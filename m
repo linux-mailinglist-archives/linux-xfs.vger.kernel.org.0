@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9A8C65A158
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:15:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 926DD65A15A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:16:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236188AbiLaCPy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:15:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
+        id S236190AbiLaCQV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:16:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbiLaCPv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:15:51 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6E02DD5
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:15:50 -0800 (PST)
+        with ESMTP id S231485AbiLaCQU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:16:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D0A2DD5
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:16:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id ED1C5CE1A8E
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:15:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31325C433D2;
-        Sat, 31 Dec 2022 02:15:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D866761C9C
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:16:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F18AC433EF;
+        Sat, 31 Dec 2022 02:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452947;
-        bh=AJZ0gNZo4OV20TBRkD8feBasdr/4SPHr8JbaDdPH7rs=;
+        s=k20201202; t=1672452978;
+        bh=8tiAYtVeFDRmFNcU8yDqeaT7trQTAFnf33IWlvVUFjA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=kdqNjGHX57o1lmiPRc+RpvI2/g7u+flkwW8VKSc3V2LBCcRlMqN2aCfG+0PcL/wpx
-         FfK4ZnE1ETuR7t6WW64eZpELDg9yENyKJtUhAk67xF/g1kGbdC3PUziuk1wYeOrHPi
-         kT9f2ZiK9mCI6OvKdVFLj8/hqkyBBMT28xiQDsxALLd7ksuZSojwnLIU3gc9Ettg6W
-         x2UIpdGQF/fQSJwOIjrO7dlrjzIxFHLkk1nMtJiqO3kTUNfX6hYZ9Sf1g085QpkpJ8
-         fgUR6XZNMlKtwcGInX5jw35LFR+E3XOkkuIvWhE6bKe0lLynduc/nY1SlBFoIvxN+W
-         /hX+TqDPm1WYA==
-Subject: [PATCH 23/46] xfs_db: support metadata directories in the path
- command
+        b=KBkN03dBsJUoyrSP8ZxhRwtN89mBqWNTvPV0c/9ckLHGb3zQL/tzrsVxmLuiYWIft
+         4ZY6YwgojSB50Wa8o6vWnc8GvXWYhMMXM0nqqPTvQZM0mw+fO0rUZLa9ypMS/d7ue8
+         FIPs7wfBOI0kWi37n6dEPJVjtlZxWgr1o4nmH2n3eA5+x+vSSNIs7b6dGJSjuuaoe9
+         5UVHWXGdjR/0Dx/yqENgbRmK/lS9lsgSEvAr61/RP1ICERi20nYJ0e/hksjFS0enKm
+         2ifBQwbmutreR50H4Z1VKrAkU/bKQa2DwpojIHl7fklILs/auDE6ZYtle+FPqz0V0R
+         nj/bbujhTVwFw==
+Subject: [PATCH 25/46] xfs_io: support the bulkstat metadata directory flag
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:22 -0800
-Message-ID: <167243876237.725900.11095686664824379022.stgit@magnolia>
+Message-ID: <167243876263.725900.14223423886543197158.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,170 +55,123 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Teach the path command to traverse the metadata directory tree by
-passing a '\' as the first letter in the path.
+Support the new XFS_BULK_IREQ_METADIR flag for bulkstat commands.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/namei.c        |   43 +++++++++++++++++++++++++++++++++++++------
- man/man8/xfs_db.8 |   11 +++++++++--
- 2 files changed, 46 insertions(+), 8 deletions(-)
+ io/bulkstat.c     |   16 +++++++++++++++-
+ man/man8/xfs_io.8 |   10 +++++++---
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
 
-diff --git a/db/namei.c b/db/namei.c
-index dc3cbbeda38..a3d917db5c6 100644
---- a/db/namei.c
-+++ b/db/namei.c
-@@ -139,11 +139,11 @@ path_navigate(
- /* Walk a directory path to an inode and set the io cursor to that inode. */
- static int
- path_walk(
-+	xfs_ino_t	rootino,
- 	char		*path)
- {
- 	struct dirpath	*dirpath;
- 	char		*p = path;
--	xfs_ino_t	rootino = mp->m_sb.sb_rootino;
- 	int		error = 0;
- 
- 	if (*p == '/') {
-@@ -173,6 +173,9 @@ path_help(void)
- 	dbprintf(_(
- "\n"
- " Navigate to an inode via directory path.\n"
-+"\n"
-+" Options:\n"
-+"   -m -- Walk an absolute path down the metadata directory tree.\n"
- 	));
- }
- 
-@@ -181,18 +184,34 @@ path_f(
- 	int		argc,
- 	char		**argv)
- {
-+	xfs_ino_t	rootino = mp->m_sb.sb_rootino;
- 	int		c;
- 	int		error;
- 
--	while ((c = getopt(argc, argv, "")) != -1) {
-+	while ((c = getopt(argc, argv, "m")) != -1) {
- 		switch (c) {
-+		case 'm':
-+			/* Absolute path, start from metadata rootdir. */
-+			if (!xfs_has_metadir(mp)) {
-+				dbprintf(
-+	_("filesystem does not support metadata directories.\n"));
-+				exitcode = 1;
-+				return 0;
-+			}
-+			rootino = mp->m_sb.sb_metadirino;
-+			break;
- 		default:
- 			path_help();
- 			return 0;
- 		}
- 	}
- 
--	error = path_walk(argv[optind]);
-+	if (argc == optind || argc > optind + 1) {
-+		dbprintf(_("Only supply one path.\n"));
-+		return -1;
-+	}
-+
-+	error = path_walk(rootino, argv[optind]);
- 	if (error) {
- 		dbprintf("%s: %s\n", argv[optind], strerror(error));
- 		exitcode = 1;
-@@ -206,7 +225,7 @@ static struct cmdinfo path_cmd = {
- 	.altname	= NULL,
- 	.cfunc		= path_f,
- 	.argmin		= 1,
--	.argmax		= 1,
-+	.argmax		= -1,
- 	.canpush	= 0,
- 	.args		= "",
- 	.help		= path_help,
-@@ -521,6 +540,7 @@ ls_help(void)
- " Options:\n"
- "   -i -- Resolve the given paths to their corresponding inode numbers.\n"
- "         If no paths are given, display the current inode number.\n"
-+"   -m -- Walk an absolute path down the metadata directory tree.\n"
- "\n"
- " Directory contents will be listed in the format:\n"
- " dir_cookie	inode_number	type	hash	name_length	name\n"
-@@ -532,15 +552,26 @@ ls_f(
- 	int			argc,
- 	char			**argv)
- {
-+	xfs_ino_t		rootino = mp->m_sb.sb_rootino;
- 	bool			inum_only = false;
+diff --git a/io/bulkstat.c b/io/bulkstat.c
+index a9ad87ca183..829f6a02515 100644
+--- a/io/bulkstat.c
++++ b/io/bulkstat.c
+@@ -70,6 +70,7 @@ bulkstat_help(void)
+ "   -d         Print debugging output.\n"
+ "   -q         Be quiet, no output.\n"
+ "   -e <ino>   Stop after this inode.\n"
++"   -m         Include metadata directories.\n"
+ "   -n <nr>    Ask for this many results at once.\n"
+ "   -s <ino>   Inode to start with.\n"
+ "   -v <ver>   Use this version of the ioctl (1 or 5).\n"));
+@@ -107,11 +108,12 @@ bulkstat_f(
+ 	bool			has_agno = false;
+ 	bool			debug = false;
+ 	bool			quiet = false;
++	bool			metadir = false;
+ 	unsigned int		i;
  	int			c;
- 	int			error = 0;
+ 	int			ret;
  
--	while ((c = getopt(argc, argv, "i")) != -1) {
-+	while ((c = getopt(argc, argv, "im")) != -1) {
+-	while ((c = getopt(argc, argv, "a:de:n:qs:v:")) != -1) {
++	while ((c = getopt(argc, argv, "a:de:mn:qs:v:")) != -1) {
  		switch (c) {
- 		case 'i':
- 			inum_only = true;
+ 		case 'a':
+ 			agno = cvt_u32(optarg, 10);
+@@ -131,6 +133,9 @@ bulkstat_f(
+ 				return 1;
+ 			}
  			break;
 +		case 'm':
-+			/* Absolute path, start from metadata rootdir. */
-+			if (!xfs_has_metadir(mp)) {
-+				dbprintf(
-+	_("filesystem does not support metadata directories.\n"));
-+				exitcode = 1;
-+				return 0;
-+			}
-+			rootino = mp->m_sb.sb_metadirino;
++			metadir = true;
 +			break;
- 		default:
- 			ls_help();
- 			return 0;
-@@ -563,7 +594,7 @@ ls_f(
- 	for (c = optind; c < argc; c++) {
- 		push_cur();
+ 		case 'n':
+ 			batch_size = cvt_u32(optarg, 10);
+ 			if (errno) {
+@@ -185,6 +190,8 @@ bulkstat_f(
  
--		error = path_walk(argv[c]);
-+		error = path_walk(rootino, argv[c]);
- 		if (error)
- 			goto err_cur;
+ 	if (has_agno)
+ 		xfrog_bulkstat_set_ag(breq, agno);
++	if (metadir)
++		breq->hdr.flags |= XFS_BULK_IREQ_METADIR;
  
-diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-index 43c7db5e225..a7e42e1a333 100644
---- a/man/man8/xfs_db.8
-+++ b/man/man8/xfs_db.8
-@@ -835,7 +835,7 @@ This makes it easier to find discrepancies in the reservation calculations
- between xfsprogs and the kernel, which will help when diagnosing minimum
- log size calculation errors.
+ 	set_xfd_flags(&xfd, ver);
+ 
+@@ -253,6 +260,7 @@ bulkstat_single_f(
+ 	unsigned long		ver = 0;
+ 	unsigned int		i;
+ 	bool			debug = false;
++	bool			metadir = false;
+ 	int			c;
+ 	int			ret;
+ 
+@@ -261,6 +269,9 @@ bulkstat_single_f(
+ 		case 'd':
+ 			debug = true;
+ 			break;
++		case 'm':
++			metadir = true;
++			break;
+ 		case 'v':
+ 			errno = 0;
+ 			ver = strtoull(optarg, NULL, 10);
+@@ -313,6 +324,9 @@ bulkstat_single_f(
+ 			}
+ 		}
+ 
++		if (metadir)
++			flags |= XFS_BULK_IREQ_METADIR;
++
+ 		ret = -xfrog_bulkstat_single(&xfd, ino, flags, &bulkstat);
+ 		if (ret) {
+ 			xfrog_perror(ret, "xfrog_bulkstat_single");
+diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
+index d531cabc3ef..0c0b00b5712 100644
+--- a/man/man8/xfs_io.8
++++ b/man/man8/xfs_io.8
+@@ -1228,7 +1228,7 @@ for the current memory mapping.
+ 
+ .SH FILESYSTEM COMMANDS
  .TP
--.BI "ls [\-i] [" paths "]..."
-+.BI "ls [\-im] [" paths "]..."
- List the contents of a directory.
- If a path resolves to a directory, the directory will be listed.
- If no paths are supplied and the IO cursor points at a directory inode,
-@@ -849,6 +849,9 @@ directory cookie, inode number, file type, hash, name length, name.
- Resolve each of the given paths to an inode number and print that number.
- If no paths are given and the IO cursor points to an inode, print the inode
- number.
+-.BI "bulkstat [ \-a " agno " ] [ \-d ] [ \-e " endino " ] [ \-n " batchsize " ] [ \-q ] [ \-s " startino " ] [ \-v " version" ]
++.BI "bulkstat [ \-a " agno " ] [ \-d ] [ \-e " endino " ] [ \-m ] [ \-n " batchsize " ] [ \-q ] [ \-s " startino " ] [ \-v " version" ]
+ Display raw stat information about a bunch of inodes in an XFS filesystem.
+ Options are as follows:
+ .RS 1.0i
+@@ -1245,6 +1245,9 @@ Print debugging information about call results.
+ Stop displaying records when this inode number is reached.
+ Defaults to stopping when the system call stops returning results.
+ .TP
++.BI \-m
++Include metadata directories in the output.
 +.TP
-+.B \-m
-+Absolute paths should be walked from the root of the metadata directory tree.
+ .BI \-n " batchsize"
+ Retrieve at most this many records per call.
+ Defaults to 4,096.
+@@ -1265,10 +1268,11 @@ Currently supported versions are 1 and 5.
  .RE
+ .PD
  .TP
- .BI "metadump [\-egow] " filename
-@@ -876,9 +879,13 @@ See the
- .B print
- command.
- .TP
--.BI "path " dir_path
-+.BI "path [\-m] " dir_path
- Walk the directory tree to an inode using the supplied path.
- Absolute and relative paths are supported.
-+The
-+.B \-m
-+option causes absolute paths to be walked from the root of the metadata
-+directory tree.
- .TP
- .B pop
- Pop location from the stack.
+-.BI "bulkstat_single [ \-d ] [ \-v " version " ] [ " inum... " | " special... " ]
++.BI "bulkstat_single [ \-d ] [ \-m ] [ \-v " version " ] [ " inum... " | " special... " ]
+ Display raw stat information about individual inodes in an XFS filesystem.
+ The
+-.B \-d
++.BR \-d ,
++.BR \-m ,
+ and
+ .B \-v
+ options are the same as the
 
