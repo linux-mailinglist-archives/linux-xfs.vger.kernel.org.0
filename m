@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D9C65A23F
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:09:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1BE865A247
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:11:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236324AbiLaDJq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:09:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35600 "EHLO
+        id S236327AbiLaDLw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:11:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236304AbiLaDJp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:09:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2731054D;
-        Fri, 30 Dec 2022 19:09:44 -0800 (PST)
+        with ESMTP id S231476AbiLaDLv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:11:51 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B49E59;
+        Fri, 30 Dec 2022 19:11:50 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B34F61D43;
-        Sat, 31 Dec 2022 03:09:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEFEEC433EF;
-        Sat, 31 Dec 2022 03:09:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 89F9DB81E6B;
+        Sat, 31 Dec 2022 03:11:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48092C433D2;
+        Sat, 31 Dec 2022 03:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456184;
-        bh=2ults4eSPPu2CQwu9Ox3S3rmD1ptyWG0E9hpnInd/tA=;
+        s=k20201202; t=1672456308;
+        bh=j/LDjaycDFOUuOJOHXG9wZs/COuMk+TbL0io55B4u7o=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nZRcvlT99NskIlyCKfPMEceyMCJoR/qJVyUqtzhN1121Mf+x6FLO/ho3vxRF8F7pS
-         3ttskirz/w7hqawFINy9K3ukkpZsUWPbbWlAUdSwlha3Ex+O6EfF9CuGfbDQe9jneh
-         0ATPeSqEaAONG1RGZX/qr34T13vEU2XWoaadtAEUdWS27aSfoqrOzNiUGod5KRBF5I
-         dQmbto58ngy8uOzjygA99x0ktKTxZh2kQXVdjTB8BKhEoQUmLPzfrTLjWrxsWf4/qr
-         zvZ0Apy8EvXJF/ZkjYwU39dgEMfglcirlrUc82PKyfp+MwALWvIxA/QGgfT2Zc+aQB
-         N3uxM6GuxF3fg==
-Subject: [PATCH 01/12] xfs/122: update for rtgroups
+        b=WLZiCGroHty9yO2wM/+VhHCxUvJh77OpMA36ekIkOL4vwnyRYz2WHClNXZS1if5TZ
+         DRS1EdmXKjcZxD+cpuARIut+pjIVL/K0Ujma1Ly7OgZe2m5lzN4fYUrRQKkedo64a6
+         H1LLHoAIEs+aDqAKpbOB0WxMw0b3jralbK8c2cS+ePzhsbyxPs6k07JjTtSeldkrwS
+         bi9JFIaX+ue5v1CsEojWdfQPUAhCZoleHYHnw7cKI4IfsPuDA//IDTcJg3Ui6GCYNu
+         K3wdqaAegoczsXgYrUz8dGE04CwAq1s/kDUGv7RldpL6EuLjfng6p3oQwdffSqiuLL
+         tiRNepRabcdtA==
+Subject: [PATCH 09/12] xfs/122: udpate test to pick up rtword/suminfo ondisk
+ unions
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Fri, 30 Dec 2022 14:20:39 -0800
-Message-ID: <167243883960.739029.13358901178644202496.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:20:40 -0800
+Message-ID: <167243884063.739029.10787000865854510244.stgit@magnolia>
 In-Reply-To: <167243883943.739029.3041109696120604285.stgit@magnolia>
 References: <167243883943.739029.3041109696120604285.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,38 +56,40 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add our new metadata for realtime allocation groups to the ondisk checking.
+Update this test to check that the ondisk unions for rt bitmap word and
+rt summary counts are always the correct size.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/122.out |    5 +++++
- 1 file changed, 5 insertions(+)
+ tests/xfs/122     |    2 +-
+ tests/xfs/122.out |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
 
+diff --git a/tests/xfs/122 b/tests/xfs/122
+index e616f1987d..fe6c1e36e9 100755
+--- a/tests/xfs/122
++++ b/tests/xfs/122
+@@ -187,7 +187,7 @@ echo 'int main(int argc, char *argv[]) {' >>$cprog
+ #
+ cat /usr/include/xfs/xfs*.h | indent |\
+ _attribute_filter |\
+-grep -E '(} *xfs_.*_t|^struct xfs_[a-z0-9_]*$)' |\
++grep -E '(} *xfs_.*_t|^(union|struct) xfs_[a-z0-9_]*$)' |\
+ grep -E -v -f $tmp.ignore |\
+ sed -e 's/^.*}[[:space:]]*//g' -e 's/;.*$//g' -e 's/_t, /_t\n/g' |\
+ sort | uniq |\
 diff --git a/tests/xfs/122.out b/tests/xfs/122.out
-index eee6c1ee6d..01376180cc 100644
+index 336618cf7a..1379c7b3b5 100644
 --- a/tests/xfs/122.out
 +++ b/tests/xfs/122.out
-@@ -44,6 +44,9 @@ offsetof(xfs_sb_t, sb_rbmino) = 64
- offsetof(xfs_sb_t, sb_rextents) = 24
- offsetof(xfs_sb_t, sb_rextsize) = 80
- offsetof(xfs_sb_t, sb_rextslog) = 125
-+offsetof(xfs_sb_t, sb_rgblklog) = 280
-+offsetof(xfs_sb_t, sb_rgblocks) = 272
-+offsetof(xfs_sb_t, sb_rgcount) = 276
- offsetof(xfs_sb_t, sb_rootino) = 56
- offsetof(xfs_sb_t, sb_rrmapino) = 264
- offsetof(xfs_sb_t, sb_rsumino) = 72
-@@ -112,9 +115,11 @@ sizeof(struct xfs_refcount_key) = 4
- sizeof(struct xfs_refcount_rec) = 12
- sizeof(struct xfs_rmap_key) = 20
- sizeof(struct xfs_rmap_rec) = 24
-+sizeof(struct xfs_rtgroup_geometry) = 128
- sizeof(struct xfs_rtrmap_key) = 24
- sizeof(struct xfs_rtrmap_rec) = 32
- sizeof(struct xfs_rtrmap_root) = 4
-+sizeof(struct xfs_rtsb) = 104
- sizeof(struct xfs_rud_log_format) = 16
- sizeof(struct xfs_rui_log_format) = 16
- sizeof(struct xfs_scrub_metadata) = 64
+@@ -128,6 +128,8 @@ sizeof(struct xfs_swap_extent) = 64
+ sizeof(struct xfs_sxd_log_format) = 16
+ sizeof(struct xfs_sxi_log_format) = 80
+ sizeof(struct xfs_unmount_log_format) = 8
++sizeof(union xfs_rtword_ondisk) = 4
++sizeof(union xfs_suminfo_ondisk) = 4
+ sizeof(xfs_agf_t) = 224
+ sizeof(xfs_agfl_t) = 36
+ sizeof(xfs_agi_t) = 344
 
