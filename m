@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70478659D38
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:51:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36E2A659D35
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:50:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235604AbiL3WvI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:51:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57126 "EHLO
+        id S235589AbiL3WuW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:50:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiL3WvI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:51:08 -0500
+        with ESMTP id S235583AbiL3WuV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:50:21 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724B4BC3F
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:51:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29C017890
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:50:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2711AB81D94
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:51:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD1D7C433D2;
-        Fri, 30 Dec 2022 22:51:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7E138B81D94
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:50:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BDB6C433EF;
+        Fri, 30 Dec 2022 22:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440664;
-        bh=w9ck7W498vYxlsCSEbsjK9C/WeHqaK13TlWWhEyEv1c=;
+        s=k20201202; t=1672440618;
+        bh=82nmgHGstiIcIvJW23aRqLOgMxNzPaHHa1LMGWJlACs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IY9NMbIEaeymL9qu1QfkD4u61uId0jjReSRBbpt1rVNvaIZaX6p6tz/6XClEcXQvg
-         ltTj5vg+eBuLMpIiT3TPL7HAsGtG4gF5TGtENYV4/GJZl+knRp4cMDtR9yE1qXXVcI
-         1xLXxHSLdWZPherMIOwFFhhPE+8jDJqgpb1jORgHYh6ZSTFGoOHBERH5SUQ99nJ2y0
-         ROFNpg72WjQ29HGQUq8zZd6Q9xMl6aaffxJlzRtuNvvIvTp8NIwkJ8ApYbqjQ0cgMG
-         2IpceiFLrffgsK137UEr6XCDrPif9GkEQbDdanIb0/cZXho+KX+eb7enLywrAPEBhP
-         PWv2arCkD4roQ==
-Subject: [PATCH 11/11] xfs: only allocate free space bitmap for xattr scrub if
- needed
+        b=W3rvI4iepm4WqpwnNPYqgHcicF34M4HZen8DcYNH0l2bSbEPGNURdI0BghognHh6g
+         HXdHJbMI+gSZ/sFfUnAApYoIw2vs3ApLj/kNuI/Fhe4vtH5f6WTjJL5IIsd8Y+UJWZ
+         FrtLrKUxMNL4FcKSi9IWuEaGgEV915KQS733dtzRH+XAXcs9EPEtmc1LCfcEM7m/Qr
+         zYrCaFYp+wHvFwtVz4yH624+s+q52EmWq4lgMAlbIPH91ILUUSwcKZB7PNZ/+U8WeC
+         bWX0MCJF5F4VEonR6o5aGyxTfJr+ytL4+zIeQucl2dPrztCjL2pKp9I/TIRdJUlzqs
+         jeUBE4rCzmuxg==
+Subject: [PATCH 08/11] xfs: move xattr scrub buffer allocation to top level
+ function
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:47 -0800
-Message-ID: <167243830759.687022.9978671103538899221.stgit@magnolia>
+Message-ID: <167243830719.687022.12351669386465585056.stgit@magnolia>
 In-Reply-To: <167243830598.687022.17067931640967897645.stgit@magnolia>
 References: <167243830598.687022.17067931640967897645.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,64 +55,50 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The free space bitmap is only required if we're going to check the
-bestfree space at the end of an xattr leaf block.  Therefore, we can
-reduce the memory requirements of this scrubber if we can determine that
-the xattr is in short format.
+Move the xchk_setup_xattr_buf call from xchk_xattr_block to xchk_xattr,
+since we only need to set up the leaf block bitmaps once.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/attr.c |   31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ fs/xfs/scrub/attr.c |   15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index ea4a723f175c..ea9d0f1a6fd0 100644
+index df2f21296b30..a98ea78c41a0 100644
 --- a/fs/xfs/scrub/attr.c
 +++ b/fs/xfs/scrub/attr.c
-@@ -37,6 +37,29 @@ xchk_xattr_buf_cleanup(
- 	ab->value_sz = 0;
- }
+@@ -346,18 +346,10 @@ xchk_xattr_block(
+ 	unsigned int			usedbytes = 0;
+ 	unsigned int			hdrsize;
+ 	int				i;
+-	int				error;
  
-+/*
-+ * Allocate the free space bitmap if we're trying harder; there are leaf blocks
-+ * in the attr fork; or we can't tell if there are leaf blocks.
-+ */
-+static inline bool
-+xchk_xattr_want_freemap(
-+	struct xfs_scrub	*sc)
-+{
-+	struct xfs_ifork	*ifp;
-+
-+	if (sc->flags & XCHK_TRY_HARDER)
-+		return true;
-+
-+	if (!sc->ip)
-+		return true;
-+
-+	ifp = xfs_ifork_ptr(sc->ip, XFS_ATTR_FORK);
-+	if (!ifp)
-+		return false;
-+
-+	return xfs_ifork_has_extents(ifp);
-+}
-+
- /*
-  * Allocate enough memory to hold an attr value and attr block bitmaps,
-  * reallocating the buffer if necessary.  Buffer contents are not preserved
-@@ -66,9 +89,11 @@ xchk_setup_xattr_buf(
- 	if (!ab->usedmap)
- 		return -ENOMEM;
+ 	if (*last_checked == blk->blkno)
+ 		return 0;
  
--	ab->freemap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
--	if (!ab->freemap)
--		return -ENOMEM;
-+	if (xchk_xattr_want_freemap(sc)) {
-+		ab->freemap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
-+		if (!ab->freemap)
-+			return -ENOMEM;
-+	}
+-	/* Allocate memory for block usage checking. */
+-	error = xchk_setup_xattr_buf(ds->sc, 0);
+-	if (error == -ENOMEM)
+-		return -EDEADLOCK;
+-	if (error)
+-		return error;
+-
+ 	*last_checked = blk->blkno;
+ 	bitmap_zero(ab->usedmap, mp->m_attr_geo->blksize);
  
- resize_value:
- 	if (ab->value_sz >= value_size)
+@@ -507,6 +499,13 @@ xchk_xattr(
+ 	if (!xfs_inode_hasattr(sc->ip))
+ 		return -ENOENT;
+ 
++	/* Allocate memory for xattr checking. */
++	error = xchk_setup_xattr_buf(sc, 0);
++	if (error == -ENOMEM)
++		return -EDEADLOCK;
++	if (error)
++		return error;
++
+ 	memset(&sx, 0, sizeof(sx));
+ 	/* Check attribute tree structure */
+ 	error = xchk_da_btree(sc, XFS_ATTR_FORK, xchk_xattr_rec,
 
