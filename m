@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 611E0659D14
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:42:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2B51659D18
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:43:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235637AbiL3WmG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:42:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
+        id S235635AbiL3WnH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:43:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235673AbiL3WmD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:42:03 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1861573A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:42:02 -0800 (PST)
+        with ESMTP id S235634AbiL3WnG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:43:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1902E12D26
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:43:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8841CB81C22
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:42:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 420A9C433EF;
-        Fri, 30 Dec 2022 22:42:00 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C45D3B81C06
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:43:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF90C433D2;
+        Fri, 30 Dec 2022 22:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440120;
-        bh=ZpaKomQyKPZkM1xzkcE5M38OD7YNZPlUrOEbMIDQPhQ=;
+        s=k20201202; t=1672440182;
+        bh=OEFPZDX9CyCI98ZLu99+7oICwPUfqwkBF6YQfBYV0Ow=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iVCYsrQFjzZEmLL2v90Y92EJQRiefrYqb5D14VD/JCqigzwUrOURsfSTJMoMv8sTh
-         zl9VSAKk6r63VwW9O20hdLoBhUNgtTVTu6n1YgOg6xQd5YOrlLCePf2Wp5gkOXUa/x
-         cedHEY0eh6G98xQCGkHsAWQ+JVn2nc0W6T4lml7FHyOzluxOtb68QkpRcUG0JT+Wwj
-         6Y7YfNUtDUbbKCOR509yGBDVncdL98lInPwHXHYfb6ZpHKcjUqmQSUenc9Ycx3mHSM
-         y47oOG8TaTYMsupx0TvQTPfIgSh4My5tnsoJ/o/YUekDc2s7QpHxrbHMfsVU8S033w
-         aN0wh6syCj3sw==
-Subject: [PATCH 1/6] xfs: refactor converting btree irec to btree key
+        b=i7dWD+6w2I7DDFSbDG0bcdaWvaCfaOyhwwuQKdpamuzyakAZ935miAlwRGUxVNz3n
+         uty791RyYix+hLF+x0PR/jHrT7vKrOTdhiGbXL9AxVzc1IvzsYbjJTlNGqtXGuNdP9
+         PPsQwkpnVdlQFE+dBXSbhNY+LGKlAL02I+g3bqM82j2VZjOsTnddRqp8bczaoH2Pks
+         wbOEj5Zh0g9qB3weKTpO7e5u7odm4bn+rDPjzfC5+lUn6qo1bPqbJHQSGQgNI9gFQx
+         Ujtfux/hT/5SHydTAOiN41+xoB0+Nk1rYpP4zwnJ2FH0cTwMPMih9Ha/tE3hB3shke
+         UGf7NJo5xmDeg==
+Subject: [PATCH 5/6] xfs: check the reference counts of gaps in the refcount
+ btree
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:25 -0800
-Message-ID: <167243828525.684405.3071704178187826488.stgit@magnolia>
+Message-ID: <167243828584.684405.7881225190931317148.stgit@magnolia>
 In-Reply-To: <167243828503.684405.18151259725784634316.stgit@magnolia>
 References: <167243828503.684405.18151259725784634316.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,59 +55,151 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-We keep doing these conversions to support btree queries, so refactor
-this into a helper.
+Gaps in the reference count btree are also significant -- for these
+regions, there must not be any overlapping reverse mappings.  We don't
+currently check this, so make the refcount scrubber more complete.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_btree.c |   23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ fs/xfs/scrub/refcount.c |   95 +++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 90 insertions(+), 5 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 35f574421670..d02634c44bff 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -4923,6 +4923,19 @@ xfs_btree_overlapped_query_range(
- 	return error;
+diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
+index 220b2850659e..10ef377873f6 100644
+--- a/fs/xfs/scrub/refcount.c
++++ b/fs/xfs/scrub/refcount.c
+@@ -332,6 +332,64 @@ xchk_refcountbt_xref(
+ 	xchk_refcountbt_xref_rmap(sc, irec);
  }
  
-+static inline void
-+xfs_btree_key_from_irec(
-+	struct xfs_btree_cur		*cur,
-+	union xfs_btree_key		*key,
-+	const union xfs_btree_irec	*irec)
-+{
-+	union xfs_btree_rec		rec;
++struct xchk_refcbt_records {
++	/* The next AG block where we aren't expecting shared extents. */
++	xfs_agblock_t		next_unshared_agbno;
 +
-+	cur->bc_rec = *irec;
-+	cur->bc_ops->init_rec_from_cur(cur, &rec);
-+	cur->bc_ops->init_key_from_rec(key, &rec);
++	/* Number of CoW blocks we expect. */
++	xfs_agblock_t		cow_blocks;
++
++	/* Was the last record a shared or CoW staging extent? */
++	enum xfs_refc_domain	prev_domain;
++};
++
++STATIC int
++xchk_refcountbt_rmap_check_gap(
++	struct xfs_btree_cur		*cur,
++	const struct xfs_rmap_irec	*rec,
++	void				*priv)
++{
++	xfs_agblock_t			*next_bno = priv;
++
++	if (*next_bno != NULLAGBLOCK && rec->rm_startblock < *next_bno)
++		return -ECANCELED;
++
++	*next_bno = rec->rm_startblock + rec->rm_blockcount;
++	return 0;
 +}
 +
- /*
-  * Query a btree for all records overlapping a given interval of keys.  The
-  * supplied function will be called with each record found; return one of the
-@@ -4937,18 +4950,12 @@ xfs_btree_query_range(
- 	xfs_btree_query_range_fn	fn,
- 	void				*priv)
++/*
++ * Make sure that a gap in the reference count records does not correspond to
++ * overlapping records (i.e. shared extents) in the reverse mappings.
++ */
++static inline void
++xchk_refcountbt_xref_gaps(
++	struct xfs_scrub	*sc,
++	struct xchk_refcbt_records *rrc,
++	xfs_agblock_t		bno)
++{
++	struct xfs_rmap_irec	low;
++	struct xfs_rmap_irec	high;
++	xfs_agblock_t		next_bno = NULLAGBLOCK;
++	int			error;
++
++	if (bno <= rrc->next_unshared_agbno || !sc->sa.rmap_cur ||
++            xchk_skip_xref(sc->sm))
++		return;
++
++	memset(&low, 0, sizeof(low));
++	low.rm_startblock = rrc->next_unshared_agbno;
++	memset(&high, 0xFF, sizeof(high));
++	high.rm_startblock = bno - 1;
++
++	error = xfs_rmap_query_range(sc->sa.rmap_cur, &low, &high,
++			xchk_refcountbt_rmap_check_gap, &next_bno);
++	if (error == -ECANCELED)
++		xchk_btree_xref_set_corrupt(sc, sc->sa.rmap_cur, 0);
++	else
++		xchk_should_check_xref(sc, &error, &sc->sa.rmap_cur);
++}
++
+ /* Scrub a refcountbt record. */
+ STATIC int
+ xchk_refcountbt_rec(
+@@ -339,7 +397,7 @@ xchk_refcountbt_rec(
+ 	const union xfs_btree_rec *rec)
  {
--	union xfs_btree_rec		rec;
- 	union xfs_btree_key		low_key;
- 	union xfs_btree_key		high_key;
+ 	struct xfs_refcount_irec irec;
+-	xfs_agblock_t		*cow_blocks = bs->private;
++	struct xchk_refcbt_records *rrc = bs->private;
  
- 	/* Find the keys of both ends of the interval. */
--	cur->bc_rec = *high_rec;
--	cur->bc_ops->init_rec_from_cur(cur, &rec);
--	cur->bc_ops->init_key_from_rec(&high_key, &rec);
--
--	cur->bc_rec = *low_rec;
--	cur->bc_ops->init_rec_from_cur(cur, &rec);
--	cur->bc_ops->init_key_from_rec(&low_key, &rec);
-+	xfs_btree_key_from_irec(cur, &high_key, high_rec);
-+	xfs_btree_key_from_irec(cur, &low_key, low_rec);
+ 	xfs_refcount_btrec_to_irec(rec, &irec);
+ 	if (xfs_refcount_check_irec(bs->cur, &irec) != NULL) {
+@@ -348,10 +406,27 @@ xchk_refcountbt_rec(
+ 	}
  
- 	/* Enforce low key < high key. */
- 	if (cur->bc_ops->diff_two_keys(cur, &low_key, &high_key) > 0)
+ 	if (irec.rc_domain == XFS_REFC_DOMAIN_COW)
+-		(*cow_blocks) += irec.rc_blockcount;
++		rrc->cow_blocks += irec.rc_blockcount;
++
++	/* Shared records always come before CoW records. */
++	if (irec.rc_domain == XFS_REFC_DOMAIN_SHARED &&
++	    rrc->prev_domain == XFS_REFC_DOMAIN_COW)
++		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
++	rrc->prev_domain = irec.rc_domain;
+ 
+ 	xchk_refcountbt_xref(bs->sc, &irec);
+ 
++	/*
++	 * If this is a record for a shared extent, check that all blocks
++	 * between the previous record and this one have at most one reverse
++	 * mapping.
++	 */
++	if (irec.rc_domain == XFS_REFC_DOMAIN_SHARED) {
++		xchk_refcountbt_xref_gaps(bs->sc, rrc, irec.rc_startblock);
++		rrc->next_unshared_agbno = irec.rc_startblock +
++					   irec.rc_blockcount;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -393,15 +468,25 @@ int
+ xchk_refcountbt(
+ 	struct xfs_scrub	*sc)
+ {
+-	xfs_agblock_t		cow_blocks = 0;
++	struct xchk_refcbt_records rrc = {
++		.cow_blocks		= 0,
++		.next_unshared_agbno	= 0,
++		.prev_domain		= XFS_REFC_DOMAIN_SHARED,
++	};
+ 	int			error;
+ 
+ 	error = xchk_btree(sc, sc->sa.refc_cur, xchk_refcountbt_rec,
+-			&XFS_RMAP_OINFO_REFC, &cow_blocks);
++			&XFS_RMAP_OINFO_REFC, &rrc);
+ 	if (error)
+ 		return error;
+ 
+-	xchk_refcount_xref_rmap(sc, cow_blocks);
++	/*
++	 * Check that all blocks between the last refcount > 1 record and the
++	 * end of the AG have at most one reverse mapping.
++	 */
++	xchk_refcountbt_xref_gaps(sc, &rrc, sc->mp->m_sb.sb_agblocks);
++
++	xchk_refcount_xref_rmap(sc, rrc.cow_blocks);
+ 
+ 	return 0;
+ }
 
