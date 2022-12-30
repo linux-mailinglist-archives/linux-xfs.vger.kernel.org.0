@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CEBA65A1EE
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:50:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EAB465A1F3
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:51:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236256AbiLaCuw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:50:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60046 "EHLO
+        id S236222AbiLaCvj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:51:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236250AbiLaCuv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:50:51 -0500
+        with ESMTP id S236250AbiLaCvi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:51:38 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C247DF80
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:50:50 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9331928C
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:51:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 18F05B81E6E
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:50:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0970C433D2;
-        Sat, 31 Dec 2022 02:50:47 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CC86DB81E71
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:51:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7915DC433EF;
+        Sat, 31 Dec 2022 02:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455047;
-        bh=R5AVAl79oVI4fcrDvID1voPojji9/iEOWfRh83U+cPM=;
+        s=k20201202; t=1672455094;
+        bh=bZtO5j5ajdc5lWxAccdPuyj4y27rvFW8DwS6gp8pd+k=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lG3szCnhLOmRDyzUQb1uB1SeLHFEpGWKw7ura4n4VS/hfO+mpnndP6YBkxJsvgSp1
-         DXXxNeU5RXOpGSty4lLix/xN4OsYp+LYfuEZ0MGDEeLEiQEZTkQkbuuBYT+nMpruu5
-         Y9Vyrd2AaOEhnfMxC0xuuyaMUaqEVTjiV53addC7z8ZbMa4nFNgB8TDbBBlGXNKeft
-         2xV+t04AsaqYK05bH49zhoGdf39M/bAyAQPV3NxUQXE8ZYR9M2UJjv4y3oPKsZZul/
-         7f2JHFC3iS7xrtyVUvdR3liBspqCm0v574bQcw2ngjeWgEkZgdyUfhQgNKQgyzpIbn
-         BaZn0D2vdJNSg==
-Subject: [PATCH 32/41] xfs_repair: refactor realtime inode check
+        b=UkjtvaM9yVpTOZDrlgwvKLdpJ3kZ8PRH04myu1V2RKvyROJzTxj6liaefS3+F1TEF
+         Nofjd90vShmtxDgQTEkgJI5PH8FPTBQaFr1aBXKLYYUVc2Jl8zs+HXpMA4RMo6jyBo
+         6iHCVoC0AEUr/+Zwrn6c9FDuXNSIEv8usfZ/bFFur+N5ewa8Sw5F7YDxmEl/sNtDQu
+         xBjJQUtIYfIibGOlgly0IWiqB8F5cJis966IzHNkYSoQWwsRyViwKAiasft7rUx6f/
+         5T8s7LYNSUdHdFMPERplVyKO5Iv9m3MKiaZEfMhMzbUew3oDVim9oTM5l6szAmvpmh
+         r963qJ7kICU5A==
+Subject: [PATCH 35/41] xfs_repair: always check realtime file mappings against
+ incore info
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:00 -0800
-Message-ID: <167243880018.732820.7186019411725969251.stgit@magnolia>
+Message-ID: <167243880058.732820.6595131423616289459.stgit@magnolia>
 In-Reply-To: <167243879574.732820.4725863402652761218.stgit@magnolia>
 References: <167243879574.732820.4725863402652761218.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,121 +56,154 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Refactor the realtime bitmap and summary checks into a helper function.
+Curiously, the xfs_repair code that processes data fork mappings of
+realtime files doesn't actually compare the mappings against the incore
+state map during the !check_dups phase (aka phase 3).  As a result, we
+lose the opportunity to clear damaged realtime data forks before we get
+to crosslinked file checking in phase 4, which results in ondisk
+metadata errors calling do_error, which aborts repair.
+
+Split the process_rt_rec_state code into two functions: one to check the
+mapping, and another to update the incore state.  The first one can be
+called to help us decide if we're going to zap the fork, and the second
+one updates the incore state if we decide to keep the fork.  We already
+do this for regular data files.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/dinode.c |   84 ++++++++++++++++++++++++++-----------------------------
- 1 file changed, 39 insertions(+), 45 deletions(-)
+ repair/dinode.c |   88 ++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 80 insertions(+), 8 deletions(-)
 
 
 diff --git a/repair/dinode.c b/repair/dinode.c
-index 28eb639bbb8..3e55434c849 100644
+index 782a36172ad..b2c27984671 100644
 --- a/repair/dinode.c
 +++ b/repair/dinode.c
-@@ -1736,6 +1736,39 @@ check_dinode_mode_format(
- 	return 0;	/* invalid modes are checked elsewhere */
- }
- 
-+static int
-+process_check_rt_inode(
-+	struct xfs_mount	*mp,
-+	struct xfs_dinode	*dinoc,
-+	xfs_ino_t		lino,
-+	int			*type,
-+	int			*dirty,
-+	int			expected_type,
-+	const char		*tag)
-+{
-+	xfs_extnum_t		dnextents = xfs_dfork_data_extents(dinoc);
-+
-+	if (*type != expected_type) {
-+		do_warn(
-+_("%s inode %" PRIu64 " has bad type 0x%x, "),
-+			tag, lino, dinode_fmt(dinoc));
-+		if (!no_modify)  {
-+			do_warn(_("resetting to regular file\n"));
-+			change_dinode_fmt(dinoc, S_IFREG);
-+			*dirty = 1;
-+		} else  {
-+			do_warn(_("would reset to regular file\n"));
-+		}
-+	}
-+	if (mp->m_sb.sb_rblocks == 0 && dnextents != 0)  {
-+		do_warn(
-+_("bad # of extents (%" PRIu64 ") for %s inode %" PRIu64 "\n"),
-+			dnextents, tag, lino);
-+		return 1;
-+	}
-+	return 0;
-+}
-+
- /*
-  * If inode is a superblock inode, does type check to make sure is it valid.
-  * Returns 0 if it's valid, non-zero if it needs to be cleared.
-@@ -1749,8 +1782,6 @@ process_check_sb_inodes(
- 	int			*type,
- 	int			*dirty)
- {
--	xfs_extnum_t		dnextents;
--
- 	if (lino == mp->m_sb.sb_rootino) {
- 		if (*type != XR_INO_DIR)  {
- 			do_warn(_("root inode %" PRIu64 " has bad type 0x%x\n"),
-@@ -1792,49 +1823,12 @@ process_check_sb_inodes(
- 		}
- 		return 0;
- 	}
--	dnextents = xfs_dfork_data_extents(dinoc);
--	if (lino == mp->m_sb.sb_rsumino) {
--		if (*type != XR_INO_RTSUM) {
--			do_warn(
--_("realtime summary inode %" PRIu64 " has bad type 0x%x, "),
--				lino, dinode_fmt(dinoc));
--			if (!no_modify)  {
--				do_warn(_("resetting to regular file\n"));
--				change_dinode_fmt(dinoc, S_IFREG);
--				*dirty = 1;
--			} else  {
--				do_warn(_("would reset to regular file\n"));
--			}
--		}
--		if (mp->m_sb.sb_rblocks == 0 && dnextents != 0)  {
--			do_warn(
--_("bad # of extents (%" PRIu64 ") for realtime summary inode %" PRIu64 "\n"),
--				dnextents, lino);
--			return 1;
--		}
--		return 0;
--	}
--	if (lino == mp->m_sb.sb_rbmino) {
--		if (*type != XR_INO_RTBITMAP) {
--			do_warn(
--_("realtime bitmap inode %" PRIu64 " has bad type 0x%x, "),
--				lino, dinode_fmt(dinoc));
--			if (!no_modify)  {
--				do_warn(_("resetting to regular file\n"));
--				change_dinode_fmt(dinoc, S_IFREG);
--				*dirty = 1;
--			} else  {
--				do_warn(_("would reset to regular file\n"));
--			}
--		}
--		if (mp->m_sb.sb_rblocks == 0 && dnextents != 0)  {
--			do_warn(
--_("bad # of extents (%" PRIu64 ") for realtime bitmap inode %" PRIu64 "\n"),
--				dnextents, lino);
--			return 1;
--		}
--		return 0;
--	}
-+	if (lino == mp->m_sb.sb_rsumino)
-+		return process_check_rt_inode(mp, dinoc, lino, type, dirty,
-+				XR_INO_RTSUM, _("realtime summary"));
-+	if (lino == mp->m_sb.sb_rbmino)
-+		return process_check_rt_inode(mp, dinoc, lino, type, dirty,
-+				XR_INO_RTBITMAP, _("realtime bitmap"));
+@@ -219,7 +219,7 @@ _("data fork in rt ino %" PRIu64 " claims dup rt extent,"
  	return 0;
  }
  
+-static int
++static void
+ process_rt_rec_state(
+ 	struct xfs_mount	*mp,
+ 	xfs_ino_t		ino,
+@@ -263,11 +263,78 @@ _("data fork in rt inode %" PRIu64 " found invalid rt extent %"PRIu64" state %d
+ 			set_rtbmap(ext, zap_metadata ? XR_E_METADATA :
+ 						       XR_E_INUSE);
+ 			break;
++		case XR_E_BAD_STATE:
++			do_error(
++_("bad state in rt extent map %" PRIu64 "\n"),
++				ext);
+ 		case XR_E_METADATA:
++		case XR_E_FS_MAP:
++		case XR_E_INO:
++		case XR_E_INUSE_FS:
++			break;
++		case XR_E_INUSE:
++		case XR_E_MULT:
++			set_rtbmap(ext, XR_E_MULT);
++			break;
++		case XR_E_FREE1:
++		default:
+ 			do_error(
++_("illegal state %d in rt extent %" PRIu64 "\n"),
++				state, ext);
++		}
++		b += mp->m_sb.sb_rextsize;
++	} while (b < irec->br_startblock + irec->br_blockcount);
++}
++
++/*
++ * Checks the realtime file's data mapping against in-core extent info, and
++ * complains if there are discrepancies.  Returns 0 if good, 1 if bad.
++ */
++static int
++check_rt_rec_state(
++	struct xfs_mount	*mp,
++	xfs_ino_t		ino,
++	struct xfs_bmbt_irec	*irec)
++{
++	xfs_fsblock_t		b = irec->br_startblock;
++	xfs_rtblock_t		ext;
++	int			state;
++
++	do {
++		ext = (xfs_rtblock_t)b / mp->m_sb.sb_rextsize;
++		state = get_rtbmap(ext);
++
++		if ((b % mp->m_sb.sb_rextsize) != 0) {
++			/*
++			 * We are midway through a partially written extent.
++			 * If we don't find the state that gets set in the
++			 * other clause of this loop body, then we have a
++			 * partially *mapped* rt extent and should complain.
++			 */
++			if (state != XR_E_INUSE && state != XR_E_FREE) {
++				do_warn(
++_("data fork in rt inode %" PRIu64 " found invalid rt extent %"PRIu64" state %d at rt block %"PRIu64"\n"),
++					ino, ext, state, b);
++				return 1;
++			}
++
++			b = roundup(b, mp->m_sb.sb_rextsize);
++			continue;
++		}
++
++		/*
++		 * This is the start of an rt extent.  Complain if there are
++		 * conflicting states.  We'll set the state elsewhere.
++		 */
++		switch (state)  {
++		case XR_E_FREE:
++		case XR_E_UNKNOWN:
++			break;
++		case XR_E_METADATA:
++			do_warn(
+ _("data fork in rt inode %" PRIu64 " found metadata file block %" PRIu64 " in rt bmap\n"),
+ 				ino, ext);
+-			break;
++			return 1;
+ 		case XR_E_BAD_STATE:
+ 			do_error(
+ _("bad state in rt extent map %" PRIu64 "\n"),
+@@ -275,12 +342,12 @@ _("bad state in rt extent map %" PRIu64 "\n"),
+ 		case XR_E_FS_MAP:
+ 		case XR_E_INO:
+ 		case XR_E_INUSE_FS:
+-			do_error(
++			do_warn(
+ _("data fork in rt inode %" PRIu64 " found rt metadata extent %" PRIu64 " in rt bmap\n"),
+ 				ino, ext);
++			return 1;
+ 		case XR_E_INUSE:
+ 		case XR_E_MULT:
+-			set_rtbmap(ext, XR_E_MULT);
+ 			do_warn(
+ _("data fork in rt inode %" PRIu64 " claims used rt extent %" PRIu64 "\n"),
+ 				ino, b);
+@@ -341,13 +408,18 @@ _("inode %" PRIu64 " - bad rt extent overflows - start %" PRIu64 ", "
+ 		return 1;
+ 	}
+ 
+-	if (check_dups)
+-		bad = process_rt_rec_dups(mp, ino, irec);
+-	else
+-		bad = process_rt_rec_state(mp, ino, zap_metadata, irec);
++	bad = check_rt_rec_state(mp, ino, irec);
+ 	if (bad)
+ 		return bad;
+ 
++	if (check_dups) {
++		bad = process_rt_rec_dups(mp, ino, irec);
++		if (bad)
++			return bad;
++	} else {
++		process_rt_rec_state(mp, ino, zap_metadata, irec);
++	}
++
+ 	/*
+ 	 * bump up the block counter
+ 	 */
 
