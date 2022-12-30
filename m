@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26C55659DAC
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:01:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24872659E3C
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:28:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235440AbiL3XBS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:01:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59194 "EHLO
+        id S229551AbiL3X2K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:28:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbiL3XBQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:01:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914D9193DB
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:01:14 -0800 (PST)
+        with ESMTP id S229536AbiL3X2J (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:28:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F7F313F32
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:28:09 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3082461BA9
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:01:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834F3C433EF;
-        Fri, 30 Dec 2022 23:01:13 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C1B65B81DA2
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:28:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BFCC433EF;
+        Fri, 30 Dec 2022 23:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672441273;
-        bh=fx1Y+osgK1kD1kEfnBWpvU4mwWaEjdQkpdZuiV2chJM=;
+        s=k20201202; t=1672442886;
+        bh=XrQUSJw3IGThz+pKh+ouzTC8pHfPg2xbZfsrSda080c=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=t/d1JVgNygi4FkFMXhx8QJOEfqhr+GVTn31QlcuayUZpgUSLW6ZpUYejOfhUFa3BE
-         ZwecOfNphVna0Pm0xMu9t6BDl8x1pJRFm6JihqidMU8lc+b7kD3hwxOud/U/i6autG
-         pbi0EHMpPlyXmbOKROwMKopAPlgUMTxJzZQJgPvd+Fh/ZCjVlkhH92nvvlOsKg5vHs
-         ZsU9HN3UAmvU9ApW8X9HcHw6dh6sMw3wTrSEIbSgScmcPVIrp2RLF5dsEA00y7HQSP
-         vOHp/gbOIzp6NxCuAvOSzxS4F2G2s6bdjzjhHxSvh33hLClIGTye7AoGpNJKnrJLnt
-         vifTqW5CIT6Pg==
-Subject: [PATCHSET v24.0 0/2] xfs: force rebuilding of metadata
+        b=lpJA1IU/AzkrLX6A3HmRnU4894OEphaEjVGz5ij6zjIBf/qeqWfeun4koF07EqWIS
+         f7vIagLlsp/z5AvbIm1Sroa3QDt8w5sFWNLB0mbLxuKcM6ln4MqGGK4tzMLXFugYBx
+         t1R8S9AOXGD50myiV2Htr5Etw3CBmE/EQm/VVveM9DgnGJh7nxaMk4Nt8CP2wflyuD
+         Ez/TVqN2q3yGh4Hyrfo+rOypbAsvzngeICMV2xw9CxCKJSNHYCB/maTVbcQhNgyi5F
+         0MqkjJyuPKNNzJeBzW/QmE6de8Dy+p9kW+0RcZ/8SdN5q/i/SEWTc21Mg8cc11Qex1
+         QtMfCpaySp6Gg==
+Subject: [PATCH 1/5] xfs: clear pagf_agflreset when repairing the AGFL
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:12:45 -0800
-Message-ID: <167243836537.692955.2878906942781441773.stgit@magnolia>
-In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
-References: <Y69Unb7KRM5awJoV@magnolia>
+Date:   Fri, 30 Dec 2022 14:12:48 -0800
+Message-ID: <167243836882.693494.4734082885669214084.stgit@magnolia>
+In-Reply-To: <167243836860.693494.7976721071711129282.stgit@magnolia>
+References: <167243836860.693494.7976721071711129282.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,35 +52,31 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This patchset adds a new IFLAG to the scrub ioctl so that userspace can
-force a rebuild of an otherwise consistent piece of metadata.  This will
-eventually enable the use of online repair to relocate metadata during a
-filesystem reorganization (e.g. shrink).  For now, it facilitates stress
-testing of online repair without needing the debugging knobs to be
-enabled.
+Clear the pagf_agflreset flag when we're repairing the AGFL because we
+fix all the same padding problems that xfs_agfl_reset does.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-force-rebuild
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-force-rebuild
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-force-rebuild
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_fs.h |    6 +++++-
- fs/xfs/scrub/common.h  |   12 ++++++++++++
- fs/xfs/scrub/scrub.c   |   18 ++++++++++++------
- fs/xfs/scrub/trace.h   |    3 ++-
- 4 files changed, 31 insertions(+), 8 deletions(-)
+ fs/xfs/scrub/agheader_repair.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+
+diff --git a/fs/xfs/scrub/agheader_repair.c b/fs/xfs/scrub/agheader_repair.c
+index 377a7a4bda5c..daeb88cf5825 100644
+--- a/fs/xfs/scrub/agheader_repair.c
++++ b/fs/xfs/scrub/agheader_repair.c
+@@ -620,8 +620,10 @@ xrep_agfl_update_agf(
+ 	xfs_force_summary_recalc(sc->mp);
+ 
+ 	/* Update the AGF counters. */
+-	if (sc->sa.pag->pagf_init)
++	if (sc->sa.pag->pagf_init) {
+ 		sc->sa.pag->pagf_flcount = flcount;
++		sc->sa.pag->pagf_agflreset = false;
++	}
+ 	agf->agf_flfirst = cpu_to_be32(0);
+ 	agf->agf_flcount = cpu_to_be32(flcount);
+ 	agf->agf_fllast = cpu_to_be32(flcount - 1);
 
