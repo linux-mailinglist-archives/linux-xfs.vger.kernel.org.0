@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C21965A14C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:12:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4C4C65A150
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:13:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236176AbiLaCMo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:12:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53384 "EHLO
+        id S236180AbiLaCNp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:13:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231494AbiLaCMo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:12:44 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEE91C430
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:12:43 -0800 (PST)
+        with ESMTP id S236179AbiLaCNo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:13:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA7E1C430
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:13:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B2A0EB81E49
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:12:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C82C433D2;
-        Sat, 31 Dec 2022 02:12:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 69CAE61D1B
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:13:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BDFC433D2;
+        Sat, 31 Dec 2022 02:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452760;
-        bh=uS4BZk38QizGOB/TLw9q2F3qBahpKRCpaE+4gfih7HQ=;
+        s=k20201202; t=1672452822;
+        bh=rrwmC+mJiK+rojDnCMCt56OcVlpwNrYT18zntilbBEA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oUavLRWjc2tja+Ne4hSH+tSkR4hqwRssoBN595VvsfQ/MWPaQYXfqxlDx/cdfRZAn
-         qpgheUQMb8leCBUpFhv3hnOUoSKev+tioP2U8EZZrYFilbpPgoKDkhWLigy5cTfPQQ
-         yboLh8J6iAABe0kucYg4WzmHs8pRXe03pZIyGIFUpxmo/ahDzKdA38B4P9XkIyXuLk
-         +Rkc8+HzefU+toDnR67YWSDbgI8aAZglqQiLUiUFTX3v5roCzhTqOv8n8vvz7idlhv
-         m2eIAvbaCyNDQ9H6bWbl0ApM0ApF5Yv1XeIcY98pokiSdcTYPyk3y3Sq9+Kgh24mXv
-         XiVwnOPXk+aRQ==
-Subject: [PATCH 11/46] xfs: enforce metadata inode flag
+        b=KQWbPuYGfzSp0/0GOWLnLeEhgVlFLwKuoXd4Sn9E2gPQyHa61001X6DenGz3zmIvy
+         2m2kmjEwiORIecXLi6WZ0Ed/Jk4neARvKDLc1T6BQSb/ML/Cz8wLSEsZayuyTIHuF3
+         igciMkyDFhxaDdcG52D1dqm36QcyVmARBmN2m40O2/3uIEgd1DHgUs1IG/77hnWkyM
+         ziFuE1WuefjF1Lb2z4DN6a6BurvBDZKlVqvcxVxCwBqLesooFOeNOscUMrmvqOfdaJ
+         z6nhs62ml6BqlZvXwMn2ZCrxnCG2vu7/LQWj9u4oO4OxKGLN5rFMWlQO2oLdJ4sLpP
+         t4FSA+RZMS1Jg==
+Subject: [PATCH 15/46] xfs: advertise metadata directory feature
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:20 -0800
-Message-ID: <167243876081.725900.15231592838271764438.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:19:21 -0800
+Message-ID: <167243876134.725900.10165638247764460105.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,146 +55,54 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add checks for the metadata inode flag so that we don't ever leak
-metadata inodes out to userspace, and we don't ever try to read a
-regular inode as metadata.
+Advertise the existence of the metadata directory feature; this will be
+used by scrub to decide if it needs to scan the metadir too.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/inode.c         |    7 ++++-
- libxfs/xfs_inode_buf.c |   73 ++++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_inode_buf.h |    3 ++
- 3 files changed, 82 insertions(+), 1 deletion(-)
+ libxfs/xfs_fs.h                 |    1 +
+ libxfs/xfs_sb.c                 |    2 ++
+ man/man2/ioctl_xfs_fsgeometry.2 |    3 +++
+ 3 files changed, 6 insertions(+)
 
 
-diff --git a/libxfs/inode.c b/libxfs/inode.c
-index 95a1ba50cdf..db42529e07e 100644
---- a/libxfs/inode.c
-+++ b/libxfs/inode.c
-@@ -231,7 +231,9 @@ libxfs_imeta_iget(
- 	if (error)
- 		return error;
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index a39fd65e6ee..7de31a6692a 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -239,6 +239,7 @@ typedef struct xfs_fsop_resblks {
+ #define XFS_FSOP_GEOM_FLAGS_BIGTIME	(1 << 21) /* 64-bit nsec timestamps */
+ #define XFS_FSOP_GEOM_FLAGS_INOBTCNT	(1 << 22) /* inobt btree counter */
+ #define XFS_FSOP_GEOM_FLAGS_NREXT64	(1 << 23) /* large extent counters */
++#define XFS_FSOP_GEOM_FLAGS_METADIR	(1 << 30) /* metadata directories */
+ #define XFS_FSOP_GEOM_FLAGS_ATOMIC_SWAP	(1U << 31) /* atomic file extent swap */
  
--	if (ftype == XFS_DIR3_FT_UNKNOWN ||
-+	if ((xfs_has_metadir(mp) &&
-+	     !xfs_is_metadata_inode(ip)) ||
-+	    ftype == XFS_DIR3_FT_UNKNOWN ||
- 	    xfs_mode_to_ftype(VFS_I(ip)->i_mode) != ftype) {
- 		libxfs_irele(ip);
- 		return -EFSCORRUPTED;
-@@ -278,6 +280,9 @@ void
- libxfs_imeta_irele(
- 	struct xfs_inode	*ip)
- {
-+	ASSERT(!xfs_has_metadir(ip->i_mount) ||
-+	       xfs_is_metadata_inode(ip));
-+
- 	libxfs_irele(ip);
- }
+ /*
+diff --git a/libxfs/xfs_sb.c b/libxfs/xfs_sb.c
+index 6452856d45b..55a5c5fc631 100644
+--- a/libxfs/xfs_sb.c
++++ b/libxfs/xfs_sb.c
+@@ -1231,6 +1231,8 @@ xfs_fs_geometry(
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_NREXT64;
+ 	if (xfs_swapext_supported(mp))
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_ATOMIC_SWAP;
++	if (xfs_has_metadir(mp))
++		geo->flags |= XFS_FSOP_GEOM_FLAGS_METADIR;
+ 	geo->rtsectsize = sbp->sb_blocksize;
+ 	geo->dirblocksize = xfs_dir2_dirblock_bytes(sbp);
  
-diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
-index 82eb3f91b9d..b5d4e5dd7ca 100644
---- a/libxfs/xfs_inode_buf.c
-+++ b/libxfs/xfs_inode_buf.c
-@@ -454,6 +454,73 @@ xfs_dinode_verify_nrext64(
- 	return NULL;
- }
- 
-+/*
-+ * Validate all the picky requirements we have for a file that claims to be
-+ * filesystem metadata.
-+ */
-+xfs_failaddr_t
-+xfs_dinode_verify_metaflag(
-+	struct xfs_mount	*mp,
-+	struct xfs_dinode	*dip,
-+	uint16_t		mode,
-+	uint16_t		flags,
-+	uint64_t		flags2)
-+{
-+	if (!xfs_has_metadir(mp))
-+		return __this_address;
-+
-+	/* V5 filesystem only */
-+	if (dip->di_version < 3)
-+		return __this_address;
-+
-+	/* V3 inode fields that are always zero */
-+	if (dip->di_onlink)
-+		return __this_address;
-+	if ((flags2 & XFS_DIFLAG2_NREXT64) && dip->di_nrext64_pad)
-+		return __this_address;
-+	if (!(flags2 & XFS_DIFLAG2_NREXT64) && dip->di_flushiter)
-+		return __this_address;
-+
-+	/* Metadata files can only be directories or regular files */
-+	if (!S_ISDIR(mode) && !S_ISREG(mode))
-+		return __this_address;
-+
-+	/* They must have zero access permissions */
-+	if (mode & 0777)
-+		return __this_address;
-+
-+	/* DMAPI event and state masks are zero */
-+	if (dip->di_dmevmask || dip->di_dmstate)
-+		return __this_address;
-+
-+	/* User, group, and project IDs must be zero */
-+	if (dip->di_uid || dip->di_gid ||
-+	    dip->di_projid_lo || dip->di_projid_hi)
-+		return __this_address;
-+
-+	/* Immutable, sync, noatime, nodump, and nodefrag flags must be set */
-+	if (!(flags & XFS_DIFLAG_IMMUTABLE))
-+		return __this_address;
-+	if (!(flags & XFS_DIFLAG_SYNC))
-+		return __this_address;
-+	if (!(flags & XFS_DIFLAG_NOATIME))
-+		return __this_address;
-+	if (!(flags & XFS_DIFLAG_NODUMP))
-+		return __this_address;
-+	if (!(flags & XFS_DIFLAG_NODEFRAG))
-+		return __this_address;
-+
-+	/* Directories must have nosymlinks flags set */
-+	if (S_ISDIR(mode) && !(flags & XFS_DIFLAG_NOSYMLINKS))
-+		return __this_address;
-+
-+	/* dax flags2 must not be set */
-+	if (flags2 & XFS_DIFLAG2_DAX)
-+		return __this_address;
-+
-+	return NULL;
-+}
-+
- xfs_failaddr_t
- xfs_dinode_verify(
- 	struct xfs_mount	*mp,
-@@ -607,6 +674,12 @@ xfs_dinode_verify(
- 	    !xfs_has_bigtime(mp))
- 		return __this_address;
- 
-+	if (flags2 & XFS_DIFLAG2_METADATA) {
-+		fa = xfs_dinode_verify_metaflag(mp, dip, mode, flags, flags2);
-+		if (fa)
-+			return fa;
-+	}
-+
- 	return NULL;
- }
- 
-diff --git a/libxfs/xfs_inode_buf.h b/libxfs/xfs_inode_buf.h
-index 585ed5a110a..94d6e7c018e 100644
---- a/libxfs/xfs_inode_buf.h
-+++ b/libxfs/xfs_inode_buf.h
-@@ -28,6 +28,9 @@ int	xfs_inode_from_disk(struct xfs_inode *ip, struct xfs_dinode *from);
- 
- xfs_failaddr_t xfs_dinode_verify(struct xfs_mount *mp, xfs_ino_t ino,
- 			   struct xfs_dinode *dip);
-+xfs_failaddr_t xfs_dinode_verify_metaflag(struct xfs_mount *mp,
-+		struct xfs_dinode *dip, uint16_t mode, uint16_t flags,
-+		uint64_t flags2);
- xfs_failaddr_t xfs_inode_validate_extsize(struct xfs_mount *mp,
- 		uint32_t extsize, uint16_t mode, uint16_t flags);
- xfs_failaddr_t xfs_inode_validate_cowextsize(struct xfs_mount *mp,
+diff --git a/man/man2/ioctl_xfs_fsgeometry.2 b/man/man2/ioctl_xfs_fsgeometry.2
+index 7c563ca0454..19328bb4be4 100644
+--- a/man/man2/ioctl_xfs_fsgeometry.2
++++ b/man/man2/ioctl_xfs_fsgeometry.2
+@@ -214,6 +214,9 @@ Filesystem supports sharing blocks between files.
+ .TP
+ .B XFS_FSOP_GEOM_FLAGS_ATOMICSWAP
+ Filesystem can exchange file contents atomically via FIEXCHANGE_RANGE.
++.TP
++.B XFS_FSOP_GEOM_FLAGS_METADIR
++Filesystem contains a metadata directory tree.
+ .RE
+ .SH XFS METADATA HEALTH REPORTING
+ .PP
 
