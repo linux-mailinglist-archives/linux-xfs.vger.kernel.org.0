@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93623659E04
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:22:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0EBC659E01
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:21:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235715AbiL3XWA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:22:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35408 "EHLO
+        id S231164AbiL3XVH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:21:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235646AbiL3XVz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:21:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1463A1D0E9
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:21:54 -0800 (PST)
+        with ESMTP id S229519AbiL3XVG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:21:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6E710040
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:21:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B453DB81DA2
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:21:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D7DDC433D2;
-        Fri, 30 Dec 2022 23:21:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2AADC61C2C
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:21:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B67EC433D2;
+        Fri, 30 Dec 2022 23:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672442511;
-        bh=5qRMXIpMuRNAgYIEQqyImNUeq6kYsggRyd9GeAkezrs=;
+        s=k20201202; t=1672442464;
+        bh=e50R8i/LhTKHFjenz9zZ6YwR2DAfsyRgM4Fqmq9DKGY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=CmMg9aEZRC5Bz+CQcswl6M/osx1XYjVRO/URam8UZYA1rXp8CEO9yINyiPh4AOIJ1
-         KoeTxtgWdXTj2OkF2O9MvId3EgqnYZah5Ld7mYX7yIhEtj0loGJBM9JxJbGs0kDM6q
-         H0wdh1YZEUl/R9g/Qjzp3aY5wuYIpe3TzFdXfx1clibIiM5enorTbPi5UBpihcVxNJ
-         xys5fQ1YTQDaDip9tCNSeQ2jCI6K29MfsxQDLb+0VHAhk+ea1c4d2EozBfKld9MdL0
-         KhcNNHb5C/Nv2W2I6+Tq+NzfGTyMGalhxef6DAXY8h9BG8L6ToN1vw4UHUEMRp6yrM
-         KGGBwr/J9Tmag==
-Subject: [PATCH 7/9] xfs: ignore stale buffers when scanning the buffer cache
+        b=etonmix9gSXkdKqMmHYP/nix6SAH0SuKT+fjDkTJFI+hrCyqWRRw1KqABlTiIcNvq
+         I4iJNqBEqU7BpKWhSHN8TA1VpJyqFt0taPaTSMpvACOvze9ViN1L4PsRG2f+A9XLkT
+         ilG6SSvvTzf2S8BAxT0urbuQKLFkKKaSuNW1mL65iWG9Rx87s8v3Co0oTSgEBYFf1e
+         WGvkDLH1T91siFjlRCNUw0Es8QUrIEA79gj8Mb6rsf9bGRu6blq+RJO+Qzs5Z5r53L
+         9siFORw3b3NFwQuei4lcr6bG7kciZgMkmGoFzNIBpdmVceanMp77ulx52+jIH5XB/f
+         UFoBeR4T1VHCA==
+Subject: [PATCH 4/9] xfs: only allow reaping of per-AG blocks in
+ xrep_reap_extents
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:12:27 -0800
-Message-ID: <167243834781.691918.1431626950635466750.stgit@magnolia>
+Message-ID: <167243834740.691918.1994751069336540270.stgit@magnolia>
 In-Reply-To: <167243834673.691918.7562784486565988430.stgit@magnolia>
 References: <167243834673.691918.7562784486565988430.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,99 +55,103 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-After an online repair, we need to invalidate buffers representing the
-blocks from the old metadata that we're replacing.  It's possible that
-parts of a tree that were previously cached in memory are no longer
-accessible due to media failure or other corruption on interior nodes,
-so repair figures out the old blocks from the reverse mapping data and
-scans the buffer cache directly.
-
-Unfortunately, the current buffer cache code triggers asserts if the
-rhashtable lookup finds a non-stale buffer of a different length than
-the key we searched for.  For regular operation this is desirable, but
-for this repair procedure, we don't care since we're going to forcibly
-stale the buffer anyway.  Add an internal lookup flag to avoid the
-assert.
+Now that we've refactored btree cursors to require the caller to pass in
+a perag structure, there are numerous problems in xrep_reap_extents if
+it's being called to reap extents for an inode metadata repair.  We
+don't have any repair functions that can do that, so drop the support
+for now.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/reap.c |    2 +-
- fs/xfs/xfs_buf.c    |    5 ++++-
- fs/xfs/xfs_buf.h    |   10 ++++++++++
- 3 files changed, 15 insertions(+), 2 deletions(-)
+ fs/xfs/scrub/reap.c |   45 +++++++++++++--------------------------------
+ 1 file changed, 13 insertions(+), 32 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/reap.c b/fs/xfs/scrub/reap.c
-index 00cdc0e9063e..a329235b039b 100644
+index b75ec582e5b1..c57388c47dc4 100644
 --- a/fs/xfs/scrub/reap.c
 +++ b/fs/xfs/scrub/reap.c
-@@ -149,7 +149,7 @@ xrep_block_reap_binval(
- 	 */
- 	error = xfs_buf_incore(sc->mp->m_ddev_targp,
- 			XFS_FSB_TO_DADDR(sc->mp, fsbno),
--			XFS_FSB_TO_BB(sc->mp, 1), 0, &bp);
-+			XFS_FSB_TO_BB(sc->mp, 1), XBF_BCACHE_SCAN, &bp);
- 	if (error)
- 		return;
+@@ -162,40 +162,30 @@ xrep_reap_block(
+ 	struct xrep_reap_state		*rs = priv;
+ 	struct xfs_scrub		*sc = rs->sc;
+ 	struct xfs_btree_cur		*cur;
+-	struct xfs_buf			*agf_bp = NULL;
++	xfs_agnumber_t			agno;
+ 	xfs_agblock_t			agbno;
+ 	bool				has_other_rmap;
+ 	int				error;
  
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 54c774af6e1c..a538501b652b 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -482,7 +482,8 @@ _xfs_buf_obj_cmp(
- 		 * reallocating a busy extent. Skip this buffer and
- 		 * continue searching for an exact match.
- 		 */
--		ASSERT(bp->b_flags & XBF_STALE);
-+		if (!(map->bm_flags & XBM_IGNORE_LENGTH_MISMATCH))
-+			ASSERT(bp->b_flags & XBF_STALE);
- 		return 1;
- 	}
- 	return 0;
-@@ -683,6 +684,8 @@ xfs_buf_get_map(
- 	int			error;
- 	int			i;
+-	ASSERT(sc->ip != NULL ||
+-	       XFS_FSB_TO_AGNO(sc->mp, fsbno) == sc->sa.pag->pag_agno);
+-	trace_xrep_dispose_btree_extent(sc->mp,
+-			XFS_FSB_TO_AGNO(sc->mp, fsbno),
+-			XFS_FSB_TO_AGBNO(sc->mp, fsbno), 1);
+-
++	agno = XFS_FSB_TO_AGNO(sc->mp, fsbno);
+ 	agbno = XFS_FSB_TO_AGBNO(sc->mp, fsbno);
+-	ASSERT(XFS_FSB_TO_AGNO(sc->mp, fsbno) == sc->sa.pag->pag_agno);
  
-+	if (flags & XBF_BCACHE_SCAN)
-+		cmap.bm_flags |= XBM_IGNORE_LENGTH_MISMATCH;
- 	for (i = 0; i < nmaps; i++)
- 		cmap.bm_len += map[i].bm_len;
- 
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 549c60942208..d6e8c3bab9f6 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -44,6 +44,11 @@ struct xfs_buf;
- #define _XBF_DELWRI_Q	 (1u << 22)/* buffer on a delwri queue */
- 
- /* flags used only as arguments to access routines */
-+/*
-+ * We're scanning the buffer cache; do not warn about lookup mismatches.
-+ * Only online repair should use this.
-+ */
-+#define XBF_BCACHE_SCAN	 (1u << 28)
- #define XBF_INCORE	 (1u << 29)/* lookup only, return if found in cache */
- #define XBF_TRYLOCK	 (1u << 30)/* lock requested, but do not wait */
- #define XBF_UNMAPPED	 (1u << 31)/* do not map the buffer */
-@@ -67,6 +72,7 @@ typedef unsigned int xfs_buf_flags_t;
- 	{ _XBF_KMEM,		"KMEM" }, \
- 	{ _XBF_DELWRI_Q,	"DELWRI_Q" }, \
- 	/* The following interface flags should never be set */ \
-+	{ XBF_BCACHE_SCAN,	"BCACHE_SCAN" }, \
- 	{ XBF_INCORE,		"INCORE" }, \
- 	{ XBF_TRYLOCK,		"TRYLOCK" }, \
- 	{ XBF_UNMAPPED,		"UNMAPPED" }
-@@ -114,8 +120,12 @@ typedef struct xfs_buftarg {
- struct xfs_buf_map {
- 	xfs_daddr_t		bm_bn;	/* block number for I/O */
- 	int			bm_len;	/* size of I/O */
-+	unsigned int		bm_flags;
- };
- 
-+/* Don't complain about live buffers with the wrong length during lookup. */
-+#define XBM_IGNORE_LENGTH_MISMATCH	(1U << 0)
+-	/*
+-	 * If we are repairing per-inode metadata, we need to read in the AGF
+-	 * buffer.  Otherwise, we're repairing a per-AG structure, so reuse
+-	 * the AGF buffer that the setup functions already grabbed.
+-	 */
+-	if (sc->ip) {
+-		error = xfs_alloc_read_agf(sc->sa.pag, sc->tp, 0, &agf_bp);
+-		if (error)
+-			return error;
+-	} else {
+-		agf_bp = sc->sa.agf_bp;
++	trace_xrep_dispose_btree_extent(sc->mp, agno, agbno, 1);
 +
- #define DEFINE_SINGLE_BUF_MAP(map, blkno, numblk) \
- 	struct xfs_buf_map (map) = { .bm_bn = (blkno), .bm_len = (numblk) };
++	/* We don't support reaping file extents yet. */
++	if (sc->ip != NULL || sc->sa.pag->pag_agno != agno) {
++		ASSERT(0);
++		return -EFSCORRUPTED;
+ 	}
+-	cur = xfs_rmapbt_init_cursor(sc->mp, sc->tp, agf_bp, sc->sa.pag);
++
++	cur = xfs_rmapbt_init_cursor(sc->mp, sc->tp, sc->sa.agf_bp, sc->sa.pag);
  
+ 	/* Can we find any other rmappings? */
+ 	error = xfs_rmap_has_other_keys(cur, agbno, 1, rs->oinfo,
+ 			&has_other_rmap);
+ 	xfs_btree_del_cursor(cur, error);
+ 	if (error)
+-		goto out_free;
++		return error;
+ 
+ 	/*
+ 	 * If there are other rmappings, this block is cross linked and must
+@@ -211,8 +201,8 @@ xrep_reap_block(
+ 	 * to run xfs_repair.
+ 	 */
+ 	if (has_other_rmap) {
+-		error = xfs_rmap_free(sc->tp, agf_bp, sc->sa.pag, agbno, 1,
+-				rs->oinfo);
++		error = xfs_rmap_free(sc->tp, sc->sa.agf_bp, sc->sa.pag, agbno,
++				1, rs->oinfo);
+ 	} else if (rs->resv == XFS_AG_RESV_AGFL) {
+ 		xrep_block_reap_binval(sc, fsbno);
+ 		error = xrep_put_freelist(sc, agbno);
+@@ -221,19 +211,10 @@ xrep_reap_block(
+ 		error = xfs_free_extent(sc->tp, sc->sa.pag, agbno, 1, rs->oinfo,
+ 				rs->resv);
+ 	}
+-	if (agf_bp != sc->sa.agf_bp)
+-		xfs_trans_brelse(sc->tp, agf_bp);
+ 	if (error)
+ 		return error;
+ 
+-	if (sc->ip)
+-		return xfs_trans_roll_inode(&sc->tp, sc->ip);
+ 	return xrep_roll_ag_trans(sc);
+-
+-out_free:
+-	if (agf_bp != sc->sa.agf_bp)
+-		xfs_trans_brelse(sc->tp, agf_bp);
+-	return error;
+ }
+ 
+ /* Dispose of every block of every extent in the bitmap. */
 
