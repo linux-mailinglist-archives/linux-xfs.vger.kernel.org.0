@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E15C65A10F
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:57:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 199CF65A10D
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:56:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236067AbiLaB5L (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:57:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50940 "EHLO
+        id S236044AbiLaB4i (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:56:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235949AbiLaB5K (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:57:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0571C900
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:57:09 -0800 (PST)
+        with ESMTP id S235949AbiLaB4h (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:56:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB7A3A19D
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:56:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2B135B81E07
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:57:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECAE1C433D2;
-        Sat, 31 Dec 2022 01:57:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 76D1961C3A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:56:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D412AC433D2;
+        Sat, 31 Dec 2022 01:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451827;
-        bh=der+2yVxVJpSIva0yR9JgMa+rs6Bq4oPOKBMQsYDAfg=;
+        s=k20201202; t=1672451795;
+        bh=G1YF0RANLr8MRX4xpE1edrgpIqOdx5gB7Xc9+v09PgU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Sv0DETkE2Qrbbji5muh/JzPQK7piT9lGaiWTYbDv1sWUK0GN8SaZYarwJnMrbjJZL
-         AGUibxSorKsbR1myOQMp2WSmwZweCYfsS+pqLxtj/+jivXYcY/jIQTTdBcjuHK5Iu7
-         VduqwSy9BDiB3zLCmKO0EIlbRpAc7IcXdQ0ELF8SaCPY8G3d0A42Y7Ky9JLbQA/Xoi
-         3qbc9U6NlBLGdbGzYLNAfIsjO8K34OjwJaLyTiZouIJX2AWOXe8DVBaG1S1dtBFU8O
-         z8pRb6Xc3bD8SoADpgQzTBR2Rlp4ErXcIk+HhmnmLBgnSq8hXmQ1YoLYpLbrfL9QQ2
-         b7mOH81XS8Zew==
-Subject: [PATCH 35/42] xfs: don't flag quota rt block usage on rtreflink
- filesystems
+        b=Vt25lnLlpg5CacWHBInzMK8Vf1Ft8HeZB3MJabcv3KxOjLI+EnAzxECqTyz4lnoLN
+         PLf23pIMgPRKikn6mfXXg+VZyrhGOGXkuZ7SHzwRo4TkYOS+Zy8+NLLUS9iQ6ZtBjY
+         Uq5rhvK/Niy6nFUEzjsBF+xWceKhglIL0U3PCCYnaqAT6D/U/bqRIdOeK87+duS2ju
+         eS0lc7hlXjrl9cVWCMQPeI2qLlAsnTL3/PvwJ+MJ42NpEUOMWm7T1tjEMLaPcEoS70
+         T3LQ0X4/wtUAEEVl9kPrlf0gXT2AeoV1sJsm29oNAKBANsBNwl6vcjBzGwgxFxpzPf
+         vlRPZerCD5aAA==
+Subject: [PATCH 33/42] xfs: allow dquot rt block count to exceed rt blocks on
+ reflink fs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:33 -0800
-Message-ID: <167243871393.717073.13834650298966488896.stgit@magnolia>
+Message-ID: <167243871365.717073.11026110278057252995.stgit@magnolia>
 In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
 References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,27 +56,37 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Quota space usage is allowed to exceed the size of the physical storage
-when reflink is enabled.  Now that we have reflink for the realtime
-volume, apply this same logic to the rtb repair logic.
+Update the quota scrubber to allow dquots where the realtime block count
+exceeds the block count of the rt volume if reflink is enabled.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/quota_repair.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/scrub/quota.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/scrub/quota_repair.c b/fs/xfs/scrub/quota_repair.c
-index a150719c2b90..c79c47714eb6 100644
---- a/fs/xfs/scrub/quota_repair.c
-+++ b/fs/xfs/scrub/quota_repair.c
-@@ -101,7 +101,7 @@ xrep_quota_item(
- 		rqi->need_quotacheck = true;
- 		dirty = true;
+diff --git a/fs/xfs/scrub/quota.c b/fs/xfs/scrub/quota.c
+index 714bd4c0753a..2d2064126bc9 100644
+--- a/fs/xfs/scrub/quota.c
++++ b/fs/xfs/scrub/quota.c
+@@ -139,12 +139,18 @@ xchk_quota_item(
+ 		if (mp->m_sb.sb_dblocks < dq->q_blk.count)
+ 			xchk_fblock_set_warning(sc, XFS_DATA_FORK,
+ 					offset);
++		if (mp->m_sb.sb_rblocks < dq->q_rtb.count)
++			xchk_fblock_set_warning(sc, XFS_DATA_FORK,
++					offset);
+ 	} else {
+ 		if (mp->m_sb.sb_dblocks < dq->q_blk.count)
+ 			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK,
+ 					offset);
++		if (mp->m_sb.sb_rblocks < dq->q_rtb.count)
++			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK,
++					offset);
  	}
--	if (dqp->q_rtb.count > mp->m_sb.sb_rblocks) {
-+	if (!xfs_has_reflink(mp) && dqp->q_rtb.count > mp->m_sb.sb_rblocks) {
- 		dqp->q_rtb.reserved -= dqp->q_rtb.count;
- 		dqp->q_rtb.reserved += mp->m_sb.sb_rblocks;
- 		dqp->q_rtb.count = mp->m_sb.sb_rblocks;
+-	if (dq->q_ino.count > fs_icount || dq->q_rtb.count > mp->m_sb.sb_rblocks)
++	if (dq->q_ino.count > fs_icount)
+ 		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
+ 
+ 	/*
 
