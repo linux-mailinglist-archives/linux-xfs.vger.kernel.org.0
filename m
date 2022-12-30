@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72CB2659CC7
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93623659E04
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:22:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231164AbiL3W2g (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:28:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51470 "EHLO
+        id S235715AbiL3XWA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:22:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbiL3W2f (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:28:35 -0500
+        with ESMTP id S235646AbiL3XVz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:21:55 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4F31C90C
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:28:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1463A1D0E9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:21:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A3493B81C22
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:28:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66407C433EF;
-        Fri, 30 Dec 2022 22:28:31 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B453DB81DA2
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:21:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D7DDC433D2;
+        Fri, 30 Dec 2022 23:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672439311;
-        bh=Fy7iA68Ob+tUtetsRFV5S6c4VHl3ieihN1v6T5U62lE=;
+        s=k20201202; t=1672442511;
+        bh=5qRMXIpMuRNAgYIEQqyImNUeq6kYsggRyd9GeAkezrs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KVFr66Ut8CZAj0tB67a6nYEkyLULdeHMDTX8xrKTH8G3gTJMLAi3WEIss5xRE+C+a
-         se8z4HgEAzAB3bDWcHxRnaaKuxJ96ywqpKvCnLJDRUV+EQed4WM3shqmC7YJJcAvVl
-         2lnP8YuoREtnCX36c+2RYm0BenIK9wVeD6rpU5+EsFLN5C+1Npx6+y75vlLSxWdljO
-         3nTvB0rUyfmlvBaZo/F9D6Md2apiUC6L2a9BD1CWxYikGtgWOrkBpziFge+dhM4iUv
-         Ft+OpUWGArCXzV3y78iQgXrUbKAU1Ev/7GUnUNk96KMwQmD0q34DsNm4S3szqmsHsL
-         DcnSgS2KkOhkA==
-Subject: [PATCHSET v24.0 0/4] xfs: fix rmap btree key flag handling
+        b=CmMg9aEZRC5Bz+CQcswl6M/osx1XYjVRO/URam8UZYA1rXp8CEO9yINyiPh4AOIJ1
+         KoeTxtgWdXTj2OkF2O9MvId3EgqnYZah5Ld7mYX7yIhEtj0loGJBM9JxJbGs0kDM6q
+         H0wdh1YZEUl/R9g/Qjzp3aY5wuYIpe3TzFdXfx1clibIiM5enorTbPi5UBpihcVxNJ
+         xys5fQ1YTQDaDip9tCNSeQ2jCI6K29MfsxQDLb+0VHAhk+ea1c4d2EozBfKld9MdL0
+         KhcNNHb5C/Nv2W2I6+Tq+NzfGTyMGalhxef6DAXY8h9BG8L6ToN1vw4UHUEMRp6yrM
+         KGGBwr/J9Tmag==
+Subject: [PATCH 7/9] xfs: ignore stale buffers when scanning the buffer cache
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:12:27 -0800
-Message-ID: <167243834739.692079.8979395707061192623.stgit@magnolia>
-In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
-References: <Y69UceeA2MEpjMJ8@magnolia>
+Message-ID: <167243834781.691918.1431626950635466750.stgit@magnolia>
+In-Reply-To: <167243834673.691918.7562784486565988430.stgit@magnolia>
+References: <167243834673.691918.7562784486565988430.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,64 +52,101 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This series fixes numerous flag handling bugs in the rmapbt key code.
-The most serious transgression is that key comparisons completely strip
-out all flag bits from rm_offset, including the ones that participate in
-record lookups.  The second problem is that for years we've been letting
-the unwritten flag (which is an attribute of a specific record and not
-part of the record key) escape from leaf records into key records.
+After an online repair, we need to invalidate buffers representing the
+blocks from the old metadata that we're replacing.  It's possible that
+parts of a tree that were previously cached in memory are no longer
+accessible due to media failure or other corruption on interior nodes,
+so repair figures out the old blocks from the reverse mapping data and
+scans the buffer cache directly.
 
-The solution to the second problem is to filter attribute flags when
-creating keys from records, and the solution to the first problem is to
-preserve *only* the flags used for key lookups.  The ATTR and BMBT flags
-are a part of the lookup key, and the UNWRITTEN flag is a record
-attribute.
+Unfortunately, the current buffer cache code triggers asserts if the
+rhashtable lookup finds a non-stale buffer of a different length than
+the key we searched for.  For regular operation this is desirable, but
+for this repair procedure, we don't care since we're going to forcibly
+stale the buffer anyway.  Add an internal lookup flag to avoid the
+assert.
 
-This has worked for years without generating user complaints because
-ATTR and BMBT extents cannot be shared, so key comparisons succeed
-solely on rm_startblock.  Only file data fork extents can be shared, and
-those records never set any of the three flag bits, so comparisons that
-dig into rm_owner and rm_offset work just fine.
-
-A filesystem written with an unpatched kernel and mounted on a patched
-kernel will work correctly because the ATTR/BMBT flags have been
-conveyed into keys correctly all along, and we still ignore the
-UNWRITTEN flag in any key record.  This was what doomed my previous
-attempt to correct this problem in 2019.
-
-A filesystem written with a patched kernel and mounted on an unpatched
-kernel will also work correctly because unpatched kernels ignore all
-flags.
-
-With this patchset applied, the scrub code gains the ability to detect
-rmap btrees with incorrectly set attr and bmbt flags in the key records.
-After three years of testing, I haven't encountered any problems.
-Online scrub is amended to recommend rebuilding of rmap btrees with the
-unwritten flag set in key records.
-
-The xfsprogs counterpart to this series amends xfs_repair to report key
-records with the unwritten flag bit set, just prior to rebuilding the
-rmapbt.  It also exposes the bit via xfs_db to enable testing back and
-forth.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=rmap-btree-fix-key-handling
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=rmap-btree-fix-key-handling
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/btblock.c            |    4 +++
- libxfs/xfs_rmap_btree.c |   40 ++++++++++++++++++++++++-------
- repair/scan.c           |   60 ++++++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 93 insertions(+), 11 deletions(-)
+ fs/xfs/scrub/reap.c |    2 +-
+ fs/xfs/xfs_buf.c    |    5 ++++-
+ fs/xfs/xfs_buf.h    |   10 ++++++++++
+ 3 files changed, 15 insertions(+), 2 deletions(-)
+
+
+diff --git a/fs/xfs/scrub/reap.c b/fs/xfs/scrub/reap.c
+index 00cdc0e9063e..a329235b039b 100644
+--- a/fs/xfs/scrub/reap.c
++++ b/fs/xfs/scrub/reap.c
+@@ -149,7 +149,7 @@ xrep_block_reap_binval(
+ 	 */
+ 	error = xfs_buf_incore(sc->mp->m_ddev_targp,
+ 			XFS_FSB_TO_DADDR(sc->mp, fsbno),
+-			XFS_FSB_TO_BB(sc->mp, 1), 0, &bp);
++			XFS_FSB_TO_BB(sc->mp, 1), XBF_BCACHE_SCAN, &bp);
+ 	if (error)
+ 		return;
+ 
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index 54c774af6e1c..a538501b652b 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -482,7 +482,8 @@ _xfs_buf_obj_cmp(
+ 		 * reallocating a busy extent. Skip this buffer and
+ 		 * continue searching for an exact match.
+ 		 */
+-		ASSERT(bp->b_flags & XBF_STALE);
++		if (!(map->bm_flags & XBM_IGNORE_LENGTH_MISMATCH))
++			ASSERT(bp->b_flags & XBF_STALE);
+ 		return 1;
+ 	}
+ 	return 0;
+@@ -683,6 +684,8 @@ xfs_buf_get_map(
+ 	int			error;
+ 	int			i;
+ 
++	if (flags & XBF_BCACHE_SCAN)
++		cmap.bm_flags |= XBM_IGNORE_LENGTH_MISMATCH;
+ 	for (i = 0; i < nmaps; i++)
+ 		cmap.bm_len += map[i].bm_len;
+ 
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index 549c60942208..d6e8c3bab9f6 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -44,6 +44,11 @@ struct xfs_buf;
+ #define _XBF_DELWRI_Q	 (1u << 22)/* buffer on a delwri queue */
+ 
+ /* flags used only as arguments to access routines */
++/*
++ * We're scanning the buffer cache; do not warn about lookup mismatches.
++ * Only online repair should use this.
++ */
++#define XBF_BCACHE_SCAN	 (1u << 28)
+ #define XBF_INCORE	 (1u << 29)/* lookup only, return if found in cache */
+ #define XBF_TRYLOCK	 (1u << 30)/* lock requested, but do not wait */
+ #define XBF_UNMAPPED	 (1u << 31)/* do not map the buffer */
+@@ -67,6 +72,7 @@ typedef unsigned int xfs_buf_flags_t;
+ 	{ _XBF_KMEM,		"KMEM" }, \
+ 	{ _XBF_DELWRI_Q,	"DELWRI_Q" }, \
+ 	/* The following interface flags should never be set */ \
++	{ XBF_BCACHE_SCAN,	"BCACHE_SCAN" }, \
+ 	{ XBF_INCORE,		"INCORE" }, \
+ 	{ XBF_TRYLOCK,		"TRYLOCK" }, \
+ 	{ XBF_UNMAPPED,		"UNMAPPED" }
+@@ -114,8 +120,12 @@ typedef struct xfs_buftarg {
+ struct xfs_buf_map {
+ 	xfs_daddr_t		bm_bn;	/* block number for I/O */
+ 	int			bm_len;	/* size of I/O */
++	unsigned int		bm_flags;
+ };
+ 
++/* Don't complain about live buffers with the wrong length during lookup. */
++#define XBM_IGNORE_LENGTH_MISMATCH	(1U << 0)
++
+ #define DEFINE_SINGLE_BUF_MAP(map, blkno, numblk) \
+ 	struct xfs_buf_map (map) = { .bm_bn = (blkno), .bm_len = (numblk) };
+ 
 
