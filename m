@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA96659FD5
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:42:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83CF365A144
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:10:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235870AbiLaAl7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:41:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
+        id S236170AbiLaCKi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:10:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235615AbiLaAlw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:41:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F10C1D0C8;
-        Fri, 30 Dec 2022 16:41:50 -0800 (PST)
+        with ESMTP id S231494AbiLaCKh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:10:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0017D15FC9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:10:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 32333B81E5C;
-        Sat, 31 Dec 2022 00:41:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E594FC433D2;
-        Sat, 31 Dec 2022 00:41:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 90DFD61D02
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:10:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F04B3C433EF;
+        Sat, 31 Dec 2022 02:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447308;
-        bh=P2W3QZG1FHvcjrs1obLySrww9Z+qQqFuBjXBZallNe0=;
+        s=k20201202; t=1672452636;
+        bh=dhDKuXb5mU+nRlIRErLHJ1ggI05k0tY0Fu1fuBmb+Bw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IbN2jh8FOsf82xxc52IXzIKXtvaI1YhAGCxjc91rRzMseMxDVspJwhPBW8Lub2zJE
-         5g5FD4x7mlcZMjfs2Fw1XgdHSY+Po124bpLQ/VtYNtFcW5bWXgbz1c8bJz23iKKD7c
-         aatA8v7n+MUpzdDrtL98iDH/ygvbFf4SFIC2HL6d7vboU2IY6+8Q6WQXwaC1w/f5Pt
-         a4ACB454nRIpCTcpWleYqDFxw672tx9hKseFwjIetPo2aWKRrv2Lo1t4wNl6TP0L5A
-         r7wWfk0p44ECkOrpsRDsbWv9wD3qbeBbdWbrJQLV/k40YSv6rgHC0RoFJy8x/v4jc4
-         +yYg6HY9cvYIQ==
-Subject: [PATCH 3/4] xfs: ensure that online file data fork repairs don't hit
- EDQUOT
+        b=MKlT1VcUan2raASDGbt7iR6PhzG1lLFCcG3ElI//rTA4kjb/2Hk/DsgWAdaE+WoC3
+         3oM3C0fzul+en5UEP+E5HqVdBXoXhewTbMDvyx6J7XymCr2p5w4Xd9xC2r8JIHegQm
+         VUwdokbKzzGB6ewloRQBFaufUGwy2YVsi1ri258FPY0djS208KIXibWi0bdTpIgP6+
+         vyZc5sE6mgmyWwEkUzyHV74gMLW7QB1mh7GNKVh/9CJjd5N5EHS1Fulcs/S3H1JYj9
+         AcXEVfIpJi9RBtlXASPWbE4+B/9FN8kjjoqroaPtA2huGV7/8T4fX/Jg6I0ZDfNvNY
+         Dwse1Fbfw8WCw==
+Subject: [PATCH 03/46] mkfs: clean up the rtinit() function
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Fri, 30 Dec 2022 14:19:18 -0800
-Message-ID: <167243875875.725760.15413971718682420180.stgit@magnolia>
-In-Reply-To: <167243875835.725760.8458608166534095780.stgit@magnolia>
-References: <167243875835.725760.8458608166534095780.stgit@magnolia>
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Date:   Fri, 30 Dec 2022 14:19:19 -0800
+Message-ID: <167243875982.725900.18291235948732233308.stgit@magnolia>
+In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
+References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,104 +55,170 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a test to ensure that the sysadmin doesn't get EDQUOT if they try to
-repair file data fork metadata when we've already exceeded a quota limit
-somewhere.
+Clean up some of the warts in this function, like the inconsistent use
+of @i for @error, missing comments, and make this more visually pleasing
+by adding some whitespace between major sections.  Some things are left
+untouched for the next patch.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/840     |   72 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/840.out |    3 ++
- 2 files changed, 75 insertions(+)
- create mode 100755 tests/xfs/840
- create mode 100644 tests/xfs/840.out
+ mkfs/proto.c |   81 +++++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
 
 
-diff --git a/tests/xfs/840 b/tests/xfs/840
-new file mode 100755
-index 0000000000..fff41c5b8a
---- /dev/null
-+++ b/tests/xfs/840
-@@ -0,0 +1,72 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test 840
-+#
-+# Ensure that the sysadmin won't hit EDQUOT while repairing file data forks
-+# even if the file's quota limits have been exceeded.  This tests the quota
-+# reservation handling inside the bmap btree rebuilding code.
-+#
-+. ./common/preamble
-+_begin_fstest online_repair
+diff --git a/mkfs/proto.c b/mkfs/proto.c
+index b60def70652..3121c35baa1 100644
+--- a/mkfs/proto.c
++++ b/mkfs/proto.c
+@@ -678,29 +678,27 @@ parse_proto(
+  */
+ static void
+ rtinit(
+-	xfs_mount_t	*mp)
++	struct xfs_mount	*mp)
+ {
+-	xfs_fileoff_t	bno;
+-	xfs_fileoff_t	ebno;
+-	xfs_bmbt_irec_t	*ep;
+-	int		error;
+-	int		i;
+-	xfs_bmbt_irec_t	map[XFS_BMAP_MAX_NMAP];
+-	xfs_extlen_t	nsumblocks;
+-	uint		blocks;
+-	int		nmap;
+-	xfs_inode_t	*rbmip;
+-	xfs_inode_t	*rsumip;
+-	xfs_trans_t	*tp;
+-	struct cred	creds;
+-	struct fsxattr	fsxattrs;
++	struct cred		creds;
++	struct fsxattr		fsxattrs;
++	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
++	struct xfs_inode	*rbmip;
++	struct xfs_inode	*rsumip;
++	struct xfs_trans	*tp;
++	struct xfs_bmbt_irec	*ep;
++	xfs_fileoff_t		bno;
++	xfs_fileoff_t		ebno;
++	xfs_extlen_t		nsumblocks;
++	uint			blocks;
++	int			i;
++	int			nmap;
++	int			error;
+ 
+-	/*
+-	 * First, allocate the inodes.
+-	 */
+-	i = -libxfs_trans_alloc_rollable(mp, MKFS_BLOCKRES_INODE, &tp);
+-	if (i)
+-		res_failed(i);
++	/* Create the realtime bitmap inode. */
++	error = -libxfs_trans_alloc_rollable(mp, MKFS_BLOCKRES_INODE, &tp);
++	if (error)
++		res_failed(error);
+ 
+ 	memset(&creds, 0, sizeof(creds));
+ 	memset(&fsxattrs, 0, sizeof(fsxattrs));
+@@ -721,6 +719,8 @@ rtinit(
+ 	libxfs_trans_log_inode(tp, rbmip, XFS_ILOG_CORE);
+ 	libxfs_log_sb(tp);
+ 	mp->m_rbmip = rbmip;
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/quota
++	/* Create the realtime summary inode. */
+ 	error = creatproto(&tp, NULL, S_IFREG, 1, 0, &creds, &fsxattrs,
+ 			&rsumip);
+ 	if (error) {
+@@ -735,14 +735,13 @@ rtinit(
+ 		fail(_("Completion of the realtime summary inode failed"),
+ 				error);
+ 	mp->m_rsumip = rsumip;
+-	/*
+-	 * Next, give the bitmap file some zero-filled blocks.
+-	 */
 +
-+# real QA test starts here
++	/* Zero the realtime bitmap. */
+ 	blocks = mp->m_sb.sb_rbmblocks +
+ 			XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
+-	i = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
+-	if (i)
+-		res_failed(i);
++	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
++	if (error)
++		res_failed(error);
+ 
+ 	libxfs_trans_ijoin(tp, rbmip, 0);
+ 	bno = 0;
+@@ -751,10 +750,10 @@ rtinit(
+ 		error = -libxfs_bmapi_write(tp, rbmip, bno,
+ 				(xfs_extlen_t)(mp->m_sb.sb_rbmblocks - bno),
+ 				0, mp->m_sb.sb_rbmblocks, map, &nmap);
+-		if (error) {
++		if (error)
+ 			fail(_("Allocation of the realtime bitmap failed"),
+ 				error);
+-		}
 +
-+# Modify as appropriate.
-+_supported_fs xfs
-+_require_xfs_io_command "falloc"
-+_require_quota
-+_require_user
-+_require_test_program "punch-alternating"
-+_require_scratch
-+_require_xfs_stress_online_repair
+ 		for (i = 0, ep = map; i < nmap; i++, ep++) {
+ 			libxfs_device_zero(mp->m_ddev_targp,
+ 				XFS_FSB_TO_DADDR(mp, ep->br_startblock),
+@@ -768,25 +767,24 @@ rtinit(
+ 		fail(_("Block allocation of the realtime bitmap inode failed"),
+ 				error);
+ 
+-	/*
+-	 * Give the summary file some zero-filled blocks.
+-	 */
++	/* Zero the summary file. */
+ 	nsumblocks = mp->m_rsumsize >> mp->m_sb.sb_blocklog;
+ 	blocks = nsumblocks + XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
+-	i = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
+-	if (i)
+-		res_failed(i);
++	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
++	if (error)
++		res_failed(error);
+ 	libxfs_trans_ijoin(tp, rsumip, 0);
 +
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_qmount_option usrquota
-+_qmount
+ 	bno = 0;
+ 	while (bno < nsumblocks) {
+ 		nmap = XFS_BMAP_MAX_NMAP;
+ 		error = -libxfs_bmapi_write(tp, rsumip, bno,
+ 				(xfs_extlen_t)(nsumblocks - bno),
+ 				0, nsumblocks, map, &nmap);
+-		if (error) {
++		if (error)
+ 			fail(_("Allocation of the realtime summary failed"),
+ 				error);
+-		}
 +
-+blocksize=$(_get_block_size $SCRATCH_MNT)
-+alloc_unit=$(_get_file_block_size $SCRATCH_MNT)
+ 		for (i = 0, ep = map; i < nmap; i++, ep++) {
+ 			libxfs_device_zero(mp->m_ddev_targp,
+ 				XFS_FSB_TO_DADDR(mp, ep->br_startblock),
+@@ -794,6 +792,7 @@ rtinit(
+ 			bno += ep->br_blockcount;
+ 		}
+ 	}
 +
-+# Make sure we can actually repair a data fork
-+scratchfile=$SCRATCH_MNT/file
-+touch $scratchfile
-+$XFS_IO_PROG -x -c 'inject force_repair' $SCRATCH_MNT
-+__stress_scrub_check_commands "$scratchfile" "" 'repair bmapbtd'
+ 	error = -libxfs_trans_commit(tp);
+ 	if (error)
+ 		fail(_("Block allocation of the realtime summary inode failed"),
+@@ -804,13 +803,15 @@ rtinit(
+ 	 * Do one transaction per bitmap block.
+ 	 */
+ 	for (bno = 0; bno < mp->m_sb.sb_rextents; bno = ebno) {
+-		i = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate,
++		error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate,
+ 				0, 0, 0, &tp);
+-		if (i)
+-			res_failed(i);
++		if (error)
++			res_failed(error);
 +
-+# Compute the number of extent records needed to guarantee btree format,
-+# assuming 16 bytes for each ondisk extent record
-+bmbt_records=$(( (blocksize / 16) * 5 / 4 ))
-+total_size=$(( bmbt_records * 2 * alloc_unit ))
+ 		libxfs_trans_ijoin(tp, rbmip, 0);
+ 		ebno = XFS_RTMIN(mp->m_sb.sb_rextents,
+ 			bno + NBBY * mp->m_sb.sb_blocksize);
 +
-+# Create a file with a data fork in bmap btree format
-+$XFS_IO_PROG -c "falloc 0 $total_size" $scratchfile >> $seqres.full
-+$here/src/punch-alternating $scratchfile
-+
-+# Set a low quota hardlimit for an unprivileged uid and chown the file to it
-+echo "set up quota" >> $seqres.full
-+$XFS_QUOTA_PROG -x -c "limit -u bhard=$((alloc_unit * 2)) $qa_user" $SCRATCH_MNT
-+chown $qa_user $scratchfile
-+$XFS_QUOTA_PROG -x -c 'report -u' $SCRATCH_MNT >> $seqres.full
-+
-+# Rebuild the data fork
-+echo "repairs" >> $seqres.full
-+$XFS_IO_PROG -x -c 'inject force_repair' -c 'repair bmapbtd' $scratchfile
-+$XFS_QUOTA_PROG -x -c 'report -u' $SCRATCH_MNT >> $seqres.full
-+
-+# Fail at appending the file as qa_user to ensure quota enforcement works
-+echo "fail quota" >> $seqres.full
-+su - "$qa_user" -c "$XFS_IO_PROG -c 'pwrite 10g 1' $scratchfile" >> $seqres.full
-+$XFS_QUOTA_PROG -x -c 'report -u' $SCRATCH_MNT >> $seqres.full
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/840.out b/tests/xfs/840.out
-new file mode 100644
-index 0000000000..8c32ec12bb
---- /dev/null
-+++ b/tests/xfs/840.out
-@@ -0,0 +1,3 @@
-+QA output created by 840
-+pwrite: Disk quota exceeded
-+Silence is golden
+ 		error = -libxfs_rtfree_extent(tp, bno, (xfs_extlen_t)(ebno-bno));
+ 		if (error) {
+ 			fail(_("Error initializing the realtime space"),
 
