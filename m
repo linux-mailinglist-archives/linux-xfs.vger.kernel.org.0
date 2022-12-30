@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65D0565A15E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:17:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CECEB65A277
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:23:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236191AbiLaCRI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:17:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54200 "EHLO
+        id S236373AbiLaDXj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:23:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236193AbiLaCRG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:17:06 -0500
+        with ESMTP id S236377AbiLaDXa (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:23:30 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D2A13F7E
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:17:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5B9A12A80
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:23:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9096C61C9C
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:17:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE746C433D2;
-        Sat, 31 Dec 2022 02:17:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6480C61D65
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:23:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C25E9C433D2;
+        Sat, 31 Dec 2022 03:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453025;
-        bh=0yeG2LER7iJLcny/pv5d/ofjBvsb8jXPCiheqjmqYvg=;
+        s=k20201202; t=1672457008;
+        bh=1HCZAQZPBWAwrp15XljqBcOzkPoGiSx2g1Xz1Aqu6yc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Mc9VGbsgy5zova861CydR1ZY6ywBEkzS57mvgoL25ErjCjFzqT6m6vJ7wut9OpvUa
-         0r7SyrzZqCdrjqIfdvZSdZtoWbQaJRepkzHKduClz+Y8pUFfKqfe9T/FP3BvaUBwi/
-         yQVTp5vI60eo3lGrCLT3a9IRQ43YXMHEMd82i0uw7hyp0yc0goKMVHheKUNGuiY++4
-         qQs5QXhdss9CZFVRAiJYku8jUU/xnOVfeOYinaW4rQg5yWqEh+d8LrRmkt7aKxxNnX
-         twrckbF2OaJiK7++5mbNHbgQJldNzQK0qFlPvAEQIJ7MNpkBdF3sjfMh0vtH0on/yT
-         rvrymctkyhm2Q==
-Subject: [PATCH 28/46] xfs_repair: refactor metadata inode tagging
+        b=UKfz34b7fEzwyULGDQJihzQPC53LrmPBv6/sO9M1B40TZnhYmYKGjV3PmdWDQ4nj2
+         thC01KQXFXkrmnJDDfY9fq71J1Nhqpi7Jfl1pq45l/P6WmHp9e+u8FPCvcmL5zMrpV
+         Q3skyZM+YMnz5PAXBLdZT/o9gmoWQkZThGD+bQe0pdTY23fz1cJwFkxsrIDAJRZpuT
+         kb2jwtkwQVf/ULJZZFLw2sS3PsgzXJeJ8nxhhO0eMqV/GWa1BCzzE/thQ7RoKe8HOZ
+         NGOPwUca3vEOrdS04Imkl5hkJDf4WRfKAHLBh0009Ijgyh+IVBp30sayfF9Xi/qoRL
+         hmbWs76lC1B8A==
+Subject: [PATCH 1/3] xfs: track deferred ops statistics
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:23 -0800
-Message-ID: <167243876303.725900.18033243717448110059.stgit@magnolia>
-In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
-References: <167243875924.725900.7061782826830118387.stgit@magnolia>
+Message-ID: <167243876379.726950.2644941938712571538.stgit@magnolia>
+In-Reply-To: <167243876361.726950.2109456102182372814.stgit@magnolia>
+References: <167243876361.726950.2109456102182372814.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,91 +55,137 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Refactor tagging of metadata inodes into a single helper function
-instead of open-coding a if-else statement.
+Track some basic statistics on how hard we're pushing the defer ops.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/dir2.c |   52 ++++++++++++++++++++++++++++------------------------
- 1 file changed, 28 insertions(+), 24 deletions(-)
+ fs/xfs/libxfs/xfs_defer.c |   14 ++++++++++++++
+ fs/xfs/xfs_trace.h        |   19 +++++++++++++++++++
+ fs/xfs/xfs_trans.c        |    3 +++
+ fs/xfs/xfs_trans.h        |    7 +++++++
+ 4 files changed, 43 insertions(+)
 
 
-diff --git a/repair/dir2.c b/repair/dir2.c
-index 022b61b885f..24d0dd84aaf 100644
---- a/repair/dir2.c
-+++ b/repair/dir2.c
-@@ -136,6 +136,31 @@ process_sf_dir2_fixoff(
- 	}
+diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
+index 1aefb4c99e7b..1b13056f6199 100644
+--- a/fs/xfs/libxfs/xfs_defer.c
++++ b/fs/xfs/libxfs/xfs_defer.c
+@@ -509,6 +509,8 @@ xfs_defer_finish_one(
+ 	/* Done with the dfp, free it. */
+ 	list_del(&dfp->dfp_list);
+ 	kmem_cache_free(xfs_defer_pending_cache, dfp);
++	tp->t_dfops_nr--;
++	tp->t_dfops_finished++;
+ out:
+ 	if (ops->finish_cleanup)
+ 		ops->finish_cleanup(tp, state, error);
+@@ -550,6 +552,9 @@ xfs_defer_finish_noroll(
+ 
+ 		list_splice_init(&(*tp)->t_dfops, &dop_pending);
+ 
++		(*tp)->t_dfops_nr_max = max((*tp)->t_dfops_nr,
++					    (*tp)->t_dfops_nr_max);
++
+ 		if (has_intents < 0) {
+ 			error = has_intents;
+ 			goto out_shutdown;
+@@ -580,6 +585,7 @@ xfs_defer_finish_noroll(
+ 	xfs_force_shutdown((*tp)->t_mountp, SHUTDOWN_CORRUPT_INCORE);
+ 	trace_xfs_defer_finish_error(*tp, error);
+ 	xfs_defer_cancel_list((*tp)->t_mountp, &dop_pending);
++	(*tp)->t_dfops_nr = 0;
+ 	xfs_defer_cancel(*tp);
+ 	return error;
+ }
+@@ -620,6 +626,7 @@ xfs_defer_cancel(
+ 
+ 	trace_xfs_defer_cancel(tp, _RET_IP_);
+ 	xfs_defer_cancel_list(mp, &tp->t_dfops);
++	tp->t_dfops_nr = 0;
  }
  
-+static bool
-+is_meta_ino(
-+	struct xfs_mount	*mp,
-+	xfs_ino_t		dirino,
-+	xfs_ino_t		lino,
-+	char			**junkreason)
-+{
-+	char			*reason = NULL;
+ /* Add an item for later deferred processing. */
+@@ -656,6 +663,7 @@ xfs_defer_add(
+ 		dfp->dfp_count = 0;
+ 		INIT_LIST_HEAD(&dfp->dfp_work);
+ 		list_add_tail(&dfp->dfp_list, &tp->t_dfops);
++		tp->t_dfops_nr++;
+ 	}
+ 
+ 	list_add_tail(li, &dfp->dfp_work);
+@@ -674,6 +682,12 @@ xfs_defer_move(
+ 	struct xfs_trans	*stp)
+ {
+ 	list_splice_init(&stp->t_dfops, &dtp->t_dfops);
++	dtp->t_dfops_nr += stp->t_dfops_nr;
++	dtp->t_dfops_nr_max = stp->t_dfops_nr_max;
++	dtp->t_dfops_finished = stp->t_dfops_finished;
++	stp->t_dfops_nr = 0;
++	stp->t_dfops_nr_max = 0;
++	stp->t_dfops_finished = 0;
+ 
+ 	/*
+ 	 * Low free space mode was historically controlled by a dfops field.
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 00716f112f4e..e1a94bfc8a13 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -2681,6 +2681,25 @@ TRACE_EVENT(xfs_btree_free_block,
+ /* deferred ops */
+ struct xfs_defer_pending;
+ 
++TRACE_EVENT(xfs_defer_stats,
++	TP_PROTO(struct xfs_trans *tp),
++	TP_ARGS(tp),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(unsigned int, max)
++		__field(unsigned int, finished)
++	),
++	TP_fast_assign(
++		__entry->dev = tp->t_mountp->m_super->s_dev;
++		__entry->max = tp->t_dfops_nr_max;
++		__entry->finished = tp->t_dfops_finished;
++	),
++	TP_printk("dev %d:%d max %u finished %u",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->max,
++		  __entry->finished)
++)
 +
-+	if (lino == mp->m_sb.sb_rbmino)
-+		reason = _("realtime bitmap");
-+	else if (lino == mp->m_sb.sb_rsumino)
-+		reason = _("realtime summary");
-+	else if (lino == mp->m_sb.sb_uquotino)
-+		reason = _("user quota");
-+	else if (lino == mp->m_sb.sb_gquotino)
-+		reason = _("group quota");
-+	else if (lino == mp->m_sb.sb_pquotino)
-+		reason = _("project quota");
+ DECLARE_EVENT_CLASS(xfs_defer_class,
+ 	TP_PROTO(struct xfs_trans *tp, unsigned long caller_ip),
+ 	TP_ARGS(tp, caller_ip),
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index fd389a8582fd..3c293c563cae 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -70,6 +70,9 @@ xfs_trans_free(
+ 	xfs_extent_busy_sort(&tp->t_busy);
+ 	xfs_extent_busy_clear(tp->t_mountp, &tp->t_busy, false);
+ 
++	if (tp->t_dfops_finished > 0)
++		trace_xfs_defer_stats(tp);
 +
-+	if (reason)
-+		*junkreason = reason;
-+	return reason != NULL;
-+}
+ 	trace_xfs_trans_free(tp, _RET_IP_);
+ 	xfs_trans_clear_context(tp);
+ 	if (!(tp->t_flags & XFS_TRANS_NO_WRITECOUNT))
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index efa7eace0859..09df8cedee8d 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -155,6 +155,13 @@ typedef struct xfs_trans {
+ 	struct list_head	t_busy;		/* list of busy extents */
+ 	struct list_head	t_dfops;	/* deferred operations */
+ 	unsigned long		t_pflags;	/* saved process flags state */
 +
++	/* Count of deferred ops attached to transaction. */
++	unsigned int		t_dfops_nr;
++	/* Maximum t_dfops_nr seen in a loop. */
++	unsigned int		t_dfops_nr_max;
++	/* Number of dfops finished. */
++	unsigned int		t_dfops_finished;
+ } xfs_trans_t;
+ 
  /*
-  * this routine performs inode discovery and tries to fix things
-  * in place.  available redundancy -- inode data size should match
-@@ -227,21 +252,8 @@ process_sf_dir2(
- 		} else if (!libxfs_verify_dir_ino(mp, lino)) {
- 			junkit = 1;
- 			junkreason = _("invalid");
--		} else if (lino == mp->m_sb.sb_rbmino)  {
-+		} else if (is_meta_ino(mp, ino, lino, &junkreason)) {
- 			junkit = 1;
--			junkreason = _("realtime bitmap");
--		} else if (lino == mp->m_sb.sb_rsumino)  {
--			junkit = 1;
--			junkreason = _("realtime summary");
--		} else if (lino == mp->m_sb.sb_uquotino)  {
--			junkit = 1;
--			junkreason = _("user quota");
--		} else if (lino == mp->m_sb.sb_gquotino)  {
--			junkit = 1;
--			junkreason = _("group quota");
--		} else if (lino == mp->m_sb.sb_pquotino)  {
--			junkit = 1;
--			junkreason = _("project quota");
- 		} else if ((irec_p = find_inode_rec(mp,
- 					XFS_INO_TO_AGNO(mp, lino),
- 					XFS_INO_TO_AGINO(mp, lino))) != NULL) {
-@@ -698,16 +710,8 @@ process_dir2_data(
- 			 * directory since it's still structurally intact.
- 			 */
- 			clearreason = _("invalid");
--		} else if (ent_ino == mp->m_sb.sb_rbmino) {
--			clearreason = _("realtime bitmap");
--		} else if (ent_ino == mp->m_sb.sb_rsumino) {
--			clearreason = _("realtime summary");
--		} else if (ent_ino == mp->m_sb.sb_uquotino) {
--			clearreason = _("user quota");
--		} else if (ent_ino == mp->m_sb.sb_gquotino) {
--			clearreason = _("group quota");
--		} else if (ent_ino == mp->m_sb.sb_pquotino) {
--			clearreason = _("project quota");
-+		} else if (is_meta_ino(mp, ino, ent_ino, &clearreason)) {
-+			/* empty */
- 		} else {
- 			irec_p = find_inode_rec(mp,
- 						XFS_INO_TO_AGNO(mp, ent_ino),
 
