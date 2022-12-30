@@ -2,77 +2,163 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0DDD65A02A
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:02:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6718265A1FB
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:53:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235919AbiLaBCT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:02:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39790 "EHLO
+        id S236279AbiLaCx0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:53:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235809AbiLaBCT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:02:19 -0500
+        with ESMTP id S236243AbiLaCxZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:53:25 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800A41DDF0
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:02:18 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5422618387
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:53:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1DB1A61D68
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:02:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A5EC433EF;
-        Sat, 31 Dec 2022 01:02:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E4E4761BF8
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:53:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5768AC433D2;
+        Sat, 31 Dec 2022 02:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448537;
-        bh=gy7qH/jr7tSAEu0Uupp3wxZfA/M5GQye0MP5DD3QzO0=;
+        s=k20201202; t=1672455203;
+        bh=r12IMMAMO5tvSP+Oa4yHmRkzkPmVQa966qh90iKGIYY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MS0BTPw1gAUbpLNgbBi90um8FSLGlyzP0fnN4yy43DAu5ww+UBjnC0mkF2YxLF2hJ
-         sJoqRxEP80wtToPlgsZS5uhXSKU7IMqR/iBr9DlmSu9IiX3VlCKjYQ2U2SRR/IIQUO
-         bvgpBYu3a8Vuh8LeweeNPllx78GNbPeaq93VGUMRAmTmqwUCmRqa0tfPJnLoOPtiLv
-         SkKwybah3Ab9ZsPo2eDwFsxijyAo92JwLPiLoJP+wIUlT4FD09WAYJK00VxRodpQqd
-         eMrq6xemaS2zLYD/q8ho+O0k43JdDZnlK3w+za4k8A6j2oPZp0e8lI4dfYlE9AVj8s
-         dBKL7ubNB8hsw==
-Subject: [PATCHSET v1.0 0/4] libxfs: file write utility refactoring
+        b=nqOBf8JEGJ4F2jucPVf73eF8g0ueMqfjlRNYEXQuBsI9W2gN9bknFrUFq1vYqfA2E
+         G4h3PGK0HmMUtjEwlFK6+6dU0g45rKnGxYUI2YCNXTNQG1oBtp+RglsEpJqx84D1w3
+         wdHEb/alMxfGCy1m2uHO6R7CWHLnY5NRLZdVFeclPMKAXEopF+2Kb428vGDoxO9jOe
+         ZHOEFVCDanwDlCPgbLTo+DoIgTK8XNl9bEzP+LZZkma3gkxCQ/e2mlF8j9c3Y/fcgK
+         d+5asM+y+XyincQ7u44AtJpeAJjpHouwrZXgEq4eS/fN6Sb6xyeWA7lvvL1VUig0vj
+         dVAk+qyKZ9BWg==
+Subject: [PATCH 1/4] libxfs: resync libxfs_alloc_file_space interface with the
+ kernel
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:04 -0800
-Message-ID: <167243880399.733953.2483387870694006201.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243880412.733953.13235409478389540449.stgit@magnolia>
+In-Reply-To: <167243880399.733953.2483387870694006201.stgit@magnolia>
+References: <167243880399.733953.2483387870694006201.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Refactor the parts of mkfs and xfs_repair that open-code the process of
-mapping disk space into files and writing data into them.  This will help
-primarily with resetting of the realtime metadata, but is also used for
-protofiles.
+Make the userspace xfs_alloc_file_space behave (more or less) like the
+kernel version, at least as far as the interface goes.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=bmap-utils
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/libxfs.h |    6 ++-
- libxfs/util.c    |  109 ++++++++++++++++++++++++++++++++++++++++---------
- mkfs/proto.c     |  120 ++++++++++--------------------------------------------
- repair/phase6.c  |   74 +++++----------------------------
- 4 files changed, 125 insertions(+), 184 deletions(-)
+ include/libxfs.h |    4 ++--
+ libxfs/util.c    |   40 +++++++++++++++++++---------------------
+ mkfs/proto.c     |    2 +-
+ 3 files changed, 22 insertions(+), 24 deletions(-)
+
+
+diff --git a/include/libxfs.h b/include/libxfs.h
+index b1e499569ac..d4985a5769f 100644
+--- a/include/libxfs.h
++++ b/include/libxfs.h
+@@ -167,8 +167,8 @@ extern int	libxfs_log_header(char *, uuid_t *, int, int, int, xfs_lsn_t,
+ 
+ /* Shared utility routines */
+ 
+-extern int	libxfs_alloc_file_space (struct xfs_inode *, xfs_off_t,
+-				xfs_off_t, int, int);
++extern int	libxfs_alloc_file_space(struct xfs_inode *ip, xfs_off_t offset,
++					xfs_off_t len, int alloc_type);
+ 
+ /* XXX: this is messy and needs fixing */
+ #ifndef __LIBXFS_INTERNAL_XFS_H__
+diff --git a/libxfs/util.c b/libxfs/util.c
+index e8397fdc341..bb6867c21af 100644
+--- a/libxfs/util.c
++++ b/libxfs/util.c
+@@ -179,25 +179,23 @@ libxfs_mod_incore_sb(
+  */
+ int
+ libxfs_alloc_file_space(
+-	xfs_inode_t	*ip,
+-	xfs_off_t	offset,
+-	xfs_off_t	len,
+-	int		alloc_type,
+-	int		attr_flags)
++	struct xfs_inode	*ip,
++	xfs_off_t		offset,
++	xfs_off_t		len,
++	int			alloc_type)
+ {
+-	xfs_mount_t	*mp;
+-	xfs_off_t	count;
+-	xfs_filblks_t	datablocks;
+-	xfs_filblks_t	allocated_fsb;
+-	xfs_filblks_t	allocatesize_fsb;
+-	xfs_bmbt_irec_t *imapp;
+-	xfs_bmbt_irec_t imaps[1];
+-	int		reccount;
+-	uint		resblks;
+-	xfs_fileoff_t	startoffset_fsb;
+-	xfs_trans_t	*tp;
+-	int		xfs_bmapi_flags;
+-	int		error;
++	struct xfs_bmbt_irec	imaps[1];
++	struct xfs_bmbt_irec	*imapp;
++	struct xfs_mount	*mp;
++	struct xfs_trans	*tp;
++	xfs_off_t		count;
++	xfs_filblks_t		datablocks;
++	xfs_filblks_t		allocated_fsb;
++	xfs_filblks_t		allocatesize_fsb;
++	int			reccount;
++	uint			resblks;
++	xfs_fileoff_t		startoffset_fsb;
++	int			error;
+ 
+ 	if (len <= 0)
+ 		return -EINVAL;
+@@ -206,7 +204,6 @@ libxfs_alloc_file_space(
+ 	error = 0;
+ 	imapp = &imaps[0];
+ 	reccount = 1;
+-	xfs_bmapi_flags = alloc_type ? XFS_BMAPI_PREALLOC : 0;
+ 	mp = ip->i_mount;
+ 	startoffset_fsb = XFS_B_TO_FSBT(mp, offset);
+ 	allocatesize_fsb = XFS_B_TO_FSB(mp, count);
+@@ -227,8 +224,9 @@ libxfs_alloc_file_space(
+ 		}
+ 		xfs_trans_ijoin(tp, ip, 0);
+ 
+-		error = xfs_bmapi_write(tp, ip, startoffset_fsb, allocatesize_fsb,
+-				xfs_bmapi_flags, 0, imapp, &reccount);
++		error = xfs_bmapi_write(tp, ip, startoffset_fsb,
++				allocatesize_fsb, alloc_type, resblks,
++				imapp, &reccount);
+ 
+ 		if (error)
+ 			goto error0;
+diff --git a/mkfs/proto.c b/mkfs/proto.c
+index 36af61ed5c0..b11b7fa5f95 100644
+--- a/mkfs/proto.c
++++ b/mkfs/proto.c
+@@ -179,7 +179,7 @@ rsvfile(
+ 	int		error;
+ 	xfs_trans_t	*tp;
+ 
+-	error = -libxfs_alloc_file_space(ip, 0, llen, 1, 0);
++	error = -libxfs_alloc_file_space(ip, 0, llen, XFS_BMAPI_PREALLOC);
+ 
+ 	if (error) {
+ 		fail(_("error reserving space for a file"), error);
 
