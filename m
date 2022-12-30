@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9FF765A0CF
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:41:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C25565A0D2
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:42:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236135AbiLaBlT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:41:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48124 "EHLO
+        id S236006AbiLaBmH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:42:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236129AbiLaBlS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:41:18 -0500
+        with ESMTP id S236092AbiLaBmG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:42:06 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F3B26D2
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:41:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218AD13DEA
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:42:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6FD2661C3A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:41:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AA0C433EF;
-        Sat, 31 Dec 2022 01:41:16 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B297361C3A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:42:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1915FC433EF;
+        Sat, 31 Dec 2022 01:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450876;
-        bh=bpsxLlA9UrZheMn2UP24dl5HxG0Ic/pudPCYxoERVW8=;
+        s=k20201202; t=1672450924;
+        bh=0rk92Ad0iwfxQ/oamTCC1FFnXI7tvagXjJ0kvhmUgmk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ou5rfoG/53j37KU3mJAgTXkQPPdGbeAQwTb7MRQ9jii/gvb7oJJxegDcseuP7L3Xa
-         okC1hckWE4a0+Ym1DXJkVSNAyc/P2qa/mmDoHNpsIuhedT3VZUWwcBvf+7J299zqZT
-         TY2Zi3d2zrwOc//Km2NZU179xhd0Vr1Z0H/uCjpOwGp1Ka9wlyHJ8oFXFOiUAM+cNi
-         Ilyf+m3JEseX12CoxJaSYidWwAg+08Ibyl2YmGStaxfxEAd0t92AbeadokOw/BSGGp
-         M9cgWjHopXTL6p9Tux0RqfJ8D8jCHNgsOeL3G0nCrAaei0KNbf/YXteHf6NKDe/LVx
-         OhfIvINOzXYJw==
-Subject: [PATCH 17/38] xfs: create routine to allocate and initialize a
- realtime rmap btree inode
+        b=B+3tgr6bMZ50vi4UtHpcfP7jqoYjpslNCqlEnJHO+/gIdcF/S8EbXIZpkwcBzBotN
+         V8DAfpD50XsT2OydukdLoDpTbqKlcypxNtORp2FqyVFh8Ygnu1SM5C9RBJYSxmXFFH
+         R3lNCJJxZbv2JaqHMtyO5JKiouu1GzOww4pE5cP7TzsArssaf2OA46ZHdKPeDYybG6
+         o9JHkSWu2FW+SlwTVcgV5Knv23sElAc2mp3JaM2hjSYrLyZxlsrGpnEv8IYV2nYHCH
+         VbQbwXtu7Dy6+LPn3VETWDYqtrKO8X1wk68sulHP76URN2obDz/DWXMlI5BoJyZml2
+         jJJ0lzU+1cmAQ==
+Subject: [PATCH 20/38] xfs: fix integer overflows in the fsmap rtbitmap
+ backend
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:18 -0800
-Message-ID: <167243869841.715303.1721205201463684435.stgit@magnolia>
+Message-ID: <167243869884.715303.13207234516175118417.stgit@magnolia>
 In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
 References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,85 +56,178 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a library routine to allocate and initialize an empty realtime
-rmapbt inode.  We'll use this for mkfs and repair.
-
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_rtrmap_btree.c |   42 ++++++++++++++++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_rtrmap_btree.h |    5 +++++
- 2 files changed, 47 insertions(+)
+ fs/xfs/xfs_fsmap.c |   54 +++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 40 insertions(+), 14 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.c b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-index a099f33f26ab..9181fca2ba54 100644
---- a/fs/xfs/libxfs/xfs_rtrmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-@@ -27,6 +27,7 @@
- #include "xfs_extent_busy.h"
- #include "xfs_rtgroup.h"
- #include "xfs_bmap.h"
-+#include "xfs_imeta.h"
- 
- static struct kmem_cache	*xfs_rtrmapbt_cur_cache;
- 
-@@ -867,3 +868,44 @@ xfs_iflush_rtrmap(
- 	xfs_rtrmapbt_to_disk(ip->i_mount, ifp->if_broot, ifp->if_broot_bytes,
- 			dfp, XFS_DFORK_SIZE(dip, ip->i_mount, XFS_DATA_FORK));
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index e330a7e55d1d..b5e7ae77cab9 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -163,6 +163,8 @@ struct xfs_getfsmap_info {
+ 	struct xfs_rtgroup	*rtg;		/* rt group info, if needed */
+ 	struct xfs_perag	*pag;		/* AG info, if applicable */
+ 	xfs_daddr_t		next_daddr;	/* next daddr we expect */
++	/* daddr of low fsmap key when we're using the rtbitmap */
++	xfs_daddr_t		low_daddr;
+ 	u64			missing_owner;	/* owner of holes */
+ 	u32			dev;		/* device id */
+ 	struct xfs_rmap_irec	low;		/* low rmap key */
+@@ -240,16 +242,29 @@ xfs_getfsmap_format(
+ 	xfs_fsmap_from_internal(rec, xfm);
  }
-+
-+/*
-+ * Create a realtime rmap btree inode.
-+ *
-+ * Regardless of the return value, the caller must clean up @ic.  If a new
-+ * inode is returned through *ipp, the caller must finish setting up the incore
-+ * inode and release it.
-+ */
-+int
-+xfs_rtrmapbt_create(
-+	struct xfs_trans	**tpp,
-+	struct xfs_imeta_path	*path,
-+	struct xfs_imeta_update	*upd,
-+	struct xfs_inode	**ipp)
-+{
-+	struct xfs_mount	*mp = (*tpp)->t_mountp;
-+	struct xfs_ifork	*ifp;
-+	struct xfs_inode	*ip;
-+	int			error;
-+
-+	*ipp = NULL;
-+
-+	error = xfs_imeta_create(tpp, path, S_IFREG, 0, &ip, upd);
-+	if (error)
-+		return error;
-+
-+	ifp = &ip->i_df;
-+	ifp->if_format = XFS_DINODE_FMT_RMAP;
-+	ASSERT(ifp->if_broot_bytes == 0);
-+	ASSERT(ifp->if_bytes == 0);
-+
-+	/* Initialize the empty incore btree root. */
-+	xfs_iroot_alloc(ip, XFS_DATA_FORK,
-+			xfs_rtrmap_broot_space_calc(mp, 0, 0));
-+	xfs_btree_init_block(mp, ifp->if_broot, &xfs_rtrmapbt_ops, 0, 0,
-+			ip->i_ino);
-+	xfs_trans_log_inode(*tpp, ip, XFS_ILOG_CORE | XFS_ILOG_DBROOT);
-+
-+	*ipp = ip;
-+	return 0;
-+}
-diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.h b/fs/xfs/libxfs/xfs_rtrmap_btree.h
-index 6917a31bfe0c..046a60816736 100644
---- a/fs/xfs/libxfs/xfs_rtrmap_btree.h
-+++ b/fs/xfs/libxfs/xfs_rtrmap_btree.h
-@@ -198,4 +198,9 @@ void xfs_rtrmapbt_to_disk(struct xfs_mount *mp, struct xfs_btree_block *rblock,
- 		unsigned int dblocklen);
- void xfs_iflush_rtrmap(struct xfs_inode *ip, struct xfs_dinode *dip);
  
-+struct xfs_imeta_update;
++static inline bool
++xfs_getfsmap_rec_before_start(
++	struct xfs_getfsmap_info	*info,
++	const struct xfs_rmap_irec	*rec,
++	xfs_daddr_t			rec_daddr)
++{
++	if (info->low_daddr != -1ULL)
++		return rec_daddr < info->low_daddr;
++	return xfs_rmap_compare(rec, &info->low) < 0;
++}
 +
-+int xfs_rtrmapbt_create(struct xfs_trans **tpp, struct xfs_imeta_path *path,
-+		struct xfs_imeta_update *ic, struct xfs_inode **ipp);
+ /*
+  * Format a reverse mapping for getfsmap, having translated rm_startblock
+- * into the appropriate daddr units.
++ * into the appropriate daddr units.  Pass in a nonzero @len_daddr if the
++ * length could be larger than rm_blockcount in struct xfs_rmap_irec.
+  */
+ STATIC int
+ xfs_getfsmap_helper(
+ 	struct xfs_trans		*tp,
+ 	struct xfs_getfsmap_info	*info,
+ 	const struct xfs_rmap_irec	*rec,
+-	xfs_daddr_t			rec_daddr)
++	xfs_daddr_t			rec_daddr,
++	xfs_daddr_t			len_daddr)
+ {
+ 	struct xfs_fsmap		fmr;
+ 	struct xfs_mount		*mp = tp->t_mountp;
+@@ -259,12 +274,15 @@ xfs_getfsmap_helper(
+ 	if (fatal_signal_pending(current))
+ 		return -EINTR;
+ 
++	if (len_daddr == 0)
++		len_daddr = XFS_FSB_TO_BB(mp, rec->rm_blockcount);
 +
- #endif	/* __XFS_RTRMAP_BTREE_H__ */
+ 	/*
+ 	 * Filter out records that start before our startpoint, if the
+ 	 * caller requested that.
+ 	 */
+-	if (xfs_rmap_compare(rec, &info->low) < 0) {
+-		rec_daddr += XFS_FSB_TO_BB(mp, rec->rm_blockcount);
++	if (xfs_getfsmap_rec_before_start(info, rec, rec_daddr)) {
++		rec_daddr += len_daddr;
+ 		if (info->next_daddr < rec_daddr)
+ 			info->next_daddr = rec_daddr;
+ 		return 0;
+@@ -283,7 +301,7 @@ xfs_getfsmap_helper(
+ 
+ 		info->head->fmh_entries++;
+ 
+-		rec_daddr += XFS_FSB_TO_BB(mp, rec->rm_blockcount);
++		rec_daddr += len_daddr;
+ 		if (info->next_daddr < rec_daddr)
+ 			info->next_daddr = rec_daddr;
+ 		return 0;
+@@ -329,7 +347,7 @@ xfs_getfsmap_helper(
+ 	if (error)
+ 		return error;
+ 	fmr.fmr_offset = XFS_FSB_TO_BB(mp, rec->rm_offset);
+-	fmr.fmr_length = XFS_FSB_TO_BB(mp, rec->rm_blockcount);
++	fmr.fmr_length = len_daddr;
+ 	if (rec->rm_flags & XFS_RMAP_UNWRITTEN)
+ 		fmr.fmr_flags |= FMR_OF_PREALLOC;
+ 	if (rec->rm_flags & XFS_RMAP_ATTR_FORK)
+@@ -346,7 +364,7 @@ xfs_getfsmap_helper(
+ 
+ 	xfs_getfsmap_format(mp, &fmr, info);
+ out:
+-	rec_daddr += XFS_FSB_TO_BB(mp, rec->rm_blockcount);
++	rec_daddr += len_daddr;
+ 	if (info->next_daddr < rec_daddr)
+ 		info->next_daddr = rec_daddr;
+ 	return 0;
+@@ -382,7 +400,7 @@ xfs_getfsmap_datadev_helper(
+ 	fsb = XFS_AGB_TO_FSB(mp, cur->bc_ag.pag->pag_agno, rec->rm_startblock);
+ 	rec_daddr = XFS_FSB_TO_DADDR(mp, fsb);
+ 
+-	return xfs_getfsmap_helper(cur->bc_tp, info, rec, rec_daddr);
++	return xfs_getfsmap_helper(cur->bc_tp, info, rec, rec_daddr, 0);
+ }
+ 
+ /* Transform a bnobt irec into a fsmap */
+@@ -406,7 +424,7 @@ xfs_getfsmap_datadev_bnobt_helper(
+ 	irec.rm_offset = 0;
+ 	irec.rm_flags = 0;
+ 
+-	return xfs_getfsmap_helper(cur->bc_tp, info, &irec, rec_daddr);
++	return xfs_getfsmap_helper(cur->bc_tp, info, &irec, rec_daddr, 0);
+ }
+ 
+ /* Execute a getfsmap query against the regular data device. */
+@@ -650,7 +668,7 @@ xfs_getfsmap_logdev(
+ 	rmap.rm_offset = 0;
+ 	rmap.rm_flags = 0;
+ 
+-	return xfs_getfsmap_helper(tp, info, &rmap, 0);
++	return xfs_getfsmap_helper(tp, info, &rmap, 0, 0);
+ }
+ 
+ #ifdef CONFIG_XFS_RT
+@@ -664,16 +682,22 @@ xfs_getfsmap_rtdev_rtbitmap_helper(
+ {
+ 	struct xfs_getfsmap_info	*info = priv;
+ 	struct xfs_rmap_irec		irec;
+-	xfs_daddr_t			rec_daddr;
++	xfs_rtblock_t			rtbno;
++	xfs_daddr_t			rec_daddr, len_daddr;
++
++	rtbno = xfs_rtx_to_rtb(mp, rec->ar_startext);
++	rec_daddr = XFS_FSB_TO_BB(mp, rtbno);
++
++	rtbno = xfs_rtx_to_rtb(mp, rec->ar_extcount);
++	len_daddr = XFS_FSB_TO_BB(mp, rtbno);
+ 
+ 	irec.rm_startblock = xfs_rtx_to_rtb(mp, rec->ar_startext);
+-	rec_daddr = XFS_FSB_TO_BB(mp, irec.rm_startblock);
+ 	irec.rm_blockcount = xfs_rtx_to_rtb(mp, rec->ar_extcount);
+ 	irec.rm_owner = XFS_RMAP_OWN_NULL;	/* "free" */
+ 	irec.rm_offset = 0;
+ 	irec.rm_flags = 0;
+ 
+-	return xfs_getfsmap_helper(tp, info, &irec, rec_daddr);
++	return xfs_getfsmap_helper(tp, info, &irec, rec_daddr, len_daddr);
+ }
+ 
+ /* Actually query the realtime bitmap. */
+@@ -741,6 +765,7 @@ xfs_getfsmap_rtdev_rtbitmap(
+ 
+ 	/* Set up search keys */
+ 	info->low.rm_startblock = start_fsb;
++	info->low_daddr = XFS_FSB_TO_BB(mp, start_fsb);
+ 	error = xfs_fsmap_owner_to_rmap(&info->low, &keys[0]);
+ 	if (error)
+ 		return error;
+@@ -778,7 +803,7 @@ xfs_getfsmap_rtdev_helper(
+ 			rec->rm_startblock);
+ 	rec_daddr = xfs_rtb_to_daddr(mp, rtbno);
+ 
+-	return xfs_getfsmap_helper(cur->bc_tp, info, rec, rec_daddr);
++	return xfs_getfsmap_helper(cur->bc_tp, info, rec, rec_daddr, 0);
+ }
+ 
+ /* Actually query the rtrmap btree. */
+@@ -1122,6 +1147,7 @@ xfs_getfsmap(
+ 		info.last = false;
+ 		info.pag = NULL;
+ 		info.rtg = NULL;
++		info.low_daddr = -1ULL;
+ 		error = handlers[i].fn(tp, dkeys, &info);
+ 		if (error)
+ 			break;
 
