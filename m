@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83DFA659FE3
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:44:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EC0465A18E
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:29:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235884AbiLaAo4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:44:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36244 "EHLO
+        id S235911AbiLaC3F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:29:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235868AbiLaAo4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:44:56 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845E81D0C8;
-        Fri, 30 Dec 2022 16:44:55 -0800 (PST)
+        with ESMTP id S231466AbiLaC3D (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:29:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2595D1C921
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:29:03 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2423261D5E;
-        Sat, 31 Dec 2022 00:44:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AADC433D2;
-        Sat, 31 Dec 2022 00:44:54 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C327EB81E6D
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:29:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868A0C433D2;
+        Sat, 31 Dec 2022 02:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447494;
-        bh=lg6Kci8gAYkjBnA4jWbeTc6udRQF7YkXDDDl0IBixn4=;
+        s=k20201202; t=1672453740;
+        bh=MvTTqZihwbHiEUTypuNXwMvBlapOLO0upWwetK3wHU0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dxtddWgr78MINX3uZmdN2ku7yb0xAS6HSsI1Jp0uPA+ddod75YMepiVGGSvfXcFw8
-         P9iiDZA2L4JmIZQ+58axvmm0cNFBJyyqTOBwNAFJkvElWxiloEd50w56MahGoYAMtj
-         Ew8Ut6gNBebFxJQ0iPUmFIg6Wp3Tf5KYUBMxD/tQdLfw3/qILatdFZ92SgulJkARmO
-         /VU0iDA/9Y5e3mBpT8sf9GnMqhfbvGN2mXU52jNNn3yJKUCDeIKoYzwxW/oH8AL2iq
-         HkgcNY1Y1nHWxQbk4V6IfZ9TJnUc6gTzHvbbGjmG5/B/Nl2/a2RHDhSYpbIj+l7BRx
-         89OZELs6m7kNA==
-Subject: [PATCH 03/24] fuzzy: don't fuzz the log sequence number
+        b=vJ87fvXe5I9cUMinQPKPfUYh6SIdDQGR84g8TUo2sy7/Qu+BAQGcM9Bi+BTO+volD
+         UYmm3sTAjAR5AwwLhzdL8cHb+fWI2e2VHUnwJFEZ84vCYNUm1RyhRuLbsYhscU1ww8
+         xbrX3Q/rg9ebg4dgN9swgW0cYwVAuyPjp0BS8iII6h82GcwC97cnN71dhZpmixuZEX
+         gKNOuZ5M4aY4FZYF/XvRnaRiRN6HZf52eggyA9EoxGqZ33qrXKpMIQluqJoB702dGV
+         lfwmwFLNyOn5lz+3mDzZR309kvbLI14OOvs+NEbr12IpdWoY9z+PMD4C0JQYseL/ay
+         v3s2ICSdTpouw==
+Subject: [PATCH 1/5] xfs_db: allow selecting logdev blocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:39 -0800
-Message-ID: <167243877946.730387.8683116177682310024.stgit@magnolia>
-In-Reply-To: <167243877899.730387.9276624623424433346.stgit@magnolia>
-References: <167243877899.730387.9276624623424433346.stgit@magnolia>
+Message-ID: <167243877995.730695.10725248450234022103.stgit@magnolia>
+In-Reply-To: <167243877981.730695.7761889719607533776.stgit@magnolia>
+References: <167243877981.730695.7761889719607533776.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,29 +55,55 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Don't bother filtering log sequence numbers since xfs_db doesn't have
-the ability to tell us the range of LSNs that would actually cause
-validation failures.
+Make it so that xfs_db can examine blocks on an external log device.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/fuzzy |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ db/io.c |   18 ++++++++++++++++++
+ db/io.h |    2 ++
+ 2 files changed, 20 insertions(+)
 
 
-diff --git a/common/fuzzy b/common/fuzzy
-index 2798c257a0..677e655d68 100644
---- a/common/fuzzy
-+++ b/common/fuzzy
-@@ -78,7 +78,9 @@ __filter_xfs_db_keys() {
- # does no validation.
- __filter_unvalidated_xfs_db_fields() {
- 	sed -e '/\.sec/d' \
--	    -e '/\.nsec/d'
-+	    -e '/\.nsec/d' \
-+	    -e '/^lsn$/d' \
-+	    -e '/\.lsn/d'
+diff --git a/db/io.c b/db/io.c
+index 00eb5e98dc2..8e3b32d9551 100644
+--- a/db/io.c
++++ b/db/io.c
+@@ -660,6 +660,24 @@ set_rt_cur(
+ 	return 0;
  }
  
- # Filter the xfs_db print command's field debug information
++int
++set_log_cur(
++	const typ_t	*type,
++	xfs_daddr_t	blknum,
++	int		len,
++	int		ring_flag,
++	bbmap_t		*bbmap)
++{
++	if (!mp->m_logdev_targp->bt_bdev ||
++	    mp->m_logdev_targp->bt_bdev == mp->m_ddev_targp->bt_bdev) {
++		printf(_("external log device not loaded, use -l.\n"));
++		return ENODEV;
++	}
++
++	__set_cur(mp->m_logdev_targp, type, blknum, len, ring_flag, bbmap);
++	return 0;
++}
++
+ void
+ set_iocur_type(
+ 	const typ_t	*type)
+diff --git a/db/io.h b/db/io.h
+index 1a37ee78c72..b3d8123d548 100644
+--- a/db/io.h
++++ b/db/io.h
+@@ -49,6 +49,8 @@ extern void	push_cur_and_set_type(void);
+ extern void	write_cur(void);
+ extern void	set_cur(const struct typ *type, xfs_daddr_t blknum,
+ 			int len, int ring_add, bbmap_t *bbmap);
++extern int	set_log_cur(const struct typ *type, xfs_daddr_t blknum,
++			int len, int ring_add, bbmap_t *bbmap);
+ extern int	set_rt_cur(const struct typ *type, xfs_daddr_t blknum,
+ 			int len, int ring_add, bbmap_t *bbmap);
+ extern void     ring_add(void);
 
