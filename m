@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1393D659FB7
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:34:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8AD965A0FE
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:53:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235715AbiLaAew (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:34:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
+        id S236042AbiLaBxe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:53:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235435AbiLaAev (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:34:51 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85E41DDE4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:34:50 -0800 (PST)
+        with ESMTP id S231231AbiLaBxc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:53:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08DA1DDD3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:53:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 3D9EFCE19BB
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:34:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77076C433D2;
-        Sat, 31 Dec 2022 00:34:47 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4CB42B81DFC
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:53:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16660C433D2;
+        Sat, 31 Dec 2022 01:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446887;
-        bh=NpOtt+luzMwEzyMdzcmGAxqYzLtP5I0Ek93HIUJWdWk=;
+        s=k20201202; t=1672451609;
+        bh=G7M0GPo2QMSQtwDDmJ22pseEXMJxV4Gxuw4AtltWmno=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gNkZebnY0JPFjkONUMwALl0u9NJY1fWt+FhtY0ep4+AtYTga4oEtKMita1H4MxpNZ
-         9KvzP+15BmUOgBMD0QfbZrNpWw82ufZ6js32e3ab8Md/muZ9WSUJOXWThOuLOezdPg
-         y2Dn1euTA3LFkqQoem7OVs2SnO4smHOc6nfyuOig0hOdCkREWlFevqUEyPx2h9/3FO
-         rL+EW8m6joCEl5d0huoEiFTid33Q3IGfod6xQpMk/Ni3nNRMO5WUjgl8DExyb1FGx6
-         3e/Jz8NhcFEM4h/ne5FVaDHorzkO7NT1Y6HUyFt5rkmP7c8XgVN6CoKhpwbTOAkjTc
-         J12iqGCnMb3Ig==
-Subject: [PATCH 4/8] xfs_scrub_fail: escape paths correctly
+        b=cCajrsjpbg4Hrrr75DnKii6PRDilqvLBlf1DEln47ffEcVQ1eJxfbb+IJ7Spike3g
+         CKPckWrmHRCwYu5WgD7aUiM027V8W3nb8C1OPCvKImQMvwIEQfv9FseGH0HCFFMmQu
+         0tm051tnB62XLqcqIEazVKBwhhkq1bjJYLZduGAlpHhyVy7iQz2+9yFo0DFySZROaP
+         /rlKCw9Wtn2s3/wNQY2tlMrRATKPwa8pl5POCt9gInvnP8El7w+55p92IQi+vaP4gH
+         ldn+N4pbDyuZsAvc4ikKWCrcHlKB7BVb70TX1gyDbPfh6PfXr6VUYYvUW80ztoxBDj
+         82sqMEDownM4w==
+Subject: [PATCH 21/42] xfs: allow inodes to have the realtime and reflink
+ flags
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871150.717702.9536987936805993820.stgit@magnolia>
-In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
-References: <167243871097.717702.15336500890922415647.stgit@magnolia>
+Message-ID: <167243871194.717073.18192234817486773032.stgit@magnolia>
+In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
+References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,55 +56,85 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Always escape pathnames correctly so that systemd doesn't complain.
+Now that we can share blocks between realtime files, allow this
+combination.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/xfs_scrub_fail |   28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_inode_buf.c |    3 ++-
+ fs/xfs/scrub/inode.c          |    5 +++--
+ fs/xfs/scrub/inode_repair.c   |    6 ------
+ fs/xfs/xfs_ioctl.c            |    4 ----
+ 4 files changed, 5 insertions(+), 13 deletions(-)
 
 
-diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
-index a46eb34ee29..4ec7e48836a 100755
---- a/scrub/xfs_scrub_fail
-+++ b/scrub/xfs_scrub_fail
-@@ -20,6 +20,32 @@ if [ ! -x "${mailer}" ]; then
- 	exit 1
- fi
+diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+index dcf816f2643b..0db719f80bf2 100644
+--- a/fs/xfs/libxfs/xfs_inode_buf.c
++++ b/fs/xfs/libxfs/xfs_inode_buf.c
+@@ -675,7 +675,8 @@ xfs_dinode_verify(
+ 		return __this_address;
  
-+# systemd doesn't like unit instance names with slashes in them, so it
-+# replaces them with dashes when it invokes the service.  However, it's not
-+# smart enough to convert the dashes to something else, so when it unescapes
-+# the instance name to feed to xfs_scrub, it turns all dashes into slashes.
-+# "/moo-cow" becomes "-moo-cow" becomes "/moo/cow", which is wrong.  systemd
-+# actually /can/ escape the dashes correctly if it is told that this is a path
-+# (and not a unit name), but it didn't do this prior to January 2017, so fix
-+# this for them.
-+#
-+# systemd path escaping also drops the initial slash so we add that back in so
-+# that log messages from the service units preserve the full path and users can
-+# look up log messages using full paths.  However, for "/" the escaping rules
-+# do /not/ drop the initial slash, so we have to special-case that here.
-+escape_path() {
-+	local arg="$1"
-+
-+	if [ "${arg}" = "/" ]; then
-+		echo "-"
-+		exit 0
-+	fi
-+
-+	echo "-$(systemd-escape --path "${mntpoint}")"
-+}
-+
-+mntpoint_esc="$(escape_path "${mntpoint}")"
-+
- (cat << ENDL
- To: $1
- From: <xfs_scrub@${hostname}>
-@@ -29,4 +55,4 @@ So sorry, the automatic xfs_scrub of ${mntpoint} on ${hostname} failed.
+ 	/* don't let reflink and realtime mix */
+-	if ((flags2 & XFS_DIFLAG2_REFLINK) && (flags & XFS_DIFLAG_REALTIME))
++	if ((flags2 & XFS_DIFLAG2_REFLINK) && (flags & XFS_DIFLAG_REALTIME) &&
++	    !xfs_has_rtreflink(mp))
+ 		return __this_address;
  
- A log of what happened follows:
- ENDL
--systemctl status --full --lines 4294967295 "xfs_scrub@${mntpoint}") | "${mailer}" -t -i
-+systemctl status --full --lines 4294967295 "xfs_scrub@${mntpoint_esc}") | "${mailer}" -t -i
+ 	/* COW extent size hint validation */
+diff --git a/fs/xfs/scrub/inode.c b/fs/xfs/scrub/inode.c
+index f2c60c3515e7..3b19976b6066 100644
+--- a/fs/xfs/scrub/inode.c
++++ b/fs/xfs/scrub/inode.c
+@@ -329,8 +329,9 @@ xchk_inode_flags2(
+ 	if ((flags2 & XFS_DIFLAG2_REFLINK) && !S_ISREG(mode))
+ 		goto bad;
+ 
+-	/* realtime and reflink make no sense, currently */
+-	if ((flags & XFS_DIFLAG_REALTIME) && (flags2 & XFS_DIFLAG2_REFLINK))
++	/* realtime and reflink don't always go together */
++	if ((flags & XFS_DIFLAG_REALTIME) && (flags2 & XFS_DIFLAG2_REFLINK) &&
++	    !xfs_has_rtreflink(mp))
+ 		goto bad;
+ 
+ 	/* no bigtime iflag without the bigtime feature */
+diff --git a/fs/xfs/scrub/inode_repair.c b/fs/xfs/scrub/inode_repair.c
+index 8566282827f8..9f946406cfa0 100644
+--- a/fs/xfs/scrub/inode_repair.c
++++ b/fs/xfs/scrub/inode_repair.c
+@@ -391,8 +391,6 @@ xrep_dinode_flags(
+ 		flags2 |= XFS_DIFLAG2_REFLINK;
+ 	else
+ 		flags2 &= ~(XFS_DIFLAG2_REFLINK | XFS_DIFLAG2_COWEXTSIZE);
+-	if (flags & XFS_DIFLAG_REALTIME)
+-		flags2 &= ~XFS_DIFLAG2_REFLINK;
+ 	if (flags2 & XFS_DIFLAG2_REFLINK)
+ 		flags2 &= ~XFS_DIFLAG2_DAX;
+ 	if (!xfs_has_bigtime(mp))
+@@ -1480,10 +1478,6 @@ xrep_inode_flags(
+ 	if (!(S_ISREG(mode) || S_ISDIR(mode)))
+ 		sc->ip->i_diflags2 &= ~XFS_DIFLAG2_DAX;
+ 
+-	/* No reflink files on the realtime device. */
+-	if (sc->ip->i_diflags & XFS_DIFLAG_REALTIME)
+-		sc->ip->i_diflags2 &= ~XFS_DIFLAG2_REFLINK;
+-
+ 	/* No mixing reflink and DAX yet. */
+ 	if (sc->ip->i_diflags2 & XFS_DIFLAG2_REFLINK)
+ 		sc->ip->i_diflags2 &= ~XFS_DIFLAG2_DAX;
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index fbe9bc50fc20..939cc6d862da 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1115,10 +1115,6 @@ xfs_ioctl_setattr_xflags(
+ 			return -EINVAL;
+ 	}
+ 
+-	/* Clear reflink if we are actually able to set the rt flag. */
+-	if ((fa->fsx_xflags & FS_XFLAG_REALTIME) && xfs_is_reflink_inode(ip))
+-		ip->i_diflags2 &= ~XFS_DIFLAG2_REFLINK;
+-
+ 	/* diflags2 only valid for v3 inodes. */
+ 	i_flags2 = xfs_flags2diflags2(ip, fa->fsx_xflags);
+ 	if (i_flags2 && !xfs_has_v3inodes(mp))
 
