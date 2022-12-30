@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 989EE659F77
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:21:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5C8F659F75
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:20:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235925AbiLaAVW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:21:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
+        id S235930AbiLaAUv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:20:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235894AbiLaAVV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:21:21 -0500
+        with ESMTP id S235925AbiLaAUu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:20:50 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47F7D104
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:21:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F42FDC
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:20:49 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9180CB81E7C
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:21:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C74C433D2;
-        Sat, 31 Dec 2022 00:21:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 825B2B81E7C
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:20:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A37AC433EF;
+        Sat, 31 Dec 2022 00:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446078;
-        bh=sO5eVoWfMoXrsKN5eCPm83SoXD5q+xtTebDdFQTOGq8=;
+        s=k20201202; t=1672446047;
+        bh=bD2V3BTuxSFusMFiFgyhwKJNs+qlpCVstsgM2WVg4L8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cAGi/1ymQqYJ+Er0Jz33dq0yNjJPYiGjHNRlopCc595sVld49xGjGHjVpNdn/415d
-         o9uVNmc6i1lcNJEbNlBZ43URcAsh4CnnC2UycTrylzGB0xl4O2GIHTnMVFfhv2/+kc
-         jkr7Wss4owjWCQYOxJ779rq+/U1/NzS53e4btQt5n8WBeIKeW+ElcjnPmSPgfcfg32
-         2lvUJJPnQ4syNf6rUWQ7IU2xAchy7/3MO+k2LTUZtJnfP5OWm7riMUEKKbjZ8gftzi
-         QKqPcbls82wjecmuZLOtSofEfW6AOKw8h/9ROok5p4RyBA/XzP3h4EUMCk2rgyuIij
-         i5bZiynKxO9zg==
-Subject: [PATCH 10/19] xfs: make atomic extent swapping support realtime files
+        b=E0zQqNhxZHo/FfFOqcPiHBe4rbjAJ0neW9AKzqio2Vzmx0lFdaL+mT40Rfr4u0efZ
+         VGARm2TX4PU/8+yRDprPsIDEOXl33N+O6PtuCq6ZEqaSXhoaaYhuENSTqszspjqFw7
+         zXBFTkqi1l19yfR0hgGm68RUdrJN8S5tpTwRkZ+0CS8RiUkrLJU5uiN7JKoLTTvQtt
+         0NY+iB6VO1cH3weMPwdtf24Y6GJ51TZMwqvW2+8fYPnEdMR8y64UYubv23ylc2Q+47
+         fLWU1Otji6Od1erF9yWr77DqqPLbhq8KD2woR7cO6YtfeF0hHreA1/H34ci8vY29Hw
+         JixO1U2apsgRA==
+Subject: [PATCH 08/19] xfs: condense directories after an atomic swap
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:00 -0800
-Message-ID: <167243868069.713817.1091572867089358356.stgit@magnolia>
+Message-ID: <167243868043.713817.545115454682669498.stgit@magnolia>
 In-Reply-To: <167243867932.713817.982387501030567647.stgit@magnolia>
 References: <167243867932.713817.982387501030567647.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,178 +54,98 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that bmap items support the realtime device, we can add the
-necessary pieces to the atomic extent swapping code to support such
-things.
+The previous commit added a new swapext flag that enables us to perform
+post-swap processing on file2 once we're done swapping the extent maps.
+Now add this ability for directories.
+
+This isn't used anywhere right now, but we need to have the basic ondisk
+flags in place so that a future online directory repair feature can
+create salvaged dirents in a temporary directory and swap the data forks
+when ready.  If one file is in extents format and the other is inline,
+we will have to promote both to extents format to perform the swap.
+After the swap, we can try to condense the fixed directory down to
+inline format if possible.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/xfs_inode.h  |    5 ++
- libxfs/xfs_swapext.c |  109 +++++++++++++++++++++++++++++++++++++++++++++++---
- libxfs/xfs_swapext.h |    5 +-
- 3 files changed, 110 insertions(+), 9 deletions(-)
+ libxfs/xfs_swapext.c |   44 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
 
-diff --git a/include/xfs_inode.h b/include/xfs_inode.h
-index b0bba1094e7..489fd7d107d 100644
---- a/include/xfs_inode.h
-+++ b/include/xfs_inode.h
-@@ -232,6 +232,11 @@ static inline bool xfs_inode_has_large_extent_counts(struct xfs_inode *ip)
- 	return ip->i_diflags2 & XFS_DIFLAG2_NREXT64;
- }
- 
-+static inline bool xfs_inode_has_bigrtextents(struct xfs_inode *ip)
-+{
-+	return XFS_IS_REALTIME_INODE(ip) && ip->i_mount->m_sb.sb_rextsize > 1;
-+}
-+
- /* Always set the child's GID to this value, even if the parent is setgid. */
- #define CRED_FORCE_GID	(1U << 0)
- struct cred {
 diff --git a/libxfs/xfs_swapext.c b/libxfs/xfs_swapext.c
-index e439b938f10..9be29f610f2 100644
+index 68aa34de0ed..cb5bafe3112 100644
 --- a/libxfs/xfs_swapext.c
 +++ b/libxfs/xfs_swapext.c
-@@ -140,6 +140,108 @@ sxi_advance(
- 	sxi->sxi_blockcount -= irec->br_blockcount;
+@@ -25,6 +25,8 @@
+ #include "xfs_da_btree.h"
+ #include "xfs_attr_leaf.h"
+ #include "xfs_attr.h"
++#include "xfs_dir2_priv.h"
++#include "xfs_dir2.h"
+ 
+ struct kmem_cache	*xfs_swapext_intent_cache;
+ 
+@@ -383,6 +385,42 @@ xfs_swapext_attr_to_sf(
+ 	return xfs_attr3_leaf_to_shortform(bp, &args, forkoff);
  }
  
-+#ifdef DEBUG
-+static inline bool
-+xfs_swapext_need_rt_conversion(
-+	const struct xfs_swapext_req	*req)
++/* Convert inode2's block dir fork back to shortform, if possible.. */
++STATIC int
++xfs_swapext_dir_to_sf(
++	struct xfs_trans		*tp,
++	struct xfs_swapext_intent	*sxi)
 +{
-+	struct xfs_inode		*ip = req->ip2;
-+	struct xfs_mount		*mp = ip->i_mount;
++	struct xfs_da_args	args = {
++		.dp		= sxi->sxi_ip2,
++		.geo		= tp->t_mountp->m_dir_geo,
++		.whichfork	= XFS_DATA_FORK,
++		.trans		= tp,
++	};
++	struct xfs_dir2_sf_hdr	sfh;
++	struct xfs_buf		*bp;
++	bool			isblock;
++	int			size;
++	int			error;
 +
-+	/* xattrs don't live on the rt device */
-+	if (req->whichfork == XFS_ATTR_FORK)
-+		return false;
++	error = xfs_dir2_isblock(&args, &isblock);
++	if (error)
++		return error;
 +
-+	/*
-+	 * Caller got permission to use logged swapext, so log recovery will
-+	 * finish the swap and not leave us with partially swapped rt extents
-+	 * exposed to userspace.
-+	 */
-+	if (req->req_flags & XFS_SWAP_REQ_LOGGED)
-+		return false;
-+
-+	/*
-+	 * If we can't use log intent items at all, the only supported
-+	 * operation is full fork swaps.
-+	 */
-+	if (!xfs_swapext_supported(mp))
-+		return false;
-+
-+	/* Conversion is only needed for realtime files with big rt extents */
-+	return xfs_inode_has_bigrtextents(ip);
-+}
-+
-+static inline int
-+xfs_swapext_check_rt_extents(
-+	struct xfs_mount		*mp,
-+	const struct xfs_swapext_req	*req)
-+{
-+	struct xfs_bmbt_irec		irec1, irec2;
-+	xfs_fileoff_t			startoff1 = req->startoff1;
-+	xfs_fileoff_t			startoff2 = req->startoff2;
-+	xfs_filblks_t			blockcount = req->blockcount;
-+	uint32_t			mod;
-+	int				nimaps;
-+	int				error;
-+
-+	if (!xfs_swapext_need_rt_conversion(req))
++	if (!isblock)
 +		return 0;
 +
-+	while (blockcount > 0) {
-+		/* Read extent from the first file */
-+		nimaps = 1;
-+		error = xfs_bmapi_read(req->ip1, startoff1, blockcount,
-+				&irec1, &nimaps, 0);
-+		if (error)
-+			return error;
-+		ASSERT(nimaps == 1);
++	error = xfs_dir3_block_read(tp, sxi->sxi_ip2, &bp);
++	if (error)
++		return error;
 +
-+		/* Read extent from the second file */
-+		nimaps = 1;
-+		error = xfs_bmapi_read(req->ip2, startoff2,
-+				irec1.br_blockcount, &irec2, &nimaps,
-+				0);
-+		if (error)
-+			return error;
-+		ASSERT(nimaps == 1);
++	size = xfs_dir2_block_sfsize(sxi->sxi_ip2, bp->b_addr, &sfh);
++	if (size > xfs_inode_data_fork_size(sxi->sxi_ip2))
++		return 0;
 +
-+		/*
-+		 * We can only swap as many blocks as the smaller of the two
-+		 * extent maps.
-+		 */
-+		irec1.br_blockcount = min(irec1.br_blockcount,
-+					  irec2.br_blockcount);
-+
-+		/* Both mappings must be aligned to the realtime extent size. */
-+		div_u64_rem(irec1.br_startoff, mp->m_sb.sb_rextsize, &mod);
-+		if (mod) {
-+			ASSERT(mod == 0);
-+			return -EINVAL;
-+		}
-+
-+		div_u64_rem(irec2.br_startoff, mp->m_sb.sb_rextsize, &mod);
-+		if (mod) {
-+			ASSERT(mod == 0);
-+			return -EINVAL;
-+		}
-+
-+		div_u64_rem(irec1.br_blockcount, mp->m_sb.sb_rextsize, &mod);
-+		if (mod) {
-+			ASSERT(mod == 0);
-+			return -EINVAL;
-+		}
-+
-+		startoff1 += irec1.br_blockcount;
-+		startoff2 += irec1.br_blockcount;
-+		blockcount -= irec1.br_blockcount;
-+	}
-+
-+	return 0;
++	return xfs_dir2_block_to_sf(&args, bp, size, &sfh);
 +}
-+#else
-+# define xfs_swapext_check_rt_extents(mp, req)		(0)
-+#endif
 +
- /* Check all extents to make sure we can actually swap them. */
- int
- xfs_swapext_check_extents(
-@@ -159,12 +261,7 @@ xfs_swapext_check_extents(
- 	    ifp2->if_format == XFS_DINODE_FMT_LOCAL)
- 		return -EINVAL;
+ static inline void
+ xfs_swapext_clear_reflink(
+ 	struct xfs_trans	*tp,
+@@ -405,6 +443,8 @@ xfs_swapext_do_postop_work(
  
--	/* We don't support realtime data forks yet. */
--	if (!XFS_IS_REALTIME_INODE(req->ip1))
--		return 0;
--	if (req->whichfork == XFS_ATTR_FORK)
--		return 0;
--	return -EINVAL;
-+	return xfs_swapext_check_rt_extents(mp, req);
- }
+ 		if (sxi->sxi_flags & XFS_SWAP_EXT_ATTR_FORK)
+ 			error = xfs_swapext_attr_to_sf(tp, sxi);
++		else if (S_ISDIR(VFS_I(sxi->sxi_ip2)->i_mode))
++			error = xfs_swapext_dir_to_sf(tp, sxi);
+ 		sxi->sxi_flags &= ~XFS_SWAP_EXT_CVT_INO2_SF;
+ 		if (error)
+ 			return error;
+@@ -1059,7 +1099,9 @@ xfs_swapext(
+ 	if (req->req_flags & XFS_SWAP_REQ_SET_SIZES)
+ 		ASSERT(req->whichfork == XFS_DATA_FORK);
+ 	if (req->req_flags & XFS_SWAP_REQ_CVT_INO2_SF)
+-		ASSERT(req->whichfork == XFS_ATTR_FORK);
++		ASSERT(req->whichfork == XFS_ATTR_FORK ||
++		       (req->whichfork == XFS_DATA_FORK &&
++			S_ISDIR(VFS_I(req->ip2)->i_mode)));
  
- #ifdef CONFIG_XFS_QUOTA
-diff --git a/libxfs/xfs_swapext.h b/libxfs/xfs_swapext.h
-index 6b610fea150..155add23d8e 100644
---- a/libxfs/xfs_swapext.h
-+++ b/libxfs/xfs_swapext.h
-@@ -13,12 +13,11 @@
-  * This can be done to individual file extents by using the block mapping log
-  * intent items introduced with reflink and rmap; or to entire file ranges
-  * using swapext log intent items to track the overall progress across multiple
-- * extent mappings.  Realtime is not supported yet.
-+ * extent mappings.
-  */
- static inline bool xfs_swapext_supported(struct xfs_mount *mp)
- {
--	return (xfs_has_reflink(mp) || xfs_has_rmapbt(mp)) &&
--	       !xfs_has_realtime(mp);
-+	return xfs_has_reflink(mp) || xfs_has_rmapbt(mp);
- }
- 
- /*
+ 	if (req->blockcount == 0)
+ 		return;
 
