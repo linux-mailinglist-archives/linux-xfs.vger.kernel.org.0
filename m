@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0225D65A0B1
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:34:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2397659F82
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:24:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236087AbiLaBeu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:34:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
+        id S229758AbiLaAYM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:24:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236116AbiLaBet (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:34:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BEF1E3CE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:34:47 -0800 (PST)
+        with ESMTP id S230117AbiLaAYL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:24:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B80FD104
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:24:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C33F6B81E0A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:34:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D02C433EF;
-        Sat, 31 Dec 2022 01:34:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 279E261CE2
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:24:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86CBEC433EF;
+        Sat, 31 Dec 2022 00:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450484;
-        bh=Pah5anWnrvyNYsFUiNVPxzlUMMaRZXC1CtzpQWxDA1E=;
+        s=k20201202; t=1672446249;
+        bh=r4KoeO7sXxeqp4oAUJrgOf8pHnzBa18ko+n8vo0w2fY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gmGnOiCwYpmrIeZCmon9uZsd1ETPeXDqEqLB1S0hL4I04OrF8eofp+FbbGTxzpvlL
-         EJoxtj3f1gblyVpzmgufYhj1A9eceFnjfDwPisNRCUJdgx/v44o0sVXQ3mzpGvA2VU
-         cf/rwTrmhi+PAgZKTIzgutm62YozjGBWEaYlLeiTE9dDgnAFfl5PRreupCoApXKN2O
-         PKM29iuyqvnBq6EAhUDnldmtvETnkfHlp7OyY/uEjtb4vvgF4pf03hBSnvC+lf21F1
-         3H/AfYiZWhwEMEWVFw8D0NloyjSlYhtgZ8OdzeWHQ9jMzeLjdlDCq4j7wLib0dQfYw
-         GRg5qRGpn9PoQ==
-Subject: [PATCH 1/2] xfs: clean up extent free log intent item tracepoint
- callsites
+        b=QIvZP2ITPo5E4xXqMzmmRoNgC84auS4YpKotjd8IKv/aLPOer2q5riMuzolo+AwT9
+         Xs2FAkgrQ0gV1B3+JWrfm1qlptyAjv3o9FdI2Rj314o96PccUH1/eTPZwUAMv0qVNH
+         1dV3FMgkZlHQYvcNBqDq86Jo9s0eVdBetWTwJ5ovpjQ/XKYGEwpKYbO7HsJiOYqMT+
+         FBpBTL/VqYm0lZ0qEJdpcfOegGdvKp/1iskeBVTub+cx8F4JX8By7nmfvg8qVpt2qM
+         Vw++xlvTj1jEos3EKKxVpy0RXHBjKRB35cnL0Dzd3TZqc+zSaPfs5SJHwY5BcBsmJ+
+         tx1xmTNj9dEHA==
+Subject: [PATCH 1/1] xfs: map xfile pages directly into xfs_buf
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:18:05 -0800
-Message-ID: <167243868534.714498.1611693606749841148.stgit@magnolia>
-In-Reply-To: <167243868517.714498.12799285534857942283.stgit@magnolia>
-References: <167243868517.714498.12799285534857942283.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:18:07 -0800
+Message-ID: <167243868762.714598.3181270732734956525.stgit@magnolia>
+In-Reply-To: <167243868750.714598.6299645052246352439.stgit@magnolia>
+References: <167243868750.714598.6299645052246352439.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,145 +54,46 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Pass the incore EFI structure to the tracepoints instead of open-coding
-the argument passing.  This cleans up the call sites a bit.
+Map the xfile pages directly into xfs_buf to reduce memory overhead.
+It's silly to use memory to stage changes to shmem pages for ephemeral
+btrees that don't care about transactionality.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c |    7 +++----
- fs/xfs/libxfs/xfs_alloc.h |    1 -
- fs/xfs/xfs_extfree_item.c |    6 ++----
- fs/xfs/xfs_trace.h        |   33 +++++++++++++++------------------
- 4 files changed, 20 insertions(+), 27 deletions(-)
+ libxfs/xfs_btree_mem.h  |    6 ++++++
+ libxfs/xfs_rmap_btree.c |    1 +
+ 2 files changed, 7 insertions(+)
 
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 550d0e3c8528..b9aef7937a2c 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2587,7 +2587,7 @@ xfs_defer_agfl_block(
- 	xefi->xefi_blockcount = 1;
- 	xefi->xefi_owner = oinfo->oi_owner;
+diff --git a/libxfs/xfs_btree_mem.h b/libxfs/xfs_btree_mem.h
+index ee142b97283..8feb104522b 100644
+--- a/libxfs/xfs_btree_mem.h
++++ b/libxfs/xfs_btree_mem.h
+@@ -17,8 +17,14 @@ struct xfbtree_config {
  
--	trace_xfs_agfl_free_defer(mp, agno, 0, agbno, 1);
-+	trace_xfs_agfl_free_defer(mp, xefi);
- 
- 	xfs_extent_free_get_group(mp, xefi);
- 	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_AGFL_FREE, &xefi->xefi_list);
-@@ -2641,9 +2641,8 @@ __xfs_free_extent_later(
- 	} else {
- 		xefi->xefi_owner = XFS_RMAP_OWN_NULL;
- 	}
--	trace_xfs_bmap_free_defer(mp,
--			XFS_FSB_TO_AGNO(tp->t_mountp, bno), 0,
--			XFS_FSB_TO_AGBNO(tp->t_mountp, bno), len);
+ 	/* Owner of this btree. */
+ 	unsigned long long		owner;
 +
-+	trace_xfs_extent_free_defer(mp, xefi);
++	/* XFBTREE_* flags */
++	unsigned int			flags;
+ };
  
- 	xfs_extent_free_get_group(mp, xefi);
- 	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_FREE, &xefi->xefi_list);
-diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index 5b05c8bfa60a..83b92c3b3452 100644
---- a/fs/xfs/libxfs/xfs_alloc.h
-+++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -255,7 +255,6 @@ xfs_free_extent_later(
- 	__xfs_free_extent_later(tp, bno, len, oinfo, false);
- }
++/* buffers should be directly mapped from memory */
++#define XFBTREE_DIRECT_MAP		(1U << 0)
++
+ #ifdef CONFIG_XFS_IN_MEMORY_BTREE
+ unsigned int xfs_btree_mem_head_nlevels(struct xfs_buf *head_bp);
  
--
- extern struct kmem_cache	*xfs_extfree_item_cache;
+diff --git a/libxfs/xfs_rmap_btree.c b/libxfs/xfs_rmap_btree.c
+index d6db7dfe22f..bc953516a98 100644
+--- a/libxfs/xfs_rmap_btree.c
++++ b/libxfs/xfs_rmap_btree.c
+@@ -668,6 +668,7 @@ xfs_rmapbt_mem_create(
+ 		.btree_ops	= &xfs_rmapbt_mem_ops,
+ 		.target		= target,
+ 		.owner		= agno,
++		.flags		= XFBTREE_DIRECT_MAP,
+ 	};
  
- int __init xfs_extfree_intent_init_cache(void);
-diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-index cec637de322e..e23af5ee16b1 100644
---- a/fs/xfs/xfs_extfree_item.c
-+++ b/fs/xfs/xfs_extfree_item.c
-@@ -361,8 +361,7 @@ xfs_trans_free_extent(
- 	if (xefi->xefi_flags & XFS_EFI_BMBT_BLOCK)
- 		oinfo.oi_flags |= XFS_OWNER_INFO_BMBT_BLOCK;
- 
--	trace_xfs_bmap_free_deferred(tp->t_mountp, xefi->xefi_pag->pag_agno, 0,
--			agbno, xefi->xefi_blockcount);
-+	trace_xfs_extent_free_deferred(mp, xefi);
- 
- 	error = __xfs_free_extent(tp, xefi->xefi_pag, agbno,
- 			xefi->xefi_blockcount, &oinfo, XFS_AG_RESV_NONE,
-@@ -558,8 +557,7 @@ xfs_agfl_free_finish_item(
- 	agbno = XFS_FSB_TO_AGBNO(mp, xefi->xefi_startblock);
- 	oinfo.oi_owner = xefi->xefi_owner;
- 
--	trace_xfs_agfl_free_deferred(mp, xefi->xefi_pag->pag_agno, 0, agbno,
--			xefi->xefi_blockcount);
-+	trace_xfs_agfl_free_deferred(mp, xefi);
- 
- 	error = xfs_alloc_read_agf(xefi->xefi_pag, tp, 0, &agbp);
- 	if (!error)
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 0b5748546c4c..698616531ea0 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -83,6 +83,7 @@ struct xfs_bmap_intent;
- struct xfs_swapext_intent;
- struct xfs_swapext_req;
- struct xfs_rtgroup;
-+struct xfs_extent_free_item;
- 
- #define XFS_ATTR_FILTER_FLAGS \
- 	{ XFS_ATTR_ROOT,	"ROOT" }, \
-@@ -2761,41 +2762,37 @@ DEFINE_DEFER_PENDING_EVENT(xfs_defer_pending_abort);
- DEFINE_DEFER_PENDING_EVENT(xfs_defer_relog_intent);
- 
- DECLARE_EVENT_CLASS(xfs_free_extent_deferred_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
--		 int type, xfs_agblock_t agbno, xfs_extlen_t len),
--	TP_ARGS(mp, agno, type, agbno, len),
-+	TP_PROTO(struct xfs_mount *mp, struct xfs_extent_free_item *free),
-+	TP_ARGS(mp, free),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
--		__field(int, type)
- 		__field(xfs_agblock_t, agbno)
- 		__field(xfs_extlen_t, len)
-+		__field(unsigned int, flags)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
--		__entry->type = type;
--		__entry->agbno = agbno;
--		__entry->len = len;
-+		__entry->agno = XFS_FSB_TO_AGNO(mp, free->xefi_startblock);
-+		__entry->agbno = XFS_FSB_TO_AGBNO(mp, free->xefi_startblock);
-+		__entry->len = free->xefi_blockcount;
-+		__entry->flags = free->xefi_flags;
- 	),
--	TP_printk("dev %d:%d op %d agno 0x%x agbno 0x%x fsbcount 0x%x",
-+	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x flags 0x%x",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
--		  __entry->type,
- 		  __entry->agno,
- 		  __entry->agbno,
--		  __entry->len)
-+		  __entry->len,
-+		  __entry->flags)
- );
- #define DEFINE_FREE_EXTENT_DEFERRED_EVENT(name) \
- DEFINE_EVENT(xfs_free_extent_deferred_class, name, \
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
--		 int type, \
--		 xfs_agblock_t bno, \
--		 xfs_extlen_t len), \
--	TP_ARGS(mp, agno, type, bno, len))
--DEFINE_FREE_EXTENT_DEFERRED_EVENT(xfs_bmap_free_defer);
--DEFINE_FREE_EXTENT_DEFERRED_EVENT(xfs_bmap_free_deferred);
-+	TP_PROTO(struct xfs_mount *mp, struct xfs_extent_free_item *free), \
-+	TP_ARGS(mp, free))
- DEFINE_FREE_EXTENT_DEFERRED_EVENT(xfs_agfl_free_defer);
- DEFINE_FREE_EXTENT_DEFERRED_EVENT(xfs_agfl_free_deferred);
-+DEFINE_FREE_EXTENT_DEFERRED_EVENT(xfs_extent_free_defer);
-+DEFINE_FREE_EXTENT_DEFERRED_EVENT(xfs_extent_free_deferred);
- 
- DECLARE_EVENT_CLASS(xfs_defer_pending_item_class,
- 	TP_PROTO(struct xfs_mount *mp, struct xfs_defer_pending *dfp,
+ 	return xfbtree_create(mp, &cfg, xfbtreep);
 
