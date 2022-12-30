@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAAA2659E58
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:33:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C67FA659DB2
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:02:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231348AbiL3XdU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:33:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41946 "EHLO
+        id S235391AbiL3XCx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:02:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235506AbiL3XdT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:33:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D3C91DDF4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:33:19 -0800 (PST)
+        with ESMTP id S229527AbiL3XCv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:02:51 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9CD15FC1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:02:50 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DE5A61B98
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:33:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DCC2C433EF;
-        Fri, 30 Dec 2022 23:33:17 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id E44D1CE1924
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:02:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B4BFC433EF;
+        Fri, 30 Dec 2022 23:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672443198;
-        bh=vHhY/AvgsiSm7GMkd8ElviT1IVbQVv1hwlHl/dyVfU8=;
+        s=k20201202; t=1672441367;
+        bh=IIHiSK9oG8mUny5nCWq3cir1NcqCTsjjCK3sEiyuKCE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=fSqItiH0ZR2Cpwe/Q0yJhMXM+YbKr5v9APw1c4UKXW3D5PNly8LGXfwN5Y+sNCMlA
-         OHzSD5DO9V8XA/ki4iEEMLeh+uCRVcZgcMCwqt+9GnY6sLKc1jWVOOMRJ2sq3mDbyI
-         5PLFKlmbnDRT7L1Up45OsA/r1KBDC+TfIfnEVxQFlGh16vXGtBd/bMkBapjNpNXiPz
-         C9WbPIAI8O1zTLB7QhUzKB0yz4OCrhlwAthQ5Bs1SvSNNfPFlXx8iYmFlhTqCUBeAb
-         CQ00GKQIJ8U4oTVP+MC7fSoNUG8z/z4qhBjA0OdNIeKn9B96R2ttPAOiyzbqOh43Gj
-         X/Zkxbg6YGSQA==
-Subject: [PATCH 1/4] xfs: speed up xfs_iwalk_adjust_start a little bit
+        b=anO96mvnEsHhSzRSMCTHuSPp1reDAPTBFblWsRszsb8JqmR81eY1gZX/Fmw/0bf22
+         WBPVJDe03iE6Dv/g8u6E04Ju7YFQ5EaLoT/clqxlsE2jyJn/yqiu3avT0jl555AU1n
+         ZyV16Ov3IShTiXt53GvCxNg3QWUe0l2Nl9HTOym+io0MyxxIcPOZj558MB7Tov6cI1
+         H51oTRc0J3W60cC/l+mrDNcDn7LjXaho9PePPiFDXf6mC7TXLvUUClHsfuzqhA6XkN
+         DcFUYxKykyPcS8M6WKe6gohs8JqM3SUxsXIo+CTmf+mWCvB081ZmI7t4aokU+88hPo
+         u/8s1q2eIofDw==
+Subject: [PATCHSET v24.0 0/5] xfs: online repair of quota counters
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:13:03 -0800
-Message-ID: <167243838349.695519.1875112266874805617.stgit@magnolia>
-In-Reply-To: <167243838331.695519.18058154683213474280.stgit@magnolia>
-References: <167243838331.695519.18058154683213474280.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:13:06 -0800
+Message-ID: <167243838686.695667.4884256571173103690.stgit@magnolia>
+In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
+References: <Y69Unb7KRM5awJoV@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,50 +52,60 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Replace the open-coded loop that recomputes freecount with a single call
-to a bit weight function.
+This series uses the inode scanner and live update hook functionality
+introduced in the last patchset to implement quotacheck on a live
+filesystem.  The quotacheck scrubber builds an incore copy of the
+dquot resource usage counters and compares it to the live dquots to
+report discrepancies.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If the user chooses to repair the quota counters, the repair function
+visits each incore dquot to update the counts from the live information.
+The live update hooks are key to keeping the incore copy up to date.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-quotacheck
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-quotacheck
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-quotacheck
 ---
- fs/xfs/xfs_iwalk.c |   13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
-
-
-diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-index 594ccadb729f..54a262b33244 100644
---- a/fs/xfs/xfs_iwalk.c
-+++ b/fs/xfs/xfs_iwalk.c
-@@ -22,6 +22,7 @@
- #include "xfs_trans.h"
- #include "xfs_pwork.h"
- #include "xfs_ag.h"
-+#include "xfs_bit.h"
- 
- /*
-  * Walking Inodes in the Filesystem
-@@ -131,21 +132,11 @@ xfs_iwalk_adjust_start(
- 	struct xfs_inobt_rec_incore	*irec)	/* btree record */
- {
- 	int				idx;	/* index into inode chunk */
--	int				i;
- 
- 	idx = agino - irec->ir_startino;
- 
--	/*
--	 * We got a right chunk with some left inodes allocated at it.  Grab
--	 * the chunk record.  Mark all the uninteresting inodes free because
--	 * they're before our start point.
--	 */
--	for (i = 0; i < idx; i++) {
--		if (XFS_INOBT_MASK(i) & ~irec->ir_free)
--			irec->ir_freecount++;
--	}
--
- 	irec->ir_free |= xfs_inobt_maskn(0, idx);
-+	irec->ir_freecount = hweight64(irec->ir_free);
- }
- 
- /* Allocate memory for a walk. */
+ fs/xfs/Makefile                  |    2 
+ fs/xfs/libxfs/xfs_fs.h           |    4 
+ fs/xfs/libxfs/xfs_health.h       |    4 
+ fs/xfs/scrub/common.c            |   47 ++
+ fs/xfs/scrub/common.h            |   11 
+ fs/xfs/scrub/health.c            |    1 
+ fs/xfs/scrub/quotacheck.c        |  840 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/quotacheck.h        |   76 +++
+ fs/xfs/scrub/quotacheck_repair.c |  254 +++++++++++
+ fs/xfs/scrub/repair.c            |   46 ++
+ fs/xfs/scrub/repair.h            |    5 
+ fs/xfs/scrub/scrub.c             |    9 
+ fs/xfs/scrub/scrub.h             |   10 
+ fs/xfs/scrub/trace.h             |   32 +
+ fs/xfs/scrub/xfarray.h           |   19 +
+ fs/xfs/xfs_health.c              |    1 
+ fs/xfs/xfs_inode.c               |   21 +
+ fs/xfs/xfs_inode.h               |    3 
+ fs/xfs/xfs_qm.c                  |   23 +
+ fs/xfs/xfs_qm.h                  |   16 +
+ fs/xfs/xfs_qm_bhv.c              |    1 
+ fs/xfs/xfs_quota.h               |   45 ++
+ fs/xfs/xfs_trans_dquot.c         |  158 +++++++
+ 23 files changed, 1604 insertions(+), 24 deletions(-)
+ create mode 100644 fs/xfs/scrub/quotacheck.c
+ create mode 100644 fs/xfs/scrub/quotacheck.h
+ create mode 100644 fs/xfs/scrub/quotacheck_repair.c
 
