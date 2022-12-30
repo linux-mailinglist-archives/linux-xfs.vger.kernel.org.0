@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 590D1659FB8
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:35:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3DC2659FB4
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:34:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235739AbiLaAfH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:35:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34112 "EHLO
+        id S235712AbiLaAeC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:34:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235435AbiLaAfG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:35:06 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A5A1DDE4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:35:05 -0800 (PST)
+        with ESMTP id S235655AbiLaAeC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:34:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B9A1DDE4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:34:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 78373B80883
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:35:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C5D2C433EF;
-        Sat, 31 Dec 2022 00:35:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1314561C63
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:34:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E03C433EF;
+        Sat, 31 Dec 2022 00:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446903;
-        bh=b7ljo0En4q++GnEO7bOXZ/k2e/2L4zIqzdWIpmampXI=;
+        s=k20201202; t=1672446840;
+        bh=hpP4MJ9V6YvRymh4jocqoLMyOjhd22/YYU85ABgSC4M=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=prnzzmCpuqZmTS0uC1QM5JG72ctqXwhrF9cDskGLPDBiSj7WHWbQjcaiE0LMwYctd
-         BJnYvJydUcHdwdmyTni/0WJWw1POsVnN9fzuhKIU8XZCbD6aKIRHEvCNKeCIb3V5LK
-         QoQe/gbGNduF/4wm+TUqXXb9GJBTBOEDI6BTIkVJNDEZ2R5VVigPZ+ANDJfu6tcArw
-         WvQD8rqbkakBghJZlYQnKyG/wx0yCsKcqeZEoTqig17fLds9AtyEEGwJtOMycZArvK
-         q6c0oVPmh7LsTjCUk+KI9nvpzJd/OwDZUtVrEdZ/xDtSQnmi5P1gs1uH6mAbZyDlYZ
-         YOuk2haTdWj1Q==
-Subject: [PATCH 5/8] xfs_scrub_fail: return the failure status of the mailer
- program
+        b=aFsvZ97Da0kBK2QI4dWZ0ZqQr9+zlj1m4jBs9jlfmsuC+5vI7b8svqJ0no1NXQ/GF
+         OKGXwJu0hdbKqIIakNdarSgEvjph6RZ5l9HbiCBy9HK9dHtst3P/3gE6nC5oxoNEwY
+         E+FTOadWPwRhWdKjjQadlpBmGW/oM4Glalbv+XY5E1bbliELO7pOaRa1NLCs9yJHoc
+         RfvSswqaKhYHfof/YC17+JBQHdYWdOoYafdAhMnOlCT+IPLljtHtN07mfALvdejYsY
+         9fhkQrCr002MFCQ7qG301XD0d1lKGKEMKI9/1H3Gi64JsHydC8NKIo0vMuRMUL46do
+         WAnLss6/l3EqA==
+Subject: [PATCH 1/8] debian: install scrub services with dh_installsystemd
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871164.717702.12178389387628868397.stgit@magnolia>
+Message-ID: <167243871113.717702.9657625631265376492.stgit@magnolia>
 In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
 References: <167243871097.717702.15336500890922415647.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,23 +54,26 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-We should return the exit code of the mailer program sending the scrub
-failure reports, since that's much more important to anyone watching the
-system.
+Use dh_installsystemd to handle the installation and activation of the
+scrub systemd services.  This requires bumping the compat version to 11.
+Note that the services are /not/ activated on installation.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/xfs_scrub_fail |    1 +
+ debian/rules |    1 +
  1 file changed, 1 insertion(+)
 
 
-diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
-index 4ec7e48836a..fbe30cbc4c6 100755
---- a/scrub/xfs_scrub_fail
-+++ b/scrub/xfs_scrub_fail
-@@ -56,3 +56,4 @@ So sorry, the automatic xfs_scrub of ${mntpoint} on ${hostname} failed.
- A log of what happened follows:
- ENDL
- systemctl status --full --lines 4294967295 "xfs_scrub@${mntpoint_esc}") | "${mailer}" -t -i
-+exit "${PIPESTATUS[1]}"
+diff --git a/debian/rules b/debian/rules
+index 95df4835b25..57baad625c5 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -108,6 +108,7 @@ binary-arch: checkroot built
+ 	dh_compress
+ 	dh_fixperms
+ 	dh_makeshlibs
++	dh_installsystemd -p xfsprogs --no-enable --no-start --no-restart-after-upgrade --no-stop-on-upgrade
+ 	dh_installdeb
+ 	dh_shlibdeps
+ 	dh_gencontrol
 
