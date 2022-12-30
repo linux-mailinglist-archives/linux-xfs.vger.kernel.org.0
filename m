@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C96165A1A0
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:32:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A9D6659FFD
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:51:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236240AbiLaCc5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:32:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56642 "EHLO
+        id S235971AbiLaAvL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:51:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236147AbiLaCc5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:32:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4084D26D9
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:32:56 -0800 (PST)
+        with ESMTP id S235961AbiLaAvL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:51:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5C61C921;
+        Fri, 30 Dec 2022 16:51:09 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 02BB0B81C22
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:32:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5D28C433D2;
-        Sat, 31 Dec 2022 02:32:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D0CA661D14;
+        Sat, 31 Dec 2022 00:51:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32776C433D2;
+        Sat, 31 Dec 2022 00:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453973;
-        bh=oxBAP3OPMPA5cfi9ab+wTSvN+iHHUMoDffjO98jW2oo=;
+        s=k20201202; t=1672447868;
+        bh=oyyuHur/DXFNz7J/oQoWbdhwO+6Pd55fMwPnIveT6oY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RwzpuOxp5ICtruljzbFRGulDp+eWcHMrsZJBdlZ3hyRjBUzrwOhQKEUA+90bkcEMj
-         3Sz9QM5ujKo1/swRgTott8OqO5ug4uF16jYDqIQ8V/OE0mThO9E2qUQ6pJh56YX8sv
-         LyjfcKYgmWnyIi7Kj44dXhHgUSK9hwM5MlBEclPfbB4Wr0a/tG5ayCjQlOCpc1kS7S
-         ltWNZ6E31bZvo3rSVmIcFh/f5aVLpsOiicXgMS6HJpkpBypttCYwpQ2+TMLNc29rq+
-         f19GlCdP4MUeZwuRjXa+x9ExraI5fXixLprr8dyJOU5d950ohWvYZygAmcoSciar+t
-         rUshpw+ptXkEQ==
-Subject: [PATCH 11/45] xfs: export the geometry of realtime groups to
- userspace
+        b=oT/k8+TVCSh/w68Bf8eKyGJMKavtSEqCl3aLgNPAfWTBBSU1bwnQ6kDuPnfBrkpvz
+         QUnBycc4D2+9zY7yfeqKmDhdAyRwVy04q9YZAxAiKL4msRdMZLC1BUXXaMxaiuICs5
+         5pQk/zLz02qjxbIuJZY3Pkh9iZtaO6UE2l56gq6OEQvDdVKvit9o7TSGuA8BH0riAE
+         PI3EvrmA9N6xlebqXJTaj5440G6jQ7ALhAzd2tnE4wOzpNtlaw1bSlauDVB9Al7m47
+         qEp9Ws6vOIJKZwX9I25rt2eZzhwvzK74RuqodQxgeCUrorvMekJkK6bs2aTGoSi1Px
+         SDT4RDl3NxpEA==
+Subject: [PATCH 3/5] fuzzy: test fuzzing realtime free space metadata
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:45 -0800
-Message-ID: <167243878509.731133.10626383770835296737.stgit@magnolia>
-In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
-References: <167243878346.731133.14642166452774753637.stgit@magnolia>
+Message-ID: <167243878509.731641.14915208406311416359.stgit@magnolia>
+In-Reply-To: <167243878469.731641.981302372644525592.stgit@magnolia>
+References: <167243878469.731641.981302372644525592.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,126 +54,656 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create an ioctl so that the kernel can report the status of realtime
-groups to userspace.
+Fuzz the contents of the realtime bitmap and summary files to see what
+happens.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/util.c        |    7 +++++++
- libxfs/xfs_fs.h      |   16 ++++++++++++++++
- libxfs/xfs_health.h  |    2 ++
- libxfs/xfs_rtgroup.c |   14 ++++++++++++++
- libxfs/xfs_rtgroup.h |    4 ++++
- 5 files changed, 43 insertions(+)
+ common/fuzzy       |  107 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ tests/xfs/1562     |   41 ++++++++++++++++++++
+ tests/xfs/1562.out |    4 ++
+ tests/xfs/1563     |   41 ++++++++++++++++++++
+ tests/xfs/1563.out |    4 ++
+ tests/xfs/1564     |   41 ++++++++++++++++++++
+ tests/xfs/1564.out |    4 ++
+ tests/xfs/1565     |   41 ++++++++++++++++++++
+ tests/xfs/1565.out |    4 ++
+ tests/xfs/1566     |   42 ++++++++++++++++++++
+ tests/xfs/1566.out |    4 ++
+ tests/xfs/1567     |   42 ++++++++++++++++++++
+ tests/xfs/1567.out |    4 ++
+ tests/xfs/1568     |   41 ++++++++++++++++++++
+ tests/xfs/1568.out |    4 ++
+ tests/xfs/1569     |   41 ++++++++++++++++++++
+ tests/xfs/1569.out |    4 ++
+ 17 files changed, 465 insertions(+), 4 deletions(-)
+ create mode 100755 tests/xfs/1562
+ create mode 100644 tests/xfs/1562.out
+ create mode 100755 tests/xfs/1563
+ create mode 100644 tests/xfs/1563.out
+ create mode 100755 tests/xfs/1564
+ create mode 100644 tests/xfs/1564.out
+ create mode 100755 tests/xfs/1565
+ create mode 100644 tests/xfs/1565.out
+ create mode 100755 tests/xfs/1566
+ create mode 100644 tests/xfs/1566.out
+ create mode 100755 tests/xfs/1567
+ create mode 100644 tests/xfs/1567.out
+ create mode 100755 tests/xfs/1568
+ create mode 100644 tests/xfs/1568.out
+ create mode 100755 tests/xfs/1569
+ create mode 100644 tests/xfs/1569.out
 
 
-diff --git a/libxfs/util.c b/libxfs/util.c
-index 7b16d30b754..e8397fdc341 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -444,6 +444,13 @@ xfs_fs_mark_healthy(
+diff --git a/common/fuzzy b/common/fuzzy
+index d8eb7d8b72..ef54f2fe2c 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -154,6 +154,12 @@ _scratch_xfs_dump_metadata() {
+ 	_scratch_xfs_db "${cmds[@]}" -c print
  }
  
- void xfs_ag_geom_health(struct xfs_perag *pag, struct xfs_ag_geometry *ageo) { }
-+void
-+xfs_rtgroup_geom_health(
-+	struct xfs_rtgroup		*rtg,
-+	struct xfs_rtgroup_geometry	*rgeo)
-+{
-+	/* empty */
++# Decide from the output of the xfs_db "stack" command if the debugger's io
++# cursor is pointed at a block that is an unstructured data format (blob).
++__scratch_xfs_detect_blob_from_stack() {
++	grep -q -E 'inode.*, type (data|rtsummary|rtbitmap)'
 +}
- void xfs_fs_mark_sick(struct xfs_mount *mp, unsigned int mask) { }
- void xfs_agno_mark_sick(struct xfs_mount *mp, xfs_agnumber_t agno,
- 		unsigned int mask) { }
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index ba90649c54e..e3d87665e4a 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -299,6 +299,21 @@ struct xfs_ag_geometry {
- #define XFS_AG_GEOM_SICK_REFCNTBT (1 << 9)  /* reference counts */
- #define XFS_AG_GEOM_SICK_INODES	(1 << 10) /* bad inodes were seen */
- 
-+/*
-+ * Output for XFS_IOC_RTGROUP_GEOMETRY
-+ */
-+struct xfs_rtgroup_geometry {
-+	uint32_t	rg_number;	/* i/o: rtgroup number */
-+	uint32_t	rg_length;	/* o: length in blocks */
-+	uint32_t	rg_sick;	/* o: sick things in ag */
-+	uint32_t	rg_checked;	/* o: checked metadata in ag */
-+	uint32_t	rg_flags;	/* i/o: flags for this ag */
-+	uint32_t	rg_pad;		/* o: zero */
-+	uint64_t	rg_reserved[13];/* o: zero */
-+};
-+#define XFS_RTGROUP_GEOM_SICK_SUPER	(1 << 0)  /* superblock */
-+#define XFS_RTGROUP_GEOM_SICK_BITMAP	(1 << 1)  /* rtbitmap for this group */
 +
- /*
-  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
-  */
-@@ -819,6 +834,7 @@ struct xfs_scrub_metadata {
- /*	XFS_IOC_GETFSMAP ------ hoisted 59         */
- #define XFS_IOC_SCRUB_METADATA	_IOWR('X', 60, struct xfs_scrub_metadata)
- #define XFS_IOC_AG_GEOMETRY	_IOWR('X', 61, struct xfs_ag_geometry)
-+#define XFS_IOC_RTGROUP_GEOMETRY _IOWR('X', 62, struct xfs_rtgroup_geometry)
- 
- /*
-  * ioctl commands that replace IRIX syssgi()'s
-diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
-index 0beb4153a43..44137c4983f 100644
---- a/libxfs/xfs_health.h
-+++ b/libxfs/xfs_health.h
-@@ -286,6 +286,8 @@ xfs_inode_is_healthy(struct xfs_inode *ip)
- 
- void xfs_fsop_geom_health(struct xfs_mount *mp, struct xfs_fsop_geom *geo);
- void xfs_ag_geom_health(struct xfs_perag *pag, struct xfs_ag_geometry *ageo);
-+void xfs_rtgroup_geom_health(struct xfs_rtgroup *rtg,
-+		struct xfs_rtgroup_geometry *rgeo);
- void xfs_bulkstat_health(struct xfs_inode *ip, struct xfs_bulkstat *bs);
- 
- #define xfs_metadata_is_sick(error) \
-diff --git a/libxfs/xfs_rtgroup.c b/libxfs/xfs_rtgroup.c
-index 86751cb8d31..ebbd0d13a8a 100644
---- a/libxfs/xfs_rtgroup.c
-+++ b/libxfs/xfs_rtgroup.c
-@@ -529,3 +529,17 @@ xfs_rtgroup_unlock(
- 	else if (rtglock_flags & XFS_RTGLOCK_BITMAP_SHARED)
- 		xfs_rtbitmap_unlock_shared(rtg->rtg_mount, XFS_RBMLOCK_BITMAP);
+ # Navigate to some part of the filesystem and print the field info.
+ # The first argument is an grep filter for the fields
+ # The rest of the arguments are xfs_db commands to locate the metadata.
+@@ -169,7 +175,17 @@ _scratch_xfs_list_metadata_fields() {
+ 	for arg in "$@"; do
+ 		cmds+=("-c" "${arg}")
+ 	done
+-	_scratch_xfs_db "${cmds[@]}" -c print | __filter_xfs_db_print_fields "${filter}"
++
++	# Does the path argument point towards something that is an
++	# unstructured blob?
++	if _scratch_xfs_db "${cmds[@]}" -c stack 2>/dev/null | \
++			__scratch_xfs_detect_blob_from_stack; then
++		echo "<blob>"
++		return
++	fi
++
++	_scratch_xfs_db "${cmds[@]}" -c print | \
++		__filter_xfs_db_print_fields "${filter}"
  }
-+
-+/* Retrieve rt group geometry. */
-+int
-+xfs_rtgroup_get_geometry(
-+	struct xfs_rtgroup	*rtg,
-+	struct xfs_rtgroup_geometry *rgeo)
-+{
-+	/* Fill out form. */
-+	memset(rgeo, 0, sizeof(*rgeo));
-+	rgeo->rg_number = rtg->rtg_rgno;
-+	rgeo->rg_length = rtg->rtg_blockcount;
-+	xfs_rtgroup_geom_health(rtg, rgeo);
-+	return 0;
-+}
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index b1e53af5a65..1fec49c496d 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -222,6 +222,9 @@ int xfs_rtgroup_update_secondary_sbs(struct xfs_mount *mp);
- void xfs_rtgroup_lock(struct xfs_trans *tp, struct xfs_rtgroup *rtg,
- 		unsigned int rtglock_flags);
- void xfs_rtgroup_unlock(struct xfs_rtgroup *rtg, unsigned int rtglock_flags);
-+
-+int xfs_rtgroup_get_geometry(struct xfs_rtgroup *rtg,
-+		struct xfs_rtgroup_geometry *rgeo);
- #else
- # define xfs_rtgroup_block_count(mp, rgno)	(0)
- # define xfs_rtgroup_update_super(bp, sb_bp)	((void)0)
-@@ -229,6 +232,7 @@ void xfs_rtgroup_unlock(struct xfs_rtgroup *rtg, unsigned int rtglock_flags);
- # define xfs_rtgroup_update_secondary_sbs(mp)	(0)
- # define xfs_rtgroup_lock(tp, rtg, gf)		((void)0)
- # define xfs_rtgroup_unlock(rtg, gf)		((void)0)
-+# define xfs_rtgroup_get_geometry(rtg, rgeo)	(-EOPNOTSUPP)
- #endif /* CONFIG_XFS_RT */
  
- #endif /* __LIBXFS_RTGROUP_H */
+ # Fuzz a metadata field
+@@ -207,6 +223,70 @@ _scratch_xfs_fuzz_metadata_field() {
+ 	return 0
+ }
+ 
++# List the fuzzing verbs available for unstructured blobs
++__scratch_xfs_list_blob_fuzz_verbs() {
++		cat << ENDL
++zeroes
++ones
++firstbit
++middlebit
++lastbit
++random
++ENDL
++}
++
++# Fuzz a metadata blob
++# The first arg is a blob fuzzing verb
++# The rest of the arguments are xfs_db commands to find the metadata.
++_scratch_xfs_fuzz_metadata_blob() {
++	local fuzzverb="$1"
++	shift
++	local trashcmd=(blocktrash -z)
++
++	local cmds=()
++	for arg in "$@"; do
++		cmds+=("-c" "${arg}")
++	done
++
++	local bytecount=$(_scratch_xfs_db "${cmds[@]}" -c "stack" | grep 'byte.*length' | awk '{print $5}')
++	local bitmax=$((bytecount * 8))
++
++	case "${fuzzverb}" in
++	"zeroes")
++		trashcmd+=(-0 -o 0 -x "${bitmax}" -y "${bitmax}");;
++	"ones")
++		trashcmd+=(-1 -o 0 -x "${bitmax}" -y "${bitmax}");;
++	"firstbit")
++		trashcmd+=(-2 -o 0 -x 1 -y 1);;
++	"middlebit")
++		trashcmd+=(-2 -o $((bitmax / 2)) -x 1 -y 1);;
++	"lastbit")
++		trashcmd+=(-2 -o "${bitmax}" -x 1 -y 1);;
++	"random")
++		trashcmd+=(-3 -o 0 -x "${bitmax}" -y "${bitmax}");;
++	*)
++		echo "Unknown blob fuzz verb \"${fuzzverb}\"."
++		return 1
++		;;
++	esac
++
++	trashcmd="${trashcmd[@]}"
++	oldval="$(_scratch_xfs_get_metadata_field "" "$@")"
++	while true; do
++		_scratch_xfs_db -x "${cmds[@]}" -c "${trashcmd}"
++		echo
++		newval="$(_scratch_xfs_get_metadata_field "" "$@" 2> /dev/null)"
++		if [ "${fuzzverb}" != "random" ] || [ "${oldval}" != "${newval}" ]; then
++			break;
++		fi
++	done
++	if [ "${oldval}" = "${newval}" ]; then
++		echo "Blob already set to new value, skipping test."
++		return 1
++	fi
++	return 0
++}
++
+ # Try to forcibly unmount the scratch fs
+ __scratch_xfs_fuzz_unmount()
+ {
+@@ -503,7 +583,11 @@ __scratch_xfs_fuzz_field_test() {
+ 
+ 	# Set the new field value
+ 	__fuzz_notify "+ Fuzz ${field} = ${fuzzverb}"
+-	_scratch_xfs_fuzz_metadata_field "${field}" ${fuzzverb} "$@"
++	if [ "$field" = "<blob>" ]; then
++		_scratch_xfs_fuzz_metadata_blob ${fuzzverb} "$@"
++	else
++		_scratch_xfs_fuzz_metadata_field "${field}" ${fuzzverb} "$@"
++	fi
+ 	res=$?
+ 	test $res -ne 0 && return
+ 
+@@ -587,7 +671,22 @@ _scratch_xfs_list_fuzz_verbs() {
+ 		echo "${SCRATCH_XFS_LIST_FUZZ_VERBS}" | tr '[ ,]' '[\n\n]'
+ 		return;
+ 	fi
+-	_scratch_xfs_db -x -c 'sb 0' -c 'fuzz' | grep '^Fuzz commands:' | \
++
++	local cmds=()
++	for arg in "$@"; do
++		cmds+=("-c" "${arg}")
++	done
++	test "${#cmds[@]}" -eq 0 && cmds=('-c' 'sb 0')
++
++	# Does the path argument point towards something that is an
++	# unstructured blob?
++	if _scratch_xfs_db "${cmds[@]}" -c stack 2>/dev/null | \
++			__scratch_xfs_detect_blob_from_stack; then
++		__scratch_xfs_list_blob_fuzz_verbs
++		return
++	fi
++
++	_scratch_xfs_db -x "${cmds[@]}" -c 'fuzz' | grep '^Fuzz commands:' | \
+ 		sed -e 's/[,.]//g' -e 's/Fuzz commands: //g' -e 's/ /\n/g' | \
+ 		grep -v '^random$'
+ }
+@@ -605,7 +704,7 @@ _scratch_xfs_fuzz_metadata() {
+ 	shift; shift
+ 
+ 	fields="$(_scratch_xfs_list_metadata_fields "${filter}" "$@")"
+-	verbs="$(_scratch_xfs_list_fuzz_verbs)"
++	verbs="$(_scratch_xfs_list_fuzz_verbs "$@")"
+ 	echo "Fields we propose to fuzz with the \"${repair}\" repair strategy: $@"
+ 	echo $(echo "${fields}")
+ 	echo "Verbs we propose to fuzz with:"
+diff --git a/tests/xfs/1562 b/tests/xfs/1562
+new file mode 100755
+index 0000000000..015209eeb2
+--- /dev/null
++++ b/tests/xfs/1562
+@@ -0,0 +1,41 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1562
++#
++# Populate a XFS filesystem and fuzz every realtime bitmap field.
++# Use xfs_scrub to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtbitmap"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.bitmap')
++else
++	path=('sb' 'addr rbmino')
++fi
++_scratch_xfs_fuzz_metadata '' 'online' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtbitmap"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1562.out b/tests/xfs/1562.out
+new file mode 100644
+index 0000000000..63a3bc7600
+--- /dev/null
++++ b/tests/xfs/1562.out
+@@ -0,0 +1,4 @@
++QA output created by 1562
++Format and populate
++Fuzz rtbitmap
++Done fuzzing rtbitmap
+diff --git a/tests/xfs/1563 b/tests/xfs/1563
+new file mode 100755
+index 0000000000..2be0870a3d
+--- /dev/null
++++ b/tests/xfs/1563
+@@ -0,0 +1,41 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1563
++#
++# Populate a XFS filesystem and fuzz every realtime summary field.
++# Use xfs_scrub to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtsummary"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.summary')
++else
++	path=('sb' 'addr rsumino')
++fi
++_scratch_xfs_fuzz_metadata '' 'online' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtsummary"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1563.out b/tests/xfs/1563.out
+new file mode 100644
+index 0000000000..e4ca8c3733
+--- /dev/null
++++ b/tests/xfs/1563.out
+@@ -0,0 +1,4 @@
++QA output created by 1563
++Format and populate
++Fuzz rtsummary
++Done fuzzing rtsummary
+diff --git a/tests/xfs/1564 b/tests/xfs/1564
+new file mode 100755
+index 0000000000..c0d10ff0e9
+--- /dev/null
++++ b/tests/xfs/1564
+@@ -0,0 +1,41 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1564
++#
++# Populate a XFS filesystem and fuzz every realtime bitmap field.
++# Use xfs_repair to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtbitmap"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.bitmap')
++else
++	path=('sb' 'addr rbmino')
++fi
++_scratch_xfs_fuzz_metadata '' 'offline' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtbitmap"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1564.out b/tests/xfs/1564.out
+new file mode 100644
+index 0000000000..afede817b8
+--- /dev/null
++++ b/tests/xfs/1564.out
+@@ -0,0 +1,4 @@
++QA output created by 1564
++Format and populate
++Fuzz rtbitmap
++Done fuzzing rtbitmap
+diff --git a/tests/xfs/1565 b/tests/xfs/1565
+new file mode 100755
+index 0000000000..6b4186fb3c
+--- /dev/null
++++ b/tests/xfs/1565
+@@ -0,0 +1,41 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1565
++#
++# Populate a XFS filesystem and fuzz every realtime summary field.
++# Use xfs_repair to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtsummary"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.summary')
++else
++	path=('sb' 'addr rsumino')
++fi
++_scratch_xfs_fuzz_metadata '' 'offline' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtsummary"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1565.out b/tests/xfs/1565.out
+new file mode 100644
+index 0000000000..7a8d9d04d6
+--- /dev/null
++++ b/tests/xfs/1565.out
+@@ -0,0 +1,4 @@
++QA output created by 1565
++Format and populate
++Fuzz rtsummary
++Done fuzzing rtsummary
+diff --git a/tests/xfs/1566 b/tests/xfs/1566
+new file mode 100755
+index 0000000000..8d0f61ae10
+--- /dev/null
++++ b/tests/xfs/1566
+@@ -0,0 +1,42 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1566
++#
++# Populate a XFS filesystem and fuzz every realtime bitmap field.
++# Try online repair and, if necessary, offline repair,
++# to test the most likely usage pattern.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_bothrepair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtbitmap"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.bitmap')
++else
++	path=('sb' 'addr rbmino')
++fi
++_scratch_xfs_fuzz_metadata '' 'both' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtbitmap"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1566.out b/tests/xfs/1566.out
+new file mode 100644
+index 0000000000..d50e1d8539
+--- /dev/null
++++ b/tests/xfs/1566.out
+@@ -0,0 +1,4 @@
++QA output created by 1566
++Format and populate
++Fuzz rtbitmap
++Done fuzzing rtbitmap
+diff --git a/tests/xfs/1567 b/tests/xfs/1567
+new file mode 100755
+index 0000000000..7dc2012b67
+--- /dev/null
++++ b/tests/xfs/1567
+@@ -0,0 +1,42 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1567
++#
++# Populate a XFS filesystem and fuzz every realtime summary field.
++# Try online repair and, if necessary, offline repair,
++# to test the most likely usage pattern.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_bothrepair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtsummary"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.summary')
++else
++	path=('sb' 'addr rsumino')
++fi
++_scratch_xfs_fuzz_metadata '' 'both' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtsummary"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1567.out b/tests/xfs/1567.out
+new file mode 100644
+index 0000000000..b88fa0c1b3
+--- /dev/null
++++ b/tests/xfs/1567.out
+@@ -0,0 +1,4 @@
++QA output created by 1567
++Format and populate
++Fuzz rtsummary
++Done fuzzing rtsummary
+diff --git a/tests/xfs/1568 b/tests/xfs/1568
+new file mode 100755
+index 0000000000..c80640ef97
+--- /dev/null
++++ b/tests/xfs/1568
+@@ -0,0 +1,41 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1568
++#
++# Populate a XFS filesystem and fuzz every realtime bitmap field.
++# Do not fix the filesystem, to test metadata verifiers.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_norepair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtbitmap"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.bitmap')
++else
++	path=('sb' 'addr rbmino')
++fi
++_scratch_xfs_fuzz_metadata '' 'none' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtbitmap"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1568.out b/tests/xfs/1568.out
+new file mode 100644
+index 0000000000..a80f579662
+--- /dev/null
++++ b/tests/xfs/1568.out
+@@ -0,0 +1,4 @@
++QA output created by 1568
++Format and populate
++Fuzz rtbitmap
++Done fuzzing rtbitmap
+diff --git a/tests/xfs/1569 b/tests/xfs/1569
+new file mode 100755
+index 0000000000..e303f08ff5
+--- /dev/null
++++ b/tests/xfs/1569
+@@ -0,0 +1,41 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1569
++#
++# Populate a XFS filesystem and fuzz every realtime summary field.
++# Do not fix the filesystem, to test metadata verifiers.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_norepair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz rtsummary"
++is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
++if [ -n "$is_metadir" ]; then
++	path=('path -m /realtime/0.summary')
++else
++	path=('sb' 'addr rsumino')
++fi
++_scratch_xfs_fuzz_metadata '' 'none' "${path[@]}" 'dblock 0' >> $seqres.full
++echo "Done fuzzing rtsummary"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1569.out b/tests/xfs/1569.out
+new file mode 100644
+index 0000000000..d6202cc3af
+--- /dev/null
++++ b/tests/xfs/1569.out
+@@ -0,0 +1,4 @@
++QA output created by 1569
++Format and populate
++Fuzz rtsummary
++Done fuzzing rtsummary
 
