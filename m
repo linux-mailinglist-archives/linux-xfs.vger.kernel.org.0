@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0BA65A235
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:08:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 472B365A23A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:09:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236216AbiLaDIH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:08:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35068 "EHLO
+        id S236269AbiLaDI3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:08:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbiLaDHn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:07:43 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADE71054D;
-        Fri, 30 Dec 2022 19:07:42 -0800 (PST)
+        with ESMTP id S236316AbiLaDI2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:08:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CD81054D;
+        Fri, 30 Dec 2022 19:08:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C9A27B81EAB;
-        Sat, 31 Dec 2022 03:07:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79EA2C433D2;
-        Sat, 31 Dec 2022 03:07:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B20E461D33;
+        Sat, 31 Dec 2022 03:08:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D024C433EF;
+        Sat, 31 Dec 2022 03:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456059;
-        bh=Ja2rsjmpbCQZlvCHfjK9BjCD4ORiClJi7K/yA4HQy+s=;
+        s=k20201202; t=1672456106;
+        bh=IYhc+HmsqaNHoWwpZz/jZLTCQqHhZF3GWE+egNFNDns=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nqYHnsOv+dHq4rbBCPUWkcYHm3Qxg3KyE3f8zs0mZOtCr+dcWQ7ncGRdVgGXb6nIp
-         uYtPjBVHm2VQRIAROLYts3xrNOXt4GbNw4LEkt6NbJUuvngjFkwzE8ClJOkqvp9XUD
-         GNzYFV01TfOqPqkrbCqh04qjZtY3HUylyl8lzmDHpm8HJk4deAFNPWT60lrgITgqzk
-         l8PINx1g6tKNxB53wEx1cTQArFkFdKQXn06qj82ji+kkFqPTuTJZ5KH5x/qRuSDXmB
-         O1RcgkYvfMrQGvcMIbPC6v71Xokm40fKHNFEjmVWChBfKA700C3LBSRwJf4W/H+sQi
-         9bBQ4tCLiBnSQ==
-Subject: [PATCH 6/9] xfs/{050,144,153,299,330}: update quota reports to leave
- out metadir files
+        b=RS4c/E18D6TyUT1OXaiAVWOy1Eb+2ZXidxG8YVnmN8RyoIICuzC59vgP0EAduDsIk
+         lVPRxytU/wIMlSahwY3yWYP3vcTaHf6jng32LKsk77gA+X45yT2VZCPbTIQzWG5/DC
+         1zSmFVatX8GRxHPDrhNhZzH2ISP1OHs2vqJK/+xfarnpMRWuR/dHS3TpAe+dn/03rn
+         cTjFvPv/zLNVAPzuCeHs90zRTZWdi6d3h3MioMn3ndl38IDSTWYVM8zycNDHVk2qxd
+         CW4lC9X9wFSoLRmoXMPdAA0R5mUAq4gRXN3jgtzRJdW7WAbNpyeTUo9XLU9pC/cO2L
+         uiwfope2tcziw==
+Subject: [PATCH 9/9] xfs: create fuzz tests for metadata directories
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:33 -0800
-Message-ID: <167243883317.736753.15243001924230247968.stgit@magnolia>
+Message-ID: <167243883352.736753.14842800987314221725.stgit@magnolia>
 In-Reply-To: <167243883244.736753.17143383151073497149.stgit@magnolia>
 References: <167243883244.736753.17143383151073497149.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,138 +55,501 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Remove the metadata directory tree directories from the quota reporting
-in these tests so that we don't regress the golden output.
+Create fuzz tests to make sure that all the validation works for
+metadata directories and subdirectories.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/filter |    7 +++++--
- common/xfs    |   23 +++++++++++++++++++++++
- tests/xfs/050 |    1 +
- tests/xfs/153 |    1 +
- tests/xfs/299 |    1 +
- tests/xfs/330 |    6 +++++-
- 6 files changed, 36 insertions(+), 3 deletions(-)
+ common/xfs         |   22 ++++++++++++++++++++++
+ tests/xfs/1546     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1546.out |    4 ++++
+ tests/xfs/1547     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1547.out |    4 ++++
+ tests/xfs/1548     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1548.out |    4 ++++
+ tests/xfs/1549     |   38 ++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1549.out |    4 ++++
+ tests/xfs/1550     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1550.out |    4 ++++
+ tests/xfs/1551     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1551.out |    4 ++++
+ tests/xfs/1552     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1552.out |    4 ++++
+ tests/xfs/1553     |   38 ++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1553.out |    4 ++++
+ 17 files changed, 352 insertions(+)
+ create mode 100755 tests/xfs/1546
+ create mode 100644 tests/xfs/1546.out
+ create mode 100755 tests/xfs/1547
+ create mode 100644 tests/xfs/1547.out
+ create mode 100755 tests/xfs/1548
+ create mode 100644 tests/xfs/1548.out
+ create mode 100755 tests/xfs/1549
+ create mode 100644 tests/xfs/1549.out
+ create mode 100755 tests/xfs/1550
+ create mode 100644 tests/xfs/1550.out
+ create mode 100755 tests/xfs/1551
+ create mode 100644 tests/xfs/1551.out
+ create mode 100755 tests/xfs/1552
+ create mode 100644 tests/xfs/1552.out
+ create mode 100755 tests/xfs/1553
+ create mode 100644 tests/xfs/1553.out
 
 
-diff --git a/common/filter b/common/filter
-index 3e3fea7ea0..49c6859992 100644
---- a/common/filter
-+++ b/common/filter
-@@ -618,11 +618,14 @@ _filter_getcap()
- 
- # Filter user/group/project id numbers out of quota reports, and standardize
- # the block counts to use filesystem block size.  Callers must set the id and
--# bsize variables before calling this function.
-+# bsize variables before calling this function.  The qhidden_rootfiles variable
-+# (by default zero) is the number of root files to filter out of the inode
-+# count part of the quota report.
- _filter_quota_report()
- {
- 	test -n "$id" || echo "id must be set"
- 	test -n "$bsize" || echo "block size must be set"
-+	test -n "$qhidden_rootfiles" || qhidden_rootfiles=0
- 
- 	tr -s '[:space:]' | \
- 	perl -npe '
-@@ -630,7 +633,7 @@ _filter_quota_report()
- 		s/^\#0 \d+ /[ROOT] 0 /g;
- 		s/6 days/7 days/g' |
- 	perl -npe '
--		$val = 0;
-+		$val = '"$qhidden_rootfiles"';
- 		if ($ENV{'LARGE_SCRATCH_DEV'}) {
- 			$val = $ENV{'NUM_SPACE_FILES'};
- 		}
 diff --git a/common/xfs b/common/xfs
-index 0f69d3eb18..99e377631b 100644
+index 99e377631b..77af8a6d60 100644
 --- a/common/xfs
 +++ b/common/xfs
-@@ -1783,3 +1783,26 @@ _scratch_xfs_force_no_metadir()
- 		MKFS_OPTIONS="-m metadir=0 $MKFS_OPTIONS"
- 	fi
+@@ -1806,3 +1806,25 @@ _xfs_calc_metadir_files() {
+ 	local metafiles="$($XFS_IO_PROG -c 'bulkstat -m' "$mount" 2>&1 | grep '^bs_ino' | wc -l)"
+ 	echo $((metafiles - regfiles))
  }
 +
-+# Decide if a mount filesystem has metadata directory trees.
-+_xfs_mount_has_metadir() {
-+	local mount="$1"
-+
-+	# spaceman (and its info command) predate metadir
-+	test ! -e "$XFS_SPACEMAN_PROG" && return 1
-+	$XFS_SPACEMAN_PROG -c "info" "$mount" | grep -q 'metadir=1'
++_require_xfs_mkfs_metadir()
++{
++	_scratch_mkfs_xfs_supported -m metadir=1 >/dev/null 2>&1 || \
++		_notrun "mkfs.xfs doesn't have metadir features"
 +}
 +
-+# Compute the number of files in the metadata directory tree.
-+_xfs_calc_metadir_files() {
-+	local mount="$1"
++_require_xfs_scratch_metadir()
++{
++	_require_xfs_mkfs_metadir
++	_require_scratch
 +
-+	if ! _xfs_mount_has_metadir "$mount"; then
-+		echo 0
-+		return
++	_scratch_mkfs -m metadir=1 &> /dev/null
++	_require_scratch_xfs_features METADIR
++	_try_scratch_mount
++	res=$?
++	if [ $res -ne 0 ]; then
++		_notrun "mounting with metadir not supported by filesystem type: $FSTYP"
++	else
++		_scratch_unmount
 +	fi
-+
-+	local regfiles="$($XFS_IO_PROG -c 'bulkstat' "$mount" | grep '^bs_ino' | wc -l)"
-+	local metafiles="$($XFS_IO_PROG -c 'bulkstat -m' "$mount" 2>&1 | grep '^bs_ino' | wc -l)"
-+	echo $((metafiles - regfiles))
 +}
-diff --git a/tests/xfs/050 b/tests/xfs/050
-index 2220e47016..64fbaf687d 100755
---- a/tests/xfs/050
-+++ b/tests/xfs/050
-@@ -34,6 +34,7 @@ _require_xfs_quota
- _scratch_mkfs >/dev/null 2>&1
- _scratch_mount
- bsize=$(_get_file_block_size $SCRATCH_MNT)
-+qhidden_rootfiles=$(_xfs_calc_metadir_files $SCRATCH_MNT)
- _scratch_unmount
- 
- bsoft=$(( 200 * $bsize ))
-diff --git a/tests/xfs/153 b/tests/xfs/153
-index dbe26b6803..fc64bf734a 100755
---- a/tests/xfs/153
-+++ b/tests/xfs/153
-@@ -39,6 +39,7 @@ _require_test_program "vfs/mount-idmapped"
- _scratch_mkfs >/dev/null 2>&1
- _scratch_mount
- bsize=$(_get_file_block_size $SCRATCH_MNT)
-+qhidden_rootfiles=$(_xfs_calc_metadir_files $SCRATCH_MNT)
- _scratch_unmount
- 
- bsoft=$(( 200 * $bsize ))
-diff --git a/tests/xfs/299 b/tests/xfs/299
-index 4b9df3c6aa..2167c492c4 100755
---- a/tests/xfs/299
-+++ b/tests/xfs/299
-@@ -159,6 +159,7 @@ _qmount_option "uquota,gquota,pquota"
- _qmount
- 
- bsize=$(_get_file_block_size $SCRATCH_MNT)
-+qhidden_rootfiles=$(_xfs_calc_metadir_files $SCRATCH_MNT)
- 
- bsoft=$(( 100 * $bsize ))
- bhard=$(( 500 * $bsize ))
-diff --git a/tests/xfs/330 b/tests/xfs/330
-index c6e74e67e8..e919ccc1ca 100755
---- a/tests/xfs/330
-+++ b/tests/xfs/330
-@@ -26,7 +26,10 @@ _require_nobody
- 
- do_repquota()
- {
--	repquota $SCRATCH_MNT | grep -E '^(fsgqa|root|nobody)' | sort -r
-+	repquota $SCRATCH_MNT | grep -E '^(fsgqa|root|nobody)' | sort -r | \
-+	perl -npe '
-+		$val = '"$qhidden_rootfiles"';
-+		s/(^root\s+--\s+\S+\s+\S+\s+\S+\s+)(\S+)/$1@{[$2 - $val]}/g'
- }
- 
- rm -f "$seqres.full"
-@@ -35,6 +38,7 @@ echo "Format and mount"
- _scratch_mkfs > "$seqres.full" 2>&1
- export MOUNT_OPTIONS="-o usrquota,grpquota $MOUNT_OPTIONS"
- _scratch_mount >> "$seqres.full" 2>&1
-+qhidden_rootfiles=$(_xfs_calc_metadir_files $SCRATCH_MNT)
- quotacheck -u -g $SCRATCH_MNT 2> /dev/null
- quotaon $SCRATCH_MNT 2> /dev/null
- 
+diff --git a/tests/xfs/1546 b/tests/xfs/1546
+new file mode 100755
+index 0000000000..5b48463abe
+--- /dev/null
++++ b/tests/xfs/1546
+@@ -0,0 +1,37 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1546
++#
++# Populate a XFS filesystem and fuzz every metadir root field.
++# Use xfs_scrub to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
++
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'online' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1546.out b/tests/xfs/1546.out
+new file mode 100644
+index 0000000000..b72891a758
+--- /dev/null
++++ b/tests/xfs/1546.out
+@@ -0,0 +1,4 @@
++QA output created by 1546
++Format and populate
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1547 b/tests/xfs/1547
+new file mode 100755
+index 0000000000..ff86bc657e
+--- /dev/null
++++ b/tests/xfs/1547
+@@ -0,0 +1,37 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1547
++#
++# Populate a XFS filesystem and fuzz every metadir root field.
++# Use xfs_repair to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
++
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'offline' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1547.out b/tests/xfs/1547.out
+new file mode 100644
+index 0000000000..983cc01343
+--- /dev/null
++++ b/tests/xfs/1547.out
+@@ -0,0 +1,4 @@
++QA output created by 1547
++Format and populate
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1548 b/tests/xfs/1548
+new file mode 100755
+index 0000000000..1f29dfda3b
+--- /dev/null
++++ b/tests/xfs/1548
+@@ -0,0 +1,37 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1548
++#
++# Populate a XFS filesystem and fuzz every metadir root field.
++# Do not fix the filesystem, to test metadata verifiers.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_norepair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
++
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'none' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1548.out b/tests/xfs/1548.out
+new file mode 100644
+index 0000000000..9e395bb059
+--- /dev/null
++++ b/tests/xfs/1548.out
+@@ -0,0 +1,4 @@
++QA output created by 1548
++Format and populate
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1549 b/tests/xfs/1549
+new file mode 100755
+index 0000000000..865023f218
+--- /dev/null
++++ b/tests/xfs/1549
+@@ -0,0 +1,38 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1549
++#
++# Populate a XFS filesystem and fuzz every metadir root field.
++# Try online repair and, if necessary, offline repair,
++# to test the most likely usage pattern.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_bothrepair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /')
++
++echo "Fuzz metadir root"
++_scratch_xfs_fuzz_metadata '' 'both' 'path -m /' >> $seqres.full
++echo "Done fuzzing metadir root"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1549.out b/tests/xfs/1549.out
+new file mode 100644
+index 0000000000..22b3d215e3
+--- /dev/null
++++ b/tests/xfs/1549.out
+@@ -0,0 +1,4 @@
++QA output created by 1549
++Format and populate
++Fuzz metadir root
++Done fuzzing metadir root
+diff --git a/tests/xfs/1550 b/tests/xfs/1550
+new file mode 100755
+index 0000000000..62219e65fc
+--- /dev/null
++++ b/tests/xfs/1550
+@@ -0,0 +1,37 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1550
++#
++# Populate a XFS filesystem and fuzz every metadir subdir field.
++# Use xfs_scrub to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
++
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'online' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1550.out b/tests/xfs/1550.out
+new file mode 100644
+index 0000000000..7694cd670b
+--- /dev/null
++++ b/tests/xfs/1550.out
+@@ -0,0 +1,4 @@
++QA output created by 1550
++Format and populate
++Fuzz metadir subdir
++Done fuzzing metadir subdir
+diff --git a/tests/xfs/1551 b/tests/xfs/1551
+new file mode 100755
+index 0000000000..f101529364
+--- /dev/null
++++ b/tests/xfs/1551
+@@ -0,0 +1,37 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1551
++#
++# Populate a XFS filesystem and fuzz every metadir subdir field.
++# Use xfs_repair to fix the corruption.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
++
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'offline' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1551.out b/tests/xfs/1551.out
+new file mode 100644
+index 0000000000..4c3360d08b
+--- /dev/null
++++ b/tests/xfs/1551.out
+@@ -0,0 +1,4 @@
++QA output created by 1551
++Format and populate
++Fuzz metadir subdir
++Done fuzzing metadir subdir
+diff --git a/tests/xfs/1552 b/tests/xfs/1552
+new file mode 100755
+index 0000000000..ab3b89ec40
+--- /dev/null
++++ b/tests/xfs/1552
+@@ -0,0 +1,37 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1552
++#
++# Populate a XFS filesystem and fuzz every metadir subdir field.
++# Do not fix the filesystem, to test metadata verifiers.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_norepair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
++
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'none' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1552.out b/tests/xfs/1552.out
+new file mode 100644
+index 0000000000..6636b1b656
+--- /dev/null
++++ b/tests/xfs/1552.out
+@@ -0,0 +1,4 @@
++QA output created by 1552
++Format and populate
++Fuzz metadir subdir
++Done fuzzing metadir subdir
+diff --git a/tests/xfs/1553 b/tests/xfs/1553
+new file mode 100755
+index 0000000000..6acbacbe16
+--- /dev/null
++++ b/tests/xfs/1553
+@@ -0,0 +1,38 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1553
++#
++# Populate a XFS filesystem and fuzz every metadir subdir field.
++# Try online repair and, if necessary, offline repair,
++# to test the most likely usage pattern.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_bothrepair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_scratch_metadir
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime')
++
++echo "Fuzz metadir subdir"
++_scratch_xfs_fuzz_metadata '' 'both' 'path -m /realtime' >> $seqres.full
++echo "Done fuzzing metadir subdir"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1553.out b/tests/xfs/1553.out
+new file mode 100644
+index 0000000000..0298fcfddb
+--- /dev/null
++++ b/tests/xfs/1553.out
+@@ -0,0 +1,4 @@
++QA output created by 1553
++Format and populate
++Fuzz metadir subdir
++Done fuzzing metadir subdir
 
