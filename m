@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4D5E659D55
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:57:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEDB7659D52
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:57:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235668AbiL3W5w (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:57:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
+        id S231294AbiL3W5G (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:57:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235581AbiL3W5v (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:57:51 -0500
+        with ESMTP id S235647AbiL3W5E (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:57:04 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA7D1B9E2;
-        Fri, 30 Dec 2022 14:57:51 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A92B1B9E2;
+        Fri, 30 Dec 2022 14:57:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AC34361C30;
-        Fri, 30 Dec 2022 22:57:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B2FC433D2;
-        Fri, 30 Dec 2022 22:57:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B820A61C30;
+        Fri, 30 Dec 2022 22:57:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2036DC433F1;
+        Fri, 30 Dec 2022 22:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672441070;
-        bh=N7ng7JtzN4kW7DNFVLF0bvK5xmgiuIB/v1OJKPdAJqg=;
+        s=k20201202; t=1672441023;
+        bh=okdMoSbtkbYrBQB1NH2KJpgYM/rd0QyX4yIcR9uhfL4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=taPrPJgG1byzU5mjLTth/jW36w3PcBLyc9Cx8eJLLVmFFPwjAOxgGniH5vQP98Sok
-         lzPS72RgDgPOgJsdbSmBfE3m1UIDsQnkSvicZmJMApym8YulD7BvntJ735pu1Zx/dO
-         GQ0xfAtt/k/7CT4y/dmTFXZo3BD/9Jhgt5A37h4kKpZj3GnUI/D6JDJ/0DaGiXXyTo
-         Eknj2+OHHHEKhQQA1cFSHjIZF+v8OC8+R2c03b/OV5apd+yfB/hrqAuHPxYwp0hHx7
-         9iAcw1NSJeqJtBPpsM5rdq1sTgaLuDYc4pEXnh1eUmNSYHfCFCLUc3K3U7y1LxT5zn
-         NygyaaUMh2DNA==
-Subject: [PATCH 14/16] fuzzy: make freezing optional for scrub stress tests
+        b=hQvN9gmE3OqID5QXh+8NVNvPyQfZy0QvQV+RYvrSl6X3ze+b48MDEs4ZsGNVAlaQq
+         3wy4dp5dC9qGLMWo/13O4OmzUuVT9CdaOta4hajfK0nEFyLlm8RN5ij/R5rBkX5jsh
+         5tDrp6RxLuYcjd6MPe0zimvbR0hj8+SC0XZRFkKMNyXHU0MJAQL/vCLzmgHbY4NkPj
+         zcX0R50FdmtiCRdr+iI+Oi1MoUJGLEKutA5HvD0u2iw8ep8oUXLOIQ5/EIQe3qxchD
+         Wpv5QWttFOkJgG6rqQn9hydo1TFUxmGQtPP5Ua1HIX17l+P9JPS4u78eMcmqxgD6qy
+         f/N4k8Vso/3yg==
+Subject: [PATCH 11/16] fuzzy: clear out the scratch filesystem if it's too
+ full
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:12:54 -0800
-Message-ID: <167243837487.694541.11855121854386930402.stgit@magnolia>
+Message-ID: <167243837447.694541.8212586612646646637.stgit@magnolia>
 In-Reply-To: <167243837296.694541.13203497631389630964.stgit@magnolia>
 References: <167243837296.694541.13203497631389630964.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,72 +55,52 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make the freeze/thaw loop optional, since that's a significant change in
-behavior if it's enabled.
+If the online fsck stress tests run for long enough, they'll fill up the
+scratch filesystem completely.  While it is interesting to test repair
+functionality on a *nearly* full filesystem undergoing a heavy workload,
+a totally full filesystem is really only exercising the ENOSPC handlers
+in the kernel.  That's not what we came here to test, so change the
+fsstress loop to detect a nearly full filesystem and erase everything
+before starting fsstress again.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/fuzzy  |   13 ++++++++++---
- tests/xfs/422 |    2 +-
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ common/fuzzy |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 
 diff --git a/common/fuzzy b/common/fuzzy
-index 0f6fc91b80..219dd3bb0a 100644
+index f1bc2dc756..01cf7f00d8 100644
 --- a/common/fuzzy
 +++ b/common/fuzzy
-@@ -499,6 +499,8 @@ __stress_scrub_check_commands() {
- #
- # Various options include:
- #
-+# -f	Run a freeze/thaw loop while we're doing other things.  Defaults to
-+#	disabled, unless XFS_SCRUB_STRESS_FREEZE is set.
- # -s	Pass this command to xfs_io to test scrub.  If zero -s options are
- #	specified, xfs_io will not be run.
- # -t	Run online scrub against this file; $SCRATCH_MNT is the default.
-@@ -506,14 +508,16 @@ _scratch_xfs_stress_scrub() {
- 	local one_scrub_args=()
- 	local scrub_tgt="$SCRATCH_MNT"
- 	local runningfile="$tmp.fsstress"
-+	local freeze="${XFS_SCRUB_STRESS_FREEZE}"
+@@ -380,6 +380,20 @@ __stress_one_scrub_loop() {
+ 	done
+ }
  
- 	__SCRUB_STRESS_FREEZE_PID=""
- 	rm -f "$runningfile"
- 	touch "$runningfile"
- 
- 	OPTIND=1
--	while getopts "s:t:" c; do
-+	while getopts "fs:t:" c; do
- 		case "$c" in
-+			f) freeze=yes;;
- 			s) one_scrub_args+=("$OPTARG");;
- 			t) scrub_tgt="$OPTARG";;
- 			*) return 1; ;;
-@@ -529,8 +533,11 @@ _scratch_xfs_stress_scrub() {
- 		   "ending at $(date --date="@${end}")" >> $seqres.full
- 
- 	__stress_scrub_fsstress_loop "$end" "$runningfile" &
--	__stress_scrub_freeze_loop "$end" "$runningfile" &
--	__SCRUB_STRESS_FREEZE_PID="$!"
++# Clean the scratch filesystem between rounds of fsstress if there is 2%
++# available space or less because that isn't an interesting stress test.
++#
++# Returns 0 if we cleared anything, and 1 if we did nothing.
++__stress_scrub_clean_scratch() {
++	local used_pct="$(_used $SCRATCH_DEV)"
 +
-+	if [ -n "$freeze" ]; then
-+		__stress_scrub_freeze_loop "$end" "$runningfile" &
-+		__SCRUB_STRESS_FREEZE_PID="$!"
-+	fi
++	test "$used_pct" -lt 98 && return 1
++
++	echo "Clearing scratch fs at $(date)" >> $seqres.full
++	rm -r -f $SCRATCH_MNT/p*
++	return 0
++}
++
+ # Run fsstress while we're testing online fsck.
+ __stress_scrub_fsstress_loop() {
+ 	local end="$1"
+@@ -389,6 +403,8 @@ __stress_scrub_fsstress_loop() {
+ 	echo "Running $FSSTRESS_PROG $args" >> $seqres.full
  
- 	if [ "${#one_scrub_args[@]}" -gt 0 ]; then
- 		__stress_one_scrub_loop "$end" "$runningfile" "$scrub_tgt" \
-diff --git a/tests/xfs/422 b/tests/xfs/422
-index faea5d6792..ac88713257 100755
---- a/tests/xfs/422
-+++ b/tests/xfs/422
-@@ -31,7 +31,7 @@ _require_xfs_stress_online_repair
- _scratch_mkfs > "$seqres.full" 2>&1
- _scratch_mount
- _require_xfs_has_feature "$SCRATCH_MNT" rmapbt
--_scratch_xfs_stress_online_repair -s "repair rmapbt 0" -s "repair rmapbt 1"
-+_scratch_xfs_stress_online_repair -f -s "repair rmapbt 0" -s "repair rmapbt 1"
- 
- # success, all done
- echo Silence is golden
+ 	while __stress_scrub_running "$end" "$runningfile"; do
++		# Need to recheck running conditions if we cleared anything
++		__stress_scrub_clean_scratch && continue
+ 		$FSSTRESS_PROG $args >> $seqres.full
+ 		echo "fsstress exits with $? at $(date)" >> $seqres.full
+ 	done
 
