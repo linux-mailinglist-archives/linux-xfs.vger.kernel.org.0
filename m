@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B8B465A12F
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:05:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D311465A131
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:05:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236153AbiLaCF2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:05:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
+        id S236155AbiLaCF6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:05:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236150AbiLaCF1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:05:27 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A952AF8
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:05:27 -0800 (PST)
+        with ESMTP id S236150AbiLaCF5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:05:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836071021
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:05:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C131BB81C23
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:05:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73286C433D2;
-        Sat, 31 Dec 2022 02:05:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 22A3F61CB1
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:05:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CD7C433EF;
+        Sat, 31 Dec 2022 02:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452324;
-        bh=HvJQNooKpEqCgg1vfdBOGkA1mLQKJ7kFlKYpE5JOVZw=;
+        s=k20201202; t=1672452355;
+        bh=mLpfzIp/FIGuKvfEQ4BTBFAUkduH6cnlmvtaIV9TJGc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=b6J3+j24VDdF2d9g5rejrPtci52HJZINLFIxL/5nJuNIuOmKzzEja8h4PDlc/BO0L
-         v+RYuGrq4XiMWZmPcHB9ZzO0U+RCPNHeC423vXeN3KZmQd7np+wD4wSlYJqdN/dC3n
-         DRQ2jQz9oPkhmp5/L8Jpco7HTFYX0hSiBMSXmUfQZlgKKqOItn5yCpcpDyQgECOJfE
-         sUUS7ySVGXKTEiobnP9KoAGHXxlqXUoUyLKdi0B60nYV3N+4t8lY4kln4RAtp9uORb
-         IhpA0jy3eMJA9sdLnmRFXklKr18Bfh6L+X7LDUNF9MyrzfsHR5WXFkWp/RZ1pg34tv
-         z2PesH4LaXRdQ==
-Subject: [PATCH 09/26] libxfs: set access time when creating files
+        b=hwCQ9SwCQEucT1PaJvVj2Dr6vuSwzES6OeAtotdAajaTCo7vWrycn6w5D1bVD2rLM
+         M320lrpP7JdtkKjrLlIIzqTEzbY+zC5mak9U9l9c0VH8dz8oEZ3o/7R7cOkpiQ64a3
+         Xd1X5guRZyfGMb+s/Lj02SnkpD/d+Ftsiou58TlSl+t5KbAUKkVHEldEsX8FPOVl/y
+         3VmvN/hfxFpfy2lTUuH0Unuo6gD1RbIcrjM4/g36WAGvISS7f7CUW9jpEpR4YbGU+N
+         5F4CJwiy/5eriWR0QWqafEguSJWyZoI4vzmfUPA/QjZo96uVssNZ0S1WafrMYNiTH0
+         d6CuVvxHsLvTw==
+Subject: [PATCH 11/26] libxfs: pass flags2 from parent to child when creating
+ files
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:14 -0800
-Message-ID: <167243875431.723621.17001516036883152447.stgit@magnolia>
+Message-ID: <167243875454.723621.6299952463214494674.stgit@magnolia>
 In-Reply-To: <167243875315.723621.17759760420120912799.stgit@magnolia>
 References: <167243875315.723621.17759760420120912799.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,27 +56,49 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Set the access time on files that we're creating, to match the behavior
-of the kernel.
+When mkfs creates a new file as a child of an existing directory, we
+should propagate the flags2 field from parent to child like the kernel
+does.  This ensures that mkfs propagates cowextsize hints properly when
+protofiles are in use.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/inode.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ libxfs/inode.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 
 diff --git a/libxfs/inode.c b/libxfs/inode.c
-index c14a4c5a27f..7f8f1164e08 100644
+index c63cc0543d6..9835c708021 100644
 --- a/libxfs/inode.c
 +++ b/libxfs/inode.c
-@@ -73,7 +73,8 @@ libxfs_icreate(
- 	struct xfs_inode	*pip = args->pip;
- 	struct xfs_inode	*ip;
- 	unsigned int		flags;
--	int			times = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
-+	int			times = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG |
-+					XFS_ICHGTIME_ACCESS;
- 	int			error;
+@@ -59,6 +59,20 @@ xfs_inode_propagate_flags(
+ 	ip->i_diflags |= di_flags;
+ }
  
- 	error = libxfs_iget(tp->t_mountp, tp, ino, 0, &ip);
++/* Propagate di_flags2 from a parent inode to a child inode. */
++static void
++xfs_inode_inherit_flags2(
++	struct xfs_inode	*ip,
++	const struct xfs_inode	*pip)
++{
++	if (pip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE) {
++		ip->i_diflags2 |= XFS_DIFLAG2_COWEXTSIZE;
++		ip->i_cowextsize = pip->i_cowextsize;
++	}
++	if (pip->i_diflags2 & XFS_DIFLAG2_DAX)
++		ip->i_diflags2 |= XFS_DIFLAG2_DAX;
++}
++
+ /*
+  * Initialise a newly allocated inode and return the in-core inode to the
+  * caller locked exclusively.
+@@ -123,6 +137,8 @@ libxfs_icreate(
+ 	case S_IFDIR:
+ 		if (pip && (pip->i_diflags & XFS_DIFLAG_ANY))
+ 			xfs_inode_propagate_flags(ip, pip);
++		if (pip && (pip->i_diflags2 & XFS_DIFLAG2_ANY))
++			xfs_inode_inherit_flags2(ip, pip);
+ 		/* FALLTHROUGH */
+ 	case S_IFLNK:
+ 		ip->i_df.if_format = XFS_DINODE_FMT_EXTENTS;
 
