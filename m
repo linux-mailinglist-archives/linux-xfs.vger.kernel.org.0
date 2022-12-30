@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5DE9659FDB
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:42:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9052765A171
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:22:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235864AbiLaAmw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:42:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35472 "EHLO
+        id S236219AbiLaCWE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:22:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235615AbiLaAmv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:42:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 212F31EAC0;
-        Fri, 30 Dec 2022 16:42:51 -0800 (PST)
+        with ESMTP id S236224AbiLaCWC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:22:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6DA19C12
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:22:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B4DBF61D53;
-        Sat, 31 Dec 2022 00:42:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E26AC433EF;
-        Sat, 31 Dec 2022 00:42:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 24AC661C31
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:22:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F6C9C433D2;
+        Sat, 31 Dec 2022 02:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447370;
-        bh=bUI4TaqofIbVCPr63nQL7L4euqFNXDQIfUppY5kN638=;
+        s=k20201202; t=1672453320;
+        bh=nyKqIR4xQ0u9byPhB7wUPV3dA2lftW+AqkrF02lvLhg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=m/ygupahqLLvtpguM/Niqfhzf2URk5asLr4zMm4beyJQ91t6bo70O61o1FJGR6Gvw
-         lWVGVaEM9IwuutG6MIvnZkzhR6pExRn2xipO2mFwxSFLSYPdyPaoxnw4OIsxftQVao
-         LE3Fq4BgWklGi7UbL4BbkQZcvNpnUY0v7EDPdXOIJpPLgNxTCdehFxsShqwyyh7jTX
-         vO9eQSwkowcVWzrweaRccdQu1urZnxVjwzqeIV87qmDQUqIEQlpYAXdIyOQ9AVbiPo
-         imR888h3R51MdAxSW3kLaGzRzjvXAi9YuAyCqy41Llclx3yN5hdsCWffahom6RVTen
-         0E6hqVP+XEWLQ==
-Subject: [PATCH 1/1] xfs: race fsstress with inode link count check and repair
+        b=M2k/m6IiswzkyfT/vPeclTnPWfoW2s37KaeMeGyfX8y+y2PL7b3abNz3TN4EukfXm
+         rUYYudvBgjUTo5Kf5bY3nIQe38yfToSuM1peKwfDuM7Ajb5+wSgc2wKhN6IIvkUFxw
+         +3aey46wz0+vQhJqjbmEQ2OQmVZw9pI1TSWYKMszpduy53LjrThc2EqKQfdP2zPw6g
+         tHAx0p09DUgmdHZQP0/857/xCxYls5Eis6ehqO7fuJoffb8quQMzDHiwiWEOOw9GEN
+         OgyJLmYzEhMVV+RcJcv4hmr2KjOUy4UpGlDZjibmqzyvP7AhA1Vtzu6DAoW9WtjzWJ
+         Z+bNCAPx6aAXw==
+Subject: [PATCH 01/10] xfs: create a helper to convert rtextents to rtblocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Fri, 30 Dec 2022 14:19:27 -0800
-Message-ID: <167243876766.727436.7268075677833351349.stgit@magnolia>
-In-Reply-To: <167243876754.727436.356658000575058711.stgit@magnolia>
-References: <167243876754.727436.356658000575058711.stgit@magnolia>
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Date:   Fri, 30 Dec 2022 14:19:28 -0800
+Message-ID: <167243876829.727509.12593553022316443491.stgit@magnolia>
+In-Reply-To: <167243876812.727509.17144221830951566022.stgit@magnolia>
+References: <167243876812.727509.17144221830951566022.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,122 +55,40 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Race fsstress with inode link count checking and repair.
+Create a helper to convert a realtime extent to a realtime block.  Later
+on we'll change the helper to use bit shifts when possible.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/772     |   38 ++++++++++++++++++++++++++++++++++++++
- tests/xfs/772.out |    2 ++
- tests/xfs/820     |   37 +++++++++++++++++++++++++++++++++++++
- tests/xfs/820.out |    2 ++
- 4 files changed, 79 insertions(+)
- create mode 100755 tests/xfs/772
- create mode 100644 tests/xfs/772.out
- create mode 100755 tests/xfs/820
- create mode 100644 tests/xfs/820.out
+ libxfs/xfs_rtbitmap.h |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 
-diff --git a/tests/xfs/772 b/tests/xfs/772
-new file mode 100755
-index 0000000000..a00c2796c5
---- /dev/null
-+++ b/tests/xfs/772
-@@ -0,0 +1,38 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 772
-+#
-+# Race fsstress and inode link count repair for a while to see if we crash or
-+# livelock.
-+#
-+. ./common/preamble
-+_begin_fstest online_repair dangerous_fsstress_repair
-+
-+_cleanup() {
-+	_scratch_xfs_stress_scrub_cleanup &> /dev/null
-+	cd /
-+	rm -r -f $tmp.*
+diff --git a/libxfs/xfs_rtbitmap.h b/libxfs/xfs_rtbitmap.h
+index 5e2afb7fea0..099ea8902aa 100644
+--- a/libxfs/xfs_rtbitmap.h
++++ b/libxfs/xfs_rtbitmap.h
+@@ -6,6 +6,22 @@
+ #ifndef __XFS_RTBITMAP_H__
+ #define	__XFS_RTBITMAP_H__
+ 
++static inline xfs_rtblock_t
++xfs_rtx_to_rtb(
++	struct xfs_mount	*mp,
++	xfs_rtxnum_t		rtx)
++{
++	return rtx * mp->m_sb.sb_rextsize;
 +}
-+_register_cleanup "_cleanup" BUS
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+_scratch_xfs_stress_online_repair -x "dir" -s "repair nlinks"
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/772.out b/tests/xfs/772.out
-new file mode 100644
-index 0000000000..98c1396896
---- /dev/null
-+++ b/tests/xfs/772.out
-@@ -0,0 +1,2 @@
-+QA output created by 772
-+Silence is golden
-diff --git a/tests/xfs/820 b/tests/xfs/820
-new file mode 100755
-index 0000000000..58a5d4cc91
---- /dev/null
-+++ b/tests/xfs/820
-@@ -0,0 +1,37 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 820
-+#
-+# Race fsstress and nlinks scrub for a while to see if we crash or livelock.
-+#
-+. ./common/preamble
-+_begin_fstest scrub dangerous_fsstress_scrub
-+
-+_cleanup() {
-+	_scratch_xfs_stress_scrub_cleanup &> /dev/null
-+	cd /
-+	rm -r -f $tmp.*
++static inline xfs_extlen_t
++xfs_rtxlen_to_extlen(
++	struct xfs_mount	*mp,
++	xfs_rtxlen_t		rtxlen)
++{
++	return rtxlen * mp->m_sb.sb_rextsize;
 +}
-+_register_cleanup "_cleanup" BUS
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_stress_scrub
-+
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+_scratch_xfs_stress_scrub -x "dir" -s "scrub nlinks"
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/820.out b/tests/xfs/820.out
-new file mode 100644
-index 0000000000..29ab2e2d8c
---- /dev/null
-+++ b/tests/xfs/820.out
-@@ -0,0 +1,2 @@
-+QA output created by 820
-+Silence is golden
+ /*
+  * Functions for walking free space rtextents in the realtime bitmap.
+  */
 
