@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F6BE65A27D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:25:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D981365A26C
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:20:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236380AbiLaDYz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:24:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
+        id S236363AbiLaDUz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:20:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236378AbiLaDYe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:24:34 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF4712A91
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:24:33 -0800 (PST)
+        with ESMTP id S236216AbiLaDUy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:20:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C18B6383
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:20:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7D548B81E72
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:24:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CFCFC433EF;
-        Sat, 31 Dec 2022 03:24:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BB3C061D5E
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:20:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 227A1C433D2;
+        Sat, 31 Dec 2022 03:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672457071;
-        bh=e/BwOndh6OfnYjUMlPMuOsKTUKteYguEs7BfA7P7bO4=;
+        s=k20201202; t=1672456853;
+        bh=Nk3hMpyaUOzgKF6BgQzK6A/LePH8jsCGrm+Iw3m68/Q=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=AGxfMWM5rsQc/50ncw3+Tj1YiYYfqJS3TRSzRbR2dLhiLDRVEP6kCKbgwbZwVTLN2
-         cWVcyPXIxeYB7pXgv0TOsxTcBU8wA00aHTeh1XoBneMkdbzfl36MNMzvg66adaLCck
-         fUhJUCXIyNgrljTvNAGaldUtdNSr5mxXyXWpRFxo7YE12vBXyNkdvEakTjvWDYPRdC
-         Xy+eiBNuHPUi6MmrsxxU9BlJTh7JZyGcPnp4pIxnhiyrChch4H/Ys2vXCY4ZADgk6E
-         UI0THqoibjx/gyHMmxDpyQluHwPAGRp2/nYk+n4Il+/tnSOm8njwBCQpYysjc+2B48
-         jTqWUvhYuaxWw==
-Subject: [PATCH 1/2] xfs: capture the offset and length in fallocate
- tracepoints
+        b=XhB+YA7s87CQ/SiK90oP3Bz4XcSMoGwJhIPyrBdfRlLx1EdOImgoGEJcA16nLdDT4
+         PPg/m6KYRSGO1ofMadrLQZhqvElDI1IQTm+nqlnVDMVNPiwYm4NeqRLSUWrSXQucR4
+         Y7bgZkuwgSshQePs4JUgaVI/7pH7y71HUnkY536jXgSUX9sikiLg10cpg8hzgkIFzD
+         YV+op/3wqnleSZOosdekTe4WRQeV02bPx1yVXY00d1NbqFBkyxebszFfW4INAQBQ1h
+         Cr582s0TOVieEauIqTmBA6Q9eiwfbqOJ+qDj/uuCqq/QqIAd3usL/uFyoYEd4PF9hz
+         I6FcX6iGrKDxw==
+Subject: [PATCHSET 0/2] xfs: defragment free space
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:30 -0800
-Message-ID: <167243877021.727784.15749904053525920523.stgit@magnolia>
-In-Reply-To: <167243877005.727784.16278955284134985550.stgit@magnolia>
-References: <167243877005.727784.16278955284134985550.stgit@magnolia>
+Message-ID: <167243877005.727784.16278955284134985550.stgit@magnolia>
+In-Reply-To: <Y69Uw6W5aclS115x@magnolia>
+References: <Y69Uw6W5aclS115x@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,98 +53,54 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Change the class of the fallocate tracepoints to capture the offset and
-length of the requested operation.
+These patches contain experimental code to enable userspace to defragment
+the free space in a filesystem.  Two purposes are imagined for this
+functionality: clearing space at the end of a filesystem before
+shrinking it, and clearing free space in anticipation of making a large
+allocation.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+The first patch adds a new fallocate mode that allows userspace to
+allocate free space from the filesystem into a file.  The goal here is
+to allow the filesystem shrink process to prevent allocation from a
+certain part of the filesystem while a free space defragmenter evacuates
+all the files from the doomed part of the filesystem.
+
+The second patch amends the online repair system to allow the sysadmin
+to forcibly rebuild metadata structures, even if they're not corrupt.
+Without adding an ioctl to move metadata btree blocks, this is the only
+way to dislodge metadata.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=defrag-freespace
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=defrag-freespace
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=defrag-freespace
 ---
- fs/xfs/xfs_bmap_util.c |    8 ++++----
- fs/xfs/xfs_file.c      |    2 +-
- fs/xfs/xfs_trace.h     |   10 +++++-----
- 3 files changed, 10 insertions(+), 10 deletions(-)
-
-
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 558951710404..8515190d2bc6 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -828,7 +828,7 @@ xfs_alloc_file_space(
- 	xfs_bmbt_irec_t		imaps[1], *imapp;
- 	int			error;
- 
--	trace_xfs_alloc_file_space(ip);
-+	trace_xfs_alloc_file_space(ip, offset, len);
- 
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
-@@ -1012,7 +1012,7 @@ xfs_free_file_space(
- 	xfs_fileoff_t		endoffset_fsb;
- 	int			done = 0, error;
- 
--	trace_xfs_free_file_space(ip);
-+	trace_xfs_free_file_space(ip, offset, len);
- 
- 	error = xfs_qm_dqattach(ip);
- 	if (error)
-@@ -1150,7 +1150,7 @@ xfs_collapse_file_space(
- 	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
- 	ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
- 
--	trace_xfs_collapse_file_space(ip);
-+	trace_xfs_collapse_file_space(ip, offset, len);
- 
- 	error = xfs_free_file_space(ip, offset, len);
- 	if (error)
-@@ -1220,7 +1220,7 @@ xfs_insert_file_space(
- 	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
- 	ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
- 
--	trace_xfs_insert_file_space(ip);
-+	trace_xfs_insert_file_space(ip, offset, len);
- 
- 	error = xfs_bmap_can_insert_extents(ip, stop_fsb, shift_fsb);
- 	if (error)
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 87e836e1aeb3..449146f9af41 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1096,7 +1096,7 @@ xfs_file_fallocate(
- 			 */
- 			unsigned int blksize = i_blocksize(inode);
- 
--			trace_xfs_zero_file_space(ip);
-+			trace_xfs_zero_file_space(ip, offset, len);
- 
- 			/* Unshare around the region to zero, if needed. */
- 			if (xfs_inode_needs_cow_around(ip)) {
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index b422a206edb5..8a7d08228586 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -817,11 +817,6 @@ DEFINE_INODE_EVENT(xfs_getattr);
- DEFINE_INODE_EVENT(xfs_setattr);
- DEFINE_INODE_EVENT(xfs_readlink);
- DEFINE_INODE_EVENT(xfs_inactive_symlink);
--DEFINE_INODE_EVENT(xfs_alloc_file_space);
--DEFINE_INODE_EVENT(xfs_free_file_space);
--DEFINE_INODE_EVENT(xfs_zero_file_space);
--DEFINE_INODE_EVENT(xfs_collapse_file_space);
--DEFINE_INODE_EVENT(xfs_insert_file_space);
- DEFINE_INODE_EVENT(xfs_readdir);
- #ifdef CONFIG_XFS_POSIX_ACL
- DEFINE_INODE_EVENT(xfs_get_acl);
-@@ -1610,6 +1605,11 @@ DEFINE_SIMPLE_IO_EVENT(xfs_zero_eof);
- DEFINE_SIMPLE_IO_EVENT(xfs_end_io_direct_write);
- DEFINE_SIMPLE_IO_EVENT(xfs_end_io_direct_write_unwritten);
- DEFINE_SIMPLE_IO_EVENT(xfs_end_io_direct_write_append);
-+DEFINE_SIMPLE_IO_EVENT(xfs_alloc_file_space);
-+DEFINE_SIMPLE_IO_EVENT(xfs_free_file_space);
-+DEFINE_SIMPLE_IO_EVENT(xfs_zero_file_space);
-+DEFINE_SIMPLE_IO_EVENT(xfs_collapse_file_space);
-+DEFINE_SIMPLE_IO_EVENT(xfs_insert_file_space);
- 
- DECLARE_EVENT_CLASS(xfs_itrunc_class,
- 	TP_PROTO(struct xfs_inode *ip, xfs_fsize_t new_size),
+ fs/open.c                   |    5 +
+ fs/xfs/libxfs/xfs_alloc.c   |   88 ++++++++++++
+ fs/xfs/libxfs/xfs_alloc.h   |    4 +
+ fs/xfs/libxfs/xfs_bmap.c    |  150 ++++++++++++++++++++
+ fs/xfs/libxfs/xfs_bmap.h    |    3 
+ fs/xfs/xfs_bmap_util.c      |  315 ++++++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_bmap_util.h      |    7 +
+ fs/xfs/xfs_file.c           |   39 +++++
+ fs/xfs/xfs_rtalloc.c        |   49 +++++++
+ fs/xfs/xfs_rtalloc.h        |   12 ++
+ fs/xfs/xfs_trace.h          |   72 +++++++++-
+ include/linux/falloc.h      |    3 
+ include/uapi/linux/falloc.h |    8 +
+ 13 files changed, 742 insertions(+), 13 deletions(-)
 
