@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D938659D4E
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:56:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19950659D47
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:54:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235614AbiL3W4F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:56:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58064 "EHLO
+        id S235566AbiL3Wyt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:54:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235490AbiL3W4E (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:56:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B806462;
-        Fri, 30 Dec 2022 14:56:03 -0800 (PST)
+        with ESMTP id S235605AbiL3Wyq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:54:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 913D11D0E2;
+        Fri, 30 Dec 2022 14:54:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DCB54B81DA0;
-        Fri, 30 Dec 2022 22:56:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F02C433F0;
-        Fri, 30 Dec 2022 22:56:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E20761AC4;
+        Fri, 30 Dec 2022 22:54:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 887B4C433D2;
+        Fri, 30 Dec 2022 22:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440960;
-        bh=0vYOWMEidKWH2xQ18ZPBL3AFF2W1dVpYtLsOLMB0KwQ=;
+        s=k20201202; t=1672440882;
+        bh=sl1BeavL/iPTTWfqEZT3TR+7+516RsIAFpISl65NUOE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=O+5BsUmP+/rrY0I2zKSg277jCYvQZS/D6Z4mwPXXofouEptquCW+kDM0CWVNZ0QIh
-         3KgFBkBswmt0D/2Y/vsBEYs+alTHM4nI76C5QXnYFs9+1oCaDjzwSy+DJUh5RlL2lX
-         WglOAVXe0b30pxf8LBO9HeqEIHf9R5PhlpyDHaqbYb+5RVYEhMItl+J8mCyiTtLmxJ
-         5SYEFLQf+jyM4iSXPwWYgJ1LuLkR8MP1WIx7doOgZ79/yjjt2xepxUWc4eoMPmOgbY
-         SFW0npmZYVLJ6AWZdimlw1CAoMiSGp+clPRCVyBbZv+zwWvkjvfL5T3D9K39b/zDSl
-         mncN8SSMWXqfw==
-Subject: [PATCH 07/16] fuzzy: give each test local control over what scrub
- stress tests get run
+        b=g8dUrYRzj23zpw5DvwneShLauAmcXZ1CRM+Y+iwhTXdJgOAxwUaRJ3jXu8WTP36K1
+         ysd4g1p1SELHyyQyYPf5GpC8zq/QkuFuL+KSACYCw3qBeHixd3erWe1lBcoqAuhN+d
+         VPwlOH6ziQzJ8oGk40Z1qPzxZogJv+diBL57kTh6Gkjt2b3gu7oPKQ6imlNXc4xN7b
+         JlTK4ZciAOkoBGh3K2O1jqPccgzupIxedQmRbc7ieQJrfRv42YCTC2vnbAMOqNDBFk
+         Cr9c4rXmoQSnIcJR9QUcvxJ0bvd7Ls+yFjUbkM/dFH0ssoxyV1PKxb+xX16kAoadcA
+         M7QNkx+dkZfow==
+Subject: [PATCH 02/16] xfs/422: move the fsstress/freeze/scrub racing logic to
+ common/fuzzy
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:12:53 -0800
-Message-ID: <167243837393.694541.5087918179710010888.stgit@magnolia>
+Message-ID: <167243837327.694541.10370212917252408651.stgit@magnolia>
 In-Reply-To: <167243837296.694541.13203497631389630964.stgit@magnolia>
 References: <167243837296.694541.13203497631389630964.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,102 +55,270 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we've hoisted the scrub stress code to common/fuzzy, introduce
-argument parsing so that each test can specify what they want to test.
+Hoist all this code to common/fuzzy in preparation for making this code
+more generic so that we implement a variety of tests that check the
+concurrency correctness of online fsck.  Do just enough renaming so that
+we don't pollute the test program's namespace; we'll fix the other warts
+in subsequent patches.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/fuzzy  |   39 +++++++++++++++++++++++++++++++++++----
- tests/xfs/422 |    2 +-
- 2 files changed, 36 insertions(+), 5 deletions(-)
+ common/fuzzy      |  100 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/422     |  104 ++++-------------------------------------------------
+ tests/xfs/422.out |    4 +-
+ 3 files changed, 109 insertions(+), 99 deletions(-)
 
 
 diff --git a/common/fuzzy b/common/fuzzy
-index de9e398984..88ba5fef69 100644
+index 70213af5db..979fa55515 100644
 --- a/common/fuzzy
 +++ b/common/fuzzy
-@@ -348,12 +348,19 @@ __stress_scrub_freeze_loop() {
+@@ -316,3 +316,103 @@ _scratch_xfs_fuzz_metadata() {
+ 		done
  	done
  }
- 
--# Run xfs online fsck commands in a tight loop.
--__stress_scrub_loop() {
-+# Run individual XFS online fsck commands in a tight loop with xfs_io.
-+__stress_one_scrub_loop() {
- 	local end="$1"
-+	local scrub_tgt="$2"
-+	shift; shift
 +
-+	local xfs_io_args=()
-+	for arg in "$@"; do
-+		xfs_io_args+=('-c' "$arg")
++# Functions to race fsstress, fs freeze, and xfs metadata scrubbing against
++# each other to shake out bugs in xfs online repair.
++
++# Filter freeze and thaw loop output so that we don't tarnish the golden output
++# if the kernel temporarily won't let us freeze.
++__stress_freeze_filter_output() {
++	grep -E -v '(Device or resource busy|Invalid argument)'
++}
++
++# Filter scrub output so that we don't tarnish the golden output if the fs is
++# too busy to scrub.  Note: Tests should _notrun if the scrub type is not
++# supported.
++__stress_scrub_filter_output() {
++	grep -E -v '(Device or resource busy|Invalid argument)'
++}
++
++# Run fs freeze and thaw in a tight loop.
++__stress_scrub_freeze_loop() {
++	local end="$1"
++
++	while [ "$(date +%s)" -lt $end ]; do
++		$XFS_IO_PROG -x -c 'freeze' -c 'thaw' $SCRATCH_MNT 2>&1 | \
++			__stress_freeze_filter_output
 +	done
- 
- 	while [ "$(date +%s)" -lt $end ]; do
--		$XFS_IO_PROG -x -c 'repair rmapbt 0' -c 'repair rmapbt 1' $SCRATCH_MNT 2>&1 | \
-+		$XFS_IO_PROG -x "${xfs_io_args[@]}" "$scrub_tgt" 2>&1 | \
- 			__stress_scrub_filter_output
- 	done
- }
-@@ -390,6 +397,8 @@ _require_xfs_stress_online_repair() {
- 
- # Clean up after the loops in case they didn't do it themselves.
- _scratch_xfs_stress_scrub_cleanup() {
-+	echo "Cleaning up scrub stress run at $(date)" >> $seqres.full
++}
 +
- 	# Send SIGINT so that bash won't print a 'Terminated' message that
- 	# distorts the golden output.
- 	$KILLALL_PROG -INT xfs_io fsstress >> $seqres.full 2>&1
-@@ -399,7 +408,25 @@ _scratch_xfs_stress_scrub_cleanup() {
- # Start scrub, freeze, and fsstress in background looping processes, and wait
- # for 30*TIME_FACTOR seconds to see if the filesystem goes down.  Callers
- # must call _scratch_xfs_stress_scrub_cleanup from their cleanup functions.
-+#
-+# Various options include:
-+#
-+# -s	Pass this command to xfs_io to test scrub.  If zero -s options are
-+#	specified, xfs_io will not be run.
-+# -t	Run online scrub against this file; $SCRATCH_MNT is the default.
- _scratch_xfs_stress_scrub() {
-+	local one_scrub_args=()
-+	local scrub_tgt="$SCRATCH_MNT"
++# Run xfs online fsck commands in a tight loop.
++__stress_scrub_loop() {
++	local end="$1"
 +
-+	OPTIND=1
-+	while getopts "s:t:" c; do
-+		case "$c" in
-+			s) one_scrub_args+=("$OPTARG");;
-+			t) scrub_tgt="$OPTARG";;
-+			*) return 1; ;;
-+		esac
++	while [ "$(date +%s)" -lt $end ]; do
++		$XFS_IO_PROG -x -c 'repair rmapbt 0' -c 'repair rmapbt 1' $SCRATCH_MNT 2>&1 | \
++			__stress_scrub_filter_output
 +	done
++}
 +
- 	local start="$(date +%s)"
- 	local end="$((start + (30 * TIME_FACTOR) ))"
- 
-@@ -408,7 +435,11 @@ _scratch_xfs_stress_scrub() {
- 
- 	__stress_scrub_fsstress_loop $end &
- 	__stress_scrub_freeze_loop $end &
--	__stress_scrub_loop $end &
++# Run fsstress while we're testing online fsck.
++__stress_scrub_fsstress_loop() {
++	local end="$1"
 +
-+	if [ "${#one_scrub_args[@]}" -gt 0 ]; then
-+		__stress_one_scrub_loop "$end" "$scrub_tgt" \
-+				"${one_scrub_args[@]}" &
-+	fi
- 
- 	# Wait until 2 seconds after the loops should have finished, then
- 	# clean up after ourselves.
++	local args=$(_scale_fsstress_args -p 4 -d $SCRATCH_MNT -n 2000 $FSSTRESS_AVOID)
++
++	while [ "$(date +%s)" -lt $end ]; do
++		$FSSTRESS_PROG $args >> $seqres.full
++	done
++}
++
++# Make sure we have everything we need to run stress and scrub
++_require_xfs_stress_scrub() {
++	_require_xfs_io_command "scrub"
++	_require_command "$KILLALL_PROG" killall
++	_require_freeze
++}
++
++# Make sure we have everything we need to run stress and online repair
++_require_xfs_stress_online_repair() {
++	_require_xfs_stress_scrub
++	_require_xfs_io_command "repair"
++	_require_xfs_io_error_injection "force_repair"
++	_require_freeze
++}
++
++# Clean up after the loops in case they didn't do it themselves.
++_scratch_xfs_stress_scrub_cleanup() {
++	$KILLALL_PROG -TERM xfs_io fsstress >> $seqres.full 2>&1
++	$XFS_IO_PROG -x -c 'thaw' $SCRATCH_MNT >> $seqres.full 2>&1
++}
++
++# Start scrub, freeze, and fsstress in background looping processes, and wait
++# for 30*TIME_FACTOR seconds to see if the filesystem goes down.  Callers
++# must call _scratch_xfs_stress_scrub_cleanup from their cleanup functions.
++_scratch_xfs_stress_scrub() {
++	local start="$(date +%s)"
++	local end="$((start + (30 * TIME_FACTOR) ))"
++
++	echo "Loop started at $(date --date="@${start}")," \
++		   "ending at $(date --date="@${end}")" >> $seqres.full
++
++	__stress_scrub_fsstress_loop $end &
++	__stress_scrub_freeze_loop $end &
++	__stress_scrub_loop $end &
++
++	# Wait until 2 seconds after the loops should have finished, then
++	# clean up after ourselves.
++	while [ "$(date +%s)" -lt $((end + 2)) ]; do
++		sleep 1
++	done
++	_scratch_xfs_stress_scrub_cleanup
++
++	echo "Loop finished at $(date)" >> $seqres.full
++}
++
++# Start online repair, freeze, and fsstress in background looping processes,
++# and wait for 30*TIME_FACTOR seconds to see if the filesystem goes down.
++# Same requirements and arguments as _scratch_xfs_stress_scrub.
++_scratch_xfs_stress_online_repair() {
++	$XFS_IO_PROG -x -c 'inject force_repair' $SCRATCH_MNT
++	_scratch_xfs_stress_scrub "$@"
++}
 diff --git a/tests/xfs/422 b/tests/xfs/422
-index b3353d2202..faea5d6792 100755
+index 9ed944ed63..0bf08572f3 100755
 --- a/tests/xfs/422
 +++ b/tests/xfs/422
-@@ -31,7 +31,7 @@ _require_xfs_stress_online_repair
+@@ -4,40 +4,19 @@
+ #
+ # FS QA Test No. 422
+ #
+-# Race freeze and rmapbt repair for a while to see if we crash or livelock.
++# Race fsstress and rmapbt repair for a while to see if we crash or livelock.
+ # rmapbt repair requires us to freeze the filesystem to stop all filesystem
+ # activity, so we can't have userspace wandering in and thawing it.
+ #
+ . ./common/preamble
+ _begin_fstest online_repair dangerous_fsstress_repair freeze
+ 
+-_register_cleanup "_cleanup" BUS
+-
+-# First kill and wait the freeze loop so it won't try to freeze fs again
+-# Then make sure fs is not frozen
+-# Then kill and wait for the rest of the workers
+-# Because if fs is frozen a killed writer will never exit
+-kill_loops() {
+-	local sig=$1
+-
+-	[ -n "$freeze_pid" ] && kill $sig $freeze_pid
+-	wait $freeze_pid
+-	unset freeze_pid
+-	$XFS_IO_PROG -x -c 'thaw' $SCRATCH_MNT
+-	[ -n "$stress_pid" ] && kill $sig $stress_pid
+-	[ -n "$repair_pid" ] && kill $sig $repair_pid
+-	wait
+-	unset stress_pid
+-	unset repair_pid
+-}
+-
+-# Override the default cleanup function.
+-_cleanup()
+-{
+-	kill_loops -9 > /dev/null 2>&1
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
+ 	cd /
+-	rm -rf $tmp.*
++	rm -r -f $tmp.*
+ }
++_register_cleanup "_cleanup" BUS
+ 
+ # Import common functions.
+ . ./common/filter
+@@ -47,80 +26,13 @@ _cleanup()
+ # real QA test starts here
+ _supported_fs xfs
+ _require_xfs_scratch_rmapbt
+-_require_xfs_io_command "scrub"
+-_require_xfs_io_error_injection "force_repair"
+-_require_command "$KILLALL_PROG" killall
+-_require_freeze
++_require_xfs_stress_online_repair
+ 
+-echo "Format and populate"
  _scratch_mkfs > "$seqres.full" 2>&1
  _scratch_mount
- _require_xfs_has_feature "$SCRATCH_MNT" rmapbt
--_scratch_xfs_stress_online_repair
-+_scratch_xfs_stress_online_repair -s "repair rmapbt 0" -s "repair rmapbt 1"
+-
+-STRESS_DIR="$SCRATCH_MNT/testdir"
+-mkdir -p $STRESS_DIR
+-
+-for i in $(seq 0 9); do
+-	mkdir -p $STRESS_DIR/$i
+-	for j in $(seq 0 9); do
+-		mkdir -p $STRESS_DIR/$i/$j
+-		for k in $(seq 0 9); do
+-			echo x > $STRESS_DIR/$i/$j/$k
+-		done
+-	done
+-done
+-
+-cpus=$(( $($here/src/feature -o) * 4 * LOAD_FACTOR))
+-
+-echo "Concurrent repair"
+-filter_output() {
+-	grep -E -v '(Device or resource busy|Invalid argument)'
+-}
+-freeze_loop() {
+-	end="$1"
+-
+-	while [ "$(date +%s)" -lt $end ]; do
+-		$XFS_IO_PROG -x -c 'freeze' -c 'thaw' $SCRATCH_MNT 2>&1 | filter_output
+-	done
+-}
+-repair_loop() {
+-	end="$1"
+-
+-	while [ "$(date +%s)" -lt $end ]; do
+-		$XFS_IO_PROG -x -c 'repair rmapbt 0' -c 'repair rmapbt 1' $SCRATCH_MNT 2>&1 | filter_output
+-	done
+-}
+-stress_loop() {
+-	end="$1"
+-
+-	FSSTRESS_ARGS=$(_scale_fsstress_args -p 4 -d $SCRATCH_MNT -n 2000 $FSSTRESS_AVOID)
+-	while [ "$(date +%s)" -lt $end ]; do
+-		$FSSTRESS_PROG $FSSTRESS_ARGS >> $seqres.full
+-	done
+-}
+-$XFS_IO_PROG -x -c 'inject force_repair' $SCRATCH_MNT
+-
+-start=$(date +%s)
+-end=$((start + (30 * TIME_FACTOR) ))
+-
+-echo "Loop started at $(date --date="@${start}"), ending at $(date --date="@${end}")" >> $seqres.full
+-stress_loop $end &
+-stress_pid=$!
+-freeze_loop $end &
+-freeze_pid=$!
+-repair_loop $end &
+-repair_pid=$!
+-
+-# Wait until 2 seconds after the loops should have finished...
+-while [ "$(date +%s)" -lt $((end + 2)) ]; do
+-	sleep 1
+-done
+-
+-# ...and clean up after the loops in case they didn't do it themselves.
+-kill_loops >> $seqres.full 2>&1
+-
+-echo "Loop finished at $(date)" >> $seqres.full
+-echo "Test done"
++_scratch_xfs_stress_online_repair
  
  # success, all done
- echo Silence is golden
++echo Silence is golden
+ status=0
+ exit
+diff --git a/tests/xfs/422.out b/tests/xfs/422.out
+index 3818c48fa8..f70693fde6 100644
+--- a/tests/xfs/422.out
++++ b/tests/xfs/422.out
+@@ -1,4 +1,2 @@
+ QA output created by 422
+-Format and populate
+-Concurrent repair
+-Test done
++Silence is golden
 
