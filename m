@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EF0065A11B
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:00:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A0C65A118
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:59:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236043AbiLaCAS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:00:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51308 "EHLO
+        id S236108AbiLaB7b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:59:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236120AbiLaCAQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:00:16 -0500
+        with ESMTP id S236118AbiLaB7a (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:59:30 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E49C1C430
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:00:16 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB461C900
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:59:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D827AB81DF8
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:00:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97696C433EF;
-        Sat, 31 Dec 2022 02:00:13 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1C79DB81DED
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:59:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD86C433EF;
+        Sat, 31 Dec 2022 01:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452013;
-        bh=N7FfoUGu7e4T+0ipGOtxdhtzzvJEIL6t7LRRRrO4C0I=;
+        s=k20201202; t=1672451966;
+        bh=NDa7sWjMOAth0FgBAHhpqBHDbEcdpUHtN5FZiLgG2Y4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MQj/pw6gYC7JxakuZcpfh6Ym4DA9MpceqJpHl6Pe0sTv+Uh/27My7ulUd8bODvGXb
-         8Bq0zXx0y5rlFlwPD2ra+L7sx2L3T8uuoZ0Z67gJavmPZNYmPeIkNhHiR0QY1BAdg8
-         5KGrIAWu5Do1qB/5PgIcinzVVKaJtarNmZHmrY7QtTTqrW8XyjS4W1HkzUPqh7iNmE
-         EoMaxu4kPyQt5podvbwr6EZ7IZkGxmpPqsw4C04qs9waOhQBPiTpRzU9hunAxZ+wAk
-         x7c+9o+RKBVt+9+ux/whc00oCxZcP6xCaKnBKQGfghuhH1NcZAXcJtMX1oaxAbOnWC
-         6ySem9IaUpC6A==
-Subject: [PATCH 5/9] xfs: extend writeback requests to handle rt cow correctly
+        b=ZWp8QTg8MftwvumbMiEz/1lBLXOzNrRrOwgBMzZe3P05xv1kVo38M/Jzq7cAjQW7+
+         3jrjGbUNWam7dm+j0HU4chfe+32r0YtbtRMWpoVkyvQOcMQSQUf2v+Qj/JeGlDnLOF
+         6Xies/RIU+bYXIiyg4HktvYqs3w8Y8caSL7QRTDpcjxmUmoUMgcc8AWtoByFxV/RIP
+         B8WIYvgHABCJsxJ/XSCRKBghRkYfbbkWyNb44bgHFczI/lcbwfrZEsIKYZF/c+Ltl9
+         TALUGF7zEqsNtzKVWnfLjQGRMTsdMgHXsYkkG63xKWXwYORDXEGrNBC1y6/UDf+8aI
+         owbn6bj7XajAw==
+Subject: [PATCH 2/9] iomap: set up for COWing around pages
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:38 -0800
-Message-ID: <167243871875.718512.10357363440477128738.stgit@magnolia>
+Message-ID: <167243871832.718512.8291440482430734344.stgit@magnolia>
 In-Reply-To: <167243871792.718512.13170681692847163098.stgit@magnolia>
 References: <167243871792.718512.13170681692847163098.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,77 +55,96 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If we have shared realtime files and the rt extent size is larger than a
-single fs block, we need to extend writeback requests to be aligned to
-rt extent size granularity because we cannot share partial rt extents.
-The front end should have set us up for this by dirtying the relevant
-ranges.
+In anticipation of enabling reflink on the realtime volume where the
+allocation unit is larger than a page, create an iomap function to dirty
+arbitrary parts of a file's page cache so that when we dirty part of a
+file that could undergo a COW extent, we can dirty an entire allocation
+unit's worth of pages.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_aops.c |   40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+ fs/iomap/buffered-io.c |   55 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/iomap.h  |    2 ++
+ 2 files changed, 57 insertions(+)
 
 
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index c3a9df0c0eab..af5c854a72dc 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -488,12 +488,41 @@ static const struct iomap_writeback_ops xfs_writeback_ops = {
- 	.discard_folio		= xfs_discard_folio,
- };
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 356193e44cf0..da5a5d28e2ee 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1141,6 +1141,61 @@ iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
+ }
+ EXPORT_SYMBOL_GPL(iomap_file_unshare);
  
-+/*
-+ * Extend the writeback range to allocation unit granularity and alignment.
-+ * This is a requirement for blocksize > pagesize scenarios such as realtime
-+ * copy on write, since we can only share full rt extents.
-+ */
-+static void
-+xfs_vm_writepage_extend(
-+	struct xfs_inode		*ip,
-+	struct writeback_control	*wbc)
++static loff_t iomap_dirty_iter(struct iomap_iter *iter)
 +{
-+	unsigned int			bsize = xfs_inode_alloc_unitsize(ip);
-+	long long int			pages_to_write;
++	loff_t pos = iter->pos;
++	loff_t length = iomap_length(iter);
++	long status = 0;
++	loff_t written = 0;
 +
-+	wbc->range_start = rounddown_64(wbc->range_start, bsize);
-+	if (wbc->range_end != LLONG_MAX)
-+		wbc->range_end = roundup_64(wbc->range_end, bsize);
++	do {
++		unsigned long offset = offset_in_page(pos);
++		unsigned long bytes = min_t(loff_t, PAGE_SIZE - offset, length);
++		struct folio *folio;
 +
-+	if (wbc->nr_to_write == LONG_MAX)
-+		return;
++		status = iomap_write_begin(iter, pos, bytes, &folio);
++		if (unlikely(status))
++			return status;
 +
-+	pages_to_write = roundup_64(wbc->range_end - wbc->range_start,
-+				    PAGE_SIZE);
-+	if (pages_to_write >= LONG_MAX)
-+		pages_to_write = LONG_MAX;
-+	if (wbc->nr_to_write < pages_to_write)
-+		wbc->nr_to_write = pages_to_write;
++		folio_mark_accessed(folio);
++
++		status = iomap_write_end(iter, pos, bytes, bytes, folio);
++		if (WARN_ON_ONCE(status == 0))
++			return -EIO;
++
++		cond_resched();
++
++		pos += status;
++		written += status;
++		length -= status;
++
++		balance_dirty_pages_ratelimited(iter->inode->i_mapping);
++	} while (length);
++
++	return written;
 +}
 +
- STATIC int
- xfs_vm_writepages(
--	struct address_space	*mapping,
--	struct writeback_control *wbc)
-+	struct address_space		*mapping,
-+	struct writeback_control	*wbc)
- {
--	struct xfs_writepage_ctx wpc = { };
-+	struct xfs_writepage_ctx	wpc = { };
-+	struct xfs_inode		*ip = XFS_I(mapping->host);
- 
- 	/*
- 	 * Writing back data in a transaction context can result in recursive
-@@ -502,7 +531,10 @@ xfs_vm_writepages(
- 	if (WARN_ON_ONCE(current->journal_info))
- 		return 0;
- 
--	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
-+	if (xfs_inode_needs_cow_around(ip))
-+		xfs_vm_writepage_extend(ip, wbc);
++int
++iomap_dirty_range(struct inode *inode, loff_t pos, u64 len,
++		const struct iomap_ops *ops)
++{
++	struct iomap_iter iter = {
++		.inode		= inode,
++		.pos		= pos,
++		.len		= len,
++		.flags		= IOMAP_WRITE,
++	};
++	int ret;
 +
-+	xfs_iflags_clear(ip, XFS_ITRUNCATED);
- 	return iomap_writepages(mapping, wbc, &wpc.ctx, &xfs_writeback_ops);
- }
- 
++	if (IS_DAX(inode))
++		return -EINVAL;
++
++	while ((ret = iomap_iter(&iter, ops)) > 0)
++		iter.processed = iomap_dirty_iter(&iter);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(iomap_dirty_range);
++
+ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
+ {
+ 	const struct iomap *srcmap = iomap_iter_srcmap(iter);
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 0983dfc9a203..4d911d780165 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -264,6 +264,8 @@ bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags);
+ void iomap_invalidate_folio(struct folio *folio, size_t offset, size_t len);
+ int iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
+ 		const struct iomap_ops *ops);
++int iomap_dirty_range(struct inode *inode, loff_t pos, u64 len,
++		const struct iomap_ops *ops);
+ int iomap_zero_range(struct inode *inode, loff_t pos, loff_t len,
+ 		bool *did_zero, const struct iomap_ops *ops);
+ int iomap_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
 
