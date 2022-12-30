@@ -2,42 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C98BC659E37
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:27:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2F62659E2B
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:26:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235692AbiL3X0V (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:26:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
+        id S235763AbiL3XZu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:25:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235761AbiL3XZt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:25:49 -0500
+        with ESMTP id S235482AbiL3XZR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:25:17 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F45512AA6;
-        Fri, 30 Dec 2022 15:25:47 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217DB1DDD3;
+        Fri, 30 Dec 2022 15:25:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F060761C40;
-        Fri, 30 Dec 2022 23:25:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57987C433EF;
-        Fri, 30 Dec 2022 23:25:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B149E61C0D;
+        Fri, 30 Dec 2022 23:25:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19E60C433EF;
+        Fri, 30 Dec 2022 23:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672442746;
-        bh=jw2iorKGf8ZJXz7ctY+p1Go980NywIcOIwg5tKE8gD4=;
+        s=k20201202; t=1672442715;
+        bh=yr/19mIKu0tHF8R9GcuDzQDVRQVMjwRQP/5oSYuAfcA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Kj/nwvTrRGvy2psCBirNni6hWcawJqdOx2aUzwN3x27N9QmZ38ZqY2m+PE/XD+z+x
-         8vzsqu7Eh/+ISK7qFEJRgusFs8itsikhbCfp9ZaLRc7u+jpXXltRRWmLMYRuzQXyeB
-         V4aqAcdmLL2tCRiHwkEv5s20yIW4VtFT0Djm/0mP5EvjyCuqpIdx0tZqFJ6Mj7Tubi
-         yRwJDCwXKMGNWDDCNmWZSL3UnzBW2ml3u5KNzIpYFbbEGJB2OJQtC+zlvIG7hJBKTZ
-         qNCiJgtk3mzkuy6UUPzx2IYS3WxxGX/6+n9pb8V6Qj8BMTGpt+V3rDBKXtIFvn9v/c
-         Cy//uD0o1WqXQ==
-Subject: [PATCH 7/7] xfs: improve xfarray quicksort pivot
+        b=Mg0jdYmzX5QJot9po+u0KWBXKXWgvzORnXq2K/YDJ2p/MvYBSlH2QlKywJ6qTlx82
+         GY0xvCcD40kOh8gB6mJ5E7CAV3GuV9F1gfPylLsFH2dqeJzl39YGOWgKpkFEeSOY1C
+         pzuytrzWY2eva6IWv1Rzln6NDzPdpglLIH5O9YhTf/AyqE8PoYz72Yp1aaUyq9laN8
+         YCm8Jbl77icNnNkvSBTj8ZAEopBrwmCS2hPjpSogyFVjIkj8m6j+yo9sCpr7/ansDo
+         cYddZp5VpLdv7yHPyEABK/uOtJw6QiQx5oqoO4JG2lzUexPi62j3oPna0vYNmw2CCP
+         e4SgLexDJf+7w==
+Subject: [PATCH 5/7] xfs: speed up xfarray sort by sorting xfile page contents
+ directly
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
         linux-fsdevel@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:12:35 -0800
-Message-ID: <167243835587.692498.4752204565816305502.stgit@magnolia>
+Message-ID: <167243835559.692498.7669553320803282373.stgit@magnolia>
 In-Reply-To: <167243835481.692498.14657125042725378987.stgit@magnolia>
 References: <167243835481.692498.14657125042725378987.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,330 +56,186 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we have the means to do insertion sorts of small in-memory
-subsets of an xfarray, use it to improve the quicksort pivot algorithm
-by reading 7 records into memory and finding the median of that.  This
-should prevent bad partitioning when a[lo] and a[hi] end up next to each
-other in the final sort, which can happen when sorting for cntbt repair
-when the free space is extremely fragmented (e.g. generic/176).
-
-This doesn't speed up the average quicksort run by much, but it will
-(hopefully) avoid the quadratic time collapse for which quicksort is
-famous.
+If all the records in an xfarray subset live within the same memory
+page, we can short-circuit even more quicksort recursion by mapping that
+page into the local CPU and using the kernel's heapsort function to sort
+the subset.  On the author's computer, this reduces the runtime by
+another 15% on a 500,000 element array.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/xfarray.c |  198 ++++++++++++++++++++++++++++++++----------------
- fs/xfs/scrub/xfarray.h |   19 +++--
- 2 files changed, 148 insertions(+), 69 deletions(-)
+ fs/xfs/scrub/trace.h   |   20 ++++++++++
+ fs/xfs/scrub/xfarray.c |   97 ++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/xfarray.h |    4 ++
+ 3 files changed, 121 insertions(+)
 
 
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 79b844c969df..2431083b9f91 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -872,6 +872,26 @@ TRACE_EVENT(xfarray_isort,
+ 		  __entry->hi - __entry->lo)
+ );
+ 
++TRACE_EVENT(xfarray_pagesort,
++	TP_PROTO(struct xfarray_sortinfo *si, uint64_t lo, uint64_t hi),
++	TP_ARGS(si, lo, hi),
++	TP_STRUCT__entry(
++		__field(unsigned long, ino)
++		__field(unsigned long long, lo)
++		__field(unsigned long long, hi)
++	),
++	TP_fast_assign(
++		__entry->ino = file_inode(si->array->xfile->file)->i_ino;
++		__entry->lo = lo;
++		__entry->hi = hi;
++	),
++	TP_printk("xfino 0x%lx lo %llu hi %llu elts %llu",
++		  __entry->ino,
++		  __entry->lo,
++		  __entry->hi,
++		  __entry->hi - __entry->lo)
++);
++
+ TRACE_EVENT(xfarray_qsort,
+ 	TP_PROTO(struct xfarray_sortinfo *si, uint64_t lo, uint64_t hi),
+ 	TP_ARGS(si, lo, hi),
 diff --git a/fs/xfs/scrub/xfarray.c b/fs/xfs/scrub/xfarray.c
-index 3e232ee5e7e6..ce1365144209 100644
+index 171c40d04e6c..08479be07fda 100644
 --- a/fs/xfs/scrub/xfarray.c
 +++ b/fs/xfs/scrub/xfarray.c
-@@ -428,6 +428,14 @@ static inline xfarray_idx_t *xfarray_sortinfo_hi(struct xfarray_sortinfo *si)
- 	return xfarray_sortinfo_lo(si) + si->max_stack_depth;
+@@ -546,6 +546,87 @@ xfarray_isort(
+ 	return xfile_obj_store(si->array->xfile, scratch, len, lo_pos);
  }
  
-+/* Size of each element in the quicksort pivot array. */
-+static inline size_t
-+xfarray_pivot_rec_sz(
-+	struct xfarray		*array)
++/* Grab a page for sorting records. */
++static inline int
++xfarray_sort_get_page(
++	struct xfarray_sortinfo	*si,
++	loff_t			pos,
++	uint64_t		len)
 +{
-+	return round_up(array->obj_size, 8) + sizeof(xfarray_idx_t);
++	int			error;
++
++	error = xfile_get_page(si->array->xfile, pos, len, &si->xfpage);
++	if (error)
++		return error;
++
++	/*
++	 * xfile pages must never be mapped into userspace, so we skip the
++	 * dcache flush when mapping the page.
++	 */
++	si->page_kaddr = kmap_local_page(si->xfpage.page);
++	return 0;
 +}
 +
- /* Allocate memory to handle the sort. */
- static inline int
- xfarray_sortinfo_alloc(
-@@ -438,8 +446,16 @@ xfarray_sortinfo_alloc(
- {
- 	struct xfarray_sortinfo	*si;
- 	size_t			nr_bytes = sizeof(struct xfarray_sortinfo);
-+	size_t			pivot_rec_sz = xfarray_pivot_rec_sz(array);
- 	int			max_stack_depth;
- 
-+	/*
-+	 * The median-of-nine pivot algorithm doesn't work if a subset has
-+	 * fewer than 9 items.  Make sure the in-memory sort will always take
-+	 * over for subsets where this wouldn't be the case.
-+	 */
-+	BUILD_BUG_ON(XFARRAY_QSORT_PIVOT_NR >= XFARRAY_ISORT_NR);
-+
- 	/*
- 	 * Tail-call recursion during the partitioning phase means that
- 	 * quicksort will never recurse more than log2(nr) times.  We need one
-@@ -454,8 +470,10 @@ xfarray_sortinfo_alloc(
- 	/* Each level of quicksort uses a lo and a hi index */
- 	nr_bytes += max_stack_depth * sizeof(xfarray_idx_t) * 2;
- 
--	/* Scratchpad for in-memory sort, or one record for the pivot */
--	nr_bytes += (XFARRAY_ISORT_NR * array->obj_size);
-+	/* Scratchpad for in-memory sort, or finding the pivot */
-+	nr_bytes += max_t(size_t,
-+			(XFARRAY_QSORT_PIVOT_NR + 1) * pivot_rec_sz,
-+			XFARRAY_ISORT_NR * array->obj_size);
- 
- 	si = kvzalloc(nr_bytes, XCHK_GFP_FLAGS);
- 	if (!si)
-@@ -633,14 +651,43 @@ static inline void *xfarray_sortinfo_pivot(struct xfarray_sortinfo *si)
- 	return xfarray_sortinfo_hi(si) + si->max_stack_depth;
- }
- 
-+/* Return a pointer to the start of the pivot array. */
-+static inline void *
-+xfarray_sortinfo_pivot_array(
++/* Release a page we grabbed for sorting records. */
++static inline int
++xfarray_sort_put_page(
 +	struct xfarray_sortinfo	*si)
 +{
-+	return xfarray_sortinfo_pivot(si) + si->array->obj_size;
++	if (!si->page_kaddr)
++		return 0;
++
++	kunmap_local(si->page_kaddr);
++	si->page_kaddr = NULL;
++
++	return xfile_put_page(si->array->xfile, &si->xfpage);
 +}
 +
-+/* The xfarray record is stored at the start of each pivot array element. */
-+static inline void *
-+xfarray_pivot_array_rec(
-+	void			*pa,
-+	size_t			pa_recsz,
-+	unsigned int		pa_idx)
++/* Decide if these records are eligible for in-page sorting. */
++static inline bool
++xfarray_want_pagesort(
++	struct xfarray_sortinfo	*si,
++	xfarray_idx_t		lo,
++	xfarray_idx_t		hi)
 +{
-+	return pa + (pa_recsz * pa_idx);
++	pgoff_t			lo_page;
++	pgoff_t			hi_page;
++	loff_t			end_pos;
++
++	/* We can only map one page at a time. */
++	lo_page = xfarray_pos(si->array, lo) >> PAGE_SHIFT;
++	end_pos = xfarray_pos(si->array, hi) + si->array->obj_size - 1;
++	hi_page = end_pos >> PAGE_SHIFT;
++
++	return lo_page == hi_page;
 +}
 +
-+/* The xfarray index is stored at the end of each pivot array element. */
-+static inline xfarray_idx_t *
-+xfarray_pivot_array_idx(
-+	void			*pa,
-+	size_t			pa_recsz,
-+	unsigned int		pa_idx)
++/* Sort a bunch of records that all live in the same memory page. */
++STATIC int
++xfarray_pagesort(
++	struct xfarray_sortinfo	*si,
++	xfarray_idx_t		lo,
++	xfarray_idx_t		hi)
 +{
-+	return xfarray_pivot_array_rec(pa, pa_recsz, pa_idx + 1) -
-+			sizeof(xfarray_idx_t);
++	void			*startp;
++	loff_t			lo_pos = xfarray_pos(si->array, lo);
++	uint64_t		len = xfarray_pos(si->array, hi - lo);
++	int			error = 0;
++
++	trace_xfarray_pagesort(si, lo, hi);
++
++	xfarray_sort_bump_loads(si);
++	error = xfarray_sort_get_page(si, lo_pos, len);
++	if (error)
++		return error;
++
++	xfarray_sort_bump_heapsorts(si);
++	startp = si->page_kaddr + offset_in_page(lo_pos);
++	sort(startp, hi - lo + 1, si->array->obj_size, si->cmp_fn, NULL);
++
++	xfarray_sort_bump_stores(si);
++	return xfarray_sort_put_page(si);
 +}
 +
- /*
-  * Find a pivot value for quicksort partitioning, swap it with a[lo], and save
-  * the cached pivot record for the next step.
-  *
-- * Select the median value from a[lo], a[mid], and a[hi].  Put the median in
-- * a[lo], the lowest in a[mid], and the highest in a[hi].  Using the median of
-- * the three reduces the chances that we pick the worst case pivot value, since
-- * it's likely that our array values are nearly sorted.
-+ * Load evenly-spaced records within the given range into memory, sort them,
-+ * and choose the pivot from the median record.  Using multiple points will
-+ * improve the quality of the pivot selection, and hopefully avoid the worst
-+ * quicksort behavior, since our array values are nearly always evenly sorted.
-  */
- STATIC int
- xfarray_qsort_pivot(
-@@ -648,76 +695,99 @@ xfarray_qsort_pivot(
- 	xfarray_idx_t		lo,
- 	xfarray_idx_t		hi)
+ /* Return a pointer to the xfarray pivot record within the sortinfo struct. */
+ static inline void *xfarray_sortinfo_pivot(struct xfarray_sortinfo *si)
  {
--	void			*a = xfarray_sortinfo_pivot(si);
--	void			*b = xfarray_scratch(si->array);
--	xfarray_idx_t		mid = lo + ((hi - lo) / 2);
-+	void			*pivot = xfarray_sortinfo_pivot(si);
-+	void			*parray = xfarray_sortinfo_pivot_array(si);
-+	void			*recp;
-+	xfarray_idx_t		*idxp;
-+	xfarray_idx_t		step = (hi - lo) / (XFARRAY_QSORT_PIVOT_NR - 1);
-+	size_t			pivot_rec_sz = xfarray_pivot_rec_sz(si->array);
-+	int			i, j;
- 	int			error;
+@@ -700,6 +781,10 @@ xfarray_qsort_push(
+  * 4. For small sets, load the records into the scratchpad and run heapsort on
+  *    them because that is very fast.  In the author's experience, this yields
+  *    a ~10% reduction in runtime.
++ *
++ *    If a small set is contained entirely within a single xfile memory page,
++ *    map the page directly and run heap sort directly on the xfile page
++ *    instead of using the load/store interface.  This halves the runtime.
+  */
  
--	/* if a[mid] < a[lo], swap a[mid] and a[lo]. */
--	error = xfarray_sort_load(si, mid, a);
--	if (error)
--		return error;
--	error = xfarray_sort_load(si, lo, b);
--	if (error)
--		return error;
--	if (xfarray_sort_cmp(si, a, b) < 0) {
--		error = xfarray_sort_store(si, lo, a);
--		if (error)
--			return error;
--		error = xfarray_sort_store(si, mid, b);
--		if (error)
--			return error;
--	}
-+	ASSERT(step > 0);
+ /*
+@@ -745,6 +830,18 @@ xfarray_sort(
+ 			continue;
+ 		}
  
--	/* if a[hi] < a[mid], swap a[mid] and a[hi]. */
--	error = xfarray_sort_load(si, hi, a);
--	if (error)
--		return error;
--	error = xfarray_sort_load(si, mid, b);
--	if (error)
--		return error;
--	if (xfarray_sort_cmp(si, a, b) < 0) {
--		error = xfarray_sort_store(si, mid, a);
--		if (error)
--			return error;
--		error = xfarray_sort_store(si, hi, b);
--		if (error)
--			return error;
--	} else {
--		goto move_front;
-+	/*
-+	 * Load the xfarray indexes of the records we intend to sample into the
-+	 * pivot array.
-+	 */
-+	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, 0);
-+	*idxp = lo;
-+	for (i = 1; i < XFARRAY_QSORT_PIVOT_NR - 1; i++) {
-+		idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, i);
-+		*idxp = lo + (i * step);
- 	}
-+	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz,
-+			XFARRAY_QSORT_PIVOT_NR - 1);
-+	*idxp = hi;
- 
--	/* if a[mid] < a[lo], swap a[mid] and a[lo]. */
--	error = xfarray_sort_load(si, mid, a);
--	if (error)
--		return error;
--	error = xfarray_sort_load(si, lo, b);
--	if (error)
--		return error;
--	if (xfarray_sort_cmp(si, a, b) < 0) {
--		error = xfarray_sort_store(si, lo, a);
--		if (error)
--			return error;
--		error = xfarray_sort_store(si, mid, b);
-+	/* Load the selected xfarray records into the pivot array. */
-+	for (i = 0; i < XFARRAY_QSORT_PIVOT_NR; i++) {
-+		xfarray_idx_t	idx;
-+
-+		recp = xfarray_pivot_array_rec(parray, pivot_rec_sz, i);
-+		idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, i);
-+
-+		/* No unset records; load directly into the array. */
-+		if (likely(si->array->unset_slots == 0)) {
-+			error = xfarray_sort_load(si, *idxp, recp);
++		/*
++		 * If directly mapping the page and sorting can solve our
++		 * problems, we're done.
++		 */
++		if (xfarray_want_pagesort(si, lo, hi)) {
++			error = xfarray_pagesort(si, lo, hi);
 +			if (error)
-+				return error;
++				goto out_free;
++			si->stack_depth--;
 +			continue;
 +		}
 +
-+		/*
-+		 * Load non-null records into the scratchpad without changing
-+		 * the xfarray_idx_t in the pivot array.
-+		 */
-+		idx = *idxp;
-+		xfarray_sort_bump_loads(si);
-+		error = xfarray_load_next(si->array, &idx, recp);
- 		if (error)
- 			return error;
- 	}
- 
--move_front:
-+	xfarray_sort_bump_heapsorts(si);
-+	sort(parray, XFARRAY_QSORT_PIVOT_NR, pivot_rec_sz, si->cmp_fn, NULL);
-+
- 	/*
--	 * Move our selected pivot to a[lo].  Recall that a == si->pivot, so
--	 * this leaves us with the pivot cached in the sortinfo structure.
-+	 * We sorted the pivot array records (which includes the xfarray
-+	 * indices) in xfarray record order.  The median element of the pivot
-+	 * array contains the xfarray record that we will use as the pivot.
-+	 * Copy that xfarray record to the designated space.
- 	 */
--	error = xfarray_sort_load(si, lo, b);
--	if (error)
--		return error;
--	error = xfarray_sort_load(si, mid, a);
--	if (error)
--		return error;
--	error = xfarray_sort_store(si, mid, b);
-+	recp = xfarray_pivot_array_rec(parray, pivot_rec_sz,
-+			XFARRAY_QSORT_PIVOT_NR / 2);
-+	memcpy(pivot, recp, si->array->obj_size);
-+
-+	/* If the pivot record we chose was already in a[lo] then we're done. */
-+	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz,
-+			XFARRAY_QSORT_PIVOT_NR / 2);
-+	if (*idxp == lo)
-+		return 0;
-+
-+	/*
-+	 * Find the cached copy of a[lo] in the pivot array so that we can swap
-+	 * a[lo] and a[pivot].
-+	 */
-+	for (i = 0, j = -1; i < XFARRAY_QSORT_PIVOT_NR; i++) {
-+		idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, i);
-+		if (*idxp == lo)
-+			j = i;
-+	}
-+	if (j < 0) {
-+		ASSERT(j >= 0);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	/* Swap a[lo] and a[pivot]. */
-+	error = xfarray_sort_store(si, lo, pivot);
- 	if (error)
- 		return error;
--	return xfarray_sort_store(si, lo, a);
-+
-+	recp = xfarray_pivot_array_rec(parray, pivot_rec_sz, j);
-+	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz,
-+			XFARRAY_QSORT_PIVOT_NR / 2);
-+	return xfarray_sort_store(si, *idxp, recp);
- }
- 
- /*
-@@ -829,7 +899,7 @@ xfarray_sort_load_cached(
-  *    particularly expensive in the kernel.
-  *
-  * 2. For arrays with records in arbitrary or user-controlled order, choose the
-- *    pivot element using a median-of-three decision tree.  This reduces the
-+ *    pivot element using a median-of-nine decision tree.  This reduces the
-  *    probability of selecting a bad pivot value which causes worst case
-  *    behavior (i.e. partition sizes of 1).
-  *
+ 		/* If insertion sort can solve our problems, we're done. */
+ 		if (xfarray_want_isort(si, lo, hi)) {
+ 			error = xfarray_isort(si, lo, hi);
 diff --git a/fs/xfs/scrub/xfarray.h b/fs/xfs/scrub/xfarray.h
-index e8a4523bf2de..69f0c922c98a 100644
+index f49c1afe24a1..e8a4523bf2de 100644
 --- a/fs/xfs/scrub/xfarray.h
 +++ b/fs/xfs/scrub/xfarray.h
-@@ -63,6 +63,9 @@ typedef cmp_func_t xfarray_cmp_fn;
- #define XFARRAY_ISORT_SHIFT		(4)
- #define XFARRAY_ISORT_NR		(1U << XFARRAY_ISORT_SHIFT)
+@@ -81,6 +81,10 @@ struct xfarray_sortinfo {
+ 	/* XFARRAY_SORT_* flags; see below. */
+ 	unsigned int		flags;
  
-+/* Evalulate this many points to find the qsort pivot. */
-+#define XFARRAY_QSORT_PIVOT_NR		(9)
++	/* Cache a page here for faster access. */
++	struct xfile_page	xfpage;
++	void			*page_kaddr;
 +
- struct xfarray_sortinfo {
- 	struct xfarray		*array;
- 
-@@ -92,7 +95,6 @@ struct xfarray_sortinfo {
- 	uint64_t		compares;
- 	uint64_t		heapsorts;
- #endif
--
- 	/*
- 	 * Extra bytes are allocated beyond the end of the structure to store
- 	 * quicksort information.  C does not permit multiple VLAs per struct,
-@@ -115,11 +117,18 @@ struct xfarray_sortinfo {
- 	 * 	xfarray_rec_t	scratch[ISORT_NR];
- 	 *
- 	 * Otherwise, we want to partition the records to partition the array.
--	 * We store the chosen pivot record here and use the xfarray scratchpad
--	 * to rearrange the array around the pivot:
--	 *
--	 * 	xfarray_rec_t	pivot;
-+	 * We store the chosen pivot record at the start of the scratchpad area
-+	 * and use the rest to sample some records to estimate the median.
-+	 * The format of the qsort_pivot array enables us to use the kernel
-+	 * heapsort function to place the median value in the middle.
- 	 *
-+	 * 	struct {
-+	 * 		xfarray_rec_t	pivot;
-+	 * 		struct {
-+	 *			xfarray_rec_t	rec;  (rounded up to 8 bytes)
-+	 * 			xfarray_idx_t	idx;
-+	 *		} qsort_pivot[QSORT_PIVOT_NR];
-+	 * 	};
- 	 * }
- 	 */
- };
+ #ifdef DEBUG
+ 	/* Performance statistics. */
+ 	uint64_t		loads;
 
