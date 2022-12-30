@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0ED365A19E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:32:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E10965A1A5
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:34:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236238AbiLaCc0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:32:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
+        id S236243AbiLaCeS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:34:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236147AbiLaCcY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:32:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B584926D9
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:32:23 -0800 (PST)
+        with ESMTP id S236245AbiLaCeP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:34:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4771CB21
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:34:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 39DFB61D13
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:32:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 966E8C433EF;
-        Sat, 31 Dec 2022 02:32:22 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CCA40B81C22
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:34:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C500C433EF;
+        Sat, 31 Dec 2022 02:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453942;
-        bh=shbbnvMwfQ1g2b/x0X5SuRE53P/hf8h7ukqJa0GC7L8=;
+        s=k20201202; t=1672454051;
+        bh=hslgFdebPew+0RjSKZG69pr4YqNQXM5R/Dsrbuw7Q0w=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=FZ+puA8SbyfQqPu13HyEBqAahyHeMwMEc7LvEKW3csosx28WWBrzUtOeR2+JrnjG8
-         ot9w7IEfNSUcKM0mqLRPJYTlGjJAOYEsSiYvwWYE2fB4vm4XREqFXmf7c08x7+4Wdl
-         SMGTvZP4Nw3KlcnL93HqbHwj+OAXQA0PeUK/t06HOjhzLz3Hb9ykmDR4myVNqBgqUA
-         0FepSK7sRsQEVHhYfY/m1FxmgQlszE9mWshgifRgMwzeI18x8Iv3mIwHVNIGIDvWBc
-         qLO7n0H5OBYu1rBML4yQKghvQvp68W/4fA/9pf8SdUJjCSXtaALuoSJFD0WYWcgIjP
-         QBBSZtP7bFF/Q==
-Subject: [PATCH 09/45] xfs: record rt group superblock errors in the health
- system
+        b=hAT9RjMqBjx/jbZP+UQQ8htDYhtpyRgtywl44SR6VcUUrkVc39+wCaOkjMGRuK/Am
+         w1zOLrlViE6xVDva3xrOaTTYBV86pB0V2Yo7g6wzALuGtYA/VcfkywHJmLsnE67SJg
+         fsfX+gf61DTVPmHZJ7LEWQV16nP0QCInMVT7iTbRRmWtMg9jZStc6cUo13GdTAcddh
+         viygKwKC/HWZqhCA5cN/inDjsmU75VroukT6EXIqTlIEqeOtxAYATXG0dZiCOikEE9
+         P+ePmsAf+zmtkzy1nDdccKfES3CBJSW/aHBKSWJZUIjTYdNhiPvBWvSk4iW2PAsVgu
+         gj2tV+tuuNqHA==
+Subject: [PATCH 16/45] xfs: store rtgroup information with a bmap intent
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:44 -0800
-Message-ID: <167243878482.731133.16012297468628814513.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:19:45 -0800
+Message-ID: <167243878576.731133.2170551438718575869.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,107 +55,69 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Record the state of per-rtgroup metadata sickness in the rtgroup
-structure for later reporting.
+Make the bmap intent items take an active reference to the rtgroup
+containing the space that is being mapped or unmapped.  We will need
+this functionality once we start enabling rmap and reflink on the rt
+volume.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_health.h  |   28 +++++++++++++++++++++++++++-
- libxfs/xfs_rtgroup.h |    8 ++++++++
- 2 files changed, 35 insertions(+), 1 deletion(-)
+ libxfs/defer_item.c |   17 +++++++++++++++--
+ libxfs/xfs_bmap.h   |    5 ++++-
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
 
-diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
-index 99d53bae9c1..0beb4153a43 100644
---- a/libxfs/xfs_health.h
-+++ b/libxfs/xfs_health.h
-@@ -52,6 +52,7 @@ struct xfs_inode;
- struct xfs_fsop_geom;
- struct xfs_btree_cur;
- struct xfs_da_args;
-+struct xfs_rtgroup;
- 
- /* Observable health issues for metadata spanning the entire filesystem. */
- #define XFS_SICK_FS_COUNTERS	(1 << 0)  /* summary counters */
-@@ -65,6 +66,7 @@ struct xfs_da_args;
- /* Observable health issues for realtime volume metadata. */
- #define XFS_SICK_RT_BITMAP	(1 << 0)  /* realtime bitmap */
- #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
-+#define XFS_SICK_RT_SUPER	(1 << 2)  /* rt group superblock */
- 
- /* Observable health issues for AG metadata. */
- #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
-@@ -101,7 +103,8 @@ struct xfs_da_args;
- 				 XFS_SICK_FS_METADIR)
- 
- #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
--				 XFS_SICK_RT_SUMMARY)
-+				 XFS_SICK_RT_SUMMARY | \
-+				 XFS_SICK_RT_SUPER)
- 
- #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
- 				 XFS_SICK_AG_AGF | \
-@@ -176,6 +179,14 @@ void xfs_rt_mark_healthy(struct xfs_mount *mp, unsigned int mask);
- void xfs_rt_measure_sickness(struct xfs_mount *mp, unsigned int *sick,
- 		unsigned int *checked);
- 
-+void xfs_rgno_mark_sick(struct xfs_mount *mp, xfs_rgnumber_t rgno,
-+		unsigned int mask);
-+void xfs_rtgroup_mark_sick(struct xfs_rtgroup *rtg, unsigned int mask);
-+void xfs_rtgroup_mark_checked(struct xfs_rtgroup *rtg, unsigned int mask);
-+void xfs_rtgroup_mark_healthy(struct xfs_rtgroup *rtg, unsigned int mask);
-+void xfs_rtgroup_measure_sickness(struct xfs_rtgroup *rtg, unsigned int *sick,
-+		unsigned int *checked);
-+
- void xfs_agno_mark_sick(struct xfs_mount *mp, xfs_agnumber_t agno,
- 		unsigned int mask);
- void xfs_ag_mark_sick(struct xfs_perag *pag, unsigned int mask);
-@@ -225,6 +236,15 @@ xfs_ag_has_sickness(struct xfs_perag *pag, unsigned int mask)
- 	return sick & mask;
- }
- 
-+static inline bool
-+xfs_rtgroup_has_sickness(struct xfs_rtgroup *rtg, unsigned int mask)
-+{
-+	unsigned int	sick, checked;
-+
-+	xfs_rtgroup_measure_sickness(rtg, &sick, &checked);
-+	return sick & mask;
-+}
-+
- static inline bool
- xfs_inode_has_sickness(struct xfs_inode *ip, unsigned int mask)
+diff --git a/libxfs/defer_item.c b/libxfs/defer_item.c
+index 316cc87a802..be6ecbc348f 100644
+--- a/libxfs/defer_item.c
++++ b/libxfs/defer_item.c
+@@ -479,8 +479,18 @@ xfs_bmap_update_get_group(
  {
-@@ -246,6 +266,12 @@ xfs_rt_is_healthy(struct xfs_mount *mp)
- 	return !xfs_rt_has_sickness(mp, -1U);
- }
+ 	xfs_agnumber_t		agno;
  
-+static inline bool
-+xfs_rtgroup_is_healthy(struct xfs_rtgroup *rtg)
-+{
-+	return !xfs_rtgroup_has_sickness(rtg, -1U);
-+}
+-	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork))
++	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork)) {
++		if (xfs_has_rtgroups(mp)) {
++			xfs_rgnumber_t	rgno;
 +
- static inline bool
- xfs_ag_is_healthy(struct xfs_perag *pag)
++			rgno = xfs_rtb_to_rgno(mp, bi->bi_bmap.br_startblock);
++			bi->bi_rtg = xfs_rtgroup_get(mp, rgno);
++		} else {
++			bi->bi_rtg = NULL;
++		}
++
+ 		return;
++	}
+ 
+ 	agno = XFS_FSB_TO_AGNO(mp, bi->bi_bmap.br_startblock);
+ 	bi->bi_pag = xfs_perag_get(mp, agno);
+@@ -500,8 +510,11 @@ static inline void
+ xfs_bmap_update_put_group(
+ 	struct xfs_bmap_intent	*bi)
  {
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index d8723fabeb5..0e664e2436b 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -23,6 +23,14 @@ struct xfs_rtgroup {
- 	/* Number of blocks in this group */
- 	xfs_rgblock_t		rtg_blockcount;
+-	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork))
++	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork)) {
++		if (xfs_has_rtgroups(bi->bi_owner->i_mount))
++			xfs_rtgroup_put(bi->bi_rtg);
+ 		return;
++	}
  
-+	/*
-+	 * Bitsets of per-rtgroup metadata that have been checked and/or are
-+	 * sick.  Callers should hold rtg_state_lock before accessing this
-+	 * field.
-+	 */
-+	uint16_t		rtg_checked;
-+	uint16_t		rtg_sick;
-+
- #ifdef __KERNEL__
- 	/* -- kernel only structures below this line -- */
- 	spinlock_t		rtg_state_lock;
+ 	xfs_perag_drop_intents(bi->bi_pag);
+ 	xfs_perag_put(bi->bi_pag);
+diff --git a/libxfs/xfs_bmap.h b/libxfs/xfs_bmap.h
+index d870c6a62e4..05097b1d5c7 100644
+--- a/libxfs/xfs_bmap.h
++++ b/libxfs/xfs_bmap.h
+@@ -241,7 +241,10 @@ struct xfs_bmap_intent {
+ 	enum xfs_bmap_intent_type		bi_type;
+ 	int					bi_whichfork;
+ 	struct xfs_inode			*bi_owner;
+-	struct xfs_perag			*bi_pag;
++	union {
++		struct xfs_perag		*bi_pag;
++		struct xfs_rtgroup		*bi_rtg;
++	};
+ 	struct xfs_bmbt_irec			bi_bmap;
+ };
+ 
 
