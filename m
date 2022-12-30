@@ -2,117 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B440E65A129
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:03:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8AEE65A020
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:00:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236146AbiLaCD4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:03:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51824 "EHLO
+        id S235770AbiLaBAB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:00:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236143AbiLaCDy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:03:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B217F2AF8
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:03:53 -0800 (PST)
+        with ESMTP id S235750AbiLaBAB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:00:01 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CEAC1C913
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:00:00 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7022DB81C23
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:03:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1BAC433EF;
-        Sat, 31 Dec 2022 02:03:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D1670B81DEF
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:59:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76FD7C433D2;
+        Sat, 31 Dec 2022 00:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452231;
-        bh=9hgBuR3PxBP47oOnbGAHCQkoj0gVExbDqco8knX96hY=;
+        s=k20201202; t=1672448397;
+        bh=6PsiESqP3Cu5st0i1k6JFAbzivCio8aUm+ET0gs61hw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XZ1fi0jOYO4BLPmkAuTEJii/if71EgCbriujn6c3pxm93qAHnM6ZE5wKloLQGl8RO
-         x8PvLpvrR2gq4BKH6nnZ/9cPpPa/Uc68mZKwCet7w0UlaIfFZhBDsNFuIjTwkoGyQ1
-         mShob4Plx22L+dBzoG6TabE2NyFu3YHIqYgZuJYxPKibW4pjiD+F3+/Ih/2jO3xTF1
-         UwhH0xRhLmVIj09S3zkmATg9dL2apESkL2A4DIEaqim1CNU1xGKLRtBrT/FwIYBvr9
-         +gLMlXzFv1LtAQoW4KQhtJJeSmqhW8NItjqsg3NJfHOGhyY1RIFv0o9aY9KkK81Ggm
-         7WZuHDtE2YRQg==
-Subject: [PATCH 03/26] xfs: hoist project id get/set functions to libxfs
+        b=lxqGBQ9JuNKkIxaQtVAbzH1B7b9ttYehFbTFvF6LUJuNV7tuy9vr9/2sR1OWsBog1
+         doCppgc53jdcT+E1LcSWXEAeUrXwp6AmG0cbpJoKGg3R9NjaLHJa64X9P2FszGCb8n
+         bFlv+DmZKH5eJuP4Yil2HvVED98fD9pK11IPu+JImRkBKKmvJ0EGGdOWoz/grK4xTp
+         RDUlnwIjboxuP/z+W+6YgtJwK1V6Pqh/8SRDfSEnnzPXzksnpt/jZQscMddUnmnFd+
+         pImzja7/8YtxLh5pdd1wx41rqd6n+C6qGXwb2I+xjyr8X6kma+grXCdNtKiqyXP+//
+         O+e71S2zxDtUw==
+Subject: [PATCHSET v1.0 00/26] libxfs: hoist inode operations to libxfs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:13 -0800
-Message-ID: <167243875362.723621.17855762543390893319.stgit@magnolia>
-In-Reply-To: <167243875315.723621.17759760420120912799.stgit@magnolia>
-References: <167243875315.723621.17759760420120912799.stgit@magnolia>
+Message-ID: <167243875315.723621.17759760420120912799.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Move the project id get and set functions into libxfs.
+Add libxfs code from the kernel from the inode refactoring, then fix up
+xfs_repair and mkfs to use library functions instead of open-coding
+inode (re)creation.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=inode-refactor
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=inode-refactor
 ---
- libxfs/libxfs_api_defs.h |    2 ++
- libxfs/xfs_inode_util.c  |   11 +++++++++++
- libxfs/xfs_inode_util.h  |    2 ++
- 3 files changed, 15 insertions(+)
-
-
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index d871963966c..01ad6e54624 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -135,6 +135,7 @@
- #define xfs_free_extent			libxfs_free_extent
- #define xfs_free_perag			libxfs_free_perag
- #define xfs_fs_geometry			libxfs_fs_geometry
-+#define xfs_get_projid			libxfs_get_projid
- #define xfs_highbit32			libxfs_highbit32
- #define xfs_highbit64			libxfs_highbit64
- #define xfs_ialloc_calc_rootino		libxfs_ialloc_calc_rootino
-@@ -207,6 +208,7 @@
- #define xfs_sb_read_secondary		libxfs_sb_read_secondary
- #define xfs_sb_to_disk			libxfs_sb_to_disk
- #define xfs_sb_version_to_features	libxfs_sb_version_to_features
-+#define xfs_set_projid			libxfs_set_projid
- #define xfs_symlink_blocks		libxfs_symlink_blocks
- #define xfs_symlink_hdr_ok		libxfs_symlink_hdr_ok
- #define xfs_symlink_write_target	libxfs_symlink_write_target
-diff --git a/libxfs/xfs_inode_util.c b/libxfs/xfs_inode_util.c
-index 868a77cafa6..89fb58807a1 100644
---- a/libxfs/xfs_inode_util.c
-+++ b/libxfs/xfs_inode_util.c
-@@ -122,3 +122,14 @@ xfs_ip2xflags(
- 		flags |= FS_XFLAG_HASATTR;
- 	return flags;
- }
-+
-+#define XFS_PROJID_DEFAULT	0
-+
-+prid_t
-+xfs_get_initial_prid(struct xfs_inode *dp)
-+{
-+	if (dp->i_diflags & XFS_DIFLAG_PROJINHERIT)
-+		return dp->i_projid;
-+
-+	return XFS_PROJID_DEFAULT;
-+}
-diff --git a/libxfs/xfs_inode_util.h b/libxfs/xfs_inode_util.h
-index 6ad1898a0f7..f7e4d5a8235 100644
---- a/libxfs/xfs_inode_util.h
-+++ b/libxfs/xfs_inode_util.h
-@@ -11,4 +11,6 @@ uint64_t	xfs_flags2diflags2(struct xfs_inode *ip, unsigned int xflags);
- uint32_t	xfs_dic2xflags(struct xfs_inode *ip);
- uint32_t	xfs_ip2xflags(struct xfs_inode *ip);
- 
-+prid_t		xfs_get_initial_prid(struct xfs_inode *dp);
-+
- #endif /* __XFS_INODE_UTIL_H__ */
+ db/sb.c                   |    4 
+ include/libxfs.h          |    1 
+ include/xfs_inode.h       |   85 ++++--
+ include/xfs_mount.h       |    1 
+ include/xfs_trace.h       |    6 
+ libxfs/Makefile           |    5 
+ libxfs/inode.c            |  279 ++++++++++++++++++
+ libxfs/iunlink.c          |  126 ++++++++
+ libxfs/iunlink.h          |   22 +
+ libxfs/libxfs_api_defs.h  |    7 
+ libxfs/libxfs_priv.h      |   36 ++
+ libxfs/rdwr.c             |   87 ------
+ libxfs/util.c             |  282 ------------------
+ libxfs/xfs_bmap.c         |   42 +++
+ libxfs/xfs_bmap.h         |    3 
+ libxfs/xfs_dir2.c         |  480 +++++++++++++++++++++++++++++++
+ libxfs/xfs_dir2.h         |   19 +
+ libxfs/xfs_format.h       |    9 -
+ libxfs/xfs_ialloc.c       |   20 +
+ libxfs/xfs_inode_util.c   |  695 +++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_inode_util.h   |   79 +++++
+ libxfs/xfs_shared.h       |    7 
+ libxfs/xfs_trans_inode.c  |    2 
+ mdrestore/xfs_mdrestore.c |    6 
+ mkfs/proto.c              |   94 +++++-
+ repair/agheader.c         |   12 -
+ repair/phase6.c           |  199 ++++---------
+ 27 files changed, 2037 insertions(+), 571 deletions(-)
+ create mode 100644 libxfs/inode.c
+ create mode 100644 libxfs/iunlink.c
+ create mode 100644 libxfs/iunlink.h
+ create mode 100644 libxfs/xfs_inode_util.c
+ create mode 100644 libxfs/xfs_inode_util.h
 
