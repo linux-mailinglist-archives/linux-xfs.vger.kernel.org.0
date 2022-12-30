@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BEBE65A1D5
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:46:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 268A865A009
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:54:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236212AbiLaCqK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:46:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58976 "EHLO
+        id S235992AbiLaAyR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:54:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiLaCqJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:46:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0534625D
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:46:08 -0800 (PST)
+        with ESMTP id S235930AbiLaAyQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:54:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2144613F29;
+        Fri, 30 Dec 2022 16:54:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C1D761D1F
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:46:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3485C433EF;
-        Sat, 31 Dec 2022 02:46:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B382A61D51;
+        Sat, 31 Dec 2022 00:54:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 180A2C433EF;
+        Sat, 31 Dec 2022 00:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454767;
-        bh=VIEnQ5AJR6Ftgec3yGYKb1k5I/atQePkvY7S6Bho34o=;
+        s=k20201202; t=1672448055;
+        bh=p9MYa6m7WHFvsYwhRGesBN5zSr3aGrlMGuiTQ2+wqMQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iv81uHBjmLxby9ODw3nebubjnmFbnrj4mg/t3ZMNeXbVEKEiZbHew8FR5qtWQ7HSN
-         d44oq7HWu7Q+pC3s5WqvrIZbDc2ut7odaJXg8f5vo3wdDikrovmLNEE/A40S0vx0q8
-         /tXI88VroZVo+XDlTLsROSHqpuJVBWzT2tHzYEiKdA7nEFyoVEvXxytSbpfjO4tIIt
-         CNpf+rrcagrf3wht6la/ZCM6GB4/eLZ+mLECIYdMTPFJmm61jO1phpJiLypU4vdV/T
-         eEgsR1F1rHNZ1AxyObR7y7xMYwc3yDzhy8Tlj0SthQzjyXN4p0+UyfcrmSzHbaJViJ
-         05SPCZ7iEETIw==
-Subject: [PATCH 14/41] xfs: report realtime rmap btree corruption errors to
- the health system
+        b=SSuIUawxFNJnhM99qiHaDASkz5dWRH6ZIqgp6GQ0aTuLbILHbHjuTY9iah3fzGJcr
+         p3gysxj1QN4SfpL+IPixw28gIT7LPuSk6hF0i/GcxlN7xOwkWeYj4gs57pilCWdeJH
+         ml9wAqv3zj5rl1zjXElQJRFIZhCyY6om73znbJB/oZdqqQ/mttX6B0oMDlOHtGcxfO
+         ieujlTrxEh6wZDSM509IwZ+ez4naUbn6K7rhOnZ1s9wReN6O1d9mOsuKyYH1MH0QB+
+         11AAxGtKvEAY7xGeg3W6aALFiRdDZI0ocCNCKnLkQyoUyyGndvfTh/bhHsQ5IoZivi
+         SZfhzqu/PK10w==
+Subject: [PATCH 1/2] xfs: ensure that online directory repairs don't hit
+ EDQUOT
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:57 -0800
-Message-ID: <167243879782.732820.6518594918342608869.stgit@magnolia>
-In-Reply-To: <167243879574.732820.4725863402652761218.stgit@magnolia>
-References: <167243879574.732820.4725863402652761218.stgit@magnolia>
+Message-ID: <167243879793.733381.10737467373374867150.stgit@magnolia>
+In-Reply-To: <167243879781.733381.1441585366549762189.stgit@magnolia>
+References: <167243879781.733381.1441585366549762189.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,90 +55,109 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Whenever we encounter corrupt realtime rmap btree blocks, we should
-report that to the health monitoring system for later reporting.
+Add a test to ensure that the sysadmin doesn't get EDQUOT if they try to
+repair directory metadata when we've already exceeded a quota limit
+somewhere.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_fs.h           |    1 +
- libxfs/xfs_health.h       |    4 +++-
- libxfs/xfs_inode_fork.c   |    4 +++-
- libxfs/xfs_rtrmap_btree.c |    5 ++++-
- 4 files changed, 11 insertions(+), 3 deletions(-)
+ tests/xfs/841     |   77 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/841.out |    3 ++
+ 2 files changed, 80 insertions(+)
+ create mode 100755 tests/xfs/841
+ create mode 100644 tests/xfs/841.out
 
 
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index 7e9d7d7bb40..5c557d5ff13 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -313,6 +313,7 @@ struct xfs_rtgroup_geometry {
- };
- #define XFS_RTGROUP_GEOM_SICK_SUPER	(1 << 0)  /* superblock */
- #define XFS_RTGROUP_GEOM_SICK_BITMAP	(1 << 1)  /* rtbitmap for this group */
-+#define XFS_RTGROUP_GEOM_SICK_RMAPBT	(1 << 2)  /* reverse mappings */
- 
- /*
-  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
-diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
-index 44137c4983f..d5976f6b0de 100644
---- a/libxfs/xfs_health.h
-+++ b/libxfs/xfs_health.h
-@@ -67,6 +67,7 @@ struct xfs_rtgroup;
- #define XFS_SICK_RT_BITMAP	(1 << 0)  /* realtime bitmap */
- #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
- #define XFS_SICK_RT_SUPER	(1 << 2)  /* rt group superblock */
-+#define XFS_SICK_RT_RMAPBT	(1 << 3)  /* reverse mappings */
- 
- /* Observable health issues for AG metadata. */
- #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
-@@ -104,7 +105,8 @@ struct xfs_rtgroup;
- 
- #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
- 				 XFS_SICK_RT_SUMMARY | \
--				 XFS_SICK_RT_SUPER)
-+				 XFS_SICK_RT_SUPER | \
-+				 XFS_SICK_RT_RMAPBT)
- 
- #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
- 				 XFS_SICK_AG_AGF | \
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 386f23b2954..2b2a3fcab94 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -259,8 +259,10 @@ xfs_iformat_data_fork(
- 		case XFS_DINODE_FMT_BTREE:
- 			return xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
- 		case XFS_DINODE_FMT_RMAP:
--			if (!xfs_has_rtrmapbt(ip->i_mount))
-+			if (!xfs_has_rtrmapbt(ip->i_mount)) {
-+				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 				return -EFSCORRUPTED;
-+			}
- 			return xfs_iformat_rtrmap(ip, dip);
- 		default:
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
-diff --git a/libxfs/xfs_rtrmap_btree.c b/libxfs/xfs_rtrmap_btree.c
-index 38f0b8567a6..b39ccba497a 100644
---- a/libxfs/xfs_rtrmap_btree.c
-+++ b/libxfs/xfs_rtrmap_btree.c
-@@ -25,6 +25,7 @@
- #include "xfs_rtgroup.h"
- #include "xfs_bmap.h"
- #include "xfs_imeta.h"
-+#include "xfs_health.h"
- 
- static struct kmem_cache	*xfs_rtrmapbt_cur_cache;
- 
-@@ -797,8 +798,10 @@ xfs_iformat_rtrmap(
- 	level = be16_to_cpu(dfp->bb_level);
- 
- 	if (level > mp->m_rtrmap_maxlevels ||
--	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize)
-+	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize) {
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		return -EFSCORRUPTED;
-+	}
- 
- 	xfs_iroot_alloc(ip, XFS_DATA_FORK,
- 			xfs_rtrmap_broot_space_calc(mp, level, numrecs));
+diff --git a/tests/xfs/841 b/tests/xfs/841
+new file mode 100755
+index 0000000000..f743454971
+--- /dev/null
++++ b/tests/xfs/841
+@@ -0,0 +1,77 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test 841
++#
++# Ensure that the sysadmin won't hit EDQUOT while repairing file data contents
++# even if the file's quota limits have been exceeded.  This tests the quota
++# reservation handling inside the swapext code used by repair.
++#
++. ./common/preamble
++_begin_fstest online_repair
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/quota
++
++# real QA test starts here
++
++# Modify as appropriate.
++_supported_fs xfs
++_require_quota
++_require_user
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_qmount_option usrquota
++_qmount
++
++blocksize=$(_get_block_size $SCRATCH_MNT)
++alloc_unit=$(_xfs_get_dir_blocksize $SCRATCH_MNT)
++
++# Make sure we can actually repair a directory
++scratchdir=$SCRATCH_MNT/dir
++scratchfile=$SCRATCH_MNT/file
++mkdir $scratchdir
++touch $scratchfile
++$XFS_IO_PROG -x -c 'inject force_repair' $SCRATCH_MNT
++__stress_scrub_check_commands "$scratchdir" "" 'repair directory'
++
++# Create a 2-dirblock directory
++total_size=$((alloc_unit * 2))
++dirents=$((total_size / 255))
++
++for ((i = 0; i < dirents; i++)); do
++	name=$(printf "x%0254d" $i)
++	ln $scratchfile $scratchdir/$name
++done
++
++# Set a low quota hardlimit for an unprivileged uid and chown the files to it
++echo "set up quota" >> $seqres.full
++$XFS_QUOTA_PROG -x -c "limit -u bhard=$alloc_unit $qa_user" $SCRATCH_MNT
++chown $qa_user $scratchdir $scratchfile
++$XFS_QUOTA_PROG -x -c 'report -u' $SCRATCH_MNT >> $seqres.full
++
++# Rebuild the directory
++echo "repairs" >> $seqres.full
++$XFS_IO_PROG -x -c 'inject force_repair' -c 'repair directory' $scratchdir
++$XFS_QUOTA_PROG -x -c 'report -u' $SCRATCH_MNT >> $seqres.full
++
++# Fail at appending the directory as qa_user to ensure quota enforcement works
++echo "fail quota" >> $seqres.full
++for ((i = 0; i < dirents; i++)); do
++	name=$(printf "y%0254d" $i)
++	su - "$qa_user" -c "ln $scratchfile $scratchdir/$name" 2>&1 | \
++		_filter_scratch | sed -e 's/y[0-9]*/yXXX/g'
++	test "${PIPESTATUS[0]}" -ne 0 && break
++done
++$XFS_QUOTA_PROG -x -c 'report -u' $SCRATCH_MNT >> $seqres.full
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/841.out b/tests/xfs/841.out
+new file mode 100644
+index 0000000000..e8e169111a
+--- /dev/null
++++ b/tests/xfs/841.out
+@@ -0,0 +1,3 @@
++QA output created by 841
++ln: failed to create hard link 'SCRATCH_MNT/dir/yXXX': Disk quota exceeded
++Silence is golden
 
