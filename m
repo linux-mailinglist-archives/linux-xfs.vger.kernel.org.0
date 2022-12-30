@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ED95659F36
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF36C65A067
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:16:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235391AbiLaAIz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:08:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53868 "EHLO
+        id S236041AbiLaBQ6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:16:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235853AbiLaAIx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:08:53 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5966D1E3C3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:08:52 -0800 (PST)
+        with ESMTP id S236048AbiLaBQv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:16:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4D71AD9A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:16:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 19021B81DF8
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:08:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE06DC433D2;
-        Sat, 31 Dec 2022 00:08:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A18E261D77
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:16:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13AC7C433EF;
+        Sat, 31 Dec 2022 01:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445329;
-        bh=JJxiucz+QmsbKzHrNdnKFpJn367sj8ul+7AqnFl1ibo=;
+        s=k20201202; t=1672449410;
+        bh=iZpoeAyr09sNC8/LhzPvMHNNf3TtviNobi5y096JWh8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Zg3OSuVPMMADNhVIxC0oovys57lZmQyfmfISzLe2vZpbOjkDy2bTHO0NonKaiIcUM
-         DHzLsCiqcM167JDIV6afAItZMtFeiBYG+IJrMb6kOgvQ5q2iGDA/SNp4XBYWk4z+js
-         7hV6fwFcMcSFJ5wgUhpAMPftYDek/Mx1hfqilieUXJyLRaaXabf/1P9DeMvFexvQE/
-         6Pl0A8+6Rig0ABlDuBUFHWqsnvpzYNaw6H5Q7ZYOBIvZh3Avv2bn7CCYdf3mln+2Cs
-         h/XoaNszbBUdAa+F2vWAJ8a8pslfpwHrBHEhcMGrb8w4EoT1lSll+2582LZ59Hz1LZ
-         dqIprtULub1Jg==
-Subject: [PATCH 3/3] xfs: implement live quotacheck inode scan
+        b=R3clVJfUNNUEBZs2C6cPmujsH84Y76gXvT3s7U9MI2nCDuTX4jGmsWL7na5TM9Lhv
+         08VPqd8kJwqdn7kdkc2MnSOWBXrLbSchdKpDQo9dYk4ZDvtHcCQZvNWBH2/yYYUgUg
+         2OMB5jPOo8+9LqoT7uWjEQkQPeUYz8OBvnQjBxiR246i51GRIBQtLqtT4smvmhoos3
+         lA6TcO1pXHrI6+Jhy98mZZR4AmFH1v4kU2C79SnJ2eN0kVtn7tG4QvscujvCjHvXVQ
+         9syp1uskMA8mBD15ry3F6T88g8Mcy0Oaf7IS7NKW8QOsItn9OuMVC50VgRJNQCtshh
+         mEGOS/O/dw43w==
+Subject: [PATCH 02/14] xfs: refactor the allocation and freeing of incore
+ inode fork btree roots
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:29 -0800
-Message-ID: <167243864931.708814.14967976429445381977.stgit@magnolia>
-In-Reply-To: <167243864892.708814.13943121883358066158.stgit@magnolia>
-References: <167243864892.708814.13943121883358066158.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:31 -0800
+Message-ID: <167243865136.708933.3250808354146954240.stgit@magnolia>
+In-Reply-To: <167243865089.708933.5645420573863731083.stgit@magnolia>
+References: <167243865089.708933.5645420573863731083.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,135 +55,123 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a new trio of scrub functions to check quota counters.  While the
-dquots themselves are filesystem metadata and should be checked early,
-the dquot counter values are computed from other metadata and are
-therefore summary counters.  We don't plug these into the scrub dispatch
-just yet, because we still need to be able to watch quota updates while
-doing our scan.
+Refactor the code that allocates and freese the incore inode fork btree
+roots.  This will help us disentangle some of the weird logic when we're
+creating and tearing down inode-based btrees.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libfrog/scrub.c |    5 +++++
- libxfs/xfs_fs.h |    3 ++-
- scrub/phase4.c  |   17 +++++++++++++++++
- scrub/repair.c  |    3 +++
- scrub/scrub.c   |    9 +++++++++
- scrub/scrub.h   |    1 +
- 6 files changed, 37 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_inode_fork.c |   53 ++++++++++++++++++++++++++++------------
+ fs/xfs/libxfs/xfs_inode_fork.h |    3 ++
+ 2 files changed, 40 insertions(+), 16 deletions(-)
 
 
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index 2e4d96caaa1..3718d56eae3 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -134,6 +134,11 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
- 		.descr	= "filesystem summary counters",
- 		.group	= XFROG_SCRUB_GROUP_SUMMARY,
- 	},
-+	[XFS_SCRUB_TYPE_QUOTACHECK] = {
-+		.name	= "quotacheck",
-+		.descr	= "quota counters",
-+		.group	= XFROG_SCRUB_GROUP_ISCAN,
-+	},
- };
+diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
+index 9d53df7ce49d..0f220f100069 100644
+--- a/fs/xfs/libxfs/xfs_inode_fork.c
++++ b/fs/xfs/libxfs/xfs_inode_fork.c
+@@ -207,8 +207,7 @@ xfs_iformat_btree(
+ 		return -EFSCORRUPTED;
+ 	}
  
- /* Invoke the scrub ioctl.  Returns zero or negative error code. */
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index 7e86e1db66d..6612c89944d 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -708,9 +708,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_TYPE_GQUOTA	22	/* group quotas */
- #define XFS_SCRUB_TYPE_PQUOTA	23	/* project quotas */
- #define XFS_SCRUB_TYPE_FSCOUNTERS 24	/* fs summary counters */
-+#define XFS_SCRUB_TYPE_QUOTACHECK 25	/* quota counters */
- 
- /* Number of scrub subcommands. */
--#define XFS_SCRUB_TYPE_NR	25
-+#define XFS_SCRUB_TYPE_NR	26
- 
- /* i: Repair this metadata. */
- #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
-diff --git a/scrub/phase4.c b/scrub/phase4.c
-index 3c985cdc13a..da9e8759134 100644
---- a/scrub/phase4.c
-+++ b/scrub/phase4.c
-@@ -128,6 +128,7 @@ int
- phase4_func(
- 	struct scrub_ctx	*ctx)
- {
-+	struct xfs_fsop_geom	fsgeom;
- 	int			ret;
- 
- 	if (!have_action_items(ctx))
-@@ -143,6 +144,22 @@ phase4_func(
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Repair possibly bad quota counts before starting other repairs,
-+	 * because wildly incorrect quota counts can cause shutdowns.
-+	 * Quotacheck scans all inodes, so we only want to do it if we know
-+	 * it's sick.
-+	 */
-+	ret = xfrog_geometry(ctx->mnt.fd, &fsgeom);
-+	if (ret)
-+		return ret;
-+
-+	if (fsgeom.sick & XFS_FSOP_GEOM_SICK_QUOTACHECK) {
-+		ret = scrub_quotacheck(ctx, &ctx->action_lists[0]);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	ret = repair_everything(ctx);
- 	if (ret)
- 		return ret;
-diff --git a/scrub/repair.c b/scrub/repair.c
-index 67900ea4208..8a1ae0226a0 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -84,6 +84,9 @@ xfs_action_item_priority(
- 	case XFS_SCRUB_TYPE_GQUOTA:
- 	case XFS_SCRUB_TYPE_PQUOTA:
- 		return PRIO(aitem, XFS_SCRUB_TYPE_UQUOTA);
-+	case XFS_SCRUB_TYPE_QUOTACHECK:
-+		/* This should always go after [UGP]QUOTA no matter what. */
-+		return PRIO(aitem, aitem->type);
- 	case XFS_SCRUB_TYPE_FSCOUNTERS:
- 		/* This should always go after AG headers no matter what. */
- 		return PRIO(aitem, INT_MAX);
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index 5c7fc4c2a3a..f2dd9bb9d0b 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -440,6 +440,15 @@ scrub_fs_counters(
- 	return scrub_meta_type(ctx, XFS_SCRUB_TYPE_FSCOUNTERS, 0, alist);
+-	ifp->if_broot_bytes = size;
+-	ifp->if_broot = kmem_alloc(size, KM_NOFS);
++	xfs_iroot_alloc(ip, whichfork, size);
+ 	ASSERT(ifp->if_broot != NULL);
+ 	/*
+ 	 * Copy and convert from the on-disk structure
+@@ -344,6 +343,32 @@ xfs_iformat_attr_fork(
+ 	return error;
  }
  
-+/* Scrub /only/ the quota counters. */
-+int
-+scrub_quotacheck(
-+	struct scrub_ctx		*ctx,
-+	struct action_list		*alist)
++/* Allocate a new incore ifork btree root. */
++void
++xfs_iroot_alloc(
++	struct xfs_inode	*ip,
++	int			whichfork,
++	size_t			bytes)
 +{
-+	return scrub_meta_type(ctx, XFS_SCRUB_TYPE_QUOTACHECK, 0, alist);
++	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
++
++	ifp->if_broot = kmem_alloc(bytes, KM_NOFS);
++	ifp->if_broot_bytes = bytes;
 +}
 +
- /* How many items do we have to check? */
- unsigned int
- scrub_estimate_ag_work(
-diff --git a/scrub/scrub.h b/scrub/scrub.h
-index 5d365f99148..42b91fbc3ed 100644
---- a/scrub/scrub.h
-+++ b/scrub/scrub.h
-@@ -27,6 +27,7 @@ int scrub_metadata_file(struct scrub_ctx *ctx, unsigned int scrub_type,
- int scrub_iscan_metadata(struct scrub_ctx *ctx, struct action_list *alist);
- int scrub_summary_metadata(struct scrub_ctx *ctx, struct action_list *alist);
- int scrub_fs_counters(struct scrub_ctx *ctx, struct action_list *alist);
-+int scrub_quotacheck(struct scrub_ctx *ctx, struct action_list *alist);
++/* Free all the memory and state associated with an incore ifork btree root. */
++void
++xfs_iroot_free(
++	struct xfs_inode	*ip,
++	int			whichfork)
++{
++	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
++
++	ifp->if_broot_bytes = 0;
++	kmem_free(ifp->if_broot);
++	ifp->if_broot = NULL;
++}
++
+ /*
+  * Reallocate the space for if_broot based on the number of records
+  * being added or deleted as indicated in rec_diff.  Move the records
+@@ -392,8 +417,7 @@ xfs_iroot_realloc(
+ 		 */
+ 		if (ifp->if_broot_bytes == 0) {
+ 			new_size = xfs_bmap_broot_space_calc(mp, rec_diff);
+-			ifp->if_broot = kmem_alloc(new_size, KM_NOFS);
+-			ifp->if_broot_bytes = (int)new_size;
++			xfs_iroot_alloc(ip, whichfork, new_size);
+ 			return;
+ 		}
  
- bool can_scrub_fs_metadata(struct scrub_ctx *ctx);
- bool can_scrub_inode(struct scrub_ctx *ctx);
+@@ -432,17 +456,15 @@ xfs_iroot_realloc(
+ 		new_size = xfs_bmap_broot_space_calc(mp, new_max);
+ 	else
+ 		new_size = 0;
+-	if (new_size > 0) {
+-		new_broot = kmem_alloc(new_size, KM_NOFS);
+-		/*
+-		 * First copy over the btree block header.
+-		 */
+-		memcpy(new_broot, ifp->if_broot,
+-			xfs_bmbt_block_len(ip->i_mount));
+-	} else {
+-		new_broot = NULL;
++	if (new_size == 0) {
++		xfs_iroot_free(ip, whichfork);
++		return;
+ 	}
+ 
++	/* First copy over the btree block header. */
++	new_broot = kmem_alloc(new_size, KM_NOFS);
++	memcpy(new_broot, ifp->if_broot, xfs_bmbt_block_len(ip->i_mount));
++
+ 	/*
+ 	 * Only copy the records and pointers if there are any.
+ 	 */
+@@ -466,9 +488,8 @@ xfs_iroot_realloc(
+ 	kmem_free(ifp->if_broot);
+ 	ifp->if_broot = new_broot;
+ 	ifp->if_broot_bytes = (int)new_size;
+-	if (ifp->if_broot)
+-		ASSERT(xfs_bmap_bmdr_space(ifp->if_broot) <=
+-			xfs_inode_fork_size(ip, whichfork));
++	ASSERT(xfs_bmap_bmdr_space(ifp->if_broot) <=
++		xfs_inode_fork_size(ip, whichfork));
+ 	return;
+ }
+ 
+diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
+index c201d8ad5957..f4379e2df616 100644
+--- a/fs/xfs/libxfs/xfs_inode_fork.h
++++ b/fs/xfs/libxfs/xfs_inode_fork.h
+@@ -171,6 +171,9 @@ void		xfs_iflush_fork(struct xfs_inode *, struct xfs_dinode *,
+ void		xfs_idestroy_fork(struct xfs_ifork *ifp);
+ void		xfs_idata_realloc(struct xfs_inode *ip, int64_t byte_diff,
+ 				int whichfork);
++void		xfs_iroot_alloc(struct xfs_inode *ip, int whichfork,
++				size_t bytes);
++void		xfs_iroot_free(struct xfs_inode *ip, int whichfork);
+ void		xfs_iroot_realloc(struct xfs_inode *, int, int);
+ int		xfs_iread_extents(struct xfs_trans *, struct xfs_inode *, int);
+ int		xfs_iextents_copy(struct xfs_inode *, struct xfs_bmbt_rec *,
 
