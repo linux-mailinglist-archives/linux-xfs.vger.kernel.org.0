@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3594B659DB1
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:02:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAAA2659E58
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:33:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbiL3XCg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:02:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59340 "EHLO
+        id S231348AbiL3XdU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:33:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiL3XCf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:02:35 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B64F15FC1
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:02:34 -0800 (PST)
+        with ESMTP id S235506AbiL3XdT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:33:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D3C91DDF4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:33:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E0842B81D68
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:02:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9060CC433D2;
-        Fri, 30 Dec 2022 23:02:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DE5A61B98
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:33:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DCC2C433EF;
+        Fri, 30 Dec 2022 23:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672441351;
-        bh=0qoTUBcj2RANoqWhbYw9bnELivMFZNOoBNaAcLJgEtw=;
+        s=k20201202; t=1672443198;
+        bh=vHhY/AvgsiSm7GMkd8ElviT1IVbQVv1hwlHl/dyVfU8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=q4vQd04E/DDMvTKdD5tB8kyZDBXmcvXcKFBswjVSVqMbfva9Ir1GX51ykXMR0OL1U
-         fKXQz5QTmrAiHEnjMvRadGtLL1+AVVea4rDRW8wiwE3zUYClkyBaR5oC7dVwKHSDJN
-         z28ItR4lE3sAYa1dLm0f8oWwigitJbbdZFpX2OUVaUAFZeN1arQPJBw0YlP1/Gsty2
-         5+tlAc6Gj0hbsR0wYR90yBEaTgmD9hgphNseNouYy2RC1GHphDvSRq1cZHqdV6c2to
-         BMPQAMoOsgTBi2lRkn+3xDQSYMlk6TAJPViwCeuucIcSpIyjsf/ToQdVuDXIJjTL4r
-         CZnTf7lY3Qu4g==
-Subject: [PATCHSET v24.0 0/4] xfs: live inode scans for online fsck
+        b=fSqItiH0ZR2Cpwe/Q0yJhMXM+YbKr5v9APw1c4UKXW3D5PNly8LGXfwN5Y+sNCMlA
+         OHzSD5DO9V8XA/ki4iEEMLeh+uCRVcZgcMCwqt+9GnY6sLKc1jWVOOMRJ2sq3mDbyI
+         5PLFKlmbnDRT7L1Up45OsA/r1KBDC+TfIfnEVxQFlGh16vXGtBd/bMkBapjNpNXiPz
+         C9WbPIAI8O1zTLB7QhUzKB0yz4OCrhlwAthQ5Bs1SvSNNfPFlXx8iYmFlhTqCUBeAb
+         CQ00GKQIJ8U4oTVP+MC7fSoNUG8z/z4qhBjA0OdNIeKn9B96R2ttPAOiyzbqOh43Gj
+         X/Zkxbg6YGSQA==
+Subject: [PATCH 1/4] xfs: speed up xfs_iwalk_adjust_start a little bit
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:13:03 -0800
-Message-ID: <167243838331.695519.18058154683213474280.stgit@magnolia>
-In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
-References: <Y69Unb7KRM5awJoV@magnolia>
+Message-ID: <167243838349.695519.1875112266874805617.stgit@magnolia>
+In-Reply-To: <167243838331.695519.18058154683213474280.stgit@magnolia>
+References: <167243838331.695519.18058154683213474280.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,39 +52,50 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-The design document discusses the need for a specialized inode scan
-cursor to manage walking every file on a live filesystem to build
-replacement metadata objects while receiving updates about the files
-already scanned.  This series adds two pieces of infrastructure -- the
-scan cursor, and live hooks to deliver information about updates going
-on in other parts of the filesystem.
+Replace the open-coded loop that recomputes freecount with a single call
+to a bit weight function.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-iscan
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/Kconfig       |   37 ++++
- fs/xfs/Makefile      |    6 +
- fs/xfs/scrub/iscan.c |  478 ++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/iscan.h |   62 ++++++
- fs/xfs/scrub/trace.c |    1 
- fs/xfs/scrub/trace.h |   74 ++++++++
- fs/xfs/xfs_hooks.c   |   94 ++++++++++
- fs/xfs/xfs_hooks.h   |   72 ++++++++
- fs/xfs/xfs_iwalk.c   |   13 -
- fs/xfs/xfs_linux.h   |    1 
- 10 files changed, 826 insertions(+), 12 deletions(-)
- create mode 100644 fs/xfs/scrub/iscan.c
- create mode 100644 fs/xfs/scrub/iscan.h
- create mode 100644 fs/xfs/xfs_hooks.c
- create mode 100644 fs/xfs/xfs_hooks.h
+ fs/xfs/xfs_iwalk.c |   13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
+
+
+diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+index 594ccadb729f..54a262b33244 100644
+--- a/fs/xfs/xfs_iwalk.c
++++ b/fs/xfs/xfs_iwalk.c
+@@ -22,6 +22,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_pwork.h"
+ #include "xfs_ag.h"
++#include "xfs_bit.h"
+ 
+ /*
+  * Walking Inodes in the Filesystem
+@@ -131,21 +132,11 @@ xfs_iwalk_adjust_start(
+ 	struct xfs_inobt_rec_incore	*irec)	/* btree record */
+ {
+ 	int				idx;	/* index into inode chunk */
+-	int				i;
+ 
+ 	idx = agino - irec->ir_startino;
+ 
+-	/*
+-	 * We got a right chunk with some left inodes allocated at it.  Grab
+-	 * the chunk record.  Mark all the uninteresting inodes free because
+-	 * they're before our start point.
+-	 */
+-	for (i = 0; i < idx; i++) {
+-		if (XFS_INOBT_MASK(i) & ~irec->ir_free)
+-			irec->ir_freecount++;
+-	}
+-
+ 	irec->ir_free |= xfs_inobt_maskn(0, idx);
++	irec->ir_freecount = hweight64(irec->ir_free);
+ }
+ 
+ /* Allocate memory for a walk. */
 
