@@ -2,96 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50F1B65A22C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:05:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B4CD65A02D
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:03:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236156AbiLaDFz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:05:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34906 "EHLO
+        id S235904AbiLaBDG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:03:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236092AbiLaDFy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:05:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E912DDFA
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:05:52 -0800 (PST)
+        with ESMTP id S235809AbiLaBDG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:03:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CAD11DDE4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:03:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A2CA2B81EA8
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:05:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B678C433EF;
-        Sat, 31 Dec 2022 03:05:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CD5FA61D73
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:03:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33490C433EF;
+        Sat, 31 Dec 2022 01:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455950;
-        bh=Bt57fd7ZfCOo59EYeSLCkPUULYA1YDFg5I96GhEifSw=;
+        s=k20201202; t=1672448584;
+        bh=4A5s6Gpvp65OOQI9NkaCPmTxnAoYReI2ismt/2hUbBI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nNa736cAvkPLvDpKyPy4648zGYM2icUMSBBF55tLEMcktyd87N4Doyv+RVKn4i2kx
-         KeKM6yn9UDTRdEeVILZQldhU1Qk1CAshc50ylv3T8V7tSpVJFJGV2UenCJL15++c42
-         tbiZ79f/eNjBt+8kh4J9mUJ70PzTw6jmYBeomW7IAAlzOvOBtZWr4Eu/szOX1y8yFd
-         2PYXmGJkjS5xlw2+QYTPZAryFXMJvvV/kzV7C2M0APZYEFBPT555/F9Z2qXFeky0Bb
-         pVu5yDwbXthd84SqUtretaIDu17UO96mx86RiB8dGaOsR25K+h8EorUW8m8i3PAQNV
-         kqpVQGRnmI7Gw==
-Subject: [PATCH 1/1] xfs_quota: report warning limits for realtime space
- quotas
+        b=OpMZLRem9AdCmydUfuzcfb/qOB1FWBBpb65B64jgFYqd1ndafqOSpLJysdMsbNw/J
+         NP7q6Nc5b/TiJWJ9n0bH4mBhI3QLQql0nhf6axAkT75Nu3hts5+LK8Ee0FpxnBz454
+         9k/hxhHJC/QLSSQfC0KCVuLX/oikK+lr+iQuaSCRFPfdto7VEMl3JiT85xtEdAzldd
+         QceAENqhhl0M+/m/Pimo925fbQAuYd5NyKAJMCPNDRjbCmDPpVA6MlOUqmo1pS8bYG
+         TqdgYWDAMa/A/9q2vv6d/x3IZ6rRfD770Q/W8LlTekyoDdINpC5WVp/MTULca1bT/E
+         RC1upM8sMelmA==
+Subject: [PATCHSET v1.0 0/1] libxfs: enable quota for realtime voluems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:19 -0800
-Message-ID: <167243881939.735184.11258120793213103815.stgit@magnolia>
-In-Reply-To: <167243881927.735184.9698389452163804435.stgit@magnolia>
-References: <167243881927.735184.9698389452163804435.stgit@magnolia>
+Message-ID: <167243881927.735184.9698389452163804435.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Report the number of warnings that a user will get for exceeding the
-soft limit of a realtime volume.
+At some point, I realized that I've refactored enough of the quota code
+in XFS that I should evaluate whether or not quota actually works on
+realtime volumes.  It turns out that with two exceptions, it actually
+does seem to work properly!  There are three broken pieces that I've
+found so far: chown doesn't work, the quota accounting goes wrong when
+the rt bitmap changes size, and the VFS quota ioctls don't report the
+realtime warning counts or limits.  Hence this series fixes two things
+in XFS and re-enables rt quota after a break of a couple decades.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-quotas
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-quotas
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-quotas
 ---
  include/xqm.h |    5 ++++-
  quota/state.c |    1 +
  2 files changed, 5 insertions(+), 1 deletion(-)
-
-
-diff --git a/include/xqm.h b/include/xqm.h
-index 573441db986..045af9b67fd 100644
---- a/include/xqm.h
-+++ b/include/xqm.h
-@@ -184,7 +184,10 @@ struct fs_quota_statv {
- 	__s32			qs_rtbtimelimit;/* limit for rt blks timer */
- 	__u16			qs_bwarnlimit;	/* limit for num warnings */
- 	__u16			qs_iwarnlimit;	/* limit for num warnings */
--	__u64			qs_pad2[8];	/* for future proofing */
-+	__u16			qs_rtbwarnlimit;/* limit for rt blks warnings */
-+	__u16			qs_pad3;
-+	__u32			qs_pad4;
-+	__u64			qs_pad2[7];	/* for future proofing */
- };
- 
- #endif	/* __XQM_H__ */
-diff --git a/quota/state.c b/quota/state.c
-index 260ef51db18..43fb700f9a7 100644
---- a/quota/state.c
-+++ b/quota/state.c
-@@ -244,6 +244,7 @@ state_quotafile_stat(
- 	state_warnlimit(fp, XFS_INODE_QUOTA, sv->qs_iwarnlimit);
- 
- 	state_timelimit(fp, XFS_RTBLOCK_QUOTA, sv->qs_rtbtimelimit);
-+	state_warnlimit(fp, XFS_RTBLOCK_QUOTA, sv->qs_rtbwarnlimit);
- }
- 
- static void
 
