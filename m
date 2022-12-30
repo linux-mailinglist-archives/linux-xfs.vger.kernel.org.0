@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1E02659FFB
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:50:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33F5F65A19D
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:32:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235968AbiLaAum (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:50:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37494 "EHLO
+        id S236141AbiLaCcJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:32:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235961AbiLaAum (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:50:42 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3CFD1C921;
-        Fri, 30 Dec 2022 16:50:40 -0800 (PST)
+        with ESMTP id S236239AbiLaCcI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:32:08 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221491CB20
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:32:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id E2893CE19DF;
-        Sat, 31 Dec 2022 00:50:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C33C433EF;
-        Sat, 31 Dec 2022 00:50:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A424161D07
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:32:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CC1C433D2;
+        Sat, 31 Dec 2022 02:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447837;
-        bh=meuYBXXD8Z+1Tas5iSvK50WmvFyiTG0iKDZc1QiqUWA=;
+        s=k20201202; t=1672453927;
+        bh=HuSGGzrdCiZTtDCZ1Edkzx9ZDoKpG/B9Pxdx4dlnQYE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jhYeL9fLZvlD982UY9l/DjQnNICLsR/18fjPcXhWw+NZ/MGlrWs1rxZ46Z+kaR3YZ
-         DwY6e2bPzzeQQOdOx502ET7+DcJ5YEhkR9qLrOF5CGjACaKkXrwkWHSSbE7CaFdCOn
-         vH+kuRuM04YAJjno1wBj99Fb33Fuwo7iq/wbH+IF80gviZpzPW602bGAqNfuFlZkZI
-         wGPXWFVKXUIeuRr0Dxc7xMFg3uHsM8bDw4T5fK7OfI7Hz3yaZE9D9/zAPPIWTfWBAn
-         NTWa318y8A0YfFJieOnTBBCPkkCk1D0YkMm6ukF+3KXJpXfZHd5/xkfKkqAkqXOwxA
-         Jf/0sV211cxSw==
-Subject: [PATCH 1/5] fuzzy: test fuzzing directory block mappings
+        b=qX40RS1dQFD9dsqtXTPiWg1Eaf1DddOBFQpH+cUW/v97X2dzIdvTUvbLSgi7JqzCI
+         FEoDjIbD6LlbzT/CKlJuWe8CxLy9z7UkC/KgzLPpHBqQK0HEDZZJlhn84ClZ/jFXft
+         UhLNVBPG8bGk8oDsWe3Ea9g227it5gggbFFftbMtBBGSeJEGkFBNfOVnfhMP7lW34B
+         4DefbCQyVv8vqEjy8jzUsoYHbQOzzYH7UzSmlmuCanJx13lzcKHTabiGgID976Xfvx
+         6GMbptAKq80rZoKmt73uF3fZiryr5aRlH1LIIWV/7bxBhIOIbKdWBamnZy3OfLT0On
+         Fvcza1qOSDE+g==
+Subject: [PATCH 08/45] xfs: add frextents to the lazysbcounters when rtgroups
+ enabled
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:44 -0800
-Message-ID: <167243878483.731641.7350453901027339940.stgit@magnolia>
-In-Reply-To: <167243878469.731641.981302372644525592.stgit@magnolia>
-References: <167243878469.731641.981302372644525592.stgit@magnolia>
+Message-ID: <167243878471.731133.13678474783101264607.stgit@magnolia>
+In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
+References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,261 +56,52 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fuzz the block mappings of directories to see what happens.
+Make the free rt extent count a part of the lazy sb counters when the
+realtime groups feature is enabled.  This is possible because the patch
+to recompute frextents from the rtbitmap during log recovery predates
+the code adding rtgroup support, hence we know that the value will
+always be correct during runtime.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/fuzzy       |   16 ++++++++++++++++
- tests/xfs/1554     |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1554.out |   10 ++++++++++
- tests/xfs/1555     |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1555.out |   10 ++++++++++
- tests/xfs/1556     |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1556.out |   10 ++++++++++
- 7 files changed, 190 insertions(+)
- create mode 100755 tests/xfs/1554
- create mode 100644 tests/xfs/1554.out
- create mode 100755 tests/xfs/1555
- create mode 100644 tests/xfs/1555.out
- create mode 100755 tests/xfs/1556
- create mode 100644 tests/xfs/1556.out
+ include/xfs_mount.h |    1 +
+ libxfs/xfs_sb.c     |    5 +++++
+ 2 files changed, 6 insertions(+)
 
 
-diff --git a/common/fuzzy b/common/fuzzy
-index 53fe22db69..09f42d9225 100644
---- a/common/fuzzy
-+++ b/common/fuzzy
-@@ -549,6 +549,22 @@ _require_scratch_xfs_fuzz_fields()
- 	_require_xfs_db_command "fuzz"
- }
+diff --git a/include/xfs_mount.h b/include/xfs_mount.h
+index 5987650c639..ed19b15fcb5 100644
+--- a/include/xfs_mount.h
++++ b/include/xfs_mount.h
+@@ -28,6 +28,7 @@ typedef struct xfs_mount {
+ #define m_icount	m_sb.sb_icount
+ #define m_ifree		m_sb.sb_ifree
+ #define m_fdblocks	m_sb.sb_fdblocks
++#define m_frextents	m_sb.sb_frextents
+ 	spinlock_t		m_sb_lock;
  
-+# Sets the array SCRATCH_XFS_DIR_FUZZ_TYPES to the list of directory formats
-+# available for fuzzing.  Each list item must match one of the /S_IFDIR.FMT_*
-+# files created by the fs population code.  Users can override this by setting
-+# SCRATCH_XFS_LIST_FUZZ_DIRTYPE in the environment.  BTREE is omitted here
-+# because that refers to the fork format and does not affect the directory
-+# structure at all.
-+_scratch_xfs_set_dir_fuzz_types() {
-+	if [ -n "${SCRATCH_XFS_LIST_FUZZ_DIRTYPE}" ]; then
-+		mapfile -t SCRATCH_XFS_DIR_FUZZ_TYPES < \
-+				<(echo "${SCRATCH_XFS_LIST_FUZZ_DIRTYPE}" | tr '[ ,]' '[\n\n]')
-+		return
-+	fi
-+
-+	SCRATCH_XFS_DIR_FUZZ_TYPES=(BLOCK LEAF LEAFN NODE)
-+}
-+
- # Grab the list of available fuzzing verbs
- _scratch_xfs_list_fuzz_verbs() {
- 	if [ -n "${SCRATCH_XFS_LIST_FUZZ_VERBS}" ]; then
-diff --git a/tests/xfs/1554 b/tests/xfs/1554
-new file mode 100755
-index 0000000000..b43c705cb9
---- /dev/null
-+++ b/tests/xfs/1554
-@@ -0,0 +1,48 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1554
-+#
-+# Populate a XFS filesystem and fuzz the data mappings of every directory type.
-+# Use xfs_scrub to fix the corruption.
-+#
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch_xfs_fuzz_fields
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+_scratch_xfs_set_dir_fuzz_types
-+
-+# Now fuzz the block maps of each directory type.
-+for dirtype in "${SCRATCH_XFS_DIR_FUZZ_TYPES[@]}"; do
-+	echo "Fuzz block map for ${dirtype}" | tee -a $seqres.full
-+
-+	# Restore a correct copy of the filesystem before we start a round of
-+	# fuzzing.  This avoids corruption errors from xfs_db when
-+	# _scratch_xfs_fuzz_metadata probes the directory block fields.
-+	__scratch_xfs_fuzz_mdrestore
-+
-+	_scratch_mount
-+	inum=$(stat -c '%i' $SCRATCH_MNT/S_IFDIR.FMT_${dirtype})
-+	_scratch_unmount
-+
-+	_scratch_xfs_fuzz_metadata 'u*.bmx' 'online'  "inode ${inum}" >> $seqres.full
-+	echo "Done fuzzing dir map ${dirtype}"
-+done
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1554.out b/tests/xfs/1554.out
-new file mode 100644
-index 0000000000..9985ed1990
---- /dev/null
-+++ b/tests/xfs/1554.out
-@@ -0,0 +1,10 @@
-+QA output created by 1554
-+Format and populate
-+Fuzz block map for BLOCK
-+Done fuzzing dir map BLOCK
-+Fuzz block map for LEAF
-+Done fuzzing dir map LEAF
-+Fuzz block map for LEAFN
-+Done fuzzing dir map LEAFN
-+Fuzz block map for NODE
-+Done fuzzing dir map NODE
-diff --git a/tests/xfs/1555 b/tests/xfs/1555
-new file mode 100755
-index 0000000000..8dee177a3d
---- /dev/null
-+++ b/tests/xfs/1555
-@@ -0,0 +1,48 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1555
-+#
-+# Populate a XFS filesystem and fuzz the data mappings of every directory type.
-+# Use xfs_repair to fix the corruption.
-+#
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch_xfs_fuzz_fields
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+_scratch_xfs_set_dir_fuzz_types
-+
-+# Now fuzz the block maps of each directory type.
-+for dirtype in "${SCRATCH_XFS_DIR_FUZZ_TYPES[@]}"; do
-+	echo "Fuzz block map for ${dirtype}" | tee -a $seqres.full
-+
-+	# Restore a correct copy of the filesystem before we start a round of
-+	# fuzzing.  This avoids corruption errors from xfs_db when
-+	# _scratch_xfs_fuzz_metadata probes the directory block fields.
-+	__scratch_xfs_fuzz_mdrestore
-+
-+	_scratch_mount
-+	inum=$(stat -c '%i' $SCRATCH_MNT/S_IFDIR.FMT_${dirtype})
-+	_scratch_unmount
-+
-+	_scratch_xfs_fuzz_metadata 'u*.bmx' 'offline'  "inode ${inum}" >> $seqres.full
-+	echo "Done fuzzing dir map ${dirtype}"
-+done
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1555.out b/tests/xfs/1555.out
-new file mode 100644
-index 0000000000..38c5714d13
---- /dev/null
-+++ b/tests/xfs/1555.out
-@@ -0,0 +1,10 @@
-+QA output created by 1555
-+Format and populate
-+Fuzz block map for BLOCK
-+Done fuzzing dir map BLOCK
-+Fuzz block map for LEAF
-+Done fuzzing dir map LEAF
-+Fuzz block map for LEAFN
-+Done fuzzing dir map LEAFN
-+Fuzz block map for NODE
-+Done fuzzing dir map NODE
-diff --git a/tests/xfs/1556 b/tests/xfs/1556
-new file mode 100755
-index 0000000000..54df601c11
---- /dev/null
-+++ b/tests/xfs/1556
-@@ -0,0 +1,48 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1556
-+#
-+# Populate a XFS filesystem and fuzz the data mappings of every directory type.
-+# Do not fix the filesystem, to test metadata verifiers.
-+#
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_norepair
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch_xfs_fuzz_fields
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+_scratch_xfs_set_dir_fuzz_types
-+
-+# Now fuzz the block maps of each directory type.
-+for dirtype in "${SCRATCH_XFS_DIR_FUZZ_TYPES[@]}"; do
-+	echo "Fuzz block map for ${dirtype}" | tee -a $seqres.full
-+
-+	# Restore a correct copy of the filesystem before we start a round of
-+	# fuzzing.  This avoids corruption errors from xfs_db when
-+	# _scratch_xfs_fuzz_metadata probes the directory block fields.
-+	__scratch_xfs_fuzz_mdrestore
-+
-+	_scratch_mount
-+	inum=$(stat -c '%i' $SCRATCH_MNT/S_IFDIR.FMT_${dirtype})
-+	_scratch_unmount
-+
-+	_scratch_xfs_fuzz_metadata 'u*.bmx' 'none'  "inode ${inum}" >> $seqres.full
-+	echo "Done fuzzing dir map ${dirtype}"
-+done
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1556.out b/tests/xfs/1556.out
-new file mode 100644
-index 0000000000..b947285caa
---- /dev/null
-+++ b/tests/xfs/1556.out
-@@ -0,0 +1,10 @@
-+QA output created by 1556
-+Format and populate
-+Fuzz block map for BLOCK
-+Done fuzzing dir map BLOCK
-+Fuzz block map for LEAF
-+Done fuzzing dir map LEAF
-+Fuzz block map for LEAFN
-+Done fuzzing dir map LEAFN
-+Fuzz block map for NODE
-+Done fuzzing dir map NODE
+ 	/*
+diff --git a/libxfs/xfs_sb.c b/libxfs/xfs_sb.c
+index 0ba9143e7c5..1bcffb24761 100644
+--- a/libxfs/xfs_sb.c
++++ b/libxfs/xfs_sb.c
+@@ -1087,6 +1087,9 @@ xfs_log_sb(
+ 	 * sb counters, despite having a percpu counter. It is always kept
+ 	 * consistent with the ondisk rtbitmap by xfs_trans_apply_sb_deltas()
+ 	 * and hence we don't need have to update it here.
++	 *
++	 * sb_frextents was added to the lazy sb counters when the rt groups
++	 * feature was introduced.
+ 	 */
+ 	if (xfs_has_lazysbcount(mp)) {
+ 		mp->m_sb.sb_icount = percpu_counter_sum(&mp->m_icount);
+@@ -1095,6 +1098,8 @@ xfs_log_sb(
+ 				mp->m_sb.sb_icount);
+ 		mp->m_sb.sb_fdblocks = percpu_counter_sum(&mp->m_fdblocks);
+ 	}
++	if (xfs_has_rtgroups(mp))
++		mp->m_sb.sb_frextents = percpu_counter_sum(&mp->m_frextents);
+ 
+ 	xfs_sb_to_disk(bp->b_addr, &mp->m_sb);
+ 	xfs_trans_buf_set_type(tp, bp, XFS_BLFT_SB_BUF);
 
