@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BE3765A170
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:21:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEA3F65A16E
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:21:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236213AbiLaCVr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:21:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54938 "EHLO
+        id S236212AbiLaCVR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:21:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236211AbiLaCVq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:21:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0573F19C12
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:21:46 -0800 (PST)
+        with ESMTP id S236211AbiLaCVQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:21:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9C119C12
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:21:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9424D61C61
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:21:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02DD2C433EF;
-        Sat, 31 Dec 2022 02:21:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8CF1B61C61
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:21:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E92FBC433D2;
+        Sat, 31 Dec 2022 02:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453305;
-        bh=UZ8tVugLLIcDt+zXBcBe+w1oqKBE52p/MGUvrolIwy8=;
+        s=k20201202; t=1672453274;
+        bh=2IqOGQ/I9rLR9UOHbEVA+McF0l2FeuE4CcmbYX7rUwY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GaQxQ2GVABrty7u7PY7in8PSqscNu7wF3L4pDyFpKgL8xyfLxzkST9PljLJeFFwRb
-         CUeh7yiVAJ1Y6Z6EF4gkOxyDp0YK8+9WA4Y+ySHvNzViCo6fvo9SrcU/cSlQK1bxWp
-         skQqpJ70SoS2BFHyfXApoPSda1szEhSEAyO6gkOZrg5HSB7SoiO7BrLOPshlPqcGvO
-         LgFzFlNo3+U41Wuky7v/dK1xXh6Ki4lkVkHerjYelXY4EGLPm456YOgXwK6ImQ9qNh
-         c5hPAefRNHkIwnD+MuhBWG2gQ4u6rehzSblje8b54ss+9krZ58K6tM+gxgfTKcwrnc
-         KqVDsQxYX6Uhg==
-Subject: [PATCH 46/46] mkfs: add a utility to generate protofiles
+        b=OijyDcuSsDXres9DXZZmU+ATxwnCot2YS8b25LYEIfdJYP6lhIK1QbJacPx969Rsy
+         neIL+tszwuiDhNl5Q6MUGTccXvErjkb9R2qZcLftN4u76xmXCYvMaB3yJmsGEDFBPg
+         XCltL/Vx9u5/8iK3+as9L44XIHKc5OmgSLOxlBTpIj0zLuzRrv9Sftgy+YRF5XnPkx
+         6kJ4TAio7HaJgSIEiUZZfKYpOV3YIOzCKSXC3XvDCTPLEORA8UxpFymDmpNelR/1oZ
+         UVcTyWfSZvkcbHlWGj1npjQsihnvK86l0UDecYd7/lZzo5x8i/vv8bjv3B4TVCT1pb
+         ga7FO3Yy0mLwA==
+Subject: [PATCH 44/46] xfs_repair: allow sysadmins to add metadata directories
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:25 -0800
-Message-ID: <167243876533.725900.5568929101331536536.stgit@magnolia>
+Message-ID: <167243876507.725900.3964018435064440628.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,251 +55,280 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a new utility to generate mkfs protofiles from a directory tree.
+Allow the sysadmin to use xfs_repair to upgrade an existing filesystem
+to support metadata directories.  This will be needed to upgrade
+filesystems to support realtime rmap and reflink.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- man/man8/xfs_protofile.8 |   33 ++++++++++
- mkfs/Makefile            |   10 +++
- mkfs/xfs_protofile.in    |  152 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 194 insertions(+), 1 deletion(-)
- create mode 100644 man/man8/xfs_protofile.8
- create mode 100644 mkfs/xfs_protofile.in
+ man/man8/xfs_admin.8 |    9 +++++++
+ repair/dino_chunks.c |    6 ++++
+ repair/dinode.c      |    5 +++-
+ repair/globals.c     |    1 +
+ repair/globals.h     |    1 +
+ repair/phase2.c      |   69 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ repair/phase4.c      |    5 +++-
+ repair/protos.h      |    6 ++++
+ repair/xfs_repair.c  |   11 ++++++++
+ 9 files changed, 110 insertions(+), 3 deletions(-)
 
 
-diff --git a/man/man8/xfs_protofile.8 b/man/man8/xfs_protofile.8
-new file mode 100644
-index 00000000000..75090c138f3
---- /dev/null
-+++ b/man/man8/xfs_protofile.8
-@@ -0,0 +1,33 @@
-+.TH xfs_protofile 8
-+.SH NAME
-+xfs_protofile \- create a protofile for use with mkfs.xfs
-+.SH SYNOPSIS
-+.B xfs_protofile
-+.I path
-+[
-+.I paths...
-+]
-+.br
-+.B xfs_protofile \-V
-+.SH DESCRIPTION
-+.B xfs_protofile
-+walks a directory tree to generate a protofile.
-+The protofile format is specified in the
-+.BR mkfs.xfs (8)
-+manual page and is derived from 3rd edition Unix.
-+.SH OPTIONS
-+.TP 1.0i
-+.I path
-+Create protofile directives to copy this path into the root directory.
-+If the path is a directory, protofile directives will be emitted to
-+replicate the entire subtree as a subtree of the root directory.
-+If the path is a not a directory, protofile directives will be emitted
-+to create the file as an entry in the root directory.
-+The first path must resolve to a directory.
-+
-+.SH BUGS
-+Filenames cannot contain spaces.
-+Extended attributes are not copied into the filesystem.
-+
-+.PD
-+.RE
-diff --git a/mkfs/Makefile b/mkfs/Makefile
-index 6c7ee186fa2..98463e4362b 100644
---- a/mkfs/Makefile
-+++ b/mkfs/Makefile
-@@ -6,6 +6,7 @@ TOPDIR = ..
- include $(TOPDIR)/include/builddefs
+diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
+index 467fb2dfd0a..f9c53235e7b 100644
+--- a/man/man8/xfs_admin.8
++++ b/man/man8/xfs_admin.8
+@@ -177,6 +177,15 @@ and online repairs to space usage metadata.
+ The filesystem cannot be downgraded after this feature is enabled.
+ This upgrade can fail if any AG has less than 5% free space remaining.
+ This feature was added to Linux 4.8.
++.TP 0.4i
++.B metadir
++Create a directory tree of metadata inodes instead of storing them all in the
++superblock.
++This is required for reverse mapping btrees and reflink support on the realtime
++device.
++The filesystem cannot be downgraded after this feature is enabled.
++This upgrade can fail if any AG has less than 5% free space remaining.
++This feature is not upstream yet.
+ .RE
+ .TP
+ .BI \-U " uuid"
+diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
+index 382196cc170..c68d92a4d88 100644
+--- a/repair/dino_chunks.c
++++ b/repair/dino_chunks.c
+@@ -962,7 +962,11 @@ process_inode_chunk(
+ 		}
  
- LTCOMMAND = mkfs.xfs
-+XFS_PROTOFILE = xfs_protofile
+ 		if (status)  {
+-			if (mp->m_sb.sb_rootino == ino) {
++			if (wipe_pre_metadir_file(ino)) {
++				if (!ino_discovery)
++					do_warn(
++	_("wiping pre-metadir metadata inode %"PRIu64".\n"), ino);
++			} else if (mp->m_sb.sb_rootino == ino) {
+ 				need_root_inode = 1;
  
- HFILES =
- CFILES = proto.c xfs_mkfs.c
-@@ -21,17 +22,24 @@ LLDLIBS += $(LIBXFS) $(LIBXCMD) $(LIBFROG) $(LIBRT) $(LIBBLKID) \
- 	$(LIBUUID) $(LIBINIH) $(LIBURCU) $(LIBPTHREAD)
- LTDEPENDENCIES += $(LIBXFS) $(LIBXCMD) $(LIBFROG)
- LLDFLAGS = -static-libtool-libs
-+DIRT = $(XFS_PROTOFILE)
+ 				if (!no_modify)  {
+diff --git a/repair/dinode.c b/repair/dinode.c
+index 5c1f07d5bc1..cc2c3474634 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -2415,6 +2415,9 @@ process_dinode_int(
+ 	ASSERT(uncertain == 0 || verify_mode != 0);
+ 	ASSERT(ino_bpp != NULL || verify_mode != 0);
  
--default: depend $(LTCOMMAND) $(CFGFILES)
-+default: depend $(LTCOMMAND) $(CFGFILES) $(XFS_PROTOFILE)
++	if (wipe_pre_metadir_file(lino))
++		goto clear_bad_out;
++
+ 	/*
+ 	 * This is the only valid point to check the CRC; after this we may have
+ 	 * made changes which invalidate it, and the CRC is only updated again
+@@ -2624,7 +2627,7 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
+ 		if (flags & XFS_DIFLAG_NEWRTBM) {
+ 			/* must be a rt bitmap inode */
+ 			if (lino != mp->m_sb.sb_rbmino) {
+-				if (!uncertain) {
++				if (!uncertain && !add_metadir) {
+ 					do_warn(
+ 	_("inode %" PRIu64 " not rt bitmap\n"),
+ 						lino);
+diff --git a/repair/globals.c b/repair/globals.c
+index c731d6bdff1..3200342e9f1 100644
+--- a/repair/globals.c
++++ b/repair/globals.c
+@@ -55,6 +55,7 @@ bool	add_nrext64;
+ bool	add_finobt;		/* add free inode btrees */
+ bool	add_reflink;		/* add reference count btrees */
+ bool	add_rmapbt;		/* add reverse mapping btrees */
++bool	add_metadir;		/* add metadata directory tree */
  
- include $(BUILDRULES)
+ /* misc status variables */
  
- install: default
- 	$(INSTALL) -m 755 -d $(PKG_ROOT_SBIN_DIR)
- 	$(LTINSTALL) -m 755 $(LTCOMMAND) $(PKG_ROOT_SBIN_DIR)
-+	$(INSTALL) -m 755 $(XFS_PROTOFILE) $(PKG_ROOT_SBIN_DIR)
- 	$(INSTALL) -m 755 -d $(MKFS_CFG_DIR)
- 	$(INSTALL) -m 644 $(CFGFILES) $(MKFS_CFG_DIR)
+diff --git a/repair/globals.h b/repair/globals.h
+index 6bd4be20cb1..e51f4e7ece4 100644
+--- a/repair/globals.h
++++ b/repair/globals.h
+@@ -96,6 +96,7 @@ extern bool	add_nrext64;
+ extern bool	add_finobt;		/* add free inode btrees */
+ extern bool	add_reflink;		/* add reference count btrees */
+ extern bool	add_rmapbt;		/* add reverse mapping btrees */
++extern bool	add_metadir;		/* add metadata directory tree */
  
- install-dev:
+ /* misc status variables */
  
-+$(XFS_PROTOFILE): $(XFS_PROTOFILE).in
-+	@echo "    [SED]    $@"
-+	$(Q)$(SED) -e "s|@pkg_version@|$(PKG_VERSION)|g" < $< > $@
-+	$(Q)chmod a+x $@
+diff --git a/repair/phase2.c b/repair/phase2.c
+index 77324a976a1..707fe5ca519 100644
+--- a/repair/phase2.c
++++ b/repair/phase2.c
+@@ -14,6 +14,7 @@
+ #include "incore.h"
+ #include "progress.h"
+ #include "scan.h"
++#include "quotacheck.h"
+ 
+ /* workaround craziness in the xlog routines */
+ int xlog_recover_do_trans(struct xlog *log, struct xlog_recover *t, int p)
+@@ -286,6 +287,70 @@ set_rmapbt(
+ 	return true;
+ }
+ 
++static xfs_ino_t doomed_rbmino = NULLFSINO;
++static xfs_ino_t doomed_rsumino = NULLFSINO;
++static xfs_ino_t doomed_uquotino = NULLFSINO;
++static xfs_ino_t doomed_gquotino = NULLFSINO;
++static xfs_ino_t doomed_pquotino = NULLFSINO;
 +
- -include .dep
-diff --git a/mkfs/xfs_protofile.in b/mkfs/xfs_protofile.in
-new file mode 100644
-index 00000000000..f2d09735a11
---- /dev/null
-+++ b/mkfs/xfs_protofile.in
-@@ -0,0 +1,152 @@
-+#!/usr/bin/python3
++bool
++wipe_pre_metadir_file(
++	xfs_ino_t	ino)
++{
++	if (ino == doomed_rbmino ||
++	    ino == doomed_rsumino ||
++	    ino == doomed_uquotino ||
++	    ino == doomed_gquotino ||
++	    ino == doomed_pquotino)
++		return true;
++	return false;
++}
 +
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (C) 2022 Oracle.  All rights reserved.
-+#
-+# Author: Darrick J. Wong <djwong@kernel.org>
++static bool
++set_metadir(
++	struct xfs_mount	*mp,
++	struct xfs_sb		*new_sb)
++{
++	if (!xfs_has_crc(mp)) {
++		printf(
++	_("Metadata directory trees only supported on V5 filesystems.\n"));
++		exit(0);
++	}
 +
-+# Walk a filesystem tree to generate a protofile for mkfs.
++	if (xfs_has_metadir(mp)) {
++		printf(_("Filesystem already supports metadata directory trees.\n"));
++		exit(0);
++	}
 +
-+import os
-+import argparse
-+import sys
-+import stat
++	printf(_("Adding metadata directory trees to filesystem.\n"));
++	new_sb->sb_features_incompat |= (XFS_SB_FEAT_INCOMPAT_METADIR |
++					 XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR);
 +
-+def emit_proto_header():
-+	'''Emit the protofile header.'''
-+	print('/')
-+	print('0 0')
++	/* Blow out all the old metadata inodes; we'll rebuild in phase6. */
++	new_sb->sb_metadirino = new_sb->sb_rootino + 1;
++	doomed_rbmino = mp->m_sb.sb_rbmino;
++	doomed_rsumino = mp->m_sb.sb_rsumino;
++	doomed_uquotino = mp->m_sb.sb_uquotino;
++	doomed_gquotino = mp->m_sb.sb_gquotino;
++	doomed_pquotino = mp->m_sb.sb_pquotino;
 +
-+def stat_to_str(statbuf):
-+	'''Convert a stat buffer to a proto string.'''
++	new_sb->sb_rbmino = NULLFSINO;
++	new_sb->sb_rsumino = NULLFSINO;
++	new_sb->sb_uquotino = NULLFSINO;
++	new_sb->sb_gquotino = NULLFSINO;
++	new_sb->sb_pquotino = NULLFSINO;
 +
-+	if stat.S_ISREG(statbuf.st_mode):
-+		type = '-'
-+	elif stat.S_ISCHR(statbuf.st_mode):
-+		type = 'c'
-+	elif stat.S_ISBLK(statbuf.st_mode):
-+		type = 'b'
-+	elif stat.S_ISFIFO(statbuf.st_mode):
-+		type = 'p'
-+	elif stat.S_ISDIR(statbuf.st_mode):
-+		type = 'd'
-+	elif stat.S_ISLNK(statbuf.st_mode):
-+		type = 'l'
++	/* Indicate that we need a rebuild. */
++	need_metadir_inode = 1;
++	need_rbmino = 1;
++	need_rsumino = 1;
++	have_uquotino = 0;
++	have_gquotino = 0;
++	have_pquotino = 0;
++	quotacheck_skip();
++	return true;
++}
 +
-+	if statbuf.st_mode & stat.S_ISUID:
-+		suid = 'u'
-+	else:
-+		suid = '-'
+ struct check_state {
+ 	struct xfs_sb		sb;
+ 	uint64_t		features;
+@@ -459,6 +524,8 @@ need_check_fs_free_space(
+ 		return true;
+ 	if (xfs_has_rmapbt(mp) && !(old->features & XFS_FEAT_RMAPBT))
+ 		return true;
++	if (xfs_has_metadir(mp) && !(old->features & XFS_FEAT_METADIR))
++		return true;
+ 	return false;
+ }
+ 
+@@ -540,6 +607,8 @@ upgrade_filesystem(
+ 		dirty |= set_reflink(mp, &new_sb);
+ 	if (add_rmapbt)
+ 		dirty |= set_rmapbt(mp, &new_sb);
++	if (add_metadir)
++		dirty |= set_metadir(mp, &new_sb);
+ 	if (!dirty)
+ 		return;
+ 
+diff --git a/repair/phase4.c b/repair/phase4.c
+index 5721647863a..28ecf56f45b 100644
+--- a/repair/phase4.c
++++ b/repair/phase4.c
+@@ -272,7 +272,10 @@ phase4(xfs_mount_t *mp)
+ 	if (xfs_has_metadir(mp) &&
+ 	    (is_inode_free(irec, 1) || !inode_isadir(irec, 1))) {
+ 		need_metadir_inode = true;
+-		if (no_modify)
++		if (add_metadir)
++			do_warn(
++	_("metadata directory root inode needs to be initialized\n"));
++		else if (no_modify)
+ 			do_warn(
+ 	_("metadata directory root inode would be lost\n"));
+ 		else
+diff --git a/repair/protos.h b/repair/protos.h
+index 83e471ff2ad..20618bb2bc2 100644
+--- a/repair/protos.h
++++ b/repair/protos.h
+@@ -3,6 +3,8 @@
+  * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+  */
++#ifndef __XFS_REPAIR_PROTOS_H__
++#define __XFS_REPAIR_PROTOS_H__
+ 
+ void	xfs_init(libxfs_init_t *args);
+ 
+@@ -45,3 +47,7 @@ void	phase7(struct xfs_mount *, int);
+ int	verify_set_agheader(struct xfs_mount *, struct xfs_buf *,
+ 		struct xfs_sb *, struct xfs_agf *, struct xfs_agi *,
+ 		xfs_agnumber_t);
 +
-+	if statbuf.st_mode & stat.S_ISGID:
-+		sgid = 'g'
-+	else:
-+		sgid = '-'
++bool wipe_pre_metadir_file(xfs_ino_t ino);
 +
-+	perms = stat.S_IMODE(statbuf.st_mode)
-+
-+	return '%s%s%s%o %d %d' % (type, suid, sgid, perms, statbuf.st_uid, \
-+			statbuf.st_gid)
-+
-+def stat_to_extra(statbuf, fullpath):
-+	'''Compute the extras column for a protofile.'''
-+
-+	if stat.S_ISREG(statbuf.st_mode):
-+		return ' %s' % fullpath
-+	elif stat.S_ISCHR(statbuf.st_mode) or stat.S_ISBLK(statbuf.st_mode):
-+		return ' %d %d' % (statbuf.st_rdev, statbuf.st_rdev)
-+	elif stat.S_ISLNK(statbuf.st_mode):
-+		return ' %s' % os.readlink(fullpath)
-+	return ''
-+
-+def max_fname_len(s1):
-+	'''Return the length of the longest string in s1.'''
-+	ret = 0
-+	for s in s1:
-+		if len(s) > ret:
-+			ret = len(s)
-+	return ret
-+
-+def walk_tree(path, depth):
-+	'''Walk the directory tree rooted by path.'''
-+	dirs = []
-+	files = []
-+
-+	for fname in os.listdir(path):
-+		fullpath = os.path.join(path, fname)
-+		sb = os.lstat(fullpath)
-+
-+		if stat.S_ISDIR(sb.st_mode):
-+			dirs.append(fname)
-+			continue
-+		elif stat.S_ISSOCK(sb.st_mode):
-+			continue
-+		else:
-+			files.append(fname)
-+
-+	for fname in files:
-+		if ' ' in fname:
-+			raise ValueError( \
-+				f'{fname}: Spaces not allowed in file names.')
-+	for fname in dirs:
-+		if ' ' in fname:
-+			raise Exception( \
-+				f'{fname}: Spaces not allowed in file names.')
-+
-+	fname_width = max_fname_len(files)
-+	for fname in files:
-+		fullpath = os.path.join(path, fname)
-+		sb = os.lstat(fullpath)
-+		extra = stat_to_extra(sb, fullpath)
-+		print('%*s%-*s %s%s' % (depth, ' ', fname_width, fname, \
-+				stat_to_str(sb), extra))
-+
-+	for fname in dirs:
-+		fullpath = os.path.join(path, fname)
-+		sb = os.lstat(fullpath)
-+		extra = stat_to_extra(sb, fullpath)
-+		print('%*s%s %s' % (depth, ' ', fname, \
-+				stat_to_str(sb)))
-+		walk_tree(fullpath, depth + 1)
-+
-+	if depth > 1:
-+		print('%*s$' % (depth - 1, ' '))
-+
-+def main():
-+	parser = argparse.ArgumentParser( \
-+			description = "Generate mkfs.xfs protofile for a directory tree.")
-+	parser.add_argument('paths', metavar = 'paths', type = str, \
-+			nargs = '*', help = 'Directory paths to walk.')
-+	parser.add_argument("-V", help = "Report version and exit.", \
-+			action = "store_true")
-+	args = parser.parse_args()
-+
-+	if args.V:
-+		print("xfs_protofile version @pkg_version@")
-+		sys.exit(0)
-+
-+	emit_proto_header()
-+	if len(args.paths) == 0:
-+		print('d--755 0 0')
-+		print('$')
-+	else:
-+		# Copy the first argument's stat to the rootdir
-+		statbuf = os.stat(args.paths[0])
-+		if not stat.S_ISDIR(statbuf.st_mode):
-+			raise NotADirectoryError(path)
-+		print(stat_to_str(statbuf))
-+
-+		# All files under each path go in the root dir, recursively
-+		for path in args.paths:
-+			print(': Descending path %s' % path)
-+			try:
-+				walk_tree(path, 1)
-+			except Exception as e:
-+				print(e, file = sys.stderr)
-+				return 1
-+
-+		print('$')
-+	return 0
-+
-+if __name__ == '__main__':
-+	sys.exit(main())
++#endif  /* __XFS_REPAIR_PROTOS_H__ */
+diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
+index fe3fe341530..92dc0fb2d9f 100644
+--- a/repair/xfs_repair.c
++++ b/repair/xfs_repair.c
+@@ -72,6 +72,7 @@ enum c_opt_nums {
+ 	CONVERT_FINOBT,
+ 	CONVERT_REFLINK,
+ 	CONVERT_RMAPBT,
++	CONVERT_METADIR,
+ 	C_MAX_OPTS,
+ };
+ 
+@@ -83,6 +84,7 @@ static char *c_opts[] = {
+ 	[CONVERT_FINOBT]	= "finobt",
+ 	[CONVERT_REFLINK]	= "reflink",
+ 	[CONVERT_RMAPBT]	= "rmapbt",
++	[CONVERT_METADIR]	= "metadir",
+ 	[C_MAX_OPTS]		= NULL,
+ };
+ 
+@@ -369,6 +371,15 @@ process_args(int argc, char **argv)
+ 		_("-c rmapbt only supports upgrades\n"));
+ 					add_rmapbt = true;
+ 					break;
++				case CONVERT_METADIR:
++					if (!val)
++						do_abort(
++		_("-c metadir requires a parameter\n"));
++					if (strtol(val, NULL, 0) != 1)
++						do_abort(
++		_("-c metadir only supports upgrades\n"));
++					add_metadir = true;
++					break;
+ 				default:
+ 					unknown('c', val);
+ 					break;
 
