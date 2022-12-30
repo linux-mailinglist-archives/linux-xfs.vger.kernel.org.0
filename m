@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB7D565A28D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4BB265A26F
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:21:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236387AbiLaD2g (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:28:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39126 "EHLO
+        id S236365AbiLaDVo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:21:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236399AbiLaD22 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:28:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2731B1659F
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:28:27 -0800 (PST)
+        with ESMTP id S236216AbiLaDVn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:21:43 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680C212A80
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:21:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D3BF5B81E65
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:28:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FA4C433EF;
-        Sat, 31 Dec 2022 03:28:24 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 18A3CB81E72
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:21:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B900EC433F0;
+        Sat, 31 Dec 2022 03:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672457304;
-        bh=yw3fExKVuyY0pVMmSABlQi6DGZsso9cr3W4+fxK90lE=;
+        s=k20201202; t=1672456899;
+        bh=jIRmEsZb6lvlkKP33wAGxWZTT6HSW4zktnk3W9Xv+wQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PT8KApzRaxA8y+2vGkWhTakOxRDMNSaXR+atI56fGEw12K8TpQOdmJJ4vP5/08GDE
-         SMHuT6j6UnTs5gic7KgWKeIbwomwtNS9MMceUqWLxIpKoEoPEy9gfrvG0vQiq8SE/S
-         edYEhO+e76wxtHXaYGQtprGVNCGW3DTCUyk4HER8iOz00aeFUFdKl5CTaVlbC03hWy
-         E8Zy/9/6Vhm15+mhMMi2I43o2v/pjsYQZJ0bLmTpGnZyoSSzvnEIko2tetyhkPf6r/
-         20IzMpV49uraAdO9d3T0Il6KteW6GRkS0eHC2FsxZqrJooYm5lsCsNB+d2QMaqNxLT
-         Par1YqqkWlRkQ==
-Subject: [PATCH 2/5] xfs_io: support using fallocate to map free space
+        b=pfULerc0pjJmgyr3yi35H9qDZPzBv7EWVqnxMlU9VN76OwfKBZWa1j/V0kMEWbp+u
+         FF/94wdN6nIn2CZ4jxqeGfA3PtIXlR4olEH1LrNgxYKewuqdDUh7l7b9Ikg0C1p/cW
+         EX3tyF8mWTmAnoFMv6WNY2nluv/GQB5kfEk79gqXoJOlSZniysCeZKtj63ZRuZfosm
+         jQkQBaqPnlJcrqQ6y9equjZwGTeVb53j4WgVJEWz9LCPbLgxQ+ZMHY0Kx+PaCFGLW6
+         dY+7gAYN8r04IxgLWHAy5LVp8WXEyOBQ6KfFd1jlmlmDPfQdl8dxiTocXKw/meHFcY
+         eN02/n52sh1xQ==
+Subject: [PATCHSET 0/5] xfsprogs: defragment free space
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:47 -0800
-Message-ID: <167243884791.740087.5840342975132569721.stgit@magnolia>
-In-Reply-To: <167243884763.740087.13414287212519500865.stgit@magnolia>
-References: <167243884763.740087.13414287212519500865.stgit@magnolia>
+Message-ID: <167243884763.740087.13414287212519500865.stgit@magnolia>
+In-Reply-To: <Y69Uw6W5aclS115x@magnolia>
+References: <Y69Uw6W5aclS115x@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,105 +53,64 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Support FALLOC_FL_MAP_FREE_SPACE as a fallocate mode.  This is
-experimental code to see if we can build a free space defragmenter out
-of this.
+These patches contain experimental code to enable userspace to defragment
+the free space in a filesystem.  Two purposes are imagined for this
+functionality: clearing space at the end of a filesystem before
+shrinking it, and clearing free space in anticipation of making a large
+allocation.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+The first patch adds a new fallocate mode that allows userspace to
+allocate free space from the filesystem into a file.  The goal here is
+to allow the filesystem shrink process to prevent allocation from a
+certain part of the filesystem while a free space defragmenter evacuates
+all the files from the doomed part of the filesystem.
+
+The second patch amends the online repair system to allow the sysadmin
+to forcibly rebuild metadata structures, even if they're not corrupt.
+Without adding an ioctl to move metadata btree blocks, this is the only
+way to dislodge metadata.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=defrag-freespace
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=defrag-freespace
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=defrag-freespace
 ---
- io/prealloc.c     |   37 +++++++++++++++++++++++++++++++++++++
- man/man8/xfs_io.8 |    8 +++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
-
-
-diff --git a/io/prealloc.c b/io/prealloc.c
-index 5805897a4a0..02de16651c1 100644
---- a/io/prealloc.c
-+++ b/io/prealloc.c
-@@ -32,6 +32,10 @@
- #define FALLOC_FL_UNSHARE_RANGE 0x40
- #endif
- 
-+#ifndef FALLOC_FL_MAP_FREE_SPACE
-+#define FALLOC_FL_MAP_FREE_SPACE	(1U << 30)
-+#endif
-+
- static cmdinfo_t allocsp_cmd;
- static cmdinfo_t freesp_cmd;
- static cmdinfo_t resvsp_cmd;
-@@ -44,6 +48,7 @@ static cmdinfo_t fcollapse_cmd;
- static cmdinfo_t finsert_cmd;
- static cmdinfo_t fzero_cmd;
- static cmdinfo_t funshare_cmd;
-+static cmdinfo_t fmapfree_cmd;
- #endif
- 
- static int
-@@ -381,6 +386,28 @@ funshare_f(
- 	}
- 	return 0;
- }
-+
-+static int
-+fmapfree_f(
-+	int		argc,
-+	char		**argv)
-+{
-+	xfs_flock64_t	segment;
-+	int		mode = FALLOC_FL_MAP_FREE_SPACE;
-+	int		index = 1;
-+
-+	if (!offset_length(argv[index], argv[index + 1], &segment)) {
-+		exitcode = 1;
-+		return 0;
-+	}
-+
-+	if (fallocate(file->fd, mode, segment.l_start, segment.l_len)) {
-+		perror("fallocate");
-+		exitcode = 1;
-+		return 0;
-+	}
-+	return 0;
-+}
- #endif	/* HAVE_FALLOCATE */
- 
- void
-@@ -496,5 +523,15 @@ prealloc_init(void)
- 	funshare_cmd.oneline =
- 	_("unshares shared blocks within the range");
- 	add_command(&funshare_cmd);
-+
-+	fmapfree_cmd.name = "fmapfree";
-+	fmapfree_cmd.cfunc = fmapfree_f;
-+	fmapfree_cmd.argmin = 2;
-+	fmapfree_cmd.argmax = 2;
-+	fmapfree_cmd.flags = CMD_NOMAP_OK | CMD_FOREIGN_OK;
-+	fmapfree_cmd.args = _("off len");
-+	fmapfree_cmd.oneline =
-+	_("maps free space into a file");
-+	add_command(&fmapfree_cmd);
- #endif	/* HAVE_FALLOCATE */
- }
-diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
-index ece778fc76c..b10523325ee 100644
---- a/man/man8/xfs_io.8
-+++ b/man/man8/xfs_io.8
-@@ -513,8 +513,14 @@ Call fallocate with FALLOC_FL_INSERT_RANGE flag as described in the
- .BR fallocate (2)
- manual page to create the hole by shifting data blocks.
- .TP
-+.BI fmapfree " offset length"
-+Maps free physical space into the file by calling fallocate with
-+the FALLOC_FL_MAP_FREE_SPACE flag as described in the
-+.BR fallocate (2)
-+manual page.
-+.TP
- .BI fpunch " offset length"
--Punches (de-allocates) blocks in the file by calling fallocate with 
-+Punches (de-allocates) blocks in the file by calling fallocate with
- the FALLOC_FL_PUNCH_HOLE flag as described in the
- .BR fallocate (2)
- manual page.
+ Makefile                 |    2 
+ db/agfl.c                |  297 +++++
+ include/xfs_trace.h      |    4 
+ io/prealloc.c            |   37 +
+ libfrog/Makefile         |    6 
+ libfrog/clearspace.c     | 2940 ++++++++++++++++++++++++++++++++++++++++++++++
+ libfrog/clearspace.h     |   72 +
+ libxfs/libxfs_api_defs.h |    3 
+ libxfs/libxfs_priv.h     |   10 
+ libxfs/xfs_alloc.c       |   88 +
+ libxfs/xfs_alloc.h       |    4 
+ libxfs/xfs_bmap.c        |  149 ++
+ libxfs/xfs_bmap.h        |    3 
+ man/man8/xfs_db.8        |   11 
+ man/man8/xfs_io.8        |    8 
+ man/man8/xfs_spaceman.8  |   17 
+ spaceman/Makefile        |    6 
+ spaceman/clearfree.c     |  164 +++
+ spaceman/init.c          |    1 
+ spaceman/space.h         |    2 
+ 20 files changed, 3815 insertions(+), 9 deletions(-)
+ create mode 100644 libfrog/clearspace.c
+ create mode 100644 libfrog/clearspace.h
+ create mode 100644 spaceman/clearfree.c
 
