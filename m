@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5953865A255
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:16:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC98765A258
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:16:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236340AbiLaDPq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:15:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36808 "EHLO
+        id S231539AbiLaDQS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:16:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236337AbiLaDPo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:15:44 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4E5257;
-        Fri, 30 Dec 2022 19:15:44 -0800 (PST)
+        with ESMTP id S236345AbiLaDP7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:15:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 232381021;
+        Fri, 30 Dec 2022 19:15:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CF0FAB81E61;
-        Sat, 31 Dec 2022 03:15:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 890FCC433EF;
-        Sat, 31 Dec 2022 03:15:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B230A61D12;
+        Sat, 31 Dec 2022 03:15:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BFEFC433EF;
+        Sat, 31 Dec 2022 03:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456541;
-        bh=aTkm8z/589qdaL7VLGasCqnTpNpfp9e+HuWHLLuLrY4=;
+        s=k20201202; t=1672456557;
+        bh=nM2u7XBrmsx1R39s/7nWtTPRmyzfjZ0rVAVb5NfQgFs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B3QVcuQ7CqHHl1+xYAjFGZhfUXAq0kw+t7vAMUzHlyKGKlyP4Q1g1tYYON7n1QuUs
-         T333sD83tDx28C1oHu3WCDJCcPqcfYKtmvD7D2yOITUKggX6lq2GzsxWAsMcxZrepF
-         RDakXaP6vUZyUE+H4IhF/7Mn69p/SJHRxO+oua73PxVsCWhc0mQ5IEG9I2VXF7mi3P
-         SJ9LdmAnLulG4Sjdf0CFs0Jd/QzrEFlpywJ5WAkKY1j8TNlcahuDbY37OB128wqI7m
-         xqPIlalHNTC0lw6T0JUI0oCUwfzqQkVw/mCXTZrzL/E9Z8Xu073Wdcj5rdKju3zQNy
-         kcUO1MyCntcNg==
-Subject: [PATCH 12/13] populate: check that we created a realtime rmap btree
- of the given height
+        b=SjV5gUES0xgykpUmTjnOuvyZL3H+CoZPQQfnrkLIcyCI496F6IQHeT5B18eVURRpV
+         MsizpqQrUk07E/NXqz4DVG7GbT6tSV8YRF93kZddZl6dCZPKQntBq1SdJUpkGHrdrQ
+         7PNJ7/KIjuwd7SnLW5LIhvDAmrNw+XokZqx3QAUu+irRi5gc8L7JzzMP53hEPrcKmz
+         Rv621VbVnjTzNDZdZ2CREOot18gRMW5X22TCJ3g2CaB5BZaOnXYOIROCa/yDeqcETG
+         jS0PkQO7+/+/UHcyVhv1ODW/5v1/9G3WisOhHQLruviGbhDBiuP3g6/Axd3IX869F8
+         flj2cwcupJRHA==
+Subject: [PATCH 13/13] fuzzy: create missing fuzz tests for rt rmap btrees
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:45 -0800
-Message-ID: <167243884551.739669.9596459322408561738.stgit@magnolia>
+Message-ID: <167243884564.739669.10126609995882362405.stgit@magnolia>
 In-Reply-To: <167243884390.739669.13524725872131241203.stgit@magnolia>
 References: <167243884390.739669.13524725872131241203.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,72 +55,148 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that we actually create an rt rmap btree of the desired height
-somewhere in the filesystem.
+Back when I first created the fuzz tests for the realtime rmap btree, I
+forgot a couple of things.  Add tests to fuzz rtrmap btree leaf records,
+and node keys.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/populate |   34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ tests/xfs/1528     |   41 +++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1528.out |    4 ++++
+ tests/xfs/1529     |   40 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1529.out |    4 ++++
+ tests/xfs/407      |    2 +-
+ 5 files changed, 90 insertions(+), 1 deletion(-)
+ create mode 100755 tests/xfs/1528
+ create mode 100644 tests/xfs/1528.out
+ create mode 100755 tests/xfs/1529
+ create mode 100644 tests/xfs/1529.out
 
 
-diff --git a/common/populate b/common/populate
-index 7d57cd1287..6a05177e6d 100644
---- a/common/populate
-+++ b/common/populate
-@@ -631,6 +631,37 @@ __populate_check_xfs_agbtree_height() {
- 	return 1
- }
+diff --git a/tests/xfs/1528 b/tests/xfs/1528
+new file mode 100755
+index 0000000000..b2e1193ebd
+--- /dev/null
++++ b/tests/xfs/1528
+@@ -0,0 +1,41 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1528
++#
++# Populate a XFS filesystem and fuzz every rtrmapbt record field.
++# Try online repair and, if necessary, offline repair,
++# to test the most likely usage pattern.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_bothrepair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_xfs_scratch_rmapbt
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
++	_fail "could not find two-level rtrmapbt"
++inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
++
++echo "Fuzz rtrmapbt recs"
++_scratch_xfs_fuzz_metadata '' 'both' "path -m $path" "addr u${inode_ver}.rtrmapbt.ptrs[1]" >> $seqres.full
++echo "Done fuzzing rtrmapbt recs"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1528.out b/tests/xfs/1528.out
+new file mode 100644
+index 0000000000..b51b640c40
+--- /dev/null
++++ b/tests/xfs/1528.out
+@@ -0,0 +1,4 @@
++QA output created by 1528
++Format and populate
++Fuzz rtrmapbt recs
++Done fuzzing rtrmapbt recs
+diff --git a/tests/xfs/1529 b/tests/xfs/1529
+new file mode 100755
+index 0000000000..91a673c049
+--- /dev/null
++++ b/tests/xfs/1529
+@@ -0,0 +1,40 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1529
++#
++# Populate a XFS filesystem and fuzz every rtrmapbt keyptr field.
++# Try online repair and, if necessary, offline repair,
++# to test the most likely usage pattern.
++
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_bothrepair realtime
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_xfs_scratch_rmapbt
++_require_scratch_xfs_fuzz_fields
++_disable_dmesg_check
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
++	_fail "could not find two-level rtrmapbt"
++
++echo "Fuzz rtrmapbt keyptrs"
++_scratch_xfs_fuzz_metadata '(rtrmapbt)' 'offline' "path -m $path" >> $seqres.full
++echo "Done fuzzing rtrmapbt keyptrs"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1529.out b/tests/xfs/1529.out
+new file mode 100644
+index 0000000000..808fcc957f
+--- /dev/null
++++ b/tests/xfs/1529.out
+@@ -0,0 +1,4 @@
++QA output created by 1529
++Format and populate
++Fuzz rtrmapbt keyptrs
++Done fuzzing rtrmapbt keyptrs
+diff --git a/tests/xfs/407 b/tests/xfs/407
+index 2460ea336c..bd439105e2 100755
+--- a/tests/xfs/407
++++ b/tests/xfs/407
+@@ -26,7 +26,7 @@ _require_scratch_xfs_fuzz_fields
+ echo "Format and populate"
+ _scratch_populate_cached nofill > $seqres.full 2>&1
  
-+# Check that there's at least one rt btree with multiple levels
-+__populate_check_xfs_rgbtree_height() {
-+	local bt_type="$1"
-+	local rgcount=$(_scratch_xfs_db -c 'sb 0' -c 'p rgcount' | awk '{print $3}')
-+	local path
-+	local path_format
-+	local bt_prefix
-+
-+	case "${bt_type}" in
-+	"rmap")
-+		path_format="/realtime/%u.rmap"
-+		bt_prefix="u3.rtrmapbt"
-+		;;
-+	*)
-+		_fail "Don't know about rt btree ${bt_type}"
-+		;;
-+	esac
-+
-+	for ((rgno = 0; rgno < rgcount; rgno++)); do
-+		path="$(printf "${path_format}" "${rgno}")"
-+		bt_level=$(_scratch_xfs_db -c "path -m ${path}" -c "p ${bt_prefix}.level" | awk '{print $3}')
-+		# "level" is the actual level within the btree
-+		if [ "${bt_level}" -gt 0 ]; then
-+			return 0
-+		fi
-+	done
-+
-+	__populate_fail "Failed to create rt ${bt_type} of sufficient height!"
-+	return 1
-+}
-+
- # Check that populate created all the types of files we wanted
- _scratch_xfs_populate_check() {
- 	_scratch_mount
-@@ -654,6 +685,7 @@ _scratch_xfs_populate_check() {
- 	is_finobt=$(_xfs_has_feature "$SCRATCH_MNT" finobt -v)
- 	is_rmapbt=$(_xfs_has_feature "$SCRATCH_MNT" rmapbt -v)
- 	is_reflink=$(_xfs_has_feature "$SCRATCH_MNT" reflink -v)
-+	is_rt="$(_xfs_get_rtextents "$SCRATCH_MNT")"
+-path="$(_scratch_xfs_find_rgbtree_height 'rmap' 1)" || \
++path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
+ 	_fail "could not find two-level rtrmapbt"
+ inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
  
- 	blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
- 	dblksz="$(_xfs_get_dir_blocksize "$SCRATCH_MNT")"
-@@ -684,6 +716,8 @@ _scratch_xfs_populate_check() {
- 	test $is_finobt -ne 0 && __populate_check_xfs_agbtree_height "fino"
- 	test $is_rmapbt -ne 0 && __populate_check_xfs_agbtree_height "rmap"
- 	test $is_reflink -ne 0 && __populate_check_xfs_agbtree_height "refcnt"
-+	test $is_rmapbt -ne 0 && test $is_rt -gt 0 && \
-+		__populate_check_xfs_rgbtree_height "rmap"
- }
- 
- # Check data fork format of ext4 file
 
