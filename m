@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E37B8659F8E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:27:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD8D65A0BB
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:37:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235802AbiLaA1U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:27:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
+        id S236110AbiLaBhZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:37:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235651AbiLaA1T (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:27:19 -0500
+        with ESMTP id S236108AbiLaBhZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:37:25 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01201E3FE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:27:18 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C75B313DD9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:37:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E131B81EA6
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:27:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A99AC433D2;
-        Sat, 31 Dec 2022 00:27:16 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 830E8B81E34
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:37:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3788BC433EF;
+        Sat, 31 Dec 2022 01:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446436;
-        bh=bPNufkI7FgCrl2mtFH/9AgDa31YVGlpOR/zdSoq8Mt4=;
+        s=k20201202; t=1672450641;
+        bh=wUPPK0fYbejmPKzElBD0aEvou/tbXT2CP47lVoEKwDk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Y1txoOasWEHtjSvwHt4gpVIHGkY+epd8uH17eDTZUBte0WUx4ZfoiYVgj0LVYE2op
-         z+bnjFk8guj/rtbbm2eNu3EbTjiqE8ndiCPAkqKhMWKSg7xY6/zBiimMQn1tPgl/vf
-         LH6z+cBnpkvnq/Eq8jFBRGaXlcm1JII4ndbAdy0kyO9PSpDw+4ecYG+vm2yWE4+Vtk
-         thPIN4z/oW8YDMCVVLT6cGZiBQjGaFyWWqQ30oXKcxyrWPjbJK4Z9laRgQsAmdfgQz
-         WhO2JOy6IA2VI1UOLc10A9oZEBJFMQKUxPAD8SdWuljQFlJAMmGcnCt6ax0+ZYe6Gf
-         J0fLBRPYQkw1A==
-Subject: [PATCH 6/6] xfs_scrub: warn about difficult repairs to rt and quota
- metadata
+        b=q7K64zKTW0FchQ++nJVetaKNusfV5gPiyVlEswnrQxsp/7aWrH1kQW4ULp/i2wfUY
+         FNohHkbMGLMj9/U4ApM/aS3In97ehHgibGNG4rQ+8Uug/53no4137mZygakId0vexO
+         tYey6EJlOTiq/+Qr0ia834vVovOnlJ9YEmltgQKTqkSJM2qnoEksu6H7OUymNErTdV
+         e1L0jDq6Iy0W3XdLa2tjQ/LLIpRgspFNXL0XgWZBK2NUqnb22++QYPupUKd1Ih3Vij
+         6c/++eAyYtB9bEw68TUwA/bW8Vzllpq5Vj4swhl6c/m/FttkApCZrtlCwtGDhAF3Cf
+         +KR60bg8U5OGw==
+Subject: [PATCH 02/38] xfs: simplify the xfs_rmap_{alloc,free}_extent calling
+ conventions
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:18:14 -0800
-Message-ID: <167243869447.715119.6647883176428105129.stgit@magnolia>
-In-Reply-To: <167243869365.715119.17881025524336922669.stgit@magnolia>
-References: <167243869365.715119.17881025524336922669.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:18:16 -0800
+Message-ID: <167243869629.715303.14412443667827419096.stgit@magnolia>
+In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
+References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,83 +56,132 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Warn the user if there are problems with the rt or quota metadata that
-might make repairs difficult.  For now there aren't any corruption
-conditions that would trigger this, but we don't want to leave a gap.
+Simplify the calling conventions by allowing callers to pass a fsbno
+(xfs_fsblock_t) directly into these functions, since we're just going to
+set it in a struct anyway.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase2.c |   37 +++++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+ fs/xfs/libxfs/xfs_refcount.c |    6 ++----
+ fs/xfs/libxfs/xfs_rmap.c     |   12 +++++-------
+ fs/xfs/libxfs/xfs_rmap.h     |    8 ++++----
+ fs/xfs/scrub/alloc_repair.c  |   10 +++++++---
+ 4 files changed, 18 insertions(+), 18 deletions(-)
 
 
-diff --git a/scrub/phase2.c b/scrub/phase2.c
-index 360426c5fb0..a78d15aac1f 100644
---- a/scrub/phase2.c
-+++ b/scrub/phase2.c
-@@ -31,6 +31,25 @@ struct scan_ctl {
- 	bool			aborted;
- };
+diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
+index 2721c6076712..20c12cb7b7de 100644
+--- a/fs/xfs/libxfs/xfs_refcount.c
++++ b/fs/xfs/libxfs/xfs_refcount.c
+@@ -1889,8 +1889,7 @@ xfs_refcount_alloc_cow_extent(
+ 	__xfs_refcount_add(tp, XFS_REFCOUNT_ALLOC_COW, fsb, len);
  
-+/* Warn about the types of mutual inconsistencies that may make repairs hard. */
-+static inline void
-+warn_repair_difficulties(
-+	struct scrub_ctx	*ctx,
-+	unsigned int		difficulty,
-+	const char		*descr)
-+{
-+	if (!(difficulty & REPAIR_DIFFICULTY_SECONDARY))
-+		return;
-+	if (debug_tweak_on("XFS_SCRUB_FORCE_REPAIR"))
-+		return;
+ 	/* Add rmap entry */
+-	xfs_rmap_alloc_extent(tp, XFS_FSB_TO_AGNO(mp, fsb),
+-			XFS_FSB_TO_AGBNO(mp, fsb), len, XFS_RMAP_OWN_COW);
++	xfs_rmap_alloc_extent(tp, fsb, len, XFS_RMAP_OWN_COW);
+ }
+ 
+ /* Forget a CoW staging event in the refcount btree. */
+@@ -1906,8 +1905,7 @@ xfs_refcount_free_cow_extent(
+ 		return;
+ 
+ 	/* Remove rmap entry */
+-	xfs_rmap_free_extent(tp, XFS_FSB_TO_AGNO(mp, fsb),
+-			XFS_FSB_TO_AGBNO(mp, fsb), len, XFS_RMAP_OWN_COW);
++	xfs_rmap_free_extent(tp, fsb, len, XFS_RMAP_OWN_COW);
+ 	__xfs_refcount_add(tp, XFS_REFCOUNT_FREE_COW, fsb, len);
+ }
+ 
+diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
+index 9ad3e5077f34..a2a863e0c7fb 100644
+--- a/fs/xfs/libxfs/xfs_rmap.c
++++ b/fs/xfs/libxfs/xfs_rmap.c
+@@ -526,7 +526,7 @@ xfs_rmap_free_check_owner(
+ 	struct xfs_btree_cur	*cur,
+ 	uint64_t		ltoff,
+ 	struct xfs_rmap_irec	*rec,
+-	xfs_filblks_t		len,
++	xfs_extlen_t		len,
+ 	uint64_t		owner,
+ 	uint64_t		offset,
+ 	unsigned int		flags)
+@@ -2745,8 +2745,7 @@ xfs_rmap_convert_extent(
+ void
+ xfs_rmap_alloc_extent(
+ 	struct xfs_trans	*tp,
+-	xfs_agnumber_t		agno,
+-	xfs_agblock_t		bno,
++	xfs_fsblock_t		fsbno,
+ 	xfs_extlen_t		len,
+ 	uint64_t		owner)
+ {
+@@ -2755,7 +2754,7 @@ xfs_rmap_alloc_extent(
+ 	if (!xfs_rmap_update_is_needed(tp->t_mountp, XFS_DATA_FORK))
+ 		return;
+ 
+-	bmap.br_startblock = XFS_AGB_TO_FSB(tp->t_mountp, agno, bno);
++	bmap.br_startblock = fsbno;
+ 	bmap.br_blockcount = len;
+ 	bmap.br_startoff = 0;
+ 	bmap.br_state = XFS_EXT_NORM;
+@@ -2767,8 +2766,7 @@ xfs_rmap_alloc_extent(
+ void
+ xfs_rmap_free_extent(
+ 	struct xfs_trans	*tp,
+-	xfs_agnumber_t		agno,
+-	xfs_agblock_t		bno,
++	xfs_fsblock_t		fsbno,
+ 	xfs_extlen_t		len,
+ 	uint64_t		owner)
+ {
+@@ -2777,7 +2775,7 @@ xfs_rmap_free_extent(
+ 	if (!xfs_rmap_update_is_needed(tp->t_mountp, XFS_DATA_FORK))
+ 		return;
+ 
+-	bmap.br_startblock = XFS_AGB_TO_FSB(tp->t_mountp, agno, bno);
++	bmap.br_startblock = fsbno;
+ 	bmap.br_blockcount = len;
+ 	bmap.br_startoff = 0;
+ 	bmap.br_state = XFS_EXT_NORM;
+diff --git a/fs/xfs/libxfs/xfs_rmap.h b/fs/xfs/libxfs/xfs_rmap.h
+index 36af4de506c7..54c969731cf4 100644
+--- a/fs/xfs/libxfs/xfs_rmap.h
++++ b/fs/xfs/libxfs/xfs_rmap.h
+@@ -187,10 +187,10 @@ void xfs_rmap_unmap_extent(struct xfs_trans *tp, struct xfs_inode *ip,
+ void xfs_rmap_convert_extent(struct xfs_mount *mp, struct xfs_trans *tp,
+ 		struct xfs_inode *ip, int whichfork,
+ 		struct xfs_bmbt_irec *imap);
+-void xfs_rmap_alloc_extent(struct xfs_trans *tp, xfs_agnumber_t agno,
+-		xfs_agblock_t bno, xfs_extlen_t len, uint64_t owner);
+-void xfs_rmap_free_extent(struct xfs_trans *tp, xfs_agnumber_t agno,
+-		xfs_agblock_t bno, xfs_extlen_t len, uint64_t owner);
++void xfs_rmap_alloc_extent(struct xfs_trans *tp, xfs_fsblock_t fsbno,
++		xfs_extlen_t len, uint64_t owner);
++void xfs_rmap_free_extent(struct xfs_trans *tp, xfs_fsblock_t fsbno,
++		xfs_extlen_t len, uint64_t owner);
+ 
+ void xfs_rmap_finish_one_cleanup(struct xfs_trans *tp,
+ 		struct xfs_btree_cur *rcur, int error);
+diff --git a/fs/xfs/scrub/alloc_repair.c b/fs/xfs/scrub/alloc_repair.c
+index 1e06ffe26029..6506fc202571 100644
+--- a/fs/xfs/scrub/alloc_repair.c
++++ b/fs/xfs/scrub/alloc_repair.c
+@@ -524,9 +524,13 @@ xrep_abt_dispose_one(
+ 	ASSERT(pag == resv->pag);
+ 
+ 	/* Add a deferred rmap for each extent we used. */
+-	if (resv->used > 0)
+-		xfs_rmap_alloc_extent(sc->tp, pag->pag_agno, resv->agbno,
+-				resv->used, XFS_RMAP_OWN_AG);
++	if (resv->used > 0) {
++		xfs_fsblock_t	fsbno;
 +
-+	if (difficulty & REPAIR_DIFFICULTY_PRIMARY)
-+		str_info(ctx, descr, _("Corrupt primary and secondary metadata."));
-+	else
-+		str_info(ctx, descr, _("Corrupt secondary metadata."));
-+	str_info(ctx, descr, _("Filesystem might not be repairable."));
-+}
-+
- /* Scrub each AG's metadata btrees. */
- static void
- scan_ag_metadata(
-@@ -80,18 +99,7 @@ scan_ag_metadata(
- 	 */
- 	difficulty = action_list_difficulty(&alist);
- 	action_list_find_mustfix(&alist, &immediate_alist);
--
--	if ((difficulty & REPAIR_DIFFICULTY_SECONDARY) &&
--	    !debug_tweak_on("XFS_SCRUB_FORCE_REPAIR")) {
--		if (difficulty & REPAIR_DIFFICULTY_PRIMARY)
--			str_info(ctx, descr,
--_("Corrupt primary and secondary block mapping metadata."));
--		else
--			str_info(ctx, descr,
--_("Corrupt secondary block mapping metadata."));
--		str_info(ctx, descr,
--_("Filesystem might not be repairable."));
--	}
-+	warn_repair_difficulties(ctx, difficulty, descr);
++		fsbno = XFS_AGB_TO_FSB(sc->mp, pag->pag_agno, resv->agbno);
++		xfs_rmap_alloc_extent(sc->tp, fsbno, resv->used,
++				XFS_RMAP_OWN_AG);
++	}
  
- 	/* Repair (inode) btree damage. */
- 	ret = action_list_process_or_defer(ctx, agno, &immediate_alist);
-@@ -115,6 +123,7 @@ scan_metafile(
- 	struct action_list	alist;
- 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
- 	struct scan_ctl		*sctl = arg;
-+	unsigned int		difficulty;
- 	int			ret;
- 
- 	if (sctl->aborted)
-@@ -127,6 +136,10 @@ scan_metafile(
- 		goto out;
- 	}
- 
-+	/* Complain about metadata corruptions that might not be fixable. */
-+	difficulty = action_list_difficulty(&alist);
-+	warn_repair_difficulties(ctx, difficulty, xfrog_scrubbers[type].descr);
-+
- 	action_list_defer(ctx, 0, &alist);
- 
- out:
+ 	/*
+ 	 * For each reserved btree block we didn't use, add it to the free
 
