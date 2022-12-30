@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E889165A239
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 017E365A23D
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:09:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236313AbiLaDIs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:08:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35352 "EHLO
+        id S236323AbiLaDJP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:09:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236321AbiLaDIq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:08:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DDD12A9C;
-        Fri, 30 Dec 2022 19:08:42 -0800 (PST)
+        with ESMTP id S236316AbiLaDJO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:09:14 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AF61054D;
+        Fri, 30 Dec 2022 19:09:13 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C0DF61D43;
-        Sat, 31 Dec 2022 03:08:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6807C433EF;
-        Sat, 31 Dec 2022 03:08:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6089F61D39;
+        Sat, 31 Dec 2022 03:09:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B975EC433EF;
+        Sat, 31 Dec 2022 03:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456121;
-        bh=ZNjCnCZ07gW3ub0N+12jMOAoaMlKgghqJ3lcLjm0/q4=;
+        s=k20201202; t=1672456152;
+        bh=K5+CfoR/yWPJrjuFDFxGWGskGStK+cRvXlhc1OYHuPU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=G7h3lexHr+I2YhnKCiE375+N+Nf7Zw3Anix7bW44TjSI+oNjgKcY0Scle15oRHdan
-         3Z4N1+k1qmBTsIqjnacrW0Zn5bdPXDnz4vyOwvSUZcV5J/uORB76yTkqU3MUz8HLW4
-         JFcbdTKltvh2VjzogeTQ9e6cLkiiWLkzB52Hjy6ypVbuBSszDscelYzyUfjjuk89hz
-         xjy6B5xOiEbqZSDET92l733SdF4ThoHaKIOSZ/4aTd84ZgMLGFouVuoy1IlpSYGdh1
-         9kUVLRU1kC4fclpMXQUljbF/ViUM+8QgwkeIo/PeKF62wEWPSM3oWZlY2bdkdLOnQ+
-         V6ayeOVRzqtmQ==
-Subject: [PATCH 1/4] common/populate: refactor caching of metadumps to a
- helper
+        b=K0+6ZrSZa0VtdogAojvGUkvSc/WGsmkeBMPg44kti192PGEnbFkmJ4JP1/OL4VWTY
+         U0LRqYPteIfRh+ss+UjbiK66LbvXMT7T7rnfIRQisMZqtf9gXxhtxr3AdvdubAKJH+
+         N4qoTNXtWyo/WuxjTnE6SXCyeSWv1+5O04aJ/Fryk2YMf1rmo5ywkKU4XJcrkMVr5Q
+         M9ePkSh2s9DUPQrandnvq8xphNDoKgasMBi2WReCqfzV5siQBSVDlZgkPiKobTV6cb
+         mkke5CBGJp7uoO04SklCVqMzdKmSn6XNJsYsJ5v8yDFrDY5BpyGdHjfTB2B4rMmAiG
+         2BKpClTHyx9+w==
+Subject: [PATCH 3/4] common/ext4: reformat external logs during mdrestore
+ operations
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:36 -0800
-Message-ID: <167243883626.738384.359731015865489369.stgit@magnolia>
+Message-ID: <167243883649.738384.9931798542555490230.stgit@magnolia>
 In-Reply-To: <167243883613.738384.6883268151338937809.stgit@magnolia>
 References: <167243883613.738384.6883268151338937809.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,81 +56,81 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Hoist out of _scratch_populate_cached all the code that we use to save a
-metadump of the populated filesystem.  We're going to make this more
-involved for XFS in the next few patches so that we can take advantage
-of the new support for external devices in metadump/mdrestore.
+The e2image file format doesn't support the capture of external log
+devices, which means that mdrestore ought to reformat the external log
+to get the restored filesystem to work again.  The common/populate code
+could already do this, so push it to the common ext4 helper.
+
+While we're at it, fix the uncareful usage of SCRATCH_LOGDEV in the
+populate code.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/populate |   37 ++++++++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 9 deletions(-)
+ common/ext4     |   17 ++++++++++++++++-
+ common/populate |   16 ++--------------
+ 2 files changed, 18 insertions(+), 15 deletions(-)
 
 
+diff --git a/common/ext4 b/common/ext4
+index 3dcbfe17c9..5171b8df68 100644
+--- a/common/ext4
++++ b/common/ext4
+@@ -134,7 +134,8 @@ _ext4_mdrestore()
+ {
+ 	local metadump="$1"
+ 	local device="$2"
+-	shift; shift
++	local logdev="$3"
++	shift; shift; shift
+ 	local options="$@"
+ 
+ 	# If we're configured for compressed dumps and there isn't already an
+@@ -148,6 +149,20 @@ _ext4_mdrestore()
+ 	test -r "$metadump" || return 1
+ 
+ 	$E2IMAGE_PROG $options -r "${metadump}" "${SCRATCH_DEV}"
++	res=$?
++	test $res -ne 0 && return $res
++
++	# ext4 cannot e2image external logs, so we have to reformat the log
++	# device to match the restored fs
++	if [ "${logdev}" != "none" ]; then
++		local fsuuid="$($DUMPE2FS_PROG -h "${SCRATCH_DEV}" 2>/dev/null | \
++				grep 'Journal UUID:' | \
++				sed -e 's/Journal UUID:[[:space:]]*//g')"
++		$MKFS_EXT4_PROG -O journal_dev "${logdev}" \
++				-F -U "${fsuuid}"
++		res=$?
++	fi
++	return $res
+ }
+ 
+ # this test requires the ext4 kernel support crc feature on scratch device
 diff --git a/common/populate b/common/populate
-index 29ea637ecb..8db7acefb6 100644
+index 08c4bdc151..095e771d67 100644
 --- a/common/populate
 +++ b/common/populate
-@@ -938,6 +938,31 @@ _scratch_populate_restore_cached() {
- 	return 1
- }
- 
-+# Take a metadump of the scratch filesystem and cache it for later.
-+_scratch_populate_save_metadump()
-+{
-+	local metadump_file="$1"
-+
-+	case "${FSTYP}" in
-+	"xfs")
-+		local logdev=none
-+		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
-+			logdev=$SCRATCH_LOGDEV
-+
-+		_xfs_metadump "$metadump_file" "$SCRATCH_DEV" "$logdev" \
-+				compress
-+		res=$?
-+		;;
-+	"ext2"|"ext3"|"ext4")
-+		_ext4_metadump "${SCRATCH_DEV}" "${metadump_file}" compress
-+		res=$?
-+		;;
-+	*)
-+		_fail "Don't know how to save a ${FSTYP} filesystem."
-+	esac
-+	return $res
-+}
-+
- # Populate a scratch FS from scratch or from a cached image.
- _scratch_populate_cached() {
- 	local meta_descr="$(_scratch_populate_cache_tag "$@")"
-@@ -961,26 +986,20 @@ _scratch_populate_cached() {
- 
- 	# Oh well, just create one from scratch
- 	_scratch_mkfs
--	echo "${meta_descr}" > "${populate_metadump_descr}"
- 	case "${FSTYP}" in
- 	"xfs")
- 		_scratch_xfs_populate $@
- 		_scratch_xfs_populate_check
--
--		local logdev=none
--		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
--			logdev=$SCRATCH_LOGDEV
--
--		_xfs_metadump "$POPULATE_METADUMP" "$SCRATCH_DEV" "$logdev" \
--			compress
+@@ -912,20 +912,8 @@ _scratch_populate_restore_cached() {
+ 		return $?
  		;;
  	"ext2"|"ext3"|"ext4")
- 		_scratch_ext4_populate $@
- 		_scratch_ext4_populate_check
--		_ext4_metadump "${SCRATCH_DEV}" "${POPULATE_METADUMP}" compress
- 		;;
- 	*)
- 		_fail "Don't know how to populate a ${FSTYP} filesystem."
+-		_ext4_mdrestore "${metadump}" "${SCRATCH_DEV}"
+-		ret=$?
+-		test $ret -ne 0 && return $ret
+-
+-		# ext4 cannot e2image external logs, so we have to reformat
+-		# the scratch device to match the restored fs
+-		if [ -n "${SCRATCH_LOGDEV}" ]; then
+-			local fsuuid="$($DUMPE2FS_PROG -h "${SCRATCH_DEV}" 2>/dev/null | \
+-					grep 'Journal UUID:' | \
+-					sed -e 's/Journal UUID:[[:space:]]*//g')"
+-			$MKFS_EXT4_PROG -O journal_dev "${SCRATCH_LOGDEV}" \
+-					-F -U "${fsuuid}"
+-		fi
+-		return 0
++		_ext4_mdrestore "${metadump}" "${SCRATCH_DEV}" "${logdev}"
++		return $?
  		;;
  	esac
-+
-+	_scratch_populate_save_metadump "${POPULATE_METADUMP}" && \
-+			echo "${meta_descr}" > "${populate_metadump_descr}"
- }
+ 	return 1
 
