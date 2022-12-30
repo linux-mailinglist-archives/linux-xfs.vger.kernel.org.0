@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50675659F9F
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:29:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0500965A0CD
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235513AbiLaA30 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:29:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60970 "EHLO
+        id S236133AbiLaBku (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:40:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235484AbiLaA3W (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:29:22 -0500
+        with ESMTP id S236129AbiLaBkr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:40:47 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2E71E3FE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:29:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7C026D2
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:40:46 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ED10761D3E
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:29:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2A5C433EF;
-        Sat, 31 Dec 2022 00:29:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DC4E861C3A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:40:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428D5C433D2;
+        Sat, 31 Dec 2022 01:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446560;
-        bh=SMX8a96RM7v3kAMtIgo4WE60AO6p59BH9Hn+vb1Djew=;
+        s=k20201202; t=1672450845;
+        bh=qFzBq/EhLNaFDw7ysmqIEQRQVG0sBNIcnbwfHVz8riQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pcjEW1TkBgDLgihWl7FyksgkHjGOnHPZ/fLs25Ri+CeqLxY6cyWxaE478fiYeI9Dr
-         r4dqKzli1r9DReziWDI0U406IjdvGyL9uSjD3/9tIt2hIblLCf/J0jUpEVaWYp+oQv
-         hVtkZZNXPc9zxpM/oB7sa1Kwn8TSKAVCWfeJ3/16OJBj7IATeIzAwspW3d21sb53b5
-         cfzsZ1jD2Al1VgbmSMekE4ilKWRfY85Mj2i7xbT/fLgR8Za6h4jzcDlFUKgK8Euy5/
-         vBKBJxId5Z2Dh4ELj51XtyENWQ+YyMPdj3AUyP1xG1VI8HWP/ujbB/Amddr0U78VA4
-         caqT7dvlZSm0A==
-Subject: [PATCH 8/9] xfs_scrub: retry incomplete repairs
+        b=Wi0TS5dyTqwB73mHdUMKgM8LSPdC/6K0dtsc4tcxIDlQGxUUrbK8gv2yEw4ondrFt
+         cInaghU/Z8Bg6mtLaGLYDIvdjvk0X0UAAUzmnZ+2MVUYzQ/I894KoqZwVQsAcDKiRe
+         8TjUVtyy7NqkSv0QJlagHMnkLIN9J2X8tbYn3v70hlxTOF8pDP/aEbkMLmHGVxXwfY
+         os1yDmKVghDDV99S/yIupXQVKjje72IcjrL/u0nZ/TkbOyEonUyNIcK5gbMUnKsrMN
+         ifCYRCnMZBN2m/s4o9a65SLR1PSdSCYbCraiyd4p7qhE9wrBlVb40BwAw9FGGAYikO
+         v3deg1H8zFBSA==
+Subject: [PATCH 15/38] xfs: use realtime EFI to free extents when realtime
+ rmap is enabled
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:18 -0800
-Message-ID: <167243869820.715746.7386680567080978081.stgit@magnolia>
-In-Reply-To: <167243869711.715746.14725730988345960302.stgit@magnolia>
-References: <167243869711.715746.14725730988345960302.stgit@magnolia>
+Message-ID: <167243869812.715303.10166820015058214253.stgit@magnolia>
+In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
+References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,93 +56,84 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If a repair says it didn't do anything on account of not being able to
-complete a scan of the metadata, retry the repair a few times; if even
-that doesn't work, we can delay it to phase 4.
+When rmap is enabled, XFS expects a certain order of operations, which
+is: 1) remove the file mapping, 2) remove the reverse mapping, and then
+3) free the blocks.  xfs_bmap_del_extent_real tries to do 1 and 3 in the
+same transaction, which means that when rtrmap is enabled, we have to
+use realtime EFIs to maintain the expected order.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/repair.c        |   15 ++++++++++++++-
- scrub/scrub.c         |    3 +--
- scrub/scrub_private.h |   10 ++++++++++
- 3 files changed, 25 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c |   22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
 
-diff --git a/scrub/repair.c b/scrub/repair.c
-index 8624167246a..c1ab03d6f02 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -57,6 +57,7 @@ xfs_repair_metadata(
- 	struct xfs_scrub_metadata	oldm;
- 	DEFINE_DESCR(dsc, ctx, format_scrub_descr);
- 	bool				repair_only;
-+	unsigned int			tries = 0;
- 	int				error;
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 2e93b018d150..8c683db35788 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -5094,7 +5094,6 @@ xfs_bmap_del_extent_real(
+ {
+ 	xfs_fsblock_t		del_endblock=0;	/* first block past del */
+ 	xfs_fileoff_t		del_endoff;	/* first offset past del */
+-	int			do_fx;	/* free extent at end of routine */
+ 	int			error;	/* error return value */
+ 	int			flags = 0;/* inode logging flags */
+ 	struct xfs_bmbt_irec	got;	/* current extent entry */
+@@ -5108,6 +5107,8 @@ xfs_bmap_del_extent_real(
+ 	uint			qfield;	/* quota field to update */
+ 	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
+ 	struct xfs_bmbt_irec	old;
++	bool			isrt = xfs_ifork_is_realtime(ip, whichfork);
++	bool			want_free = !(bflags & XFS_BMAPI_REMAP);
  
+ 	mp = ip->i_mount;
+ 	XFS_STATS_INC(mp, xs_del_exlist);
+@@ -5138,17 +5139,24 @@ xfs_bmap_del_extent_real(
+ 		return -ENOSPC;
+ 
+ 	flags = XFS_ILOG_CORE;
+-	if (xfs_ifork_is_realtime(ip, whichfork)) {
+-		if (!(bflags & XFS_BMAPI_REMAP)) {
++	if (isrt) {
++		/*
++		 * Historically, we did not use EFIs to free realtime extents.
++		 * However, when reverse mapping is enabled, we must maintain
++		 * the same order of operations as the data device, which is:
++		 * Remove the file mapping, remove the reverse mapping, and
++		 * then free the blocks.  This means that we must delay the
++		 * freeing until after we've scheduled the rmap update.
++		 */
++		if (want_free && !xfs_has_rtrmapbt(mp)) {
+ 			error = xfs_rtfree_blocks(tp, del->br_startblock,
+ 					del->br_blockcount);
+ 			if (error)
+ 				goto done;
++			want_free = false;
+ 		}
+-		do_fx = 0;
+ 		qfield = XFS_TRANS_DQ_RTBCOUNT;
+ 	} else {
+-		do_fx = 1;
+ 		qfield = XFS_TRANS_DQ_BCOUNT;
+ 	}
+ 	nblks = del->br_blockcount;
+@@ -5303,7 +5311,7 @@ xfs_bmap_del_extent_real(
  	/*
-@@ -98,6 +99,7 @@ xfs_repair_metadata(
- 		str_info(ctx, descr_render(&dsc),
- 				_("Attempting optimization."));
- 
-+retry:
- 	error = -xfrog_scrub_metadata(xfdp, &meta);
- 	switch (error) {
- 	case 0:
-@@ -176,9 +178,20 @@ _("Read-only filesystem; cannot make changes."));
- 		return CHECK_DONE;
- 	}
- 
-+	/*
-+	 * If the kernel says the repair was incomplete or that there was a
-+	 * cross-referencing discrepancy but no obvious corruption, we'll try
-+	 * the repair again, just in case the fs was busy.  Only retry so many
-+	 * times.
-+	 */
-+	if (want_retry(&meta) && tries < 10) {
-+		tries++;
-+		goto retry;
-+	}
-+
- 	if (repair_flags & XRM_FINAL_WARNING)
- 		scrub_warn_incomplete_scrub(ctx, &dsc, &meta);
--	if (needs_repair(&meta)) {
-+	if (needs_repair(&meta) || is_incomplete(&meta)) {
- 		/*
- 		 * Still broken; if we've been told not to complain then we
- 		 * just requeue this and try again later.  Otherwise we
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index b970d1cfe90..699e9aa3940 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -137,8 +137,7 @@ _("Filesystem is shut down, aborting."));
- 	 * we'll try the scan again, just in case the fs was busy.
- 	 * Only retry so many times.
+ 	 * If we need to, add to list of extents to delete.
  	 */
--	if (tries < 10 && (is_incomplete(meta) ||
--			   (xref_disagrees(meta) && !is_corrupt(meta)))) {
-+	if (want_retry(meta) && tries < 10) {
- 		tries++;
- 		goto retry;
- 	}
-diff --git a/scrub/scrub_private.h b/scrub/scrub_private.h
-index eafb750b0d1..b54384c2091 100644
---- a/scrub/scrub_private.h
-+++ b/scrub/scrub_private.h
-@@ -49,6 +49,16 @@ static inline bool needs_repair(struct xfs_scrub_metadata *sm)
- 	return is_corrupt(sm) || xref_disagrees(sm);
- }
+-	if (do_fx && !(bflags & XFS_BMAPI_REMAP)) {
++	if (want_free) {
+ 		if (xfs_is_reflink_inode(ip) && whichfork == XFS_DATA_FORK) {
+ 			xfs_refcount_decrease_extent(tp, del);
+ 		} else {
+@@ -5312,6 +5320,8 @@ xfs_bmap_del_extent_real(
+ 			if ((bflags & XFS_BMAPI_NODISCARD) ||
+ 			    del->br_state == XFS_EXT_UNWRITTEN)
+ 				efi_flags |= XFS_FREE_EXTENT_SKIP_DISCARD;
++			if (isrt)
++				efi_flags |= XFS_FREE_EXTENT_REALTIME;
  
-+/*
-+ * We want to retry an operation if the kernel says it couldn't complete the
-+ * scan/repair; or if there were cross-referencing problems but the object was
-+ * not obviously corrupt.
-+ */
-+static inline bool want_retry(struct xfs_scrub_metadata *sm)
-+{
-+	return is_incomplete(sm) || (xref_disagrees(sm) && !is_corrupt(sm));
-+}
-+
- void scrub_warn_incomplete_scrub(struct scrub_ctx *ctx, struct descr *dsc,
- 		struct xfs_scrub_metadata *meta);
- 
+ 			xfs_free_extent_later(tp, del->br_startblock,
+ 					del->br_blockcount, NULL, efi_flags);
 
