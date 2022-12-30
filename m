@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F34FA659F20
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:03:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C776C659F22
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:03:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235848AbiLaAD0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:03:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52960 "EHLO
+        id S235665AbiLaAD6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:03:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235844AbiLaADZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:03:25 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3429F1E3CE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:03:24 -0800 (PST)
+        with ESMTP id S235651AbiLaAD5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:03:57 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77601E3CE
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:03:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C7CDC61CAD
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:03:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33335C433EF;
-        Sat, 31 Dec 2022 00:03:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 922FAB81DB1
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:03:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 429EBC433EF;
+        Sat, 31 Dec 2022 00:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445003;
-        bh=+HYhpZfyYB2vd2wcdhefVJL+KwZ5qWmEuAhBkMWJB4I=;
+        s=k20201202; t=1672445034;
+        bh=yvW4pc7ok3eLpbzjQOPtkUuUCw6iyxUyAByG+RQsiaU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ca2bvk0rVNVd3aM+VsiBU7UOMEfPkeXhMK/BpdM+5cK2BvfqjyEamAMF1s96TlBe3
-         iY0AW8GPfmkXRdC0KpSyh5QrVGQq3GStFjF+1Hpf/7pHKYp9PofkGuDTWG9h0Dr7nQ
-         Niukx+3XQVJgEH+N5MsOuLO6FE3mrr3/H3x/sJ58H0l8u67ReNus0CSoo0Ky7qaLTD
-         o+AM5esYIioolW7+CnAxkf3VaKWTSbTieKIiek8dFAjMKBSLSFMtBJzUUpMTVL5Xm1
-         gCx1RABaoW0BMKgk1Euc+hDAEgfobNTGOEYs3gtugmHrC9/Avlk6Fnv11ZHyLe33S2
-         wdY9f/vD8HeEw==
-Subject: [PATCH 1/4] xfs: use i_prev_unlinked to distinguish inodes that are
- not on the unlinked list
+        b=B8UfCvoEatbg128vz3Z5z44ncH9/1oP04RJ4rwoAOXrIeikr8BWeqzQn+z8XLfBxH
+         H6P7lH/8+gzTnGUvmQaiT5pHuwVEQjV7rP0AFrk7dZVHbSeTV9zC+RveSHe1iHEypi
+         ej4TThbqCxj55nKSHMJJfURXD5yNif577PZ/0rYtK5cq1Z4gRvYzyYAqw8qnaE9zvW
+         ExxxmenD3oyf2cwTE3ZPBQ1LmP5yyR8vB/AlccRQMURjgh+TURkB0Y1eGFHOc5S0jj
+         n5aYWqO/xFzFpWLmeOAKJvtqYRMOx6GcfyWpiZ6gjuJoZgB/MtatqY9v0a+fgoJo6Q
+         RDT/ceDit0f2g==
+Subject: [PATCH 3/4] xfs: hoist AGI repair context to a heap object
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:14:29 -0800
-Message-ID: <167243846924.701054.16997256866884327419.stgit@magnolia>
+Message-ID: <167243846952.701054.16159465524790778214.stgit@magnolia>
 In-Reply-To: <167243846905.701054.601680294547998738.stgit@magnolia>
 References: <167243846905.701054.601680294547998738.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,79 +54,207 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Alter the definition of i_prev_unlinked slightly to make it more obvious
-when an inode with 0 link count is not part of the iunlink bucket lists
-rooted in the AGI.  An upcoming enhancement to the online AGI fsck code
-will need to make this distinction to check and rebuild the AGI unlinked
-buckets.
-
-This distinction is necessary because it is not sufficient to check
-xfs_inode.i_nlink to decide if an inode is on the unlinked list.
-Updates to i_nlink can happen while holding only ILOCK_EXCL, but updates
-to an inode's position in the AGI unlinked list requires both ILOCK_EXCL
-and the AGI buffer lock.
+Save ~460 bytes of stack space by moving all the repair context to a
+heap object.  We're going to add even more context data in the next
+patch, which is why we really need to do this now.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_icache.c |    2 +-
- fs/xfs/xfs_inode.c  |    3 ++-
- fs/xfs/xfs_inode.h  |   10 +++++++++-
- 3 files changed, 12 insertions(+), 3 deletions(-)
+ fs/xfs/scrub/agheader_repair.c |  105 ++++++++++++++++++++++++----------------
+ 1 file changed, 63 insertions(+), 42 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index e94c193cd417..06b3de67d791 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -114,7 +114,7 @@ xfs_inode_alloc(
- 	INIT_LIST_HEAD(&ip->i_ioend_list);
- 	spin_lock_init(&ip->i_ioend_lock);
- 	ip->i_next_unlinked = NULLAGINO;
--	ip->i_prev_unlinked = NULLAGINO;
-+	ip->i_prev_unlinked = 0;
+diff --git a/fs/xfs/scrub/agheader_repair.c b/fs/xfs/scrub/agheader_repair.c
+index daeb88cf5825..26ed60c24386 100644
+--- a/fs/xfs/scrub/agheader_repair.c
++++ b/fs/xfs/scrub/agheader_repair.c
+@@ -803,15 +803,29 @@ enum {
+ 	XREP_AGI_MAX
+ };
  
- 	return ip;
- }
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 85ce54a09d82..3788093fc81d 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -2143,6 +2143,7 @@ xfs_iunlink_insert_inode(
- 	}
++struct xrep_agi {
++	struct xfs_scrub		*sc;
++
++	/* AGI buffer, tracked separately */
++	struct xfs_buf			*agi_bp;
++
++	/* context for finding btree roots */
++	struct xrep_find_ag_btree	fab[XREP_AGI_MAX];
++
++	/* old AGI contents in case we have to revert */
++	struct xfs_agi			old_agi;
++};
++
+ /*
+  * Given the inode btree roots described by *fab, find the roots, check them
+  * for sanity, and pass the root data back out via *fab.
+  */
+ STATIC int
+ xrep_agi_find_btrees(
+-	struct xfs_scrub		*sc,
+-	struct xrep_find_ag_btree	*fab)
++	struct xrep_agi			*ragi)
+ {
++	struct xfs_scrub		*sc = ragi->sc;
++	struct xrep_find_ag_btree	*fab = ragi->fab;
+ 	struct xfs_buf			*agf_bp;
+ 	struct xfs_mount		*mp = sc->mp;
+ 	int				error;
+@@ -844,10 +858,11 @@ xrep_agi_find_btrees(
+  */
+ STATIC void
+ xrep_agi_init_header(
+-	struct xfs_scrub	*sc,
+-	struct xfs_buf		*agi_bp,
+-	struct xfs_agi		*old_agi)
++	struct xrep_agi		*ragi)
+ {
++	struct xfs_scrub	*sc = ragi->sc;
++	struct xfs_buf		*agi_bp = ragi->agi_bp;
++	struct xfs_agi		*old_agi = &ragi->old_agi;
+ 	struct xfs_agi		*agi = agi_bp->b_addr;
+ 	struct xfs_mount	*mp = sc->mp;
  
- 	/* Point the head of the list to point to this inode. */
-+	ip->i_prev_unlinked = NULLAGINO;
- 	return xfs_iunlink_update_bucket(tp, pag, agibp, bucket_index, agino);
- }
+@@ -874,10 +889,12 @@ xrep_agi_init_header(
+ /* Set btree root information in an AGI. */
+ STATIC void
+ xrep_agi_set_roots(
+-	struct xfs_scrub		*sc,
+-	struct xfs_agi			*agi,
+-	struct xrep_find_ag_btree	*fab)
++	struct xrep_agi			*ragi)
+ {
++	struct xfs_scrub		*sc = ragi->sc;
++	struct xfs_agi			*agi = ragi->agi_bp->b_addr;
++	struct xrep_find_ag_btree	*fab = ragi->fab;
++
+ 	agi->agi_root = cpu_to_be32(fab[XREP_AGI_INOBT].root);
+ 	agi->agi_level = cpu_to_be32(fab[XREP_AGI_INOBT].height);
  
-@@ -2245,7 +2246,7 @@ xfs_iunlink_remove_inode(
- 	}
+@@ -890,9 +907,10 @@ xrep_agi_set_roots(
+ /* Update the AGI counters. */
+ STATIC int
+ xrep_agi_calc_from_btrees(
+-	struct xfs_scrub	*sc,
+-	struct xfs_buf		*agi_bp)
++	struct xrep_agi		*ragi)
+ {
++	struct xfs_scrub	*sc = ragi->sc;
++	struct xfs_buf		*agi_bp = ragi->agi_bp;
+ 	struct xfs_btree_cur	*cur;
+ 	struct xfs_agi		*agi = agi_bp->b_addr;
+ 	struct xfs_mount	*mp = sc->mp;
+@@ -939,9 +957,10 @@ xrep_agi_calc_from_btrees(
+ /* Trigger reinitialization of the in-core data. */
+ STATIC int
+ xrep_agi_commit_new(
+-	struct xfs_scrub	*sc,
+-	struct xfs_buf		*agi_bp)
++	struct xrep_agi		*ragi)
+ {
++	struct xfs_scrub	*sc = ragi->sc;
++	struct xfs_buf		*agi_bp = ragi->agi_bp;
+ 	struct xfs_perag	*pag;
+ 	struct xfs_agi		*agi = agi_bp->b_addr;
  
- 	ip->i_next_unlinked = NULLAGINO;
--	ip->i_prev_unlinked = NULLAGINO;
-+	ip->i_prev_unlinked = 0;
+@@ -964,33 +983,36 @@ xrep_agi_commit_new(
+ /* Repair the AGI. */
+ int
+ xrep_agi(
+-	struct xfs_scrub		*sc)
++	struct xfs_scrub	*sc)
+ {
+-	struct xrep_find_ag_btree	fab[XREP_AGI_MAX] = {
+-		[XREP_AGI_INOBT] = {
+-			.rmap_owner = XFS_RMAP_OWN_INOBT,
+-			.buf_ops = &xfs_inobt_buf_ops,
+-			.maxlevels = M_IGEO(sc->mp)->inobt_maxlevels,
+-		},
+-		[XREP_AGI_FINOBT] = {
+-			.rmap_owner = XFS_RMAP_OWN_INOBT,
+-			.buf_ops = &xfs_finobt_buf_ops,
+-			.maxlevels = M_IGEO(sc->mp)->inobt_maxlevels,
+-		},
+-		[XREP_AGI_END] = {
+-			.buf_ops = NULL
+-		},
+-	};
+-	struct xfs_agi			old_agi;
+-	struct xfs_mount		*mp = sc->mp;
+-	struct xfs_buf			*agi_bp;
+-	struct xfs_agi			*agi;
+-	int				error;
++	struct xrep_agi		*ragi;
++	struct xfs_mount	*mp = sc->mp;
++	int			error;
+ 
+ 	/* We require the rmapbt to rebuild anything. */
+ 	if (!xfs_has_rmapbt(mp))
+ 		return -EOPNOTSUPP;
+ 
++	sc->buf = kzalloc(sizeof(struct xrep_agi), XCHK_GFP_FLAGS);
++	if (!sc->buf)
++		return -ENOMEM;
++	ragi = sc->buf;
++	ragi->sc = sc;
++
++	ragi->fab[XREP_AGI_INOBT] = (struct xrep_find_ag_btree){
++		.rmap_owner	= XFS_RMAP_OWN_INOBT,
++		.buf_ops	= &xfs_inobt_buf_ops,
++		.maxlevels	= M_IGEO(sc->mp)->inobt_maxlevels,
++	};
++	ragi->fab[XREP_AGI_FINOBT] = (struct xrep_find_ag_btree){
++		.rmap_owner	= XFS_RMAP_OWN_INOBT,
++		.buf_ops	= &xfs_finobt_buf_ops,
++		.maxlevels	= M_IGEO(sc->mp)->inobt_maxlevels,
++	};
++	ragi->fab[XREP_AGI_END] = (struct xrep_find_ag_btree){
++		.buf_ops	= NULL,
++	};
++
+ 	/*
+ 	 * Make sure we have the AGI buffer, as scrub might have decided it
+ 	 * was corrupt after xfs_ialloc_read_agi failed with -EFSCORRUPTED.
+@@ -998,14 +1020,13 @@ xrep_agi(
+ 	error = xfs_trans_read_buf(mp, sc->tp, mp->m_ddev_targp,
+ 			XFS_AG_DADDR(mp, sc->sa.pag->pag_agno,
+ 						XFS_AGI_DADDR(mp)),
+-			XFS_FSS_TO_BB(mp, 1), 0, &agi_bp, NULL);
++			XFS_FSS_TO_BB(mp, 1), 0, &ragi->agi_bp, NULL);
+ 	if (error)
+ 		return error;
+-	agi_bp->b_ops = &xfs_agi_buf_ops;
+-	agi = agi_bp->b_addr;
++	ragi->agi_bp->b_ops = &xfs_agi_buf_ops;
+ 
+ 	/* Find the AGI btree roots. */
+-	error = xrep_agi_find_btrees(sc, fab);
++	error = xrep_agi_find_btrees(ragi);
+ 	if (error)
+ 		return error;
+ 
+@@ -1014,18 +1035,18 @@ xrep_agi(
+ 		return error;
+ 
+ 	/* Start rewriting the header and implant the btrees we found. */
+-	xrep_agi_init_header(sc, agi_bp, &old_agi);
+-	xrep_agi_set_roots(sc, agi, fab);
+-	error = xrep_agi_calc_from_btrees(sc, agi_bp);
++	xrep_agi_init_header(ragi);
++	xrep_agi_set_roots(ragi);
++	error = xrep_agi_calc_from_btrees(ragi);
+ 	if (error)
+ 		goto out_revert;
+ 
+ 	/* Reinitialize in-core state. */
+-	return xrep_agi_commit_new(sc, agi_bp);
++	return xrep_agi_commit_new(ragi);
+ 
+ out_revert:
+ 	/* Mark the incore AGI state stale and revert the AGI. */
+ 	sc->sa.pag->pagi_init = 0;
+-	memcpy(agi, &old_agi, sizeof(old_agi));
++	memcpy(ragi->agi_bp->b_addr, &ragi->old_agi, sizeof(struct xfs_agi));
  	return error;
  }
- 
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 34f596deb92c..177b027b8803 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -68,7 +68,15 @@ typedef struct xfs_inode {
- 	uint64_t		i_diflags2;	/* XFS_DIFLAG2_... */
- 	struct timespec64	i_crtime;	/* time created */
- 
--	/* unlinked list pointers */
-+	/*
-+	 * Unlinked list pointers.  These point to the next and previous inodes
-+	 * in the AGI unlinked bucket list, respectively.  These fields can
-+	 * only be updated with the AGI locked.
-+	 *
-+	 * i_next_unlinked reflects di_next_unlinked.  If i_prev_unlinked == 0,
-+	 * the inode is not on the unlinked list.  If it is NULLAGINO, an AGI
-+	 * bucket points at this inode.
-+	 */
- 	xfs_agino_t		i_next_unlinked;
- 	xfs_agino_t		i_prev_unlinked;
- 
 
