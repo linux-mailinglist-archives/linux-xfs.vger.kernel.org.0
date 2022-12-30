@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 957C865A26D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:21:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 975F265A244
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:11:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236361AbiLaDVM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:21:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        id S229560AbiLaDLH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:11:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236216AbiLaDVL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:21:11 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA426383
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:21:11 -0800 (PST)
+        with ESMTP id S236311AbiLaDLG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:11:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65E1DB844;
+        Fri, 30 Dec 2022 19:11:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DD060B81E6E
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:21:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C2FC433EF;
-        Sat, 31 Dec 2022 03:21:08 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0E296B81E69;
+        Sat, 31 Dec 2022 03:11:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3856C433EF;
+        Sat, 31 Dec 2022 03:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456868;
-        bh=l8WUGkRBo+ZoQL4nG6IpQmVyWo2od4yTSfPxiR3MtPc=;
+        s=k20201202; t=1672456261;
+        bh=wsqC3D7LUO/WzeJWOdHsFQhiOxAWi4EJ1NZMu3PLVgo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=sbZYkydaBw9JY1/xkKQdlwEKJuyIk3/6h+V3jC0HUtEnL7wfyIVjdKRM209v9lB3g
-         s3GoO3yjikGx9rmOL5ik8u1Yke3HdU7W9uX0P9h8RWMkBUGgSDsbY6w0Rlp/l23CSu
-         HyJBABro2Z+ErbO9yV83ntdvPsoi8PawZyOKOzGLxoCY4isR4MF95G/gZmv48YH0q0
-         1X6bg8vrQ9e4TLcd1vNQ6ETU33czfoQSLZM6IjJox2xdJ9kT+QyiaaNvrhcW7/u0mc
-         ag1KCdz43vlSRuWHyL3J6qHtjPxUxBrfJOyywhg7sevIg19wIKFvILpCQGsjF75/2p
-         NlSyqABflMrSw==
-Subject: [PATCHSET 00/11] xfs_scrub: vectorize kernel calls
+        b=rDwq5kOKSjSCIY8D3C/43a35UPdAy7HSShfhPMtnJ7jgSGWAKvq4JDNXK/f4O2rHr
+         aBk9BmevDdiCsoY8ls4atbSJtFkaGPTT466jowQtxPW9baVJIJjwus2NdiQKpBHhd+
+         4XmjdwLqViw6sUzXTd7QDcfAUvzBMoUOdMIPVmbNfkI4zrXhfc6Zyx1luCgEzvd4ig
+         iHzjbzDRduLTK2r0wC0Gw/zOT6RxTOiKSh8y4wyMxeHp+bd1aZRw3TpFGM0v+/SGqh
+         m6SdyQakQWn5FJzr+sI9QkX8Krr8HRJLuJ4rTKTst58YC1ZD1ZymbzsznQxr/e5thf
+         oqRDsYJnkiyIQ==
+Subject: [PATCH 06/12] xfs/185: update for rtgroups
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:40 -0800
-Message-ID: <167243884029.739244.16777239536975047510.stgit@magnolia>
-In-Reply-To: <Y69Uw6W5aclS115x@magnolia>
-References: <Y69Uw6W5aclS115x@magnolia>
+Message-ID: <167243884026.739029.5256016394301933477.stgit@magnolia>
+In-Reply-To: <167243883943.739029.3041109696120604285.stgit@magnolia>
+References: <167243883943.739029.3041109696120604285.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,43 +53,30 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Create a vectorized version of the metadata scrub and repair ioctl, and
-adapt xfs_scrub to use that.  This is an experiment to measure overhead
-and to try refactoring xfs_scrub.
+Send the fallocate results to seqres.full, since it doesn't matter if
+the call fails as long as we get the layout that we wanted.  This test
+already has code to check the layout, so there's no point in failing on
+random ENOSPC errors.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=vectorized-scrub
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=vectorized-scrub
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=vectorized-scrub
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/xfs_trans.h   |    4 
- io/scrub.c            |  485 +++++++++++++++++++++++++++++++++++++++++--------
- libfrog/fsgeom.h      |    6 +
- libfrog/scrub.c       |  124 +++++++++++++
- libfrog/scrub.h       |    1 
- libxfs/xfs_defer.c    |   14 +
- libxfs/xfs_fs.h       |   37 ++++
- man/man8/xfs_io.8     |   47 +++++
- scrub/phase1.c        |    2 
- scrub/phase2.c        |  106 +++++++++--
- scrub/phase3.c        |   84 +++++++-
- scrub/repair.c        |  347 ++++++++++++++++++++++-------------
- scrub/scrub.c         |  353 ++++++++++++++++++++++++++----------
- scrub/scrub.h         |   19 ++
- scrub/scrub_private.h |   62 ++++--
- 15 files changed, 1344 insertions(+), 347 deletions(-)
+ tests/xfs/185 |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+diff --git a/tests/xfs/185 b/tests/xfs/185
+index abeb052580..04770fd6c9 100755
+--- a/tests/xfs/185
++++ b/tests/xfs/185
+@@ -100,7 +100,7 @@ test "$ddbytes" -lt "$((rtbytes + (10 * rtextsize) ))" || \
+ # easy because fallocate for the first rt file always starts allocating at
+ # physical offset zero.
+ alloc_rtx="$((rtbytes / rtextsize))"
+-$XFS_IO_PROG -c "falloc 0 $((alloc_rtx * rtextsize))" $rtfile
++$XFS_IO_PROG -c "falloc 0 $((alloc_rtx * rtextsize))" $rtfile &>> $seqres.full
+ 
+ expected_end="$(( (alloc_rtx * rtextsize - 1) / 512 ))"
+ 
 
