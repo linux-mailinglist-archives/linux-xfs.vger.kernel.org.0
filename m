@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9790659F65
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:18:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85BF265A014
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:57:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235905AbiLaASA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:18:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
+        id S235660AbiLaA5I (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:57:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235901AbiLaAR5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:17:57 -0500
+        with ESMTP id S230017AbiLaA5H (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:57:07 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CB31CB3F
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:17:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C4EF03A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:57:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3AE8361D1C
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:17:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B16CC4332B;
-        Sat, 31 Dec 2022 00:17:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F11CE61D64
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:57:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DDC7C433EF;
+        Sat, 31 Dec 2022 00:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445875;
-        bh=OsNTwKmyPt/6sX/Y24yyL+dkkwQjblrRxSBJGns/kj4=;
+        s=k20201202; t=1672448226;
+        bh=hpfY6Ns7TovfBy/PQXp8yiqV/ui4PKMeaeenUxytdTc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oiB3vSZvunjckl5ygGzjCZocEMdKprVGy5XW3yEp37TDMTeqTeCn4cfuFzmW0GGpP
-         Gqy70v354AiUUTnzMZxXPAFtoEtY+B+kcJE0ZhsEpopEXOHn8qHIObGjJ7GYTdo+WP
-         vFyVuEnd/uQrDVLG4LbS27e3/fhouV+kITkTs0GHoFNFfswnioUnaLjhr7s9H58nrC
-         Mv+gsIc1mjBEgHmd+Z5K/mBKp9enlKKjEKCSK5LVmZ21l6zFL9G5kK3eh9LmAN11P0
-         aYz1GbUofmI2iRFr6amxWIcXH/bAZCtvBPszkJd1Za6AWluVkZg73vklAi9MBIOZXO
-         F8MVzktR+R8VQ==
-Subject: [PATCH 1/4] xfs: move xfs_symlink_remote.c declarations to
- xfs_symlink_remote.h
+        b=tH8QsJl/4Of9buBVgtqt+qPqOy362h17wDJ9xQ7kkhJn8oPk/m3ADHXiqS8R6OK60
+         0VR+ggyjoPtufDzzZ+aCQN3Ed2/tsHLXo2gi66SFB3CWwVWxzW12P3o4ppF4m2TIG9
+         7oTaluB+8wRhO2r7+cwgA3l76Bv6ll/ucRsumk5hLOWN49tYzJnuHyIqLiBqHNYE8t
+         pNyoooQdSwaKl96crlT/9m8HNnuFiFRyxc5KR0EKPgLmV0rEGOK8a5ZIU6ZcRmDTG8
+         yfc+qfmrSoApK+rlVfZKrrSTLpVgTvoe2m4oBPk9FIjNcBBU6zvPSGTMDZ+/HdYtgV
+         n+UIYXWLpifZA==
+Subject: [PATCHSET v1.0 0/3] xfsprogs: enable FITRIM for the realtime section
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:56 -0800
-Message-ID: <167243867601.713532.6540985468566213398.stgit@magnolia>
-In-Reply-To: <167243867587.713532.17037228277541976894.stgit@magnolia>
-References: <167243867587.713532.17037228277541976894.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:58 -0800
+Message-ID: <167243867862.713699.17132272459502557791.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,124 +52,28 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Move declarations for libxfs symlink functions into a separate header
-file like we do for most everything else.
+One thing that's been missing for a long time is the ability to tell
+underlying storage that it can unmap the unused space on the realtime
+device.  This short series exposes this functionality through FITRIM.
+Callers that want ranged FITRIM should be aware that the realtime space
+exists in the offset range after the data device.  However, it is
+anticipated that most callers pass in offset=0 len=-1ULL and will not
+notice or care.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-discard
 ---
- include/libxfs.h            |    1 +
- libxfs/xfs_bmap.c           |    1 +
- libxfs/xfs_inode_fork.c     |    1 +
- libxfs/xfs_shared.h         |   14 --------------
- libxfs/xfs_symlink_remote.c |    2 +-
- libxfs/xfs_symlink_remote.h |   23 +++++++++++++++++++++++
- 6 files changed, 27 insertions(+), 15 deletions(-)
- create mode 100644 libxfs/xfs_symlink_remote.h
-
-
-diff --git a/include/libxfs.h b/include/libxfs.h
-index 887f57b6171..d4b5d8e564d 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -79,6 +79,7 @@ struct iomap;
- #include "xfs_refcount_btree.h"
- #include "xfs_refcount.h"
- #include "xfs_btree_staging.h"
-+#include "xfs_symlink_remote.h"
- 
- #ifndef ARRAY_SIZE
- #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index edd3e81fd04..983eb7641fc 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -30,6 +30,7 @@
- #include "xfs_ag_resv.h"
- #include "xfs_refcount.h"
- #include "xfs_health.h"
-+#include "xfs_symlink_remote.h"
- 
- struct kmem_cache		*xfs_bmap_intent_cache;
- 
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 9b0c786fab6..9d76a6b5c65 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -24,6 +24,7 @@
- #include "xfs_types.h"
- #include "xfs_errortag.h"
- #include "xfs_health.h"
-+#include "xfs_symlink_remote.h"
- 
- struct kmem_cache *xfs_ifork_cache;
- 
-diff --git a/libxfs/xfs_shared.h b/libxfs/xfs_shared.h
-index eaabfa52eda..5127fa88531 100644
---- a/libxfs/xfs_shared.h
-+++ b/libxfs/xfs_shared.h
-@@ -138,20 +138,6 @@ void	xfs_log_get_max_trans_res(struct xfs_mount *mp,
- #define	XFS_ICHGTIME_CHG	0x2	/* inode field change timestamp */
- #define	XFS_ICHGTIME_CREATE	0x4	/* inode create timestamp */
- 
--
--/*
-- * Symlink decoding/encoding functions
-- */
--int xfs_symlink_blocks(struct xfs_mount *mp, int pathlen);
--int xfs_symlink_hdr_set(struct xfs_mount *mp, xfs_ino_t ino, uint32_t offset,
--			uint32_t size, struct xfs_buf *bp);
--bool xfs_symlink_hdr_ok(xfs_ino_t ino, uint32_t offset,
--			uint32_t size, struct xfs_buf *bp);
--void xfs_symlink_local_to_remote(struct xfs_trans *tp, struct xfs_buf *bp,
--				 struct xfs_inode *ip, struct xfs_ifork *ifp);
--xfs_failaddr_t xfs_symlink_sf_verify_struct(void *sfp, int64_t size);
--xfs_failaddr_t xfs_symlink_shortform_verify(struct xfs_inode *ip);
--
- /* Computed inode geometry for the filesystem. */
- struct xfs_ino_geometry {
- 	/* Maximum inode count in this filesystem. */
-diff --git a/libxfs/xfs_symlink_remote.c b/libxfs/xfs_symlink_remote.c
-index b9d446fba9a..e036a8f46fe 100644
---- a/libxfs/xfs_symlink_remote.c
-+++ b/libxfs/xfs_symlink_remote.c
-@@ -13,7 +13,7 @@
- #include "xfs_mount.h"
- #include "xfs_inode.h"
- #include "xfs_trans.h"
--
-+#include "xfs_symlink_remote.h"
- 
- /*
-  * Each contiguous block has a header, so it is not just a simple pathlen
-diff --git a/libxfs/xfs_symlink_remote.h b/libxfs/xfs_symlink_remote.h
-new file mode 100644
-index 00000000000..a58d536c8b8
---- /dev/null
-+++ b/libxfs/xfs_symlink_remote.h
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2000-2005 Silicon Graphics, Inc.
-+ * Copyright (c) 2013 Red Hat, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef __XFS_SYMLINK_REMOTE_H
-+#define __XFS_SYMLINK_REMOTE_H
-+
-+/*
-+ * Symlink decoding/encoding functions
-+ */
-+int xfs_symlink_blocks(struct xfs_mount *mp, int pathlen);
-+int xfs_symlink_hdr_set(struct xfs_mount *mp, xfs_ino_t ino, uint32_t offset,
-+			uint32_t size, struct xfs_buf *bp);
-+bool xfs_symlink_hdr_ok(xfs_ino_t ino, uint32_t offset,
-+			uint32_t size, struct xfs_buf *bp);
-+void xfs_symlink_local_to_remote(struct xfs_trans *tp, struct xfs_buf *bp,
-+				 struct xfs_inode *ip, struct xfs_ifork *ifp);
-+xfs_failaddr_t xfs_symlink_sf_verify_struct(void *sfp, int64_t size);
-+xfs_failaddr_t xfs_symlink_shortform_verify(struct xfs_inode *ip);
-+
-+#endif /* __XFS_SYMLINK_REMOTE_H */
+ fs/xfs/xfs_discard.c |  167 +++++++++++++++++++++++++++++++++++++++++++-------
+ fs/xfs/xfs_trace.h   |   20 ++++++
+ 2 files changed, 164 insertions(+), 23 deletions(-)
 
