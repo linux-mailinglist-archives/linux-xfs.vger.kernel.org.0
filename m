@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09E99659F11
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:59:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64A3C659F13
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:00:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235842AbiL3X7e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:59:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
+        id S235438AbiLaAAF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:00:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235706AbiL3X7d (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:59:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329B11E3D8
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:59:32 -0800 (PST)
+        with ESMTP id S235840AbiLaAAE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:00:04 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0481E3E5
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:00:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C08A4B81DDD
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:59:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A7F8C433D2;
-        Fri, 30 Dec 2022 23:59:29 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1763B61CAF
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:00:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77710C433D2;
+        Sat, 31 Dec 2022 00:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672444769;
-        bh=czCTGOexeeqB+H015XDNTmzmuj/uZhOmItU/RNNemrc=;
+        s=k20201202; t=1672444800;
+        bh=H4Ec0dsHYplNTtoIx/qVOZabgIuoLA32Q8EJf/nouJw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=L0L6amwY2FqcYk7LHOM/P3OcpBQGyeobNPNN1WP4CESuE3PHnf3fDPoYUuSdENBQ2
-         6MeY0jlWGGAQqfttVK6Gzxw+7ZjK8ashzgz2ySD1xKtxMdJNo65ggHK5x3kp5P9X7w
-         xASUw8ZZmwDHjL5hYRlbXguwsG1cnIhrwjCJqre06B+zJ5e606r2yLgX5lc3BluMoa
-         JMGZdxw7hxcpmKdI2v+SqQ0Xx3GI09voWCy4d3hYo3C7AhuQgMezO/84cchaUGYAl8
-         P6UojgD5Oxh7dQRipi5+TUrg9vtcnsLC9GulKhVnRDIZjkWPtyGHKh+AWV5is6ItU1
-         dhB00nZkEIu6A==
-Subject: [PATCH 8/9] xfs: validate explicit directory block buffer owners
+        b=DrdbtOcTgni9Lws6WWaD4oiF2mzdgIUpdMeDNKy8DvwQA/taF78yFEo2p6ILoMqTk
+         +DaKbdC/5xSKxwrF7UQEO4Sr1ep3+xsNHAqrS+8802ZKvZg+uKXlDweRGulHUsHS5c
+         DXqHXtLpXMF9jjK7QxoXmJeksjMUZjj9qwtVX/GDH4RVIa72lFl6ABK/DI6BULLJqE
+         Z21XZ7n2nsGeVm3BczvpHlGNov+mhLNNNiAdocCa6tfOJRkJxvHp5HtThndqDEMPsr
+         7CeZKIZDPHV28ZmTNx43HpkIcYDmhfICiOrvACtmRJvlI87alf71ihi37FO8AM+2kg
+         JfvI/DzXU/3sg==
+Subject: [PATCH 1/5] xfs: create a blob array data structure
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:14:09 -0800
-Message-ID: <167243844949.700244.16991920616583355450.stgit@magnolia>
-In-Reply-To: <167243844821.700244.10251762547708755105.stgit@magnolia>
-References: <167243844821.700244.10251762547708755105.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:14:12 -0800
+Message-ID: <167243845284.700496.7818211212049308592.stgit@magnolia>
+In-Reply-To: <167243845264.700496.9115810454468711427.stgit@magnolia>
+References: <167243845264.700496.9115810454468711427.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,165 +54,222 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Port the existing directory block header checking function to accept an
-owner number instead of an xfs_inode, then update the callsites to use
-xfs_da_args.owner when possible.
+Create a simple 'blob array' data structure for storage of arbitrarily
+sized metadata objects that will be used to reconstruct metadata.  For
+the intended usage (temporarily storing extended attribute names and
+values) we only have to support storing objects and retrieving them.
+Use the xfile abstraction to store the attribute information in memory
+that can be swapped out.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_dir2.h       |    1 +
- fs/xfs/libxfs/xfs_dir2_block.c |   22 ++++++++++++++--------
- fs/xfs/libxfs/xfs_dir2_priv.h  |    2 +-
- fs/xfs/libxfs/xfs_swapext.c    |    2 +-
- fs/xfs/scrub/dir.c             |    2 +-
- fs/xfs/scrub/readdir.c         |    2 +-
- fs/xfs/xfs_dir2_readdir.c      |    2 +-
- 7 files changed, 20 insertions(+), 13 deletions(-)
+ fs/xfs/Makefile       |    1 
+ fs/xfs/scrub/xfblob.c |  152 +++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/xfblob.h |   25 ++++++++
+ 3 files changed, 178 insertions(+)
+ create mode 100644 fs/xfs/scrub/xfblob.c
+ create mode 100644 fs/xfs/scrub/xfblob.h
 
 
-diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
-index 2c2564c2158d..7322284f61a0 100644
---- a/fs/xfs/libxfs/xfs_dir2.h
-+++ b/fs/xfs/libxfs/xfs_dir2.h
-@@ -91,6 +91,7 @@ extern int xfs_dir_ino_validate(struct xfs_mount *mp, xfs_ino_t ino);
+diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+index 0abdcc69cd7f..ac3bda492446 100644
+--- a/fs/xfs/Makefile
++++ b/fs/xfs/Makefile
+@@ -202,6 +202,7 @@ xfs-y				+= $(addprefix scrub/, \
+ 				   repair.o \
+ 				   rmap_repair.o \
+ 				   tempfile.o \
++				   xfblob.o \
+ 				   xfbtree.o \
+ 				   )
  
- xfs_failaddr_t xfs_dir3_leaf_header_check(struct xfs_buf *bp, xfs_ino_t owner);
- xfs_failaddr_t xfs_dir3_data_header_check(struct xfs_buf *bp, xfs_ino_t owner);
-+xfs_failaddr_t xfs_dir3_block_header_check(struct xfs_buf *bp, xfs_ino_t owner);
- 
- extern const struct xfs_buf_ops xfs_dir3_block_buf_ops;
- extern const struct xfs_buf_ops xfs_dir3_leafn_buf_ops;
-diff --git a/fs/xfs/libxfs/xfs_dir2_block.c b/fs/xfs/libxfs/xfs_dir2_block.c
-index 184341bb1f6a..30eef4d9d866 100644
---- a/fs/xfs/libxfs/xfs_dir2_block.c
-+++ b/fs/xfs/libxfs/xfs_dir2_block.c
-@@ -115,18 +115,23 @@ const struct xfs_buf_ops xfs_dir3_block_buf_ops = {
- 	.verify_struct = xfs_dir3_block_verify,
- };
- 
--static xfs_failaddr_t
-+xfs_failaddr_t
- xfs_dir3_block_header_check(
--	struct xfs_inode	*dp,
--	struct xfs_buf		*bp)
-+	struct xfs_buf		*bp,
-+	xfs_ino_t		owner)
- {
--	struct xfs_mount	*mp = dp->i_mount;
-+	struct xfs_mount	*mp = bp->b_mount;
- 
- 	if (xfs_has_crc(mp)) {
- 		struct xfs_dir3_blk_hdr *hdr3 = bp->b_addr;
- 
--		if (be64_to_cpu(hdr3->owner) != dp->i_ino)
-+		ASSERT(hdr3->magic == cpu_to_be32(XFS_DIR3_BLOCK_MAGIC));
+diff --git a/fs/xfs/scrub/xfblob.c b/fs/xfs/scrub/xfblob.c
+new file mode 100644
+index 000000000000..c3a646cad5ed
+--- /dev/null
++++ b/fs/xfs/scrub/xfblob.c
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2022 Oracle.  All Rights Reserved.
++ * Author: Darrick J. Wong <djwong@kernel.org>
++ */
++#include "xfs.h"
++#include "xfs_fs.h"
++#include "xfs_shared.h"
++#include "xfs_format.h"
++#include "scrub/scrub.h"
++#include "scrub/xfile.h"
++#include "scrub/xfarray.h"
++#include "scrub/xfblob.h"
 +
-+		if (be64_to_cpu(hdr3->owner) != owner) {
-+			xfs_err(NULL, "dir block owner 0x%llx doesnt match block 0x%llx", owner, be64_to_cpu(hdr3->owner));
-+			dump_stack();
- 			return __this_address;
-+		}
- 	}
- 
- 	return NULL;
-@@ -136,6 +141,7 @@ int
- xfs_dir3_block_read(
- 	struct xfs_trans	*tp,
- 	struct xfs_inode	*dp,
-+	xfs_ino_t		owner,
- 	struct xfs_buf		**bpp)
- {
- 	struct xfs_mount	*mp = dp->i_mount;
-@@ -148,7 +154,7 @@ xfs_dir3_block_read(
- 		return err;
- 
- 	/* Check things that we can't do in the verifier. */
--	fa = xfs_dir3_block_header_check(dp, *bpp);
-+	fa = xfs_dir3_block_header_check(*bpp, owner);
- 	if (fa) {
- 		__xfs_buf_mark_corrupt(*bpp, fa);
- 		xfs_trans_brelse(tp, *bpp);
-@@ -383,7 +389,7 @@ xfs_dir2_block_addname(
- 	tp = args->trans;
- 
- 	/* Read the (one and only) directory block into bp. */
--	error = xfs_dir3_block_read(tp, dp, &bp);
-+	error = xfs_dir3_block_read(tp, dp, args->owner, &bp);
- 	if (error)
- 		return error;
- 
-@@ -698,7 +704,7 @@ xfs_dir2_block_lookup_int(
- 	dp = args->dp;
- 	tp = args->trans;
- 
--	error = xfs_dir3_block_read(tp, dp, &bp);
-+	error = xfs_dir3_block_read(tp, dp, args->owner, &bp);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/libxfs/xfs_dir2_priv.h b/fs/xfs/libxfs/xfs_dir2_priv.h
-index 22267a6e651a..b1dfe3e27357 100644
---- a/fs/xfs/libxfs/xfs_dir2_priv.h
-+++ b/fs/xfs/libxfs/xfs_dir2_priv.h
-@@ -51,7 +51,7 @@ extern int xfs_dir_cilookup_result(struct xfs_da_args *args,
- 
- /* xfs_dir2_block.c */
- extern int xfs_dir3_block_read(struct xfs_trans *tp, struct xfs_inode *dp,
--			       struct xfs_buf **bpp);
-+			       xfs_ino_t owner, struct xfs_buf **bpp);
- extern int xfs_dir2_block_addname(struct xfs_da_args *args);
- extern int xfs_dir2_block_lookup(struct xfs_da_args *args);
- extern int xfs_dir2_block_removename(struct xfs_da_args *args);
-diff --git a/fs/xfs/libxfs/xfs_swapext.c b/fs/xfs/libxfs/xfs_swapext.c
-index 063922989d77..12d548aa90cf 100644
---- a/fs/xfs/libxfs/xfs_swapext.c
-+++ b/fs/xfs/libxfs/xfs_swapext.c
-@@ -513,7 +513,7 @@ xfs_swapext_dir_to_sf(
- 	if (!isblock)
- 		return 0;
- 
--	error = xfs_dir3_block_read(tp, sxi->sxi_ip2, &bp);
-+	error = xfs_dir3_block_read(tp, sxi->sxi_ip2, sxi->sxi_ip2->i_ino, &bp);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
-index 01b00edfeb6d..0db7dab744d0 100644
---- a/fs/xfs/scrub/dir.c
-+++ b/fs/xfs/scrub/dir.c
-@@ -308,7 +308,7 @@ xchk_directory_data_bestfree(
- 		/* dir block format */
- 		if (lblk != XFS_B_TO_FSBT(mp, XFS_DIR2_DATA_OFFSET))
- 			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, lblk);
--		error = xfs_dir3_block_read(sc->tp, sc->ip, &bp);
-+		error = xfs_dir3_block_read(sc->tp, sc->ip, sc->ip->i_ino, &bp);
- 	} else {
- 		/* dir data format */
- 		error = xfs_dir3_data_read(sc->tp, sc->ip, sc->ip->i_ino, lblk,
-diff --git a/fs/xfs/scrub/readdir.c b/fs/xfs/scrub/readdir.c
-index b385325707e0..9dc828b736a2 100644
---- a/fs/xfs/scrub/readdir.c
-+++ b/fs/xfs/scrub/readdir.c
-@@ -101,7 +101,7 @@ xchk_dir_walk_block(
- 	unsigned int		off, next_off, end;
- 	int			error;
- 
--	error = xfs_dir3_block_read(sc->tp, dp, &bp);
-+	error = xfs_dir3_block_read(sc->tp, dp, dp->i_ino, &bp);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
-index 37a521f47f20..771769f9e404 100644
---- a/fs/xfs/xfs_dir2_readdir.c
-+++ b/fs/xfs/xfs_dir2_readdir.c
-@@ -159,7 +159,7 @@ xfs_dir2_block_getdents(
- 	if (xfs_dir2_dataptr_to_db(geo, ctx->pos) > geo->datablk)
- 		return 0;
- 
--	error = xfs_dir3_block_read(args->trans, dp, &bp);
-+	error = xfs_dir3_block_read(args->trans, dp, args->owner, &bp);
- 	if (error)
- 		return error;
- 
++/*
++ * XFS Blob Storage
++ * ================
++ * Stores and retrieves blobs using an xfile.  Objects are appended to the file
++ * and the offset is returned as a magic cookie for retrieval.
++ */
++
++#define XB_KEY_MAGIC	0xABAADDAD
++struct xb_key {
++	uint32_t		xb_magic;  /* XB_KEY_MAGIC */
++	uint32_t		xb_size;   /* size of the blob, in bytes */
++	loff_t			xb_offset; /* byte offset of this key */
++	/* blob comes after here */
++} __packed;
++
++/* Initialize a blob storage object. */
++int
++xfblob_create(
++	struct xfs_mount	*mp,
++	const char		*description,
++	struct xfblob		**blobp)
++{
++	struct xfblob		*blob;
++	struct xfile		*xfile;
++	int			error;
++
++	error = xfile_create(mp, description, 0, &xfile);
++	if (error)
++		return error;
++
++	blob = kmalloc(sizeof(struct xfblob), XCHK_GFP_FLAGS);
++	if (!blob) {
++		error = -ENOMEM;
++		goto out_xfile;
++	}
++
++	blob->xfile = xfile;
++	blob->last_offset = PAGE_SIZE;
++
++	*blobp = blob;
++	return 0;
++
++out_xfile:
++	xfile_destroy(xfile);
++	return error;
++}
++
++/* Destroy a blob storage object. */
++void
++xfblob_destroy(
++	struct xfblob	*blob)
++{
++	xfile_destroy(blob->xfile);
++	kfree(blob);
++}
++
++/* Retrieve a blob. */
++int
++xfblob_load(
++	struct xfblob	*blob,
++	xfblob_cookie	cookie,
++	void		*ptr,
++	uint32_t	size)
++{
++	struct xb_key	key;
++	int		error;
++
++	error = xfile_obj_load(blob->xfile, &key, sizeof(key), cookie);
++	if (error)
++		return error;
++
++	if (key.xb_magic != XB_KEY_MAGIC || key.xb_offset != cookie) {
++		ASSERT(0);
++		return -ENODATA;
++	}
++	if (size < key.xb_size) {
++		ASSERT(0);
++		return -EFBIG;
++	}
++
++	return xfile_obj_load(blob->xfile, ptr, key.xb_size,
++			cookie + sizeof(key));
++}
++
++/* Store a blob. */
++int
++xfblob_store(
++	struct xfblob	*blob,
++	xfblob_cookie	*cookie,
++	void		*ptr,
++	uint32_t	size)
++{
++	struct xb_key	key = {
++		.xb_offset = blob->last_offset,
++		.xb_magic = XB_KEY_MAGIC,
++		.xb_size = size,
++	};
++	loff_t		pos = blob->last_offset;
++	int		error;
++
++	error = xfile_obj_store(blob->xfile, &key, sizeof(key), pos);
++	if (error)
++		return error;
++
++	pos += sizeof(key);
++	error = xfile_obj_store(blob->xfile, ptr, size, pos);
++	if (error)
++		goto out_err;
++
++	*cookie = blob->last_offset;
++	blob->last_offset += sizeof(key) + size;
++	return 0;
++out_err:
++	xfile_discard(blob->xfile, blob->last_offset, sizeof(key));
++	return error;
++}
++
++/* Free a blob. */
++int
++xfblob_free(
++	struct xfblob	*blob,
++	xfblob_cookie	cookie)
++{
++	struct xb_key	key;
++	int		error;
++
++	error = xfile_obj_load(blob->xfile, &key, sizeof(key), cookie);
++	if (error)
++		return error;
++
++	if (key.xb_magic != XB_KEY_MAGIC || key.xb_offset != cookie) {
++		ASSERT(0);
++		return -ENODATA;
++	}
++
++	xfile_discard(blob->xfile, cookie, sizeof(key) + key.xb_size);
++	return 0;
++}
+diff --git a/fs/xfs/scrub/xfblob.h b/fs/xfs/scrub/xfblob.h
+new file mode 100644
+index 000000000000..2c1810b4a4eb
+--- /dev/null
++++ b/fs/xfs/scrub/xfblob.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright (C) 2022 Oracle.  All Rights Reserved.
++ * Author: Darrick J. Wong <djwong@kernel.org>
++ */
++#ifndef __XFS_SCRUB_XFBLOB_H__
++#define __XFS_SCRUB_XFBLOB_H__
++
++struct xfblob {
++	struct xfile	*xfile;
++	loff_t		last_offset;
++};
++
++typedef loff_t		xfblob_cookie;
++
++int xfblob_create(struct xfs_mount *mp, const char *descr,
++		struct xfblob **blobp);
++void xfblob_destroy(struct xfblob *blob);
++int xfblob_load(struct xfblob *blob, xfblob_cookie cookie, void *ptr,
++		uint32_t size);
++int xfblob_store(struct xfblob *blob, xfblob_cookie *cookie, void *ptr,
++		uint32_t size);
++int xfblob_free(struct xfblob *blob, xfblob_cookie cookie);
++
++#endif /* __XFS_SCRUB_XFBLOB_H__ */
 
