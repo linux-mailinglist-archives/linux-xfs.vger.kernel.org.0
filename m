@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF7D4659F4D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:13:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEE4065A091
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:26:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235662AbiLaANt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:13:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55290 "EHLO
+        id S236081AbiLaB0q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:26:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235580AbiLaANs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:13:48 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4728660EF
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:13:47 -0800 (PST)
+        with ESMTP id S230058AbiLaB0p (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:26:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 058536581
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:26:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D4BAD61CFD
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:13:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34324C433EF;
-        Sat, 31 Dec 2022 00:13:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B5FD4B81DE3
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:26:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FF5C433EF;
+        Sat, 31 Dec 2022 01:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445626;
-        bh=oX1yq6xn6FeSgY1G0NyiQ/VI83nHgV55hdWXA5Us+1Y=;
+        s=k20201202; t=1672450001;
+        bh=cpGiRY+RAtr+nUcVK25njg8DtcsLTZ/5zCvfLLRfpS0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=o8SZYWHtgvjVBHCK/EfT0Of2sqWjkw4xuTa3Z2uMptouDD36Xo/WJeFyU6rUKkSkd
-         Fn5VVMCCRe5mrWjO2qSL1ukbhubgj7bJFi2AuxKDtr70quzpYRlP4GtMxIgqVgSF7k
-         2M+j+0XoBoNQggHnpuYwKDOFKqomdA0GoSy2j29tl8XpALVSnXNYwTq/ts72fpIa2f
-         iqjPN9RK15mZHotiPTrdqRxdLnoHb8hlT3Gd7jRxC61UhOVq7DqKFwWJb3rMdhUqVV
-         N6hcUYtDJdwWkoDxNX3th/u7vvGag807SXkSp53/Nc+z1KnxxDL+N1c0vMx4aqGENh
-         ssG8Be3VmUOrw==
-Subject: [PATCH 1/5] xfs: create a helper to decide if a file mapping targets
- the rt volume
+        b=d4uVSw53alklhWMm70OI68SYXzP1AgRmA/v1hVbT/jSvgPvOZG9EJIovjxFo2/RUn
+         gyN6G6203NunzzjrM7YD3WURMaeYU6eVg+/AnEtoJFhB09INBRMKuCkOLMMfxMFTFY
+         FfhdWtcxs8JQUoN7iMbTNGgHNznNm9xlFvNx6p8bcpCETPw5cxViTlf/5OWEEDVbUq
+         uECPSX3Uo+OPGoe20MHqw8LYEtoqEu5KKRce8LtmvpVFq/TkNbBTl0mLgEcxgr9yJC
+         hQ/AkBFzlXsoVNFXjxVBbE3rpi7BbYHyD6U/Kdm4Dy+Q6viy+SMXsgDBe0dVF9Cx4l
+         EYULf/9KAnSGQ==
+Subject: [PATCH 8/8] xfs: use accessor functions for summary info words
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:45 -0800
-Message-ID: <167243866577.712315.17923461730307344571.stgit@magnolia>
-In-Reply-To: <167243866562.712315.18184440339100962213.stgit@magnolia>
-References: <167243866562.712315.18184440339100962213.stgit@magnolia>
+Message-ID: <167243866591.712132.12893233664728372558.stgit@magnolia>
+In-Reply-To: <167243866468.712132.9606813674941614562.stgit@magnolia>
+References: <167243866468.712132.9606813674941614562.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,75 +55,268 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a helper so that we can stop open-coding this decision
-everywhere.
+Create get and set functions for rtsummary words so that we can redefine
+the ondisk format with a specific endianness.  Note that this requires
+the definition of a distinct type for ondisk summary info words so that
+the compiler can perform proper typechecking.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_bmap.c       |    6 +++---
- libxfs/xfs_inode_fork.c |    9 +++++++++
- libxfs/xfs_inode_fork.h |    1 +
- 3 files changed, 13 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_format.h   |    8 ++++++++
+ fs/xfs/libxfs/xfs_rtbitmap.c |   27 ++++++++++++++++++++++-----
+ fs/xfs/libxfs/xfs_rtbitmap.h |   10 +++++++---
+ fs/xfs/scrub/rtsummary.c     |   22 ++++++++++++----------
+ fs/xfs/scrub/rtsummary.h     |    2 +-
+ fs/xfs/scrub/trace.c         |    1 +
+ fs/xfs/scrub/trace.h         |    4 ++--
+ fs/xfs/xfs_ondisk.h          |    1 +
+ 8 files changed, 54 insertions(+), 21 deletions(-)
 
 
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index f88e95056e2..4533db87668 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -4905,7 +4905,7 @@ xfs_bmap_del_extent_delay(
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 14da972f5508..946870eb492c 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -725,6 +725,14 @@ union xfs_rtword_ondisk {
+ 	__u32		raw;
+ };
  
- 	XFS_STATS_INC(mp, xs_del_exlist);
- 
--	isrt = (whichfork == XFS_DATA_FORK) && XFS_IS_REALTIME_INODE(ip);
-+	isrt = xfs_ifork_is_realtime(ip, whichfork);
- 	del_endoff = del->br_startoff + del->br_blockcount;
- 	got_endoff = got->br_startoff + got->br_blockcount;
- 	da_old = startblockval(got->br_startblock);
-@@ -5145,7 +5145,7 @@ xfs_bmap_del_extent_real(
- 		return -ENOSPC;
- 
- 	flags = XFS_ILOG_CORE;
--	if (whichfork == XFS_DATA_FORK && XFS_IS_REALTIME_INODE(ip)) {
-+	if (xfs_ifork_is_realtime(ip, whichfork)) {
- 		xfs_filblks_t	len;
- 		xfs_extlen_t	mod;
- 
-@@ -5410,7 +5410,7 @@ __xfs_bunmapi(
- 		return 0;
- 	}
- 	XFS_STATS_INC(mp, xs_blk_unmap);
--	isrt = (whichfork == XFS_DATA_FORK) && XFS_IS_REALTIME_INODE(ip);
-+	isrt = xfs_ifork_is_realtime(ip, whichfork);
- 	end = start + len;
- 
- 	if (!xfs_iext_lookup_extent_before(ip, ifp, &end, &icur, &got)) {
-diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 0dd59f4eb43..9b0c786fab6 100644
---- a/libxfs/xfs_inode_fork.c
-+++ b/libxfs/xfs_inode_fork.c
-@@ -785,3 +785,12 @@ xfs_iext_count_upgrade(
- 
++/*
++ * Realtime summary counts are accessed by the word, which is currently
++ * stored in host-endian format.
++ */
++union xfs_suminfo_ondisk {
++	__u32		raw;
++};
++
+ /*
+  * XFS Timestamps
+  * ==============
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index be5c793da46c..b74261abd238 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -466,6 +466,23 @@ xfs_rtfind_forw(
  	return 0;
  }
-+
-+/* Decide if a file mapping is on the realtime device or not. */
-+bool
-+xfs_ifork_is_realtime(
-+	struct xfs_inode	*ip,
-+	int			whichfork)
-+{
-+	return XFS_IS_REALTIME_INODE(ip) && whichfork != XFS_ATTR_FORK;
-+}
-diff --git a/libxfs/xfs_inode_fork.h b/libxfs/xfs_inode_fork.h
-index 36a9fe3420c..c201d8ad595 100644
---- a/libxfs/xfs_inode_fork.h
-+++ b/libxfs/xfs_inode_fork.h
-@@ -261,6 +261,7 @@ int xfs_iext_count_may_overflow(struct xfs_inode *ip, int whichfork,
- 		int nr_to_add);
- int xfs_iext_count_upgrade(struct xfs_trans *tp, struct xfs_inode *ip,
- 		uint nr_to_add);
-+bool xfs_ifork_is_realtime(struct xfs_inode *ip, int whichfork);
  
- /* returns true if the fork has extents but they are not read in yet. */
- static inline bool xfs_need_iread_extents(struct xfs_ifork *ifp)
++inline xfs_suminfo_t
++xfs_suminfo_get(
++	struct xfs_mount	*mp,
++	union xfs_suminfo_ondisk *infoptr)
++{
++	return infoptr->raw;
++}
++
++inline void
++xfs_suminfo_add(
++	struct xfs_mount	*mp,
++	union xfs_suminfo_ondisk *infoptr,
++	int			delta)
++{
++	infoptr->raw += delta;
++}
++
+ /*
+  * Read and/or modify the summary information for a given extent size,
+  * bitmap block combination.
+@@ -490,7 +507,7 @@ xfs_rtmodify_summary_int(
+ 	int		error;		/* error value */
+ 	xfs_fileoff_t	sb;		/* summary fsblock */
+ 	xfs_rtsumoff_t	so;		/* index into the summary file */
+-	xfs_suminfo_t	*sp;		/* pointer to returned data */
++	union xfs_suminfo_ondisk *sp;		/* pointer to returned data */
+ 	unsigned int	infoword;
+ 
+ 	/*
+@@ -533,17 +550,17 @@ xfs_rtmodify_summary_int(
+ 	if (delta) {
+ 		uint first = (uint)((char *)sp - (char *)bp->b_addr);
+ 
+-		*sp += delta;
++		xfs_suminfo_add(mp, sp, delta);
+ 		if (mp->m_rsum_cache) {
+-			if (*sp == 0 && log == mp->m_rsum_cache[bbno])
++			if (sp->raw == 0 && log == mp->m_rsum_cache[bbno])
+ 				mp->m_rsum_cache[bbno]++;
+-			if (*sp != 0 && log < mp->m_rsum_cache[bbno])
++			if (sp->raw != 0 && log < mp->m_rsum_cache[bbno])
+ 				mp->m_rsum_cache[bbno] = log;
+ 		}
+ 		xfs_trans_log_buf(tp, bp, first, first + sizeof(*sp) - 1);
+ 	}
+ 	if (sum)
+-		*sum = *sp;
++		*sum = xfs_suminfo_get(mp, sp);
+ 	return 0;
+ }
+ 
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
+index a66357cf002b..749c8e3ec4cb 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.h
++++ b/fs/xfs/libxfs/xfs_rtbitmap.h
+@@ -181,18 +181,18 @@ xfs_rtsumoffs_to_infoword(
+ }
+ 
+ /* Return a pointer to a summary info word within a rt summary block buffer. */
+-static inline xfs_suminfo_t *
++static inline union xfs_suminfo_ondisk *
+ xfs_rsumbuf_infoptr(
+ 	void			*buf,
+ 	unsigned int		infoword)
+ {
+-	xfs_suminfo_t		*infop = buf;
++	union xfs_suminfo_ondisk *infop = buf;
+ 
+ 	return &infop[infoword];
+ }
+ 
+ /* Return a pointer to a summary info word within a rt summary block. */
+-static inline xfs_suminfo_t *
++static inline union xfs_suminfo_ondisk *
+ xfs_rsumblock_infoptr(
+ 	struct xfs_buf		*bp,
+ 	unsigned int		infoword)
+@@ -275,6 +275,10 @@ xfs_filblks_t xfs_rtsummary_blockcount(struct xfs_mount *mp,
+ 		unsigned int rsumlevels, xfs_extlen_t rbmblocks);
+ unsigned long long xfs_rtsummary_wordcount(struct xfs_mount *mp,
+ 		unsigned int rsumlevels, xfs_extlen_t rbmblocks);
++xfs_suminfo_t xfs_suminfo_get(struct xfs_mount *mp,
++		union xfs_suminfo_ondisk *infoptr);
++void xfs_suminfo_add(struct xfs_mount *mp, union xfs_suminfo_ondisk *infoptr,
++		int delta);
+ #else /* CONFIG_XFS_RT */
+ # define xfs_rtfree_extent(t,b,l)			(-ENOSYS)
+ # define xfs_rtfree_blocks(t,rb,rl)			(-ENOSYS)
+diff --git a/fs/xfs/scrub/rtsummary.c b/fs/xfs/scrub/rtsummary.c
+index e51c3d10e501..ca9153e646c9 100644
+--- a/fs/xfs/scrub/rtsummary.c
++++ b/fs/xfs/scrub/rtsummary.c
+@@ -89,9 +89,10 @@ static inline int
+ xfsum_load(
+ 	struct xfs_scrub	*sc,
+ 	xfs_rtsumoff_t		sumoff,
+-	xfs_suminfo_t		*info)
++	union xfs_suminfo_ondisk *rawinfo)
+ {
+-	return xfile_obj_load(sc->xfile, info, sizeof(xfs_suminfo_t),
++	return xfile_obj_load(sc->xfile, rawinfo,
++			sizeof(union xfs_suminfo_ondisk),
+ 			sumoff << XFS_WORDLOG);
+ }
+ 
+@@ -99,9 +100,10 @@ static inline int
+ xfsum_store(
+ 	struct xfs_scrub	*sc,
+ 	xfs_rtsumoff_t		sumoff,
+-	const xfs_suminfo_t	info)
++	const union xfs_suminfo_ondisk rawinfo)
+ {
+-	return xfile_obj_store(sc->xfile, &info, sizeof(xfs_suminfo_t),
++	return xfile_obj_store(sc->xfile, &rawinfo,
++			sizeof(union xfs_suminfo_ondisk),
+ 			sumoff << XFS_WORDLOG);
+ }
+ 
+@@ -109,10 +111,10 @@ inline int
+ xfsum_copyout(
+ 	struct xfs_scrub	*sc,
+ 	xfs_rtsumoff_t		sumoff,
+-	xfs_suminfo_t		*info,
++	union xfs_suminfo_ondisk *rawinfo,
+ 	unsigned int		nr_words)
+ {
+-	return xfile_obj_load(sc->xfile, info, nr_words << XFS_WORDLOG,
++	return xfile_obj_load(sc->xfile, rawinfo, nr_words << XFS_WORDLOG,
+ 			sumoff << XFS_WORDLOG);
+ }
+ 
+@@ -130,7 +132,7 @@ xchk_rtsum_record_free(
+ 	xfs_filblks_t			rtlen;
+ 	xfs_rtsumoff_t			offs;
+ 	unsigned int			lenlog;
+-	xfs_suminfo_t			v = 0;
++	union xfs_suminfo_ondisk	v;
+ 	int				error = 0;
+ 
+ 	if (xchk_should_terminate(sc, &error))
+@@ -154,9 +156,9 @@ xchk_rtsum_record_free(
+ 	if (error)
+ 		return error;
+ 
+-	v++;
++	xfs_suminfo_add(mp, &v, 1);
+ 	trace_xchk_rtsum_record_free(mp, rec->ar_startext, rec->ar_extcount,
+-			lenlog, offs, v);
++			lenlog, offs, &v);
+ 
+ 	return xfsum_store(sc, offs, v);
+ }
+@@ -191,7 +193,7 @@ xchk_rtsum_compare(
+ 	int			nmap;
+ 
+ 	for (off = 0; off < XFS_B_TO_FSB(mp, mp->m_rsumsize); off++) {
+-		xfs_suminfo_t	*ondisk_info;
++		union xfs_suminfo_ondisk *ondisk_info;
+ 		int		error = 0;
+ 
+ 		if (xchk_should_terminate(sc, &error))
+diff --git a/fs/xfs/scrub/rtsummary.h b/fs/xfs/scrub/rtsummary.h
+index f5fd55992957..aca13556b3a2 100644
+--- a/fs/xfs/scrub/rtsummary.h
++++ b/fs/xfs/scrub/rtsummary.h
+@@ -9,6 +9,6 @@
+ typedef unsigned int xfs_rtsumoff_t;
+ 
+ int xfsum_copyout(struct xfs_scrub *sc, xfs_rtsumoff_t sumoff,
+-		xfs_suminfo_t *info, unsigned int nr_words);
++		union xfs_suminfo_ondisk *info, unsigned int nr_words);
+ 
+ #endif /* __XFS_SCRUB_RTSUMMARY_H__ */
+diff --git a/fs/xfs/scrub/trace.c b/fs/xfs/scrub/trace.c
+index 2e36fcc12e40..bb13f0a8e4cf 100644
+--- a/fs/xfs/scrub/trace.c
++++ b/fs/xfs/scrub/trace.c
+@@ -19,6 +19,7 @@
+ #include "xfs_da_format.h"
+ #include "xfs_btree_mem.h"
+ #include "xfs_rmap.h"
++#include "xfs_rtbitmap.h"
+ #include "scrub/scrub.h"
+ #include "scrub/xfile.h"
+ #include "scrub/xfarray.h"
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 650a4c88ebc4..749cf4333c8a 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -1083,7 +1083,7 @@ TRACE_EVENT(xfarray_sort_stats,
+ TRACE_EVENT(xchk_rtsum_record_free,
+ 	TP_PROTO(struct xfs_mount *mp, xfs_rtxnum_t start,
+ 		 xfs_rtbxlen_t len, unsigned int log, loff_t pos,
+-		 xfs_suminfo_t v),
++		 union xfs_suminfo_ondisk *v),
+ 	TP_ARGS(mp, start, len, log, pos, v),
+ 	TP_STRUCT__entry(
+ 		__field(dev_t, dev)
+@@ -1101,7 +1101,7 @@ TRACE_EVENT(xchk_rtsum_record_free,
+ 		__entry->len = len;
+ 		__entry->log = log;
+ 		__entry->pos = pos;
+-		__entry->v = v;
++		__entry->v = xfs_suminfo_get(mp, v);
+ 	),
+ 	TP_printk("dev %d:%d rtdev %d:%d rtx 0x%llx rtxcount 0x%llx log %u rsumpos 0x%llx sumcount %u",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
+index 7f20642b073e..f4d700ce185c 100644
+--- a/fs/xfs/xfs_ondisk.h
++++ b/fs/xfs/xfs_ondisk.h
+@@ -74,6 +74,7 @@ xfs_check_ondisk_structs(void)
+ 
+ 	/* realtime structures */
+ 	XFS_CHECK_STRUCT_SIZE(union xfs_rtword_ondisk,		4);
++	XFS_CHECK_STRUCT_SIZE(union xfs_suminfo_ondisk,		4);
+ 
+ 	/*
+ 	 * m68k has problems with xfs_attr_leaf_name_remote_t, but we pad it to
 
