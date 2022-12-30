@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 734FC65A1A6
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:34:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DD5D65A1A9
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:35:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236246AbiLaCee (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:34:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56840 "EHLO
+        id S236207AbiLaCfQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:35:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236245AbiLaCeb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:34:31 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885F826D9
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:34:30 -0800 (PST)
+        with ESMTP id S236248AbiLaCfP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:35:15 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8EA11CB1F
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:35:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id E835FCE1926
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:34:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20967C433EF;
-        Sat, 31 Dec 2022 02:34:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6674761A32
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:35:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C83E1C433EF;
+        Sat, 31 Dec 2022 02:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454067;
-        bh=aMEk3z3oha5Jm0jmAqpy62J7bLJmYD53pzcLrv1EBMo=;
+        s=k20201202; t=1672454113;
+        bh=Cpdtn+YwVxZiD4sZo/Mo6nxdqUAjt6hlWF8P5YlX0Yk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=svKY12Yd5BXCsF3P3ZA1/LF5N+e/j3tHcB5JcLKEYmP5+pN/3zODqf/ttkfurYIWy
-         yxAK3K8UW62LHGOftMB3gcYlqYrZHmnMYFq58KAbel6QARvUarfWl/gP4loX9l+4uw
-         KPptHK2SCm6K3TdFy4mvjPoP80F5xiIngK+KD9BSN/Zq91TQDFkS/JsfXBILcKSFja
-         ryE2O/TdNWb1QrIobi2osMDU+zPZrKNGTgd1kP+uw6Dwbabv7QRf41AAnX3Ux2uurY
-         9SsaKXmCMZNYUjTL8ql+21skWX15e8umCl89q860kPQ/XEMTQqQ2oLiqtkM4+r1OnP
-         o6vJTN2FSowwg==
-Subject: [PATCH 17/45] xfs: scrub the realtime group superblock
+        b=PM/Vkg+il2dLnrUZwKx4iSd87PgHKgZYthbIFhEUfW1dyIdkbyO/7OfpXtDUZXWT9
+         ZM5PAGzcLsB+K21+0RwzWfbThqvRI4tDjoQkkep2lRztQQoSVyF+6hqzNo8w5YPuPp
+         dSvdlJ5SGMz/pJ3ShW2n7/RZNgXhOKpYy45H6n+Iks+0iEvsFY/+GvVT9kHrc7WIAM
+         slGRNgRtyBeDUIOgpI5JbKwExMeHSiMa2/ovOjvakab6GAmsB7cc1nDsCRTwVHOfrN
+         kXH+7z2lPEKxfOIl9RJP9i4NX9M9FTT+fnzKS/dj/U8KTqaZ234NKENqVHt5AxaETN
+         j39MWSGgnzTgw==
+Subject: [PATCH 20/45] libfrog: report rt groups in output
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:45 -0800
-Message-ID: <167243878587.731133.13102036028058926154.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:19:46 -0800
+Message-ID: <167243878628.731133.15946823593658902489.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,143 +55,36 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Enable scrubbing of realtime group superblocks.
+Report realtime group geometry.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- io/scrub.c      |   15 +++++++++++++++
- libfrog/scrub.c |    5 +++++
- libfrog/scrub.h |    1 +
- libxfs/xfs_fs.h |    3 ++-
- scrub/repair.c  |    2 ++
- scrub/scrub.c   |    4 ++++
- 6 files changed, 29 insertions(+), 1 deletion(-)
+ libfrog/fsgeom.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 
-diff --git a/io/scrub.c b/io/scrub.c
-index 0ad1b0229cc..d764a5a997b 100644
---- a/io/scrub.c
-+++ b/io/scrub.c
-@@ -59,6 +59,7 @@ scrub_ioctl(
- 	switch (sc->group) {
- 	case XFROG_SCRUB_GROUP_AGHEADER:
- 	case XFROG_SCRUB_GROUP_PERAG:
-+	case XFROG_SCRUB_GROUP_RTGROUP:
- 		meta.sm_agno = control;
- 		break;
- 	case XFROG_SCRUB_GROUP_INODE:
-@@ -178,6 +179,19 @@ parse_args(
- 			return 0;
- 		}
- 		break;
-+	case XFROG_SCRUB_GROUP_RTGROUP:
-+		if (optind != argc - 1) {
-+			fprintf(stderr,
-+				_("Must specify one rtgroup number.\n"));
-+			return 0;
-+		}
-+		control = strtoul(argv[optind], &p, 0);
-+		if (*p != '\0') {
-+			fprintf(stderr,
-+				_("Bad rtgroup number '%s'.\n"), argv[optind]);
-+			return 0;
-+		}
-+		break;
- 	default:
- 		ASSERT(0);
- 		break;
-@@ -255,6 +269,7 @@ repair_ioctl(
- 	switch (sc->group) {
- 	case XFROG_SCRUB_GROUP_AGHEADER:
- 	case XFROG_SCRUB_GROUP_PERAG:
-+	case XFROG_SCRUB_GROUP_RTGROUP:
- 		meta.sm_agno = control;
- 		break;
- 	case XFROG_SCRUB_GROUP_INODE:
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index 3e322b4717d..7d6c9c69e4a 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -149,6 +149,11 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
- 		.descr	= "retained health records",
- 		.group	= XFROG_SCRUB_GROUP_NONE,
- 	},
-+	[XFS_SCRUB_TYPE_RGSUPER] = {
-+		.name	= "rgsuper",
-+		.descr	= "realtime group superblock",
-+		.group	= XFROG_SCRUB_GROUP_RTGROUP,
-+	},
- };
- #undef DEP
- 
-diff --git a/libfrog/scrub.h b/libfrog/scrub.h
-index a59371fe141..7155e6a9b0e 100644
---- a/libfrog/scrub.h
-+++ b/libfrog/scrub.h
-@@ -15,6 +15,7 @@ enum xfrog_scrub_group {
- 	XFROG_SCRUB_GROUP_INODE,	/* per-inode metadata */
- 	XFROG_SCRUB_GROUP_ISCAN,	/* metadata requiring full inode scan */
- 	XFROG_SCRUB_GROUP_SUMMARY,	/* summary metadata */
-+	XFROG_SCRUB_GROUP_RTGROUP,	/* per-rtgroup metadata */
- };
- 
- /* Catalog of scrub types and names, indexed by XFS_SCRUB_TYPE_* */
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index e3d87665e4a..c12be9dbb59 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -741,9 +741,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_TYPE_QUOTACHECK 25	/* quota counters */
- #define XFS_SCRUB_TYPE_NLINKS	26	/* inode link counts */
- #define XFS_SCRUB_TYPE_HEALTHY	27	/* everything checked out ok */
-+#define XFS_SCRUB_TYPE_RGSUPER	28	/* realtime superblock */
- 
- /* Number of scrub subcommands. */
--#define XFS_SCRUB_TYPE_NR	28
-+#define XFS_SCRUB_TYPE_NR	29
- 
- /* i: Repair this metadata. */
- #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
-diff --git a/scrub/repair.c b/scrub/repair.c
-index 6629125578c..10db103c87f 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -108,6 +108,7 @@ xfs_repair_metadata(
- 	switch (xfrog_scrubbers[scrub_type].group) {
- 	case XFROG_SCRUB_GROUP_AGHEADER:
- 	case XFROG_SCRUB_GROUP_PERAG:
-+	case XFROG_SCRUB_GROUP_RTGROUP:
- 		meta.sm_agno = sri->sri_agno;
- 		break;
- 	case XFROG_SCRUB_GROUP_INODE:
-@@ -412,6 +413,7 @@ repair_item_difficulty(
- 		case XFS_SCRUB_TYPE_REFCNTBT:
- 		case XFS_SCRUB_TYPE_RTBITMAP:
- 		case XFS_SCRUB_TYPE_RTSUM:
-+		case XFS_SCRUB_TYPE_RGSUPER:
- 			ret |= REPAIR_DIFFICULTY_PRIMARY;
- 			break;
- 		}
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index 19c35bfd907..a6d5ec056c8 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -49,6 +49,9 @@ format_scrub_descr(
- 	case XFROG_SCRUB_GROUP_ISCAN:
- 	case XFROG_SCRUB_GROUP_NONE:
- 		return snprintf(buf, buflen, _("%s"), _(sc->descr));
-+	case XFROG_SCRUB_GROUP_RTGROUP:
-+		return snprintf(buf, buflen, _("rtgroup %u %s"), meta->sm_agno,
-+				_(sc->descr));
- 	}
- 	return -1;
+diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
+index 3f4c38d1e1b..66e813a863f 100644
+--- a/libfrog/fsgeom.c
++++ b/libfrog/fsgeom.c
+@@ -63,7 +63,8 @@ xfs_report_geom(
+ "naming   =version %-14u bsize=%-6u ascii-ci=%d, ftype=%d\n"
+ "log      =%-22s bsize=%-6d blocks=%u, version=%d\n"
+ "         =%-22s sectsz=%-5u sunit=%d blks, lazy-count=%d\n"
+-"realtime =%-22s extsz=%-6d blocks=%lld, rtextents=%lld\n"),
++"realtime =%-22s extsz=%-6d blocks=%lld, rtextents=%lld\n"
++"         =%-22s rgcount=%-4d rgsize=%u blks\n"),
+ 		mntpoint, geo->inodesize, geo->agcount, geo->agblocks,
+ 		"", geo->sectsize, attrversion, projid32bit,
+ 		"", crcs_enabled, finobt_enabled, spinodes, rmapbt_enabled,
+@@ -78,7 +79,8 @@ xfs_report_geom(
+ 		"", geo->logsectsize, geo->logsunit / geo->blocksize, lazycount,
+ 		!geo->rtblocks ? _("none") : rtname ? rtname : _("external"),
+ 		geo->rtextsize * geo->blocksize, (unsigned long long)geo->rtblocks,
+-			(unsigned long long)geo->rtextents);
++			(unsigned long long)geo->rtextents,
++		"", geo->rgcount, geo->rgblocks);
  }
-@@ -97,6 +100,7 @@ xfs_check_metadata(
- 	switch (group) {
- 	case XFROG_SCRUB_GROUP_AGHEADER:
- 	case XFROG_SCRUB_GROUP_PERAG:
-+	case XFROG_SCRUB_GROUP_RTGROUP:
- 		meta.sm_agno = sri->sri_agno;
- 		break;
- 	case XFROG_SCRUB_GROUP_METAFILES:
+ 
+ /* Try to obtain the xfs geometry.  On error returns a negative error code. */
 
