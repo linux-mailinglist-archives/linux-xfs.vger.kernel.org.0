@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38EF3659E39
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:27:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BAB4659E3B
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:28:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbiL3X1X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:27:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39558 "EHLO
+        id S229527AbiL3X2H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:28:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbiL3X1X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:27:23 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0E719C20
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:27:22 -0800 (PST)
+        with ESMTP id S229827AbiL3X1w (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:27:52 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD861DDEA
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:27:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 15066B81DAD
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:27:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF73C433D2;
-        Fri, 30 Dec 2022 23:27:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73CDC61C31
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:27:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D193DC433D2;
+        Fri, 30 Dec 2022 23:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672442839;
-        bh=9/84iOvu/gKIsbcTJSZYjdLd1ivSrb8eDP5IEZ/Dg/4=;
+        s=k20201202; t=1672442870;
+        bh=LWC7uB5zwxUTKAwTE14xUFF2iu39aCGbdDhZYCI409Q=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=b7fdeGhkvDDyMyrBotcQcDChZlCzOaK8Ic23IMWnFrK+RJWxKSOU1TRAoHR8F03lG
-         3Kj95B1Rs3qxWw/ypprUzsSqkvrejfSZVgBdb0vUC0r8ipfl7WVjMePoBN4pSPUwId
-         TgZ0MvcTfWy2Uz77TsNBjirzCIQYlRGzoEKZAEvXjNrxzM3ivTbbaaxt0/xFLPkSnb
-         0dFoFTkruudFCo0T9ZBoW4qc+1slSkVzWe4rVCK809lY4UMLiIkPvwN+DcnqqTGibd
-         YVnW5uRLQULzx+KRzv3EFZQsByTS/Ud8drIAyoeZjRvkka+khaBdGmOwPG1e+ZjrT3
-         wvbP0cFmTkjvA==
-Subject: [PATCH 2/2] xfs: allow the user to cancel repairs before we start
- writing
+        b=X7tOEUViSioEQEkZJFm3yzyoJW4DysqnjanV3CTqfZ3K2WK8A6sJOisRcMZwacwsG
+         f7xIVw0TpGLkPaWHKQttK3oFWzpEaj56uZ+fcP7vctnB10SK+sovD6NGDvC9ayRIRH
+         r+eWcZiQIR7L1DGehWVKZ9L8YcVlGexoqVXAEfgwJTFzEB5saM6qeG9UzvCg7dZR9y
+         aWqhvDS7JQNGYlrxbdKf9fBW9+jgis1TPgR71LRn3Rvu4g4DR1ASzVZZT8BNJVgGoq
+         6HkDM/m+JZMa6i/tO9GXP4EOqd1nBJPlcR2cw5vWkAVLlFLzNWUueoQYEjCtrMjbhN
+         sqCSFe7ZXIKRQ==
+Subject: [PATCH 2/2] xfs: allow userspace to rebuild metadata structures
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:12:42 -0800
-Message-ID: <167243836243.692856.10000272539073209572.stgit@magnolia>
-In-Reply-To: <167243836213.692856.10814391065284832600.stgit@magnolia>
-References: <167243836213.692856.10814391065284832600.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:12:45 -0800
+Message-ID: <167243836566.692955.11429471313463580772.stgit@magnolia>
+In-Reply-To: <167243836537.692955.2878906942781441773.stgit@magnolia>
+References: <167243836537.692955.2878906942781441773.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,75 +54,78 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-All online repair functions have the same structure: walk filesystem
-metadata structures gathering enough data to rebuild the structure,
-stage a new copy, and then commit the new copy.
-
-The gathering steps do not write anything to disk, so they are peppered
-with xchk_should_terminate calls to avoid softlockup warnings and to
-provide an opportunity to abort the repair (by killing xfs_scrub).
-However, it's not clear in the code base when is the last chance to
-abort cleanly without having to undo a bunch of structure.
-
-Therefore, add one more call to xchk_should_terminate (along with a
-comment) providing the sysadmin with the ability to abort before it's
-too late and to make it clear in the source code when it's no longer
-convenient or safe to abort a repair.   As there are only four repair
-functions right now, this patch exists more to establish a precedent for
-subsequent additions than to deliver practical functionality.
+Add a new (superuser-only) flag to the online metadata repair ioctl to
+force it to rebuild structures, even if they're not broken.  We will use
+this to move metadata structures out of the way during a free space
+defragmentation operation.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/agheader_repair.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/xfs/libxfs/xfs_fs.h |    6 +++++-
+ fs/xfs/scrub/scrub.c   |   11 ++++++++++-
+ fs/xfs/scrub/trace.h   |    3 ++-
+ 3 files changed, 17 insertions(+), 3 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/agheader_repair.c b/fs/xfs/scrub/agheader_repair.c
-index 5140f52fa9a1..377a7a4bda5c 100644
---- a/fs/xfs/scrub/agheader_repair.c
-+++ b/fs/xfs/scrub/agheader_repair.c
-@@ -50,6 +50,10 @@ xrep_superblock(
- 	if (error)
- 		return error;
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index 1cfd5bc6520a..920fd4513fcb 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -741,7 +741,11 @@ struct xfs_scrub_metadata {
+  */
+ #define XFS_SCRUB_OFLAG_NO_REPAIR_NEEDED (1u << 7)
  
-+	/* Last chance to abort before we start committing fixes. */
-+	if (xchk_should_terminate(sc, &error))
-+		return error;
+-#define XFS_SCRUB_FLAGS_IN	(XFS_SCRUB_IFLAG_REPAIR)
++/* i: Rebuild the data structure. */
++#define XFS_SCRUB_IFLAG_FORCE_REBUILD	(1 << 31)
 +
- 	/* Copy AG 0's superblock to this one. */
- 	xfs_buf_zero(bp, 0, BBTOB(bp->b_length));
- 	xfs_sb_to_disk(bp->b_addr, &mp->m_sb);
-@@ -424,6 +428,10 @@ xrep_agf(
- 	if (error)
- 		return error;
++#define XFS_SCRUB_FLAGS_IN	(XFS_SCRUB_IFLAG_REPAIR | \
++				 XFS_SCRUB_IFLAG_FORCE_REBUILD)
+ #define XFS_SCRUB_FLAGS_OUT	(XFS_SCRUB_OFLAG_CORRUPT | \
+ 				 XFS_SCRUB_OFLAG_PREEN | \
+ 				 XFS_SCRUB_OFLAG_XFAIL | \
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index cda7b55d77a5..60975d050b82 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -412,6 +412,11 @@ xchk_validate_inputs(
+ 		goto out;
+ 	}
  
-+	/* Last chance to abort before we start committing fixes. */
-+	if (xchk_should_terminate(sc, &error))
-+		return error;
-+
- 	/* Start rewriting the header and implant the btrees we found. */
- 	xrep_agf_init_header(sc, agf_bp, &old_agf);
- 	xrep_agf_set_roots(sc, agf, fab);
-@@ -748,6 +756,10 @@ xrep_agfl(
- 	if (error)
- 		goto err;
- 
-+	/* Last chance to abort before we start committing fixes. */
-+	if (xchk_should_terminate(sc, &error))
-+		goto err;
++	/* No rebuild without repair. */
++	if ((sm->sm_flags & XFS_SCRUB_IFLAG_FORCE_REBUILD) &&
++	    !(sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR))
++		return -EINVAL;
 +
  	/*
- 	 * Update AGF and AGFL.  We reset the global free block counter when
- 	 * we adjust the AGF flcount (which can fail) so avoid updating any
-@@ -995,6 +1007,10 @@ xrep_agi(
- 	if (error)
- 		return error;
+ 	 * We only want to repair read-write v5+ filesystems.  Defer the check
+ 	 * for ops->repair until after our scrub confirms that we need to
+@@ -536,8 +541,12 @@ xfs_scrub_metadata(
+ 	    !(sc->flags & XREP_ALREADY_FIXED)) {
+ 		bool needs_fix = xchk_needs_repair(sc->sm);
  
-+	/* Last chance to abort before we start committing fixes. */
-+	if (xchk_should_terminate(sc, &error))
-+		return error;
++		/* Userspace asked us to rebuild the structure regardless. */
++		if (sc->sm->sm_flags & XFS_SCRUB_IFLAG_FORCE_REBUILD)
++			needs_fix = true;
 +
- 	/* Start rewriting the header and implant the btrees we found. */
- 	xrep_agi_init_header(sc, agi_bp, &old_agi);
- 	xrep_agi_set_roots(sc, agi, fab);
+ 		/* Let debug users force us into the repair routines. */
+-		if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_FORCE_SCRUB_REPAIR))
++		if (XFS_TEST_ERROR(needs_fix, mp, XFS_ERRTAG_FORCE_SCRUB_REPAIR))
+ 			needs_fix = true;
+ 
+ 		/*
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 8d9a5e8c59e2..788a02aee689 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -98,7 +98,8 @@ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_FSCOUNTERS);
+ 	{ XFS_SCRUB_OFLAG_XCORRUPT,		"xcorrupt" }, \
+ 	{ XFS_SCRUB_OFLAG_INCOMPLETE,		"incomplete" }, \
+ 	{ XFS_SCRUB_OFLAG_WARNING,		"warning" }, \
+-	{ XFS_SCRUB_OFLAG_NO_REPAIR_NEEDED,	"norepair" }
++	{ XFS_SCRUB_OFLAG_NO_REPAIR_NEEDED,	"norepair" }, \
++	{ XFS_SCRUB_IFLAG_FORCE_REBUILD,	"rebuild" }
+ 
+ #define XFS_SCRUB_STATE_STRINGS \
+ 	{ XCHK_TRY_HARDER,			"try_harder" }, \
 
