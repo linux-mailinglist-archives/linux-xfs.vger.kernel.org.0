@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C47B65A242
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:10:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E251465A280
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:25:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236265AbiLaDKd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:10:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35774 "EHLO
+        id S236390AbiLaDZq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:25:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236259AbiLaDKc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:10:32 -0500
+        with ESMTP id S236357AbiLaDZf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:25:35 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6EB10540;
-        Fri, 30 Dec 2022 19:10:31 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61AF712A80
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:25:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3A32A61D07;
-        Sat, 31 Dec 2022 03:10:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A08C433D2;
-        Sat, 31 Dec 2022 03:10:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0142B61C7A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:25:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F7AFC433EF;
+        Sat, 31 Dec 2022 03:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456230;
-        bh=iazQdORJNTiNeT1Bp91lybOGz7rdHR5iUv8jJ2e1ZXQ=;
+        s=k20201202; t=1672457133;
+        bh=RedcZtUlhM9LzsQTYpybCqt2h/vSHAx1cngBcOQQlF0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nRYM/XcVDr6we5jjicMUgSpay9hmf42UCTss4c8FXdx9lYOQeQVaFkr73YcO1vlv/
-         2YbJh98r8aSy53O0kz6tlytP8WQtWIq1sksN6Uu/faw3aq1OkkTowbB7KhqCeKNLok
-         4vX5O9aveiCu3C5e97n6zFXjpJwK5ohW9QLbrpSlrrTGmLb7UWMGuyIQSnCuhkGj8d
-         nXmLjckhchJd5tSgZ5CEMyJEDrG3W223DM+vddeymz/iSkyJbhvqjvN10DwKuzxAX8
-         tbQECYLWXAp04K8P3XvdoNaN+rUznlgCL4jp2BpiayiAs1D7KxfvmSi+DIZgSAIDtY
-         vfylIq3OWTi1w==
-Subject: [PATCH 04/12] common: pass the realtime device to xfs_db when
- possible
+        b=Nhlfkw58wV5YTejfcAFXRtg/XoRG5J86HaidwJpGhj+77aXWKzvs2wLJZUDXxs0qe
+         aJa5bSTC4uuKKfHe0K1R4Q2K6aXioplmJh+m4mdL9iN6feNDenv3yxIJfQQefuKA9H
+         0dQzBnTJgjhlS7xglL/FCkq+yEQxMIhgTr3S8iXD/lzTw8pV2tCdD2v4DUXTFTDLYm
+         CRaM3muqvHvH3tKFaI6dPQzgMdxZwZ42raYCGDNpippcYaKjUkT/4rMWObQSF28SBp
+         jtc8Re2WC+5FM3Iv+HGDP0YuYgytAyJVJTawrzqIX/FJNONkaa0mid5ELPvem5zKVV
+         5bjapW8d/QgZg==
+Subject: [PATCH 03/11] libfrog: support vectored scrub
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+To:     cem@kernel.org, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:40 -0800
-Message-ID: <167243883999.739029.2059552910043982016.stgit@magnolia>
-In-Reply-To: <167243883943.739029.3041109696120604285.stgit@magnolia>
-References: <167243883943.739029.3041109696120604285.stgit@magnolia>
+Message-ID: <167243884072.739244.9544942319521737422.stgit@magnolia>
+In-Reply-To: <167243884029.739244.16777239536975047510.stgit@magnolia>
+References: <167243884029.739244.16777239536975047510.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -56,70 +55,174 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Teach xfstests to pass the realtime device to xfs_db when it supports
-that option.
+Enhance libfrog to support performing vectored metadata scrub.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/xfs |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ libfrog/fsgeom.h |    6 +++
+ libfrog/scrub.c  |  124 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ libfrog/scrub.h  |    1 
+ 3 files changed, 131 insertions(+)
 
 
-diff --git a/common/xfs b/common/xfs
-index 36e02413db..0d1e0ec4bc 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -281,10 +281,10 @@ _xfs_check()
- {
- 	OPTS=" "
- 	DBOPTS=" "
--	USAGE="Usage: xfs_check [-fsvV] [-l logdev] [-i ino]... [-b bno]... special"
-+	USAGE="Usage: xfs_check [-fsvV] [-l logdev] [-R rtdev] [-i ino]... [-b bno]... special"
+diff --git a/libfrog/fsgeom.h b/libfrog/fsgeom.h
+index 6c6d6bb815a..0265a7c1684 100644
+--- a/libfrog/fsgeom.h
++++ b/libfrog/fsgeom.h
+@@ -58,6 +58,12 @@ struct xfs_fd {
+ /* Only use FIEXCHANGE_RANGE for file data exchanges. */
+ #define XFROG_FLAG_FORCE_FIEXCHANGE	(1 << 3)
  
- 	OPTIND=1
--	while getopts "b:fi:l:stvV" c; do
-+	while getopts "b:fi:l:stvVR:" c; do
- 		case $c in
- 			s) OPTS=$OPTS"-s ";;
- 			t) OPTS=$OPTS"-t ";;
-@@ -296,12 +296,14 @@ _xfs_check()
- 			V) $XFS_DB_PROG -p xfs_check -V
- 			   return $?
- 			   ;;
-+			R) DBOPTS="$DBOPTS -R $OPTARG";;
- 		esac
- 	done
- 	set -- extra $@
- 	shift $OPTIND
- 	case $# in
--		1) ${XFS_DB_PROG}${DBOPTS} -F -i -p xfs_check -c "check$OPTS" $1
-+		1) echo "${XFS_DB_PROG}${DBOPTS} -F -i -p xfs_check -c check$OPTS $1" >> /dev/ttyprintk
-+		   ${XFS_DB_PROG}${DBOPTS} -F -i -p xfs_check -c "check$OPTS" $1
- 		   status=$?
- 		   ;;
- 		2) echo $USAGE 1>&1
-@@ -339,6 +341,11 @@ _scratch_xfs_db_options()
- 	SCRATCH_OPTIONS=""
- 	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
- 		SCRATCH_OPTIONS="-l$SCRATCH_LOGDEV"
-+	if [ "$USE_EXTERNAL" = yes ] && [ ! -z "$SCRATCH_RTDEV" ]; then
-+		$XFS_DB_PROG --help 2>&1 | grep -q -- '-R rtdev' || \
-+			_notrun 'xfs_db does not support rt devices'
-+		SCRATCH_OPTIONS="$SCRATCH_OPTIONS -R$SCRATCH_RTDEV"
-+	fi
- 	echo $SCRATCH_OPTIONS $* $SCRATCH_DEV
++/* Only use the older one-at-a-time scrub ioctl. */
++#define XFROG_FLAG_SCRUB_FORCE_SINGLE	(1 << 4)
++
++/* Only use the vectored scrub ioctl. */
++#define XFROG_FLAG_SCRUB_FORCE_VECTOR	(1 << 5)
++
+ /* Static initializers */
+ #define XFS_FD_INIT(_fd)	{ .fd = (_fd), }
+ #define XFS_FD_INIT_EMPTY	XFS_FD_INIT(-1)
+diff --git a/libfrog/scrub.c b/libfrog/scrub.c
+index c3cf5312f80..02b659ea2bd 100644
+--- a/libfrog/scrub.c
++++ b/libfrog/scrub.c
+@@ -186,3 +186,127 @@ xfrog_scrub_metadata(
+ 
+ 	return 0;
  }
++
++/* Decide if there have been any scrub failures up to this point. */
++static inline int
++xfrog_scrubv_previous_failures(
++	struct xfs_scrub_vec_head	*vhead,
++	struct xfs_scrub_vec		*barrier_vec)
++{
++	struct xfs_scrub_vec		*v;
++	__u32				failmask;
++
++	failmask = barrier_vec->sv_flags & XFS_SCRUB_FLAGS_OUT;
++	for (v = vhead->svh_vecs; v < barrier_vec; v++) {
++		if (v->sv_type == XFS_SCRUB_TYPE_BARRIER)
++			continue;
++
++		/*
++		 * Runtime errors count as a previous failure, except the ones
++		 * used to ask userspace to retry.
++		 */
++		if (v->sv_ret && v->sv_ret != -EBUSY && v->sv_ret != -ENOENT &&
++		    v->sv_ret != -EUSERS)
++			return -ECANCELED;
++
++		/*
++		 * If any of the out-flags on the scrub vector match the mask
++		 * that was set on the barrier vector, that's a previous fail.
++		 */
++		if (v->sv_flags & failmask)
++			return -ECANCELED;
++	}
++
++	return 0;
++}
++
++static int
++xfrog_scrubv_fallback(
++	struct xfs_fd			*xfd,
++	struct xfs_scrub_vec_head	*vhead)
++{
++	struct xfs_scrub_vec		*v;
++	unsigned int			i;
++
++	if (vhead->svh_flags & ~XFS_SCRUB_VEC_FLAGS_ALL)
++		return -EINVAL;
++	for (i = 0, v = vhead->svh_vecs; i < vhead->svh_nr; i++, v++) {
++		if (v->sv_reserved)
++			return -EINVAL;
++		if (v->sv_type == XFS_SCRUB_TYPE_BARRIER &&
++		    (v->sv_flags & ~XFS_SCRUB_FLAGS_OUT))
++			return -EINVAL;
++	}
++
++	/* Run all the scrubbers. */
++	for (i = 0, v = vhead->svh_vecs; i < vhead->svh_nr; i++, v++) {
++		struct xfs_scrub_metadata	sm = {
++			.sm_type	= v->sv_type,
++			.sm_flags	= v->sv_flags,
++			.sm_ino		= vhead->svh_ino,
++			.sm_gen		= vhead->svh_gen,
++			.sm_agno	= vhead->svh_agno,
++		};
++		struct timespec	tv;
++
++		if (v->sv_type == XFS_SCRUB_TYPE_BARRIER) {
++			v->sv_ret = xfrog_scrubv_previous_failures(vhead, v);
++			if (v->sv_ret)
++				break;
++			continue;
++		}
++
++		v->sv_ret = xfrog_scrub_metadata(xfd, &sm);
++		v->sv_flags = sm.sm_flags;
++
++		if (vhead->svh_rest_us) {
++			tv.tv_sec = 0;
++			tv.tv_nsec = vhead->svh_rest_us * 1000;
++			nanosleep(&tv, NULL);
++		}
++	}
++
++	return 0;
++}
++
++/* Invoke the vectored scrub ioctl. */
++static int
++xfrog_scrubv_call(
++	struct xfs_fd			*xfd,
++	struct xfs_scrub_vec_head	*vhead)
++{
++	int				ret;
++
++	ret = ioctl(xfd->fd, XFS_IOC_SCRUBV_METADATA, vhead);
++	if (ret)
++		return -errno;
++
++	return 0;
++}
++
++/* Invoke the vectored scrub ioctl.  Returns zero or negative error code. */
++int
++xfrog_scrubv_metadata(
++	struct xfs_fd			*xfd,
++	struct xfs_scrub_vec_head	*vhead)
++{
++	int				error = 0;
++
++	if (xfd->flags & XFROG_FLAG_SCRUB_FORCE_SINGLE)
++		goto try_single;
++
++	error = xfrog_scrubv_call(xfd, vhead);
++	if (error == 0 || (xfd->flags & XFROG_FLAG_SCRUB_FORCE_VECTOR))
++		return error;
++
++	/* If the vectored scrub ioctl wasn't found, force single mode. */
++	switch (error) {
++	case -EOPNOTSUPP:
++	case -ENOTTY:
++		xfd->flags |= XFROG_FLAG_SCRUB_FORCE_SINGLE;
++		break;
++	}
++
++try_single:
++	return xfrog_scrubv_fallback(xfd, vhead);
++}
+diff --git a/libfrog/scrub.h b/libfrog/scrub.h
+index 7155e6a9b0e..2f5ca2b1317 100644
+--- a/libfrog/scrub.h
++++ b/libfrog/scrub.h
+@@ -28,5 +28,6 @@ struct xfrog_scrub_descr {
+ extern const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR];
  
-@@ -403,6 +410,11 @@ _scratch_xfs_check()
- 		SCRATCH_OPTIONS="-l $SCRATCH_LOGDEV"
- 	[ "$LARGE_SCRATCH_DEV" = yes ] && \
- 		SCRATCH_OPTIONS=$SCRATCH_OPTIONS" -t"
-+	if [ "$USE_EXTERNAL" = yes ] && [ ! -z "$SCRATCH_RTDEV" ]; then
-+		$XFS_DB_PROG --help 2>&1 | grep -q -- '-R rtdev' || \
-+			_notrun 'xfs_db does not support rt devices'
-+		SCRATCH_OPTIONS="$SCRATCH_OPTIONS -R$SCRATCH_RTDEV"
-+	fi
- 	_xfs_check $SCRATCH_OPTIONS $* $SCRATCH_DEV
- }
+ int xfrog_scrub_metadata(struct xfs_fd *xfd, struct xfs_scrub_metadata *meta);
++int xfrog_scrubv_metadata(struct xfs_fd *xfd, struct xfs_scrub_vec_head *vhead);
  
+ #endif	/* __LIBFROG_SCRUB_H__ */
 
