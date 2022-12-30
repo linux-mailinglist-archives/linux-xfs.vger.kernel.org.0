@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FFD165A028
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:02:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E83F65A007
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:53:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235914AbiLaBBu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:01:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
+        id S235988AbiLaAxq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:53:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235809AbiLaBBt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:01:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0567F1DDE4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:01:49 -0800 (PST)
+        with ESMTP id S235930AbiLaAxp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:53:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DB813F29;
+        Fri, 30 Dec 2022 16:53:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ADF17B81E52
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:01:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA1BC433D2;
-        Sat, 31 Dec 2022 01:01:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 914E461D47;
+        Sat, 31 Dec 2022 00:53:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F14F1C433D2;
+        Sat, 31 Dec 2022 00:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448506;
-        bh=5mim0xfNsn1wVWeeFVTqUdh9qgwcsYmavr3CtLJYoP4=;
+        s=k20201202; t=1672448024;
+        bh=TdfAfb7GW40/sE8S+wGYtWPmR6jcqncVM9qAKz84ftc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=fmG7sWbK84wySRdzG9gcxeSKlXMy2/qmjN+G9JhB4P1pA+SUnBvHOldTbh+YRwiyd
-         nuR8GjrKwMFxpS02rnEVIKt1dG6UGu1Bh2z8aTtJadZJB7+kiuM2nSUUEoFOQIYfkL
-         XwdIuTgRCRsZvWD2DdX5EThLvVyO0G+cQ4FFBYSfY2CVhFC56dXNoLeU82Zo0c6aem
-         qknzA33k8aNEENAlVJmTg8CTKTz8vUJJoyp5GCceLK4FyLYEWMdxYA2OvgKscZFw8h
-         QjWZEr/95c+OkKBl6e76tsaIlnnf8a6PRunCEaorTOl+w+iru+gppkW2WL2Akob52j
-         ZaiSBPTuA8Gkw==
-Subject: [PATCHSET v1.0 0/3] libxfs: widen EFI format to support rt
+        b=kysAYZZ3gEjT37cC7KHjs+7YoipvDg4USw1qfxNfpcp4q+Qrr358LdGMxdRcEiGSc
+         R6bCoJULfMGy855xaE4mZr9CdJpB90j/MjpXKYi0QGRA02R8BjW/urJV71C/XgfeUL
+         8W9ytHsAhmma36k0J1RmD5DigKVQz1XfvYb5g0B8G8JZxtUnb21zHapzO/BjsWteQR
+         JjaOX4Hk9ssjL3b4jYeMvXHUZNlder/ndq8zNnivhYF1i5tYFZ0jVf1m1UX3DFU8l8
+         vvSuPYgdyLHlC+90Y+JlngDa0rDt3PuKBjuzXnuhOrjHEQJLxH2hcPVabKUSN7TwKX
+         49cb42fPlxDsw==
+Subject: [PATCH 1/1] xfs: race fsstress with online repair of realtime summary
+ files
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:52 -0800
-Message-ID: <167243879231.732626.2849871285052288588.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243879205.732554.15899325554709079259.stgit@magnolia>
+In-Reply-To: <167243879193.732554.7976867017693507837.stgit@magnolia>
+References: <167243879193.732554.7976867017693507837.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,34 +53,80 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Realtime reverse mapping (and beyond that, realtime reflink) needs to be
-able to defer file mapping and extent freeing work in much the same
-manner as is required on the data volume.  Make the extent freeing log
-items operate on rt extents in preparation for realtime rmap.
+Create tests to race fsstress with rt summary file repair while running
+fsstress in the background.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-extfree-intents
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-extfree-intents
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/defer_item.c     |   18 ++++++++++++++++++
- libxfs/xfs_alloc.c      |   35 ++++++++++++++++++++++++++++-------
- libxfs/xfs_alloc.h      |   17 +++++++++++++++--
- libxfs/xfs_defer.c      |    1 +
- libxfs/xfs_defer.h      |    1 +
- libxfs/xfs_log_format.h |    7 +++++++
- libxfs/xfs_rtbitmap.c   |    4 ++++
- logprint/log_redo.c     |   20 ++++++++++++++++----
- 8 files changed, 90 insertions(+), 13 deletions(-)
+ tests/xfs/813     |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/813.out |    2 ++
+ 2 files changed, 50 insertions(+)
+ create mode 100755 tests/xfs/813
+ create mode 100644 tests/xfs/813.out
+
+
+diff --git a/tests/xfs/813 b/tests/xfs/813
+new file mode 100755
+index 0000000000..5efe923c75
+--- /dev/null
++++ b/tests/xfs/813
+@@ -0,0 +1,48 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
++#
++# FS QA Test No. 813
++#
++# Race fsstress and realtime summary repair for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest online_repair dangerous_fsstress_repair
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++
++# real QA test starts here
++_supported_fs xfs
++_require_realtime
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_has_feature "$SCRATCH_MNT" realtime
++_xfs_force_bdev realtime $SCRATCH_MNT
++
++# XXX the realtime summary scrubber isn't currently implemented upstream.
++# Don't bother trying to fix it on those kernels
++$XFS_IO_PROG -c 'scrub rtsummary' -c 'scrub rtsummary' "$SCRATCH_MNT" 2>&1 | \
++	grep -q 'Scan was not complete' && \
++	_notrun "rtsummary scrub is incomplete"
++
++_scratch_xfs_stress_online_repair -s "repair rtsummary"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/813.out b/tests/xfs/813.out
+new file mode 100644
+index 0000000000..f0c2a12bea
+--- /dev/null
++++ b/tests/xfs/813.out
+@@ -0,0 +1,2 @@
++QA output created by 813
++Silence is golden
 
