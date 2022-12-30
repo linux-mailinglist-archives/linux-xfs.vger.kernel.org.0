@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C68665A1A7
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:35:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB6A465A1B3
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:38:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236245AbiLaCfH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:35:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57002 "EHLO
+        id S236255AbiLaCiB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:38:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236278AbiLaCeo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:34:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAADA1CB1F
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:34:43 -0800 (PST)
+        with ESMTP id S236259AbiLaChw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:37:52 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AA8BC9C
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:37:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A63E61D07
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:34:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD0AC433D2;
-        Sat, 31 Dec 2022 02:34:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C037EB81DED
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:37:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69B0CC433EF;
+        Sat, 31 Dec 2022 02:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454082;
-        bh=JhU81Rx7BbLmAepDEG6Sau5chDCzGoFUso2n9XV0vmE=;
+        s=k20201202; t=1672454269;
+        bh=T2rcw9zijVnEhsZ2JOKIJLSqrX3XBWHev44gfq4Jv8Y=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=agimEwh2T8/YkPBZWP61FnPoe+KhaYUwUBUESbrPlvZYFjdFIELSERXOWRO0sGa5V
-         0pE4M/TKHiS0pgOhK5FijS08QznWBqzkpSzWV19Lv8WnOULhZZni2WWll6TV3lstSO
-         7CaEYUAz7VUdroM3ESCrUfLx8cNfDXDDBWgzLFZ3AAfmb9QLB6GkHRZBXDY399eow7
-         a3Zr6jmamxXJbwH9yu7qGAQPUaVZISDWVd/b9647l/suYOZXo5fmFlPYaUEF3T6i/W
-         IThZJyAo4rdRZSw1YaSVDM43qlIJE7hOd8w/y3qGSHzJ6l7dXMoP+MfGWeldSV1TzV
-         E1eDUN3eD/++Q==
-Subject: [PATCH 18/45] xfs: repair secondary realtime group superblocks
+        b=SXLcYrXgoEfOmT01BlHl9AQ5Lz1RvHTcy1A7nWxvJmIMFzsxaun8PHtxYWvsq8zE5
+         x62+C/qL/jU/ypeHb/DiiNs8gVHmK9WJpnGIUYx9cBEcZiV0S4bsd0ec/pWFHhuM68
+         NwZuPJie7/zRyPLtkVnovr6ctzSWd4Z0xQgWSA6EEG7yMqVm6qGxR3YEzE3BwHZfCz
+         ZOP/4LyKmfTjIzO2e0Q/nodZ4mNN2ze3ZQ8v4+G/7a/wqCLRvWtRjCmJTUR/ml+Fef
+         coMgpGrPk4avpeTOjJGqsS2BT/yGbju9HjDV5YzYVsB+bC9jC3fOtYJOVq0tutUGM9
+         +wROf4twTOWeg==
+Subject: [PATCH 30/45] xfs_db: enable conversion of rt space units
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:46 -0800
-Message-ID: <167243878601.731133.11726860471295155355.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:19:47 -0800
+Message-ID: <167243878758.731133.6306481528555037356.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,48 +55,161 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Repair secondary realtime group superblocks.  They're not critical for
-anything, but some consistency would be a good idea.
+Teach the xfs_db convert function about realtime extents, blocks, and
+realtime group numbers.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_rtgroup.c |    2 +-
- libxfs/xfs_rtgroup.h |    3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ db/convert.c      |   38 +++++++++++++++++++++++++++++++++++++-
+ man/man8/xfs_db.8 |   17 +++++++++++++++++
+ 2 files changed, 54 insertions(+), 1 deletion(-)
 
 
-diff --git a/libxfs/xfs_rtgroup.c b/libxfs/xfs_rtgroup.c
-index ebbd0d13a8a..97643fdcc7c 100644
---- a/libxfs/xfs_rtgroup.c
-+++ b/libxfs/xfs_rtgroup.c
-@@ -381,7 +381,7 @@ xfs_rtgroup_log_super(
- }
+diff --git a/db/convert.c b/db/convert.c
+index 072ccc8f6ef..2214649650d 100644
+--- a/db/convert.c
++++ b/db/convert.c
+@@ -34,6 +34,10 @@
+ 	rtblock_to_bytes(rtx_to_rtblock(xfs_rbmblock_to_rtx(mp, (uint64_t)x)))
+ #define rbmword_to_bytes(x)	\
+ 	rtblock_to_bytes(rtx_to_rtblock((uint64_t)(x) << XFS_NBWORDLOG))
++#define	rgblock_to_bytes(x)	\
++	((uint64_t)(x) << mp->m_sb.sb_blocklog)
++#define	rgnumber_to_bytes(x)	\
++	rgblock_to_bytes((uint64_t)(x) * mp->m_sb.sb_rgblocks)
  
- /* Initialize a secondary realtime superblock. */
--static int
-+int
- xfs_rtgroup_init_secondary_super(
- 	struct xfs_mount	*mp,
- 	xfs_rgnumber_t		rgno,
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index 1fec49c496d..3c9572677f7 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -210,6 +210,8 @@ void xfs_rtgroup_update_super(struct xfs_buf *rtsb_bp,
- 		const struct xfs_buf *sb_bp);
- void xfs_rtgroup_log_super(struct xfs_trans *tp, const struct xfs_buf *sb_bp);
- int xfs_rtgroup_update_secondary_sbs(struct xfs_mount *mp);
-+int xfs_rtgroup_init_secondary_super(struct xfs_mount *mp, xfs_rgnumber_t rgno,
-+		struct xfs_buf **bpp);
+ typedef enum {
+ 	CT_NONE = -1,
+@@ -55,6 +59,8 @@ typedef enum {
+ 	CT_RSUMBLOCK,		/* block within rt summary */
+ 	CT_RSUMLOG,		/* log level for rtsummary computations */
+ 	CT_RSUMINFO,		/* info word within rt summary */
++	CT_RGBLOCK,		/* xfs_rgblock_t */
++	CT_RGNUMBER,		/* xfs_rgno_t */
+ 	NCTS
+ } ctype_t;
  
- /* Lock the rt bitmap inode in exclusive mode */
- #define XFS_RTGLOCK_BITMAP		(1U << 0)
-@@ -230,6 +232,7 @@ int xfs_rtgroup_get_geometry(struct xfs_rtgroup *rtg,
- # define xfs_rtgroup_update_super(bp, sb_bp)	((void)0)
- # define xfs_rtgroup_log_super(tp, sb_bp)	((void)0)
- # define xfs_rtgroup_update_secondary_sbs(mp)	(0)
-+# define xfs_rtgroup_init_secondary_super(mp, rgno, bpp)	(-EOPNOTSUPP)
- # define xfs_rtgroup_lock(tp, rtg, gf)		((void)0)
- # define xfs_rtgroup_unlock(rtg, gf)		((void)0)
- # define xfs_rtgroup_get_geometry(rtg, rgeo)	(-EOPNOTSUPP)
+@@ -80,6 +86,8 @@ typedef union {
+ 	xfs_fileoff_t	rbmblock;
+ 	unsigned int	rbmword;
+ 	xfs_fileoff_t	rsumblock;
++	xfs_rgnumber_t	rgnumber;
++	xfs_rgblock_t	rgblock;
+ } cval_t;
+ 
+ static uint64_t		bytevalue(ctype_t ctype, cval_t *val);
+@@ -95,7 +103,7 @@ static const char	*agnumber_names[] = { "agnumber", "agno", NULL };
+ static const char	*bboff_names[] = { "bboff", "daddroff", NULL };
+ static const char	*blkoff_names[] = { "blkoff", "fsboff", "agboff",
+ 					    NULL };
+-static const char	*rtblkoff_names[] = { "blkoff", "rtboff",
++static const char	*rtblkoff_names[] = { "blkoff", "rtboff", "rgboff",
+ 					    NULL };
+ static const char	*byte_names[] = { "byte", "fsbyte", NULL };
+ static const char	*daddr_names[] = { "daddr", "bb", NULL };
+@@ -111,6 +119,8 @@ static const char	*rbmword_names[] = { "rbmword", "rbmw", NULL };
+ static const char	*rsumblock_names[] = { "rsumblock", "rsmb", NULL };
+ static const char	*rsumlog_names[] = { "rsumlog", "rsml", NULL };
+ static const char	*rsumword_names[] = { "rsuminfo", "rsmi", NULL };
++static const char	*rgblock_names[] = { "rgblock", "rgbno", NULL };
++static const char	*rgnumber_names[] = { "rgnumber", "rgno", NULL };
+ 
+ static int		rsuminfo;
+ static int		rsumlog;
+@@ -208,6 +218,14 @@ static const ctydesc_t	ctydescs_rt[NCTS] = {
+ 		.allowed = M(RSUMBLOCK),
+ 		.names   = rsumword_names,
+ 	},
++	[CT_RGBLOCK] = {
++		.allowed = M(RGNUMBER)|M(BBOFF)|M(BLKOFF)|M(RSUMLOG),
++		.names   = rgblock_names,
++	},
++	[CT_RGNUMBER] = {
++		.allowed = M(RGBLOCK)|M(BBOFF)|M(BLKOFF)|M(RSUMLOG),
++		.names   = rgnumber_names,
++	},
+ };
+ 
+ static const cmdinfo_t	convert_cmd =
+@@ -295,6 +313,10 @@ bytevalue(ctype_t ctype, cval_t *val)
+ 		 * value.
+ 		 */
+ 		return 0;
++	case CT_RGBLOCK:
++		return rgblock_to_bytes(val->rgblock);
++	case CT_RGNUMBER:
++		return rgnumber_to_bytes(val->rgnumber);
+ 	case CT_NONE:
+ 	case NCTS:
+ 		break;
+@@ -401,6 +423,8 @@ convert_f(int argc, char **argv)
+ 	case CT_RSUMBLOCK:
+ 	case CT_RSUMLOG:
+ 	case CT_RSUMINFO:
++	case CT_RGBLOCK:
++	case CT_RGNUMBER:
+ 		/* shouldn't get here */
+ 		ASSERT(0);
+ 		break;
+@@ -537,6 +561,12 @@ rtconvert_f(int argc, char **argv)
+ 	case CT_RSUMINFO:
+ 		v = rt_daddr_to_rsuminfo(mp, v);
+ 		break;
++	case CT_RGBLOCK:
++		v = xfs_daddr_to_rgbno(mp, v >> BBSHIFT);
++		break;
++	case CT_RGNUMBER:
++		v = xfs_daddr_to_rgno(mp, v >> BBSHIFT);
++		break;
+ 	case CT_AGBLOCK:
+ 	case CT_AGINO:
+ 	case CT_AGNUMBER:
+@@ -629,6 +659,12 @@ getvalue(char *s, ctype_t ctype, cval_t *val)
+ 	case CT_RSUMINFO:
+ 		rsuminfo = (unsigned int)v;
+ 		break;
++	case CT_RGBLOCK:
++		val->rgblock = (xfs_rgblock_t)v;
++		break;
++	case CT_RGNUMBER:
++		val->rgnumber = (xfs_rgnumber_t)v;
++		break;
+ 	case CT_NONE:
+ 	case NCTS:
+ 		/* NOTREACHED */
+diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
+index 9c1ce5d79cf..bcb4c871827 100644
+--- a/man/man8/xfs_db.8
++++ b/man/man8/xfs_db.8
+@@ -978,6 +978,16 @@ with alternate names, are:
+ .RS 1.0i
+ .PD 0
+ .HP
++.B rgblock
++or
++.B rgbno
++(realtime block within a realtime group)
++.HP
++.B rgnumber
++or
++.B rgno
++(realtime group number)
++.HP
+ .B bboff
+ or
+ .B daddroff
+@@ -1045,6 +1055,13 @@ or
+ .RE
+ .IP
+ Only conversions that "make sense" are allowed.
++The compound form (with more than three arguments) is useful for
++conversions such as
++.B convert rgno
++.I rg
++.B rgbno
++.I rgb
++.BR rtblock .
+ 
+ Realtime summary file location conversions have the following rules:
+ Each info word in the rt summary file counts the number of free extents of a
 
