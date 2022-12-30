@@ -2,89 +2,198 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37FC865A024
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:00:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBA6E65A17F
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:25:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235750AbiLaBAt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:00:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39588 "EHLO
+        id S236227AbiLaCZl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:25:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235809AbiLaBAs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:00:48 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA60FDB0
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:00:46 -0800 (PST)
+        with ESMTP id S236224AbiLaCZk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:25:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6189919C12
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:25:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 79E7AB81E4A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:00:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39008C433EF;
-        Sat, 31 Dec 2022 01:00:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED1D061CC6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:25:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59FF1C433EF;
+        Sat, 31 Dec 2022 02:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448444;
-        bh=Jl1OdfZVEjYj1LF6r6o/fJOFiUwOpzWO1oUC40mbry0=;
+        s=k20201202; t=1672453538;
+        bh=4Qp617zrANHrRn0rm1vEOtucpbyLaeJFfCMUlBKA4yg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Qqd0akIkY6IYlJQZaMaFSJpw4wdF2Ia0HMi1SfkQ50ZDyBC1ywr7EUYTFx/dkWDh4
-         dNLuiNcPIQ2T+RJGL4+uQ7UC+zcADsBMMTt92Bmg8PZxiJamgZHovceCADLp0wUEEX
-         sIqqntp/DTMvzmF4qxUP8XjeLFTKtKWi5j32F7/5zhYByo7FiaWup7/9ijVbwU2GwB
-         BWMWe59zkV9khoXSFETQpxtxbN261B5qpyuo8+q0IPckU5FId9yzo/r1jvk12LWfCd
-         OQlIgIgvJ8tBal68Akp5Pl2YlicQ9FyJaRxmiNQqWwSdLBNR7DPLFQiiUftugB/1ZJ
-         GiNXncR0BDp/g==
-Subject: [PATCHSET v1.0 0/9] libxfs: refactor rtbitmap/summary macros
+        b=JLyDAzrr661hxCXe1Kq9O8ISEnPodo9wheWuhYEp1MqtHx6awUACNEcY6i31/DUaW
+         pT79xc9AawYejlp70o/BfOGiCf7FwaZUeNLbAgpOhnCciTlNbeVsu6Dfb7ZjKEO6Zs
+         Mg46Ur/Q9H/Gls/Yf8F2nLMSMiBKozWPvCEsYB2O8RnOS/OZ5Gzogi3JVAhQaEHO1+
+         rLOrWFkxfF2jZfg8wawToYjLJBznhK8/tOY0XxLMUgXiRJQnPkX6bRg3NZ0VWccRlz
+         8g2Umz2dprsWQ0ltIc3K6OqDMvj84iLodN29b9TX7hNalN2GJwiRlls5jl+45fy71u
+         2FbobmqE1SHNQ==
+Subject: [PATCH 5/9] xfs: create helpers for rtbitmap block/wordcount
+ computations
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:32 -0800
-Message-ID: <167243877226.727982.8292582053571487702.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243877295.727982.18027474219615629039.stgit@magnolia>
+In-Reply-To: <167243877226.727982.8292582053571487702.stgit@magnolia>
+References: <167243877226.727982.8292582053571487702.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-In preparation for adding block headers and enforcing endian order in
-rtbitmap and rtsummary blocks, replace open-coded geometry computations
-and fugly macros with proper helper functions that can be typechecked.
-Soon we'll be needing to add more complex logic to the helpers.
+Create helper functions that compute the number of blocks or words
+necessary to store the rt bitmap.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=refactor-rtbitmap-macros
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=refactor-rtbitmap-macros
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/check.c               |   63 ++++++++---
- libxfs/init.c            |    8 +
- libxfs/libxfs_api_defs.h |    8 +
- libxfs/xfs_format.h      |   32 +++--
- libxfs/xfs_rtbitmap.c    |  268 +++++++++++++++++++++++++++++++++-------------
- libxfs/xfs_rtbitmap.h    |  133 +++++++++++++++++++++++
- libxfs/xfs_trans_resv.c  |    9 +-
- libxfs/xfs_types.h       |    2 
- repair/globals.c         |    4 -
- repair/globals.h         |    4 -
- repair/phase6.c          |   14 +-
- repair/rt.c              |   43 ++++---
- repair/rt.h              |    6 -
- 13 files changed, 443 insertions(+), 151 deletions(-)
+ libxfs/libxfs_api_defs.h |    2 ++
+ libxfs/xfs_rtbitmap.c    |   27 +++++++++++++++++++++++++++
+ libxfs/xfs_rtbitmap.h    |   12 ++++++++++++
+ libxfs/xfs_trans_resv.c  |    9 +++++----
+ repair/rt.c              |   10 +++++-----
+ 5 files changed, 51 insertions(+), 9 deletions(-)
+
+
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index 494172b213b..818406b0415 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -227,6 +227,8 @@
+ #define xfs_rmap_query_all		libxfs_rmap_query_all
+ #define xfs_rmap_query_range		libxfs_rmap_query_range
+ 
++#define xfs_rtbitmap_wordcount		libxfs_rtbitmap_wordcount
++
+ #define xfs_rtfree_extent		libxfs_rtfree_extent
+ #define xfs_sb_from_disk		libxfs_sb_from_disk
+ #define xfs_sb_quota_from_disk		libxfs_sb_quota_from_disk
+diff --git a/libxfs/xfs_rtbitmap.c b/libxfs/xfs_rtbitmap.c
+index e17af3b9d28..116afec2a75 100644
+--- a/libxfs/xfs_rtbitmap.c
++++ b/libxfs/xfs_rtbitmap.c
+@@ -1140,3 +1140,30 @@ xfs_rtalloc_extent_is_free(
+ 	*is_free = matches;
+ 	return 0;
+ }
++
++/*
++ * Compute the number of rtbitmap blocks needed to track the given number of rt
++ * extents.
++ */
++xfs_filblks_t
++xfs_rtbitmap_blockcount(
++	struct xfs_mount	*mp,
++	xfs_rtbxlen_t		rtextents)
++{
++	return howmany_64(rtextents, NBBY * mp->m_sb.sb_blocksize);
++}
++
++/*
++ * Compute the number of rtbitmap words needed to populate every block of a
++ * bitmap that is large enough to track the given number of rt extents.
++ */
++unsigned long long
++xfs_rtbitmap_wordcount(
++	struct xfs_mount	*mp,
++	xfs_rtbxlen_t		rtextents)
++{
++	xfs_filblks_t		blocks;
++
++	blocks = xfs_rtbitmap_blockcount(mp, rtextents);
++	return XFS_FSB_TO_B(mp, blocks) >> XFS_WORDLOG;
++}
+diff --git a/libxfs/xfs_rtbitmap.h b/libxfs/xfs_rtbitmap.h
+index f616956b289..308ce814a90 100644
+--- a/libxfs/xfs_rtbitmap.h
++++ b/libxfs/xfs_rtbitmap.h
+@@ -261,6 +261,11 @@ xfs_rtfree_extent(
+ /* Same as above, but in units of rt blocks. */
+ int xfs_rtfree_blocks(struct xfs_trans *tp, xfs_fsblock_t rtbno,
+ 		xfs_filblks_t rtlen);
++
++xfs_filblks_t xfs_rtbitmap_blockcount(struct xfs_mount *mp, xfs_rtbxlen_t
++		rtextents);
++unsigned long long xfs_rtbitmap_wordcount(struct xfs_mount *mp,
++		xfs_rtbxlen_t rtextents);
+ #else /* CONFIG_XFS_RT */
+ # define xfs_rtfree_extent(t,b,l)			(-ENOSYS)
+ # define xfs_rtfree_blocks(t,rb,rl)			(-ENOSYS)
+@@ -268,6 +273,13 @@ int xfs_rtfree_blocks(struct xfs_trans *tp, xfs_fsblock_t rtbno,
+ # define xfs_rtalloc_query_all(m,t,f,p)			(-ENOSYS)
+ # define xfs_rtbuf_get(m,t,b,i,p)			(-ENOSYS)
+ # define xfs_rtalloc_extent_is_free(m,t,s,l,i)		(-ENOSYS)
++static inline xfs_filblks_t
++xfs_rtbitmap_blockcount(struct xfs_mount *mp, xfs_rtbxlen_t rtextents)
++{
++	/* shut up gcc */
++	return 0;
++}
++# define xfs_rtbitmap_wordcount(mp, r)			(0)
+ #endif /* CONFIG_XFS_RT */
+ 
+ #endif /* __XFS_RTBITMAP_H__ */
+diff --git a/libxfs/xfs_trans_resv.c b/libxfs/xfs_trans_resv.c
+index be486ed42c3..36db7d709fe 100644
+--- a/libxfs/xfs_trans_resv.c
++++ b/libxfs/xfs_trans_resv.c
+@@ -217,11 +217,12 @@ xfs_rtalloc_block_count(
+ 	struct xfs_mount	*mp,
+ 	unsigned int		num_ops)
+ {
+-	unsigned int		blksz = XFS_FSB_TO_B(mp, 1);
+-	unsigned int		rtbmp_bytes;
++	unsigned int		rtbmp_blocks;
++	xfs_rtxlen_t		rtxlen;
+ 
+-	rtbmp_bytes = xfs_extlen_to_rtxlen(mp, XFS_MAX_BMBT_EXTLEN) / NBBY;
+-	return (howmany(rtbmp_bytes, blksz) + 1) * num_ops;
++	rtxlen = xfs_extlen_to_rtxlen(mp, XFS_MAX_BMBT_EXTLEN);
++	rtbmp_blocks = xfs_rtbitmap_blockcount(mp, rtxlen);
++	return (rtbmp_blocks + 1) * num_ops;
+ }
+ 
+ /*
+diff --git a/repair/rt.c b/repair/rt.c
+index 8f3b9082a9b..244b59f04ce 100644
+--- a/repair/rt.c
++++ b/repair/rt.c
+@@ -19,6 +19,8 @@
+ void
+ rtinit(xfs_mount_t *mp)
+ {
++	unsigned long long	wordcnt;
++
+ 	if (mp->m_sb.sb_rblocks == 0)
+ 		return;
+ 
+@@ -26,11 +28,9 @@ rtinit(xfs_mount_t *mp)
+ 	 * realtime init -- blockmap initialization is
+ 	 * handled by incore_init()
+ 	 */
+-	/*
+-	sumfile = calloc(mp->m_rsumsize, 1);
+-	*/
+-	if ((btmcompute = calloc(mp->m_sb.sb_rbmblocks *
+-			mp->m_sb.sb_blocksize, 1)) == NULL)
++	wordcnt = libxfs_rtbitmap_wordcount(mp, mp->m_sb.sb_rextents);
++	btmcompute = calloc(wordcnt, sizeof(xfs_rtword_t));
++	if (!btmcompute)
+ 		do_error(
+ 	_("couldn't allocate memory for incore realtime bitmap.\n"));
+ 
 
