@@ -2,70 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22D2865D35D
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Jan 2023 13:56:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA06C65D971
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Jan 2023 17:25:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239289AbjADMz3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 Jan 2023 07:55:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36080 "EHLO
+        id S230073AbjADQZz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 Jan 2023 11:25:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239089AbjADMyz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Jan 2023 07:54:55 -0500
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400631DDF0
-        for <linux-xfs@vger.kernel.org>; Wed,  4 Jan 2023 04:54:53 -0800 (PST)
-Received: by mail-qk1-x729.google.com with SMTP id k3so16198309qki.13
-        for <linux-xfs@vger.kernel.org>; Wed, 04 Jan 2023 04:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=BQfo1+41q2NZR57Q7BFlMODaOza2AgrRvUpAp3daCd4t1w84OEhFtXAM1g7CkVTr/y
-         mvXWkJvXCDM96Iy3cSf9E37Th3uZX5TzmwlIsHFzK3DAyLuSjJ8d3uR9drr/ahkzPGkt
-         iW+sw+gZOJCd7bumtfoM4UR2xOfXz6tdmGq2f+IJJhoSBazdofAm5Gs9PxuweXnk264c
-         knSGf1CtrqZScdeov1GoaGbl2sApMUXYjJGPCObPVA0UTlHx2t6+wdp4VOKHmsqLWM8X
-         lQt15zqigA6uJCG+q37n0r4mLK1MKtsniT1i9jhRA9qlN9E2Mf0sYN4W9Jd0n+39BoCK
-         yzWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
-        b=wQQpfsDuT6Fq3LElkqoOkAO3YUvqjY26TUbXA2B+u7iMndJHainGvfkSU2KOkgypcN
-         fqNQ4+oSWpZUG2xnqdvoakZvWVqeTROp48t0GFHsPQUF/PlUnS3drG+NAqrk2n4VdQD6
-         Od3blsLVXRAgCqrf1qu1KjpJtXvQL4+eTEX8FNQYkLvGEW5JDmpkOeJmGb4jLINmwmOC
-         ayPu6CSISANypHe6LZbEbxO8Ro+dUwPHkpo1M+mZywwXDVptzR93o8Dvmb6ZapXm1Xov
-         Y3qI5yRGJyS4h1ZKwQf/iwW4t3OxcYcIPqPqEo2JRf3IZllwBbKykAmDP1Jb5WNT+PSF
-         ISxQ==
-X-Gm-Message-State: AFqh2kriGd1FmEoZfXjvjmknD1lGWPtxm9Wk54EKXAkH226b7ahID48T
-        uQBLDeR3l397P/6Q1nSbDb/IOPWqOoic2AyR5qxv/lnu3t4=
-X-Google-Smtp-Source: AMrXdXuKXTvNK0aSB9vnyjtdhrZfKmRzvU9Jw1W0zhcD7x19AMFVNgTh5oL+8ilZBOfTDf/bL64QVz1mYULxa/ftADs=
-X-Received: by 2002:ac8:568a:0:b0:3a9:688d:fad2 with SMTP id
- h10-20020ac8568a000000b003a9688dfad2mr1976067qta.646.1672836882017; Wed, 04
- Jan 2023 04:54:42 -0800 (PST)
+        with ESMTP id S239999AbjADQZR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 Jan 2023 11:25:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687A63D1C1
+        for <linux-xfs@vger.kernel.org>; Wed,  4 Jan 2023 08:24:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 08593617AE
+        for <linux-xfs@vger.kernel.org>; Wed,  4 Jan 2023 16:24:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 646C0C433F1;
+        Wed,  4 Jan 2023 16:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672849483;
+        bh=h89W5fHGwB3rpxAeaZDsUkf9H0QOo1DzBgvh8AAgAfI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ThFLmoZgYY2147icg5Zp0L63qStM46LqE5dDdFTL2/0jiQX3fAYXMBPmSffm8AFDx
+         7n0QsBoe0N3hFby/tvS8lc5OO9e8Ga+cZGsJX8KYGj9UOVbM7+Zt7+67e1Bi1mPxoa
+         Nuasoi89/SRIbYjKtpQ2KYTt5ubFjO2cNlGA0zfxJp2oye4ALDzmeD6W+3LmXfGK9H
+         csNH69cJtYaFcdl4rm+AJkxiz8ZRXhYtdLEO4u9bLdqu5GLsqpHNUmIaJ+sIouP830
+         Q10tCrPhk5/207ABkATkIo6I5tJ65V51pbc9hfv5dSja6U+l4gBSKWpK3j/bdrKy2y
+         oxyIkNVgXaOHw==
+Date:   Wed, 4 Jan 2023 08:24:42 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Wengang Wang <wen.gang.wang@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] xfs: fix extent busy updating
+Message-ID: <Y7WoStJT4ImufLct@magnolia>
+References: <20230103193217.4941-1-wen.gang.wang@oracle.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6200:5d91:b0:4a5:78e9:2012 with HTTP; Wed, 4 Jan 2023
- 04:54:41 -0800 (PST)
-Reply-To: Gregdenzell9@gmail.com
-From:   Greg Denzell <mzsophie@gmail.com>
-Date:   Wed, 4 Jan 2023 12:54:41 +0000
-Message-ID: <CAEoj5=ZpJ15GRz-U33Ocbu5-P3Va+3bNv3476+mmJJ52cwx7tA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230103193217.4941-1-wen.gang.wang@oracle.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Seasons Greetings!
+On Tue, Jan 03, 2023 at 11:32:17AM -0800, Wengang Wang wrote:
+> In xfs_extent_busy_update_extent() case 6 and 7, whenever bno is modified on
+> extent busy, the relavent length has to be modified accordingly.
+> 
+> Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
+> ---
+>  fs/xfs/xfs_extent_busy.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/xfs/xfs_extent_busy.c b/fs/xfs/xfs_extent_busy.c
+> index ad22a003f959..f3d328e4a440 100644
+> --- a/fs/xfs/xfs_extent_busy.c
+> +++ b/fs/xfs/xfs_extent_busy.c
+> @@ -236,6 +236,7 @@ xfs_extent_busy_update_extent(
+>  		 *
+>  		 */
+>  		busyp->bno = fend;
+> +		busyp->length = bend - fend;
 
-This will remind you again that I have not yet received your reply to
-my last message to you.
+Looks correct to me, but how did you find this?  Is there some sort of
+test case we could attach to this?
+
+--D
+
+>  	} else if (bbno < fbno) {
+>  		/*
+>  		 * Case 8:
+> -- 
+> 2.21.0 (Apple Git-122.2)
+> 
