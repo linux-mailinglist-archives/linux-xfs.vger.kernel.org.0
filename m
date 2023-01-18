@@ -2,69 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72E7A672B74
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 23:45:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89BAA672B7C
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 23:45:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjARWpW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Jan 2023 17:45:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
+        id S229710AbjARWp2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Jan 2023 17:45:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbjARWpQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 17:45:16 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811A161D4A
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:14 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id y3-20020a17090a390300b00229add7bb36so49746pjb.4
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:14 -0800 (PST)
+        with ESMTP id S229830AbjARWpS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 17:45:18 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B6C5F38D
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:16 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id 7-20020a17090a098700b002298931e366so67321pjo.2
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5Wk19nqjItmb7/nEJAS5MYPkA5nXbup5O1XuVw11F1k=;
-        b=QqeBT803qiNQhdgXUBJKL4dnWBe8OX/wiz+LhC7hyau42oPv7BLKH4J1qEyuLfakjQ
-         KtgIkA3OAETQXg37Um2LAqEngRzXDSsiHfjlXHXY+PgP+JZjMw2hOh3CvN9jPEXDIlyK
-         Ozl+h+nhqY5eIHijlTX+iBtvPPTsjfKsyJTk2NuiVR2jpotSb/VesHs1vGMwlyUXN8Br
-         WKdfLo1o/3rK7MSvjCb3XFKZ+wF2GHv4BRJy1Ah1tEdBb6x3Tq1I7ll2saPLN4Zlrjjm
-         EoPmCTZMnSQMfOXor+dRy7tijgW+RQTOPZFVZeOlDo0Mm2ZdbLqE2Hd9oBgqhLa+V1P7
-         OG1A==
+        bh=zEMct9Zqrd13A6nzsqLIu04c0gI3Nv0cf7YVOTPO3rY=;
+        b=ZTYbuE5VWxqg6wGLlAJ2Gjs0KMwmYFTi8coleZdcx13NLkq/GYZf/JwDPu5DzyBqxI
+         bdFNCEsXfyODt9idLVHGb0mf0sCb+s7AwASNCWMB19RQU6EmovgxvsXPo5djBKfXfvRq
+         veNw4KHVVpXbvPEAFUMz83uRslgmXY/osk4BPY+VukdpdItw4olJ0MDEBDru/zHfUVcH
+         VRTTW1b0aFc02iC6KnC51VP1hn8A/G3b/YoU1ceRLH6EMV0rqlb8obONKq0q7l9qgvtZ
+         4Td28wQYTu+fC9x9B9dfpYl1GkT43o5Cbxuyfsjvd1hA+/TRj8chtvYZxOKIWZSAgt61
+         v1Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5Wk19nqjItmb7/nEJAS5MYPkA5nXbup5O1XuVw11F1k=;
-        b=pHC0/tXDrMCcwcOj4wB/WHYzVdIGpVMvfJ0eDVVmRBhfkMYtCDGFBKu4+a2DU2f4pK
-         IdALqaPP6jf0ov3ObLObsHPbs3WCDZolyyHi9Gx0ZW9p00FjC46y4Gd11m+gLIgG7GTs
-         q48TZAGS3+X+ud/sGUSC9HsMN85GsozUOGmdCQMVmgPLCTTum426JS7ACw/Y6cFgx6wA
-         Jt28iOk7OJu0bU/PRl62Ob8oD85/tdFqILdhVxm6ioegTQ9rCscQonUytT/6SeMyzcKb
-         NW+6IX6C9J1FEQbJbtHry0wylhM9HIYqJ5Q6K43yqSds+N6W7bbIkicTXn7xWgexFstq
-         6DTA==
-X-Gm-Message-State: AFqh2kpWYjbe7RSasoosMuNMXPOwQhc13Wn84/rA/5cDWxjM+HeULhql
-        7cULt6y1AKRNjyvTpRKfScHhVouuFJ3XKrId
-X-Google-Smtp-Source: AMrXdXsfOS1t++iEyld62MIyDAdlYGFc8Xthg2EnTsbW7+uCR67FrKQYElb/j8OxhTuCwd8oiNr0Xw==
-X-Received: by 2002:a17:902:7088:b0:192:52d7:b574 with SMTP id z8-20020a170902708800b0019252d7b574mr8647272plk.63.1674081914036;
-        Wed, 18 Jan 2023 14:45:14 -0800 (PST)
+        bh=zEMct9Zqrd13A6nzsqLIu04c0gI3Nv0cf7YVOTPO3rY=;
+        b=q+LGthsMOVMBpF/0WW+7lsXWv87Gn8in4J1JWBX6eR1+DCgSCaObySKe8/KcO4Kgcw
+         CZDAZ79HzEDXi6t39j0MWTzAWfisc2MGxVhCdf46Vwuy1fSdQ3vuPSRq8jDup+UwN9EQ
+         fy4Qq/r4bBkmHY3UkCpFRmiV02OXlqL6qbQ+yDb0hlAy78ZTR6NXOvw0lL/UdL7NSzKq
+         Me6bEzIy5nPbMhd8yQDX4JoPMY9JIdvsJiyqO4r/DScv9Tzzy4Je66h+g13hl0OG69JG
+         90mtzsmLepY8gIGCsCcR1WkEapxIkSZbczdXAAaiU4CPsgQ+MpO0CqRvvO12Z0IbLLYD
+         CpSQ==
+X-Gm-Message-State: AFqh2kqMW4ToItKcjH/NCHUrlrfeulS3tA0flZUFKYe6HAYzdvZYPx5L
+        BxO2yJdmjKlGOKbtQON/LRCsXCz4wFVX+5Fv
+X-Google-Smtp-Source: AMrXdXuMxKZGCffA32+IsKGgdfn0qxyHHkTr3CB8xhxxtQR3bn/NbPA3+HPdFEGlA8f4beeP9885NQ==
+X-Received: by 2002:a17:902:bd41:b0:194:3cef:31 with SMTP id b1-20020a170902bd4100b001943cef0031mr9044498plx.49.1674081916118;
+        Wed, 18 Jan 2023 14:45:16 -0800 (PST)
 Received: from dread.disaster.area (pa49-186-146-207.pa.vic.optusnet.com.au. [49.186.146.207])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170902d2ce00b00192fe452e17sm6195719plc.162.2023.01.18.14.45.13
+        by smtp.gmail.com with ESMTPSA id t12-20020a170902e84c00b0019327a6abc2sm3878852plg.44.2023.01.18.14.45.13
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 18 Jan 2023 14:45:13 -0800 (PST)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <dave@fromorbit.com>)
-        id 1pIHB8-004iWm-UH
+        id 1pIHB8-004iWs-V3
         for linux-xfs@vger.kernel.org; Thu, 19 Jan 2023 09:45:10 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1pIHB8-008FCt-32
+        id 1pIHB8-008FCz-38
         for linux-xfs@vger.kernel.org;
         Thu, 19 Jan 2023 09:45:10 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 05/42] xfs: t_firstblock is tracking AGs not blocks
-Date:   Thu, 19 Jan 2023 09:44:28 +1100
-Message-Id: <20230118224505.1964941-6-david@fromorbit.com>
+Subject: [PATCH 06/42] xfs: don't assert fail on transaction cancel with deferred ops
+Date:   Thu, 19 Jan 2023 09:44:29 +1100
+Message-Id: <20230118224505.1964941-7-david@fromorbit.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20230118224505.1964941-1-david@fromorbit.com>
 References: <20230118224505.1964941-1-david@fromorbit.com>
@@ -81,215 +81,42 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The tp->t_firstblock field is now raelly tracking the highest AG we
-have locked, not the block number of the highest allocation we've
-made. It's purpose is to prevent AGF locking deadlocks, so rename it
-to "highest AG" and simplify the implementation to just track the
-agno rather than a fsbno.
+We can error out of an allocation transaction when updating BMBT
+blocks when things go wrong. This can be a btree corruption, and
+unexpected ENOSPC, etc. In these cases, we already have deferred ops
+queued for the first allocation that has been done, and we just want
+to cancel out the transaction and shut down the filesystem on error.
+
+In fact, we do just that for production systems - the assert that we
+can't have a transaction with defer ops attached unless we are
+already shut down is bogus and gets in the way of debugging
+whatever issue is actually causing the transaction to be cancelled.
+
+Remove the assert because it is causing spurious test failures to
+hang test machines.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_alloc.c      | 12 +++++-------
- fs/xfs/libxfs/xfs_bmap.c       |  4 ++--
- fs/xfs/libxfs/xfs_bmap_btree.c |  6 +++---
- fs/xfs/xfs_bmap_util.c         |  2 +-
- fs/xfs/xfs_inode.c             |  2 +-
- fs/xfs/xfs_reflink.c           |  2 +-
- fs/xfs/xfs_trace.h             |  8 ++++----
- fs/xfs/xfs_trans.c             |  4 ++--
- fs/xfs/xfs_trans.h             |  2 +-
- 9 files changed, 20 insertions(+), 22 deletions(-)
+ fs/xfs/xfs_trans.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index c2f38f595d7f..9f26a9368eeb 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -3169,8 +3169,8 @@ xfs_alloc_vextent(
- 	mp = args->mp;
- 	type = args->otype = args->type;
- 	args->agbno = NULLAGBLOCK;
--	if (args->tp->t_firstblock != NULLFSBLOCK)
--		minimum_agno = XFS_FSB_TO_AGNO(mp, args->tp->t_firstblock);
-+	if (args->tp->t_highest_agno != NULLAGNUMBER)
-+		minimum_agno = args->tp->t_highest_agno;
- 	/*
- 	 * Just fix this up, for the case where the last a.g. is shorter
- 	 * (or there's only one a.g.) and the caller couldn't easily figure
-@@ -3375,11 +3375,9 @@ xfs_alloc_vextent(
- 	 * deadlocks.
- 	 */
- 	if (args->agbp &&
--	    (args->tp->t_firstblock == NULLFSBLOCK ||
--	     args->pag->pag_agno > minimum_agno)) {
--		args->tp->t_firstblock = XFS_AGB_TO_FSB(mp,
--					args->pag->pag_agno, 0);
--	}
-+	    (args->tp->t_highest_agno == NULLAGNUMBER ||
-+	     args->pag->pag_agno > minimum_agno))
-+		args->tp->t_highest_agno = args->pag->pag_agno;
- 	xfs_perag_put(args->pag);
- 	return 0;
- error0:
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index bc566aae4246..f15d45af661f 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -4192,7 +4192,7 @@ xfs_bmapi_minleft(
- {
- 	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, fork);
- 
--	if (tp && tp->t_firstblock != NULLFSBLOCK)
-+	if (tp && tp->t_highest_agno != NULLAGNUMBER)
- 		return 0;
- 	if (ifp->if_format != XFS_DINODE_FMT_BTREE)
- 		return 1;
-@@ -6084,7 +6084,7 @@ xfs_bmap_finish_one(
- {
- 	int				error = 0;
- 
--	ASSERT(tp->t_firstblock == NULLFSBLOCK);
-+	ASSERT(tp->t_highest_agno == NULLAGNUMBER);
- 
- 	trace_xfs_bmap_deferred(tp->t_mountp,
- 			XFS_FSB_TO_AGNO(tp->t_mountp, startblock), type,
-diff --git a/fs/xfs/libxfs/xfs_bmap_btree.c b/fs/xfs/libxfs/xfs_bmap_btree.c
-index 76a0f0d260a4..afd9b2d962a3 100644
---- a/fs/xfs/libxfs/xfs_bmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_bmap_btree.c
-@@ -184,11 +184,11 @@ xfs_bmbt_update_cursor(
- 	struct xfs_btree_cur	*src,
- 	struct xfs_btree_cur	*dst)
- {
--	ASSERT((dst->bc_tp->t_firstblock != NULLFSBLOCK) ||
-+	ASSERT((dst->bc_tp->t_highest_agno != NULLAGNUMBER) ||
- 	       (dst->bc_ino.ip->i_diflags & XFS_DIFLAG_REALTIME));
- 
- 	dst->bc_ino.allocated += src->bc_ino.allocated;
--	dst->bc_tp->t_firstblock = src->bc_tp->t_firstblock;
-+	dst->bc_tp->t_highest_agno = src->bc_tp->t_highest_agno;
- 
- 	src->bc_ino.allocated = 0;
- }
-@@ -218,7 +218,7 @@ xfs_bmbt_alloc_block(
- 	 * we have to ensure that we attempt to locate the entire set of bmbt
- 	 * allocations in the same AG, as xfs_bmapi_write() would have reserved.
- 	 */
--	if (cur->bc_tp->t_firstblock == NULLFSBLOCK)
-+	if (cur->bc_tp->t_highest_agno == NULLAGNUMBER)
- 		args.minleft = xfs_bmapi_minleft(cur->bc_tp, cur->bc_ino.ip,
- 					cur->bc_ino.whichfork);
- 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 867645b74d88..a09dd2606479 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -1410,7 +1410,7 @@ xfs_swap_extent_rmap(
- 
- 		/* Unmap the old blocks in the source file. */
- 		while (tirec.br_blockcount) {
--			ASSERT(tp->t_firstblock == NULLFSBLOCK);
-+			ASSERT(tp->t_highest_agno == NULLAGNUMBER);
- 			trace_xfs_swap_extent_rmap_remap_piece(tip, &tirec);
- 
- 			/* Read extent from the source file */
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index d354ea2b74f9..dbe274b8065d 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1367,7 +1367,7 @@ xfs_itruncate_extents_flags(
- 
- 	unmap_len = XFS_MAX_FILEOFF - first_unmap_block + 1;
- 	while (unmap_len > 0) {
--		ASSERT(tp->t_firstblock == NULLFSBLOCK);
-+		ASSERT(tp->t_highest_agno == NULLAGNUMBER);
- 		error = __xfs_bunmapi(tp, ip, first_unmap_block, &unmap_len,
- 				flags, XFS_ITRUNC_MAX_EXTENTS);
- 		if (error)
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 5535778a98f9..57bf59ff4854 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -610,7 +610,7 @@ xfs_reflink_cancel_cow_blocks(
- 			if (error)
- 				break;
- 		} else if (del.br_state == XFS_EXT_UNWRITTEN || cancel_real) {
--			ASSERT((*tpp)->t_firstblock == NULLFSBLOCK);
-+			ASSERT((*tpp)->t_highest_agno == NULLAGNUMBER);
- 
- 			/* Free the CoW orphan record. */
- 			xfs_refcount_free_cow_extent(*tpp, del.br_startblock,
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 918e778fdd55..7dc57db6aa42 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1801,7 +1801,7 @@ DECLARE_EVENT_CLASS(xfs_alloc_class,
- 		__field(char, wasfromfl)
- 		__field(int, resv)
- 		__field(int, datatype)
--		__field(xfs_fsblock_t, firstblock)
-+		__field(xfs_agnumber_t, highest_agno)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = args->mp->m_super->s_dev;
-@@ -1822,12 +1822,12 @@ DECLARE_EVENT_CLASS(xfs_alloc_class,
- 		__entry->wasfromfl = args->wasfromfl;
- 		__entry->resv = args->resv;
- 		__entry->datatype = args->datatype;
--		__entry->firstblock = args->tp->t_firstblock;
-+		__entry->highest_agno = args->tp->t_highest_agno;
- 	),
- 	TP_printk("dev %d:%d agno 0x%x agbno 0x%x minlen %u maxlen %u mod %u "
- 		  "prod %u minleft %u total %u alignment %u minalignslop %u "
- 		  "len %u type %s otype %s wasdel %d wasfromfl %d resv %d "
--		  "datatype 0x%x firstblock 0x%llx",
-+		  "datatype 0x%x highest_agno 0x%x",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->agno,
- 		  __entry->agbno,
-@@ -1846,7 +1846,7 @@ DECLARE_EVENT_CLASS(xfs_alloc_class,
- 		  __entry->wasfromfl,
- 		  __entry->resv,
- 		  __entry->datatype,
--		  (unsigned long long)__entry->firstblock)
-+		  __entry->highest_agno)
- )
- 
- #define DEFINE_ALLOC_EVENT(name) \
 diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index 7bd16fbff534..53ab544e4c2c 100644
+index 53ab544e4c2c..8afc0c080861 100644
 --- a/fs/xfs/xfs_trans.c
 +++ b/fs/xfs/xfs_trans.c
-@@ -102,7 +102,7 @@ xfs_trans_dup(
- 	INIT_LIST_HEAD(&ntp->t_items);
- 	INIT_LIST_HEAD(&ntp->t_busy);
- 	INIT_LIST_HEAD(&ntp->t_dfops);
--	ntp->t_firstblock = NULLFSBLOCK;
-+	ntp->t_highest_agno = NULLAGNUMBER;
- 
- 	ASSERT(tp->t_flags & XFS_TRANS_PERM_LOG_RES);
- 	ASSERT(tp->t_ticket != NULL);
-@@ -278,7 +278,7 @@ xfs_trans_alloc(
- 	INIT_LIST_HEAD(&tp->t_items);
- 	INIT_LIST_HEAD(&tp->t_busy);
- 	INIT_LIST_HEAD(&tp->t_dfops);
--	tp->t_firstblock = NULLFSBLOCK;
-+	tp->t_highest_agno = NULLAGNUMBER;
- 
- 	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
- 	if (error == -ENOSPC && want_retry) {
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index 55819785941c..6e3646d524ce 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -132,7 +132,7 @@ typedef struct xfs_trans {
- 	unsigned int		t_rtx_res;	/* # of rt extents resvd */
- 	unsigned int		t_rtx_res_used;	/* # of resvd rt extents used */
- 	unsigned int		t_flags;	/* misc flags */
--	xfs_fsblock_t		t_firstblock;	/* first block allocated */
-+	xfs_agnumber_t		t_highest_agno;	/* highest AGF locked */
- 	struct xlog_ticket	*t_ticket;	/* log mgr ticket */
- 	struct xfs_mount	*t_mountp;	/* ptr to fs mount struct */
- 	struct xfs_dquot_acct   *t_dqinfo;	/* acctg info for dquots */
+@@ -1078,10 +1078,10 @@ xfs_trans_cancel(
+ 	/*
+ 	 * It's never valid to cancel a transaction with deferred ops attached,
+ 	 * because the transaction is effectively dirty.  Complain about this
+-	 * loudly before freeing the in-memory defer items.
++	 * loudly before freeing the in-memory defer items and shutting down the
++	 * filesystem.
+ 	 */
+ 	if (!list_empty(&tp->t_dfops)) {
+-		ASSERT(xfs_is_shutdown(mp) || list_empty(&tp->t_dfops));
+ 		ASSERT(tp->t_flags & XFS_TRANS_PERM_LOG_RES);
+ 		dirty = true;
+ 		xfs_defer_cancel(tp);
 -- 
 2.39.0
 
