@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FD55670F40
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 01:58:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFB44670F42
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 01:58:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229930AbjARA6T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 17 Jan 2023 19:58:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
+        id S229618AbjARA6h (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 17 Jan 2023 19:58:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbjARA56 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Jan 2023 19:57:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A6759E4C
-        for <linux-xfs@vger.kernel.org>; Tue, 17 Jan 2023 16:44:51 -0800 (PST)
+        with ESMTP id S229547AbjARA6R (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Jan 2023 19:58:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75544F768
+        for <linux-xfs@vger.kernel.org>; Tue, 17 Jan 2023 16:45:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 792046159B
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 00:44:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9724C433D2;
-        Wed, 18 Jan 2023 00:44:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 11E39615A7
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 00:45:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BEFBC433D2;
+        Wed, 18 Jan 2023 00:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674002689;
-        bh=9CvFS7Jlh4TUywGMnINuqVzphG9r07051N4y6vVQuGY=;
+        s=k20201202; t=1674002705;
+        bh=ApJXi3hN8zIzHDL4KwqIjokFRqXN2ItECVNABbU9eiY=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=J7ETpvUDWHgWXTuzDSjURzCL2ecivjtVJRL2+fK1D4ZUELbqDzzssTayZV9O3ZLzl
-         QCc/RDs1pVJ5xgY9WGYulRLacdWld4ceUuceW9vzeSP/O6k9fsj1wr4FUShNE1cEw5
-         2j7f+O+6qzOpRC8LMUyYLDp0O+t3zLochh8pDg8FVevgv8IZtVJdhauxGqCfzXkZum
-         A+uyH6eHP6b13kVz9ASjoDRwoj8oe8UegKTIvmF2DFgs69+8a8wyECsJSmsO8BnN2h
-         7nWhhVdWW0JcK7CjTdvSraaN6m22zojOZCp5yFTAte/iCLFQhiUSIMshT7pnJS1vVN
-         jZBZANjgquL6w==
-Date:   Tue, 17 Jan 2023 16:44:49 -0800
-Subject: [PATCH 1/3] design: update group quota inode information for v5
- filesystems
+        b=kbMwc39nLxwqztYazLClaUBMBTPLwYWDTMoYe6EIBWVbfJcWBOLKXjwSKClVPM+wv
+         22enUOLCh0D7kUJIKTsnDCNrBOOISJzUwQ9x+3witsun6AT9hMAUq4DC1umha40FLC
+         yT5NiP7i2NgtPS9bJFH9E+cLoPcdIXUyJn30yzdxTWVdRqZFzX+IaqMfXr5+g5qq1F
+         CkiZEgfXukdqfLExHO5LDe5AOTFB/RoiQgQBWT6FRDKEThgUYMlZXVaismwiPW1gXf
+         YFgNiSyGeG+EHDdYA9ES0kcKxgERaVtjCmnP/6QPW9J13yIia/zNDcskfko43b4Y2k
+         lPioiMlAPIBSQ==
+Date:   Tue, 17 Jan 2023 16:45:05 -0800
+Subject: [PATCH 2/3] design: document the large extent count ondisk format
+ changes
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, chandan.babu@oracle.com,
         allison.henderson@oracle.com
-Message-ID: <167400163292.1925795.12938763753506074554.stgit@magnolia>
+Message-ID: <167400163305.1925795.9512359158912946568.stgit@magnolia>
 In-Reply-To: <167400163279.1925795.1487663139527842585.stgit@magnolia>
 References: <167400163279.1925795.1487663139527842585.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,33 +56,139 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fix a few out of date statements about the group quota inode field on v5
-filesystems.
+Update the ondisk format documentation to discuss the larger maximum
+extent counts that were added in 2022.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- .../allocation_groups.asciidoc                     |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ .../allocation_groups.asciidoc                     |    4 +
+ .../XFS_Filesystem_Structure/ondisk_inode.asciidoc |   61 ++++++++++++++++++--
+ 2 files changed, 58 insertions(+), 7 deletions(-)
 
 
 diff --git a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-index 0e48b4bf..7ee5d561 100644
+index 7ee5d561..c64b4fad 100644
 --- a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
 +++ b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-@@ -262,11 +262,12 @@ maintained in the first superblock.
- *sb_uquotino*::
- Inode for user quotas. This and the following two quota fields only apply if
- +XFS_SB_VERSION_QUOTABIT+ flag is set in +sb_versionnum+. Refer to
--xref:Quota_Inodes[quota inodes] for more information
-+xref:Quota_Inodes[quota inodes] for more information.
+@@ -454,6 +454,10 @@ xref:Timestamps[timestamps] for more information.
+ The filesystem is not in operable condition, and must be run through
+ xfs_repair before it can be mounted.
  
- *sb_gquotino*::
--Inode for group or project quotas. Group and Project quotas cannot be used at
--the same time.
-+Inode for group or project quotas. Group and project quotas cannot be used at
-+the same time on v4 filesystems.  On a v5 filesystem, this inode always stores
-+group quota information.
++| +XFS_SB_FEAT_INCOMPAT_NREXT64+ |
++Large file fork extent counts.  This greatly expands the maximum number of
++space mappings allowed in data and extended attribute file forks.
++
+ |=====
  
- *sb_qflags*::
- Quota flags. It can be a combination of the following flags:
+ *sb_features_log_incompat*::
+diff --git a/design/XFS_Filesystem_Structure/ondisk_inode.asciidoc b/design/XFS_Filesystem_Structure/ondisk_inode.asciidoc
+index 1922954e..34c06487 100644
+--- a/design/XFS_Filesystem_Structure/ondisk_inode.asciidoc
++++ b/design/XFS_Filesystem_Structure/ondisk_inode.asciidoc
+@@ -84,14 +84,41 @@ struct xfs_dinode_core {
+      __uint32_t                di_nlink;
+      __uint16_t                di_projid;
+      __uint16_t                di_projid_hi;
+-     __uint8_t                 di_pad[6];
+-     __uint16_t                di_flushiter;
++     union {
++          /* Number of data fork extents if NREXT64 is set */
++          __be64               di_big_nextents;
++
++          /* Padding for V3 inodes without NREXT64 set. */
++          __be64               di_v3_pad;
++
++          /* Padding and inode flush counter for V2 inodes. */
++          struct {
++               __u8            di_v2_pad[6];
++               __be16          di_flushiter;
++          };
++     };
+      xfs_timestamp_t           di_atime;
+      xfs_timestamp_t           di_mtime;
+      xfs_timestamp_t           di_ctime;
+      xfs_fsize_t               di_size;
+      xfs_rfsblock_t            di_nblocks;
+      xfs_extlen_t              di_extsize;
++     union {
++          /*
++           * For V2 inodes and V3 inodes without NREXT64 set, this
++           * is the number of data and attr fork extents.
++           */
++          struct {
++               __be32          di_nextents;
++               __be16          di_anextents;
++          } __packed;
++
++          /* Number of attr fork extents if NREXT64 is set. */
++          struct {
++               __be32          di_big_anextents;
++               __be16          di_nrext64_pad;
++          } __packed;
++     } __packed;
+      xfs_extnum_t              di_nextents;
+      xfs_aextnum_t             di_anextents;
+      __uint8_t                 di_forkoff;
+@@ -162,7 +189,7 @@ When the number exceeds 65535, the inode is converted to v2 and the link count
+ is stored in +di_nlink+.
+ 
+ *di_uid*::
+-Specifies the owner's UID of the inode. 
++Specifies the owner's UID of the inode.
+ 
+ *di_gid*::
+ Specifies the owner's GID of the inode.
+@@ -181,10 +208,17 @@ Specifies the high 16 bits of the owner's project ID in v2 inodes, if the
+ +XFS_SB_VERSION2_PROJID32BIT+ feature is set; and zero otherwise.
+ 
+ *di_pad[6]*::
+-Reserved, must be zero.
++Reserved, must be zero.  Only exists for v2 inodes.
+ 
+ *di_flushiter*::
+-Incremented on flush.
++Incremented on flush.  Only exists for v2 inodes.
++
++*di_v3_pad*::
++Must be zero for v3 inodes without the NREXT64 flag set.
++
++*di_big_nextents*::
++Specifies the number of data extents associated with this inode if the NREXT64
++flag is set.  This allows for up to 2^48^ - 1 extent mappings.
+ 
+ *di_atime*::
+ 
+@@ -231,10 +265,19 @@ file is written to beyond allocated space, XFS will attempt to allocate
+ additional disk space based on this value.
+ 
+ *di_nextents*::
+-Specifies the number of data extents associated with this inode.
++Specifies the number of data extents associated with this inode if the NREXT64
++flag is not set.  Supports up to 2^31^ - 1 extents.
+ 
+ *di_anextents*::
+-Specifies the number of extended attribute extents associated with this inode.
++Specifies the number of extended attribute extents associated with this inode
++if the NREXT64 flag is not set.  Supports up to 2^15^ - 1 extents.
++
++*di_big_anextents*::
++Specifies the number of extended attribute extents associated with this inode
++if the NREXT64 flag is set.  Supports up to 2^32^ - 1 extents.
++
++*di_nrext64_pad*::
++Must be zero if the NREXT64 flag is set.
+ 
+ *di_forkoff*::
+ Specifies the offset into the inode's literal area where the extended attribute
+@@ -336,6 +379,10 @@ This inode shares (or has shared) data blocks with another inode.
+ For files, this is the extent size hint for copy on write operations; see
+ +di_cowextsize+ for details.  For directories, the value in +di_cowextsize+
+ will be copied to all newly created files and directories.
++| +XFS_DIFLAG2_NREXT64+		|
++Files with this flag set may have up to (2^48^ - 1) extents mapped to the data
++fork and up to (2^32^ - 1) extents mapped to the attribute fork.  This flag
++requires the +XFS_SB_FEAT_INCOMPAT_NREXT64+ feature to be enabled.
+ |=====
+ 
+ *di_cowextsize*::
 
