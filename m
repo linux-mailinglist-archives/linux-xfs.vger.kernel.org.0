@@ -2,69 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D932C672B71
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 23:45:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09AB6672B7D
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 23:45:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbjARWpU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Jan 2023 17:45:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
+        id S229766AbjARWp3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Jan 2023 17:45:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjARWpP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 17:45:15 -0500
+        with ESMTP id S229813AbjARWpR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 17:45:17 -0500
 Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FE035F3BA
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:14 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id v10-20020a17090abb8a00b00229c517a6eeso3992677pjr.5
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:14 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B5D63E3A
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:15 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id v10-20020a17090abb8a00b00229c517a6eeso3992728pjr.5
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+XhOUABUrwg/JfEwItPd+UcaDxpn/yLUV8KJI364MO8=;
-        b=5qBLwiYm7I+ze5BHggBhVap0fYmry9CNc758puQ6LwCTMd5PjMQ8wGk6dyljsE/YMo
-         qw+J9UH89tJJL96XWq+aLxVevGbvu+4P6YrGAROpytqaFZl2NEaYIwZWDvwkaX84kN0E
-         hqyVVT5RUeK4AvMVx+4Oj5fWkqwx8MvYSn0UHEvlmwcYyDsXIq3tMhxIfNN9w417dmeX
-         oC8nfGaqHq8DnpsCC6B864YTN3YEELEyVhzIAAEcqNSMJB00juI4EW4Nc94wVYrKwPO5
-         RTsO8CTgV1GEh+m/+QxxxCoeMw41bggaPusbmjgvSiAxEDWVdidioY5redqXpgMdCQNM
-         dp9g==
+        bh=ESNl4gcmMvqESi3nyV6w/UdCrWaFMG1IJcQBAioCf04=;
+        b=YcLQeofUPNrSxh+tVow59ikNuz3M4fehaOHecVgKm0XRBAcpghP6jF3p8dc3v93fOg
+         1WJDl1m8WigyPvfgbMFZi28Bb3OISkqlyWfQZSvZTyJPqzBnagtONZQivX5gFzqjOvMu
+         wKepWsS25NqrdqK3LPFIB8OKth8xxe+pXbDF1aa7uGr37AmGTBYM8xmnuHpEvM11HK/5
+         MDZdTteMxXvgfwiZewDW6l390wn9K6ssg7dkPZ6mMXrdeheHrT/2hMzhmdk+42rNa4fK
+         MgSwKTwWGj8COu/+9dUF/DMz6ElqJ3pnZMpi1JihjvGQDwCV1pCqKrOPloSw9Oqzj5JS
+         WRGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+XhOUABUrwg/JfEwItPd+UcaDxpn/yLUV8KJI364MO8=;
-        b=ta8iHIQsw+vSYR/1f/2XqlITCVNpEV52Lbq6wVOE3h5UiTvgOTm9YDnTZLnFkk0EU4
-         iStioNBO7pOz/Uetf+qdNwxZVPqB0nHLAtdCe8mHPRw5kw1DnEpnzVroOHZuebQpvesx
-         2EbrCpDxlYw3I/5ueZezX9BHSAGtHU/pjHuGm0QdOcaxFYQJxbUn+0r3zNuBKS4vSP5Z
-         RPySWGpxZlwT7OP9Ei2B6CLxfB71EeaoWxQCtlx/jmZFLpDGDfB9HQhQXAETVP/xN1e3
-         6VHVjKksDt2ApnXwZWj8b+XfGdP7mXfn6CA90Dh3QF+J/LfuKPxib++craWF+Amklenv
-         K19Q==
-X-Gm-Message-State: AFqh2kpzju26c+P+68HCDPyMNG3M0SBUyDbCuJreBDlsJFFKFLJcIjIK
-        Ilm+jP+b3xS2SKp7VLtwXnWp+lVWPBDX62I3
-X-Google-Smtp-Source: AMrXdXu7hRXchv1y7xJeb92RD0RJCWrfWXl0tMN6Ul0Gz5scepZ28bRj14ZBjQ+9RKHr13ZuLkWnpA==
-X-Received: by 2002:a17:902:7894:b0:189:cf92:6f5c with SMTP id q20-20020a170902789400b00189cf926f5cmr8942348pll.52.1674081913808;
-        Wed, 18 Jan 2023 14:45:13 -0800 (PST)
+        bh=ESNl4gcmMvqESi3nyV6w/UdCrWaFMG1IJcQBAioCf04=;
+        b=s02YjAN4joa5imFZirR23sUlLiggKMZXlBebYuodcP9AAcQeZk9IYGSZbc/HrLIxgI
+         2vbRUM9tdJouZyCILoWahPn9aN+MsiKBr8pn0f210kMWUl6xxGpvFSmxKhB8nRRLHVQO
+         VqAb8avgKCzk2z69DZRkKCtSUe9XSkoOPAGvZsKNEV2WVLeYxZszmy6D/DtKlvTjYKaZ
+         JpbagHMs07Gq9JKjgsigZbWkcKAaXLetYHUiQEP90bNWVkGhHWGKZGqZmaipVxF3xoTc
+         akxwjXC4ToXIl0eJsVnnhT1W9cBubH8KK7boVo0/Egztxl4HyiYyPGdB5jY82SFgAR42
+         2l0w==
+X-Gm-Message-State: AFqh2kqRKyGBHgCBlbfhuv/9suKYruCA3fkFwesUDm1Z9jGnpPvW5Pfk
+        4BhvrzV8bOicJtRDquyeu8tg52Igzjd7v8Rk
+X-Google-Smtp-Source: AMrXdXvu66FCtqYVOUt05zCVXmIR48GZPjUYo3SqQiWjsuoKBn6sRS9cnGffFeBAz894KrUwEAh6Aw==
+X-Received: by 2002:a17:903:2345:b0:193:3155:ebcf with SMTP id c5-20020a170903234500b001933155ebcfmr15858466plh.3.1674081915502;
+        Wed, 18 Jan 2023 14:45:15 -0800 (PST)
 Received: from dread.disaster.area (pa49-186-146-207.pa.vic.optusnet.com.au. [49.186.146.207])
-        by smtp.gmail.com with ESMTPSA id b15-20020a170902650f00b00188f3970d4asm23661258plk.163.2023.01.18.14.45.13
+        by smtp.gmail.com with ESMTPSA id k6-20020a170902c40600b0017f8094a52asm6611009plk.29.2023.01.18.14.45.13
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 18 Jan 2023 14:45:13 -0800 (PST)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <dave@fromorbit.com>)
-        id 1pIHB8-004iWf-RY
+        id 1pIHB8-004iWh-SX
         for linux-xfs@vger.kernel.org; Thu, 19 Jan 2023 09:45:10 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1pIHB8-008FCf-2m
+        id 1pIHB8-008FCj-2q
         for linux-xfs@vger.kernel.org;
         Thu, 19 Jan 2023 09:45:10 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 02/42] xfs: prefer free inodes at ENOSPC over chunk allocation
-Date:   Thu, 19 Jan 2023 09:44:25 +1100
-Message-Id: <20230118224505.1964941-3-david@fromorbit.com>
+Subject: [PATCH 03/42] xfs: block reservation too large for minleft allocation
+Date:   Thu, 19 Jan 2023 09:44:26 +1100
+Message-Id: <20230118224505.1964941-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20230118224505.1964941-1-david@fromorbit.com>
 References: <20230118224505.1964941-1-david@fromorbit.com>
@@ -81,86 +81,95 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-When an XFS filesystem has free inodes in chunks already allocated
-on disk, it will still allocate new inode chunks if the target AG
-has no free inodes in it. Normally, this is a good idea as it
-preserves locality of all the inodes in a given directory.
+When we enter xfs_bmbt_alloc_block() without having first allocated
+a data extent (i.e. tp->t_firstblock == NULLFSBLOCK) because we
+are doing something like unwritten extent conversion, the transaction
+block reservation is used as the minleft value.
 
-However, at ENOSPC this can lead to using the last few remaining
-free filesystem blocks to allocate a new chunk when there are many,
-many free inodes that could be allocated without consuming free
-space. This results in speeding up the consumption of the last few
-blocks and inode create operations then returning ENOSPC when there
-free inodes available because we don't have enough block left in the
-filesystem for directory creation reservations to proceed.
+This works for operations like unwritten extent conversion, but it
+assumes that the block reservation is only for a BMBT split. THis is
+not always true, and sometimes results in larger than necessary
+minleft values being set. We only actually need enough space for a
+btree split, something we already handle correctly in
+xfs_bmapi_write() via the xfs_bmapi_minleft() calculation.
 
-Hence when we are near ENOSPC, we should be attempting to preserve
-the remaining blocks for directory block allocation rather than
-using them for unnecessary inode chunk creation.
-
-This particular behaviour is exposed by xfs/294, when it drives to
-ENOSPC on empty file creation whilst there are still thousands of
-free inodes available for allocation in other AGs in the filesystem.
-
-Hence, when we are within 1% of ENOSPC, change the inode allocation
-behaviour to prefer to use existing free inodes over allocating new
-inode chunks, even though it results is poorer locality of the data
-set. It is more important for the allocations to be space efficient
-near ENOSPC than to have optimal locality for performance, so lets
-modify the inode AG selection code to reflect that fact.
-
-This allows generic/294 to not only pass with this allocator rework
-patchset, but to increase the number of post-ENOSPC empty inode
-allocations to from ~600 to ~9080 before we hit ENOSPC on the
-directory create transaction reservation.
+We should use xfs_bmapi_minleft() in xfs_bmbt_alloc_block() to
+calculate the number of blocks a BMBT split on this inode is going to
+require, not use the transaction block reservation that contains the
+maximum number of blocks this transaction may consume in it...
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_ialloc.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ fs/xfs/libxfs/xfs_bmap.c       |  2 +-
+ fs/xfs/libxfs/xfs_bmap.h       |  2 ++
+ fs/xfs/libxfs/xfs_bmap_btree.c | 19 +++++++++----------
+ 3 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 5118dedf9267..e8068422aa21 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -1737,6 +1737,7 @@ xfs_dialloc(
- 	struct xfs_perag	*pag;
- 	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
- 	bool			ok_alloc = true;
-+	bool			low_space = false;
- 	int			flags;
- 	xfs_ino_t		ino;
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 018837bd72c8..9dc33cdc2ab9 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -4242,7 +4242,7 @@ xfs_bmapi_convert_unwritten(
+ 	return 0;
+ }
  
-@@ -1767,6 +1768,20 @@ xfs_dialloc(
- 		ok_alloc = false;
- 	}
+-static inline xfs_extlen_t
++xfs_extlen_t
+ xfs_bmapi_minleft(
+ 	struct xfs_trans	*tp,
+ 	struct xfs_inode	*ip,
+diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+index 16db95b11589..08c16e4edc0f 100644
+--- a/fs/xfs/libxfs/xfs_bmap.h
++++ b/fs/xfs/libxfs/xfs_bmap.h
+@@ -220,6 +220,8 @@ int	xfs_bmap_add_extent_unwritten_real(struct xfs_trans *tp,
+ 		struct xfs_inode *ip, int whichfork,
+ 		struct xfs_iext_cursor *icur, struct xfs_btree_cur **curp,
+ 		struct xfs_bmbt_irec *new, int *logflagsp);
++xfs_extlen_t xfs_bmapi_minleft(struct xfs_trans *tp, struct xfs_inode *ip,
++		int fork);
  
-+	/*
-+	 * If we are near to ENOSPC, we want to prefer allocation from AGs that
-+	 * have free inodes in them rather than use up free space allocating new
-+	 * inode chunks. Hence we turn off allocation for the first non-blocking
-+	 * pass through the AGs if we are near ENOSPC to consume free inodes
-+	 * that we can immediately allocate, but then we allow allocation on the
-+	 * second pass if we fail to find an AG with free inodes in it.
-+	 */
-+	if (percpu_counter_read_positive(&mp->m_fdblocks) <
-+			mp->m_low_space[XFS_LOWSP_1_PCNT]) {
-+		ok_alloc = false;
-+		low_space = true;
-+	}
+ enum xfs_bmap_intent_type {
+ 	XFS_BMAP_MAP = 1,
+diff --git a/fs/xfs/libxfs/xfs_bmap_btree.c b/fs/xfs/libxfs/xfs_bmap_btree.c
+index cfa052d40105..18de4fbfef4e 100644
+--- a/fs/xfs/libxfs/xfs_bmap_btree.c
++++ b/fs/xfs/libxfs/xfs_bmap_btree.c
+@@ -213,18 +213,16 @@ xfs_bmbt_alloc_block(
+ 	if (args.fsbno == NULLFSBLOCK) {
+ 		args.fsbno = be64_to_cpu(start->l);
+ 		args.type = XFS_ALLOCTYPE_START_BNO;
 +
- 	/*
- 	 * Loop until we find an allocation group that either has free inodes
- 	 * or in which we can allocate some inodes.  Iterate through the
-@@ -1795,6 +1810,8 @@ xfs_dialloc(
- 				break;
- 			}
- 			flags = 0;
-+			if (low_space)
-+				ok_alloc = true;
- 		}
- 		xfs_perag_put(pag);
- 	}
+ 		/*
+-		 * Make sure there is sufficient room left in the AG to
+-		 * complete a full tree split for an extent insert.  If
+-		 * we are converting the middle part of an extent then
+-		 * we may need space for two tree splits.
+-		 *
+-		 * We are relying on the caller to make the correct block
+-		 * reservation for this operation to succeed.  If the
+-		 * reservation amount is insufficient then we may fail a
+-		 * block allocation here and corrupt the filesystem.
++		 * If we are coming here from something like unwritten extent
++		 * conversion, there has been no data extent allocation already
++		 * done, so we have to ensure that we attempt to locate the
++		 * entire set of bmbt allocations in the same AG, as
++		 * xfs_bmapi_write() would have reserved.
+ 		 */
+-		args.minleft = args.tp->t_blk_res;
++		args.minleft = xfs_bmapi_minleft(cur->bc_tp, cur->bc_ino.ip,
++						cur->bc_ino.whichfork);
+ 	} else if (cur->bc_tp->t_flags & XFS_TRANS_LOWMODE) {
+ 		args.type = XFS_ALLOCTYPE_START_BNO;
+ 	} else {
+@@ -248,6 +246,7 @@ xfs_bmbt_alloc_block(
+ 		 * successful activate the lowspace algorithm.
+ 		 */
+ 		args.fsbno = 0;
++		args.minleft = 0;
+ 		args.type = XFS_ALLOCTYPE_FIRST_AG;
+ 		error = xfs_alloc_vextent(&args);
+ 		if (error)
 -- 
 2.39.0
 
