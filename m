@@ -2,79 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B14B1672ABF
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 22:43:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1921D672B7B
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 23:45:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231321AbjARVnl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Jan 2023 16:43:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39688 "EHLO
+        id S229716AbjARWp2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Jan 2023 17:45:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbjARVnY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 16:43:24 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4DD66016
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 13:42:27 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id 20so21902175pfu.13
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 13:42:27 -0800 (PST)
+        with ESMTP id S229798AbjARWpR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 17:45:17 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD16863E39
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:15 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id n20-20020a17090aab9400b00229ca6a4636so3156247pjq.0
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=25/ogZ1IY1yCzD+p9FJLZ5EqJq4IvrsYWI+uktJqoc8=;
-        b=b6n2HzUq915R4Q52gekT31VCYQfhro59qvgUT/934MH4Ph5mOu/m74OMQPxPnVS/Jj
-         udr4O/ozJG9Wr9xUuH2pWLtCd0DTUDFDxmD74lfUUGrbGuRaGcSnGoh0rNX1AC2NFXV6
-         qMCOhTTi27jvwOqSTZhFFRHiEyeZfv1Z7SJm/zUnPYhEZFr3pUaYsE1UE9b+AyxmBdYe
-         7NiRz5Hqjq2balCLmD9DyIqwhWgbKeB2es8kJ68QDAwvLHxSwwYUN+FimGMTNMO7OYv4
-         LSx+3Sfiw6/J+ifh5//FHTHi/49BsvmL+hcFXy0sAcr90oEDNxS5oG5e41N6r7Nqtgwz
-         BdIg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=++Cg3sGO8a2SDx6tdjz79G2MdDaeXXLkWhyYGYUl/Cc=;
+        b=mMcH4sgWkfrqg73IJgiDAp907C2fbleDqrMuwz9dk6uQOc0RQ6JQCrQMXV2aGBNtgH
+         rMkk1VEZWcFUHExzBmiZ0agETsMjnd8uEVFNpuW3flEDdAEJRiu/rnwR3ZCAI00ueEKx
+         cnGIIJtIB14xsFfTufoQgOfZFgK74wv8IQ5UwjFRubgs5KybTz6faEgWTkdPopbdPkuo
+         jmilmiaoqtHrpDTatIaRVbDkDHx8z9z6F6QlsD0fVIweF3prWaElSxTgD17c/hDuKJ5+
+         7PywVmeI8YjPar33141ViRTdMkAbQEDstdR1IiH2jiP/IoNPGcc+Z6gOmfucTpnZeF1R
+         kn2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=25/ogZ1IY1yCzD+p9FJLZ5EqJq4IvrsYWI+uktJqoc8=;
-        b=u9iF9bK8QUfKim4yIBPD0k0gbn97LJtQjng/Ku1Khta3HsY7tKUTQ/gqp39Oiw47+x
-         TTz4xpJWhFlaW1cmShoavaEGB5Hw5tuiCp2e4Rv4b5lZxsTZ9ERKPKJq2cciiKG6Q5TU
-         MaJOoaNVZmWhMRlNUwgpWyQbobIFnu87QkLmzjhikr9htmuxMSmLLFXcX4/U+CIJcu+x
-         xkj7CV9/MFINiOny1+H9asaXECdG31IK81OTWmn2NkzpPfmdngo49fPMXJ1+/ips5tzX
-         6udgqIxgzjBHxEs/iICSZXRdmkI1Q0SqeNpt+gpj1vtRm7bxqkuz0t8++6GHAkpQmvut
-         9zAA==
-X-Gm-Message-State: AFqh2krP87pmRBKwwGC3eN70XHJHAxgP9HuF4KrcBXy6im6moAFJ2xkC
-        gDX/DA4wPvfh7AaD9UWeqHOVSA==
-X-Google-Smtp-Source: AMrXdXuUhT365uogRqJeciSgZ6jusXovRP6UIOCn0m3CnHYkFzQba4SbhSlaI19LX086ihdE2UUqBA==
-X-Received: by 2002:a05:6a00:4088:b0:58d:aadf:5e62 with SMTP id bw8-20020a056a00408800b0058daadf5e62mr9302248pfb.18.1674078147224;
-        Wed, 18 Jan 2023 13:42:27 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=++Cg3sGO8a2SDx6tdjz79G2MdDaeXXLkWhyYGYUl/Cc=;
+        b=gaALgrwWJYRcjf/qbpO7OrHwYFenaztLi84dRk3joVbpzL1ygMKpb6UxkvbcPy2mXZ
+         oDf0Na9/O+7RU8Gv9OmiqDouI8XBmnHEUL1/LOQKDNyJmufBYciz5tKmcOAPblT3ZIpe
+         iF/9BzbdD0hmPuVzACy5NT5Hl9TGV5IPpMVbCB+J70dnU3MxRmawHZlSYg4h6mAnfs/y
+         8XVmKgvvXNkT1xxSusE0U034y0XCIItxfFqkdCTB/y5DsTxA5xnZJiH/UEcl2fv9W5gI
+         IYiDRbYEJKRBoReZQHpmeUqQn3trfb3hjHv3u5NEdeZO47zoJvZRItUwcrBZ3vix7w4p
+         dBJA==
+X-Gm-Message-State: AFqh2kqSabksae0+rB1Q9+3qha/KVemKjSh+isiZ6TGzy0rkTxS7Infy
+        ZNwjZCGBhEbVQY1oTBA24EaKa1nfkTz8xavF
+X-Google-Smtp-Source: AMrXdXvAohfKaZQsVMShyHQXHl1MF7TfY/lUtY6MelY5FceVRmHqdmi4CkMK2NAASN5orsw6EKAwsA==
+X-Received: by 2002:a17:902:ccce:b0:194:91eb:5b84 with SMTP id z14-20020a170902ccce00b0019491eb5b84mr10534113ple.22.1674081915166;
+        Wed, 18 Jan 2023 14:45:15 -0800 (PST)
 Received: from dread.disaster.area (pa49-186-146-207.pa.vic.optusnet.com.au. [49.186.146.207])
-        by smtp.gmail.com with ESMTPSA id m2-20020a62a202000000b005869a33dd3bsm20734472pff.164.2023.01.18.13.42.26
+        by smtp.gmail.com with ESMTPSA id q6-20020a17090311c600b00186985198a4sm23742290plh.169.2023.01.18.14.45.13
+        for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jan 2023 13:42:26 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1pIGCN-004hTW-Hg; Thu, 19 Jan 2023 08:42:23 +1100
-Date:   Thu, 19 Jan 2023 08:42:23 +1100
+        Wed, 18 Jan 2023 14:45:13 -0800 (PST)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <dave@fromorbit.com>)
+        id 1pIHB8-004iWc-Pz
+        for linux-xfs@vger.kernel.org; Thu, 19 Jan 2023 09:45:10 +1100
+Received: from dave by devoid.disaster.area with local (Exim 4.96)
+        (envelope-from <dave@devoid.disaster.area>)
+        id 1pIHB8-008FCY-2V
+        for linux-xfs@vger.kernel.org;
+        Thu, 19 Jan 2023 09:45:10 +1100
 From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Andreas =?iso-8859-1?Q?Gr=FCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, cluster-devel@redhat.com
-Subject: Re: [RFC v6 08/10] iomap/xfs: Eliminate the iomap_valid handler
-Message-ID: <20230118214223.GH360264@dread.disaster.area>
-References: <20230108194034.1444764-1-agruenba@redhat.com>
- <20230108194034.1444764-9-agruenba@redhat.com>
- <20230108215911.GP1971568@dread.disaster.area>
- <CAHc6FU4z1nC8zdM8NvUyMqU29_J7_oNu1pvBHuOvR+M6gq7F0Q@mail.gmail.com>
- <20230109225453.GQ1971568@dread.disaster.area>
- <CAHpGcM+urV5LYpTZQWTRoK6VWaLx0sxk3mDe_kd3VznMY9woVw@mail.gmail.com>
- <Y8Q4FmhYehpQPZ3Z@magnolia>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 00/42] xfs: per-ag centric allocation alogrithms
+Date:   Thu, 19 Jan 2023 09:44:23 +1100
+Message-Id: <20230118224505.1964941-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8Q4FmhYehpQPZ3Z@magnolia>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -84,68 +75,141 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Jan 15, 2023 at 09:29:58AM -0800, Darrick J. Wong wrote:
-> 2. Do we need to revalidate mappings for directio writes?  I think the
-> answer is no (for xfs) because the ->iomap_begin call will allocate
-> whatever blocks are needed and truncate/punch/reflink block on the
-> iolock while the directio writes are pending, so you'll never end up
-> with a stale mapping.  But I don't know if that statement applies
-> generally...
+This series continues the work towards making shrinking a filesystem
+possible.  We need to be able to stop operations from taking place
+on AGs that need to be removed by a shrink, so before shrink can be
+implemented we need to have the infrastructure in place to prevent
+incursion into AGs that are going to be, or are in the process, of
+being removed from active duty.
 
-The issue is not truncate/punch/reflink for either DIO or buffered
-IO - the issue that leads to stale iomaps is async extent state.
-i.e. IO completion doing unwritten extent conversion.
+The focus of this is making operations that depend on access to AGs
+use the perag to access and pin the AG in active use, thereby
+creating a barrier we can use to delay shrink until all active uses
+of an AG have been drained and new uses are prevented.
 
-For DIO, AIO doesn't hold the IOLOCK at all when completion is run
-(like buffered writeback), but non-AIO DIO writes hold the IOLOCK
-shared while waiting for completion. This means that we can have DIO
-submission and completion still running concurrently, and so stale
-iomaps are a definite possibility.
+This series starts by fixing some existing issues that are exposed
+by changes later in the series. They stand alone, so can be picked
+up independently of the rest of this patchset.
 
-From my notes when I looked at this:
+The most complex of these fixes is cleaning up the mess that is the
+AGF deadlock avoidance algorithm. This algorithm stores the first
+block that is allocated in a transaction in tp->t_firstblock, then
+uses this to try to limit future allocations within the transaction
+to AGs at or higher than the filesystem block stored in
+tp->t_firstblock. This depends on one of the initial bug fixes in
+the series to move the deadlock avoidance checks to
+xfs_alloc_vextent(), and then builds on it to relax the constraints
+of the avoidance algorithm to only be active when a deadlock is
+possible.
 
-1. the race condition for a DIO write mapping go stale is an
-overlapping DIO completion and converting the block from unwritten
-to written, and then the dio write incorrectly issuing sub-block
-zeroing because the mapping is now stale.
+We also update the algorithm to record allocations from higher AGs
+that are allocated from, because we when we need to lock more than
+two AGs we still have to ensure lock order is correct. Therefore we
+can't lock AGs in the order 1, 3, 2, even though tp->t_firstblock
+indicates that we've allocated from AG 1 and so AG is valid to lock.
+It's not valid, because we already hold AG 3 locked, and so
+tp->t-first_block should actually point at AG 3, not AG 1 in this
+situation.
 
-2. DIO read into a hole or unwritten extent zeroes the entire range
-in the user buffer in one operation. If this is a large range, this
-could race with small DIO writes within that range that have
-completed
+It should now be obvious that the deadlock avoidance algorithm
+should record AGs, not filesystem blocks. So the series then changes
+the transaction to store the highest AG we've allocated in rather
+than a filesystem block we allocated.  This makes it obvious what
+the constraints are, and trivial to update as we lock and allocate
+from various AGs.
 
-3. There is a window between dio write completion doing unwritten
-extent conversion (by ->end_io) and the page cache being
-invalidated, providing a window where buffered read maps can be
-stale and incorrect read behaviour exposed to userpace before
-the page cache is invalidated.
+With all the bug fixes out of the way, the series then starts
+converting the code to use active references. Active reference
+counts are used by high level code that needs to prevent the AG from
+being taken out from under it by a shrink operation. The high level
+code needs to be able to handle not getting an active reference
+gracefully, and the shrink code will need to wait for active
+references to drain before continuing.
 
-These all stem from IO having overlapping ranges, which is largely
-unsupported but can't be entirely prevented (e.g. backup
-applications running in the background). Largely the problems are
-confined to sub-block IOs. i.e.  when sub-block DIO writes to the
-same block are being performed, we have the possiblity that one
-write completes whilst the other is deciding what to zero, unaware
-that the range is now MAPPED rather than UNWRITTEN.
+Active references are implemented just as reference counts right now
+- an active reference is taken at perag init during mount, and all
+other active references are dependent on the active reference count
+being greater than zero. This gives us an initial method of stopping
+new active references without needing other infrastructure; just
+drop the reference taken at filesystem mount time and when the
+refcount then falls to zero no new references can be taken.
 
-We currently avoid issues with sub-block dio writes by using
-IOMAP_DIO_OVERWRITE_ONLY with shared locking. This ensures that the
-unaligned IO fits entirely within a MAPPED extent so no sub-block
-zeroing is required. If allocation or sub-block zeroing is required,
-then we force the filesystem to fall back to exclusive IO locking
-and wait for all concurrent DIO in flight to complete so that it
-can't race with any other DIO write that might cause the map to
-become stale while we are doing the zeroing.
+In future, this will need to take into account AG control state
+(e.g. offline, no alloc, etc) as well as the reference count, but
+right now we can implement a basic barrier for shrink with just
+reference count manipulations. As such, patches to convert the perag
+state to atomic opstate fields similar to the xfs_mount and xlog
+opstate fields follow the initial active perag reference counting
+patches.
 
-This does not avoid potential issues with DIO write vs buffered
-read, nor DIO write vs mmap IO. It's not totally clear to me
-whether we need ->iomap_valid checks in the buffered read paths
-to avoid the completion races with DIO writes, but there are windows
-there where cached iomaps could be considered stale....
+The first target for active reference conversion is the
+for_each_perag*() iterators. This captures a lot of high level code
+that should skip offline AGs, and introduces the ability to
+differentiate between a lookup that didn't have an online AG and the
+end of the AG iteration range.
 
-Cheers,
+From there, the inode allocation AG selection is converted to active
+references, and the perag is driven deeper into the inode allocation
+and btree code to replace the xfs_mount. Most of the inode
+allocation code operates on a single AG once it is selected, hence
+it should pass the perag as the primary referenced object around for
+allocation, not the xfs_mount. There is a bit of churn here, but it
+emphasises that inode allocation is inherently an allocation group
+based operation.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Next the bmap/alloc interface undergoes a major untangling,
+reworking xfs_bmap_btalloc() into separate allocation operations for
+different contexts and failure handling behaviours. This then allows
+us to completely remove the xfs_alloc_vextent() layer via
+restructuring the xfs_alloc_vextent/xfs_alloc_ag_vextent() into a
+set of realtively simple helper function that describe the
+allocation that they are doing. e.g.  xfs_alloc_vextent_exact_bno().
+
+This allows the requirements for accessing AGs to be allocation
+context dependent. The allocations that require operation on a
+single AG generally can't tolerate failure after the allocation
+method and AG has been decided on, and hence the caller needs to
+manage the active references to ensure the allocation does not race
+with shrink removing the selected AG for the duration of the
+operation that requires access to that allocation group.
+
+Other allocations iterate AGs and so the first AG is just a hint -
+these do not need to pin a perag first as they can tolerate not
+being able to access an AG by simply skipping over it. These require
+new perag iteration functions that can start at arbitrary AGs and
+wrap around at arbitrary AGs, hence a new set for
+for_each_perag_wrap*() helpers to do this.
+
+Next is the rework of the filestreams allocator. This doesn't change
+any functionality, but gets rid of the unnecessary multi-pass
+selection algorithm when the selected AG is not available. It
+currently does a lookup pass which might iterate all AGs to select
+an AG, then checks if the AG is acceptible and if not does a "new
+AG" pass that is essentially identical to the lookup pass. Both of
+these scans also do the same "longest extent in AG" check before
+selecting an AG as is done after the AG is selected.
+
+IOWs, the filestreams algorithm can be greatly simplified into a
+single new AG selection pass if the there is no current association
+or the currently associated AG doesn't have enough contiguous free
+space for the allocation to proceed.  With this simplification of
+the filestreams allocator, it's then trivial to convert it to use
+for_each_perag_wrap() for the AG scan algorithm.
+
+This series passes auto group fstests with rmapbt=1 on both 1kB and
+4kB block size configurations without functional or performance
+regressions. In some cases ENOSPC behaviour is improved, but fstests
+does not capture those improvements as it only tests for regressions
+in behaviour.
+
+Version 2:
+- AGI, AGF and AGFL access conversion patches removed due to being
+  merged.
+- AG geometry conversion patches removed due to being merged
+- Rebase on 6.2-rc4
+- fixed "firstblock" AGF deadlock avoidance algorithm
+- lots of cleanups and bug fixes.
+
+Version 1 [RFC]:
+- https://lore.kernel.org/linux-xfs/20220611012659.3418072-1-david@fromorbit.com/
+
