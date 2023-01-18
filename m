@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4F93670F3C
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 01:57:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E9E670F41
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 01:58:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbjARA5q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 17 Jan 2023 19:57:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52804 "EHLO
+        id S229965AbjARA6V (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 17 Jan 2023 19:58:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbjARA5S (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Jan 2023 19:57:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F2C459741;
-        Tue, 17 Jan 2023 16:44:21 -0800 (PST)
+        with ESMTP id S229977AbjARA6B (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Jan 2023 19:58:01 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30995A801;
+        Tue, 17 Jan 2023 16:44:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 56EB461587;
-        Wed, 18 Jan 2023 00:44:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB11AC433EF;
-        Wed, 18 Jan 2023 00:44:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 96843B8164A;
+        Wed, 18 Jan 2023 00:44:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C71C433EF;
+        Wed, 18 Jan 2023 00:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674002658;
-        bh=/t5e4H63A0yA50yAugMJjgVV/sdWPXrKyv6xll7M8hQ=;
+        s=k20201202; t=1674002674;
+        bh=bk2W7mh2lu0tQsYqc/CuqqVAHOCqpCzTnRs/t4kldZc=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=un66hR7atZVcgL/l4GKWGRb3AutOvIk8m6q04ueEDj9NPhhGely5x3CCiPBmWkchl
-         x4q/0rfySiJhI0ps9wI3mANHJIIylRl2c9CS3r9jMUtizBFwGbnQndrl+ANIGzVCA5
-         RXa8pW/3IyqL3HbPi8GqB5mEvA3ffpc9zl4AOjwSaTwfL/y4Ujro5v7uOySBOgT0RC
-         sErpWQ5FcUK08FKuVB53++/zEr1cgoak33t+vBrUF8YGwlxccKKsNxddeoZDk+LJNP
-         fEv3+vdJNjt3t3cYz7nBW/VQRNHuZGmiP97nO4gmfUpYwQwBHR0iMY2vn4NhwJG87S
-         XDS/OpmMOLN5w==
-Date:   Tue, 17 Jan 2023 16:44:18 -0800
-Subject: [PATCH 3/4] populate: improve attr creation runtime
+        b=VGSaNKq7RRoaeTXHpnCCc/FLRujDGFCWCvbjsUOfrVqWqsKuiCvwyB6se4XSMBYfg
+         aoirJdghCD0ZCxVX5YcGnAx1NQw0JSWd3IJVNKppC/ysEJqrmALk24cXUOdnpo5jVy
+         wVg0EKw6990c6jkxmLoC2j/xs/VNGiJibdN2dPFIvBG13Xg2GC4qSFPbFMutAivMu2
+         nIatNYlaRSl2YESzkuumyOFVG1sHeG+HH4LFnrgfWEtB/hUZb7jpw15D7wv3nwb4yW
+         tVQlazJJqVhUE7Gl95IIyNKY8nbjSvKLtfGHXRfWC2Xemyi5qo11F7fGbi2MGOkTki
+         IhNCUuZ8ObXPg==
+Date:   Tue, 17 Jan 2023 16:44:33 -0800
+Subject: [PATCH 4/4] populate: improve runtime of __populate_fill_fs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, zlang@redhat.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me,
         david@fromorbit.com
-Message-ID: <167400103083.1915094.17122126052905864562.stgit@magnolia>
+Message-ID: <167400103096.1915094.8399897640768588035.stgit@magnolia>
 In-Reply-To: <167400103044.1915094.5935980986164675922.stgit@magnolia>
 References: <167400103044.1915094.5935980986164675922.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,129 +55,30 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Replace the file creation loops with a python script that does
-everything we want from a single process.  This reduces the runtime of
-_scratch_xfs_populate substantially by avoiding thousands of execve
-overhead.  This patch builds on the previous one by reducing the runtime
-of xfs/349 from ~45s to ~15s.
-
-For people who don't have python3, use setfattr's "restore" mode to bulk
-create xattrs.  This reduces runtime to about ~25s.
+Run the copy loop in parallel to reduce runtime.  If filling the
+populated fs is selected (which it isn't by default in xfs/349), this
+reduces the runtime from ~18s to ~15s, since it's only making enough
+copies to reduce the free space by 5%.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/populate |   22 +++++++++++++++++---
- src/popattr.py  |   62 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 81 insertions(+), 3 deletions(-)
- create mode 100755 src/popattr.py
+ common/populate |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
 diff --git a/common/populate b/common/populate
-index 180540aedd..f34551d272 100644
+index f34551d272..1c3c28463f 100644
 --- a/common/populate
 +++ b/common/populate
-@@ -12,6 +12,10 @@ _require_populate_commands() {
- 	_require_xfs_io_command "fpunch"
- 	_require_test_program "punch-alternating"
- 	_require_test_program "popdir.pl"
-+	if [ -n "${PYTHON3_PROG}" ]; then
-+		_require_command $PYTHON3_PROG python3
-+		_require_test_program "popattr.py"
-+	fi
- 	case "${FSTYP}" in
- 	"xfs")
- 		_require_command "$XFS_DB_PROG" "xfs_db"
-@@ -108,9 +112,21 @@ __populate_create_attr() {
- 	missing="$3"
+@@ -151,8 +151,9 @@ __populate_fill_fs() {
+ 	echo "FILL FS"
+ 	echo "src_sz $SRC_SZ fs_sz $FS_SZ nr $NR"
+ 	seq 2 "${NR}" | while read nr; do
+-		cp -pRdu "${dir}/test/1" "${dir}/test/${nr}"
++		cp -pRdu "${dir}/test/1" "${dir}/test/${nr}" &
+ 	done
++	wait
+ }
  
- 	touch "${name}"
--	seq 0 "${nr}" | while read d; do
--		setfattr -n "user.$(printf "%.08d" "$d")" -v "$(printf "%.08d" "$d")" "${name}"
--	done
-+
-+	if [ -n "${PYTHON3_PROG}" ]; then
-+		${PYTHON3_PROG} $here/src/popattr.py --file "${name}" --end "${nr}"
-+
-+		test -z "${missing}" && return
-+		${PYTHON3_PROG} $here/src/popattr.py --file "${name}" --start 1 --incr 2 --end "${nr}" --remove
-+		return
-+	fi
-+
-+	# Simulate a getfattr dump file so we can bulk-add attrs.
-+	(
-+		echo "# file: ${name}";
-+		seq --format "user.%08g=\"abcdefgh\"" 0 "${nr}"
-+		echo
-+	) | setfattr --restore -
- 
- 	test -z "${missing}" && return
- 	seq 1 2 "${nr}" | while read d; do
-diff --git a/src/popattr.py b/src/popattr.py
-new file mode 100755
-index 0000000000..397ced9d33
---- /dev/null
-+++ b/src/popattr.py
-@@ -0,0 +1,62 @@
-+#!/usr/bin/python3
-+
-+# Copyright (c) 2023 Oracle.  All rights reserved.
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Create a bunch of xattrs in a file.
-+
-+import argparse
-+import sys
-+import os
-+
-+parser = argparse.ArgumentParser(description = 'Mass create xattrs in a file')
-+parser.add_argument(
-+	'--file', required = True, type = str, help = 'manipulate this file')
-+parser.add_argument(
-+	'--start', type = int, default = 0,
-+	help = 'create xattrs starting with this number')
-+parser.add_argument(
-+	'--incr', type = int, default = 1,
-+	help = 'increment attr number by this much')
-+parser.add_argument(
-+	'--end', type = int, default = 1000,
-+	help = 'stop at this attr number')
-+parser.add_argument(
-+	'--remove', dest = 'remove', action = 'store_true',
-+	help = 'remove instead of creating')
-+parser.add_argument(
-+	'--format', type = str, default = '%08d',
-+	help = 'printf formatting string for attr name')
-+parser.add_argument(
-+	'--verbose', dest = 'verbose', action = 'store_true',
-+	help = 'verbose output')
-+
-+args = parser.parse_args()
-+
-+fmtstring = "user.%s" % args.format
-+
-+# If we are passed a regular file, open it as a proper file descriptor and
-+# pass that around for speed.  Otherwise, we pass the path.
-+fp = None
-+try:
-+	fp = open(args.file, 'r')
-+	fd = fp.fileno()
-+	os.listxattr(fd)
-+	if args.verbose:
-+		print("using fd calls")
-+except:
-+	if args.verbose:
-+		print("using path calls")
-+	fd = args.file
-+
-+for i in range(args.start, args.end + 1, args.incr):
-+	fname = fmtstring % i
-+
-+	if args.remove:
-+		if args.verbose:
-+			print("removexattr %s" % fname)
-+		os.removexattr(fd, fname)
-+	else:
-+		if args.verbose:
-+			print("setxattr %s" % fname)
-+		os.setxattr(fd, fname, b'abcdefgh')
+ # For XFS, force on all the quota options if quota is enabled
 
