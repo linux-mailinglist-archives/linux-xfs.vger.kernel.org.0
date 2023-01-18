@@ -2,69 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D4C4672BA5
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 23:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0ACA672B87
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Jan 2023 23:45:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229926AbjARWs0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Jan 2023 17:48:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45890 "EHLO
+        id S229847AbjARWpf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Jan 2023 17:45:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbjARWsN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 17:48:13 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E355E63E28
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:48:12 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id s13-20020a17090a6e4d00b0022900843652so4038065pjm.1
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:48:12 -0800 (PST)
+        with ESMTP id S229872AbjARWpT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Jan 2023 17:45:19 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C2461D4A
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:18 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso53659pjo.3
+        for <linux-xfs@vger.kernel.org>; Wed, 18 Jan 2023 14:45:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jshD/9c7V6ANEfyMPGcv0GQviC/f5uQ0vJVfnkiQWRY=;
-        b=54qOFW9hp++GmNfkvsC0HisOObL8PRFVr9E+oZoLIZcFVIU4jgQh0wN8Sg8ehuY+Ot
-         jDyfHiJwG/Jk5qTseGLn55vDyqUPqZxfN0QzcstuJFQxSPR8HY46NhjL4bkRiyZtIHQB
-         E13aHIJp7dVSFuHSW3F8MFO8G2XBqK6ySJr4EFtC97PuruLoufuuwYNwvRRrm0JuxTZT
-         mklDZ6AeoMb4e3MvLw47zay9XPDTajY0EoOjF6DxtgMCro76cvSUhUkRDx0zGYbd4NRB
-         GoyEYA09RYtgoFRSRrVrODs5QsOa8uC/Q1IvR45bN2pb8AmNz498MlIijGrpCMx7vrBM
-         iQSg==
+        bh=Hyb8kFqnYO+7TbGRi2aAzXLcH3t+q4Rx2pDf7LxCmw8=;
+        b=as7scDEOGEym7EiyON7KXQ+uo6zlFI2VXRtoEnSgPNxpCkwESICoXgBgaTnRx0MWw1
+         hKwvOKjK717+B/ErOeyspCxG7ZfC8k6hz40Yl2LctKubY9UdFDmntfACNvqxdShMUlKm
+         oCrGFf2ntpTX4kQYcgFEtq3YTqGK10u+eb6cFCNWG7OaLVkA/rn57rkLHGlhl7goPW0s
+         nzPvpuA5NjvK1Cs6bnY4C+ut5mLHiPuqhBZnn1bycQSrxt0aHV3pvP8eI+3sRz5Zt3KV
+         h1E0BTdh2yUztZcsZD7AF6MPBOT6tuAGCg8AXazEJOKRIcX25I0sigDc1NHW+8HKw2fT
+         0M2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jshD/9c7V6ANEfyMPGcv0GQviC/f5uQ0vJVfnkiQWRY=;
-        b=01I+te0AN2bQiksSIDOHuyqoQX4U2F6h29m+Dlr6/59m2orXvlMR/HCFadlLxFAR2r
-         Dap/sVNXSWQEa0GNWkMY00Yu7ylMG2WOftADZN9h0C/WeKDi6NW0Po7z8XJJvMt2Qdwe
-         S7FMfx0QCeZoLk1e4k1XF3nkBr/oKmuK4P1fEK4EB3qAz4Y4LXJwJIhTHOo3rlCkdyb5
-         5kUhnMzuVaRV/P3U3SCWq2e5dsQzANxQaNMLUaiJj8I13c3mR7jQJDOXfq4H9TLSL2YE
-         MnjxymqZ0oScOMu23xWzBhxnQP3degva/xHfv9hq8BHkc0i9tuotsRhNR9aUUaF0iGqV
-         p69A==
-X-Gm-Message-State: AFqh2krwbpmmkJXT12Y+yZ3oOv/n3bN3W0+YQb/EdwtHUq3NU62vBABw
-        EPfA5R6jyy2lMjulbaLRtCy/2K47hob8kDvQ
-X-Google-Smtp-Source: AMrXdXujiMGBHygf+k28wJrIbAuQ46FQ1IxLUbmllIgmoVf+H9Buman6XwLwNx8Rf8ztxH1WUXFIMA==
-X-Received: by 2002:a17:902:720a:b0:193:25b6:71bc with SMTP id ba10-20020a170902720a00b0019325b671bcmr9702127plb.25.1674082092362;
-        Wed, 18 Jan 2023 14:48:12 -0800 (PST)
+        bh=Hyb8kFqnYO+7TbGRi2aAzXLcH3t+q4Rx2pDf7LxCmw8=;
+        b=eoSu1nY6teli/JxQPpqUWogvp6bS2hLmQCDiIrWRcW+V56pkcXTlyXifXrj2Kx1CFf
+         z9nk7Vrzi6izqpvStoLXBhGl3qImutFYJxsqv2cV/zaiInfJEThx4E1T+OslNVXNLPye
+         C6MIf7SH2P+f1c8sImMKBdwsO3fEhHtvPGO20GEhMvEH3z3lYP8pU2Tz7MNC6a89xH2M
+         3kw7N/J2uBHgfTkYFFHWjsZ/8HG+nerw+aXDXk72stAP9/RcNWSZoITMfcR5vX4X6XH/
+         0rqT5LKSDswWfQMSzT7MEC3rRRuWRlJUHmCDFVGUIwrmrHIEw8CTKYV9M2sEzBFlzLt5
+         P1dg==
+X-Gm-Message-State: AFqh2kqG6bDdUiXKCPKer2La7c//os0mQE7Q3XwnX37PixGViMOYRHmd
+        PFrhzNRgZFKSPJ+kYFQxhkuPc4d/r9sbiu7/
+X-Google-Smtp-Source: AMrXdXvKiiEsP6vv8HBDsmxTBUTjy6HSMAx1JFk+or7sxROrSzjnMvdx37RY4nTibQzKGSlJfsLuJg==
+X-Received: by 2002:a05:6a20:441:b0:b8:9f05:5216 with SMTP id b1-20020a056a20044100b000b89f055216mr7891065pzb.57.1674081918291;
+        Wed, 18 Jan 2023 14:45:18 -0800 (PST)
 Received: from dread.disaster.area (pa49-186-146-207.pa.vic.optusnet.com.au. [49.186.146.207])
-        by smtp.gmail.com with ESMTPSA id v13-20020a170902f0cd00b0019324fbec59sm6294135pla.41.2023.01.18.14.48.11
+        by smtp.gmail.com with ESMTPSA id g15-20020a63200f000000b004d1d89ec63fsm48396pgg.6.2023.01.18.14.45.13
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jan 2023 14:48:11 -0800 (PST)
+        Wed, 18 Jan 2023 14:45:16 -0800 (PST)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <dave@fromorbit.com>)
-        id 1pIHB9-004iYF-Ob
+        id 1pIHB9-004iYH-PX
         for linux-xfs@vger.kernel.org; Thu, 19 Jan 2023 09:45:11 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1pIHB9-008FFF-2S
+        id 1pIHB9-008FFK-2Y
         for linux-xfs@vger.kernel.org;
         Thu, 19 Jan 2023 09:45:11 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 34/42] xfs: merge filestream AG lookup into xfs_filestream_select_ag()
-Date:   Thu, 19 Jan 2023 09:44:57 +1100
-Message-Id: <20230118224505.1964941-35-david@fromorbit.com>
+Subject: [PATCH 35/42] xfs: merge new filestream AG selection into xfs_filestream_select_ag()
+Date:   Thu, 19 Jan 2023 09:44:58 +1100
+Message-Id: <20230118224505.1964941-36-david@fromorbit.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20230118224505.1964941-1-david@fromorbit.com>
 References: <20230118224505.1964941-1-david@fromorbit.com>
@@ -81,253 +81,243 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The lookup currently either returns the cached filestream AG or it
-calls xfs_filestreams_select_lengths() to looks up a new AG. This
-has verify the AG that is selected, so we end up doing "select a new
-AG loop in a couple of places when only one really is needed.  Merge
-the initial lookup functionality with the length selection so that
-we only need to do a single pick loop on lookup or verification
-failure.
+This is largely a wrapper around xfs_filestream_pick_ag() that
+repeats a lot of the lookups that we just merged back into
+xfs_filestream_select_ag() from the lookup code. Merge the
+xfs_filestream_new_ag() code back into _select_ag() to get rid
+of all the unnecessary logic.
 
-This undoes a lot of the factoring that enabled the selection to be
-moved over to the filestreams code. It makes
-xfs_filestream_select_ag() an awful messier, but it has to be made
-worse before it can get better in future patches...
+Indeed, this makes it obvious that if we have no parent inode,
+the filestreams allocator always selects AG 0 regardless of whether
+it is fit for purpose or not.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_filestream.c | 184 +++++++++++++++-------------------------
- 1 file changed, 70 insertions(+), 114 deletions(-)
+ fs/xfs/xfs_filestream.c | 112 ++++++++++++++--------------------------
+ 1 file changed, 40 insertions(+), 72 deletions(-)
 
 diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
-index a641404aa9a6..23044dab2001 100644
+index 23044dab2001..713766729dcf 100644
 --- a/fs/xfs/xfs_filestream.c
 +++ b/fs/xfs/xfs_filestream.c
-@@ -258,55 +258,6 @@ xfs_filestream_get_parent(
+@@ -98,16 +98,18 @@ xfs_fstrm_free_func(
+ static int
+ xfs_filestream_pick_ag(
+ 	struct xfs_inode	*ip,
+-	xfs_agnumber_t		startag,
+ 	xfs_agnumber_t		*agp,
+ 	int			flags,
+-	xfs_extlen_t		minlen)
++	xfs_extlen_t		*longest)
+ {
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct xfs_fstrm_item	*item;
+ 	struct xfs_perag	*pag;
+-	xfs_extlen_t		longest, free = 0, minfree, maxfree = 0;
+-	xfs_agnumber_t		ag, max_ag = NULLAGNUMBER;
++	xfs_extlen_t		minlen = *longest;
++	xfs_extlen_t		free = 0, minfree, maxfree = 0;
++	xfs_agnumber_t		startag = *agp;
++	xfs_agnumber_t		ag = startag;
++	xfs_agnumber_t		max_ag = NULLAGNUMBER;
+ 	int			err, trylock, nscan;
+ 
+ 	ASSERT(S_ISDIR(VFS_I(ip)->i_mode));
+@@ -115,7 +117,6 @@ xfs_filestream_pick_ag(
+ 	/* 2% of an AG's blocks must be free for it to be chosen. */
+ 	minfree = mp->m_sb.sb_agblocks / 50;
+ 
+-	ag = startag;
+ 	*agp = NULLAGNUMBER;
+ 
+ 	/* For the first pass, don't sleep trying to init the per-AG. */
+@@ -125,8 +126,8 @@ xfs_filestream_pick_ag(
+ 		trace_xfs_filestream_scan(mp, ip->i_ino, ag);
+ 
+ 		pag = xfs_perag_get(mp, ag);
+-		longest = 0;
+-		err = xfs_bmap_longest_free_extent(pag, NULL, &longest);
++		*longest = 0;
++		err = xfs_bmap_longest_free_extent(pag, NULL, longest);
+ 		if (err) {
+ 			xfs_perag_put(pag);
+ 			if (err != -EAGAIN)
+@@ -152,7 +153,7 @@ xfs_filestream_pick_ag(
+ 			goto next_ag;
+ 		}
+ 
+-		if (((minlen && longest >= minlen) ||
++		if (((minlen && *longest >= minlen) ||
+ 		     (!minlen && pag->pagf_freeblks >= minfree)) &&
+ 		    (!xfs_perag_prefers_metadata(pag) ||
+ 		     !(flags & XFS_PICK_USERDATA) ||
+@@ -258,58 +259,6 @@ xfs_filestream_get_parent(
  	return dir ? XFS_I(dir) : NULL;
  }
  
 -/*
-- * Find the right allocation group for a file, either by finding an
-- * existing file stream or creating a new one.
+- * Pick a new allocation group for the current file and its file stream.
 - *
-- * Returns NULLAGNUMBER in case of an error.
+- * This is called when the allocator can't find a suitable extent in the
+- * current AG, and we have to move the stream into a new AG with more space.
 - */
--static xfs_agnumber_t
--xfs_filestream_lookup_ag(
--	struct xfs_inode	*ip)
+-static int
+-xfs_filestream_new_ag(
+-	struct xfs_bmalloca	*ap,
+-	xfs_agnumber_t		*agp)
 -{
+-	struct xfs_inode	*ip = ap->ip, *pip;
 -	struct xfs_mount	*mp = ip->i_mount;
--	struct xfs_inode	*pip = NULL;
--	xfs_agnumber_t		startag, ag = NULLAGNUMBER;
+-	xfs_extlen_t		minlen = ap->length;
+-	xfs_agnumber_t		startag = 0;
+-	int			flags = 0;
+-	int			err = 0;
 -	struct xfs_mru_cache_elem *mru;
 -
--	ASSERT(S_ISREG(VFS_I(ip)->i_mode));
+-	*agp = NULLAGNUMBER;
 -
 -	pip = xfs_filestream_get_parent(ip);
 -	if (!pip)
--		return NULLAGNUMBER;
+-		goto exit;
 -
--	mru = xfs_mru_cache_lookup(mp->m_filestream, pip->i_ino);
+-	mru = xfs_mru_cache_remove(mp->m_filestream, pip->i_ino);
 -	if (mru) {
--		ag = container_of(mru, struct xfs_fstrm_item, mru)->ag;
--		xfs_mru_cache_done(mp->m_filestream);
--
--		trace_xfs_filestream_lookup(mp, ip->i_ino, ag);
--		goto out;
+-		struct xfs_fstrm_item *item =
+-			container_of(mru, struct xfs_fstrm_item, mru);
+-		startag = (item->ag + 1) % mp->m_sb.sb_agcount;
 -	}
 -
--	/*
--	 * Set the starting AG using the rotor for inode32, otherwise
--	 * use the directory inode's AG.
--	 */
--	if (xfs_is_inode32(mp)) {
--		xfs_agnumber_t	 rotorstep = xfs_rotorstep;
--		startag = (mp->m_agfrotor / rotorstep) % mp->m_sb.sb_agcount;
--		mp->m_agfrotor = (mp->m_agfrotor + 1) %
--		                 (mp->m_sb.sb_agcount * rotorstep);
--	} else
--		startag = XFS_INO_TO_AGNO(mp, pip->i_ino);
+-	if (ap->datatype & XFS_ALLOC_USERDATA)
+-		flags |= XFS_PICK_USERDATA;
+-	if (ap->tp->t_flags & XFS_TRANS_LOWMODE)
+-		flags |= XFS_PICK_LOWSPACE;
 -
--	if (xfs_filestream_pick_ag(pip, startag, &ag, 0, 0))
--		ag = NULLAGNUMBER;
--out:
+-	err = xfs_filestream_pick_ag(pip, startag, agp, flags, minlen);
+-
+-	/*
+-	 * Only free the item here so we skip over the old AG earlier.
+-	 */
+-	if (mru)
+-		xfs_fstrm_free_func(mp, mru);
+-
 -	xfs_irele(pip);
--	return ag;
+-exit:
+-	if (*agp == NULLAGNUMBER)
+-		*agp = 0;
+-	return err;
 -}
 -
  /*
-  * Pick a new allocation group for the current file and its file stream.
-  *
-@@ -359,83 +310,70 @@ xfs_filestream_new_ag(
- 	return err;
- }
- 
--static int
--xfs_filestreams_select_lengths(
-+/*
-+ * Search for an allocation group with a single extent large enough for
-+ * the request.  If one isn't found, then the largest available free extent is
-+ * returned as the best length possible.
-+ */
-+int
-+xfs_filestream_select_ag(
- 	struct xfs_bmalloca	*ap,
- 	struct xfs_alloc_arg	*args,
- 	xfs_extlen_t		*blen)
- {
- 	struct xfs_mount	*mp = ap->ip->i_mount;
- 	struct xfs_perag	*pag;
--	xfs_agnumber_t		start_agno;
-+	struct xfs_inode	*pip = NULL;
-+	xfs_agnumber_t		agno = NULLAGNUMBER;
-+	struct xfs_mru_cache_elem *mru;
+  * Search for an allocation group with a single extent large enough for
+  * the request.  If one isn't found, then the largest available free extent is
+@@ -326,6 +275,7 @@ xfs_filestream_select_ag(
+ 	struct xfs_inode	*pip = NULL;
+ 	xfs_agnumber_t		agno = NULLAGNUMBER;
+ 	struct xfs_mru_cache_elem *mru;
++	int			flags = 0;
  	int			error;
  
  	args->total = ap->total;
-+	*blen = 0;
- 
--	start_agno = XFS_FSB_TO_AGNO(mp, ap->blkno);
--	if (start_agno == NULLAGNUMBER)
--		start_agno = 0;
--
--	pag = xfs_perag_grab(mp, start_agno);
--	if (pag) {
--		error = xfs_bmap_longest_free_extent(pag, args->tp, blen);
--		xfs_perag_rele(pag);
--		if (error) {
--			if (error != -EAGAIN)
--				return error;
--			*blen = 0;
--		}
-+	pip = xfs_filestream_get_parent(ap->ip);
-+	if (!pip) {
-+		agno = 0;
-+		goto new_ag;
+@@ -334,13 +284,14 @@ xfs_filestream_select_ag(
+ 	pip = xfs_filestream_get_parent(ap->ip);
+ 	if (!pip) {
+ 		agno = 0;
+-		goto new_ag;
++		goto out_select;
  	}
  
--	if (*blen < args->maxlen) {
--		xfs_agnumber_t	agno = start_agno;
-+	mru = xfs_mru_cache_lookup(mp->m_filestream, pip->i_ino);
-+	if (mru) {
-+		agno = container_of(mru, struct xfs_fstrm_item, mru)->ag;
-+		xfs_mru_cache_done(mp->m_filestream);
+ 	mru = xfs_mru_cache_lookup(mp->m_filestream, pip->i_ino);
+ 	if (mru) {
+ 		agno = container_of(mru, struct xfs_fstrm_item, mru)->ag;
+ 		xfs_mru_cache_done(mp->m_filestream);
++		mru = NULL;
  
--		error = xfs_filestream_new_ag(ap, &agno);
--		if (error)
--			return error;
--		if (agno == NULLAGNUMBER)
--			goto out_select;
-+		trace_xfs_filestream_lookup(mp, ap->ip->i_ino, agno);
-+		xfs_irele(pip);
- 
--		pag = xfs_perag_grab(mp, agno);
--		if (!pag)
--			goto out_select;
-+		ap->blkno = XFS_AGB_TO_FSB(args->mp, agno, 0);
-+		xfs_bmap_adjacent(ap);
- 
--		error = xfs_bmap_longest_free_extent(pag, args->tp, blen);
--		xfs_perag_rele(pag);
--		if (error) {
--			if (error != -EAGAIN)
--				return error;
--			*blen = 0;
-+		pag = xfs_perag_grab(mp, agno);
-+		if (pag) {
-+			error = xfs_bmap_longest_free_extent(pag, args->tp, blen);
-+			xfs_perag_rele(pag);
-+			if (error) {
-+				if (error != -EAGAIN)
-+					return error;
-+				*blen = 0;
-+			}
+ 		trace_xfs_filestream_lookup(mp, ap->ip->i_ino, agno);
+ 		xfs_irele(pip);
+@@ -354,7 +305,7 @@ xfs_filestream_select_ag(
+ 			xfs_perag_rele(pag);
+ 			if (error) {
+ 				if (error != -EAGAIN)
+-					return error;
++					goto out_error;
+ 				*blen = 0;
+ 			}
  		}
--		start_agno = agno;
-+		if (*blen >= args->maxlen)
-+			goto out_select;
-+	} else if (xfs_is_inode32(mp)) {
-+		xfs_agnumber_t	 rotorstep = xfs_rotorstep;
-+		agno = (mp->m_agfrotor / rotorstep) %
-+				mp->m_sb.sb_agcount;
-+		mp->m_agfrotor = (mp->m_agfrotor + 1) %
-+				 (mp->m_sb.sb_agcount * rotorstep);
-+		xfs_irele(pip);
-+	} else {
-+		agno = XFS_INO_TO_AGNO(mp, pip->i_ino);
-+		xfs_irele(pip);
+@@ -366,13 +317,18 @@ xfs_filestream_select_ag(
+ 				mp->m_sb.sb_agcount;
+ 		mp->m_agfrotor = (mp->m_agfrotor + 1) %
+ 				 (mp->m_sb.sb_agcount * rotorstep);
+-		xfs_irele(pip);
+ 	} else {
+ 		agno = XFS_INO_TO_AGNO(mp, pip->i_ino);
+-		xfs_irele(pip);
  	}
  
--out_select:
--	/*
--	 * Set the failure fallback case to look in the selected AG as stream
--	 * may have moved.
--	 */
--	ap->blkno = args->fsbno = XFS_AGB_TO_FSB(mp, start_agno, 0);
--	return 0;
--}
--
--/*
-- * Search for an allocation group with a single extent large enough for
-- * the request.  If one isn't found, then the largest available free extent is
-- * returned as the best length possible.
-- */
--int
--xfs_filestream_select_ag(
--	struct xfs_bmalloca	*ap,
--	struct xfs_alloc_arg	*args,
--	xfs_extlen_t		*blen)
--{
--	xfs_agnumber_t		start_agno = xfs_filestream_lookup_ag(ap->ip);
--
--	/* Determine the initial block number we will target for allocation. */
--	if (start_agno == NULLAGNUMBER)
--		start_agno = 0;
--	ap->blkno = XFS_AGB_TO_FSB(args->mp, start_agno, 0);
-+new_ag:
-+	ap->blkno = XFS_AGB_TO_FSB(args->mp, agno, 0);
+-new_ag:
++	/* Changing parent AG association now, so remove the existing one. */
++	mru = xfs_mru_cache_remove(mp->m_filestream, pip->i_ino);
++	if (mru) {
++		struct xfs_fstrm_item *item =
++			container_of(mru, struct xfs_fstrm_item, mru);
++		agno = (item->ag + 1) % mp->m_sb.sb_agcount;
++		xfs_fstrm_free_func(mp, mru);
++	}
+ 	ap->blkno = XFS_AGB_TO_FSB(args->mp, agno, 0);
  	xfs_bmap_adjacent(ap);
  
- 	/*
-@@ -446,14 +384,32 @@ xfs_filestream_select_ag(
+@@ -382,33 +338,45 @@ xfs_filestream_select_ag(
+ 	 * larger free space available so we don't even try.
+ 	 */
  	if (ap->tp->t_flags & XFS_TRANS_LOWMODE)
- 		return 0;
- 
--	/*
--	 * Search for an allocation group with a single extent large enough for
--	 * the request.  If one isn't found, then adjust the minimum allocation
--	 * size to the largest space found.
--	 */
--	return xfs_filestreams_select_lengths(ap, args, blen);
-+	error = xfs_filestream_new_ag(ap, &agno);
-+	if (error)
-+		return error;
-+	if (agno == NULLAGNUMBER) {
-+		agno = 0;
-+		goto out_select;
-+	}
-+
-+	pag = xfs_perag_grab(mp, agno);
-+	if (!pag)
+-		return 0;
 +		goto out_select;
 +
-+	error = xfs_bmap_longest_free_extent(pag, args->tp, blen);
-+	xfs_perag_rele(pag);
-+	if (error) {
-+		if (error != -EAGAIN)
-+			return error;
-+		*blen = 0;
-+	}
-+
-+out_select:
-+	ap->blkno = XFS_AGB_TO_FSB(mp, agno, 0);
-+	return 0;
- }
++	if (ap->datatype & XFS_ALLOC_USERDATA)
++		flags |= XFS_PICK_USERDATA;
++	if (ap->tp->t_flags & XFS_TRANS_LOWMODE)
++		flags |= XFS_PICK_LOWSPACE;
  
+-	error = xfs_filestream_new_ag(ap, &agno);
++	*blen = ap->length;
++	error = xfs_filestream_pick_ag(pip, &agno, flags, blen);
+ 	if (error)
+-		return error;
++		goto out_error;
+ 	if (agno == NULLAGNUMBER) {
+ 		agno = 0;
+-		goto out_select;
++		goto out_irele;
+ 	}
+ 
+ 	pag = xfs_perag_grab(mp, agno);
+ 	if (!pag)
+-		goto out_select;
++		goto out_irele;
+ 
+ 	error = xfs_bmap_longest_free_extent(pag, args->tp, blen);
+ 	xfs_perag_rele(pag);
+ 	if (error) {
+ 		if (error != -EAGAIN)
+-			return error;
++			goto out_error;
+ 		*blen = 0;
+ 	}
+ 
++out_irele:
++	xfs_irele(pip);
+ out_select:
+ 	ap->blkno = XFS_AGB_TO_FSB(mp, agno, 0);
+ 	return 0;
+-}
+ 
++out_error:
++	xfs_irele(pip);
++	return error;
 +
++}
+ 
  void
  xfs_filestream_deassociate(
- 	struct xfs_inode	*ip)
 -- 
 2.39.0
 
