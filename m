@@ -2,70 +2,130 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AE0867A9D1
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Jan 2023 06:02:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C0667AC6B
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Jan 2023 09:41:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbjAYFCi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Jan 2023 00:02:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44668 "EHLO
+        id S235235AbjAYIlW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 Jan 2023 03:41:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbjAYFCh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Jan 2023 00:02:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC0846156
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Jan 2023 21:01:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674622909;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bk+kl20NQ+qOwz5FT8H4jLfWY22/JQFsQdu7k7N6mbY=;
-        b=iRjq9z2vRfHY0l0UQwd593MjDMxesN9/UPmJAJkChb8gC6sElN+YQdM8IAL9D1Op6jXsHt
-        uhjeMY5O1rNEltZL4nBH+JTYfnosICL3m0qOs226Ph9Ve8iLDB+PJB2MCJ67MO3QbUzUFS
-        NLuxUaKzPiioU9IFTqhw5mUfIlVEAjY=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-94-WgQMTwvrOpab9WCv1qNLgw-1; Wed, 25 Jan 2023 00:01:48 -0500
-X-MC-Unique: WgQMTwvrOpab9WCv1qNLgw-1
-Received: by mail-pg1-f197.google.com with SMTP id h69-20020a638348000000b004d08330e922so7799381pge.5
-        for <linux-xfs@vger.kernel.org>; Tue, 24 Jan 2023 21:01:47 -0800 (PST)
+        with ESMTP id S235424AbjAYIkM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Jan 2023 03:40:12 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539CA4DE1A
+        for <linux-xfs@vger.kernel.org>; Wed, 25 Jan 2023 00:39:23 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5005ef73cf3so141389487b3.2
+        for <linux-xfs@vger.kernel.org>; Wed, 25 Jan 2023 00:39:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gBh0+9Ej4fdZiBcL1FEtjjBddEyxpct0JkyXcSRf3Wg=;
+        b=lB4btchvNlTfCRHflexrgCXbRXFvyy8g1gFK/OMeKiIJNh1tqeN9E/OUXMnf2U4uji
+         YYT9ZG6Uz9BNIXcJPuB6IBGSNwEdssClBGTD7I8F8xN9feCnsNR77DeUemH49gSW7JIZ
+         i8Fyk+8dX7xmZBgb/4LlxS50DWuY+p/ZAvE5rke3AXUvgG50Y7E3pTP3J2Z3NRLwRPG+
+         tuCoTtjvQeclLyeusopPtZIO8LUuu13+9dnLJ2g+6d0g96WjPTO8eD8l7HbwyilzSGVH
+         oGzLOV4is7gwgAYTgd7llD5IZe+pWMCF81FsE6KNSAjCT9NY1E+DcM18ZvHUvuruVpcX
+         WOLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bk+kl20NQ+qOwz5FT8H4jLfWY22/JQFsQdu7k7N6mbY=;
-        b=p04mF7KKePKjexZjPkBTDUZgTlMkBB0Uw3Nyd++/mIx6ZJfmCZ7p9mvHriNYaqTuoA
-         LdukRnU0sdJfYMIvLug35OoH20z6uMFySE2pZW//Ic8/OlvTOlXqPZSbwqCMhlzcb8W7
-         Ket3HEbY2vsnqsmkOGyi8J65ZfODsmQ3plLvKs/9K8t/0MAGNzM+3ENxLdnNWNYMeKT/
-         5em38jD89+9xD3CkkiEZvxTUiZcIn9RjtSmnYvcjLSm1/we1l7u49V0xFmOIkhF3ylMo
-         Ccju8y2fCzUyXlcWkXGHrHJkSWAx8EtT6sBVC3dnXTx6akoVTpB9aYL0SQYhthLZvSgT
-         2+Aw==
-X-Gm-Message-State: AFqh2kryo6zPZmVII5R5ryRa1VDq3xVkhwq22D1blWYjbAzXvF9s5iiE
-        g7uOfu4V/xhxyNOeSt9QUgbLEwGKkaVyk1WcnS+d0ZZ8U3mUxj5+6SonRbZ4NSpdalVNcUl52Ej
-        9cUPpkr3ur7ZvBx5H5dMbzZVlIRVjWN+yn+FwXu6/ObO//6Ew9TpXz5Vunm9I0RpHG/SJdQtz
-X-Received: by 2002:a17:903:1209:b0:189:6f76:9b61 with SMTP id l9-20020a170903120900b001896f769b61mr42370472plh.39.1674622906620;
-        Tue, 24 Jan 2023 21:01:46 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuZoiU2sKt1ipGngfud/YNX11EvNhURNC0xwJQQdRdCcCRilrjXcJZJjKOR6JRvdhmKLbsw0g==
-X-Received: by 2002:a17:903:1209:b0:189:6f76:9b61 with SMTP id l9-20020a170903120900b001896f769b61mr42370441plh.39.1674622906187;
-        Tue, 24 Jan 2023 21:01:46 -0800 (PST)
-Received: from snowcrash.redhat.com ([2001:8003:4800:1b00:4c4a:1757:c744:923])
-        by smtp.gmail.com with ESMTPSA id bf2-20020a170902b90200b00196085e1bbdsm2563221plb.161.2023.01.24.21.01.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jan 2023 21:01:45 -0800 (PST)
-From:   Donald Douwsma <ddouwsma@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Donald Douwsma <ddouwsma@redhat.com>
-Subject: [PATCH] xfs: allow setting full range of panic tags
-Date:   Wed, 25 Jan 2023 16:01:38 +1100
-Message-Id: <20230125050138.372749-1-ddouwsma@redhat.com>
-X-Mailer: git-send-email 2.31.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gBh0+9Ej4fdZiBcL1FEtjjBddEyxpct0JkyXcSRf3Wg=;
+        b=eYv6rVb+VqtKA963P3ZIbndtgYeCACJh9tf/2/AcL9D0iZnO2C+koZsBRX3QE8GHQP
+         FNg9MPBpXk780SFHa2UnAkqz9yYd67hLTV3CJX9d2mb24E1kjPdlID0PLErE52eGHMaM
+         ELUjITgTQ2MfWzRFTJJUhrj4OldWQ3KWM3KlsGwYQkZWB+kZgtLjLUdPbzYSzwlJzLcz
+         4QgS8ROKz4lLKGWwrr2S/ar0TJHeBDxW4s7K7qSqmgYZjXke+YMonHjGw360kmkM5nkb
+         VlmbySDMq9KhfllNr3Dv1fJEE2fiqBh0LoeEr7UF2tJoQtg0SKzNy9WB4EvkVLkoYFNe
+         nKMg==
+X-Gm-Message-State: AO0yUKWlCZCKp80xvGTWV8nOBkSVMF5rrNnBtTBBXZZgRr6/TfhzzA80
+        ObGcI/EZMngs33WyPZaY5iuM9kat6lw=
+X-Google-Smtp-Source: AMrXdXtLI+TT5dUaC9pRI2aKjkmKt7tjdC79b+se6AwZUh4jJJgCSUqcAubWc2ByjewYclrfSPgwiLKmrmw=
+X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:200:f7b0:20e8:ce66:f98])
+ (user=surenb job=sendgmr) by 2002:a05:6902:34f:b0:6f9:7bf9:8fc7 with SMTP id
+ e15-20020a056902034f00b006f97bf98fc7mr3373858ybs.279.1674635936246; Wed, 25
+ Jan 2023 00:38:56 -0800 (PST)
+Date:   Wed, 25 Jan 2023 00:38:45 -0800
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.1.405.gd4c25cc71f-goog
+Message-ID: <20230125083851.27759-1-surenb@google.com>
+Subject: [PATCH v2 0/6] introduce vm_flags modifier functions
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     akpm@linux-foundation.org
+Cc:     michel@lespinasse.org, jglisse@google.com, mhocko@suse.com,
+        vbabka@suse.cz, hannes@cmpxchg.org, mgorman@techsingularity.net,
+        dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
+        peterz@infradead.org, ldufour@linux.ibm.com, paulmck@kernel.org,
+        luto@kernel.org, songliubraving@fb.com, peterx@redhat.com,
+        david@redhat.com, dhowells@redhat.com, hughd@google.com,
+        bigeasy@linutronix.de, kent.overstreet@linux.dev,
+        punit.agrawal@bytedance.com, lstoakes@gmail.com,
+        peterjung1337@gmail.com, rientjes@google.com,
+        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
+        jannh@google.com, shakeelb@google.com, tatashin@google.com,
+        edumazet@google.com, gthelen@google.com, gurua@google.com,
+        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
+        leewalsh@google.com, posk@google.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        qianweili@huawei.com, wangzhou1@hisilicon.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
+        airlied@gmail.com, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, l.stach@pengutronix.de,
+        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
+        matthias.bgg@gmail.com, robdclark@gmail.com,
+        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
+        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
+        ray.huang@amd.com, kraxel@redhat.com, sre@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
+        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
+        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
+        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
+        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, miklos@szeredi.hu,
+        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
+        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
+        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
+        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
+        loongarch@lists.linux.dev, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
+        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        devel@lists.orangefs.org, kexec@lists.infradead.org,
+        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
+        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
+        kernel-team@android.com, surenb@google.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,47 +133,163 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-xfs will not allow combining other panic values with XFS_PTAG_VERIFIER_ERROR.
+This patchset was originally published as a part of per-VMA locking [1] and
+was split after suggestion that it's viable on its own and to facilitate
+the review process. It is now a preprequisite for the next version of per-VMA
+lock patchset, which reuses vm_flags modifier functions to lock the VMA when
+vm_flags are being updated.
 
- sysctl fs.xfs.panic_mask=511
- sysctl: setting key "fs.xfs.panic_mask": Invalid argument
- fs.xfs.panic_mask = 511
+VMA vm_flags modifications are usually done under exclusive mmap_lock
+protection because this attrubute affects other decisions like VMA merging
+or splitting and races should be prevented. Introduce vm_flags modifier
+functions to enforce correct locking.
 
-Update to the maximum value that can be set to allow the full range of masks.
+[1] https://lore.kernel.org/all/20230109205336.3665937-1-surenb@google.com/
 
-Fixes: d519da41e2b78 ("xfs: Introduce XFS_PTAG_VERIFIER_ERROR panic mask")
-Signed-off-by: Donald Douwsma <ddouwsma@redhat.com>
----
- Documentation/admin-guide/xfs.rst | 2 +-
- fs/xfs/xfs_globals.c              | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+The patchset applies cleanly over mm-unstable branch of mm tree.
 
-diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-index 8de008c0c5ad..e2561416391c 100644
---- a/Documentation/admin-guide/xfs.rst
-+++ b/Documentation/admin-guide/xfs.rst
-@@ -296,7 +296,7 @@ The following sysctls are available for the XFS filesystem:
- 		XFS_ERRLEVEL_LOW:       1
- 		XFS_ERRLEVEL_HIGH:      5
- 
--  fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 256)
-+  fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 511)
- 	Causes certain error conditions to call BUG(). Value is a bitmask;
- 	OR together the tags which represent errors which should cause panics:
- 
-diff --git a/fs/xfs/xfs_globals.c b/fs/xfs/xfs_globals.c
-index 4d0a98f920ca..e0e9494a8251 100644
---- a/fs/xfs/xfs_globals.c
-+++ b/fs/xfs/xfs_globals.c
-@@ -15,7 +15,7 @@ xfs_param_t xfs_params = {
- 			  /*	MIN		DFLT		MAX	*/
- 	.sgid_inherit	= {	0,		0,		1	},
- 	.symlink_mode	= {	0,		0,		1	},
--	.panic_mask	= {	0,		0,		256	},
-+	.panic_mask	= {	0,		0,		511	},
- 	.error_level	= {	0,		3,		11	},
- 	.syncd_timer	= {	1*100,		30*100,		7200*100},
- 	.stats_clear	= {	0,		0,		1	},
+My apologies for an extremely large distribution list. The patch touches
+lots of files and many are in arch/ and drivers/.
+
+Suren Baghdasaryan (6):
+  mm: introduce vma->vm_flags modifier functions
+  mm: replace VM_LOCKED_CLEAR_MASK with VM_LOCKED_MASK
+  mm: replace vma->vm_flags direct modifications with modifier calls
+  mm: replace vma->vm_flags indirect modification in ksm_madvise
+  mm: introduce mod_vm_flags_nolock and use it in untrack_pfn
+  mm: export dump_mm()
+
+ arch/arm/kernel/process.c                     |  2 +-
+ arch/ia64/mm/init.c                           |  8 +--
+ arch/loongarch/include/asm/tlb.h              |  2 +-
+ arch/powerpc/kvm/book3s_hv_uvmem.c            |  5 +-
+ arch/powerpc/kvm/book3s_xive_native.c         |  2 +-
+ arch/powerpc/mm/book3s64/subpage_prot.c       |  2 +-
+ arch/powerpc/platforms/book3s/vas-api.c       |  2 +-
+ arch/powerpc/platforms/cell/spufs/file.c      | 14 ++---
+ arch/s390/mm/gmap.c                           |  8 +--
+ arch/x86/entry/vsyscall/vsyscall_64.c         |  2 +-
+ arch/x86/kernel/cpu/sgx/driver.c              |  2 +-
+ arch/x86/kernel/cpu/sgx/virt.c                |  2 +-
+ arch/x86/mm/pat/memtype.c                     | 14 +++--
+ arch/x86/um/mem_32.c                          |  2 +-
+ drivers/acpi/pfr_telemetry.c                  |  2 +-
+ drivers/android/binder.c                      |  3 +-
+ drivers/char/mspec.c                          |  2 +-
+ drivers/crypto/hisilicon/qm.c                 |  2 +-
+ drivers/dax/device.c                          |  2 +-
+ drivers/dma/idxd/cdev.c                       |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c       |  2 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_chardev.c      |  4 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_doorbell.c     |  4 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_events.c       |  4 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c      |  4 +-
+ drivers/gpu/drm/drm_gem.c                     |  2 +-
+ drivers/gpu/drm/drm_gem_dma_helper.c          |  3 +-
+ drivers/gpu/drm/drm_gem_shmem_helper.c        |  2 +-
+ drivers/gpu/drm/drm_vm.c                      |  8 +--
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c         |  2 +-
+ drivers/gpu/drm/exynos/exynos_drm_gem.c       |  4 +-
+ drivers/gpu/drm/gma500/framebuffer.c          |  2 +-
+ drivers/gpu/drm/i810/i810_dma.c               |  2 +-
+ drivers/gpu/drm/i915/gem/i915_gem_mman.c      |  4 +-
+ drivers/gpu/drm/mediatek/mtk_drm_gem.c        |  2 +-
+ drivers/gpu/drm/msm/msm_gem.c                 |  2 +-
+ drivers/gpu/drm/omapdrm/omap_gem.c            |  3 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c   |  3 +-
+ drivers/gpu/drm/tegra/gem.c                   |  5 +-
+ drivers/gpu/drm/ttm/ttm_bo_vm.c               |  3 +-
+ drivers/gpu/drm/virtio/virtgpu_vram.c         |  2 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_ttm_glue.c      |  2 +-
+ drivers/gpu/drm/xen/xen_drm_front_gem.c       |  3 +-
+ drivers/hsi/clients/cmt_speech.c              |  2 +-
+ drivers/hwtracing/intel_th/msu.c              |  2 +-
+ drivers/hwtracing/stm/core.c                  |  2 +-
+ drivers/infiniband/hw/hfi1/file_ops.c         |  4 +-
+ drivers/infiniband/hw/mlx5/main.c             |  4 +-
+ drivers/infiniband/hw/qib/qib_file_ops.c      | 13 +++--
+ drivers/infiniband/hw/usnic/usnic_ib_verbs.c  |  2 +-
+ .../infiniband/hw/vmw_pvrdma/pvrdma_verbs.c   |  2 +-
+ .../common/videobuf2/videobuf2-dma-contig.c   |  2 +-
+ .../common/videobuf2/videobuf2-vmalloc.c      |  2 +-
+ drivers/media/v4l2-core/videobuf-dma-contig.c |  2 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c     |  4 +-
+ drivers/media/v4l2-core/videobuf-vmalloc.c    |  2 +-
+ drivers/misc/cxl/context.c                    |  2 +-
+ drivers/misc/habanalabs/common/memory.c       |  2 +-
+ drivers/misc/habanalabs/gaudi/gaudi.c         |  4 +-
+ drivers/misc/habanalabs/gaudi2/gaudi2.c       |  8 +--
+ drivers/misc/habanalabs/goya/goya.c           |  4 +-
+ drivers/misc/ocxl/context.c                   |  4 +-
+ drivers/misc/ocxl/sysfs.c                     |  2 +-
+ drivers/misc/open-dice.c                      |  4 +-
+ drivers/misc/sgi-gru/grufile.c                |  4 +-
+ drivers/misc/uacce/uacce.c                    |  2 +-
+ drivers/sbus/char/oradax.c                    |  2 +-
+ drivers/scsi/cxlflash/ocxl_hw.c               |  2 +-
+ drivers/scsi/sg.c                             |  2 +-
+ .../staging/media/atomisp/pci/hmm/hmm_bo.c    |  2 +-
+ drivers/staging/media/deprecated/meye/meye.c  |  4 +-
+ .../media/deprecated/stkwebcam/stk-webcam.c   |  2 +-
+ drivers/target/target_core_user.c             |  2 +-
+ drivers/uio/uio.c                             |  2 +-
+ drivers/usb/core/devio.c                      |  3 +-
+ drivers/usb/mon/mon_bin.c                     |  3 +-
+ drivers/vdpa/vdpa_user/iova_domain.c          |  2 +-
+ drivers/vfio/pci/vfio_pci_core.c              |  2 +-
+ drivers/vhost/vdpa.c                          |  2 +-
+ drivers/video/fbdev/68328fb.c                 |  2 +-
+ drivers/video/fbdev/core/fb_defio.c           |  4 +-
+ drivers/xen/gntalloc.c                        |  2 +-
+ drivers/xen/gntdev.c                          |  4 +-
+ drivers/xen/privcmd-buf.c                     |  2 +-
+ drivers/xen/privcmd.c                         |  4 +-
+ fs/aio.c                                      |  2 +-
+ fs/cramfs/inode.c                             |  2 +-
+ fs/erofs/data.c                               |  2 +-
+ fs/exec.c                                     |  4 +-
+ fs/ext4/file.c                                |  2 +-
+ fs/fuse/dax.c                                 |  2 +-
+ fs/hugetlbfs/inode.c                          |  4 +-
+ fs/orangefs/file.c                            |  3 +-
+ fs/proc/task_mmu.c                            |  2 +-
+ fs/proc/vmcore.c                              |  3 +-
+ fs/userfaultfd.c                              |  2 +-
+ fs/xfs/xfs_file.c                             |  2 +-
+ include/linux/mm.h                            | 51 +++++++++++++++++--
+ include/linux/mm_types.h                      |  8 ++-
+ include/linux/pgtable.h                       |  5 +-
+ kernel/bpf/ringbuf.c                          |  4 +-
+ kernel/bpf/syscall.c                          |  4 +-
+ kernel/events/core.c                          |  2 +-
+ kernel/fork.c                                 |  2 +-
+ kernel/kcov.c                                 |  2 +-
+ kernel/relay.c                                |  2 +-
+ mm/debug.c                                    |  1 +
+ mm/hugetlb.c                                  |  4 +-
+ mm/khugepaged.c                               |  2 +
+ mm/ksm.c                                      |  2 +
+ mm/madvise.c                                  |  2 +-
+ mm/memory.c                                   | 19 +++----
+ mm/memremap.c                                 |  4 +-
+ mm/mlock.c                                    | 12 ++---
+ mm/mmap.c                                     | 32 +++++++-----
+ mm/mprotect.c                                 |  2 +-
+ mm/mremap.c                                   |  8 +--
+ mm/nommu.c                                    | 11 ++--
+ mm/secretmem.c                                |  2 +-
+ mm/shmem.c                                    |  2 +-
+ mm/vmalloc.c                                  |  2 +-
+ net/ipv4/tcp.c                                |  4 +-
+ security/selinux/selinuxfs.c                  |  6 +--
+ sound/core/oss/pcm_oss.c                      |  2 +-
+ sound/core/pcm_native.c                       |  9 ++--
+ sound/soc/pxa/mmp-sspa.c                      |  2 +-
+ sound/usb/usx2y/us122l.c                      |  4 +-
+ sound/usb/usx2y/usX2Yhwdep.c                  |  2 +-
+ sound/usb/usx2y/usx2yhwdeppcm.c               |  2 +-
+ 129 files changed, 292 insertions(+), 233 deletions(-)
+
 -- 
-2.31.1
+2.39.1
 
