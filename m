@@ -2,92 +2,154 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E3E367D68D
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Jan 2023 21:37:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3602267EADC
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Jan 2023 17:27:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232841AbjAZUhf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 26 Jan 2023 15:37:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45388 "EHLO
+        id S233708AbjA0Q1Q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 27 Jan 2023 11:27:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232848AbjAZUha (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Jan 2023 15:37:30 -0500
-X-Greylist: delayed 734 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 Jan 2023 12:37:26 PST
-Received: from sp14.canonet.ne.jp (sp14.canonet.ne.jp [210.134.168.91])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD97473766;
-        Thu, 26 Jan 2023 12:37:26 -0800 (PST)
-Received: from csp14.canonet.ne.jp (unknown [172.21.160.134])
-        by sp14.canonet.ne.jp (Postfix) with ESMTP id 7BD0A1E070E;
-        Fri, 27 Jan 2023 05:25:09 +0900 (JST)
-Received: from echeck14.canonet.ne.jp ([172.21.160.124])
-        by csp4 with ESMTP
-        id L8o1pIZHhVjWJL8o1p2hS0; Fri, 27 Jan 2023 05:25:09 +0900
-X-CNT-CMCheck-Reason: "undefined", "v=2.4 cv=WsmVjfTv c=1 sm=1 tr=0
- ts=63d2e1a5 cx=g_jp:t_eml p=jICtXCb1Bd4A:10 p=QA8zHFxAwLBQ4A9MkZgA:9
- p=WKcvGfCz9DfGexK3dBCb:22 a=puqJfqqrwnhV2n3dwg+kWg==:117
- a=yr9NA9NbXb0B05yJHQEWeQ==:17 a=PlGk70OYzacA:10 a=kj9zAlcOel0A:10
- a=RvmDmJFTN0MA:10 a=x7bEGLp0ZPQA:10 a=CjuIK1q_8ugA:10 a=0iaRBTTaEecA:10
- a=xo5jKAKm-U-Zyk2_beg_:22"
-X-CNT-CMCheck-Score: 100.00
-Received: from echeck14.canonet.ne.jp (localhost [127.0.0.1])
-        by esets.canonet.ne.jp (Postfix) with ESMTP id 3069B1C020D;
-        Fri, 27 Jan 2023 05:25:09 +0900 (JST)
-X-Virus-Scanner: This message was checked by ESET Mail Security
-        for Linux/BSD. For more information on ESET Mail Security,
-        please, visit our website: http://www.eset.com/.
-Received: from smtp14.canonet.ne.jp (unknown [172.21.160.104])
-        by echeck14.canonet.ne.jp (Postfix) with ESMTP id D15011C0255;
-        Fri, 27 Jan 2023 05:25:08 +0900 (JST)
-Received: from daime.co.jp (webmail.canonet.ne.jp [210.134.169.250])
-        by smtp14.canonet.ne.jp (Postfix) with ESMTPA id 2234115F967;
-        Fri, 27 Jan 2023 05:25:08 +0900 (JST)
+        with ESMTP id S232974AbjA0Q1P (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Jan 2023 11:27:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895ED80F8F
+        for <linux-xfs@vger.kernel.org>; Fri, 27 Jan 2023 08:27:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3F300B82159
+        for <linux-xfs@vger.kernel.org>; Fri, 27 Jan 2023 16:27:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B00C433D2;
+        Fri, 27 Jan 2023 16:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674836831;
+        bh=ZNIqWcxH6ClJJvBuUICQzkIKTi9pslg/QgOfZIb18bY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V7gaXbWtSGTNH9xwuy22ioBwxL3MAAFvFQTlU7vsGEybOyW2OsNq3EvbjfViN0L8a
+         zqKXwW7X24ddp4kamxPK5PJSwECWTVnalv0B3XUIHmBCDOqL14R5P6R23XKq1o0oP2
+         tZAO5j3h8628zY/fPsk2p5ysWnI/mJB4mfpwTKWN1LVie8/NQ3I6glwi+kYruLPsbY
+         OePHuqKj+R0ufx9WqkhYdGPS8gFYIX8ZRBoZLCupvpAqUNyut29MN/tzntf4EETjbz
+         3pf46vFIFZeH4wLj8tE+dE/k/hbzYziv5+c0HHVYF/OTCimFjCViWGL7tM1NHHb2l5
+         kfY1dkgea0e7Q==
+Date:   Fri, 27 Jan 2023 08:27:11 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Donald Douwsma <ddouwsma@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: allow setting full range of panic tags
+Message-ID: <Y9P7X6GnLA/iJuIa@magnolia>
+References: <20230126052910.588098-1-ddouwsma@redhat.com>
 MIME-Version: 1.0
-Message-ID: <20230126202508.00005AB9.0996@daime.co.jp>
-Date:   Fri, 27 Jan 2023 05:25:08 +0900
-From:   "Mrs Alice Walton" <daime@daime.co.jp>
-To:     <INQUIRY@daime.co.jp>
-Reply-To: <alicewaltton1@gmail.com>
-Subject: INQUIRY
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-ORGANIZATION: Mrs Alice Walton
-X-MAILER: Active! mail
-X-EsetResult: clean, %VIRUSNAME%
-X-ESET-AS: R=SPAM;S=100;OP=CALC;TIME=1674764709;VERSION=7944;MC=3201162752;TRN=17;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
-X-I-ESET-AS: RN=285,624:0;RNP=alicewaltton1@gmail.com
-X-ESET-Antispam: SPAM
-X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        LOCALPART_IN_SUBJECT,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_MR_MRS,
-        UNRESOLVED_TEMPLATE,XPRIO_SHORT_SUBJ autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5039]
-        *  1.1 LOCALPART_IN_SUBJECT Local part of To: address appears in
-        *      Subject
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [alicewaltton1[at]gmail.com]
-        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 T_HK_NAME_MR_MRS No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-        *  1.0 XPRIO_SHORT_SUBJ Has X Priority header + short subject
-X-Spam-Level: ******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230126052910.588098-1-ddouwsma@redhat.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Thu, Jan 26, 2023 at 04:29:10PM +1100, Donald Douwsma wrote:
+> xfs will not allow combining other panic masks with
+> XFS_PTAG_VERIFIER_ERROR.
+> 
+>  sysctl fs.xfs.panic_mask=511
+>  sysctl: setting key "fs.xfs.panic_mask": Invalid argument
+>  fs.xfs.panic_mask = 511
+> 
+> Update to the maximum value that can be set to allow the full range of
+> masks.
+> 
+> Fixes: d519da41e2b7 ("xfs: Introduce XFS_PTAG_VERIFIER_ERROR panic mask")
+> Signed-off-by: Donald Douwsma <ddouwsma@redhat.com>
+> ---
+>  Documentation/admin-guide/xfs.rst |  2 +-
+>  fs/xfs/xfs_error.h                | 13 ++++++++++++-
+>  fs/xfs/xfs_globals.c              |  3 ++-
+>  3 files changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
+> index 8de008c0c5ad..e2561416391c 100644
+> --- a/Documentation/admin-guide/xfs.rst
+> +++ b/Documentation/admin-guide/xfs.rst
+> @@ -296,7 +296,7 @@ The following sysctls are available for the XFS filesystem:
+>  		XFS_ERRLEVEL_LOW:       1
+>  		XFS_ERRLEVEL_HIGH:      5
+>  
+> -  fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 256)
+> +  fs.xfs.panic_mask		(Min: 0  Default: 0  Max: 511)
+>  	Causes certain error conditions to call BUG(). Value is a bitmask;
+>  	OR together the tags which represent errors which should cause panics:
+>  
+> diff --git a/fs/xfs/xfs_error.h b/fs/xfs/xfs_error.h
+> index dbe6c37dc697..a015f7b370dc 100644
+> --- a/fs/xfs/xfs_error.h
+> +++ b/fs/xfs/xfs_error.h
+> @@ -75,7 +75,7 @@ extern int xfs_errortag_clearall(struct xfs_mount *mp);
+>  
+>  /*
+>   * XFS panic tags -- allow a call to xfs_alert_tag() be turned into
+> - *			a panic by setting xfs_panic_mask in a sysctl.
+> + *			a panic by setting fs.xfs.panic_mask in a sysctl.
+>   */
+>  #define		XFS_NO_PTAG			0u
+>  #define		XFS_PTAG_IFLUSH			(1u << 0)
+> @@ -88,6 +88,17 @@ extern int xfs_errortag_clearall(struct xfs_mount *mp);
+>  #define		XFS_PTAG_FSBLOCK_ZERO		(1u << 7)
+>  #define		XFS_PTAG_VERIFIER_ERROR		(1u << 8)
+>  
+> +#define		XFS_MAX_PTAG ( \
 
-Greetings,
+The ptag values are a bitmask, not a continuous integer range, so the
+name should have "MASK" in it, e.g.
 
-I trust you are well. I sent you an email yesterday, I just want to confirm if you received it.
-Please let me know as soon as possible,
+#define			XFS_PTAG_MASK	(XFS_PTAG_IFLUSH | \
+					 XFS_PTAG_LOGRES | \
+					...
 
-Regard
-Mrs Alice Walton
+and follow the customary style where the macro definition lines are
+indented from the name.
 
+Otherwise this looks fine.
 
+--D
+
+> +			XFS_PTAG_IFLUSH | \
+> +			XFS_PTAG_LOGRES | \
+> +			XFS_PTAG_AILDELETE | \
+> +			XFS_PTAG_ERROR_REPORT | \
+> +			XFS_PTAG_SHUTDOWN_CORRUPT | \
+> +			XFS_PTAG_SHUTDOWN_IOERROR | \
+> +			XFS_PTAG_SHUTDOWN_LOGERROR | \
+> +			XFS_PTAG_FSBLOCK_ZERO | \
+> +			XFS_PTAG_VERIFIER_ERROR)
+> +
+>  #define XFS_PTAG_STRINGS \
+>  	{ XFS_NO_PTAG,			"none" }, \
+>  	{ XFS_PTAG_IFLUSH,		"iflush" }, \
+> diff --git a/fs/xfs/xfs_globals.c b/fs/xfs/xfs_globals.c
+> index 4d0a98f920ca..ff129acce8e6 100644
+> --- a/fs/xfs/xfs_globals.c
+> +++ b/fs/xfs/xfs_globals.c
+> @@ -4,6 +4,7 @@
+>   * All Rights Reserved.
+>   */
+>  #include "xfs.h"
+> +#include "xfs_error.h"
+>  
+>  /*
+>   * Tunable XFS parameters.  xfs_params is required even when CONFIG_SYSCTL=n,
+> @@ -15,7 +16,7 @@ xfs_param_t xfs_params = {
+>  			  /*	MIN		DFLT		MAX	*/
+>  	.sgid_inherit	= {	0,		0,		1	},
+>  	.symlink_mode	= {	0,		0,		1	},
+> -	.panic_mask	= {	0,		0,		256	},
+> +	.panic_mask	= {	0,		0,		XFS_MAX_PTAG},
+>  	.error_level	= {	0,		3,		11	},
+>  	.syncd_timer	= {	1*100,		30*100,		7200*100},
+>  	.stats_clear	= {	0,		0,		1	},
+> -- 
+> 2.31.1
+> 
