@@ -2,64 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1C7568F61A
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Feb 2023 18:52:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A5AF68F61B
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Feb 2023 18:52:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbjBHRwo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Feb 2023 12:52:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60014 "EHLO
+        id S230353AbjBHRwp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Feb 2023 12:52:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230353AbjBHRwn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Feb 2023 12:52:43 -0500
+        with ESMTP id S230377AbjBHRwo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Feb 2023 12:52:44 -0500
 Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CDB6A64
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Feb 2023 09:52:42 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id f15-20020a17090ac28f00b00230a32f0c9eso3098460pjt.4
-        for <linux-xfs@vger.kernel.org>; Wed, 08 Feb 2023 09:52:42 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9383B59E2
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Feb 2023 09:52:43 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id bx22so16241818pjb.3
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Feb 2023 09:52:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4zaCZqG/9Te1S4SLOTcFbt+IncxgVAgVwl1b3HxBTaM=;
-        b=U6uDQK23exe1TGSi7ij0zE1dEuzunO3lMaVQPLhVIOr0Dt8LqJYIuTd9rb46km8JQW
-         /9sgsB7W1DRVl0pQMAPDTfAN3qn0m7WVVMnj/Ziuxs4VrMvukXuo2/GSOqOgoUndyJec
-         KjIYrXskXITH80Tp65xselLFD1/BlEN1YQ7y1nZzcu8VyChuTmhGYHbhT23tBmu/q9oH
-         0BqAoLgGi8IIfcR/r1YmFs2lYlMM+kcfI//JweEgP/NTk2BX28nBw6r9YEoQqZ4AVi70
-         JBVrYUBHaFxW6dwgrA05OaaEeWUokUnHzTX1SCw0ymbQhJD/O9fWmpSUiUgHW2VG7D3y
-         gyLA==
+        bh=Q8Kt5e9eFuHaUHQVJUsJnYzgwinUdun/p02DUjewDYY=;
+        b=PvUN/+43lsNdWDWHu8Mh8CEEmvKra7e8Kj0aMxHpHwev3HHOW4b7eOinGzbMCrwtp0
+         7mcVJU3Aw7TgfnrVq8v5bTTF8ZoxsIk0GnsnPkbpoL+Rr/ca9879P/TcfPKvb9ZeAWNJ
+         QuJMpgRI0THznTfcJVyrana/Gd058xawJqd9cxIDQzbqnCPeAR/7H3pDmjyZBklvfjh9
+         TD+7G+bNphkgGxuiVQo7bFviRNVf+flcw4+w9TxZg8QgpHRbCnhzxcGZOVLOshbqsWzF
+         XCFTCi+j1v+fFanytaAzg9KFXyQ65xCCY0Drz8OQJKI7a9LRXAF8YZkCzr+j0r+o5Iti
+         0dAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4zaCZqG/9Te1S4SLOTcFbt+IncxgVAgVwl1b3HxBTaM=;
-        b=CCE8i8T5vHPjhY5WYvPL7EginX9OEcbUzN8r3YjUBZFKe98W79YeEsN7K4i24UEFpg
-         F+b/kgkfhf6V5L/ENud6Il6lKnD5rDx790+sX3ANHzojvHU44bVA6lz/Mz7OX/VDgqcz
-         PoI50+4yJLNJwTzxvsc8jBEhGeX24GeMaoxfmrcyW4Izzd5pnMZWMZB9rg0IpKTEBbRi
-         iuP+RMF0LeVUk930BAM+wEcdVrreg560eViukC/SJPu1H05OcYrdkAvEShSuFq/5D2w3
-         JVlmmoDuXKTIo0O0zuKyEQiYdX58xwhZvxPSCXH7ejFl5EXT+8poS3de7E1so9quxcHA
-         tOMg==
-X-Gm-Message-State: AO0yUKVBlJ6x2WnNjuzvbXgo/BnyXEXwqvtN1YbMwcoz81eIfhqH62b6
-        GDjq6hplkJ5FAP7Igimuyl3+TzhXo6kywQ==
-X-Google-Smtp-Source: AK7set/h18P8sxQ1Y9t4cPrNTh0ObWqSMEV0mhKZzlLpwcFTjxdKtvwjjLxrFCbT1P6s0XWH771Udw==
-X-Received: by 2002:a17:902:db0a:b0:199:15bb:8320 with SMTP id m10-20020a170902db0a00b0019915bb8320mr8566270plx.31.1675878761525;
-        Wed, 08 Feb 2023 09:52:41 -0800 (PST)
+        bh=Q8Kt5e9eFuHaUHQVJUsJnYzgwinUdun/p02DUjewDYY=;
+        b=WWu4i5Wkbg/Df335Ct1BBnUZ/oNSyK0CktzAeF3JZLMDX+WFE6vRUXKYioc3/IHeow
+         y59JbAhZExPzyNeOFbMDYWaiyuX6daFHldGdgMso1U1ls4CDTMJt8wUPYZ8g/nWL4+v5
+         GxiL4gK5iexG1NGW98mOaXRg/E2uPnHbr++KazzXuhgZwv9uOZhfu55tBuWzNI+eY6XA
+         0CKCIkZb8NEXkY17OQBFqItwDBgW/KwRzXY037KoTDqJwohUWKuGleikHvQFqkD4zUay
+         QDoYLVNbvLrOmEsNpMjZ/BIz60ozU/mvkwWLp/ZmjZiAb2DA10YGT6bkX+/7eSWx8fBU
+         vc7A==
+X-Gm-Message-State: AO0yUKWn3RYa/jg7aK+IysBo0WkwsninZrRYYVUVVRwlR4EXugUEOQ5G
+        OREJIjEuJ+nC9JMaoPQtqN42Sm2HXk/VNA==
+X-Google-Smtp-Source: AK7set8f7A+ZlPJdf/3aC2O9dXmbfty0gPqN5pBfSoFRmsXSfZk4bKvBIyxv1bVrqUb6NDCKu7HeLQ==
+X-Received: by 2002:a17:902:ca0b:b0:194:d4e5:5e5c with SMTP id w11-20020a170902ca0b00b00194d4e55e5cmr1985590pld.37.1675878762843;
+        Wed, 08 Feb 2023 09:52:42 -0800 (PST)
 Received: from lrumancik.svl.corp.google.com ([2620:15c:2d4:203:726:5e6d:fcde:4245])
-        by smtp.gmail.com with ESMTPSA id y17-20020a170902d65100b00198e397994bsm10911452plh.136.2023.02.08.09.52.40
+        by smtp.gmail.com with ESMTPSA id y17-20020a170902d65100b00198e397994bsm10911452plh.136.2023.02.08.09.52.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 09:52:41 -0800 (PST)
+        Wed, 08 Feb 2023 09:52:42 -0800 (PST)
 From:   Leah Rumancik <leah.rumancik@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     amir73il@gmail.com, chandan.babu@oracle.com,
         Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
         "Darrick J . Wong" <djwong@kernel.org>,
-        Allison Henderson <allison.henderson@oracle.com>,
         Dave Chinner <david@fromorbit.com>,
         Leah Rumancik <leah.rumancik@gmail.com>
-Subject: [PATCH 5.15 CANDIDATE 02/10] xfs: fix potential log item leak
-Date:   Wed,  8 Feb 2023 09:52:20 -0800
-Message-Id: <20230208175228.2226263-3-leah.rumancik@gmail.com>
+Subject: [PATCH 5.15 CANDIDATE 03/10] xfs: detect self referencing btree sibling pointers
+Date:   Wed,  8 Feb 2023 09:52:21 -0800
+Message-Id: <20230208175228.2226263-4-leah.rumancik@gmail.com>
 X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
 In-Reply-To: <20230208175228.2226263-1-leah.rumancik@gmail.com>
 References: <20230208175228.2226263-1-leah.rumancik@gmail.com>
@@ -77,113 +77,235 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit c230a4a85bcdbfc1a7415deec6caf04e8fca1301 ]
+[ Upstream commit dc04db2aa7c9307e740d6d0e173085301c173b1a ]
 
-Ever since we added shadown format buffers to the log items, log
-items need to handle the item being released with shadow buffers
-attached. Due to the fact this requirement was added at the same
-time we added new rmap/reflink intents, we missed the cleanup of
-those items.
-
-In theory, this means shadow buffers can be leaked in a very small
-window when a shutdown is initiated. Testing with KASAN shows this
-leak does not happen in practice - we haven't identified a single
-leak in several years of shutdown testing since ~v4.8 kernels.
-
-However, the intent whiteout cleanup mechanism results in every
-cancelled intent in exactly the same state as this tiny race window
-creates and so if intents down clean up shadow buffers on final
-release we will leak the shadow buffer for just about every intent
-we create.
-
-Hence we start with this patch to close this condition off and
-ensure that when whiteouts start to be used we don't leak lots of
-memory.
+To catch the obvious graph cycle problem and hence potential endless
+looping.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Leah Rumancik <leah.rumancik@gmail.com>
 ---
- fs/xfs/xfs_bmap_item.c     | 2 ++
- fs/xfs/xfs_icreate_item.c  | 1 +
- fs/xfs/xfs_refcount_item.c | 2 ++
- fs/xfs/xfs_rmap_item.c     | 2 ++
- 4 files changed, 7 insertions(+)
+ fs/xfs/libxfs/xfs_btree.c | 140 ++++++++++++++++++++++++++++----------
+ 1 file changed, 105 insertions(+), 35 deletions(-)
 
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index 03159970133f..51ffdec5e4fa 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -39,6 +39,7 @@ STATIC void
- xfs_bui_item_free(
- 	struct xfs_bui_log_item	*buip)
+diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
+index 298395481713..5bec048343b0 100644
+--- a/fs/xfs/libxfs/xfs_btree.c
++++ b/fs/xfs/libxfs/xfs_btree.c
+@@ -51,6 +51,52 @@ xfs_btree_magic(
+ 	return magic;
+ }
+ 
++static xfs_failaddr_t
++xfs_btree_check_lblock_siblings(
++	struct xfs_mount	*mp,
++	struct xfs_btree_cur	*cur,
++	int			level,
++	xfs_fsblock_t		fsb,
++	xfs_fsblock_t		sibling)
++{
++	if (sibling == NULLFSBLOCK)
++		return NULL;
++	if (sibling == fsb)
++		return __this_address;
++	if (level >= 0) {
++		if (!xfs_btree_check_lptr(cur, sibling, level + 1))
++			return __this_address;
++	} else {
++		if (!xfs_verify_fsbno(mp, sibling))
++			return __this_address;
++	}
++
++	return NULL;
++}
++
++static xfs_failaddr_t
++xfs_btree_check_sblock_siblings(
++	struct xfs_mount	*mp,
++	struct xfs_btree_cur	*cur,
++	int			level,
++	xfs_agnumber_t		agno,
++	xfs_agblock_t		agbno,
++	xfs_agblock_t		sibling)
++{
++	if (sibling == NULLAGBLOCK)
++		return NULL;
++	if (sibling == agbno)
++		return __this_address;
++	if (level >= 0) {
++		if (!xfs_btree_check_sptr(cur, sibling, level + 1))
++			return __this_address;
++	} else {
++		if (!xfs_verify_agbno(mp, agno, sibling))
++			return __this_address;
++	}
++	return NULL;
++}
++
+ /*
+  * Check a long btree block header.  Return the address of the failing check,
+  * or NULL if everything is ok.
+@@ -65,6 +111,8 @@ __xfs_btree_check_lblock(
+ 	struct xfs_mount	*mp = cur->bc_mp;
+ 	xfs_btnum_t		btnum = cur->bc_btnum;
+ 	int			crc = xfs_has_crc(mp);
++	xfs_failaddr_t		fa;
++	xfs_fsblock_t		fsb = NULLFSBLOCK;
+ 
+ 	if (crc) {
+ 		if (!uuid_equal(&block->bb_u.l.bb_uuid, &mp->m_sb.sb_meta_uuid))
+@@ -83,16 +131,16 @@ __xfs_btree_check_lblock(
+ 	if (be16_to_cpu(block->bb_numrecs) >
+ 	    cur->bc_ops->get_maxrecs(cur, level))
+ 		return __this_address;
+-	if (block->bb_u.l.bb_leftsib != cpu_to_be64(NULLFSBLOCK) &&
+-	    !xfs_btree_check_lptr(cur, be64_to_cpu(block->bb_u.l.bb_leftsib),
+-			level + 1))
+-		return __this_address;
+-	if (block->bb_u.l.bb_rightsib != cpu_to_be64(NULLFSBLOCK) &&
+-	    !xfs_btree_check_lptr(cur, be64_to_cpu(block->bb_u.l.bb_rightsib),
+-			level + 1))
+-		return __this_address;
+ 
+-	return NULL;
++	if (bp)
++		fsb = XFS_DADDR_TO_FSB(mp, xfs_buf_daddr(bp));
++
++	fa = xfs_btree_check_lblock_siblings(mp, cur, level, fsb,
++			be64_to_cpu(block->bb_u.l.bb_leftsib));
++	if (!fa)
++		fa = xfs_btree_check_lblock_siblings(mp, cur, level, fsb,
++				be64_to_cpu(block->bb_u.l.bb_rightsib));
++	return fa;
+ }
+ 
+ /* Check a long btree block header. */
+@@ -130,6 +178,9 @@ __xfs_btree_check_sblock(
+ 	struct xfs_mount	*mp = cur->bc_mp;
+ 	xfs_btnum_t		btnum = cur->bc_btnum;
+ 	int			crc = xfs_has_crc(mp);
++	xfs_failaddr_t		fa;
++	xfs_agblock_t		agbno = NULLAGBLOCK;
++	xfs_agnumber_t		agno = NULLAGNUMBER;
+ 
+ 	if (crc) {
+ 		if (!uuid_equal(&block->bb_u.s.bb_uuid, &mp->m_sb.sb_meta_uuid))
+@@ -146,16 +197,18 @@ __xfs_btree_check_sblock(
+ 	if (be16_to_cpu(block->bb_numrecs) >
+ 	    cur->bc_ops->get_maxrecs(cur, level))
+ 		return __this_address;
+-	if (block->bb_u.s.bb_leftsib != cpu_to_be32(NULLAGBLOCK) &&
+-	    !xfs_btree_check_sptr(cur, be32_to_cpu(block->bb_u.s.bb_leftsib),
+-			level + 1))
+-		return __this_address;
+-	if (block->bb_u.s.bb_rightsib != cpu_to_be32(NULLAGBLOCK) &&
+-	    !xfs_btree_check_sptr(cur, be32_to_cpu(block->bb_u.s.bb_rightsib),
+-			level + 1))
+-		return __this_address;
+ 
+-	return NULL;
++	if (bp) {
++		agbno = xfs_daddr_to_agbno(mp, xfs_buf_daddr(bp));
++		agno = xfs_daddr_to_agno(mp, xfs_buf_daddr(bp));
++	}
++
++	fa = xfs_btree_check_sblock_siblings(mp, cur, level, agno, agbno,
++			be32_to_cpu(block->bb_u.s.bb_leftsib));
++	if (!fa)
++		fa = xfs_btree_check_sblock_siblings(mp, cur, level, agno,
++				 agbno, be32_to_cpu(block->bb_u.s.bb_rightsib));
++	return fa;
+ }
+ 
+ /* Check a short btree block header. */
+@@ -4265,6 +4318,21 @@ xfs_btree_visit_block(
+ 	if (xfs_btree_ptr_is_null(cur, &rptr))
+ 		return -ENOENT;
+ 
++	/*
++	 * We only visit blocks once in this walk, so we have to avoid the
++	 * internal xfs_btree_lookup_get_block() optimisation where it will
++	 * return the same block without checking if the right sibling points
++	 * back to us and creates a cyclic reference in the btree.
++	 */
++	if (cur->bc_flags & XFS_BTREE_LONG_PTRS) {
++		if (be64_to_cpu(rptr.l) == XFS_DADDR_TO_FSB(cur->bc_mp,
++							xfs_buf_daddr(bp)))
++			return -EFSCORRUPTED;
++	} else {
++		if (be32_to_cpu(rptr.s) == xfs_daddr_to_agbno(cur->bc_mp,
++							xfs_buf_daddr(bp)))
++			return -EFSCORRUPTED;
++	}
+ 	return xfs_btree_lookup_get_block(cur, level, &rptr, &block);
+ }
+ 
+@@ -4439,20 +4507,21 @@ xfs_btree_lblock_verify(
  {
-+	kmem_free(buip->bui_item.li_lv_shadow);
- 	kmem_cache_free(xfs_bui_zone, buip);
+ 	struct xfs_mount	*mp = bp->b_mount;
+ 	struct xfs_btree_block	*block = XFS_BUF_TO_BLOCK(bp);
++	xfs_fsblock_t		fsb;
++	xfs_failaddr_t		fa;
+ 
+ 	/* numrecs verification */
+ 	if (be16_to_cpu(block->bb_numrecs) > max_recs)
+ 		return __this_address;
+ 
+ 	/* sibling pointer verification */
+-	if (block->bb_u.l.bb_leftsib != cpu_to_be64(NULLFSBLOCK) &&
+-	    !xfs_verify_fsbno(mp, be64_to_cpu(block->bb_u.l.bb_leftsib)))
+-		return __this_address;
+-	if (block->bb_u.l.bb_rightsib != cpu_to_be64(NULLFSBLOCK) &&
+-	    !xfs_verify_fsbno(mp, be64_to_cpu(block->bb_u.l.bb_rightsib)))
+-		return __this_address;
+-
+-	return NULL;
++	fsb = XFS_DADDR_TO_FSB(mp, xfs_buf_daddr(bp));
++	fa = xfs_btree_check_lblock_siblings(mp, NULL, -1, fsb,
++			be64_to_cpu(block->bb_u.l.bb_leftsib));
++	if (!fa)
++		fa = xfs_btree_check_lblock_siblings(mp, NULL, -1, fsb,
++				be64_to_cpu(block->bb_u.l.bb_rightsib));
++	return fa;
  }
  
-@@ -198,6 +199,7 @@ xfs_bud_item_release(
- 	struct xfs_bud_log_item	*budp = BUD_ITEM(lip);
- 
- 	xfs_bui_release(budp->bud_buip);
-+	kmem_free(budp->bud_item.li_lv_shadow);
- 	kmem_cache_free(xfs_bud_zone, budp);
- }
- 
-diff --git a/fs/xfs/xfs_icreate_item.c b/fs/xfs/xfs_icreate_item.c
-index 017904a34c02..c265ae20946d 100644
---- a/fs/xfs/xfs_icreate_item.c
-+++ b/fs/xfs/xfs_icreate_item.c
-@@ -63,6 +63,7 @@ STATIC void
- xfs_icreate_item_release(
- 	struct xfs_log_item	*lip)
+ /**
+@@ -4493,7 +4562,9 @@ xfs_btree_sblock_verify(
  {
-+	kmem_free(ICR_ITEM(lip)->ic_item.li_lv_shadow);
- 	kmem_cache_free(xfs_icreate_zone, ICR_ITEM(lip));
+ 	struct xfs_mount	*mp = bp->b_mount;
+ 	struct xfs_btree_block	*block = XFS_BUF_TO_BLOCK(bp);
+-	xfs_agblock_t		agno;
++	xfs_agnumber_t		agno;
++	xfs_agblock_t		agbno;
++	xfs_failaddr_t		fa;
+ 
+ 	/* numrecs verification */
+ 	if (be16_to_cpu(block->bb_numrecs) > max_recs)
+@@ -4501,14 +4572,13 @@ xfs_btree_sblock_verify(
+ 
+ 	/* sibling pointer verification */
+ 	agno = xfs_daddr_to_agno(mp, xfs_buf_daddr(bp));
+-	if (block->bb_u.s.bb_leftsib != cpu_to_be32(NULLAGBLOCK) &&
+-	    !xfs_verify_agbno(mp, agno, be32_to_cpu(block->bb_u.s.bb_leftsib)))
+-		return __this_address;
+-	if (block->bb_u.s.bb_rightsib != cpu_to_be32(NULLAGBLOCK) &&
+-	    !xfs_verify_agbno(mp, agno, be32_to_cpu(block->bb_u.s.bb_rightsib)))
+-		return __this_address;
+-
+-	return NULL;
++	agbno = xfs_daddr_to_agbno(mp, xfs_buf_daddr(bp));
++	fa = xfs_btree_check_sblock_siblings(mp, NULL, -1, agno, agbno,
++			be32_to_cpu(block->bb_u.s.bb_leftsib));
++	if (!fa)
++		fa = xfs_btree_check_sblock_siblings(mp, NULL, -1, agno, agbno,
++				be32_to_cpu(block->bb_u.s.bb_rightsib));
++	return fa;
  }
  
-diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
-index 46904b793bd4..8ef842d17916 100644
---- a/fs/xfs/xfs_refcount_item.c
-+++ b/fs/xfs/xfs_refcount_item.c
-@@ -35,6 +35,7 @@ STATIC void
- xfs_cui_item_free(
- 	struct xfs_cui_log_item	*cuip)
- {
-+	kmem_free(cuip->cui_item.li_lv_shadow);
- 	if (cuip->cui_format.cui_nextents > XFS_CUI_MAX_FAST_EXTENTS)
- 		kmem_free(cuip);
- 	else
-@@ -204,6 +205,7 @@ xfs_cud_item_release(
- 	struct xfs_cud_log_item	*cudp = CUD_ITEM(lip);
- 
- 	xfs_cui_release(cudp->cud_cuip);
-+	kmem_free(cudp->cud_item.li_lv_shadow);
- 	kmem_cache_free(xfs_cud_zone, cudp);
- }
- 
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index 5f0695980467..15e7b01740a7 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
-@@ -35,6 +35,7 @@ STATIC void
- xfs_rui_item_free(
- 	struct xfs_rui_log_item	*ruip)
- {
-+	kmem_free(ruip->rui_item.li_lv_shadow);
- 	if (ruip->rui_format.rui_nextents > XFS_RUI_MAX_FAST_EXTENTS)
- 		kmem_free(ruip);
- 	else
-@@ -227,6 +228,7 @@ xfs_rud_item_release(
- 	struct xfs_rud_log_item	*rudp = RUD_ITEM(lip);
- 
- 	xfs_rui_release(rudp->rud_ruip);
-+	kmem_free(rudp->rud_item.li_lv_shadow);
- 	kmem_cache_free(xfs_rud_zone, rudp);
- }
- 
+ /*
 -- 
 2.39.1.519.gcb327c4b5f-goog
 
