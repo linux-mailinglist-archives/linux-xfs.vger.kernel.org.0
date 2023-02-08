@@ -2,49 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9AFB68EBF1
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Feb 2023 10:44:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AB9A68ED79
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Feb 2023 12:04:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbjBHJoj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Feb 2023 04:44:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
+        id S229450AbjBHLEp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Feb 2023 06:04:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230135AbjBHJoi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Feb 2023 04:44:38 -0500
+        with ESMTP id S229895AbjBHLEo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Feb 2023 06:04:44 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66AE10F3
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Feb 2023 01:43:53 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACBEE4491
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Feb 2023 03:03:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675849433;
+        s=mimecast20190719; t=1675854236;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding;
-        bh=yEKdacVqLsrzVLEOLPr8AuentFYTZisPsMxq8Mf+/Ac=;
-        b=ZsUyxTooOe9TMmA1Ujl4LZJB5FJS2GUfX4rzPL9tbN0ZvTvO3g69w3ZxJdHDTxiCcrX6wG
-        p9LW+kG9bw7TcXJobV9OwEpXNKjPTA4oeA6wmdVbyqweq0M0T4Kv568LILQOjgknP8txKq
-        pPAw1zkRluP0hxX171bXBzM0gFj2v68=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-56-Cvs6eQFmOoWTVk2nI5gPvA-1; Wed, 08 Feb 2023 04:43:51 -0500
-X-MC-Unique: Cvs6eQFmOoWTVk2nI5gPvA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 595E1101A52E
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Feb 2023 09:43:51 +0000 (UTC)
-Received: from x1carbon.redhat.com (ovpn-194-160.brq.redhat.com [10.40.194.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82C79175A2;
-        Wed,  8 Feb 2023 09:43:50 +0000 (UTC)
-From:   Arjun Shankar <arjun@redhat.com>
+        bh=LdPKlJ/Kd7Fe6YgCPdgdCUc947RC0NbzYbTuZ5UoVw0=;
+        b=Rjji39HTbMRY70vL7/gCUv1iV8Q0PXaei1kZdBL/fc6V2O2MUWpLiYS7jiYFh140RJudgk
+        s7eF0HG00wvuvTdZGCPD8/d048nGmvkalX7Ewm0TW93RqbUvjdonCwQP5xcJOdUb3FSYsz
+        ASSJbXN2gdcOHAwIl1Gp30C0srQ0/6o=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-112-jb6gr4ZWNqKfQUR5F-oOQA-1; Wed, 08 Feb 2023 06:03:55 -0500
+X-MC-Unique: jb6gr4ZWNqKfQUR5F-oOQA-1
+Received: by mail-ej1-f70.google.com with SMTP id p16-20020a170906499000b0088c5a527c89so13103892eju.23
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Feb 2023 03:03:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LdPKlJ/Kd7Fe6YgCPdgdCUc947RC0NbzYbTuZ5UoVw0=;
+        b=JU4QFDXrsBCmxOwqkdr5jJVU2PrG1p7n5S6rVjNDT5MEYQ7nssFQu0msAx+204SOOL
+         oC9HgttrLkN2cFdFaCrwD8QRnMCGF9qCKmjFOCKa6KroFniIbVLkMRQwbKmZlZKhUo4d
+         Y++gVMX82MvUGkMrfIQDinhJGubN1FLUMfh0eRYh3Ibx/toJ8fxG7BNzbWAECfwTERcp
+         pTCkDrss+o4E360Iv86U/KuWDp1LGmDfWazVOWaz41jp2Jw6erwEgpaooY2YE2GebaiU
+         kYqPRpKL+9ngYp7Ry9LgFN971L869ZMw0gTHJ0xo/nvmhJaDHo+v7C2wrg0FDtRPL5oA
+         OYmA==
+X-Gm-Message-State: AO0yUKUP/94HdPfAON89vewlZwcyvdUnkRFvD8wvRnrZzmEIJ+YEu+KV
+        Uv2yc1YFFvPAKsoynyNOwnagT9BktAoaKgaF5GCFPbrwvxZGEbxVYZuU1a7xOxAdqqzepyC6iu3
+        VZiybgJa4ZWaNzXIlJl+Bx5Mr8F91LJLhzNyM62zL+yUHESvYTiIWhMkH2BY2rfGt670abh9W86
+        Gi
+X-Received: by 2002:a17:906:6448:b0:877:6713:7e99 with SMTP id l8-20020a170906644800b0087767137e99mr6637278ejn.58.1675854234302;
+        Wed, 08 Feb 2023 03:03:54 -0800 (PST)
+X-Google-Smtp-Source: AK7set9WYIwS2myBIMJg6p2nPPht8MO0JgWecogeYqBP9joVGCj+PvjvCKDO1MRrFOzD0FrX+L7S3w==
+X-Received: by 2002:a17:906:6448:b0:877:6713:7e99 with SMTP id l8-20020a170906644800b0087767137e99mr6637258ejn.58.1675854234055;
+        Wed, 08 Feb 2023 03:03:54 -0800 (PST)
+Received: from aalbersh.remote.csb ([109.183.6.197])
+        by smtp.gmail.com with ESMTPSA id y22-20020a1709064b1600b008786675d086sm8122135eju.29.2023.02.08.03.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Feb 2023 03:03:53 -0800 (PST)
+From:   Andrey Albershteyn <aalbersh@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Cc:     Arjun Shankar <arjun@redhat.com>
-Subject: [PATCH] Remove several implicit function declarations
-Date:   Wed,  8 Feb 2023 10:43:33 +0100
-Message-Id: <20230208094333.364705-1-arjun@redhat.com>
+Cc:     cem@kernel.org, Andrey Albershteyn <aalbersh@redhat.com>,
+        "Darrick J . Wong" <djwong@kernel.org>
+Subject: [PATCH v2] xfs_db: make flist_find_ftyp() to check for field existance on disk
+Date:   Wed,  8 Feb 2023 12:02:22 +0100
+Message-Id: <20230208110220.2664995-1-aalbersh@redhat.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -55,74 +75,104 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-During configure, several ioctl checks omit the correspondig include
-and a pwritev2 check uses the wrong feature test macro.  Also,
-scrub/unicrash.c omits the appropriate include for u_init/u_cleanup.
-All of the above lead to implicit function declarations at build time.
-This commit fixes the same.
+flist_find_ftyp() searches for the field of the requested type. The
+first found field/path is returned. However, this doesn't work when
+there are multiple fields of the same type. For example, attr3 type
+have a few CRC fields. Leaf block (xfs_attr_leaf_hdr ->
+xfs_da3_blkinfo) and remote value block (xfs_attr3_rmt_hdr) both
+have CRC but goes under attr3 type. This causes 'crc' command to be
+unable to find CRC field when we are at remote attribute block as it
+tries to use leaf block CRC path:
 
-Signed-off-by: Arjun Shankar <arjun@redhat.com>
+	$ dd if=/dev/zero bs=4k count=10 | tr '\000' '1' > test.img
+	$ touch test.file
+	$ setfattr -n user.bigattr -v "$(cat test.img)" test.file
+
+	$ # CRC of the leaf block
+	$ xfs_db -r -x /dev/sda5 -c 'inode 132' -c 'ablock 0' -c 'crc'
+	Verifying CRC:
+	hdr.info.crc = 0x102b5cbf (correct)
+
+	$ # CRC of the remote value block
+	$ xfs_db -r -x /dev/sda5 -c 'inode 132' -c 'ablock 1' -c 'crc'
+	field info not found
+	parsing error
+
+Solve this by making flist_find_ftyp() to also check that field in
+question have non-zero count (exist at the current block).
+
+Changes from v1:
+- Removed unnecessary curly braces
+
+Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
-We ran into these when trying to port Fedora to modern C:
+ db/crc.c   |  2 +-
+ db/flist.c | 12 +++++++++---
+ db/flist.h |  3 ++-
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
-https://fedoraproject.org/wiki/Changes/PortingToModernC
-https://fedoraproject.org/wiki/Toolchain/PortingToModernC
----
- m4/package_libcdev.m4 | 7 +++++--
- scrub/unicrash.c      | 1 +
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/m4/package_libcdev.m4 b/m4/package_libcdev.m4
-index bb1ab49c..f987aa4a 100644
---- a/m4/package_libcdev.m4
-+++ b/m4/package_libcdev.m4
-@@ -117,6 +117,7 @@ AC_DEFUN([AC_HAVE_FIEMAP],
- #define _GNU_SOURCE
- #include <linux/fs.h>
- #include <linux/fiemap.h>
-+#include <sys/ioctl.h>
- 	]], [[
- struct fiemap *fiemap;
- ioctl(0, FS_IOC_FIEMAP, (unsigned long)fiemap);
-@@ -153,7 +154,7 @@ AC_DEFUN([AC_HAVE_PWRITEV2],
-   [ AC_MSG_CHECKING([for pwritev2])
-     AC_LINK_IFELSE(
-     [	AC_LANG_PROGRAM([[
--#define _BSD_SOURCE
-+#define _GNU_SOURCE
- #include <sys/uio.h>
- 	]], [[
- pwritev2(0, 0, 0, 0, 0);
-@@ -454,6 +455,7 @@ AC_DEFUN([AC_HAVE_SG_IO],
-     AC_COMPILE_IFELSE(
-     [	AC_LANG_PROGRAM([[
- #include <scsi/sg.h>
-+#include <sys/ioctl.h>
- 	]], [[
- struct sg_io_hdr hdr;
- ioctl(0, SG_IO, &hdr);
-@@ -471,7 +473,8 @@ AC_DEFUN([AC_HAVE_HDIO_GETGEO],
-   [ AC_MSG_CHECKING([for struct hd_geometry ])
-     AC_COMPILE_IFELSE(
-     [	AC_LANG_PROGRAM([[
--#include <linux/hdreg.h>,
-+#include <linux/hdreg.h>
-+#include <sys/ioctl.h>
- 	]], [[
- struct hd_geometry hdr;
- ioctl(0, HDIO_GETGEO, &hdr);
-diff --git a/scrub/unicrash.c b/scrub/unicrash.c
-index 24d4ea58..c645fc73 100644
---- a/scrub/unicrash.c
-+++ b/scrub/unicrash.c
-@@ -14,6 +14,7 @@
- #include <unicode/ustring.h>
- #include <unicode/unorm2.h>
- #include <unicode/uspoof.h>
-+#include <unicode/uclean.h>
- #include "libfrog/paths.h"
- #include "xfs_scrub.h"
- #include "common.h"
+diff --git a/db/crc.c b/db/crc.c
+index 7428b916..1c73f980 100644
+--- a/db/crc.c
++++ b/db/crc.c
+@@ -114,7 +114,7 @@ crc_f(
+ 	}
+ 
+ 	/* Search for a CRC field */
+-	fl = flist_find_ftyp(fields, FLDT_CRC);
++	fl = flist_find_ftyp(fields, FLDT_CRC, iocur_top->data, 0);
+ 	if (!fl) {
+ 		dbprintf(_("No CRC field found for type %s\n"), cur_typ->name);
+ 		return 0;
+diff --git a/db/flist.c b/db/flist.c
+index 0bb6474c..c81d229a 100644
+--- a/db/flist.c
++++ b/db/flist.c
+@@ -408,11 +408,14 @@ flist_split(
+  */
+ flist_t *
+ flist_find_ftyp(
+-	const field_t *fields,
+-	fldt_t	type)
++	const field_t	*fields,
++	fldt_t		type,
++	void		*obj,
++	int		startoff)
+ {
+ 	flist_t	*fl;
+ 	const field_t	*f;
++	int		count;
+ 	const ftattr_t  *fa;
+ 
+ 	for (f = fields; f->name; f++) {
+@@ -420,11 +423,14 @@ flist_find_ftyp(
+ 		fl->fld = f;
+ 		if (f->ftyp == type)
+ 			return fl;
++		count = fcount(f, obj, startoff);
++		if (!count)
++			continue;
+ 		fa = &ftattrtab[f->ftyp];
+ 		if (fa->subfld) {
+ 			flist_t *nfl;
+ 
+-			nfl = flist_find_ftyp(fa->subfld, type);
++			nfl = flist_find_ftyp(fa->subfld, type, obj, startoff);
+ 			if (nfl) {
+ 				fl->child = nfl;
+ 				return fl;
+diff --git a/db/flist.h b/db/flist.h
+index f0772378..e327a360 100644
+--- a/db/flist.h
++++ b/db/flist.h
+@@ -38,4 +38,5 @@ extern int	flist_parse(const struct field *fields, flist_t *fl, void *obj,
+ 			    int startoff);
+ extern void	flist_print(flist_t *fl);
+ extern flist_t	*flist_scan(char *name);
+-extern flist_t	*flist_find_ftyp(const field_t *fields, fldt_t  type);
++extern flist_t	*flist_find_ftyp(const field_t *fields, fldt_t  type, void *obj,
++		int startoff);
 -- 
-2.38.1
+2.31.1
 
