@@ -2,78 +2,74 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C789F68FD51
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 Feb 2023 03:48:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 606C568FDD4
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 Feb 2023 04:17:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbjBICsh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Feb 2023 21:48:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36520 "EHLO
+        id S230183AbjBIDRm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Feb 2023 22:17:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232211AbjBICrt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Feb 2023 21:47:49 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C863EB5E;
-        Wed,  8 Feb 2023 18:44:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VBRf3kzezRGAcEqaQ6FqqxXIsPA/O+8ixt4Mt6EZ1iE=; b=Tr2Y/7RFlxGZWNQeZTUv4kN+Wb
-        /Fg0Wmke6hO89KsqNkjQgdkSCyzYuXQzbJ6N3A+Wl8Q4GSlr+S8uujRVcWZaoZiyxRC+bP2rGC6hW
-        VqsD2KZONdU6/BHyHQvgePlgXveJmGJkekvQueBRszL67cAr7dxW6vJKExw+NKQAxdIhuDh5UKXfI
-        mQQaQpz04gMPZerXq9H0bl+t18EDrgTskDBdThVYBCDSW1CeGr+tO4Zf+oJ3o9362h6MLs3SYsZRE
-        boyRUfBpDGh8BtFU+ZmGdxX3jsYwQ7UwplcmKo0F2cWMG/G5gTIpFvhbRZyC4SrjFPmtvpory64EX
-        hyhYTQCw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pPwv6-001kY4-Av; Thu, 09 Feb 2023 02:44:20 +0000
-Date:   Thu, 9 Feb 2023 02:44:20 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 1/3] xfs: Remove xfs_filemap_map_pages() wrapper
-Message-ID: <Y+ReBH8DFxf+Iab4@casper.infradead.org>
-References: <20230208145335.307287-1-willy@infradead.org>
- <20230208145335.307287-2-willy@infradead.org>
- <Y+PQN8cLdOXST20D@magnolia>
- <Y+PX5tPyOP2KQqoD@casper.infradead.org>
- <20230208215311.GC360264@dread.disaster.area>
+        with ESMTP id S230437AbjBIDRl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Feb 2023 22:17:41 -0500
+Received: from m126.mail.126.com (m126.mail.126.com [220.181.12.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 42D525FD4
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Feb 2023 19:17:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=S+Rs1
+        MbQ/ZNAOrwD1O0pUrEbsUROivvmoT3Xq361E30=; b=kcX8X7ujJXKEs0Yf36W+n
+        gdEm/QHbENSdu9Uiz7pOt8NPPtJs+pxu0ErS1Gf8ZxemMaXiNIJ69XGWaxMo8x+I
+        /vTwLdpcPZfXP0OOowlG/NNLCcRGcT1QfX9cxU+0csv7UFC95ttkXgUXhc58oJhj
+        zLU1It5N6Bg35GEsH+zDXs=
+Received: from localhost.localdomain (unknown [116.128.244.169])
+        by zwqz-smtp-mta-g2-1 (Coremail) with SMTP id _____wBnkFaxZeRjKzblAg--.47897S2;
+        Thu, 09 Feb 2023 11:17:11 +0800 (CST)
+From:   Xiaole He <hexiaole1994@126.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     djwong@kernel.org, dchinner@redhat.com, chandan.babu@oracle.com,
+        huhai@kylinos.cn, zhangshida@kylinos.cn,
+        Xiaole He <hexiaole1994@126.com>,
+        Xiaole He <hexiaole@kylinos.cn>
+Subject: [PATCH v1 1/2] xfs: fix typo from filesystes to filesystems
+Date:   Thu,  9 Feb 2023 11:16:36 +0800
+Message-Id: <20230209031637.19026-1-hexiaole1994@126.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230208215311.GC360264@dread.disaster.area>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wBnkFaxZeRjKzblAg--.47897S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZFWfWF4DGFWxtr18tFWkJFb_yoW3JFg_Ca
+        nrtrs7Z34qyryfZ3ZxJan8Kr109a1fGr9rGa4fCFW3tw4UGa4kX39xJrsIyF13GrWfCr4r
+        Ja9rWrWak34v9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRZBMNPUUUUU==
+X-Originating-IP: [116.128.244.169]
+X-CM-SenderInfo: 5kh0xt5rohimizu6ij2wof0z/1tbikA8RBlpEC6SapQACsE
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Feb 09, 2023 at 08:53:11AM +1100, Dave Chinner wrote:
-> > If XFS really needs it,
-> > it can trylock the semaphore and return 0 if it fails, falling back to
-> > the ->fault path.  But I don't think XFS actually needs it.
-> >
-> > The ->map_pages path trylocks the folio, checks the folio->mapping,
-> > checks uptodate, then checks beyond EOF (not relevant to hole punch).
-> > Then it takes the page table lock and puts the page(s) into the page
-> > tables, unlocks the folio and moves on to the next folio.
-> > 
-> > The hole-punch path, like the truncate path, takes the folio lock,
-> > unmaps the folio (which will take the page table lock) and removes
-> > it from the page cache.
-> > 
-> > So what's the race?
-> 
-> Hole punch is a multi-folio operation, so while we are operating on
-> invalidating one folio, another folio in the range we've already
-> invalidated could be instantiated and mapped, leaving mapped
-> up-to-date pages over a range we *require* the page cache to empty.
+Signed-off-by: Xiaole He <hexiaole@kylinos.cn>
+---
+ fs/xfs/libxfs/xfs_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nope.  ->map_pages is defined to _not_ instantiate new pages.
-If there are uptodate pages in the page cache, they can be mapped, but
-missing pages will be skipped, and left to ->fault to bring in.
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index f8ff81c3de76..7ebef43e3c1f 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -41,7 +41,7 @@ STATIC int xfs_alloc_ag_vextent_near(xfs_alloc_arg_t *);
+ STATIC int xfs_alloc_ag_vextent_size(xfs_alloc_arg_t *);
+ 
+ /*
+- * Size of the AGFL.  For CRC-enabled filesystes we steal a couple of slots in
++ * Size of the AGFL.  For CRC-enabled filesystems we steal a couple of slots in
+  * the beginning of the block for a proper header with the location information
+  * and CRC.
+  */
+-- 
+2.27.0
 
