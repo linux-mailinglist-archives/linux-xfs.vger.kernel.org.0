@@ -2,69 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D695F691311
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 Feb 2023 23:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 583B969130F
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 Feb 2023 23:18:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230362AbjBIWSm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 9 Feb 2023 17:18:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54640 "EHLO
+        id S229571AbjBIWSk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 9 Feb 2023 17:18:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230327AbjBIWSh (ORCPT
+        with ESMTP id S230296AbjBIWSh (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Thu, 9 Feb 2023 17:18:37 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CE169537
-        for <linux-xfs@vger.kernel.org>; Thu,  9 Feb 2023 14:18:34 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id k13so4591906plg.0
-        for <linux-xfs@vger.kernel.org>; Thu, 09 Feb 2023 14:18:34 -0800 (PST)
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B36F68135
+        for <linux-xfs@vger.kernel.org>; Thu,  9 Feb 2023 14:18:32 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id x31so2533582pgl.6
+        for <linux-xfs@vger.kernel.org>; Thu, 09 Feb 2023 14:18:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xin3lhPINgxQ/vw661cQaP/j5HNHxYnfWw/wAiiKWBU=;
-        b=Mv8Go6jsYihhqngiNo6s7k2YTS2RicjtYIueI54D29axcch+Gp/TLaE9+g4SqZ7H4/
-         Y7tYao04UpMPpuTlttMuFM7KMZvWoaFkoNCjJ9MVrv8rR/cX9QGossqmsu810RNVl1sE
-         RbJcEN6jBiKrzIywBudmAscD/zh6k5oeHNJWnK3sVs4QicKzBl7FCj/tAxuftGyQ3GTB
-         AssM6gNfwgfpodmZtoAEC2vny170pDflSkKuuhJAgpaFHs2jSImP1pwciiq4l6KDpw7l
-         V7Y3yrmpwkqm/bodKyV2mcv5jXOTsq/km9Nx8ZtB1iuFtfUaIiWH9N3eSO1+1YY6w3QS
-         91hw==
+        bh=cmJiGMf59zKUSiFmeMNKxzfafXoD4IT96SkwJkulaso=;
+        b=bQyvYcph2vqGNUSyR02z9/cHEKyLBbLBnsY7PUCp9c2oNh8vNwW6pzf/vJilDdgmap
+         Eq9kfVaKt6hcIUAUtUnGfFxKnS01dUymwflgSzZ5laZVkxvIiCtiL+ya00TAdXBU98Pk
+         ZR4VwI4lu8oFq+LUtnqHclIRLvHur3p44OuNGsmNrmNp2HjkMXG5NBix4IotFXSv5Mpd
+         h7HjDPRKT/HzSvErSND61VE844jNhO0i+NGtV9hrF9jxg3BrBIb9bE2aHuxB2HiXHJm8
+         jvb16ZntZAMVZEqYbfwvkGWrU+JnliEUI8WDTJPef4Tcg0ISLCq2VCT3vu8Xh1ye8EO7
+         rkew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xin3lhPINgxQ/vw661cQaP/j5HNHxYnfWw/wAiiKWBU=;
-        b=auv+BeiZF643vO5Mo7GHmFzpVnGveIKlqo1ocPAIPF7e64k4AAgrTpV94ZPggldbdW
-         sIu2nO16qEMw+M2esbDHKnodM1AfxoTv04hM9yp1k4GRv6DDptzIEIrN5KoH8RB7Rv0q
-         NWAxI6npb2mjaNHobbYtG1BybC+wJtAGEoCJahhW1gZEqqs4T848eS1ziARniOFAdNnP
-         2y6qpWeSF2jlwRtgluzJCSyVr0HJkWr01lpDOrV8G9IWU3YT5QEMzqcchhRyibjev6mH
-         UroTfbVuz7f3ECn+pAlDim46dNb7WLupN6GMZ4ELh68J+m+Pc9b/FcnZ4r7f5m/0chJT
-         8CSw==
-X-Gm-Message-State: AO0yUKUacTOQIoGSSOUFzWT52v80zTgC2y7F0NRddNlPVNyU6mYglawR
-        2kFQ1qdn64eBUkSwh5jM3v1uo46JKfiiisei
-X-Google-Smtp-Source: AK7set/22Bk2f8O7uDRyqdbSA3rbYZpAQQN6feIqzJyX0wcp+0o0X/PTnznuFEmWamCy6I/bWJkvVQ==
-X-Received: by 2002:a17:903:12d7:b0:198:adc4:22a4 with SMTP id io23-20020a17090312d700b00198adc422a4mr5616290plb.31.1675981113720;
-        Thu, 09 Feb 2023 14:18:33 -0800 (PST)
+        bh=cmJiGMf59zKUSiFmeMNKxzfafXoD4IT96SkwJkulaso=;
+        b=fc/zcRxcXChGf8zvoO4thVzQg7gP1dKAK63YjzJrrN0sRmUw8yPvUT3ZHhcVRKKxgi
+         u1eL/oizRfUv8jO9hRBpcJHNRdZLv5r6liL9LfgsEmJo1M+9/2E51EMn26uhVfK509Yv
+         3+nvJal2emqwfIC8YKWJk+1++h5Pmo+w9Ug9nLQdnrHBwoILrNvXlxXCP2Oojt3nI7Pp
+         yqAcf05QDm8KD9GpEbTKSQPLJKihKYXk8hwsz4ryfKeuaX9pPIGNKXiH0/DT92/T1hn8
+         ipdZvNqmJGjd707EMZ8Sp1wd7QngZnb4uWOHgHFgjF1mJSsKYCwvvAtEzqmxVByfxXbR
+         F0JQ==
+X-Gm-Message-State: AO0yUKWBHysFmU7UNW+9Py8mMYeBJbiiocrEXEokMtISKrrEhPQ/OMPP
+        Jwdz17e0FA6oV+NNNdckHkSonbqe63jahUjx
+X-Google-Smtp-Source: AK7set8fZjFPN3WdRn9RDstVZybd4v1JiPKKxvZl4m9+RSNApy3+1qFl29v8hol5fTWzGTriWkqZbg==
+X-Received: by 2002:a62:4ed1:0:b0:577:272f:fdb with SMTP id c200-20020a624ed1000000b00577272f0fdbmr10253612pfb.29.1675981111677;
+        Thu, 09 Feb 2023 14:18:31 -0800 (PST)
 Received: from dread.disaster.area (pa49-181-4-128.pa.nsw.optusnet.com.au. [49.181.4.128])
-        by smtp.gmail.com with ESMTPSA id a7-20020a1709027e4700b001943d58268csm2011010pln.55.2023.02.09.14.18.30
+        by smtp.gmail.com with ESMTPSA id z20-20020aa791d4000000b0058e08796e98sm1901923pfa.196.2023.02.09.14.18.30
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 14:18:31 -0800 (PST)
+        Thu, 09 Feb 2023 14:18:30 -0800 (PST)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <dave@fromorbit.com>)
-        id 1pQFFM-00DOV2-1s
+        id 1pQFFM-00DOV5-2n
         for linux-xfs@vger.kernel.org; Fri, 10 Feb 2023 09:18:28 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1pQFFM-00FcMS-08
+        id 1pQFFM-00FcMd-0F
         for linux-xfs@vger.kernel.org;
         Fri, 10 Feb 2023 09:18:28 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 08/42] xfs: rework the perag trace points to be perag centric
-Date:   Fri, 10 Feb 2023 09:17:51 +1100
-Message-Id: <20230209221825.3722244-9-david@fromorbit.com>
+Subject: [PATCH 09/42] xfs: convert xfs_imap() to take a perag
+Date:   Fri, 10 Feb 2023 09:17:52 +1100
+Message-Id: <20230209221825.3722244-10-david@fromorbit.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20230209221825.3722244-1-david@fromorbit.com>
 References: <20230209221825.3722244-1-david@fromorbit.com>
@@ -81,183 +81,226 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-So that they all output the same information in the traces to make
-debugging refcount issues easier.
-
-This means that all the lookup/drop functions no longer need to use
-the full memory barrier atomic operations (atomic*_return()) so
-will have less overhead when tracing is off. The set/clear tag
-tracepoints no longer abuse the reference count to pass the tag -
-the tag being cleared is obvious from the _RET_IP_ that is recorded
-in the trace point.
+Callers have referenced perags but they don't pass it into
+xfs_imap() so it takes it's own reference. Fix that so we can change
+inode allocation over to using active references.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_ag.c | 25 +++++++++----------------
- fs/xfs/xfs_icache.c    |  4 ++--
- fs/xfs/xfs_trace.h     | 21 +++++++++++----------
- 3 files changed, 22 insertions(+), 28 deletions(-)
+ fs/xfs/libxfs/xfs_ialloc.c | 45 ++++++++++++++------------------------
+ fs/xfs/libxfs/xfs_ialloc.h |  3 ++-
+ fs/xfs/scrub/common.c      | 13 +++++++----
+ fs/xfs/xfs_icache.c        |  2 +-
+ 4 files changed, 28 insertions(+), 35 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-index 46e25c682bf4..7cff61875340 100644
---- a/fs/xfs/libxfs/xfs_ag.c
-+++ b/fs/xfs/libxfs/xfs_ag.c
-@@ -44,16 +44,15 @@ xfs_perag_get(
- 	xfs_agnumber_t		agno)
- {
- 	struct xfs_perag	*pag;
--	int			ref = 0;
+diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+index e8068422aa21..f120a48813cc 100644
+--- a/fs/xfs/libxfs/xfs_ialloc.c
++++ b/fs/xfs/libxfs/xfs_ialloc.c
+@@ -2217,15 +2217,15 @@ xfs_difree(
  
- 	rcu_read_lock();
- 	pag = radix_tree_lookup(&mp->m_perag_tree, agno);
- 	if (pag) {
-+		trace_xfs_perag_get(pag, _RET_IP_);
- 		ASSERT(atomic_read(&pag->pag_ref) >= 0);
--		ref = atomic_inc_return(&pag->pag_ref);
-+		atomic_inc(&pag->pag_ref);
+ STATIC int
+ xfs_imap_lookup(
+-	struct xfs_mount	*mp,
+-	struct xfs_trans	*tp,
+ 	struct xfs_perag	*pag,
++	struct xfs_trans	*tp,
+ 	xfs_agino_t		agino,
+ 	xfs_agblock_t		agbno,
+ 	xfs_agblock_t		*chunk_agbno,
+ 	xfs_agblock_t		*offset_agbno,
+ 	int			flags)
+ {
++	struct xfs_mount	*mp = pag->pag_mount;
+ 	struct xfs_inobt_rec_incore rec;
+ 	struct xfs_btree_cur	*cur;
+ 	struct xfs_buf		*agbp;
+@@ -2280,12 +2280,13 @@ xfs_imap_lookup(
+  */
+ int
+ xfs_imap(
+-	struct xfs_mount	 *mp,	/* file system mount structure */
+-	struct xfs_trans	 *tp,	/* transaction pointer */
++	struct xfs_perag	*pag,
++	struct xfs_trans	*tp,
+ 	xfs_ino_t		ino,	/* inode to locate */
+ 	struct xfs_imap		*imap,	/* location map structure */
+ 	uint			flags)	/* flags for inode btree lookup */
+ {
++	struct xfs_mount	*mp = pag->pag_mount;
+ 	xfs_agblock_t		agbno;	/* block number of inode in the alloc group */
+ 	xfs_agino_t		agino;	/* inode number within alloc group */
+ 	xfs_agblock_t		chunk_agbno;	/* first block in inode chunk */
+@@ -2293,17 +2294,15 @@ xfs_imap(
+ 	int			error;	/* error code */
+ 	int			offset;	/* index of inode in its buffer */
+ 	xfs_agblock_t		offset_agbno;	/* blks from chunk start to inode */
+-	struct xfs_perag	*pag;
+ 
+ 	ASSERT(ino != NULLFSINO);
+ 
+ 	/*
+ 	 * Split up the inode number into its parts.
+ 	 */
+-	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ino));
+ 	agino = XFS_INO_TO_AGINO(mp, ino);
+ 	agbno = XFS_AGINO_TO_AGBNO(mp, agino);
+-	if (!pag || agbno >= mp->m_sb.sb_agblocks ||
++	if (agbno >= mp->m_sb.sb_agblocks ||
+ 	    ino != XFS_AGINO_TO_INO(mp, pag->pag_agno, agino)) {
+ 		error = -EINVAL;
+ #ifdef DEBUG
+@@ -2312,20 +2311,14 @@ xfs_imap(
+ 		 * as they can be invalid without implying corruption.
+ 		 */
+ 		if (flags & XFS_IGET_UNTRUSTED)
+-			goto out_drop;
+-		if (!pag) {
+-			xfs_alert(mp,
+-				"%s: agno (%d) >= mp->m_sb.sb_agcount (%d)",
+-				__func__, XFS_INO_TO_AGNO(mp, ino),
+-				mp->m_sb.sb_agcount);
+-		}
++			return error;
+ 		if (agbno >= mp->m_sb.sb_agblocks) {
+ 			xfs_alert(mp,
+ 		"%s: agbno (0x%llx) >= mp->m_sb.sb_agblocks (0x%lx)",
+ 				__func__, (unsigned long long)agbno,
+ 				(unsigned long)mp->m_sb.sb_agblocks);
+ 		}
+-		if (pag && ino != XFS_AGINO_TO_INO(mp, pag->pag_agno, agino)) {
++		if (ino != XFS_AGINO_TO_INO(mp, pag->pag_agno, agino)) {
+ 			xfs_alert(mp,
+ 		"%s: ino (0x%llx) != XFS_AGINO_TO_INO() (0x%llx)",
+ 				__func__, ino,
+@@ -2333,7 +2326,7 @@ xfs_imap(
+ 		}
+ 		xfs_stack_trace();
+ #endif /* DEBUG */
+-		goto out_drop;
++		return error;
  	}
- 	rcu_read_unlock();
--	trace_xfs_perag_get(mp, agno, ref, _RET_IP_);
- 	return pag;
- }
  
-@@ -68,7 +67,6 @@ xfs_perag_get_tag(
- {
- 	struct xfs_perag	*pag;
- 	int			found;
--	int			ref;
- 
- 	rcu_read_lock();
- 	found = radix_tree_gang_lookup_tag(&mp->m_perag_tree,
-@@ -77,9 +75,9 @@ xfs_perag_get_tag(
- 		rcu_read_unlock();
- 		return NULL;
+ 	/*
+@@ -2344,10 +2337,10 @@ xfs_imap(
+ 	 * in all cases where an untrusted inode number is passed.
+ 	 */
+ 	if (flags & XFS_IGET_UNTRUSTED) {
+-		error = xfs_imap_lookup(mp, tp, pag, agino, agbno,
++		error = xfs_imap_lookup(pag, tp, agino, agbno,
+ 					&chunk_agbno, &offset_agbno, flags);
+ 		if (error)
+-			goto out_drop;
++			return error;
+ 		goto out_map;
  	}
--	ref = atomic_inc_return(&pag->pag_ref);
-+	trace_xfs_perag_get_tag(pag, _RET_IP_);
-+	atomic_inc(&pag->pag_ref);
- 	rcu_read_unlock();
--	trace_xfs_perag_get_tag(mp, pag->pag_agno, ref, _RET_IP_);
- 	return pag;
- }
  
-@@ -87,11 +85,9 @@ void
- xfs_perag_put(
- 	struct xfs_perag	*pag)
- {
--	int	ref;
--
-+	trace_xfs_perag_put(pag, _RET_IP_);
- 	ASSERT(atomic_read(&pag->pag_ref) > 0);
--	ref = atomic_dec_return(&pag->pag_ref);
--	trace_xfs_perag_put(pag->pag_mount, pag->pag_agno, ref, _RET_IP_);
-+	atomic_dec(&pag->pag_ref);
+@@ -2363,8 +2356,7 @@ xfs_imap(
+ 		imap->im_len = XFS_FSB_TO_BB(mp, 1);
+ 		imap->im_boffset = (unsigned short)(offset <<
+ 							mp->m_sb.sb_inodelog);
+-		error = 0;
+-		goto out_drop;
++		return 0;
+ 	}
+ 
+ 	/*
+@@ -2376,10 +2368,10 @@ xfs_imap(
+ 		offset_agbno = agbno & M_IGEO(mp)->inoalign_mask;
+ 		chunk_agbno = agbno - offset_agbno;
+ 	} else {
+-		error = xfs_imap_lookup(mp, tp, pag, agino, agbno,
++		error = xfs_imap_lookup(pag, tp, agino, agbno,
+ 					&chunk_agbno, &offset_agbno, flags);
+ 		if (error)
+-			goto out_drop;
++			return error;
+ 	}
+ 
+ out_map:
+@@ -2407,14 +2399,9 @@ xfs_imap(
+ 			__func__, (unsigned long long) imap->im_blkno,
+ 			(unsigned long long) imap->im_len,
+ 			XFS_FSB_TO_BB(mp, mp->m_sb.sb_dblocks));
+-		error = -EINVAL;
+-		goto out_drop;
++		return -EINVAL;
+ 	}
+-	error = 0;
+-out_drop:
+-	if (pag)
+-		xfs_perag_put(pag);
+-	return error;
++	return 0;
  }
  
  /*
-@@ -110,8 +106,7 @@ xfs_perag_grab(
- 	rcu_read_lock();
- 	pag = radix_tree_lookup(&mp->m_perag_tree, agno);
- 	if (pag) {
--		trace_xfs_perag_grab(mp, pag->pag_agno,
--				atomic_read(&pag->pag_active_ref), _RET_IP_);
-+		trace_xfs_perag_grab(pag, _RET_IP_);
- 		if (!atomic_inc_not_zero(&pag->pag_active_ref))
- 			pag = NULL;
- 	}
-@@ -138,8 +133,7 @@ xfs_perag_grab_tag(
- 		rcu_read_unlock();
- 		return NULL;
- 	}
--	trace_xfs_perag_grab_tag(mp, pag->pag_agno,
--			atomic_read(&pag->pag_active_ref), _RET_IP_);
-+	trace_xfs_perag_grab_tag(pag, _RET_IP_);
- 	if (!atomic_inc_not_zero(&pag->pag_active_ref))
- 		pag = NULL;
- 	rcu_read_unlock();
-@@ -150,8 +144,7 @@ void
- xfs_perag_rele(
- 	struct xfs_perag	*pag)
+diff --git a/fs/xfs/libxfs/xfs_ialloc.h b/fs/xfs/libxfs/xfs_ialloc.h
+index 9bbbca6ac4ed..4cfce2eebe7e 100644
+--- a/fs/xfs/libxfs/xfs_ialloc.h
++++ b/fs/xfs/libxfs/xfs_ialloc.h
+@@ -12,6 +12,7 @@ struct xfs_imap;
+ struct xfs_mount;
+ struct xfs_trans;
+ struct xfs_btree_cur;
++struct xfs_perag;
+ 
+ /* Move inodes in clusters of this size */
+ #define	XFS_INODE_BIG_CLUSTER_SIZE	8192
+@@ -47,7 +48,7 @@ int xfs_difree(struct xfs_trans *tp, struct xfs_perag *pag,
+  */
+ int
+ xfs_imap(
+-	struct xfs_mount *mp,		/* file system mount structure */
++	struct xfs_perag *pag,
+ 	struct xfs_trans *tp,		/* transaction pointer */
+ 	xfs_ino_t	ino,		/* inode to locate */
+ 	struct xfs_imap	*imap,		/* location map structure */
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 613260b04a3d..033bf6730ece 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -636,6 +636,7 @@ xchk_get_inode(
  {
--	trace_xfs_perag_rele(pag->pag_mount, pag->pag_agno,
--			atomic_read(&pag->pag_active_ref), _RET_IP_);
-+	trace_xfs_perag_rele(pag, _RET_IP_);
- 	if (atomic_dec_and_test(&pag->pag_active_ref))
- 		wake_up(&pag->pag_active_wq);
- }
+ 	struct xfs_imap		imap;
+ 	struct xfs_mount	*mp = sc->mp;
++	struct xfs_perag	*pag;
+ 	struct xfs_inode	*ip_in = XFS_I(file_inode(sc->file));
+ 	struct xfs_inode	*ip = NULL;
+ 	int			error;
+@@ -671,10 +672,14 @@ xchk_get_inode(
+ 		 * Otherwise, we really couldn't find it so tell userspace
+ 		 * that it no longer exists.
+ 		 */
+-		error = xfs_imap(sc->mp, sc->tp, sc->sm->sm_ino, &imap,
+-				XFS_IGET_UNTRUSTED | XFS_IGET_DONTCACHE);
+-		if (error)
+-			return -ENOENT;
++		pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, sc->sm->sm_ino));
++		if (pag) {
++			error = xfs_imap(pag, sc->tp, sc->sm->sm_ino, &imap,
++					XFS_IGET_UNTRUSTED | XFS_IGET_DONTCACHE);
++			xfs_perag_put(pag);
++			if (error)
++				return -ENOENT;
++		}
+ 		error = -EFSCORRUPTED;
+ 		fallthrough;
+ 	default:
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 0f4a014dded3..8b2823d85a68 100644
+index 8b2823d85a68..c9a7e270a428 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -255,7 +255,7 @@ xfs_perag_set_inode_tag(
- 		break;
- 	}
+@@ -586,7 +586,7 @@ xfs_iget_cache_miss(
+ 	if (!ip)
+ 		return -ENOMEM;
  
--	trace_xfs_perag_set_inode_tag(mp, pag->pag_agno, tag, _RET_IP_);
-+	trace_xfs_perag_set_inode_tag(pag, _RET_IP_);
- }
+-	error = xfs_imap(mp, tp, ip->i_ino, &ip->i_imap, flags);
++	error = xfs_imap(pag, tp, ip->i_ino, &ip->i_imap, flags);
+ 	if (error)
+ 		goto out_destroy;
  
- /* Clear a tag on both the AG incore inode tree and the AG radix tree. */
-@@ -289,7 +289,7 @@ xfs_perag_clear_inode_tag(
- 	radix_tree_tag_clear(&mp->m_perag_tree, pag->pag_agno, tag);
- 	spin_unlock(&mp->m_perag_lock);
- 
--	trace_xfs_perag_clear_inode_tag(mp, pag->pag_agno, tag, _RET_IP_);
-+	trace_xfs_perag_clear_inode_tag(pag, _RET_IP_);
- }
- 
- /*
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index eb5e49d44f13..1d99c30f66f0 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -159,33 +159,34 @@ TRACE_EVENT(xlog_intent_recovery_failed,
- );
- 
- DECLARE_EVENT_CLASS(xfs_perag_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int refcount,
--		 unsigned long caller_ip),
--	TP_ARGS(mp, agno, refcount, caller_ip),
-+	TP_PROTO(struct xfs_perag *pag, unsigned long caller_ip),
-+	TP_ARGS(pag, caller_ip),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
- 		__field(int, refcount)
-+		__field(int, active_refcount)
- 		__field(unsigned long, caller_ip)
- 	),
- 	TP_fast_assign(
--		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
--		__entry->refcount = refcount;
-+		__entry->dev = pag->pag_mount->m_super->s_dev;
-+		__entry->agno = pag->pag_agno;
-+		__entry->refcount = atomic_read(&pag->pag_ref);
-+		__entry->active_refcount = atomic_read(&pag->pag_active_ref);
- 		__entry->caller_ip = caller_ip;
- 	),
--	TP_printk("dev %d:%d agno 0x%x refcount %d caller %pS",
-+	TP_printk("dev %d:%d agno 0x%x passive refs %d active refs %d caller %pS",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->agno,
- 		  __entry->refcount,
-+		  __entry->active_refcount,
- 		  (char *)__entry->caller_ip)
- );
- 
- #define DEFINE_PERAG_REF_EVENT(name)	\
- DEFINE_EVENT(xfs_perag_class, name,	\
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int refcount,	\
--		 unsigned long caller_ip),					\
--	TP_ARGS(mp, agno, refcount, caller_ip))
-+	TP_PROTO(struct xfs_perag *pag, unsigned long caller_ip), \
-+	TP_ARGS(pag, caller_ip))
- DEFINE_PERAG_REF_EVENT(xfs_perag_get);
- DEFINE_PERAG_REF_EVENT(xfs_perag_get_tag);
- DEFINE_PERAG_REF_EVENT(xfs_perag_put);
 -- 
 2.39.0
 
