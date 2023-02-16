@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DB95699F77
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Feb 2023 22:54:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B1A699F8B
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Feb 2023 22:58:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbjBPVyX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Feb 2023 16:54:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
+        id S229741AbjBPV6H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Feb 2023 16:58:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbjBPVyW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Feb 2023 16:54:22 -0500
+        with ESMTP id S229541AbjBPV6G (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Feb 2023 16:58:06 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC677199C1
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 13:54:02 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976CD34F4A
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 13:58:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0DBABB829C1
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 21:52:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF02EC433EF;
-        Thu, 16 Feb 2023 21:52:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BF022B829C2
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 21:53:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE0CC433EF;
+        Thu, 16 Feb 2023 21:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676584373;
-        bh=a37Dj5RdtMGYRK2mNzeB8TS5yGaDkFpNxQ4UhsVZ1ME=;
+        s=k20201202; t=1676584379;
+        bh=3we7A9vDCGbgxQAjt4sDrPfuFt/V8kiXm2FMM0iuXN4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=C1FSfbYLGS7lyjisbaOwE5PjUct4ji+Y1K2R+AGWPB8eoZhJ1mqQCX2ldDI+3yNtP
-         vsbl+sWGap83Nez+lHd2zadASopnZ6SgzOfxxK4nj44otMXDSEiAYl2x8FOlUhvxe5
-         HX+2vKk4KH+mijIPzNFctvXfQOIZV4zEKtLLCcE+xF4H76m/DTJN908ekq7I/JoUhj
-         rUh/6zsMSejydjKlfoWPqrs61+0ER0SngFeNccea9kiBCwJ6xim78L8i0BGu+BN/CP
-         72ZFWeP7cbZIq3XYuQg8adRsu60ANqe8p71EIBZH5SnNFbeVdqeSV31SXGAEBo2KZq
-         zrxt4RwCwSSVw==
-Subject: [PATCH 1/5] xfs_spaceman: fix broken -g behavior in freesp command
+        b=Za6t4jP1EDGjFQCR86JQ5KXWHrheh46thUlOm+wYsoFV89SGs0Jgx3cOKs2pqwZjx
+         tPyg4Vr2dvC5hiUF8PpFJzPutqt9tPD7kkrrB9bNa/S54k45mityQkihR4jRXHeUmg
+         gJ7uk4ZHsHxyWb70L4UT+Iqd45yIlRXKreN3OpfMBt0+dv/9R+rFtxaIl8VMNhC8mp
+         vLONysBTH3FZQRzzCvEOHzuqumQrLR5LJ730XZOAL7yTNQneSj1bOdE/o9KXtGw9vU
+         ++ndz+y7N0ljoV5h5DdBOYHuPp0mRZf1oa8vajV0p31ocOLJL1XG4KMWD4+oTbuYS6
+         zzACArEwQ2D2Q==
+Subject: [PATCH 2/5] xfs_scrub: fix broken realtime free blocks unit
+ conversions
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, daan.j.demeyer@gmail.com
-Date:   Thu, 16 Feb 2023 13:52:53 -0800
-Message-ID: <167658437328.3590000.18137446679798085024.stgit@magnolia>
+Date:   Thu, 16 Feb 2023 13:52:58 -0800
+Message-ID: <167658437893.3590000.1698651202541264559.stgit@magnolia>
 In-Reply-To: <167658436759.3590000.3700844510708970684.stgit@magnolia>
 References: <167658436759.3590000.3700844510708970684.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,25 +55,40 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Don't zero out the histogram bucket count when turning on group summary
-mode -- this will screw up the data structures and it's pointless.
+r_blocks is in units of fs blocks, but freertx is in units of realtime
+extents.  Add the missing conversion factor so we don't end up with
+bogus things like this:
+
+Pretend that sda and sdb are both 100T volumes.
+
+# mkfs.xfs -f /dev/sda -b -r rtdev=/dev/sdb,extsize=2m
+# mount /dev/sda /mnt -o rtdev=/dev/sdb
+# xfs_scrub -dTvn /mnt
+<snip>
+Phase 7: Check summary counters.
+3.5TiB data used;  99.8TiB realtime data used;  55 inodes used.
+2.0GiB data found; 50.0MiB realtime data found; 55 inodes found.
+55 inodes counted; 0 inodes checked.
+
+We just created the filesystem, the realtime volume should be empty.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- spaceman/freesp.c |    1 -
- 1 file changed, 1 deletion(-)
+ scrub/fscounters.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/spaceman/freesp.c b/spaceman/freesp.c
-index 423568a4248..70dcdb5c923 100644
---- a/spaceman/freesp.c
-+++ b/spaceman/freesp.c
-@@ -284,7 +284,6 @@ init(
- 			speced = 1;
- 			break;
- 		case 'g':
--			histcount = 0;
- 			gflag++;
- 			break;
- 		case 'h':
+diff --git a/scrub/fscounters.c b/scrub/fscounters.c
+index f21b24e0935..3ceae3715dc 100644
+--- a/scrub/fscounters.c
++++ b/scrub/fscounters.c
+@@ -138,7 +138,7 @@ scrub_scan_estimate_blocks(
+ 	*d_blocks = ctx->mnt.fsgeom.datablocks;
+ 	*d_bfree = fc.freedata;
+ 	*r_blocks = ctx->mnt.fsgeom.rtblocks;
+-	*r_bfree = fc.freertx;
++	*r_bfree = fc.freertx * ctx->mnt.fsgeom.rtextsize;
+ 	*f_files_used = fc.allocino - fc.freeino;
+ 
+ 	return 0;
 
