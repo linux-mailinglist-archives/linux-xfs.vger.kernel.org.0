@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B1A699F8B
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Feb 2023 22:58:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1EF8699F7C
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Feb 2023 22:55:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbjBPV6H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Feb 2023 16:58:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48372 "EHLO
+        id S230220AbjBPVzI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Feb 2023 16:55:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbjBPV6G (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Feb 2023 16:58:06 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976CD34F4A
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 13:58:05 -0800 (PST)
+        with ESMTP id S230238AbjBPVzG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Feb 2023 16:55:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2505381C
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 13:54:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BF022B829C2
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 21:53:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE0CC433EF;
-        Thu, 16 Feb 2023 21:52:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6129FB829C4
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Feb 2023 21:53:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C1B8C433D2;
+        Thu, 16 Feb 2023 21:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676584379;
-        bh=3we7A9vDCGbgxQAjt4sDrPfuFt/V8kiXm2FMM0iuXN4=;
+        s=k20201202; t=1676584385;
+        bh=FVY71ycVl1HQg0aXR0FcDrJQ/i2iz6auVfd1LvnZmo8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Za6t4jP1EDGjFQCR86JQ5KXWHrheh46thUlOm+wYsoFV89SGs0Jgx3cOKs2pqwZjx
-         tPyg4Vr2dvC5hiUF8PpFJzPutqt9tPD7kkrrB9bNa/S54k45mityQkihR4jRXHeUmg
-         gJ7uk4ZHsHxyWb70L4UT+Iqd45yIlRXKreN3OpfMBt0+dv/9R+rFtxaIl8VMNhC8mp
-         vLONysBTH3FZQRzzCvEOHzuqumQrLR5LJ730XZOAL7yTNQneSj1bOdE/o9KXtGw9vU
-         ++ndz+y7N0ljoV5h5DdBOYHuPp0mRZf1oa8vajV0p31ocOLJL1XG4KMWD4+oTbuYS6
-         zzACArEwQ2D2Q==
-Subject: [PATCH 2/5] xfs_scrub: fix broken realtime free blocks unit
- conversions
+        b=S+P+y+Qz7UQbtLMRAiyCE7VuV1WMUbFDPVhV6f5REpkEwaR4bqAJa2w2QGd73hlqA
+         hX+oWouqBa939tQeFuo0ae1SIeBPNiSWzFmpU/l5R76pdBdrxetqVgqxFHgJsiHD1T
+         wHHAwKMdT4l7mI9ZIOnMyGSqBFVzg/arSpJ5dpZzfDStsIKsXbfB6QHHXMaQsXJJPV
+         hE+DDSHc+QZw+P5Q8kfXIUWepxrA7jJ3tg96Ghs4YYCG9InKEEkgb3BmIXdJK7dYDc
+         L/qeLK8FtJbxIvSHBu5UpzynxQxuoI7lKxxyHcor6+Vm9sZZfxMywazLFa0sTX5g8g
+         X7/qasC7+YdQg==
+Subject: [PATCH 3/5] xfs_io: set fs_path when opening files on foreign
+ filesystems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, daan.j.demeyer@gmail.com
-Date:   Thu, 16 Feb 2023 13:52:58 -0800
-Message-ID: <167658437893.3590000.1698651202541264559.stgit@magnolia>
+Cc:     tytso@mit.edu, linux-xfs@vger.kernel.org, daan.j.demeyer@gmail.com
+Date:   Thu, 16 Feb 2023 13:53:04 -0800
+Message-ID: <167658438451.3590000.8820235517511814402.stgit@magnolia>
 In-Reply-To: <167658436759.3590000.3700844510708970684.stgit@magnolia>
 References: <167658436759.3590000.3700844510708970684.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,40 +55,55 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-r_blocks is in units of fs blocks, but freertx is in units of realtime
-extents.  Add the missing conversion factor so we don't end up with
-bogus things like this:
+Ted noticed that the following command:
 
-Pretend that sda and sdb are both 100T volumes.
+$ xfs_io -c 'fsmap -d 0 0' /mnt
+xfs_io: xfsctl(XFS_IOC_GETFSMAP) iflags=0x0 ["/mnt"]: Invalid argument
 
-# mkfs.xfs -f /dev/sda -b -r rtdev=/dev/sdb,extsize=2m
-# mount /dev/sda /mnt -o rtdev=/dev/sdb
-# xfs_scrub -dTvn /mnt
-<snip>
-Phase 7: Check summary counters.
-3.5TiB data used;  99.8TiB realtime data used;  55 inodes used.
-2.0GiB data found; 50.0MiB realtime data found; 55 inodes found.
-55 inodes counted; 0 inodes checked.
+doesn't work on an ext4 filesystem.  The above command is supposed to
+issue a GETFSMAP query against the "data" device.  Although the manpage
+doesn't claim support for ext4, it turns out that this you get this
+trace data:
 
-We just created the filesystem, the realtime volume should be empty.
+          xfs_io-4144  [002]   210.965642: ext4_getfsmap_low_key: dev
+7:0 keydev 163:2567 block 0 len 0 owner 0 flags 0x0
+          xfs_io-4144  [002]   210.965645: ext4_getfsmap_high_key: dev
+7:0 keydev 32:5277:0 block 0 len 0 owner -1 flags 0xffffffff
 
+Notice the random garbage in the keydev field -- this happens because
+openfile (in xfs_io) doesn't initialize *fs_path if the caller doesn't
+supply a geometry structure or the opened file isn't on an XFS
+filesystem.  IOWs, we feed random heap garbage to the kernel, and the
+kernel rejects the call unnecessarily.
+
+Fix this to set the fspath information even for foreign filesystems.
+
+Reported-by: tytso@mit.edu
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/fscounters.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ io/open.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/scrub/fscounters.c b/scrub/fscounters.c
-index f21b24e0935..3ceae3715dc 100644
---- a/scrub/fscounters.c
-+++ b/scrub/fscounters.c
-@@ -138,7 +138,7 @@ scrub_scan_estimate_blocks(
- 	*d_blocks = ctx->mnt.fsgeom.datablocks;
- 	*d_bfree = fc.freedata;
- 	*r_blocks = ctx->mnt.fsgeom.rtblocks;
--	*r_bfree = fc.freertx;
-+	*r_bfree = fc.freertx * ctx->mnt.fsgeom.rtextsize;
- 	*f_files_used = fc.allocino - fc.freeino;
+diff --git a/io/open.c b/io/open.c
+index d8072664c16..15850b5557b 100644
+--- a/io/open.c
++++ b/io/open.c
+@@ -116,7 +116,7 @@ openfile(
+ 	}
  
- 	return 0;
+ 	if (!geom || !platform_test_xfs_fd(fd))
+-		return fd;
++		goto set_fspath;
+ 
+ 	if (flags & IO_PATH) {
+ 		/* Can't call ioctl() on O_PATH fds */
+@@ -150,6 +150,7 @@ openfile(
+ 		}
+ 	}
+ 
++set_fspath:
+ 	if (fs_path) {
+ 		fsp = fs_table_lookup(path, FS_MOUNT_POINT);
+ 		if (!fsp)
 
