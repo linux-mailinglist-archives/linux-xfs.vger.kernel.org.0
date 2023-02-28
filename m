@@ -2,159 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7F1A6A4D84
-	for <lists+linux-xfs@lfdr.de>; Mon, 27 Feb 2023 22:46:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECBB86A507B
+	for <lists+linux-xfs@lfdr.de>; Tue, 28 Feb 2023 02:02:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230154AbjB0Vq3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Feb 2023 16:46:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
+        id S229850AbjB1BCV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Feb 2023 20:02:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbjB0Vq1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Feb 2023 16:46:27 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E74298C8
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Feb 2023 13:46:11 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id x20-20020a17090a8a9400b00233ba727724so157533pjn.1
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Feb 2023 13:46:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mXgojBwrlxtAqkqi3m8eA8saXCE8aC8dYvlKT0132G8=;
-        b=qm5ux6gnD5DjmItwJsdIJ2BBKADH1JcBq3kTwtFWTBJW+Cg5DL53I4/MU2Juj0bUkk
-         gMMYmiYa8DpdOBfSY5SFVpNJYH2fCoMOpKPQeeQNtKcPI/pCZMKqF+ruBiprzNydctGK
-         c2M5V48o1EcgjhU2yCbhPqkJTQf7fwX2UE3ucEVrEdRzLd6eDdcamxv6vItr/PCbxNYP
-         PjHv8BqmbmEv+m0NwK0V6M5lkTUF/raLlk60FfaMZK2cfPqH5hv5ruw2FeWTuLd8qMNx
-         WEaZGoxek4024i+78l/nKMuB3zLfvbgFoqk4MZj/icKngIBjOLwu7Ez4CyaMVDG2welh
-         RDKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mXgojBwrlxtAqkqi3m8eA8saXCE8aC8dYvlKT0132G8=;
-        b=pEv/n0MZWapBJWjW6zz7WoMEGzFFaqTM/X3ANINC982sB71xWMOTfYU5i1DOSzHh/F
-         1P6+WU+WRFqBzGcPg9PfXoafWi8FBT1XN+utX5Q7wuoHmgKUmLRx2qurVnu5+3FFQV7m
-         0jj+1GieJ3JKOC4aRdProyffh0XKO0GyAdMy1vkRdfaHaCtTdr1qNVCIWxaq2VWzqXwR
-         f9P/uqZTw8Lr0ELU31sOB+eSMTjlUFSFYSfM2FXlqV9tJClcN3EZ+17rac4eiDtSvXw2
-         HgRPGL5114+Wzi0t7IgPNKCckUfQmdbJd/EntCPNVjwo4g7hokmcxkKm2eCVW17vDC45
-         C6Cw==
-X-Gm-Message-State: AO0yUKU6zFaTNYOSk21+xh57jbsxebNKSPLdw4HXKrQhOY1UAt0k4QC8
-        eqEoCxM34ndQU/t5sGVo0ioWgA==
-X-Google-Smtp-Source: AK7set+RaJjdc/yi8v5IzW1B2wtX/FN5jbCYbEoHd/Mbo9tOb8tVGchKcWTC2jhLVHnO9/NC99l8LQ==
-X-Received: by 2002:a17:902:e851:b0:19a:839f:435 with SMTP id t17-20020a170902e85100b0019a839f0435mr10097058plg.3.1677534370439;
-        Mon, 27 Feb 2023 13:46:10 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-4-237.pa.vic.optusnet.com.au. [49.186.4.237])
-        by smtp.gmail.com with ESMTPSA id q6-20020a170902a3c600b0019608291564sm5065061plb.134.2023.02.27.13.46.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Feb 2023 13:46:09 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1pWlJv-002szD-7q; Tue, 28 Feb 2023 08:46:07 +1100
-Date:   Tue, 28 Feb 2023 08:46:07 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Pengfei Xu <pengfei.xu@intel.com>
-Cc:     Helge Deller <deller@gmx.de>,
-        linux-xfs <linux-xfs@vger.kernel.org>, asml.silence@gmail.com,
-        geert@linux-m68k.org, linux-kernel@vger.kernel.org,
-        heng.su@intel.com
-Subject: Re: [Syzkaller & bisect] There is "xfs_dquot_alloc" related BUG in
- v6.2 in guest
-Message-ID: <20230227214607.GB360264@dread.disaster.area>
-References: <Y/g/femUL7jZ9gF3@xpf.sh.intel.com>
- <a39d97c1-2ced-d159-f742-e5c6008f79ee@gmx.de>
- <20230226223403.GU360264@dread.disaster.area>
- <Y/xbyABFGZEeKduv@xpf.sh.intel.com>
+        with ESMTP id S229732AbjB1BCK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Feb 2023 20:02:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C37F329E2B;
+        Mon, 27 Feb 2023 17:01:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7977DB80DD5;
+        Tue, 28 Feb 2023 01:01:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 15E2BC433EF;
+        Tue, 28 Feb 2023 01:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677546115;
+        bh=SOFnAzz1BpATHblwfDPCUsbi+PYozLGsV7wjyMHjkQk=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=Yrv42d67C/zchBY/GRxlF2I0lPmwe05knllpu/5rTK8vNLkpKkCLGXRW/EjYeRcQY
+         aHuxa5lUaSLE2Afe8ejaxjxddX83InNC8yYf/n7QqXsiOwRK1tdC/PAWG2IXcNQOgY
+         ctsys9m1rsLd6yP7b7tBdN812nYX2LYEo8qPe+oBIPHLt89g0Cwqkm0p51fR8fPCcg
+         TdetilTXNnPAfk0reqGCm2sT8/+GsltnN7i+3VER2zpwbvwtW7x3LYVUOVdHbsdst+
+         nRsbnEVQZZ/TZDNRZDCtUZfjm+T1pc4gWZZkfyI00zmudv+MED+Nr1dAn0L670B0wj
+         RaBYdXnRZfKoA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E53C0E1CF31;
+        Tue, 28 Feb 2023 01:01:54 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/xbyABFGZEeKduv@xpf.sh.intel.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH v2 00/11] fsverity: support for non-4K pages
+From:   patchwork-bot+f2fs@kernel.org
+Message-Id: <167754611492.27916.393758892204411776.git-patchwork-notify@kernel.org>
+Date:   Tue, 28 Feb 2023 01:01:54 +0000
+References: <20221223203638.41293-1-ebiggers@kernel.org>
+In-Reply-To: <20221223203638.41293-1-ebiggers@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-fscrypt@vger.kernel.org, aalbersh@redhat.com,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 03:29:12PM +0800, Pengfei Xu wrote:
-> Hi Dave and Helge Deller,
+Hello:
+
+This series was applied to jaegeuk/f2fs.git (dev)
+by Eric Biggers <ebiggers@google.com>:
+
+On Fri, 23 Dec 2022 12:36:27 -0800 you wrote:
+> [This patchset applies to mainline + some fsverity cleanups I sent out
+>  recently.  You can get everything from tag "fsverity-non4k-v2" of
+>  https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git ]
 > 
-> Thanks Helge Deller to add the xfs mailing list!
+> Currently, filesystems (ext4, f2fs, and btrfs) only support fsverity
+> when the Merkle tree block size, filesystem block size, and page size
+> are all the same.  In practice that means 4K, since increasing the page
+> size, e.g. to 16K, forces the Merkle tree block size and filesystem
+> block size to be increased accordingly.  That can be impractical; for
+> one, users want the same file signatures to work on all systems.
 > 
-> On 2023-02-27 at 09:34:03 +1100, Dave Chinner wrote:
-> > On Sat, Feb 25, 2023 at 08:58:25PM +0100, Helge Deller wrote:
-> > > Looping in xfs mailing list as this seems to be a XFS problem...
-> > > On 2/24/23 05:39, Pengfei Xu wrote:
-> > > > [   71.225966] XFS (loop1): Quotacheck: Unsuccessful (Error -5): Disabling quotas.
-> > > > [   71.226310] xfs filesystem being mounted at /root/syzkaller.qCVHXV/0/file0 supports timestamps until 2038 (0x7fffffff)
-> > > > [   71.227591] BUG: kernel NULL pointer dereference, address: 00000000000002a8
-> > > > [   71.227873] #PF: supervisor read access in kernel mode
-> > > > [   71.228077] #PF: error_code(0x0000) - not-present page
-> > > > [   71.228280] PGD c313067 P4D c313067 PUD c1fe067 PMD 0
-> > > > [   71.228494] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > > > [   71.228673] CPU: 0 PID: 161 Comm: kworker/0:4 Not tainted 6.2.0-c9c3395d5e3d #1
-> > > > [   71.228961] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> > > > [   71.229400] Workqueue: xfs-inodegc/loop1 xfs_inodegc_worker
-> > > > [   71.229626] RIP: 0010:xfs_dquot_alloc+0x95/0x1e0
-> > > > [   71.229820] Code: 80 15 ad 85 48 c7 c6 7c 6b 92 83 e8 75 0f 6b ff 49 8b 8d 60 01 00 00 44 89 e0 31 d2 48 c7 c6 18 ae 8f 83 48 8d bb 18 02 00 00 <f7> b1 a8 02 2
-> > > > [   71.230528] RSP: 0018:ffffc90000babc20 EFLAGS: 00010246
-> > > > [   71.230737] RAX: 0000000000000009 RBX: ffff8880093c98c0 RCX: 0000000000000000
-> > > > [   71.231014] RDX: 0000000000000000 RSI: ffffffff838fae18 RDI: ffff8880093c9ad8
-> > > > [   71.231292] RBP: ffffc90000babc48 R08: 0000000000000002 R09: 0000000000000000
-> > > > [   71.231570] R10: ffffc90000baba80 R11: ffff88800af08d98 R12: 0000000000000009
-> > > > [   71.231850] R13: ffff88800c4bc000 R14: ffff88800c4bc000 R15: 0000000000000004
-> > > > [   71.232129] FS:  0000000000000000(0000) GS:ffff88807dc00000(0000) knlGS:0000000000000000
-> > > > [   71.232441] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [   71.232668] CR2: 00000000000002a8 CR3: 000000000a1d2002 CR4: 0000000000770ef0
-> > > > [   71.232949] PKRU: 55555554
-> > > > [   71.233061] Call Trace:
-> > > > [   71.233162]  <TASK>
-> > > > [   71.233254]  xfs_qm_dqread+0x46/0x440
-> > > > [   71.233410]  ? xfs_qm_dqget_inode+0x13e/0x500
-> > > > [   71.233596]  xfs_qm_dqget_inode+0x154/0x500
-> > > > [   71.233774]  xfs_qm_dqattach_one+0x142/0x3c0
-> > > > [   71.233961]  xfs_qm_dqattach_locked+0x14a/0x170
-> > > > [   71.234149]  xfs_qm_dqattach+0x52/0x80
-> > > > [   71.234307]  xfs_inactive+0x186/0x340
-> > > > [   71.234461]  xfs_inodegc_worker+0xd3/0x430
-> > > > [   71.234630]  process_one_work+0x3b1/0x960
-> > > > [   71.234802]  worker_thread+0x52/0x660
-> > > > [   71.234957]  ? __pfx_worker_thread+0x10/0x10
-> > > > [   71.235136]  kthread+0x161/0x1a0
-> > > > [   71.235279]  ? __pfx_kthread+0x10/0x10
-> > > > [   71.235442]  ret_from_fork+0x29/0x50
-> > > > [   71.235602]  </TASK>
-> > > > [   71.235696] Modules linked in:
-> > > > [   71.235826] CR2: 00000000000002a8
-> > > > [   71.235964] ---[ end trace 0000000000000000 ]---
-> > 
-> > Looks like a quota disable race with background inode inactivation
-> > reading in dquots.
-> > 
-> > Can you test the patch below?
-> > 
-> Thanks for your fixed patch in short time!
-> I installed below patch on top of v6.2 kernel.
-> And there was no any BUG dmesg anyway, so the fixed patch worked.
-> 
-> And left some "Internal error xfs_iunlink_remove_inode" related Call Trace.
-> I'm new to xfs, could you help to check if it is some other issue or we
-> could ignore it.
+> [...]
 
-I'm guessing this the filesystem detecting a corruption and shutting
-down. That's normal behaviour when tools like syzkaller through
-random crap at the filesystem and expect it to like it.
+Here is the summary with links:
+  - [f2fs-dev,v2,01/11] fsverity: use unsigned long for level_start
+    https://git.kernel.org/jaegeuk/f2fs/c/284d5db5f99e
+  - [f2fs-dev,v2,02/11] fsverity: simplify Merkle tree readahead size calculation
+    https://git.kernel.org/jaegeuk/f2fs/c/9098f36b739d
+  - [f2fs-dev,v2,03/11] fsverity: store log2(digest_size) precomputed
+    https://git.kernel.org/jaegeuk/f2fs/c/579a12f78d88
+  - [f2fs-dev,v2,04/11] fsverity: use EFBIG for file too large to enable verity
+    https://git.kernel.org/jaegeuk/f2fs/c/55eed69cc8fd
+  - [f2fs-dev,v2,05/11] fsverity: replace fsverity_hash_page() with fsverity_hash_block()
+    https://git.kernel.org/jaegeuk/f2fs/c/f45555bf23cf
+  - [f2fs-dev,v2,06/11] fsverity: support verification with tree block size < PAGE_SIZE
+    https://git.kernel.org/jaegeuk/f2fs/c/5306892a50bf
+  - [f2fs-dev,v2,07/11] fsverity: support enabling with tree block size < PAGE_SIZE
+    https://git.kernel.org/jaegeuk/f2fs/c/56124d6c87fd
+  - [f2fs-dev,v2,08/11] ext4: simplify ext4_readpage_limit()
+    https://git.kernel.org/jaegeuk/f2fs/c/5e122148a3d5
+  - [f2fs-dev,v2,09/11] f2fs: simplify f2fs_readpage_limit()
+    https://git.kernel.org/jaegeuk/f2fs/c/feb0576a361a
+  - [f2fs-dev,v2,10/11] fs/buffer.c: support fsverity in block_read_full_folio()
+    https://git.kernel.org/jaegeuk/f2fs/c/4fa512ce7051
+  - [f2fs-dev,v2,11/11] ext4: allow verity with fs block size < PAGE_SIZE
+    https://git.kernel.org/jaegeuk/f2fs/c/db85d14dc5c5
 
-> I put the dmesg in bugzilla attachment as follow:
-> https://bugzilla.kernel.org/show_bug.cgi?id=217078 ->
-> https://bugzilla.kernel.org/attachment.cgi?id=303793
-
-I am not authorised to access bug 217078, so I can't read any of
-this. Just cut out and attach the relevant dmesg output to the email.
-
--Dave.
+You are awesome, thank you!
 -- 
-Dave Chinner
-david@fromorbit.com
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
