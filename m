@@ -2,104 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EB086A912C
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 Mar 2023 07:43:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 024E26A9585
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 Mar 2023 11:45:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbjCCGnc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 Mar 2023 01:43:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
+        id S229565AbjCCKpy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 3 Mar 2023 05:45:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjCCGn1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Mar 2023 01:43:27 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9727DEB7A;
-        Thu,  2 Mar 2023 22:43:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=EikGI9w+uPXjJ4dtrLFAW51qvClSS07G2CZElAuAwUM=; b=pFoSD5j/ApLVQvdntttTFaO3z9
-        SlGGg8n7vFMOzmPPCx5rPn16IOZV3SJwQtp9wXcBXGqCZJwNV2wV5vzC9viHEy3TdZ8pNCeSuEUjy
-        XoaaO7ffk9b9Bypr53t5V0V8bTwS6FWe5zmKt2UUCEMOxayIon/Z7fA77xqjkjn/vUjZfntfDULDL
-        uYwnbeDNu5SJN4CR2mmBHsgwYwzjpnFJqFtnbC9TaPaVMT6Gqbq68fB/KUZUI29kRlAFwYZtTh/ku
-        pNSfMwOVs+ptQcPIXkFyeF28R5iSGybOkAXxSjIOKFQM43Uf2/ovmjpZQXuXxwpJEodwy4sqnfPyr
-        SyIPkIKg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pXz8P-002wO8-KJ; Fri, 03 Mar 2023 06:43:17 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Gao Xiang <xiang@kernel.org>
-Subject: [PATCH 2/2] iomap: Use folio_copy_tail()
-Date:   Fri,  3 Mar 2023 06:43:15 +0000
-Message-Id: <20230303064315.701090-3-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230303064315.701090-1-willy@infradead.org>
-References: <20230303064315.701090-1-willy@infradead.org>
+        with ESMTP id S229681AbjCCKpx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Mar 2023 05:45:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EBE45D8A5
+        for <linux-xfs@vger.kernel.org>; Fri,  3 Mar 2023 02:45:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CECBA617A6
+        for <linux-xfs@vger.kernel.org>; Fri,  3 Mar 2023 10:45:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 705C2C433EF;
+        Fri,  3 Mar 2023 10:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677840352;
+        bh=NZli42HebBgPdRLoGFYVVBb6T6+KFmnwmWiBIS9UTuo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u8Fb+KbONVnGoGTHnnZxKD0QXMcnVp18a3HbLV3RNergF23CAwtpFen1PSlV8lBsR
+         wTXbBQg45drxHzpljeptFj94+wY+oPIAC0eSEyihKfeGwWvsR6mQQSv+nZVMbJgiHL
+         A6e7jZEZUlN++eGVNB/O9rC+FfcL13sbGA880S2Nqz6nqLpUv9aYU96haF1otO3egu
+         uN9ZOG0ZFBuceAZ/A2YR5t9Q9md+Ww9dn7qO4Dj2yL+gGevrQdITu6bjBF43fNd/gr
+         BGqmuOt0QW1eoynJch9KAE8C1J8cckYBX/ZC8ieouMW/mbtfoVFSopD7mdaWSWde8p
+         q/1Gsd265ogmQ==
+Date:   Fri, 3 Mar 2023 11:45:48 +0100
+From:   Carlos Maiolino <cem@kernel.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, daan.j.demeyer@gmail.com
+Subject: Re: [PATCH 1/3] mkfs: check dirent names when reading protofile
+Message-ID: <20230303104548.hb4isyjjirtofbvh@andromeda>
+References: <167768672841.4130726.1758921319115777334.stgit@magnolia>
+ <ED16BgxEjmojPneowA7vF2dI6lOm4dx4MP3mJDz3ayovku7hh0us4acUn7oXkbA_S92b_LxKnXyclnvmZ9xATQ==@protonmail.internalid>
+ <167768673411.4130726.18042131075742150245.stgit@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <167768673411.4130726.18042131075742150245.stgit@magnolia>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The iomap handling of tails doesn't support multi-page folios, so
-convert it to call folio_copy_tail(), which does.
+On Wed, Mar 01, 2023 at 08:05:34AM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> The protofile parser in mkfs does not check directory entry names when
+> populating the filesystem.  The libxfs directory code doesn't check them
+> either, since they depend on the Linux VFS to sanitize incoming names.
+> If someone puts a slash in the first (name) column in the protofile,
+> this results in a successful format and xfs_repair -n immediately
+> complains.
+> 
+> Screen the names that are being read from the protofile.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/iomap/buffered-io.c | 23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+Looks good
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 10a203515583..d08edf2de19c 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -215,31 +215,20 @@ static int iomap_read_inline_data(const struct iomap_iter *iter,
- {
- 	struct iomap_page *iop;
- 	const struct iomap *iomap = iomap_iter_srcmap(iter);
--	size_t size = i_size_read(iter->inode) - iomap->offset;
--	size_t poff = offset_in_page(iomap->offset);
--	size_t offset = offset_in_folio(folio, iomap->offset);
--	void *addr;
-+	loff_t pos = iomap->offset;
- 
- 	if (folio_test_uptodate(folio))
- 		return 0;
- 
--	if (WARN_ON_ONCE(size > PAGE_SIZE - poff))
--		return -EIO;
--	if (WARN_ON_ONCE(size > PAGE_SIZE -
--			 offset_in_page(iomap->inline_data)))
--		return -EIO;
--	if (WARN_ON_ONCE(size > iomap->length))
--		return -EIO;
--	if (offset > 0)
-+	if (pos > folio_pos(folio))
- 		iop = iomap_page_create(iter->inode, folio, iter->flags);
- 	else
- 		iop = to_iomap_page(folio);
- 
--	addr = kmap_local_folio(folio, offset);
--	memcpy(addr, iomap->inline_data, size);
--	memset(addr + size, 0, PAGE_SIZE - poff - size);
--	kunmap_local(addr);
--	iomap_set_range_uptodate(folio, iop, offset, PAGE_SIZE - poff);
-+	folio_copy_tail(folio, pos, iomap->inline_data,
-+			iomap->length);
-+	iomap_set_range_uptodate(folio, iop, pos - folio_pos(folio),
-+			folio_size(folio) - offset_in_folio(folio, pos));
- 	return 0;
- }
- 
+> 
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  mkfs/proto.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> 
+> diff --git a/mkfs/proto.c b/mkfs/proto.c
+> index 68ecdbf3632..7e3fc1b8134 100644
+> --- a/mkfs/proto.c
+> +++ b/mkfs/proto.c
+> @@ -326,6 +326,12 @@ newdirent(
+>  	int	error;
+>  	int	rsv;
+> 
+> +	if (!libxfs_dir2_namecheck(name->name, name->len)) {
+> +		fprintf(stderr, _("%.*s: invalid directory entry name\n"),
+> +				name->len, name->name);
+> +		exit(1);
+> +	}
+> +
+>  	rsv = XFS_DIRENTER_SPACE_RES(mp, name->len);
+> 
+>  	error = -libxfs_dir_createname(tp, pip, name, inum, rsv);
+> 
+
 -- 
-2.39.1
-
+Carlos Maiolino
