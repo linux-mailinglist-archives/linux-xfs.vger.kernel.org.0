@@ -2,391 +2,1023 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CAEF6AA5D3
-	for <lists+linux-xfs@lfdr.de>; Sat,  4 Mar 2023 00:51:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA8C76AA789
+	for <lists+linux-xfs@lfdr.de>; Sat,  4 Mar 2023 03:20:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbjCCXvX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 Mar 2023 18:51:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54924 "EHLO
+        id S229494AbjCDCUE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 3 Mar 2023 21:20:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbjCCXvW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Mar 2023 18:51:22 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD31862DA3;
-        Fri,  3 Mar 2023 15:51:19 -0800 (PST)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 323LZbmO018974;
-        Fri, 3 Mar 2023 23:51:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=ec7Yqj8pEwWWSPSJ78v3k851tyx0I3H/dCqB7WOny9E=;
- b=SmtgQN8Hgo8yvQUu/AqX7OE8Ute7iO1jtLTGaPLdYU9QG8SImmuYUlq47mo/Xzw804YS
- j2pi2h9ULxGLcM+DmTiLlPJl4OULPZ6V6DEY4oRpkCfUXfSq59MynN5xZns0UXL2mSgN
- meYFEFFl182ydIhgasFYANQo3yDIjdI9OGyvEvFYlSfNHaHsy+szCgIaRIFq9J7akwl5
- sDv+maCD842hlVz4wcf7/yg36REe6TW+xpXSkdtDwtZTzIzgRnljBaDt9EllIGb/0V7k
- gK1Jzbfqn3DvP86wVxDEPHw1akDZPYLAwgJHV3mnRPzrxSXk2AAb3B9S8F5G2ZfOjwfv kA== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3nyb7x0nff-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Mar 2023 23:51:08 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 323Mae6L033004;
-        Fri, 3 Mar 2023 23:51:08 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2177.outbound.protection.outlook.com [104.47.73.177])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ny8sc596d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 Mar 2023 23:51:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IYHRhq+mvJNroQxqCV6PYabqOzIn7iZedojoFks5XwK6KsR1XpvN19TGjxWr7bcgvhTyahlg07uX8oTJtfIdJVa8OHPHUjfj8Rg6+bDJBu5GFiM+o+zutLbAgckxRSvsPL69rr2HeUbqNfpK50UrxqXJkc4lrYhwFaf3AMDIOWaUYLx6JzzdojeWCOwqP9EWl/wHTJJPfwOTuYzzRveYj60zCcygw0i+GP7IthfS8QSvdi6Q5Cv3ZOEeDWQhDTJrMGRIf1+Bm4vAGtwsIwIRoWS1tWPWXClwNemjt+wapTCskYEddIiAGnnVpPKaNWC9MPeWDsr1mjblx5yvbNeQtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ec7Yqj8pEwWWSPSJ78v3k851tyx0I3H/dCqB7WOny9E=;
- b=iak0kbkUkGu8uxhlDzXCn9cWboCuBxEJEqbK/+M4m3zu1rY3FYGQqEwfQ73THZyAO5ujip6MVuKt/GK6qZYahNpR4KiLsF9vk7Y8TntqOtVM1Zmf6iLzXNk4Kl/A7n2xyBj3lA3R42P85WULF9AjtO1wRhp35o1Wmzi199olk5JV+XmCmBDNpo6S4wnWIxfm8Dj4XJr2jbEdn/a3dvhc/h426ftax9+R/74gCT5vgffJzWWnYoHW21kfqXwguMskYvpUUAk3zLhq0gFf/LRBIrg92QmILFFAv5C+B17WF/EvL0YWhVU7QMfBl+eF3BRmt+NFB9btJF0BO6fFlTxOig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ec7Yqj8pEwWWSPSJ78v3k851tyx0I3H/dCqB7WOny9E=;
- b=Om3mTo60/miJPvRuEkh4UNztH6UqaQzFnwhHQF3/0UMqveZh803yGchMGrBSD/HKcJzV0sPVufCSX4b0cFFJ7RJABajp2Cx1hD27F10CoErD0HLSuVIzRDrYcRwK+67KkVvTNjd9f9uUyrLGUwcm2FwoyGxHEISn4UYO6eX05QE=
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
- by PH0PR10MB4437.namprd10.prod.outlook.com (2603:10b6:510:3a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.12; Fri, 3 Mar
- 2023 23:51:06 +0000
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::2a7c:497e:b785:dc06]) by BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::2a7c:497e:b785:dc06%8]) with mapi id 15.20.6156.019; Fri, 3 Mar 2023
- 23:51:06 +0000
-From:   Allison Henderson <allison.henderson@oracle.com>
-To:     "djwong@kernel.org" <djwong@kernel.org>
-CC:     Catherine Hoang <catherine.hoang@oracle.com>,
-        "david@fromorbit.com" <david@fromorbit.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        Chandan Babu <chandan.babu@oracle.com>,
+        with ESMTP id S229437AbjCDCUD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Mar 2023 21:20:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ECAB197;
+        Fri,  3 Mar 2023 18:19:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A120EB81A07;
+        Sat,  4 Mar 2023 02:19:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CC76C433EF;
+        Sat,  4 Mar 2023 02:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677896396;
+        bh=kQjdVCPjiEHbRZ4Y2A8ICqOT4yE4EnXN1rgc25uQREA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vRc6/u6zfUtfriHhwXIE4LRap1or1+T+33h3ZfVl94+uprc26SpiN1zIC9YL50Kah
+         FmdaBuPSIOW9Y0ERDXI2LTo1bQmlH7kzHBm1o1EVXKUfp2ALRxLa0OjE6sjkaiW3G+
+         mIxEbF6i9/rhb3u59iKxPWR5tv37cnGaDcuuYb1zD/+Szuv+PQM0aYEBPr9YVYpYGI
+         lN10kvbKVuXJgVbGyCHqmdzolfOBrtGOdYB08MwMCfoh04eXh+U64iRm0Xc7i2iSS8
+         KEsWuJXMA03HSWaZvtzWzKt6ymzuRvkrUSkpudUEhcuY0fCetFfZPmSa9e5YgWzPNp
+         +uR0oF0j0lCGw==
+Date:   Fri, 3 Mar 2023 18:19:55 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Allison Henderson <allison.henderson@oracle.com>
+Cc:     "david@fromorbit.com" <david@fromorbit.com>,
+        Catherine Hoang <catherine.hoang@oracle.com>,
         "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>
-Subject: Re: [PATCH 14/14] xfs: document future directions of online fsck
-Thread-Topic: [PATCH 14/14] xfs: document future directions of online fsck
-Thread-Index: AQHZHJ6tDSSTz1pu/UqS9wmePnBaKK7lxomAgAE/O4CAAxcHgA==
-Date:   Fri, 3 Mar 2023 23:51:05 +0000
-Message-ID: <805216bb33aaecb2a9fdb564f2d390fcfadf3b4b.camel@oracle.com>
+        "hch@infradead.org" <hch@infradead.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        Chandan Babu <chandan.babu@oracle.com>
+Subject: Re: [PATCH v24.3 12/14] xfs: document directory tree repairs
+Message-ID: <20230304021955.GA1637709@frogsfrogsfrogs>
 References: <167243825144.682859.12802259329489258661.stgit@magnolia>
-         <167243825360.682859.5189751153452545448.stgit@magnolia>
-         <1a1bb01af95baab71172d0f6366e156a01b68143.camel@oracle.com>
-         <Y//wWfERMOrEtFnu@magnolia>
-In-Reply-To: <Y//wWfERMOrEtFnu@magnolia>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.44.4-0ubuntu1 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY5PR10MB4306:EE_|PH0PR10MB4437:EE_
-x-ms-office365-filtering-correlation-id: a4787d5b-72a9-4f84-6db0-08db1c422792
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: unOQdThT8McS2cOJ4lbRCsNdIxewe6ziaOkvn9IeGqXyCwY3/NlWcnFspOs3SokUE0/0iKfq/aKX8ZAbwBkk/HLJxMJ313UPgDqNDpDprnUEhSNk8G3cyVtegiZy6NxRSyBLyzYkLtlBCpF70A2LyAgE4tGwUKVNlIp7qvIAeAqcpmYKhAz9Hc3DcLN5FTbuCpAYN69aNtcMCAKTBdTerp9dblpFZNxn7UxCMEnjmTwM+vAHCJ0ZaLt2r10gH7QAdrSFdSnZJ/j/KubLwBaiTVKNGlXu/IeLkIdpQRHuZwF6ixf38ae1hbGxRtHSodEMqxJQYJOBuBmp3L4FzXX3cZYEILj2iZWxXN143rKaeq38cwX3qs1Mymwd4EXwaiJGAkaZ4DP2AC8D6rZZaz4ZkHO+VdPpEl7Ph5QXO1M4qDh/nvjkUu3b3z+zUCcfEhWJsSkxywF8hncS+rpiSFZ2OY39xS91kwBWQuUosvFCqcRs1A9HoWsW5aURSG547DFeO0tBWDgJKl0ymCyMExDE1pkQj4QLwe/UJyEVZFXslq464dkDHSzZTPWeK9OsF0nEHDPGQDSA2CNsbA8NaSr9EvzwPoIrJw8gRUH2u8AShKyyfJGn8bYEdF2sch3npJp+nPw9fQ4iyLGRdz4LbrbXece7FAUXw6qxSXvunctYQlQKxTdd6k2UWonZ4RxOmC59bb2xphu8A4Jj1e0kOU7DluYftwrR5uu21SJ2C870eXM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(39860400002)(376002)(136003)(366004)(346002)(451199018)(41300700001)(66476007)(2616005)(316002)(66946007)(66556008)(6916009)(36756003)(76116006)(64756008)(54906003)(122000001)(4001150100001)(2906002)(4326008)(38070700005)(8676002)(38100700002)(66446008)(6506007)(6512007)(83380400001)(71200400001)(478600001)(186003)(86362001)(26005)(6486002)(966005)(66899018)(44832011)(30864003)(5660300002)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NWpvRE1JbDJGWHhUc0NYRm9FMzZvK01WN1YzTG8rUFAzMGNGUURRb3ovd0VJ?=
- =?utf-8?B?STdhRUw1SFRjY2M3c0FETGRqY2FGdTR6T0xSdzA5ejRLeTU5NGNudUZmdkh5?=
- =?utf-8?B?RDBRMTFXM1NkM2NYL3A5NExjUmtIc0x6VjNYZm11ZWhyZ3dQcGFNTjJzbThG?=
- =?utf-8?B?anpTQklqZHZwUVdaRHM3RGFnR3p2aUNVSnNBZlRRZURJYUs1bXd2UFo5UU1j?=
- =?utf-8?B?VnRvRlVwRGZzT1hKWGp1OGd0c0Ztc2E4d2lwc3RSUlVBamJTaldXM1BVVWtN?=
- =?utf-8?B?dUpLcDVYMEkwSnhVbXFRKzdSUGVPV3E2WC9lekd1bGZydGZ0Z0YxYU9weW1Y?=
- =?utf-8?B?dHZGWVJmTktNZmEvQlBuellDQVlzQ2tiN0NlSVZUTHN1bkdZUW9YL3NGWjJP?=
- =?utf-8?B?SDRuZFp1V00zU0ZVeE5teXZLemkvNlhrSDJwZ2RPWHpBcm5lQlJnL1g0WW1L?=
- =?utf-8?B?UmovZU5Ed1hMRGhtTG9OUFc0QmI5NnYwcTI3MmpQTXpOR2V0NjM1ZWx4cVlt?=
- =?utf-8?B?akxJdkhxNjcvNFRVVUZWR21aMjUrOWNqd0R4STY2dExOMzhpcW5KaG84SXBi?=
- =?utf-8?B?SkpaTnBLZWxpY3IzWjRoajVkRXlNUmpQcjY4Z2Q2ZHFlOE03Mk1NZGZMWXkx?=
- =?utf-8?B?T1crZjFvVHB1WkJVTWxJdzlZaHJXemd6UGRYdHRpSW9nMmlLS1N0VDdzTTFN?=
- =?utf-8?B?V3lSZ2c3SEMzRWhtL2tRci8xTFkvMXlQMkIyRTNTN2tHZVB2M3JVSlVNSW9E?=
- =?utf-8?B?b1MvdmFsSldOb3luVTVsMDhsQUE4WmF1M2xPNzlkYnFLTG9tOFNiZTZJSEdC?=
- =?utf-8?B?dHMzS3lBL0o5SkJLK2h0RW53VTBCL0VEcFd6SUtiVTl0TURndTBFZVZxeGdD?=
- =?utf-8?B?WVEyWG05SlNoQmJtdllEZWRzaTNiVnZkMzhKVE5BaHdTYTZFRkFtbEpCdTIy?=
- =?utf-8?B?R1pXVmQ1bDdVendhSXFTU1hQYnhxZEtsU0syclA2NFhXT3V1eXV3aW9nMjRj?=
- =?utf-8?B?OXJnOG1XZ294MGI5UjZPYkt1RFhjTDFlYm45MFFxY0Q4NHFWUjRvVFRzZGFx?=
- =?utf-8?B?WlFwMCsrZU5CbXhDcUovbjUzSW5Vcmt4c2w1MUZSNVUyUGtVYktkVWVmbmRX?=
- =?utf-8?B?SVdFM2dENlZOVVBSWG9ERmFrOXFESnp3VGxoSXkwSStKejZmajY0N0hoaGpK?=
- =?utf-8?B?d3J2RXczaTdGYmtlOGlKb3VNVDUvbDRXcVpoeDVGM0Q4OGVvQXZRVVc3a2U3?=
- =?utf-8?B?N3FCUGhZMVJENDlpVkZxdlM2b3VNUjkyaTV0Y3BiVmdCd2dhMk5kd2V3Y1pR?=
- =?utf-8?B?OTQ5OVhXVUlwcmdLa1VsSUNscm03Q2ZpeG13eGdwalh1Q3VRVjVpWEY5cEVv?=
- =?utf-8?B?TUxZcEE0MDVpY3BhcytwQmRyWi9FTGFrZkNRYnRMNWE3UUFUdDg2a3dNVmRR?=
- =?utf-8?B?TE9TMVl6RVJtbW12Tk1HZVlXL2xJMmRlOFNob2h0Uk1oYTNLcEV5dUY1TmlD?=
- =?utf-8?B?VUd3OGxLc0RpU0lOc0tGSEt5dUNMRnZ2UUM5V25EaUxGSGs5QTdidFJERmVV?=
- =?utf-8?B?RDJpL3RJcEpFUmZtckZ0WDIwNDU2akRWdjJ6R0JQTEpXSitDSmFGekJkeVh1?=
- =?utf-8?B?NzM2OHRsazNDOS8zdk5FcGdaNkJIVmhEWXp2eDdkWjhldFR0OFBEVG5XSEV5?=
- =?utf-8?B?ZXlHK0ZoQXY5Z2x2UkxjZFNTTUZOZ1pkckM2YngyZmV2WnBWWHNvTzNPWjJD?=
- =?utf-8?B?YURlMjlKMjcvTWNPbHFpcGNjUDlvbWFYZlJxdWJaS0RWV1VGclJ4ZzAya0FK?=
- =?utf-8?B?aGphcnBXUzFqTUlNRnBGbkVTSjhKWTExZUc0NG5TdFZBSjh5N2IwODVZWHF3?=
- =?utf-8?B?cFNoL1BlY05rZDNRTzROdHFId1p4dTFlVk1PeHpMSUJMY2JpSUljN05kYW9n?=
- =?utf-8?B?ald5N3NucTd0Q09JSm1JN1VwREFUc2VtYkNQTnhBUlV6UDJINTd6a2UrRktJ?=
- =?utf-8?B?U0xDN1JTWFp6am9RZHpUb2dSbDE5RFN6ZGZFaEd1OHVEdkFyeGFPbGd1WlVS?=
- =?utf-8?B?NXhUdk11UGpHWnVrQTJkeXBCMlA5UVFBUmF4bm0vVG9NY2JaRk1lYVJFVGZZ?=
- =?utf-8?B?Si93MkxpU2t6aTQ0aE9KV0REbm1vbEVYNHd1WjJ4ZE9yRCtOam1YM0x4aVla?=
- =?utf-8?Q?PQtLe+brFMiJLdt2bxpd0Mw=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <05CC5DEA424D6D4B88D401FB551E32C6@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <167243825331.682859.12874143420813343961.stgit@magnolia>
+ <Y9xtgrkdwlpM2/JN@magnolia>
+ <181f96f378c88281e9fa48e1803a03254051cb35.camel@oracle.com>
+ <Y//qYIyYcaApDUI2@magnolia>
+ <e222a402c471aca8e2c67f1cc9c439f54eb159e3.camel@oracle.com>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: Hsek1F/SYo026ro3s4HJiGDWUQhCfgvPt+aiz6Wj9ht/fu76hXoubcDAHr7yPQqnSvvrTk7Ohe3M5a8QwVRxAEO2EKnQ2ydJuKm8dII/1DDHwWB37AW9u/BIyqZByeLyvgd+9elEDztA75OOUBV0cAPmp63KMFFkSNQRfihpO9yeWARuTQY7tZFLpxVd/Ed0HJtWVAEhLoaUrCCliGt6WhRzr8ZtTPvy/5zm4kwMAfkTqFtF/l3+RKpLx9XBMV23/B4qCVy4gqdI/GW3OHL8eUkjBcPEgxvqQTELi7lvHtDCV7O9VIraIsq6bfnLQ41+W3VAY7gNHjeE8HyABCUz/AOqBYQFQ/eZbfA7FM2vxwZgguNfxzf8s0teX9uAdhgHjyscLhaIqnT8LhjCHOagYjOoNazdvh/zM0Q9Lea6DB6G1RrqRO+TKUk2I567U7iMCXwSywEIeMfW0Md2U4eUrYqjArmOxGThVvDIi6ve9eLey3Rgawt9yxRydiAYy0SsYqsiD6yoTpLAamkKZOHuwMo/ggorNgN1RgSNofl+40wi3+I0702tmMV6jYbDufU7g+Pj5rx8sr9WfcrgWy+oSqAnc4uhx+j4hy2iwEZz69U9Jc2pXPoTrJnFYX/0e1eLF2dqYlse+zF6WotTefUsr5ZsC01Ai7ZrgqhRN3GM3yl4dzEE/XvMRYuYHv26skAleSGZhVi34WBL+RWHXAM/nRtrgJZjs8CAglUL+vN4/Tvp3YlTHfc5sSGiTRUavh819hULD86w7n/1PJB1sJxcM04wG7Rrx4qtv9ZqJg+pqTx8iHEDa7IezaHngD6XeDEPQ3OYnce0HWH2K0N1slFvpcdyeTzbRTUc8obZWGfeBpk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4787d5b-72a9-4f84-6db0-08db1c422792
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2023 23:51:05.9915
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y+H9+WLX3/HF/yp1Z0VH1jlzR8CqTXkRjW4y84+USrUTDietqLsQWoxSrrtqFEs3eEZkru9qPjfcZ2MMthd+PvOykzbpPPdmZYxjN1mCjAU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4437
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-03_06,2023-03-03_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
- mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303030201
-X-Proofpoint-GUID: XcKHy0zGGsA57dGmRfb_h_unCXX570Tm
-X-Proofpoint-ORIG-GUID: XcKHy0zGGsA57dGmRfb_h_unCXX570Tm
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e222a402c471aca8e2c67f1cc9c439f54eb159e3.camel@oracle.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-T24gV2VkLCAyMDIzLTAzLTAxIGF0IDE2OjM5IC0wODAwLCBEYXJyaWNrIEouIFdvbmcgd3JvdGU6
-DQo+IE9uIFdlZCwgTWFyIDAxLCAyMDIzIGF0IDA1OjM3OjE5QU0gKzAwMDAsIEFsbGlzb24gSGVu
-ZGVyc29uIHdyb3RlOg0KPiA+IE9uIEZyaSwgMjAyMi0xMi0zMCBhdCAxNDoxMCAtMDgwMCwgRGFy
-cmljayBKLiBXb25nIHdyb3RlOg0KPiA+ID4gRnJvbTogRGFycmljayBKLiBXb25nIDxkandvbmdA
-a2VybmVsLm9yZz4NCj4gPiA+IA0KPiA+ID4gQWRkIHRoZSBzZXZlbnRoIGFuZCBmaW5hbCBjaGFw
-dGVyIG9mIHRoZSBvbmxpbmUgZnNjaw0KPiA+ID4gZG9jdW1lbnRhdGlvbiwNCj4gPiA+IHdoZXJl
-IHdlIHRhbGsgYWJvdXQgZnV0dXJlIGZ1bmN0aW9uYWxpdHkgdGhhdCBjYW4gdGllIGluIHdpdGgg
-dGhlDQo+ID4gPiBmdW5jdGlvbmFsaXR5IHByb3ZpZGVkIGJ5IHRoZSBvbmxpbmUgZnNjayBwYXRj
-aHNldC4NCj4gPiA+IA0KPiA+ID4gU2lnbmVkLW9mZi1ieTogRGFycmljayBKLiBXb25nIDxkandv
-bmdAa2VybmVsLm9yZz4NCj4gPiA+IC0tLQ0KPiA+ID4gwqAuLi4vZmlsZXN5c3RlbXMveGZzLW9u
-bGluZS1mc2NrLWRlc2lnbi5yc3TCoMKgwqDCoMKgwqDCoMKgIHzCoCAxNTUNCj4gPiA+ICsrKysr
-KysrKysrKysrKysrKysrDQo+ID4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAxNTUgaW5zZXJ0aW9ucygr
-KQ0KPiA+ID4gDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2ZpbGVz
-eXN0ZW1zL3hmcy1vbmxpbmUtZnNjay1kZXNpZ24ucnN0DQo+ID4gPiBiL0RvY3VtZW50YXRpb24v
-ZmlsZXN5c3RlbXMveGZzLW9ubGluZS1mc2NrLWRlc2lnbi5yc3QNCj4gPiA+IGluZGV4IDA1Yjk0
-MTFmYWM3Zi4uNDEyOTFlZGIwMmI5IDEwMDY0NA0KPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9m
-aWxlc3lzdGVtcy94ZnMtb25saW5lLWZzY2stZGVzaWduLnJzdA0KPiA+ID4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9maWxlc3lzdGVtcy94ZnMtb25saW5lLWZzY2stZGVzaWduLnJzdA0KPiA+ID4gQEAg
-LTQwNjcsNiArNDA2Nyw4IEBAIFRoZSBleHRyYSBmbGV4aWJpbGl0eSBlbmFibGVzIHNldmVyYWwg
-bmV3DQo+ID4gPiB1c2UNCj4gPiA+IGNhc2VzOg0KPiA+ID4gwqDCoCAoYGBGSUVYQ0hBTkdFX1JB
-TkdFYGApIHRvIGV4Y2hhbmdlIHRoZSBmaWxlIGNvbnRlbnRzLCB0aGVyZWJ5DQo+ID4gPiBjb21t
-aXR0aW5nIGFsbA0KPiA+ID4gwqDCoCBvZiB0aGUgdXBkYXRlcyB0byB0aGUgb3JpZ2luYWwgZmls
-ZSwgb3Igbm9uZSBvZiB0aGVtLg0KPiA+ID4gwqANCj4gPiA+ICsuLiBfc3dhcGV4dF9pZl91bmNo
-YW5nZWQ6DQo+ID4gPiArDQo+ID4gPiDCoC0gKipUcmFuc2FjdGlvbmFsIGZpbGUgdXBkYXRlcyoq
-OiBUaGUgc2FtZSBtZWNoYW5pc20gYXMgYWJvdmUsDQo+ID4gPiBidXQNCj4gPiA+IHRoZSBjYWxs
-ZXINCj4gPiA+IMKgwqAgb25seSB3YW50cyB0aGUgY29tbWl0IHRvIG9jY3VyIGlmIHRoZSBvcmln
-aW5hbCBmaWxlJ3MgY29udGVudHMNCj4gPiA+IGhhdmUgbm90DQo+ID4gPiDCoMKgIGNoYW5nZWQu
-DQo+ID4gPiBAQCAtNDgxOCwzICs0ODIwLDE1NiBAQCBhbmQgcmVwb3J0IHdoYXQgaGFzIGJlZW4g
-bG9zdC4NCj4gPiA+IMKgRm9yIG1lZGlhIGVycm9ycyBpbiBibG9ja3Mgb3duZWQgYnkgZmlsZXMs
-IHRoZSBsYWNrIG9mIHBhcmVudA0KPiA+ID4gcG9pbnRlcnMgbWVhbnMNCj4gPiA+IMKgdGhhdCB0
-aGUgZW50aXJlIGZpbGVzeXN0ZW0gbXVzdCBiZSB3YWxrZWQgdG8gcmVwb3J0IHRoZSBmaWxlDQo+
-ID4gPiBwYXRocw0KPiA+ID4gYW5kIG9mZnNldHMNCj4gPiA+IMKgY29ycmVzcG9uZGluZyB0byB0
-aGUgbWVkaWEgZXJyb3IuDQo+ID4gPiArDQo+ID4gPiArNy4gQ29uY2x1c2lvbiBhbmQgRnV0dXJl
-IFdvcmsNCj4gPiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+ID4gKw0KPiA+
-ID4gK0l0IGlzIGhvcGVkIHRoYXQgdGhlIHJlYWRlciBvZiB0aGlzIGRvY3VtZW50IGhhcyBmb2xs
-b3dlZCB0aGUNCj4gPiA+IGRlc2lnbnMgbGFpZCBvdXQNCj4gPiA+ICtpbiB0aGlzIGRvY3VtZW50
-IGFuZCBub3cgaGFzIHNvbWUgZmFtaWxpYXJpdHkgd2l0aCBob3cgWEZTDQo+ID4gPiBwZXJmb3Jt
-cw0KPiA+ID4gb25saW5lDQo+ID4gPiArcmVidWlsZGluZyBvZiBpdHMgbWV0YWRhdGEgaW5kaWNl
-cywgYW5kIGhvdyBmaWxlc3lzdGVtIHVzZXJzIGNhbg0KPiA+ID4gaW50ZXJhY3Qgd2l0aA0KPiA+
-ID4gK3RoYXQgZnVuY3Rpb25hbGl0eS4NCj4gPiA+ICtBbHRob3VnaCB0aGUgc2NvcGUgb2YgdGhp
-cyB3b3JrIGlzIGRhdW50aW5nLCBpdCBpcyBob3BlZCB0aGF0DQo+ID4gPiB0aGlzDQo+ID4gPiBn
-dWlkZSB3aWxsDQo+ID4gPiArbWFrZSBpdCBlYXNpZXIgZm9yIGNvZGUgcmVhZGVycyB0byB1bmRl
-cnN0YW5kIHdoYXQgaGFzIGJlZW4NCj4gPiA+IGJ1aWx0LA0KPiA+ID4gZm9yIHdob20gaXQNCj4g
-PiA+ICtoYXMgYmVlbiBidWlsdCwgYW5kIHdoeS4NCj4gPiA+ICtQbGVhc2UgZmVlbCBmcmVlIHRv
-IGNvbnRhY3QgdGhlIFhGUyBtYWlsaW5nIGxpc3Qgd2l0aCBxdWVzdGlvbnMuDQo+ID4gPiArDQo+
-ID4gPiArRklFWENIQU5HRV9SQU5HRQ0KPiA+ID4gKy0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+ICsN
-Cj4gPiA+ICtBcyBkaXNjdXNzZWQgZWFybGllciwgYSBzZWNvbmQgZnJvbnRlbmQgdG8gdGhlIGF0
-b21pYyBleHRlbnQNCj4gPiA+IHN3YXANCj4gPiA+IG1lY2hhbmlzbSBpcw0KPiA+ID4gK2EgbmV3
-IGlvY3RsIGNhbGwgdGhhdCB1c2Vyc3BhY2UgcHJvZ3JhbXMgY2FuIHVzZSB0byBjb21taXQNCj4g
-PiA+IHVwZGF0ZXMNCj4gPiA+IHRvIGZpbGVzDQo+ID4gPiArYXRvbWljYWxseS4NCj4gPiA+ICtU
-aGlzIGZyb250ZW5kIGhhcyBiZWVuIG91dCBmb3IgcmV2aWV3IGZvciBzZXZlcmFsIHllYXJzIG5v
-dywNCj4gPiA+IHRob3VnaA0KPiA+ID4gdGhlDQo+ID4gPiArbmVjZXNzYXJ5IHJlZmluZW1lbnRz
-IHRvIG9ubGluZSByZXBhaXIgYW5kIGxhY2sgb2YgY3VzdG9tZXINCj4gPiA+IGRlbWFuZA0KPiA+
-ID4gbWVhbiB0aGF0DQo+ID4gPiArdGhlIHByb3Bvc2FsIGhhcyBub3QgYmVlbiBwdXNoZWQgdmVy
-eSBoYXJkLg0KPiANCj4gTm90ZTogVGhlICJFeHRlbnQgU3dhcHBpbmcgd2l0aCBSZWd1bGFyIFVz
-ZXIgRmlsZXMiIHNlY3Rpb24gaGFzIG1vdmVkDQo+IGhlcmUuDQo+IA0KPiA+ID4gK1ZlY3Rvcml6
-ZWQgU2NydWINCj4gPiA+ICstLS0tLS0tLS0tLS0tLS0tDQo+ID4gPiArDQo+ID4gPiArQXMgaXQg
-dHVybnMgb3V0LCB0aGUgOnJlZjpgcmVmYWN0b3JpbmcgPHNjcnVicmVwYWlyPmAgb2YgcmVwYWly
-DQo+ID4gPiBpdGVtcyBtZW50aW9uZWQNCj4gPiA+ICtlYXJsaWVyIHdhcyBhIGNhdGFseXN0IGZv
-ciBlbmFibGluZyBhIHZlY3Rvcml6ZWQgc2NydWIgc3lzdGVtDQo+ID4gPiBjYWxsLg0KPiA+ID4g
-K1NpbmNlIDIwMTgsIHRoZSBjb3N0IG9mIG1ha2luZyBhIGtlcm5lbCBjYWxsIGhhcyBpbmNyZWFz
-ZWQNCj4gPiA+IGNvbnNpZGVyYWJseSBvbiBzb21lDQo+ID4gPiArc3lzdGVtcyB0byBtaXRpZ2F0
-ZSB0aGUgZWZmZWN0cyBvZiBzcGVjdWxhdGl2ZSBleGVjdXRpb24NCj4gPiA+IGF0dGFja3MuDQo+
-ID4gPiArVGhpcyBpbmNlbnRpdml6ZXMgcHJvZ3JhbSBhdXRob3JzIHRvIG1ha2UgYXMgZmV3IHN5
-c3RlbSBjYWxscyBhcw0KPiA+ID4gcG9zc2libGUgdG8NCj4gPiA+ICtyZWR1Y2UgdGhlIG51bWJl
-ciBvZiB0aW1lcyBhbiBleGVjdXRpb24gcGF0aCBjcm9zc2VzIGEgc2VjdXJpdHkNCj4gPiA+IGJv
-dW5kYXJ5Lg0KPiA+ID4gKw0KPiA+ID4gK1dpdGggdmVjdG9yaXplZCBzY3J1YiwgdXNlcnNwYWNl
-IHB1c2hlcyB0byB0aGUga2VybmVsIHRoZQ0KPiA+ID4gaWRlbnRpdHkNCj4gPiA+IG9mIGENCj4g
-PiA+ICtmaWxlc3lzdGVtIG9iamVjdCwgYSBsaXN0IG9mIHNjcnViIHR5cGVzIHRvIHJ1biBhZ2Fp
-bnN0IHRoYXQNCj4gPiA+IG9iamVjdCwNCj4gPiA+IGFuZCBhDQo+ID4gPiArc2ltcGxlIHJlcHJl
-c2VudGF0aW9uIG9mIHRoZSBkYXRhIGRlcGVuZGVuY2llcyBiZXR3ZWVuIHRoZQ0KPiA+ID4gc2Vs
-ZWN0ZWQNCj4gPiA+IHNjcnViDQo+ID4gPiArdHlwZXMuDQo+ID4gPiArVGhlIGtlcm5lbCBleGVj
-dXRlcyBhcyBtdWNoIG9mIHRoZSBjYWxsZXIncyBwbGFuIGFzIGl0IGNhbiB1bnRpbA0KPiA+ID4g
-aXQNCj4gPiA+IGhpdHMgYQ0KPiA+ID4gK2RlcGVuZGVuY3kgdGhhdCBjYW5ub3QgYmUgc2F0aXNm
-aWVkIGR1ZSB0byBhIGNvcnJ1cHRpb24sIGFuZA0KPiA+ID4gdGVsbHMNCj4gPiA+IHVzZXJzcGFj
-ZQ0KPiA+ID4gK2hvdyBtdWNoIHdhcyBhY2NvbXBsaXNoZWQuDQo+ID4gPiArSXQgaXMgaG9wZWQg
-dGhhdCBgYGlvX3VyaW5nYGAgd2lsbCBwaWNrIHVwIGVub3VnaCBvZiB0aGlzDQo+ID4gPiBmdW5j
-dGlvbmFsaXR5IHRoYXQNCj4gPiA+ICtvbmxpbmUgZnNjayBjYW4gdXNlIHRoYXQgaW5zdGVhZCBv
-ZiBhZGRpbmcgYSBzZXBhcmF0ZSB2ZWN0b3JlZA0KPiA+ID4gc2NydWINCj4gPiA+IHN5c3RlbQ0K
-PiA+ID4gK2NhbGwgdG8gWEZTLg0KPiA+ID4gKw0KPiA+ID4gK1RoZSByZWxldmFudCBwYXRjaHNl
-dHMgYXJlIHRoZQ0KPiA+ID4gK2BrZXJuZWwgdmVjdG9yaXplZCBzY3J1Yg0KPiA+ID4gKzwNCj4g
-PiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2Rqd29u
-Zy94ZnMtbGludXguZ2l0Lw0KPiA+ID4gbG9nLz9oPXZlY3Rvcml6ZWQtc2NydWI+YF8NCj4gPiA+
-ICthbmQNCj4gPiA+ICtgdXNlcnNwYWNlIHZlY3Rvcml6ZWQgc2NydWINCj4gPiA+ICs8DQo+ID4g
-PiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9kandvbmcv
-eGZzcHJvZ3MtZGV2LmcNCj4gPiA+IGl0L2xvZy8/aD12ZWN0b3JpemVkLXNjcnViPmBfDQo+ID4g
-PiArc2VyaWVzLg0KPiA+ID4gKw0KPiA+ID4gK1F1YWxpdHkgb2YgU2VydmljZSBUYXJnZXRzIGZv
-ciBTY3J1Yg0KPiA+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+
-ID4gKw0KPiA+ID4gK09uZSBzZXJpb3VzIHNob3J0Y29taW5nIG9mIHRoZSBvbmxpbmUgZnNjayBj
-b2RlIGlzIHRoYXQgdGhlDQo+ID4gPiBhbW91bnQNCj4gPiA+IG9mIHRpbWUgdGhhdA0KPiA+ID4g
-K2l0IGNhbiBzcGVuZCBpbiB0aGUga2VybmVsIGhvbGRpbmcgcmVzb3VyY2UgbG9ja3MgaXMgYmFz
-aWNhbGx5DQo+ID4gPiB1bmJvdW5kZWQuDQo+ID4gPiArVXNlcnNwYWNlIGlzIGFsbG93ZWQgdG8g
-c2VuZCBhIGZhdGFsIHNpZ25hbCB0byB0aGUgcHJvY2VzcyB3aGljaA0KPiA+ID4gd2lsbCBjYXVz
-ZQ0KPiA+ID4gK2BgeGZzX3NjcnViYGAgdG8gZXhpdCB3aGVuIGl0IHJlYWNoZXMgYSBnb29kIHN0
-b3BwaW5nIHBvaW50LCBidXQNCj4gPiA+IHRoZXJlJ3Mgbm8gd2F5DQo+ID4gPiArZm9yIHVzZXJz
-cGFjZSB0byBwcm92aWRlIGEgdGltZSBidWRnZXQgdG8gdGhlIGtlcm5lbC4NCj4gPiA+ICtHaXZl
-biB0aGF0IHRoZSBzY3J1YiBjb2RlYmFzZSBoYXMgaGVscGVycyB0byBkZXRlY3QgZmF0YWwNCj4g
-PiA+IHNpZ25hbHMsDQo+ID4gPiBpdCBzaG91bGRuJ3QNCj4gPiA+ICtiZSB0b28gbXVjaCB3b3Jr
-IHRvIGFsbG93IHVzZXJzcGFjZSB0byBzcGVjaWZ5IGEgdGltZW91dCBmb3IgYQ0KPiA+ID4gc2Ny
-dWIvcmVwYWlyDQo+ID4gPiArb3BlcmF0aW9uIGFuZCBhYm9ydCB0aGUgb3BlcmF0aW9uIGlmIGl0
-IGV4Y2VlZHMgYnVkZ2V0Lg0KPiA+ID4gK0hvd2V2ZXIsIG1vc3QgcmVwYWlyIGZ1bmN0aW9ucyBo
-YXZlIHRoZSBwcm9wZXJ0eSB0aGF0IG9uY2UgdGhleQ0KPiA+ID4gYmVnaW4gdG8gdG91Y2gNCj4g
-PiA+ICtvbmRpc2sgbWV0YWRhdGEsIHRoZSBvcGVyYXRpb24gY2Fubm90IGJlIGNhbmNlbGxlZCBj
-bGVhbmx5LA0KPiA+ID4gYWZ0ZXINCj4gPiA+IHdoaWNoIGEgUW9TDQo+ID4gPiArdGltZW91dCBp
-cyBubyBsb25nZXIgdXNlZnVsLg0KPiA+ID4gKw0KPiA+ID4gK0RlZnJhZ21lbnRpbmcgRnJlZSBT
-cGFjZQ0KPiA+ID4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gKw0KPiA+ID4gK092
-ZXIgdGhlIHllYXJzLCBtYW55IFhGUyB1c2VycyBoYXZlIHJlcXVlc3RlZCB0aGUgY3JlYXRpb24g
-b2YgYQ0KPiA+ID4gcHJvZ3JhbSB0bw0KPiA+ID4gK2NsZWFyIGEgcG9ydGlvbiBvZiB0aGUgcGh5
-c2ljYWwgc3RvcmFnZSB1bmRlcmx5aW5nIGEgZmlsZXN5c3RlbQ0KPiA+ID4gc28NCj4gPiA+IHRo
-YXQgaXQNCj4gPiA+ICtiZWNvbWVzIGEgY29udGlndW91cyBjaHVuayBvZiBmcmVlIHNwYWNlLg0K
-PiA+ID4gK0NhbGwgdGhpcyBmcmVlIHNwYWNlIGRlZnJhZ21lbnRlciBgYGNsZWFyc3BhY2VgYCBm
-b3Igc2hvcnQuDQo+ID4gPiArDQo+ID4gPiArVGhlIGZpcnN0IHBpZWNlIHRoZSBgYGNsZWFyc3Bh
-Y2VgYCBwcm9ncmFtIG5lZWRzIGlzIHRoZSBhYmlsaXR5DQo+ID4gPiB0bw0KPiA+ID4gcmVhZCB0
-aGUNCj4gPiA+ICtyZXZlcnNlIG1hcHBpbmcgaW5kZXggZnJvbSB1c2Vyc3BhY2UuDQo+ID4gPiAr
-VGhpcyBhbHJlYWR5IGV4aXN0cyBpbiB0aGUgZm9ybSBvZiB0aGUgYGBGU19JT0NfR0VURlNNQVBg
-YA0KPiA+ID4gaW9jdGwuDQo+ID4gPiArVGhlIHNlY29uZCBwaWVjZSBpdCBuZWVkcyBpcyBhIG5l
-dyBmYWxsb2NhdGUgbW9kZQ0KPiA+ID4gKyhgYEZBTExPQ19GTF9NQVBfRlJFRV9TUEFDRWBgKSB0
-aGF0IGFsbG9jYXRlcyB0aGUgZnJlZSBzcGFjZSBpbg0KPiA+ID4gYQ0KPiA+ID4gcmVnaW9uIGFu
-ZA0KPiA+ID4gK21hcHMgaXQgdG8gYSBmaWxlLg0KPiA+ID4gK0NhbGwgdGhpcyBmaWxlIHRoZSAi
-c3BhY2UgY29sbGVjdG9yIiBmaWxlLg0KPiA+ID4gK1RoZSB0aGlyZCBwaWVjZSBpcyB0aGUgYWJp
-bGl0eSB0byBmb3JjZSBhbiBvbmxpbmUgcmVwYWlyLg0KPiA+ID4gKw0KPiA+ID4gK1RvIGNsZWFy
-IGFsbCB0aGUgbWV0YWRhdGEgb3V0IG9mIGEgcG9ydGlvbiBvZiBwaHlzaWNhbCBzdG9yYWdlLA0K
-PiA+ID4gY2xlYXJzcGFjZQ0KPiA+ID4gK3VzZXMgdGhlIG5ldyBmYWxsb2NhdGUgbWFwLWZyZWVz
-cGFjZSBjYWxsIHRvIG1hcCBhbnkgZnJlZSBzcGFjZQ0KPiA+ID4gaW4NCj4gPiA+IHRoYXQgcmVn
-aW9uDQo+ID4gPiArdG8gdGhlIHNwYWNlIGNvbGxlY3RvciBmaWxlLg0KPiA+ID4gK05leHQsIGNs
-ZWFyc3BhY2UgZmluZHMgYWxsIG1ldGFkYXRhIGJsb2NrcyBpbiB0aGF0IHJlZ2lvbiBieSB3YXkN
-Cj4gPiA+IG9mDQo+ID4gPiArYGBHRVRGU01BUGBgIGFuZCBpc3N1ZXMgZm9yY2VkIHJlcGFpciBy
-ZXF1ZXN0cyBvbiB0aGUgZGF0YQ0KPiA+ID4gc3RydWN0dXJlLg0KPiA+ID4gK1RoaXMgb2Z0ZW4g
-cmVzdWx0cyBpbiB0aGUgbWV0YWRhdGEgYmVpbmcgcmVidWlsdCBzb21ld2hlcmUgdGhhdA0KPiA+
-ID4gaXMNCj4gPiA+IG5vdCBiZWluZw0KPiA+ID4gK2NsZWFyZWQuDQo+ID4gPiArQWZ0ZXIgZWFj
-aCByZWxvY2F0aW9uLCBjbGVhcnNwYWNlIGNhbGxzIHRoZSAibWFwIGZyZWUgc3BhY2UiDQo+ID4g
-PiBmdW5jdGlvbiBhZ2FpbiB0bw0KPiA+ID4gK2NvbGxlY3QgYW55IG5ld2x5IGZyZWVkIHNwYWNl
-IGluIHRoZSByZWdpb24gYmVpbmcgY2xlYXJlZC4NCj4gPiA+ICsNCj4gPiA+ICtUbyBjbGVhciBh
-bGwgdGhlIGZpbGUgZGF0YSBvdXQgb2YgYSBwb3J0aW9uIG9mIHRoZSBwaHlzaWNhbA0KPiA+ID4g
-c3RvcmFnZSwNCj4gPiA+IGNsZWFyc3BhY2UNCj4gPiA+ICt1c2VzIHRoZSBGU01BUCBpbmZvcm1h
-dGlvbiB0byBmaW5kIHJlbGV2YW50IGZpbGUgZGF0YSBibG9ja3MuDQo+ID4gPiArSGF2aW5nIGlk
-ZW50aWZpZWQgYSBnb29kIHRhcmdldCwgaXQgdXNlcyB0aGUgYGBGSUNMT05FUkFOR0VgYA0KPiA+
-ID4gY2FsbA0KPiA+ID4gb24gdGhhdCBwYXJ0DQo+ID4gPiArb2YgdGhlIGZpbGUgdG8gdHJ5IHRv
-IHNoYXJlIHRoZSBwaHlzaWNhbCBzcGFjZSB3aXRoIGEgZHVtbXkNCj4gPiA+IGZpbGUuDQo+ID4g
-PiArQ2xvbmluZyB0aGUgZXh0ZW50IG1lYW5zIHRoYXQgdGhlIG9yaWdpbmFsIG93bmVycyBjYW5u
-b3QNCj4gPiA+IG92ZXJ3cml0ZQ0KPiA+ID4gdGhlDQo+ID4gPiArY29udGVudHM7IGFueSBjaGFu
-Z2VzIHdpbGwgYmUgd3JpdHRlbiBzb21ld2hlcmUgZWxzZSB2aWEgY29weS0NCj4gPiA+IG9uLQ0K
-PiA+ID4gd3JpdGUuDQo+ID4gPiArQ2xlYXJzcGFjZSBtYWtlcyBpdHMgb3duIGNvcHkgb2YgdGhl
-IGZyb3plbiBleHRlbnQgaW4gYW4gYXJlYQ0KPiA+ID4gdGhhdA0KPiA+ID4gaXMgbm90IGJlaW5n
-DQo+ID4gPiArY2xlYXJlZCwgYW5kIHVzZXMgYGBGSUVERVVQUkFOR0VgYCAob3IgdGhlIDpyZWY6
-YGF0b21pYyBleHRlbnQNCj4gPiA+IHN3YXANCj4gPiA+ICs8c3dhcGV4dF9pZl91bmNoYW5nZWQ+
-YCBmZWF0dXJlKSB0byBjaGFuZ2UgdGhlIHRhcmdldCBmaWxlJ3MNCj4gPiA+IGRhdGENCj4gPiA+
-IGV4dGVudA0KPiA+ID4gK21hcHBpbmcgYXdheSBmcm9tIHRoZSBhcmVhIGJlaW5nIGNsZWFyZWQu
-DQo+ID4gPiArV2hlbiBhbGwgb3RoZXIgbWFwcGluZ3MgaGF2ZSBiZWVuIG1vdmVkLCBjbGVhcnNw
-YWNlIHJlZmxpbmtzIHRoZQ0KPiA+ID4gc3BhY2UgaW50byB0aGUNCj4gPiA+ICtzcGFjZSBjb2xs
-ZWN0b3IgZmlsZSBzbyB0aGF0IGl0IGJlY29tZXMgdW5hdmFpbGFibGUuDQo+ID4gPiArDQo+ID4g
-PiArVGhlcmUgYXJlIGZ1cnRoZXIgb3B0aW1pemF0aW9ucyB0aGF0IGNvdWxkIGFwcGx5IHRvIHRo
-ZSBhYm92ZQ0KPiA+ID4gYWxnb3JpdGhtLg0KPiA+ID4gK1RvIGNsZWFyIGEgcGllY2Ugb2YgcGh5
-c2ljYWwgc3RvcmFnZSB0aGF0IGhhcyBhIGhpZ2ggc2hhcmluZw0KPiA+ID4gZmFjdG9yLA0KPiA+
-ID4gaXQgaXMNCj4gPiA+ICtzdHJvbmdseSBkZXNpcmFibGUgdG8gcmV0YWluIHRoaXMgc2hhcmlu
-ZyBmYWN0b3IuDQo+ID4gPiArSW4gZmFjdCwgdGhlc2UgZXh0ZW50cyBzaG91bGQgYmUgbW92ZWQg
-Zmlyc3QgdG8gbWF4aW1pemUgc2hhcmluZw0KPiA+ID4gZmFjdG9yIGFmdGVyDQo+ID4gPiArdGhl
-IG9wZXJhdGlvbiBjb21wbGV0ZXMuDQo+ID4gPiArVG8gbWFrZSB0aGlzIHdvcmsgc21vb3RobHks
-IGNsZWFyc3BhY2UgbmVlZHMgYSBuZXcgaW9jdGwNCj4gPiA+ICsoYGBGU19JT0NfR0VUUkVGQ09V
-TlRTYGApIHRvIHJlcG9ydCByZWZlcmVuY2UgY291bnQgaW5mb3JtYXRpb24NCj4gPiA+IHRvDQo+
-ID4gPiB1c2Vyc3BhY2UuDQo+ID4gPiArV2l0aCB0aGUgcmVmY291bnQgaW5mb3JtYXRpb24gZXhw
-b3NlZCwgY2xlYXJzcGFjZSBjYW4gcXVpY2tseQ0KPiA+ID4gZmluZA0KPiA+ID4gdGhlIGxvbmdl
-c3QsDQo+ID4gPiArbW9zdCBzaGFyZWQgZGF0YSBleHRlbnRzIGluIHRoZSBmaWxlc3lzdGVtLCBh
-bmQgdGFyZ2V0IHRoZW0NCj4gPiA+IGZpcnN0Lg0KPiA+ID4gKw0KPiA+IA0KPiA+IA0KPiA+ID4g
-KyoqUXVlc3Rpb24qKjogSG93IG1pZ2h0IHRoZSBmaWxlc3lzdGVtIG1vdmUgaW5vZGUgY2h1bmtz
-Pw0KPiA+ID4gKw0KPiA+ID4gKypBbnN3ZXIqOsKgDQo+ID4gIkluIG9yZGVyIHRvIG1vdmUgaW5v
-ZGUgY2h1bmtzLi4iDQo+IA0KPiBEb25lLg0KPiANCj4gPiA+IERhdmUgQ2hpbm5lciBoYXMgYSBw
-cm90b3R5cGUgdGhhdCBjcmVhdGVzIGEgbmV3IGZpbGUgd2l0aCB0aGUgb2xkDQo+ID4gPiArY29u
-dGVudHMgYW5kIHRoZW4gbG9ja2xlc3NseSBydW5zIGFyb3VuZCB0aGUgZmlsZXN5c3RlbSB1cGRh
-dGluZw0KPiA+ID4gZGlyZWN0b3J5DQo+ID4gPiArZW50cmllcy4NCj4gPiA+ICtUaGUgb3BlcmF0
-aW9uIGNhbm5vdCBjb21wbGV0ZSBpZiB0aGUgZmlsZXN5c3RlbSBnb2VzIGRvd24uDQo+ID4gPiAr
-VGhhdCBwcm9ibGVtIGlzbid0IHRvdGFsbHkgaW5zdXJtb3VudGFibGU6IGNyZWF0ZSBhbiBpbm9k
-ZQ0KPiA+ID4gcmVtYXBwaW5nDQo+ID4gPiB0YWJsZQ0KPiA+ID4gK2hpZGRlbiBiZWhpbmQgYSBq
-dW1wIGxhYmVsLCBhbmQgYSBsb2cgaXRlbSB0aGF0IHRyYWNrcyB0aGUNCj4gPiA+IGtlcm5lbA0K
-PiA+ID4gd2Fsa2luZyB0aGUNCj4gPiA+ICtmaWxlc3lzdGVtIHRvIHVwZGF0ZSBkaXJlY3Rvcnkg
-ZW50cmllcy4NCj4gPiA+ICtUaGUgdHJvdWJsZSBpcywgdGhlIGtlcm5lbCBjYW4ndCBkbyBhbnl0
-aGluZyBhYm91dCBvcGVuIGZpbGVzLA0KPiA+ID4gc2luY2UNCj4gPiA+IGl0IGNhbm5vdA0KPiA+
-ID4gK3Jldm9rZSB0aGVtLg0KPiA+ID4gKw0KPiA+IA0KPiA+IA0KPiA+ID4gKyoqUXVlc3Rpb24q
-KjogQ2FuIHN0YXRpYyBrZXlzIGJlIHVzZWQgdG8gYWRkIGEgcmV2b2tlIGJhaWxvdXQNCj4gPiA+
-IHJldHVybg0KPiA+ID4gdG8NCj4gPiA+ICsqZXZlcnkqIGNvZGUgcGF0aCBjb21pbmcgaW4gZnJv
-bSB1c2Vyc3BhY2U/DQo+ID4gPiArDQo+ID4gPiArKkFuc3dlcio6IEluIHByaW5jaXBsZSwgeWVz
-Lg0KPiA+ID4gK1RoaXPCoA0KPiA+IA0KPiA+ICJJdCBpcyBhbHNvIHBvc3NpYmxlIHRvIHVzZSBz
-dGF0aWMga2V5cyB0byBhZGQgYSByZXZva2UgYmFpbG91dA0KPiA+IHJldHVybg0KPiA+IHRvIGVh
-Y2ggY29kZSBwYXRoIGNvbWluZyBpbiBmcm9tIHVzZXJzcGFjZS7CoCBUaGlzLi4uIg0KPiANCj4g
-SSB0aGluayB0aGlzIGNoYW5nZSB3b3VsZCBtYWtlIHRoZSBhbnN3ZXIgcmVkdW5kYW50IHdpdGgg
-dGhlDQo+IHF1ZXN0aW9uLg0KU29ycnksIEkgbWVhbnQgZm9yIHRoZSBxdW90YXRpb25zIHRvIHJl
-cGxhY2UgZXZlcnl0aGluZyBiZXR3ZWVuIHRoZQ0KbGluZSBicmVha3MuICBTbyBmcm9tIFEgdGhy
-b3VnaCB0aGUgYW5zd2VyLCBqdXN0IHRvIGJyZWFrIG91dCBvZiB0aGUNClEmQSBmb3JtYXQuDQoN
-Ckkgc29ydCBvZiBmZWVsIGxpa2UgaWYgYSBkb2N1bWVudCBsZWF2ZXMgdGhlIHJlYWRlciB3aXRo
-IHF1ZXN0aW9ucyB0aGF0DQp0aGV5IGRpZG4ndCBoYXZlIGJlZm9yZSB0aGV5IHN0YXJ0ZWQgcmVh
-ZGluZywgdGhlbiBpZGVhbGx5IHdlIHNob3VsZA0Kc2ltcGx5IGp1c3QgaW5jb3Jwb3JhdGUgdGhl
-IGFuc3dlciBpbiB0aGUgZG9jdW1lbnQuICBKdXN0IG1ha2VzIHRoZQ0KcmVhZCBlYXNpZXIgaW1o
-by4NCg0KPiANCj4gIkNhbiBzdGF0aWMga2V5cyBiZSB1c2VkIHRvIG1pbmltaXplIHRoZSBydW50
-aW1lIGNvc3Qgb2Ygc3VwcG9ydGluZw0KPiBgYHJldm9rZSgpYGAgb24gWEZTIGZpbGVzPyINCj4g
-DQo+ICJZZXMuwqAgVW50aWwgdGhlIGZpcnN0IHJldm9jYXRpb24sIHRoZSBiYWlsb3V0IGNvZGUg
-bmVlZCBub3QgYmUgaW4NCj4gdGhlDQo+IGNhbGwgcGF0aCBhdCBhbGwuIg0KDQpUaGF0J3MgYW4g
-aW1wbGllZCBRJkEgZm9ybWF0LCBidXQgSSBzdXBwb3NlIGl0J3Mgbm90IGEgYmlnIGRlYWwgZWl0
-aGVyDQp3YXkgdGhvdWdoLg0KDQo+IA0KPiA+ID4gd291bGQgZWxpbWluYXRlIHRoZSBvdmVyaGVh
-ZCBvZiB0aGUgY2hlY2sgdW50aWwgYSByZXZvY2F0aW9uDQo+ID4gPiBoYXBwZW5zLg0KPiA+ID4g
-K0l0J3Mgbm90IGNsZWFyIHdoYXQgd2UgZG8gdG8gYSByZXZva2VkIGZpbGUgYWZ0ZXIgYWxsIHRo
-ZQ0KPiA+ID4gY2FsbGVycw0KPiA+ID4gYXJlIGZpbmlzaGVkDQo+ID4gPiArd2l0aCBpdCwgaG93
-ZXZlci4NCj4gPiA+ICsNCj4gPiA+ICtUaGUgcmVsZXZhbnQgcGF0Y2hzZXRzIGFyZSB0aGUNCj4g
-PiA+ICtga2VybmVsIGZyZWVzcGFjZSBkZWZyYWcNCj4gPiA+ICs8DQo+ID4gPiBodHRwczovL2dp
-dC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9kandvbmcveGZzLWxpbnV4Lmdp
-dC8NCj4gPiA+IGxvZy8/aD1kZWZyYWctZnJlZXNwYWNlPmBfDQo+ID4gPiArYW5kDQo+ID4gPiAr
-YHVzZXJzcGFjZSBmcmVlc3BhY2UgZGVmcmFnDQo+ID4gPiArPA0KPiA+ID4gaHR0cHM6Ly9naXQu
-a2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZGp3b25nL3hmc3Byb2dzLWRldi5n
-DQo+ID4gPiBpdC9sb2cvP2g9ZGVmcmFnLWZyZWVzcGFjZT5gXw0KPiA+ID4gK3Nlcmllcy4NCj4g
-PiANCj4gPiBJIGd1ZXNzIHNpbmNlIHRoZXkncmUganVzdCBmdXR1cmUgaWRlYXMganVzdCBsaWdo
-dCBkb2N1bWVudGF0aW9uIGlzDQo+ID4gZmluZS7CoCBPdGhlciB0aGFuIGNsZWFuaW5nIG91dCB0
-aGUgUSAmIEEncywgSSB0aGluayBpdCBsb29rcyBwcmV0dHkNCj4gPiBnb29kLg0KPiANCj4gT2su
-wqAgVGhhbmsgeW91IHgxMDAwMDAwMDAgZm9yIGJlaW5nIHRoZSBmaXJzdCBwZXJzb24gdG8gcHVi
-bGljbHkNCj4gY29tbWVudA0KPiBvbiB0aGUgZW50aXJlIGRvY3VtZW50IQ0KDQpTdXJlLCBnbGFk
-IHRvIGhlbHAhICA6LSkNCg0KQWxsaXNvbg0KDQo+IA0KPiAtLUQNCj4gDQo+ID4gQWxsaXNvbg0K
-PiA+IA0KPiA+ID4gKw0KPiA+ID4gK1Nocmlua2luZyBGaWxlc3lzdGVtcw0KPiA+ID4gKy0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gKw0KPiA+ID4gK1JlbW92aW5nIHRoZSBlbmQgb2YgdGhl
-IGZpbGVzeXN0ZW0gb3VnaHQgdG8gYmUgYSBzaW1wbGUgbWF0dGVyDQo+ID4gPiBvZg0KPiA+ID4g
-ZXZhY3VhdGluZw0KPiA+ID4gK3RoZSBkYXRhIGFuZCBtZXRhZGF0YSBhdCB0aGUgZW5kIG9mIHRo
-ZSBmaWxlc3lzdGVtLCBhbmQgaGFuZGluZw0KPiA+ID4gdGhlDQo+ID4gPiBmcmVlZCBzcGFjZQ0K
-PiA+ID4gK3RvIHRoZSBzaHJpbmsgY29kZS4NCj4gPiA+ICtUaGF0IHJlcXVpcmVzIGFuIGV2YWN1
-YXRpb24gb2YgdGhlIHNwYWNlIGF0IGVuZCBvZiB0aGUNCj4gPiA+IGZpbGVzeXN0ZW0sDQo+ID4g
-PiB3aGljaCBpcyBhDQo+ID4gPiArdXNlIG9mIGZyZWUgc3BhY2UgZGVmcmFnbWVudGF0aW9uIQ0K
-PiA+ID4gDQo+ID4gDQoNCg==
+On Fri, Mar 03, 2023 at 11:50:57PM +0000, Allison Henderson wrote:
+> On Wed, 2023-03-01 at 16:14 -0800, Darrick J. Wong wrote:
+> > On Sat, Feb 25, 2023 at 07:33:23AM +0000, Allison Henderson wrote:
+> > > On Thu, 2023-02-02 at 18:12 -0800, Darrick J. Wong wrote:
+> > > > From: Darrick J. Wong <djwong@kernel.org>
+> > > > 
+> > > > Directory tree repairs are the least complete part of online
+> > > > fsck,
+> > > > due
+> > > > to the lack of directory parent pointers.  However, even without
+> > > > that
+> > > > feature, we can still make some corrections to the directory tree
+> > > > --
+> > > > we
+> > > > can salvage as many directory entries as we can from a damaged
+> > > > directory, and we can reattach orphaned inodes to the lost+found,
+> > > > just
+> > > > as xfs_repair does now.
+> > > > 
+> > > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > > > ---
+> > > > v24.2: updated with my latest thoughts about how to use parent
+> > > > pointers
+> > > > v24.3: updated to reflect the online fsck code I built for parent
+> > > > pointers
+> > > > ---
+> > > >  .../filesystems/xfs-online-fsck-design.rst         |  410
+> > > > ++++++++++++++++++++
+> > > >  1 file changed, 410 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/filesystems/xfs-online-fsck-design.rst
+> > > > b/Documentation/filesystems/xfs-online-fsck-design.rst
+> > > > index af7755fe0107..51d040e4a2d0 100644
+> > > > --- a/Documentation/filesystems/xfs-online-fsck-design.rst
+> > > > +++ b/Documentation/filesystems/xfs-online-fsck-design.rst
+> > > > @@ -4359,3 +4359,413 @@ The proposed patchset is the
+> > > >  `extended attribute repair
+> > > >  <
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/
+> > > > log/?h=repair-xattrs>`_
+> > > >  series.
+> > > > +
+> > > > +Fixing Directories
+> > > > +------------------
+> > > > +
+> > > > +Fixing directories is difficult with currently available
+> > > > filesystem
+> > > > features,
+> > > > +since directory entries are not redundant.
+> > > > +The offline repair tool scans all inodes to find files with
+> > > > nonzero
+> > > > link count,
+> > > > +and then it scans all directories to establish parentage of
+> > > > those
+> > > > linked files.
+> > > > +Damaged files and directories are zapped, and files with no
+> > > > parent
+> > > > are
+> > > > +moved to the ``/lost+found`` directory.
+> > > > +It does not try to salvage anything.
+> > > > +
+> > > > +The best that online repair can do at this time is to read
+> > > > directory
+> > > > data
+> > > > +blocks and salvage any dirents that look plausible, correct link
+> > > > counts, and
+> > > > +move orphans back into the directory tree.
+> > > > +The salvage process is discussed in the case study at the end of
+> > > > this section.
+> > > > +The :ref:`file link count fsck <nlinks>` code takes care of
+> > > > fixing
+> > > > link counts
+> > > > +and moving orphans to the ``/lost+found`` directory.
+> > > > +
+> > > > +Case Study: Salvaging Directories
+> > > > +`````````````````````````````````
+> > > > +
+> > > > +Unlike extended attributes, directory blocks are all the same
+> > > > size,
+> > > > so
+> > > > +salvaging directories is straightforward:
+> > > > +
+> > > > +1. Find the parent of the directory.
+> > > > +   If the dotdot entry is not unreadable, try to confirm that
+> > > > the
+> > > > alleged
+> > > > +   parent has a child entry pointing back to the directory being
+> > > > repaired.
+> > > > +   Otherwise, walk the filesystem to find it.
+> > > > +
+> > > > +2. Walk the first partition of data fork of the directory to
+> > > > find
+> > > > the directory
+> > > > +   entry data blocks.
+> > > > +   When one is found,
+> > > > +
+> > > > +   a. Walk the directory data block to find candidate entries.
+> > > > +      When an entry is found:
+> > > > +
+> > > > +      i. Check the name for problems, and ignore the name if
+> > > > there
+> > > > are.
+> > > > +
+> > > > +      ii. Retrieve the inumber and grab the inode.
+> > > > +          If that succeeds, add the name, inode number, and file
+> > > > type to the
+> > > > +          staging xfarray and xblob.
+> > > > +
+> > > > +3. If the memory usage of the xfarray and xfblob exceed a
+> > > > certain
+> > > > amount of
+> > > > +   memory or there are no more directory data blocks to examine,
+> > > > unlock the
+> > > > +   directory and add the staged dirents into the temporary
+> > > > directory.
+> > > > +   Truncate the staging files.
+> > > > +
+> > > > +4. Use atomic extent swapping to exchange the new and old
+> > > > directory
+> > > > structures.
+> > > > +   The old directory blocks are now attached to the temporary
+> > > > file.
+> > > > +
+> > > > +5. Reap the temporary file.
+> > > > +
+> > > 
+> > > 
+> > > 
+> > > > +**Future Work Question**: Should repair revalidate the dentry
+> > > > cache
+> > > > when
+> > > > +rebuilding a directory?
+> > > > +
+> > > > +*Answer*: Yes, though the current dentry cache code doesn't
+> > > > provide
+> > > > a means
+> > > > +to walk every dentry of a specific directory.
+> > > > +If the cache contains an entry that the salvaging code does not
+> > > > find, the
+> > > > +repair cannot proceed.
+> > > > +
+> > > > +**Future Work Question**: Can the dentry cache know about a
+> > > > directory entry
+> > > > +that cannot be salvaged?
+> > > > +
+> > > > +*Answer*: In theory, the dentry cache should be a subset of the
+> > > > directory
+> > > > +entries on disk because there's no way to load a dentry without
+> > > > having
+> > > > +something to read in the directory.
+> > > > +However, it is possible for a coherency problem to be introduced
+> > > > if
+> > > > the ondisk
+> > > > +structures becomes corrupt *after* the cache loads.
+> > > > +In theory it is necessary to scan all dentry cache entries for a
+> > > > directory to
+> > > > +ensure that one of the following apply:
+> > > 
+> > > "Currently the dentry cache code doesn't provide a means to walk
+> > > every
+> > > dentry of a specific directory.  This makes validation of the
+> > > rebuilt
+> > > directory difficult, and it is possible that an ondisk structure to
+> > > become corrupt *after* the cache loads.  Walking the dentry cache
+> > > is
+> > > currently being considered as a future improvement.  This will also
+> > > enable the ability to report which entries were not salvageable
+> > > since
+> > > these will be the subset of entries that are absent after the walk.
+> > > This improvement will ensure that one of the following apply:"
+> > 
+> > The thing is -- I'm not considering restructuring the dentry cache. 
+> > The
+> > cache key is a one-way hash function of the parent_ino and the dirent
+> > name, and I can't even imagine how one would support using that for
+> > arbitrary lookups or walks.
+> > 
+> > This is the giant hole in all of the online repair code -- the design
+> > of
+> > the dentry cache is such that we can't invalidate the entire cache. 
+> > We
+> > also cannot walk it to perform targeted invalidation of just the
+> > pieces
+> > we want.  If after a repair the cache contains a dentry that isn't
+> > backed by an actual ondisk directory entry ... kaboom.
+> > 
+> > The one thing I'll grant you is that I don't think it's likely that
+> > the
+> > dentry cache will get populated with some information and later the
+> > ondisk directory bitrots undetectably.
+> > 
+> > > ?
+> > > 
+> > > I just think it reads cleaner.  I realize this is an area that
+> > > still
+> > > sort of in flux, but definitely before we call the document done we
+> > > should probably strip out the Q's and just document the A's.  If
+> > > someone re-raises the Q's we can always refer to the archives and
+> > > then
+> > > have the discussion on the mailing list.  But I think the document
+> > > should maintain the goal of making clear whatever the current plan
+> > > is
+> > > just to keep it reading cleanly. 
+> > 
+> > Yeah, I'll shorten this section so that it only mentions these things
+> > once and clearly states that I have no solution.
+> I see, yes I got the impression from the original phrasing that is was
+> an intended "todo", so clarifying that its not should help. 
+
+Ahh, ok. :)
+
+> > 
+> > > > +
+> > > > +1. The cached dentry reflects an ondisk dirent in the new
+> > > > directory.
+> > > > +
+> > > > +2. The cached dentry no longer has a corresponding ondisk dirent
+> > > > in
+> > > > the new
+> > > > +   directory and the dentry can be purged from the cache.
+> > > > +
+> > > > +3. The cached dentry no longer has an ondisk dirent but the
+> > > > dentry
+> > > > cannot be
+> > > > +   purged.
+> > > 
+> > > > +   This is bad.
+> > > These entries are irrecoverable, but can now be reported.
+> > > 
+> > > 
+> > > 
+> > > > +
+> > > > +As mentioned above, the dentry cache does not have a means to
+> > > > walk
+> > > > all the
+> > > > +dentries with a particular directory as a parent.
+> > > > +This makes detecting situations #2 and #3 impossible, and
+> > > > remains an
+> > > > +interesting question for research.
+> > > I think the above paraphrase makes this last bit redundant.
+> > 
+> > N
+> Not sure if this is "no" or an unfinished thought?
+
+N[ot sure either.] :(
+
+N[ot remembering what I was thinking here.]
+
+N[ever mind].
+
+<giggle>
+
+> > 
+> > > > +
+> > > > +The proposed patchset is the
+> > > > +`directory repair
+> > > > +<
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/
+> > > > log/?h=repair-dirs>`_
+> > > > +series.
+> > > > +
+> > > > +Parent Pointers
+> > > > +```````````````
+> > > > +
+> > > "Generally speaking, a parent pointer is any kind of metadata that
+> > > enables an inode to locate its parent with out having to traverse
+> > > the
+> > > directory tree from the root."
+> > > 
+> > > > +The lack of secondary directory metadata hinders directory tree
+> > > "Without them, the lack of secondary..." 
+> > 
+> > Ok.  I want to reword the first sentence slightly, yielding this:
+> > 
+> > "A parent pointer is a piece of file metadata that enables a user to
+> > locate the file's parent directory without having to traverse the
+> > directory tree from the root.  Without them, reconstruction of
+> > directory
+> > trees is hindered in much the same way that the historic lack of
+> > reverse
+> > space mapping information once hindered reconstruction of filesystem
+> > space metadata.  The parent pointer feature, however, makes total
+> > directory reconstruction
+> > possible."
+> 
+> Alrighty, that sounds good
+> 
+> > 
+> > But that's a much better start to the paragraph, thank you.
+> > 
+> > > > reconstruction
+> > > > +in much the same way that the historic lack of reverse space
+> > > > mapping
+> > > > +information once hindered reconstruction of filesystem space
+> > > > metadata.
+> > > > +The parent pointer feature, however, makes total directory
+> > > > reconstruction
+> > > > +possible.
+> > > > +
+> > > 
+> > > History side bar the below chunk...
+> > 
+> > Done.
+> > 
+> > > > +Directory parent pointers were first proposed as an XFS feature
+> > > > more
+> > > > than a
+> > > > +decade ago by SGI.
+> > > > +Each link from a parent directory to a child file is mirrored
+> > > > with
+> > > > an extended
+> > > > +attribute in the child that could be used to identify the parent
+> > > > directory.
+> > > > +Unfortunately, this early implementation had major shortcomings
+> > > > and
+> > > > was never
+> > > > +merged into Linux XFS:
+> > > > +
+> > > > +1. The XFS codebase of the late 2000s did not have the
+> > > > infrastructure to
+> > > > +   enforce strong referential integrity in the directory tree.
+> > > > +   It did not guarantee that a change in a forward link would
+> > > > always
+> > > > be
+> > > > +   followed up with the corresponding change to the reverse
+> > > > links.
+> > > > +
+> > > > +2. Referential integrity was not integrated into offline repair.
+> > > > +   Checking and repairs were performed on mounted filesystems
+> > > > without taking
+> > > > +   any kernel or inode locks to coordinate access.
+> > > > +   It is not clear how this actually worked properly.
+> > > > +
+> > > > +3. The extended attribute did not record the name of the
+> > > > directory
+> > > > entry in the
+> > > > +   parent, so the SGI parent pointer implementation cannot be
+> > > > used
+> > > > to reconnect
+> > > > +   the directory tree.
+> > > > +
+> > > > +4. Extended attribute forks only support 65,536 extents, which
+> > > > means
+> > > > that
+> > > > +   parent pointer attribute creation is likely to fail at some
+> > > > point
+> > > > before the
+> > > > +   maximum file link count is achieved.
+> > > 
+> > > 
+> > > "The original parent pointer design was too unstable for something
+> > > like
+> > > a file system repair to depend on."
+> > 
+> > Er... I think this is addressed by #2 above?
+> Sorry, I meant for the history side bar to go through the list, and
+> then add that quotation to connect the paragraphs.  In a way, simply
+> talking about the new improvements below implies everything that the
+> old design lacked.
+
+*OH* ok, I think I understand now.  You're suggesting this sentence as
+an introduction to the paragraph below, not as something to be appended
+to point #4.  That makes more sense, I'll go add that, thanks!
+
+> > 
+> > > > +
+> > > > +Allison Henderson, Chandan Babu, and Catherine Hoang are working
+> > > > on
+> > > > a second
+> > > > +implementation that solves all shortcomings of the first.
+> > > > +During 2022, Allison introduced log intent items to track
+> > > > physical
+> > > > +manipulations of the extended attribute structures.
+> > > > +This solves the referential integrity problem by making it
+> > > > possible
+> > > > to commit
+> > > > +a dirent update and a parent pointer update in the same
+> > > > transaction.
+> > > > +Chandan increased the maximum extent counts of both data and
+> > > > attribute forks,
+> > > 
+> > > > +thereby addressing the fourth problem.
+> > > which ensures the parent pointer creation will succeed even if the
+> > > max
+> > > extent count is reached.
+> > 
+> > The max extent count cannot be exceeded, but the nrext64 feature
+> > ensures
+> > that the xattr structure can grow enough to handle maximal
+> > hardlinking.
+> > 
+> > "Chandan increased the maximum extent counts of both data and
+> > attribute
+> > forks, thereby ensuring that the extended attribute structure can
+> > grow
+> > to handle the maximum hardlink count of any file."
+> 
+> Ok, sounds good.
+> 
+> > 
+> > > > +
+> > > > +To solve the third problem, parent pointers include the dirent
+> > > > name
+> > > "Lastly, the new design includes the dirent name..."
+> > 
+> > <nod>
+> > 
+> > > > and
+> > > > +location of the entry within the parent directory.
+> > > > +In other words, child files use extended attributes to store
+> > > > pointers to
+> > > > +parents in the form ``(parent_inum, parent_gen, dirent_pos) →
+> > > > (dirent_name)``.
+> > > This parts still in flux, so probably this will have to get updated
+> > > later...
+> > 
+> > Yep, I'll add a note about that.
+> > 
+> > > > +
+> > > > +On a filesystem with parent pointers, the directory checking
+> > > > process
+> > > > can be
+> > > > +strengthened to ensure that the target of each dirent also
+> > > > contains
+> > > > a parent
+> > > > +pointer pointing back to the dirent.
+> > > > +Likewise, each parent pointer can be checked by ensuring that
+> > > > the
+> > > > target of
+> > > > +each parent pointer is a directory and that it contains a dirent
+> > > > matching
+> > > > +the parent pointer.
+> > > > +Both online and offline repair can use this strategy.
+> > 
+> > I moved this paragraph up to become the second paragraph, and now it
+> > reads:
+> > 
+> > "XFS parent pointers include the dirent name and location of the
+> > entry
+> > within the parent directory.  In other words, child files use
+> > extended
+> > attributes to store pointers to parents in the form ``(parent_inum,
+> > parent_gen, dirent_pos) → (dirent_name)``.  The directory checking
+> > process can be strengthened to ensure that the target of each dirent
+> > also contains a parent pointer pointing back to the dirent. 
+> > Likewise,
+> > each parent pointer can be checked by ensuring that the target of
+> > each
+> > parent pointer is a directory and that it contains a dirent matching
+> > the
+> > parent pointer.  Both online and offline repair can use this
+> > strategy.
+> > 
+> > Note: The ondisk format of parent pointers is not yet finalized."
+> > 
+> > After which comes the historical sidebar.
+> Alrighty, I think that's fine for now
+> 
+> > 
+> > > > +
+> > > > +Case Study: Repairing Directories with Parent Pointers
+> > > > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > +
+> > > > +Directory rebuilding uses a :ref:`coordinated inode scan
+> > > > <iscan>`
+> > > > and
+> > > > +a :ref:`directory entry live update hook <liveupdate>` as
+> > > > follows:
+> > > > +
+> > > > +1. Set up a temporary directory for generating the new directory
+> > > > structure,
+> > > > +   an xfblob for storing entry names, and an xfarray for
+> > > > stashing
+> > > > directory
+> > > > +   updates.
+> > > > +
+> > > > +2. Set up an inode scanner and hook into the directory entry
+> > > > code to
+> > > > receive
+> > > > +   updates on directory operations.
+> > > > +
+> > > > +3. For each parent pointer found in each file scanned, decide if
+> > > > the
+> > > > parent
+> > > > +   pointer references the directory of interest.
+> > > > +   If so:
+> > > > +
+> > > > +   a. Stash an addname entry for this dirent in the xfarray for
+> > > > later.
+> > > > +
+> > > > +   b. When finished scanning that file, flush the stashed
+> > > > updates to
+> > > > the
+> > > > +      temporary directory.
+> > > > +
+> > > > +4. For each live directory update received via the hook, decide
+> > > > if
+> > > > the child
+> > > > +   has already been scanned.
+> > > > +   If so:
+> > > > +
+> > > > +   a. Stash an addname or removename entry for this dirent
+> > > > update in
+> > > > the
+> > > > +      xfarray for later.
+> > > > +      We cannot write directly to the temporary directory
+> > > > because
+> > > > hook
+> > > > +      functions are not allowed to modify filesystem metadata.
+> > > > +      Instead, we stash updates in the xfarray and rely on the
+> > > > scanner thread
+> > > > +      to apply the stashed updates to the temporary directory.
+> > > > +
+> > > > +5. When the scan is complete, atomically swap the contents of
+> > > > the
+> > > > temporary
+> > > > +   directory and the directory being repaired.
+> > > > +   The temporary directory now contains the damaged directory
+> > > > structure.
+> > > > +
+> > > > +6. Reap the temporary directory.
+> > > > +
+> > > > +7. Update the dirent position field of parent pointers as
+> > > > necessary.
+> > > > +   This may require the queuing of a substantial number of xattr
+> > > > log
+> > > > intent
+> > > > +   items.
+> > > > +
+> > > > +The proposed patchset is the
+> > > > +`parent pointers directory repair
+> > > > +<
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/
+> > > > log/?h=pptrs-online-dir-repair>`_
+> > > > +series.
+> > > > +
+> > > > +**Unresolved Question**: How will repair ensure that the
+> > > > ``dirent_pos`` fields
+> > > > +match in the reconstructed directory?
+> > > > +
+> > > > +*Answer*: There are a few ways to solve this problem:
+> > > > +
+> > > > +1. The field could be designated advisory, since the other three
+> > > > values are
+> > > > +   sufficient to find the entry in the parent.
+> > > > +   However, this makes indexed key lookup impossible while
+> > > > repairs
+> > > > are ongoing.
+> > > > +
+> > > > +2. We could allow creating directory entries at specified
+> > > > offsets,
+> > > > which solves
+> > > > +   the referential integrity problem but runs the risk that
+> > > > dirent
+> > > > creation
+> > > > +   will fail due to conflicts with the free space in the
+> > > > directory.
+> > > > +
+> > > > +   These conflicts could be resolved by appending the directory
+> > > > entry and
+> > > > +   amending the xattr code to support updating an xattr key and
+> > > > reindexing the
+> > > > +   dabtree, though this would have to be performed with the
+> > > > parent
+> > > > directory
+> > > > +   still locked.
+> > > > +
+> > > > +3. Same as above, but remove the old parent pointer entry and
+> > > > add a
+> > > > new one
+> > > > +   atomically.
+> > > > +
+> > > > +4. Change the ondisk xattr format to ``(parent_inum, name) →
+> > > > (parent_gen)``,
+> > > > +   which would provide the attr name uniqueness that we require,
+> > > > without
+> > > > +   forcing repair code to update the dirent position.
+> > > > +   Unfortunately, this requires changes to the xattr code to
+> > > > support
+> > > > attr
+> > > > +   names as long as 263 bytes.
+> > > > +
+> > > > +5. Change the ondisk xattr format to ``(parent_inum, hash(name))
+> > > > →
+> > > > +   (name, parent_gen)``.
+> > > > +   If the hash is sufficiently resistant to collisions (e.g.
+> > > > sha256)
+> > > > then
+> > > > +   this should provide the attr name uniqueness that we require.
+> > > > +   Names shorter than 247 bytes could be stored directly.
+> > > I think the RFC deluge is the same question but more context, so
+> > > probably this section will follow what we decide there.  I will
+> > > save
+> > > commentary to keep the discussion in the same thread...
+> > > 
+> > > I'll just link it here for anyone else following this for now...
+> > > https://www.spinics.net/lists/linux-xfs/msg69397.html
+> > 
+> > Yes, the deluge has much more detailed information.  I'll add this
+> > link
+> > (for now) to the doc.
+> > 
+> > > > +
+> > > > +Case Study: Repairing Parent Pointers
+> > > > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > +
+> > > > +Online reconstruction of a file's parent pointer information
+> > > > works
+> > > > similarly to
+> > > > +directory reconstruction:
+> > > > +
+> > > > +1. Set up a temporary file for generating a new extended
+> > > > attribute
+> > > > structure,
+> > > > +   an xfblob for storing parent pointer names, and an xfarray
+> > > > for
+> > > > stashing
+> > > > +   parent pointer updates.
+> > > we did talk about blobs in patch 6 though it took me a moment to
+> > > remember... if there's a way to link or tag it, that would be
+> > > helpful
+> > > for with the quick refresh.  kinda like wikipedia hyperlinks, you
+> > > really only need like the first line or two to get it snap back
+> > 
+> > There is; I'll put in a backreference.
+> > 
+> > > > +
+> > > > +2. Set up an inode scanner and hook into the directory entry
+> > > > code to
+> > > > receive
+> > > > +   updates on directory operations.
+> > > > +
+> > > > +3. For each directory entry found in each directory scanned,
+> > > > decide
+> > > > if the
+> > > > +   dirent references the file of interest.
+> > > > +   If so:
+> > > > +
+> > > > +   a. Stash an addpptr entry for this parent pointer in the
+> > > > xfblob
+> > > > and xfarray
+> > > > +      for later.
+> > > > +
+> > > > +   b. When finished scanning the directory, flush the stashed
+> > > > updates to the
+> > > > +      temporary directory.
+> > > > +
+> > > > +4. For each live directory update received via the hook, decide
+> > > > if
+> > > > the parent
+> > > > +   has already been scanned.
+> > > > +   If so:
+> > > > +
+> > > > +   a. Stash an addpptr or removepptr entry for this dirent
+> > > > update in
+> > > > the
+> > > > +      xfarray for later.
+> > > > +      We cannot write parent pointers directly to the temporary
+> > > > file
+> > > > because
+> > > > +      hook functions are not allowed to modify filesystem
+> > > > metadata.
+> > > > +      Instead, we stash updates in the xfarray and rely on the
+> > > > scanner thread
+> > > > +      to apply the stashed parent pointer updates to the
+> > > > temporary
+> > > > file.
+> > > > +
+> > > > +5. Copy all non-parent pointer extended attributes to the
+> > > > temporary
+> > > > file.
+> > > > +
+> > > > +6. When the scan is complete, atomically swap the attribute fork
+> > > > of
+> > > > the
+> > > > +   temporary file and the file being repaired.
+> > > > +   The temporary file now contains the damaged extended
+> > > > attribute
+> > > > structure.
+> > > > +
+> > > > +7. Reap the temporary file.
+> > > Seems like it should work
+> > 
+> > Let's hope so!
+> > 
+> > > > +
+> > > > +The proposed patchset is the
+> > > > +`parent pointers repair
+> > > > +<
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/
+> > > > log/?h=pptrs-online-parent-repair>`_
+> > > > +series.
+> > > > +
+> > > > +Digression: Offline Checking of Parent Pointers
+> > > > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > +
+> > > > +Examining parent pointers in offline repair works differently
+> > > > because corrupt
+> > > > +files are erased long before directory tree connectivity checks
+> > > > are
+> > > > performed.
+> > > > +Parent pointer checks are therefore a second pass to be added to
+> > > > the
+> > > > existing
+> > > > +connectivity checks:
+> > > > +
+> > > > +1. After the set of surviving files has been established (i.e.
+> > > > phase
+> > > > 6),
+> > > > +   walk the surviving directories of each AG in the filesystem.
+> > > > +   This is already performed as part of the connectivity checks.
+> > > > +
+> > > > +2. For each directory entry found, record the name in an xfblob,
+> > > > and
+> > > > store
+> > > > +   ``(child_ag_inum, parent_inum, parent_gen, dirent_pos)``
+> > > > tuples
+> > > > in a
+> > > > +   per-AG in-memory slab.
+> > > > +
+> > > > +3. For each AG in the filesystem,
+> > > > +
+> > > > +   a. Sort the per-AG tuples in order of child_ag_inum,
+> > > > parent_inum,
+> > > > and
+> > > > +      dirent_pos.
+> > > > +
+> > > > +   b. For each inode in the AG,
+> > > > +
+> > > > +      1. Scan the inode for parent pointers.
+> > > > +         Record the names in a per-file xfblob, and store
+> > > > ``(parent_inum,
+> > > > +         parent_gen, dirent_pos)`` tuples in a per-file slab.
+> > > > +
+> > > > +      2. Sort the per-file tuples in order of parent_inum, and
+> > > > dirent_pos.
+> > > > +
+> > > > +      3. Position one slab cursor at the start of the inode's
+> > > > records in the
+> > > > +         per-AG tuple slab.
+> > > > +         This should be trivial since the per-AG tuples are in
+> > > > child
+> > > > inumber
+> > > > +         order.
+> > > > +
+> > > > +      4. Position a second slab cursor at the start of the per-
+> > > > file
+> > > > tuple slab.
+> > > > +
+> > > > +      5. Iterate the two cursors in lockstep, comparing the
+> > > > parent_ino and
+> > > > +         dirent_pos fields of the records under each cursor.
+> > > > +
+> > > > +         a. Tuples in the per-AG list but not the per-file list
+> > > > are
+> > > > missing and
+> > > > +            need to be written to the inode.
+> > > > +
+> > > > +         b. Tuples in the per-file list but not the per-AG list
+> > > > are
+> > > > dangling
+> > > > +            and need to be removed from the inode.
+> > > > +
+> > > > +         c. For tuples in both lists, update the parent_gen and
+> > > > name
+> > > > components
+> > > > +            of the parent pointer if necessary.
+> > > > +
+> > > > +4. Move on to examining link counts, as we do today.
+> > > > +
+> > > > +The proposed patchset is the
+> > > > +`offline parent pointers repair
+> > > > +<
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfsprogs-dev.g
+> > > > it/log/?h=pptrs-repair>`_
+> > > > +series.
+> > > > +
+> > > > +Rebuilding directories from parent pointers in offline repair is
+> > > > very
+> > > > +challenging because it currently uses a single-pass scan of the
+> > > > filesystem
+> > > > +during phase 3 to decide which files are corrupt enough to be
+> > > > zapped.
+> > > > +This scan would have to be converted into a multi-pass scan:
+> > > > +
+> > > > +1. The first pass of the scan zaps corrupt inodes, forks, and
+> > > > attributes
+> > > > +   much as it does now.
+> > > > +   Corrupt directories are noted but not zapped.
+> > > > +
+> > > > +2. The next pass records parent pointers pointing to the
+> > > > directories
+> > > > noted
+> > > > +   as being corrupt in the first pass.
+> > > > +   This second pass may have to happen after the phase 4 scan
+> > > > for
+> > > > duplicate
+> > > > +   blocks, if phase 4 is also capable of zapping directories.
+> > > > +
+> > > > +3. The third pass resets corrupt directories to an empty
+> > > > shortform
+> > > > directory.
+> > > > +   Free space metadata has not been ensured yet, so repair
+> > > > cannot
+> > > > yet use the
+> > > > +   directory building code in libxfs.
+> > > > +
+> > > > +4. At the start of phase 6, space metadata have been rebuilt.
+> > > > +   Use the parent pointer information recorded during step 2 to
+> > > > reconstruct
+> > > > +   the dirents and add them to the now-empty directories.
+> > > > +
+> > > > +This code has not yet been constructed.
+> > > > +
+> > > > +.. _orphanage:
+> > > > +
+> > > > +The Orphanage
+> > > > +-------------
+> > > > +
+> > > > +Filesystems present files as a directed, and hopefully acyclic,
+> > > > graph.
+> > > > +In other words, a tree.
+> > > > +The root of the filesystem is a directory, and each entry in a
+> > > > directory points
+> > > > +downwards either to more subdirectories or to non-directory
+> > > > files.
+> > > > +Unfortunately, a disruption in the directory graph pointers
+> > > > result
+> > > > in a
+> > > > +disconnected graph, which makes files impossible to access via
+> > > > regular path
+> > > > +resolution.
+> > > > +The directory parent pointer online scrub code can detect a
+> > > > dotdot
+> > > > entry
+> > > > +pointing to a parent directory that doesn't have a link back to
+> > > > the
+> > > > child
+> > > > +directory, and the file link count checker can detect a file
+> > > > that
+> > > > isn't pointed
+> > > > +to by any directory in the filesystem.
+> > > > +If the file in question has a positive link count, the file in
+> > > > question is an
+> > > > +orphan.
+> > > 
+> > > Hmm, I kinda felt like this should have flowed into something like:
+> > > "now that we have parent pointers, we can reparent them instead of
+> > > putting them in the orphanage..."
+> > 
+> > That's only true if we actually *find* the relevant forward or back
+> > pointers.  If a file has positive link count but there aren't any
+> > links
+> > to it from anywhere, we still have to dump it in the /lost+found.
+> > 
+> > Parent pointers make it a lot less likely that we'll have to put a
+> > file
+> > in the /lost+found, but it's still possible.
+> > 
+> > I think I'll change this paragraph to start:
+> > 
+> > "Without parent pointers, the directory parent pointer online scrub
+> > code
+> > can detect a dotdot entry pointing to a parent directory..."
+> > 
+> > and then add a new paragraph:
+> > 
+> > "With parent pointers, directories can be rebuilt by scanning parent
+> > pointers and parent pointers can be rebuilt by scanning directories.
+> > This should reduce the incidence of files ending up in
+> > ``/lost+found``."
+> I see, ok i think that sounds good then.
+
+<nod>
+
+--D
+
+> Allison
+> > 
+> > > ?
+> > > > +
+> > > > +When orphans are found, they should be reconnected to the
+> > > > directory
+> > > > tree.
+> > > > +Offline fsck solves the problem by creating a directory
+> > > > ``/lost+found`` to
+> > > > +serve as an orphanage, and linking orphan files into the
+> > > > orphanage
+> > > > by using the
+> > > > +inumber as the name.
+> > > > +Reparenting a file to the orphanage does not reset any of its
+> > > > permissions or
+> > > > +ACLs.
+> > > > +
+> > > > +This process is more involved in the kernel than it is in
+> > > > userspace.
+> > > > +The directory and file link count repair setup functions must
+> > > > use
+> > > > the regular
+> > > > +VFS mechanisms to create the orphanage directory with all the
+> > > > necessary
+> > > > +security attributes and dentry cache entries, just like a
+> > > > regular
+> > > > directory
+> > > > +tree modification.
+> > > > +
+> > > > +Orphaned files are adopted by the orphanage as follows:
+> > > > +
+> > > > +1. Call ``xrep_orphanage_try_create`` at the start of the scrub
+> > > > setup function
+> > > > +   to try to ensure that the lost and found directory actually
+> > > > exists.
+> > > > +   This also attaches the orphanage directory to the scrub
+> > > > context.
+> > > > +
+> > > > +2. If the decision is made to reconnect a file, take the IOLOCK
+> > > > of
+> > > > both the
+> > > > +   orphanage and the file being reattached.
+> > > > +   The ``xrep_orphanage_iolock_two`` function follows the inode
+> > > > locking
+> > > > +   strategy discussed earlier.
+> > > > +
+> > > > +3. Call ``xrep_orphanage_compute_blkres`` and
+> > > > ``xrep_orphanage_compute_name``
+> > > > +   to compute the new name in the orphanage and the block
+> > > > reservation required.
+> > > > +
+> > > > +4. Use ``xrep_orphanage_adoption_prep`` to reserve resources to
+> > > > the
+> > > > repair
+> > > > +   transaction.
+> > > > +
+> > > > +5. Call ``xrep_orphanage_adopt`` to reparent the orphaned file
+> > > > into
+> > > > the lost
+> > > > +   and found, and update the kernel dentry cache.
+> > > > +
+> > > > +The proposed patches are in the
+> > > > +`orphanage adoption
+> > > > +<
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/
+> > > > log/?h=repair-orphanage>`_
+> > > > +series.
+> > > 
+> > > Certainly we'll need to come back and update all the parts that
+> > > would
+> > > be affected by the RFC, but otherwise looks ok.  It seems trying to
+> > > document code before it's written tends to cause things to go
+> > > around
+> > > for a while, since we really just cant know how stable a design is
+> > > until it's been through at least a few prototypes.
+> > 
+> > Agreed!
+> > 
+> > --D
+> > 
+> > > Allison
+> 
