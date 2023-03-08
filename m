@@ -2,73 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E736B1499
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Mar 2023 22:56:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7259D6B153B
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Mar 2023 23:38:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230059AbjCHV4u (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Mar 2023 16:56:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57158 "EHLO
+        id S229966AbjCHWiS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Mar 2023 17:38:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230192AbjCHVyt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Mar 2023 16:54:49 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C39D3332
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Mar 2023 13:54:44 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id p3-20020a17090ad30300b0023a1cd5065fso275244pju.0
-        for <linux-xfs@vger.kernel.org>; Wed, 08 Mar 2023 13:54:44 -0800 (PST)
+        with ESMTP id S229850AbjCHWiN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Mar 2023 17:38:13 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E332917E
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Mar 2023 14:38:10 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 328Jwo4Q020813
+        for <linux-xfs@vger.kernel.org>; Wed, 8 Mar 2023 22:38:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : content-transfer-encoding : content-type :
+ mime-version; s=corp-2022-7-12;
+ bh=JDJXi73maJu33KCHvW/GLFsjAXAO3XLjG385twvdFTo=;
+ b=tV89JiZDwd9Uxo+8kuSVprR9mm1Q/LhL4hy2KKtBvKUW9uyIRiLDhCTJvfousbKfqj4o
+ C/dIwa/CRpVLUP29TINNEmyLgzC6V2TtbgKHjvkosJ7T2yUjKOE51vZsuBWwC5hFmPgF
+ FoUOKgXrtwgbg1HhSrsTX5EBcX6SRXsJh277iTZXyglBhavSYAQayt/U/Mi/5ywQ+v33
+ x6CCiIRsybDPmOGTCIfV0+5Ei2DOFQm/nEpFQRQH/p7oRREYXyqYkduuctzov1KI6aWP
+ P77FP6SWIRt4P4dsF4yneOf3qp9/cTSdCrwmM7CKsO2r7CGMpRLeYr47Eaj+N5Gj258C 2w== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p41811a27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Mar 2023 22:38:09 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 328MAF4f036499
+        for <linux-xfs@vger.kernel.org>; Wed, 8 Mar 2023 22:38:08 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2106.outbound.protection.outlook.com [104.47.70.106])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3p6g464w1m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Mar 2023 22:38:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ve4h0/I0/NgKlk85qR5sEwqo8Xe5kp3G2LZbJpbKb5SRVHmuWNrIuyvdH57Dpxc8aAmJI1g8uGTtGBWLDa/BoFU6Y3u8AbGnS8XMI6bPdtIYPxohB8NqwbY2CanPEPzIl0W2rWTuNoOMs73z8jry9R5rVoeRYims6DziTtZfWVWBVUvUjaelQhaGDjmK66/BpO/Nt1FrO2rHkgO36HtUNgAt04DiU9fbN1I/tuAq85C9uCDrn8witzdFva2pjyWV8g1htPlRqV0luI1aldOJWE++2idSiwLEAkWxr8ggW6uevlT+qbRt8FnriRBf5Rc6VWQdJ9Iu85bgsXuSt5F+Qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JDJXi73maJu33KCHvW/GLFsjAXAO3XLjG385twvdFTo=;
+ b=hhZ02xwNy/s6bZUthqfj0qo4H35i39WYjWPHFBZxQPPyAiDDPFI0u5TvCo/6GTdyQ90X8YsInZPamGbF7rCvFC5UZtTXlGs+G2nw0iH69wEJkcp7OFDsX76XwDjgiO1CtOE60q2ksG2mlTG8zb39Nl/gkSbynWd4Hz3iua+nUF/o0oAPyrO/fuu4TRbdG7vgkG2CaCMHLbWWyBJK2MR+E927q3VxkCVu2VQb9BtWLq1jMV4k4ZOlfC3AXYbPta36388FxY1mVelPV+2ol7hkYUT3kM+wncS5qkzLF2gBW1uQJsy/GkDyEEmMR61u/gsIFCPTzpAfiP9LH26EnZTbEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20210112.gappssmtp.com; s=20210112; t=1678312484;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9eJVa41nTmMQ+G4UBh2PB+ATL8MzATmHLYKGAZJwIy0=;
-        b=UIldcrVurz1F2+jOwv90GDUHgNDJNzDrmzXtCIfMOIkLvItwdpkD4kO3CxXIqkfZar
-         Fe5elgJj4q8SFfRfzwJNyc6pBHQTVCM+GIcC9kAzLQTFN7fwkB7E97q/thAZElt6DZH0
-         9lxw809EPXWzhvzkgZ9vEU6zpq+Sr68Uu4VSyLDCPJ2ELQWbDXoaaWDAKl1bI+9xMeny
-         qBB9BPOB2TDpITDE687EI39JD6N1cejECN4HeZzGWhDaClhf5qXeWVfw5WW6XO0fqaY8
-         U4Z4m9HfYtkxcpIq0gCXcCDjbWxs0/5ZI+iK8gKGlnECdqM8q+tw/APBf+eulRL287gN
-         VSow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678312484;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9eJVa41nTmMQ+G4UBh2PB+ATL8MzATmHLYKGAZJwIy0=;
-        b=vwR2ijWX7NnDUVDAIxiM6Ywm0LLANnNodSOXtYZbHEs0Yd7jTwo4MtNxLJTnaJGs3j
-         KJV3v+0XV0ZMgmacYwOCCTBo8fhc5T/0WWMWsWBHA9gLCLAkMQNz4c8pIddWzvt0el9r
-         upzkPWqUbC+WJKWd2F0DiYsctXvzQzVgw+QPpKC/IThR5GXzQTgtmdmhxE/grReIIPLZ
-         Dhhja2QbskrZCV9lNflLFTEVVVy/AAUpiAge6QyeBEWnaSWT9ROrSJRh40FawcopRc/B
-         YFm7WJZo1urGzhQh15SnpFhj1d10Xu1/h3s34RSE4Cw/+iq8HwI0/VYGKWVn/nwP8ehD
-         pBLA==
-X-Gm-Message-State: AO0yUKUvjPgoNNIP239SwXMR075g+yo5NP6VtQ8lsAcK5jdzAHduzjt6
-        oBRp0Ecaie61kPKfoiY1cC9c5A==
-X-Google-Smtp-Source: AK7set9yRz1V13+udAytKTyotPF1CUbcR1Ua1DXz6+jnfNyurODG/UiKaYcGULo46TRERBNAMJUNsQ==
-X-Received: by 2002:a17:90b:3505:b0:22b:b282:a9d7 with SMTP id ls5-20020a17090b350500b0022bb282a9d7mr19285284pjb.20.1678312483682;
-        Wed, 08 Mar 2023 13:54:43 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-4-237.pa.vic.optusnet.com.au. [49.186.4.237])
-        by smtp.gmail.com with ESMTPSA id v8-20020a17090ad58800b002376d85844dsm199576pju.51.2023.03.08.13.54.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 13:54:42 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1pa1k7-006RWP-DJ; Thu, 09 Mar 2023 08:54:39 +1100
-Date:   Thu, 9 Mar 2023 08:54:39 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        xfs <linux-xfs@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>
-Subject: Re: [LSF TOPIC] online repair of filesystems: what next?
-Message-ID: <20230308215439.GM360264@dread.disaster.area>
-References: <Y/5ovz6HI2Z47jbk@magnolia>
- <20230308171206.zuci3wdd3yg7amw5@quack3>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JDJXi73maJu33KCHvW/GLFsjAXAO3XLjG385twvdFTo=;
+ b=QpFaL6+O9JxijUk7mztDQg9+OPs3Zsce/Dp6p6EHbZthodSSz+cbG7euApG043DA6xcFmEeapbu5yt/RmUoVh92fMVqcv81Z3cLr4y9HI2VALpkQp+mPo/hUNExnJAJRX3f1bX3BNR3KTyz6erAsaRMWFvwl1on1p0k3jMXPhDE=
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
+ by SN7PR10MB7102.namprd10.prod.outlook.com (2603:10b6:806:348::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Wed, 8 Mar
+ 2023 22:37:56 +0000
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::2a7c:497e:b785:dc06]) by BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::2a7c:497e:b785:dc06%8]) with mapi id 15.20.6178.017; Wed, 8 Mar 2023
+ 22:37:56 +0000
+From:   allison.henderson@oracle.com
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v10 00/32] Parent Pointers
+Date:   Wed,  8 Mar 2023 15:37:22 -0700
+Message-Id: <20230308223754.1455051-1-allison.henderson@oracle.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0027.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::32) To BY5PR10MB4306.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230308171206.zuci3wdd3yg7amw5@quack3>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4306:EE_|SN7PR10MB7102:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33692eab-a3d2-4418-6e3b-08db2025c350
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6R/+5z3ZWCKzmlI/9wlsGe384zvBrG7k7bklJLPjksoTIAT/j4K2Mdx5CvfTlZuq+pcioLuXN5CjiLiXglxl2evv03J/H9g3nFOcYMRKRewYpDZR5YK66CpevwzM296B4d/Gj4FVFA+X4n5hv0YC8QFg8f46WTi8NtcLks1hKlucCA2fPNMcjNelR07fqGbi9fRC+POqzKtxJ/BmV4quTf8KZLmAkUciF0zYJrArzBimMYXsWpw54lGpeA2VJJfyILJPdvJ5vMjs66S4TNt35eWb/JgZMp4bKVJRlI+MJAbfrdsMnqi8xL6HI6O6hHJ16wCJRUYvYJBoJsoCxvg+zxY2qWgtoHg/zSE+yIkMa4nuKvMinR7ibg2MPmhOYDjjjDzGWg5agvRg91KTTWMTN6YXtw9N0WL9OSrjk1Wpw3Uca8O4p+2Y5UoiH9qo42HxJZgqpVtg5WR17ImWSa78Cqdytj8VN4i0MFPwdrP5rvPHSxtAUhVGGQBFe72qrxBl3L2q4/rxu9StlI8A35yvn0u1KsRUOzSVG3otcCHQzFzVHMZe3JQnKFIvqMlBpKrzUFMbsrToLkRdpmV+3sphMkHgwhKoVtZ3Kn/sIxSJ8NNquB/0ApU+ePPkZh3WiZWy2PUPsNpAmFiL1B8XGdpG5T8KIElLYnqY8QLn50Sr9CU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(39860400002)(366004)(346002)(136003)(396003)(451199018)(966005)(36756003)(6666004)(8936002)(6916009)(41300700001)(8676002)(66476007)(66946007)(5660300002)(66556008)(6506007)(2906002)(38100700002)(86362001)(6486002)(1076003)(6512007)(316002)(478600001)(83380400001)(9686003)(186003)(26005)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Q370aJBjg82v9rEt6RqQMiYyC2/o+dV78rwSQpfRRaM6htJc1VyVMcs5HN/O?=
+ =?us-ascii?Q?w6DDg6u/RhX/bguWN32Y29Ot+uNHXOvRnVhHGoTCPxSUwPcFlmqPKOTYhPAi?=
+ =?us-ascii?Q?io6j97M6P9PMbUhi2Ac3b+OyBOwG8geZ2JroYYbuLlTENYjxiG4N5BZpI8Zw?=
+ =?us-ascii?Q?Zge168FNOn0j2LvnaVLk9Niy1ngMEVKyLQGr3RID8ZwZsOtX4bLae8nwqLo7?=
+ =?us-ascii?Q?6NkeB2POj85NTGdvbjR7PcgGygW8pD0ZyK7Lj/uClXlBK5+5ild78WhK4d+v?=
+ =?us-ascii?Q?lJz+puULEYG67KitA51HNeNsHwgqYGcBWaVED92ra2UuCpqtKJ2cT6V9rVcn?=
+ =?us-ascii?Q?XTY5mm5QRnJFWAuCzMCsvMNSJMmfMzwiFIuEKsjYA+KgEQrHqbyq5bcn6XaP?=
+ =?us-ascii?Q?3L0JagXkGJkiDhdrZV4rVVjzgUSbb5VQNSBE+MjQimd4zx+h9CMJ/JX/33dR?=
+ =?us-ascii?Q?7dEM9npLhAdPh8ggECGskODWhtG7lnR4zVSl38H+BpNRvG1kqtOqrOzGr6nu?=
+ =?us-ascii?Q?wc59oKoHkC1SgpCp0j1cIInUe4dOtWyJQ4Pqr0YAZbnN4hPCyZ00qn1QSxbF?=
+ =?us-ascii?Q?uCxTCoglYI57sayDf3ARi1UPtxyfcMJ16f10eijSX2A5kUiGmnmIKO9O1VBz?=
+ =?us-ascii?Q?dqPj8sJd1ckmZO9vdZR7EM0M3CCsUStCBVo3hXh1bVBdQsqXJjpiq7MNzVLx?=
+ =?us-ascii?Q?ttjI5JoiUNM+pDAYSQc2DgMtv61Wf3crrZUn4wA6CxcPoZ19HPzf4cTHXwa1?=
+ =?us-ascii?Q?z1JC/ToNsom8/7tj2irO9Ljj1C8k4G2glZj7uSuHKgTpI16sAx5uWHaR07n1?=
+ =?us-ascii?Q?Y7RTeEYFolDUThpgR1OuLfiYiK+DbLdiq5Zypk5qMqQg8fI+0rT1orl+I73f?=
+ =?us-ascii?Q?ftNgkm9nRTpIm3OHHpM8XFzGdtDzuAC9Gb/bZ/sSU+1tDBp9lI5dy642tJCW?=
+ =?us-ascii?Q?hUFmaTBNI/vSyRcbit3UYVT38w3N/J+Ymr/0kSGentrnUuYhOIfXvY7g+nqq?=
+ =?us-ascii?Q?eeqFg4QU5WtMMo0IfOylshTcGsb/C+d/ns9n1v7E5BX5HbXJDd7PdveHv+h9?=
+ =?us-ascii?Q?fhKc9KKQ/5/G355v22vxbEe56yVXceHljPcUZDcn4w9cP/xPXs4Vc1BGYmzU?=
+ =?us-ascii?Q?F3BmLsAxjRutbTnUi2XU7SpXoBz19valGAMgzxdKPxlqA/Btpp/+X7xfnsEG?=
+ =?us-ascii?Q?nXGddjyBupkucRkrxLFok2jMKLsm8jqCW3/EaIV/Ul73gR2Iejd2dRJaMujl?=
+ =?us-ascii?Q?LNbyKuHn5LdWp6hiGq6fyKmvdR7FTrX+7xH2XtlPgcyLLX/MD8EUi28v3Yek?=
+ =?us-ascii?Q?+1rvH54rOqy8Km5CfWfJEYhBE+Pi/G+TbI32IMDx3sEaSixSjJQxcsfMxojq?=
+ =?us-ascii?Q?IUZlCInIyfPwTaUFoxyyAk6iXv511KRNFOzQ42y03XfNQRu6Js2opCgQ7u8k?=
+ =?us-ascii?Q?YThDQdxtlB7Dtga0OP6LC/XLnljMY4sEg6I7MowPZrKfVss2hICviqL5T9i7?=
+ =?us-ascii?Q?C3bv/p6f7SvlV/9ed3ztVJvxzuPQho+HHoBZsrKFYScb1E9c0yKAc7mqFSxO?=
+ =?us-ascii?Q?y+kaOcCwBL7gZhd6o2B+Fj6aNmuNvU4E0mB92FWBJomzQ2LFKxMNqe4noz+w?=
+ =?us-ascii?Q?tA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 0UICgDa558EQ3LGNNBmc64UXPrEF8sv4logvK/oEqGcgaJ5sJSHxBEinHp0ToPWaYvFq3RWpyzduL5YIhUPu0RQ2QPOo1iUdkLALkIHACYpFBeUTuM6aSb19IR/UlaNr7aDCQoa1HRypdlitHfcpvtTaGzliR6ehmGL7zq1Pget/GEEuwmThf7f8zH+JmaH2YCJ45VM9uesy49xBk9RPJIhcm70xo94Kbi9SbBZ9IECj3ukeqNeOkOtr1nvM19YgKZKWK6tqjVPFL4IQ/PqCIRR4gxWLJeACZ/2gTW4x2zmvzjAwlpvYUgjWg3baJ0kAnoYfLrx1eat41NRgXuN6ExlkC7AsBIiRLPKGcUYbMX2ht3cQUENst/D+oUm7moiJhNEhx8XJBFS2+zgjD+UJHkD07P8E5PecxAc9Kjl2qAUFVp56SHBvE9+O9w7DsijtW3U08GV+V1TVkkL1YXwM1F/dww+QBbavfT6LgtqqrOnQFvo4wLcnP7jH36zIWw7mLDoDPvjGAmMMp1HedJWv3fT3kEJsO71ZS626aqZLoHJRjZ4WY/pj0WQR7I7CwTEvQ7HlOSLl66mQF+D2LraWEK367YgvxYgN5x9w0ygFhEa/FAYbONGeMiZDY8fSPpD3nFB0G1YVC/PbYyrNO/U9NRLbevmggDbi4knCjQX41nUcb1zwsHHfWlNnRXEvNP2gxwccByPOeLKzqadViVONKJAAe+yJHG3Q6t1jkP5Cks48AciArWNxS+e++ba497bddnOmdA8LFJgeQQ6dkOiykw==
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33692eab-a3d2-4418-6e3b-08db2025c350
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2023 22:37:56.7638
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: epNTjSNwq66izrWCmwgt1VeQEiH0HWmgLhMKwF7mfnyViDTcfCyseg3DLDWJ04bBkVqiQ2H15ZBrCnpyMqWzWAp8sA/aSoJceLozgiwRxXo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB7102
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-08_15,2023-03-08_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303080190
+X-Proofpoint-ORIG-GUID: _q4B4aS5nb7uTpOoHGF0TyQAfJhvpWnB
+X-Proofpoint-GUID: _q4B4aS5nb7uTpOoHGF0TyQAfJhvpWnB
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,110 +142,141 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Mar 08, 2023 at 06:12:06PM +0100, Jan Kara wrote:
-> Hi!
-> 
-> I'm interested in this topic. Some comments below.
-> 
-> On Tue 28-02-23 12:49:03, Darrick J. Wong wrote:
-> > Five years ago[0], we started a conversation about cross-filesystem
-> > userspace tooling for online fsck.  I think enough time has passed for
-> > us to have another one, since a few things have happened since then:
-> > 
-> > 1. ext4 has gained the ability to send corruption reports to a userspace
-> >    monitoring program via fsnotify.  Thanks, Collabora!
-> > 
-> > 2. XFS now tracks successful scrubs and corruptions seen during runtime
-> >    and during scrubs.  Userspace can query this information.
-> > 
-> > 3. Directory parent pointers, which enable online repair of the
-> >    directory tree, is nearing completion.
-> > 
-> > 4. Dave and I are working on merging online repair of space metadata for
-> >    XFS.  Online repair of directory trees is feature complete, but we
-> >    still have one or two unresolved questions in the parent pointer
-> >    code.
-> > 
-> > 5. I've gotten a bit better[1] at writing systemd service descriptions
-> >    for scheduling and performing background online fsck.
-> > 
-> > Now that fsnotify_sb_error exists as a result of (1), I think we
-> > should figure out how to plumb calls into the readahead and writeback
-> > code so that IO failures can be reported to the fsnotify monitor.  I
-> > suspect there may be a few difficulties here since fsnotify (iirc)
-> > allocates memory and takes locks.
-> 
-> Well, if you want to generate fsnotify events from an interrupt handler,
-> you're going to have a hard time, I don't have a good answer for that.
+From: Allison Henderson <allison.henderson@oracle.com>
 
-I don't think we ever do that, or need to do that. IO completions
-that can throw corruption errors are already running in workqueue
-contexts in XFS.
+Hi all,
 
-Worst case, we throw all bios that have IO errors flagged to the
-same IO completion workqueues, and the problem of memory allocation,
-locks, etc in interrupt context goes away entire.
+This is the latest parent pointer attributes for xfs.
+The goal of this patch set is to add a parent pointer attribute to each inode.
+The attribute name containing the parent inode, generation, and directory
+offset, while the  attribute value contains the file name.  This feature will
+enable future optimizations for online scrub, shrink, nfs handles, verity, or
+any other feature that could make use of quickly deriving an inodes path from
+the mount point.  
 
-> But
-> offloading of error event generation to a workqueue should be doable (and
-> event delivery is async anyway so from userspace POV there's no
-> difference).
+This set can be viewed on github here
+https://github.com/allisonhenderson/xfs/tree/xfs_new_pptrsv10
 
-Unless I'm misunderstanding you (possible!), that requires a memory
-allocation to offload the error information to the work queue to
-allow the fsnotify error message to be generated in an async manner.
-That doesn't seem to solve anything.
+And the corresponding xfsprogs code is here
+https://github.com/allisonhenderson/xfsprogs/tree/xfsprogs_new_pptrs_v10
 
-> Otherwise locking shouldn't be a problem AFAICT. WRT memory
-> allocation, we currently preallocate the error events to avoid the loss of
-> event due to ENOMEM. With current usecases (filesystem catastrophical error
-> reporting) we have settled on a mempool with 32 preallocated events (note
-> that preallocated event gets used only if normal kmalloc fails) for
-> simplicity. If the error reporting mechanism is going to be used
-> significantly more, we may need to reconsider this but it should be doable.
-> And frankly if you have a storm of fs errors *and* the system is going
-> ENOMEM at the same time, I have my doubts loosing some error report is
-> going to do any more harm ;).
+This set has been tested with the below parent pointers tests
+https://lore.kernel.org/fstests/20221012013812.82161-1-catherine.hoang@oracle.com/T/#t
 
-Once the filesystem is shut down, it will need to turn off
-individual sickness notifications because everything is sick at this
-point.
+Updates since v9:
 
-> > As a result of (2), XFS now retains quite a bit of incore state about
-> > its own health.  The structure that fsnotify gives to userspace is very
-> > generic (superblock, inode, errno, errno count).  How might XFS export
-> > a greater amount of information via this interface?  We can provide
-> > details at finer granularity -- for example, a specific data structure
-> > under an allocation group or an inode, or specific quota records.
-> 
-> Fsnotify (fanotify in fact) interface is fairly flexible in what can be
-> passed through it. So if you need to pass some (reasonably short) binary
-> blob to userspace which knows how to decode it, fanotify can handle that
-> (with some wrapping). Obviously there's a tradeoff to make how much of the
-> event is generic (as that is then easier to process by tools common for all
-> filesystems) and how much is fs specific (which allows to pass more
-> detailed information). But I guess we need to have concrete examples of
-> events to discuss this.
+Reordered patches 2 and 3 to be 6 and 7
 
-Fine grained health information will always be filesystem specific -
-IMO it's not worth trying to make it generic when there is only one
-filesystem that tracking and exporting fine-grained health
-information. Once (if) we get multiple filesystems tracking fine
-grained health information, then we'll have the information we need
-to implement a useful generic set of notifications, but until then I
-don't think we should try.
+xfs: Add xfs_verify_pptr
+   moved parent pointer validators to xfs_parent
 
-We should just export the notifications the filesystem utilities
-need to do their work for the moment.  When management applications
-(e.g Stratis) get to the point where they can report/manage
-filesystem health and need that information from multiple
-filesystems types, then we can work out a useful common subset of
-fine grained events across those filesystems that the applications
-can listen for.
+xfs: Add parent pointer ioctl
+   Extra validation checks for fs id
+   added missing release for the inode
+   use GFP_KERNEL flags for malloc/realloc
+   reworked ioctl to use pptr listenty and flex array
 
-Cheers,
+NEW
+   xfs: don't remove the attr fork when parent pointers are enabled
 
-Dave.
+NEW
+   directory lookups should return diroffsets too
+
+NEW
+   xfs: move/add parent pointer validators to xfs_parent
+
+Questions comments and feedback appreciated!
+
+Thanks all!
+Allison
+
+Allison Henderson (32):
+  xfs: Add new name to attri/d
+  xfs: Hold inode locks in xfs_ialloc
+  xfs: Hold inode locks in xfs_trans_alloc_dir
+  xfs: Hold inode locks in xfs_rename
+  xfs: Expose init_xattrs in xfs_create_tmpfile
+  xfs: Increase XFS_DEFER_OPS_NR_INODES to 5
+  xfs: Increase XFS_QM_TRANS_MAXDQS to 5
+  xfs: get directory offset when adding directory name
+  xfs: get directory offset when removing directory name
+  xfs: get directory offset when replacing a directory name
+  xfs: add parent pointer support to attribute code
+  xfs: define parent pointer xattr format
+  xfs: Add xfs_verify_pptr
+  xfs: extend transaction reservations for parent attributes
+  xfs: parent pointer attribute creation
+  xfs: add parent attributes to link
+  xfs: add parent attributes to symlink
+  xfs: remove parent pointers in unlink
+  xfs: Indent xfs_rename
+  xfs: Add parent pointers to rename
+  xfs: Add parent pointers to xfs_cross_rename
+  xfs: Add the parent pointer support to the  superblock version 5.
+  xfs: Add helper function xfs_attr_list_context_init
+  xfs: Filter XFS_ATTR_PARENT for getfattr
+  xfs: pass the attr value to put_listent when possible
+  xfs: Add parent pointer ioctl
+  xfs: fix unit conversion error in xfs_log_calc_max_attrsetm_res
+  xfs: drop compatibility minimum log size computations for reflink
+  xfs: add xfs_trans_mod_sb tracing
+  xfs: move/add parent pointer validators to xfs_parent
+  xfs: directory lookups should return diroffsets too
+  xfs: don't remove the attr fork when parent pointers are enabled
+
+ fs/xfs/Makefile                 |   2 +
+ fs/xfs/libxfs/xfs_attr.c        |  34 ++-
+ fs/xfs/libxfs/xfs_attr.h        |  18 +-
+ fs/xfs/libxfs/xfs_attr_leaf.c   |   6 +-
+ fs/xfs/libxfs/xfs_attr_sf.h     |   1 +
+ fs/xfs/libxfs/xfs_da_btree.h    |   3 +
+ fs/xfs/libxfs/xfs_da_format.h   |  26 +-
+ fs/xfs/libxfs/xfs_defer.c       |  28 +-
+ fs/xfs/libxfs/xfs_defer.h       |   8 +-
+ fs/xfs/libxfs/xfs_dir2.c        |  21 +-
+ fs/xfs/libxfs/xfs_dir2.h        |   7 +-
+ fs/xfs/libxfs/xfs_dir2_block.c  |  11 +-
+ fs/xfs/libxfs/xfs_dir2_leaf.c   |  10 +-
+ fs/xfs/libxfs/xfs_dir2_node.c   |  10 +-
+ fs/xfs/libxfs/xfs_dir2_sf.c     |  10 +
+ fs/xfs/libxfs/xfs_format.h      |   4 +-
+ fs/xfs/libxfs/xfs_fs.h          |  71 +++++
+ fs/xfs/libxfs/xfs_log_format.h  |   7 +-
+ fs/xfs/libxfs/xfs_log_rlimit.c  |  53 ++++
+ fs/xfs/libxfs/xfs_parent.c      | 267 +++++++++++++++++++
+ fs/xfs/libxfs/xfs_parent.h      | 108 ++++++++
+ fs/xfs/libxfs/xfs_sb.c          |   4 +
+ fs/xfs/libxfs/xfs_trans_resv.c  | 324 +++++++++++++++++++----
+ fs/xfs/libxfs/xfs_trans_space.h |   8 -
+ fs/xfs/scrub/attr.c             |  12 +-
+ fs/xfs/xfs_attr_item.c          | 142 ++++++++--
+ fs/xfs/xfs_attr_item.h          |   1 +
+ fs/xfs/xfs_attr_list.c          |  25 +-
+ fs/xfs/xfs_dquot.c              |  38 +++
+ fs/xfs/xfs_dquot.h              |   1 +
+ fs/xfs/xfs_file.c               |   1 +
+ fs/xfs/xfs_inode.c              | 447 +++++++++++++++++++++++++-------
+ fs/xfs/xfs_inode.h              |   3 +-
+ fs/xfs/xfs_ioctl.c              | 190 ++++++++++++--
+ fs/xfs/xfs_ioctl.h              |   2 +
+ fs/xfs/xfs_iops.c               |   2 +-
+ fs/xfs/xfs_ondisk.h             |   4 +
+ fs/xfs/xfs_parent_utils.c       | 154 +++++++++++
+ fs/xfs/xfs_parent_utils.h       |  20 ++
+ fs/xfs/xfs_qm.c                 |   4 +-
+ fs/xfs/xfs_qm.h                 |   2 +-
+ fs/xfs/xfs_super.c              |  14 +
+ fs/xfs/xfs_symlink.c            |  58 ++++-
+ fs/xfs/xfs_trans.c              |  13 +-
+ fs/xfs/xfs_trans_dquot.c        |  15 +-
+ fs/xfs/xfs_xattr.c              |   8 +-
+ fs/xfs/xfs_xattr.h              |   2 +
+ 47 files changed, 1942 insertions(+), 257 deletions(-)
+ create mode 100644 fs/xfs/libxfs/xfs_parent.c
+ create mode 100644 fs/xfs/libxfs/xfs_parent.h
+ create mode 100644 fs/xfs/xfs_parent_utils.c
+ create mode 100644 fs/xfs/xfs_parent_utils.h
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.25.1
+
