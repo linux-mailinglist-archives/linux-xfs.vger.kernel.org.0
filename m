@@ -2,75 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 596516BAB12
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Mar 2023 09:50:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4F2A6BBB10
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Mar 2023 18:40:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231590AbjCOIt5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Mar 2023 04:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55358 "EHLO
+        id S229602AbjCORkH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Mar 2023 13:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231792AbjCOIty (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Mar 2023 04:49:54 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6F25B5FA
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Mar 2023 01:49:52 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id k2so11392693pll.8
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Mar 2023 01:49:52 -0700 (PDT)
+        with ESMTP id S231701AbjCORkG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Mar 2023 13:40:06 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F434D2B1
+        for <linux-xfs@vger.kernel.org>; Wed, 15 Mar 2023 10:40:03 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id r4so10780364ila.2
+        for <linux-xfs@vger.kernel.org>; Wed, 15 Mar 2023 10:40:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20210112.gappssmtp.com; s=20210112; t=1678870191;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DnnMb4Et7WhpEe76RPSGsI6qWidW0Ymzw0QUU6G4yao=;
-        b=MldnmFi+QRjEcfycD9KY0bZvSKUHkvSL3UtA0U/PWvEzo8AB2GYhsOMJ9Yna93phsr
-         3pmBXGrj79AYyoeIfCO7JsUKNVP8tmqlS8mY/FTf5EtAxhPN1xd1Fm9/pzGq/ZdxfhQz
-         eU2tuyfglF9o3N9mm4hhAzPHlUfBjcvnSq9Nb2s84Jjh61ufX2fH3XB7ShgyRL4j80Ax
-         QyS9p698XnwvyGRgs0e4BrNF4ilCCsUmxrRDQcMuw618JIheaRe7R9Qmg/xhef7MwYkb
-         GmW1c4Xe7Xs5vN1n3/NKD+0FvXsYvic5EsCMGBEC3z5N+9iBqt2u48HdxYZQHcZIPME0
-         idug==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1678902003; x=1681494003;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/5df0VVcQalC1bXRcr/ZzFE9DW4g6pmup34uWUxk2BE=;
+        b=zwxQprHXlzq84Q96JdMBQaXVvSCHCBcJxqwLAdS2/M6P2PZf8X+QBMdh444n639VR4
+         9WawyHfreN9zeFpPIMhQsN7v7r0TWD5dW79rcxlqjdiRYD9CKeuHkVzP5OWvsI8S+cvb
+         GDC4tEZKH/QFkrr8nDLOkHeZriSUz/RbHofPkaXRLz6fCHLG90K7wPEWbwpuibh0EhcR
+         33COVEz8u5PDhku1P4VHqFjFgejAw7CwBqNz45vHuiNQSzxFc3uFKrVQz8nlcFD8nJwq
+         dMtxuCBUyahbswuu6YxFGozBwSWkHygIp6T2Q+IOaD+QgWYfWWa0Sr2JJEOOVVm6dXWr
+         6wqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678870191;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DnnMb4Et7WhpEe76RPSGsI6qWidW0Ymzw0QUU6G4yao=;
-        b=j/yuyO/z8vn+oX2mVv6bjuVfzK+7ZANETxFsPn5SEdLa9dqPav5F/M3kh1ZwQZO2kt
-         oQZ6417w/Jed6yv+kwI2zKdXxykzRTM828Q4OvUnDNxtMHxwgUpIznzfmyNItobbU/es
-         3xB/vy2jT26glxTCiop+scO17l2Xy9ZNI4fna+uejVTKseC9gYZBNx+bTRHuMs8wJ0Af
-         rYB6spafBINT6TjJ3fDJByv4KFbKJb8XL7ULxasTIAvd2FHDoHjIIiyQZhunGBpyMdah
-         he8BaojrEXBTi3VKIJ4OlsTOrZwRNdyOmVp6WN/y1XeBIg7epmDwKalwJWjOQ7z3sL1B
-         hkHQ==
-X-Gm-Message-State: AO0yUKW1h9i5zeQmhWg7Bp1zzTzlc3SMkmoGCdau2DuOd7tg82GosQID
-        UsiNjC586R/iFSrjDUAWT7anxw==
-X-Google-Smtp-Source: AK7set8ONEq6R2DicXybExxV1KAqb5LJDX736BB8nt9+Drt0g4Wcxf32rD3Zg0NHbWPaIIoqz/KYqA==
-X-Received: by 2002:a05:6a20:7d88:b0:cc:32a8:323d with SMTP id v8-20020a056a207d8800b000cc32a8323dmr15446982pzj.28.1678870191517;
-        Wed, 15 Mar 2023 01:49:51 -0700 (PDT)
-Received: from dread.disaster.area (pa49-186-4-237.pa.vic.optusnet.com.au. [49.186.4.237])
-        by smtp.gmail.com with ESMTPSA id e29-20020a63501d000000b0050be183459bsm593527pgb.34.2023.03.15.01.49.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 01:49:51 -0700 (PDT)
-Received: from [192.168.253.23] (helo=devoid.disaster.area)
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <dave@fromorbit.com>)
-        id 1pcMpQ-008zeV-50; Wed, 15 Mar 2023 19:49:48 +1100
-Received: from dave by devoid.disaster.area with local (Exim 4.96)
-        (envelope-from <dave@devoid.disaster.area>)
-        id 1pcMpQ-00Ag6X-0S;
-        Wed, 15 Mar 2023 19:49:48 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
-Cc:     linux-mm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        yebin10@huawei.com
-Subject: [PATCH 4/4] pcpcntr: remove percpu_counter_sum_all()
-Date:   Wed, 15 Mar 2023 19:49:38 +1100
-Message-Id: <20230315084938.2544737-5-david@fromorbit.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230315084938.2544737-1-david@fromorbit.com>
-References: <20230315084938.2544737-1-david@fromorbit.com>
+        d=1e100.net; s=20210112; t=1678902003; x=1681494003;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/5df0VVcQalC1bXRcr/ZzFE9DW4g6pmup34uWUxk2BE=;
+        b=5wLtTixpJVLZkc7Km34HI4ZefPHiZj0RnOky733A8qZggihnyoMRejPAzMJO1X6mmx
+         HsOkSCOjXhao7p5F6zaP8IMnAvdAp1V+Xu9gKkQuYDi1KuW9ze1EvFykLu8tb20qlbwe
+         m9VXjWIzoY4+729lQXdyvDIIQLxEkCP9kQ3Mn2BXfSxxuPF7pT5C9GL+205eyueU86GS
+         ukXaaL1bO9s0Ef2OCtJ/Apa7W2+LmNVSLMVTqwidYWzcdxJAMF41DU2KfIhZVSRLPG4c
+         bfH47CLHUT30+rvBWOUYa/y7832+BiUnTP916ljQpCQbtEHWBspGCpwFgnEjxSU0GyEG
+         isCg==
+X-Gm-Message-State: AO0yUKXIk/2RyF6dz/B4e2mNW+ilDOoHUUB/ct9UBatb+ZRkKOhEaz8c
+        jFdzwy5kpeuPwjR0LCgrtMn96w==
+X-Google-Smtp-Source: AK7set8OzK+A6f5D0yNLMn24/3DUQDhPAXFB5nnrO48ARbTVMVcy3wWxXjFNd9A785kMM5Plifl11g==
+X-Received: by 2002:a05:6e02:dd3:b0:317:2f8d:528f with SMTP id l19-20020a056e020dd300b003172f8d528fmr62272ilj.2.1678902003223;
+        Wed, 15 Mar 2023 10:40:03 -0700 (PDT)
+Received: from [192.168.1.94] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id y17-20020a056e02119100b0031798b87a14sm1786576ili.19.2023.03.15.10.40.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Mar 2023 10:40:02 -0700 (PDT)
+Message-ID: <b11d27d5-8e83-7144-cdc8-3966abf42db5@kernel.dk>
+Date:   Wed, 15 Mar 2023 11:40:02 -0600
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCHSET for-next 0/2] Flag file systems as supporting parallel
+ dio writes
+Content-Language: en-US
+From:   Jens Axboe <axboe@kernel.dk>
+To:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org
+References: <20230307172015.54911-1-axboe@kernel.dk>
+In-Reply-To: <20230307172015.54911-1-axboe@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,112 +73,20 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On 3/7/23 10:20 AM, Jens Axboe wrote:
+> Hi,
+> 
+> This has been on my TODO list for a while, and now that ext4 supports
+> parallel dio writes as well, time to dust it off and send it out... This
+> adds an FMODE flag to inform users that a given file supports parallel
+> dio writes. io_uring can use this to avoid serializing dio writes
+> upfront, in case it isn't needed. A few details in patch #2, patch 1 does
+> nothing by itself.
 
-percpu_counter_sum_all() is now redundant as the race condition it
-was invented to handle is now dealt with by percpu_counter_sum()
-directly and all users of percpu_counter_sum_all() have been
-removed.
+I'm assuming silence is consent here and folks are fine with this
+change?
 
-Remove it.
-
-This effectively reverts the changes made in f689054aace2
-("percpu_counter: add percpu_counter_sum_all interface") except for
-the cpumask iteration that fixes percpu_counter_sum() made earlier
-in this series.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- include/linux/percpu_counter.h |  6 -----
- lib/percpu_counter.c           | 40 ++++++++++------------------------
- 2 files changed, 11 insertions(+), 35 deletions(-)
-
-diff --git a/include/linux/percpu_counter.h b/include/linux/percpu_counter.h
-index 521a733e21a9..75b73c83bc9d 100644
---- a/include/linux/percpu_counter.h
-+++ b/include/linux/percpu_counter.h
-@@ -45,7 +45,6 @@ void percpu_counter_set(struct percpu_counter *fbc, s64 amount);
- void percpu_counter_add_batch(struct percpu_counter *fbc, s64 amount,
- 			      s32 batch);
- s64 __percpu_counter_sum(struct percpu_counter *fbc);
--s64 percpu_counter_sum_all(struct percpu_counter *fbc);
- int __percpu_counter_compare(struct percpu_counter *fbc, s64 rhs, s32 batch);
- void percpu_counter_sync(struct percpu_counter *fbc);
- 
-@@ -196,11 +195,6 @@ static inline s64 percpu_counter_sum(struct percpu_counter *fbc)
- 	return percpu_counter_read(fbc);
- }
- 
--static inline s64 percpu_counter_sum_all(struct percpu_counter *fbc)
--{
--	return percpu_counter_read(fbc);
--}
--
- static inline bool percpu_counter_initialized(struct percpu_counter *fbc)
- {
- 	return true;
-diff --git a/lib/percpu_counter.c b/lib/percpu_counter.c
-index 0e096311e0c0..5004463c4f9f 100644
---- a/lib/percpu_counter.c
-+++ b/lib/percpu_counter.c
-@@ -122,23 +122,6 @@ void percpu_counter_sync(struct percpu_counter *fbc)
- }
- EXPORT_SYMBOL(percpu_counter_sync);
- 
--static s64 __percpu_counter_sum_mask(struct percpu_counter *fbc,
--			      const struct cpumask *cpu_mask)
--{
--	s64 ret;
--	int cpu;
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&fbc->lock, flags);
--	ret = fbc->count;
--	for_each_cpu_or(cpu, cpu_online_mask, cpu_mask) {
--		s32 *pcount = per_cpu_ptr(fbc->counters, cpu);
--		ret += *pcount;
--	}
--	raw_spin_unlock_irqrestore(&fbc->lock, flags);
--	return ret;
--}
--
- /*
-  * Add up all the per-cpu counts, return the result.  This is a more accurate
-  * but much slower version of percpu_counter_read_positive().
-@@ -153,22 +136,21 @@ static s64 __percpu_counter_sum_mask(struct percpu_counter *fbc,
-  */
- s64 __percpu_counter_sum(struct percpu_counter *fbc)
- {
-+	s64 ret;
-+	int cpu;
-+	unsigned long flags;
- 
--	return __percpu_counter_sum_mask(fbc, cpu_dying_mask);
-+	raw_spin_lock_irqsave(&fbc->lock, flags);
-+	ret = fbc->count;
-+	for_each_cpu_or(cpu, cpu_online_mask, cpu_dying_mask) {
-+		s32 *pcount = per_cpu_ptr(fbc->counters, cpu);
-+		ret += *pcount;
-+	}
-+	raw_spin_unlock_irqrestore(&fbc->lock, flags);
-+	return ret;
- }
- EXPORT_SYMBOL(__percpu_counter_sum);
- 
--/*
-- * This is slower version of percpu_counter_sum as it traverses all possible
-- * cpus. Use this only in the cases where accurate data is needed in the
-- * presense of CPUs getting offlined.
-- */
--s64 percpu_counter_sum_all(struct percpu_counter *fbc)
--{
--	return __percpu_counter_sum_mask(fbc, cpu_possible_mask);
--}
--EXPORT_SYMBOL(percpu_counter_sum_all);
--
- int __percpu_counter_init(struct percpu_counter *fbc, s64 amount, gfp_t gfp,
- 			  struct lock_class_key *key)
- {
 -- 
-2.39.2
+Jens Axboe
+
 
