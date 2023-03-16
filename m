@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63ABD6BD8F8
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Mar 2023 20:22:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 668B36BD8FC
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Mar 2023 20:23:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230203AbjCPTWh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Mar 2023 15:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45242 "EHLO
+        id S229704AbjCPTXB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Mar 2023 15:23:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230164AbjCPTWg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Mar 2023 15:22:36 -0400
+        with ESMTP id S229667AbjCPTXA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Mar 2023 15:23:00 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AD365C7D
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 12:22:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E41BCFE2
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 12:22:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ECF2A620EE
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 19:22:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A97AC433EF;
-        Thu, 16 Mar 2023 19:22:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F126620C9
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 19:22:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCABC433EF;
+        Thu, 16 Mar 2023 19:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678994552;
-        bh=7unI4aM4kWj0c4FF4eod83BtE4iRejRvVLdrHGZCPqI=;
+        s=k20201202; t=1678994567;
+        bh=P/2Dr4jU4U0gFwv0Q8y1QSNrbmQONrKwU/LjtDqK56A=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=VyYE04xy7v7YHqz5l73+pc2vepHwBM5Pm8YpXpcpHZEfKKH8pfEbdPGCjIT2GQCRB
-         QQhD/CyfUGBsR0hVM19v5FSArjtVPDx/e0OIhn0nh50Ga1y58tQXsgWYxm29hC4GIF
-         fLMmJdevJr7RSq2gh7e7oO48iwUBc37I7OKRXveaOlXi7omkTscrVoYnjsB2hpNkVE
-         78BY9YUrxtofc6JwX/gcbzQSA/lEUhi6J4OEu/KbKoR8t0TtOKyEnPjL71VuI2xf0C
-         rR1sbrAZ+jZrvjS3BPwjRNFZAueyJQFeppdOnDNO3rTeSCddyLLYtfm2FxEflz25WG
-         UTNZs+73XYbXQ==
-Date:   Thu, 16 Mar 2023 12:22:31 -0700
-Subject: [PATCH 04/17] xfs: preserve VLOOKUP in xfs_attr_set
+        b=MeHOGwP6zJedoLnf1aPje1Lsnr/3tEpBAnJvOEmpVPkj4JkJrvS0EGuLYXuCC9rCX
+         iDES1QD5aDbXbtdF+xl4Zd3eG38OblbJziXZ8PvKb5chJMHsCJhgyUhoDb8kboJvdL
+         TLEvcorLrhJuUh3JVq3WBlHzyVJbgSiXD6GYh56vKTNAyxD15XwONYWgZDpKmHx+KO
+         fCLI0Lwi9nKBUR1g1R9eX9oU2pvORa4dZX7dE8dvnhbog0krnQyTAEvqtNdP4IjXfD
+         /ugatgKsBUU+faf+Wel+k6FRBlL6qwca8c5gFtde/v2Iu6lrNRd3q4iObbTllCOfb9
+         CyP+fMxFzJPAQ==
+Date:   Thu, 16 Mar 2023 12:22:47 -0700
+Subject: [PATCH 05/17] xfs: restructure xfs_attr_complete_op a bit
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     allison.henderson@oracle.com, linux-xfs@vger.kernel.org
-Message-ID: <167899414413.15363.13959734432816342056.stgit@frogsfrogsfrogs>
+Message-ID: <167899414427.15363.5872297549117711319.stgit@frogsfrogsfrogs>
 In-Reply-To: <167899414339.15363.12404998880107296432.stgit@frogsfrogsfrogs>
 References: <167899414339.15363.12404998880107296432.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -54,33 +54,46 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Preserve the attr-value lookup flag when calling xfs_attr_set.  Normal
-xattr users will never use this, but parent pointer fsck will.
+Reduce the indentation in this function by flattening the nested if
+statements.  We're going to add more code later to this function later,
+hence the early cleanup.  No functional changes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 756d93526075..86672061c99e 100644
+index 86672061c99e..996ef24482e1 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -999,11 +999,11 @@ xfs_attr_set(
- 	/*
- 	 * We have no control over the attribute names that userspace passes us
- 	 * to remove, so we have to allow the name lookup prior to attribute
--	 * removal to fail as well.  Preserve the logged flag, since we need
--	 * to pass that through to the logging code.
-+	 * removal to fail as well.  Preserve the logged and vlookup flags,
-+	 * since we need to pass them through to the lower levels.
- 	 */
--	args->op_flags = XFS_DA_OP_OKNOENT |
--					(args->op_flags & XFS_DA_OP_LOGGED);
-+	args->op_flags &= (XFS_DA_OP_LOGGED | XFS_DA_OP_VLOOKUP);
-+	args->op_flags |= XFS_DA_OP_OKNOENT;
+@@ -422,17 +422,17 @@ xfs_attr_complete_op(
+ 	bool			do_replace = args->op_flags & XFS_DA_OP_REPLACE;
  
- 	if (!is_remove) {
- 		XFS_STATS_INC(mp, xs_attr_set);
+ 	args->op_flags &= ~XFS_DA_OP_REPLACE;
+-	if (do_replace) {
+-		args->attr_filter &= ~XFS_ATTR_INCOMPLETE;
+-		if (args->new_namelen > 0) {
+-			args->name = args->new_name;
+-			args->namelen = args->new_namelen;
+-			args->hashval = xfs_da_hashname(args->name,
+-							args->namelen);
+-		}
++	if (!do_replace)
++		return XFS_DAS_DONE;
++
++	args->attr_filter &= ~XFS_ATTR_INCOMPLETE;
++	if (args->new_namelen == 0)
+ 		return replace_state;
+-	}
+-	return XFS_DAS_DONE;
++
++	args->name = args->new_name;
++	args->namelen = args->new_namelen;
++	args->hashval = xfs_da_hashname(args->name, args->namelen);
++	return replace_state;
+ }
+ 
+ static int
 
