@@ -2,49 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8788E6BD8CF
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Mar 2023 20:19:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 654AA6BD8D0
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Mar 2023 20:19:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjCPTTT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Mar 2023 15:19:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40206 "EHLO
+        id S230089AbjCPTT1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Mar 2023 15:19:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbjCPTTS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Mar 2023 15:19:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECCA7A54D0
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 12:18:40 -0700 (PDT)
+        with ESMTP id S230103AbjCPTTZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Mar 2023 15:19:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB2824BEE
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 12:18:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9F49FB82302
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 19:18:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5931EC433EF;
-        Thu, 16 Mar 2023 19:18:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91986620DC
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Mar 2023 19:18:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA81C433D2;
+        Thu, 16 Mar 2023 19:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678994318;
-        bh=haDAEHewDro+bwTv0uEoZCOMac2rD1pMZaNVmq2nkK4=;
+        s=k20201202; t=1678994334;
+        bh=hbdpsb5Bg+sois3AwRaHZC1+x3EyM5zL81RrUu4bEZ4=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=XlOfAcxCBh2/x6WIr6bSrhzS862NHrGtEGaldyQFl5Erury7+POkETgLC4xlobe51
-         Iid7715R98aDWy8PYbbKZ5w+spCYYr+gIE+cv9dQRryd1YhWg75K+gSNNjnr1wOHZz
-         fOFQs4uRWPfV57pw/eo4GpfGr7YgTMPTnkzr/CBmT+hRyavIYvgmW0Nc51gRRUggS+
-         clrU1/KvUkh9GtF1/leh6HH/SbWkDz2tZCZZ6rtogDU0Y7YyqW+c6gxA/kyNv2E2EI
-         OMVWIhsq5LPEAn/eBxU80XDAnv1rV0YDuOcm6/mF1fFYy92FbfVLfxecFE1E2fyDN+
-         1ik4xEqFiQwGw==
-Date:   Thu, 16 Mar 2023 12:18:38 -0700
-Subject: [PATCHSET v10r1d2 0/5] xfsprogs: bug fixes for parent pointers
+        b=avaJDdBMIhfMtulpjT5dFUU2sq5alkFB+8Wse86h1kc0LtdMYEto81Hu5sFWFUSOs
+         ew6rB209tHjGqkmF7VTca6lnOmMzhGuS3Zga9f/oCxqN4IR/kLGLo9f1GmG1shc/pc
+         ibR6taFjwJqZXs3b/QeQ2AMGD1F5KdGoU9nlEAmBvifh1n4oeWpGu0stEE1hFvVZ3r
+         EEz3/bgWjLDjQF9lR7FlAvAbl/b1R1+xcs1dm/ASDz9ncrDHsrFTfY4O2Ilj1PB7Kv
+         vJXWFX41qk84qtzNb6cE3EA2entW5vx3qfNEb6swBmZ9R16qP1Os6N1p4INzOXOazO
+         48O4Dd10hLtjg==
+Date:   Thu, 16 Mar 2023 12:18:53 -0700
+Subject: [PATCHSET v10r1d2 0/4] xfs_logprint: clean up attri/pptr dumping
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     allison.henderson@oracle.com, linux-xfs@vger.kernel.org
-Message-ID: <167899416457.16836.2981078472584318439.stgit@frogsfrogsfrogs>
+Message-ID: <167899416793.17000.8105050564560343480.stgit@frogsfrogsfrogs>
 In-Reply-To: <20230316185414.GH11394@frogsfrogsfrogs>
 References: <20230316185414.GH11394@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,31 +54,22 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-This series contains the accumulated bug fixes from Darrick to make
-fstests pass and online repair work.
+This series starts by reverting all the recent changes to log_redo.c
+because there's a lot of duplicated code and overly complicated pointer
+handling.  Next, we address a few missing pieces in the attri log item
+decoding, and finish the series by adding proper decoding of parent
+pointers embedded in an xattri log intent item.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
 
 This is an extraordinary way to destroy everything.  Enjoy!
 Comments and questions are, as always, welcome.
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=pptrs-bugfixes
-
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=pptrs-bugfixes
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=pptrs-bugfixes
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=pptrs-logprint-cleanups
 ---
- io/parent.c              |   22 +++++++--------
- libfrog/pptrs.c          |   36 ++++++++++++------------
- libfrog/pptrs.h          |    4 +--
- libxfs/libxfs_api_defs.h |    3 +-
- libxfs/xfs_da_format.h   |   11 +++++++
- libxfs/xfs_fs.h          |   69 +++++++++++++++++++++-------------------------
- libxfs/xfs_parent.c      |   47 +++++++++++++++++++++++++++----
- libxfs/xfs_parent.h      |   24 +++++++---------
- mkfs/proto.c             |   12 ++++----
- 9 files changed, 131 insertions(+), 97 deletions(-)
+ libxfs/libxfs_api_defs.h |    1 
+ logprint/log_redo.c      |  266 +++++++++++++++++-----------------------------
+ logprint/logprint.h      |    5 -
+ 3 files changed, 102 insertions(+), 170 deletions(-)
 
