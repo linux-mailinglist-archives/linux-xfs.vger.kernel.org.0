@@ -2,89 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF6B76C909D
-	for <lists+linux-xfs@lfdr.de>; Sat, 25 Mar 2023 21:06:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1038C6C90AC
+	for <lists+linux-xfs@lfdr.de>; Sat, 25 Mar 2023 21:20:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbjCYUGI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 25 Mar 2023 16:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40458 "EHLO
+        id S230399AbjCYUUW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 25 Mar 2023 16:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjCYUGH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 25 Mar 2023 16:06:07 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6C29EEF
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Mar 2023 13:06:06 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id cn12so20888681edb.4
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Mar 2023 13:06:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1679774765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mPB7hzR1KHvTdfIifE2g7FovsTPRz1KIWa91Eo2+Hxw=;
-        b=hNMebUU7huTAcRxFGTajfQnywt7MuQ44i0xXCtVO5WQ3B+31dzCRbcfyESb0YSL57e
-         7brCdGvBKh9R8JVM/PtB8FYGCQ6VHgyw6nX9ub37wEf6GFA94ph5C3C+EYuKd/Ot7dcP
-         Sj2qyD1dFZSMtC+ibINbD7VjNHtd9BNTHASmU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679774765;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mPB7hzR1KHvTdfIifE2g7FovsTPRz1KIWa91Eo2+Hxw=;
-        b=kMUspsgYHv9isHQv8LnlSwQDVLCdMlGwrgaOOKsGiKvOhwhwvxqd8yLWLDkBIy71U+
-         fvuOqeTUatsBQNaBWcEaxEFilB3KTasmTPsdXvuLrmv2Q+ctKw3WK/Dy+mXg5G2nIGv1
-         WVBqL0KPDm4xQxYgCrCJvT+/UtD+ibkFud2eXm8uUclGp6yQAMrf7Xy4jwEh0cvgmRI3
-         51nTAmMJY61eVkEYr7akogz1FctZV302KCTDAvvm8oAhHpsgHTsZ2w3EifYcTYa4b5Vu
-         2upEB77m0X7Wt6Rtu2K8FSUbPLsuBHFnGK2O+SVrxVHTfeKyh85QuDWQg2/vYzcf6N2f
-         wQIA==
-X-Gm-Message-State: AAQBX9cvzV1Wbc72xU8DprwxZMkvIfBXm+5MikPILbKlXUlbLqe0vnrE
-        n48HB3OcmVA8hPeSVbwbWl0/p7rYgoHi5yyEL6xkA2AA
-X-Google-Smtp-Source: AKy350bJpYRo9BVcVlIC+9km2fEpTaGFKCredNAD7BGkrddtPs+RgXfCeMLuM0vL3vcS+G3UeG2IrQ==
-X-Received: by 2002:a17:906:ecf4:b0:930:2e1c:97ba with SMTP id qt20-20020a170906ecf400b009302e1c97bamr7442373ejb.5.1679774765062;
-        Sat, 25 Mar 2023 13:06:05 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id t9-20020a50c249000000b005021d1ae6adsm3205330edf.28.2023.03.25.13.06.04
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Mar 2023 13:06:04 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id ew6so20805659edb.7
-        for <linux-xfs@vger.kernel.org>; Sat, 25 Mar 2023 13:06:04 -0700 (PDT)
-X-Received: by 2002:a17:906:7846:b0:933:1967:a984 with SMTP id
- p6-20020a170906784600b009331967a984mr3248641ejm.15.1679774763744; Sat, 25 Mar
- 2023 13:06:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <167976583201.986322.4007693111843261305.stg-ugh@frogsfrogsfrogs>
-In-Reply-To: <167976583201.986322.4007693111843261305.stg-ugh@frogsfrogsfrogs>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 25 Mar 2023 13:05:46 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjqeE9JBh7Jkkjb-QE4oeRhO4Xcf92d0=DDTzVeFp=6rA@mail.gmail.com>
-Message-ID: <CAHk-=wjqeE9JBh7Jkkjb-QE4oeRhO4Xcf92d0=DDTzVeFp=6rA@mail.gmail.com>
-Subject: Re: [GIT PULL 2/3] xfs: percpu counter bug fixes for 6.3-rc3
+        with ESMTP id S229446AbjCYUUV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 25 Mar 2023 16:20:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E698FD31D
+        for <linux-xfs@vger.kernel.org>; Sat, 25 Mar 2023 13:20:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B8B960C69
+        for <linux-xfs@vger.kernel.org>; Sat, 25 Mar 2023 20:20:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E08EDC433EF;
+        Sat, 25 Mar 2023 20:20:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679775619;
+        bh=3dEEfpJGlW59Q3J9NHcZ76CD1ET8fvbiXErwOzcJYV8=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=O2CcH+TETUS7Zj5BrDeRLG7xA0DCMaJAO+0J5NLZ367HH6lU+4fB8hFFw19cQiF6Q
+         bQQ8Mb3RkO0POd8MymyysPC9wikna8mryGZCUxfWv1QAD4qTnMf1KGIVbriP6xPiXN
+         bVkHhBA86FNz8UWplaMuOaf9h2Ziu4QSSHeO2cRnUcLCBvzaTRYYVAmGsrvoUAOVx0
+         p65MTBhFQgC4cxvRuYnO2sZ6ZxRCqCC7Os2/oUsVUGnzEX9iPyd/W7ahB5qoxRap/0
+         G2mQoGu7syXQA7MAdB6HAZOCe/M4Mg+NK5LurD1fdfLhvbV0o458Z81ctfJJgK+l66
+         izvRzODqppFUQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CCD60E4F0DA;
+        Sat, 25 Mar 2023 20:20:19 +0000 (UTC)
+Subject: Re: [GIT PULL 1/3] xfs: bug fixes for 6.3-rc2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <167976583114.986322.11327553276111503462.stg-ugh@frogsfrogsfrogs>
+References: <167976583114.986322.11327553276111503462.stg-ugh@frogsfrogsfrogs>
+X-PR-Tracked-List-Id: <linux-xfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <167976583114.986322.11327553276111503462.stg-ugh@frogsfrogsfrogs>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-6.3-fixes-3
+X-PR-Tracked-Commit-Id: 3cfb9290da3d87a5877b03bda96c3d5d3ed9fcb0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1470afefc3c42df5d1662f87d079b46651bdc95b
+Message-Id: <167977561982.2542.350631907515805505.pr-tracker-bot@kernel.org>
+Date:   Sat, 25 Mar 2023 20:20:19 +0000
 To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     david@fromorbit.com, dchinner@redhat.com, linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Cc:     djwong@kernel.org, torvalds@linux-foundation.org,
+        david@fromorbit.com, dchinner@redhat.com, linux-xfs@vger.kernel.org
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Mar 25, 2023 at 11:33=E2=80=AFAM Darrick J. Wong <djwong@kernel.org=
-> wrote:
->
-> I'm hoping this is a fairly painless fix to the problem, since the dying
-> cpu mask should generally be empty.  It's been in for-next for a week
-> without any complaints from the bots.  However, if this is too much for
-> a bug fix, we could defer to 6.4.
+The pull request you sent on Sat, 25 Mar 2023 11:20:47 -0700:
 
-I'm not overly happy about the timing of the fix and it would have
-been lovely to get this earlier in the release, but it does seem quite
-sane and fairly straightforward.
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-6.3-fixes-3
 
-So in it went,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1470afefc3c42df5d1662f87d079b46651bdc95b
 
-                Linus
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
