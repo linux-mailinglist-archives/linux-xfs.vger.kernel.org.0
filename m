@@ -2,81 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A6BE6C9657
-	for <lists+linux-xfs@lfdr.de>; Sun, 26 Mar 2023 17:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3941A6C9717
+	for <lists+linux-xfs@lfdr.de>; Sun, 26 Mar 2023 19:06:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjCZP5T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 26 Mar 2023 11:57:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51048 "EHLO
+        id S229552AbjCZRGf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 26 Mar 2023 13:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbjCZP5S (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Mar 2023 11:57:18 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208F14220
-        for <linux-xfs@vger.kernel.org>; Sun, 26 Mar 2023 08:57:17 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id ja10so6215418plb.5
-        for <linux-xfs@vger.kernel.org>; Sun, 26 Mar 2023 08:57:17 -0700 (PDT)
+        with ESMTP id S229475AbjCZRGe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Mar 2023 13:06:34 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8F444B0
+        for <linux-xfs@vger.kernel.org>; Sun, 26 Mar 2023 10:06:33 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id q16so8299907lfe.10
+        for <linux-xfs@vger.kernel.org>; Sun, 26 Mar 2023 10:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679846236;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YzwnjkUenmiZUEBZjCVaStCmhFT11zV1dVjxIZMZJd0=;
-        b=aUvEyt1YD+mIydWxTKiD74QRnJzfKKp9ZT2AHo1dCs1/RwMJ2gr441wuOM6/LQxreO
-         W3R7jsvyKrM2JS655pJs/V3Y9EBKRLSKpWB72zwjCV+b/1pouEzHObduGDdfYOCjJ19Q
-         WPwQSenaurTwFDK+DxixUaGyWC28ORyipmMW8u3pia+rhKzj/iWNQLV7YtAS54k57mca
-         MR2Y85r/UCeYnYCyABkihAKkrtFWfD9WgX1N5JE8I0wZjAxCOaWrk+qRhW+0Ujbj98Lk
-         xr/NP/kjMq+WqMhtO1cK32v3eixjOuvogDLReoKfz4nccweszvpObTg6I7fc5Mh0L42e
-         NeoQ==
+        d=gmail.com; s=20210112; t=1679850391;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qlYEmHawRUc9CXHZvxz4hcXryBGUW3aSpn5U9HU8xgw=;
+        b=U2RMt1ltWUI8b/9xLkbElYtyYdou3M887Jvk2GDM0SaocnKt6n30zHVHWmS7A7mKf0
+         6cFUsUwuQsbDWG86Uwh+hg5c9ikTLP8oOZM+KAuUyoYIvfCMYFmqgM96jXltsSuTmNXE
+         /kgby636C10siXtjqLlVkAQ+2RB0RnJVx4DR1DbKgoD8NkVi1h270HXh7EqrR4zgozeT
+         8HztZesM8vlLdoBvGl95KkvHXhjA8W7f+JdTQRL5aA4Z+5hrYC6nElRn+fSVcv4JkHfd
+         7Vq/gzQEHV2HCWJiW0vxFJFY59Q0RrPn7KG22dfgYJfqev+EeaoMHhEimSn9jX7y/UDs
+         MD3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679846236;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YzwnjkUenmiZUEBZjCVaStCmhFT11zV1dVjxIZMZJd0=;
-        b=LZzaukPAMV31W6CWLhMB26FBWfnL00i8LC4FNhIjZCYAGXMwV1zkPzu7Uw5cTIxAvQ
-         W0+oFumDvTdJZ/CDBL/OyuswTPbzd5BazmgiHN21NJZUyBBUTHWoPhzhWkbGUOhZHtOB
-         AL/x+keV0pZetEJEeaM2MMEfKoVZa2H3Pjg22onKeZ6J1yicIcC/6A9cIscfbZtuWEMV
-         Qq87arjvOvfn9hEZQ5+PH7fqdTu2ID3FKJWUhutTPsievTTdh637bGTqKQ/qyxWlb5Co
-         +9W2QynR38niObqs+a2u4ZrSfJ7JeOoW8OSZeeE6GeNh3//VKQH/9FasQGtLspSWOcnP
-         fE3g==
-X-Gm-Message-State: AAQBX9eqs0gwEkjUnGUYY2ZH3RtkMusapfFjLiQQJoHKMVNVfv/L/eLA
-        wjNg35Szl8zu4GGKUBtpCoHUpryWf6pDGGVzsNE=
-X-Google-Smtp-Source: AKy350YsHlytX1VVCSJekSF2Z1TcLyMip/EYWzfminCAphE8YgD9KcDzJVhUuSsiodWiw06LGwZ5wc1zYXlnd9GS1Eg=
-X-Received: by 2002:a17:903:22cb:b0:19a:850a:d88b with SMTP id
- y11-20020a17090322cb00b0019a850ad88bmr3353832plg.4.1679846236663; Sun, 26 Mar
- 2023 08:57:16 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679850391;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qlYEmHawRUc9CXHZvxz4hcXryBGUW3aSpn5U9HU8xgw=;
+        b=yccZcot2hSGsq2ffAPrOISBctp1JrTrBpUaeJDZO2WjYOWqR2l43l5EzPfCzBYcjrH
+         XSqbK1TQKpDPv3613dqCv3hnbTjjJhusnnjEu1vJ8vNzHIpqXheP7Hw4Jvh5y8fUWsNq
+         qDWKloMCTAmN8Y3gl3dPNd2lIR7cGIRp9seQYDb/7HFv4oluLhlHecNo0ur/e8IVKfEs
+         06QDhDOy/Ze5cpGcrkyKrMDJtfcK8B4SMOxEhxVZvMnljkAJAHVLa+w7o/hsBLuQohMq
+         oxpyQgVfV2whvz808oYVBr9vNjQAsuGIKTzqo5OrOv2ku1isEVDrHT+N2f2/poUrKlNZ
+         sq0w==
+X-Gm-Message-State: AAQBX9d076m1H5HNiRnBLyv/TVdTZzpURxqZUUgjr9owIXpOLbjvjXvz
+        rncVccB6fBNd0KslISJ3cmU=
+X-Google-Smtp-Source: AKy350YLEtLKqjZ5+2kD6hWm0P4/sY8bMOeIfvxtQIfd5UNhSOnEw16cAYE9IN6kd0KWKseWZtBWdw==
+X-Received: by 2002:ac2:4105:0:b0:4db:381d:4496 with SMTP id b5-20020ac24105000000b004db381d4496mr2340810lfi.51.1679850391377;
+        Sun, 26 Mar 2023 10:06:31 -0700 (PDT)
+Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
+        by smtp.gmail.com with ESMTPSA id m7-20020ac24ac7000000b004d858fa34ebsm4288720lfp.112.2023.03.26.10.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Mar 2023 10:06:30 -0700 (PDT)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     "Darrick J . Wong" <djwong@kernel.org>
+Cc:     Chandan Babu R <chandan.babu@oracle.com>,
+        Leah Rumancik <leah.rumancik@gmail.com>,
+        Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
+Subject: [PATCH 5.10 CANDIDATE 0/2] Two more xfs backports for 5.10.y (from v5.11)
+Date:   Sun, 26 Mar 2023 20:06:21 +0300
+Message-Id: <20230326170623.386288-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Received: by 2002:a05:7022:e98a:b0:60:784c:95a4 with HTTP; Sun, 26 Mar 2023
- 08:57:16 -0700 (PDT)
-Reply-To: mr.alabbashadi@gmail.com
-From:   "mr.alabbas hadi" <nutritionf65@gmail.com>
-Date:   Sun, 26 Mar 2023 08:57:16 -0700
-Message-ID: <CANLmhrWj-XbQ+OTpowXhHiWZcztERYuXUXMeb56=hUXu+275hA@mail.gmail.com>
-Subject: WITH ALL DUE RESPECT,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        SUBJ_ALL_CAPS,T_HK_NAME_FM_MR_MRS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Darrick,
+
+These two backports were selected by Chandan for 5.4.y, but are
+currently missing from 5.10.y.
+
+I've put them through the usual kdevops testing routine.
+
+This is the second time that I have considered patch #2 for 5.10.y.
+The last time around, I observed increased the probablity of a known
+buffer corruption assertion when running xfs/076, so I suspected
+a regression, and dropped it from the submission [1].
+
+At the time, the alleged regression happened only in the kdevops setup
+and neither I nor Brain were able to understand why that happens [2].
+This time around, the kdevops setup did not observe that odd regression.
+
+Thanks,
+Amir.
+
+[1] https://lore.kernel.org/linux-xfs/20220601104547.260949-1-amir73il@gmail.com/
+[2] https://lore.kernel.org/linux-xfs/YpY6hUknor2S1iMd@bfoster/T/#mf1add66b8309a75a8984f28ea08718f22033bce7
+
+Brian Foster (1):
+  xfs: don't reuse busy extents on extent trim
+
+Darrick J. Wong (1):
+  xfs: shut down the filesystem if we screw up quota reservation
+
+ fs/xfs/xfs_extent_busy.c | 14 --------------
+ fs/xfs/xfs_trans_dquot.c | 13 ++++++++++---
+ 2 files changed, 10 insertions(+), 17 deletions(-)
+
 -- 
-Greetings,
+2.34.1
 
-I have a Mutual/Beneficial Business Project that would be beneficial
-to you. I only have two questions to ask of you, if you are
-interested.
-
- 1. Can you handle this project?
- 2. Can I give you this trust?
-
-It's legal and no risk involved, I will send you more details as soon
-as I hear from you.
-
-Thanks
