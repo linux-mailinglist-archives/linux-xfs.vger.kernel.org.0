@@ -2,80 +2,141 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B4F96D2B6D
-	for <lists+linux-xfs@lfdr.de>; Sat,  1 Apr 2023 00:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53A646D52B5
+	for <lists+linux-xfs@lfdr.de>; Mon,  3 Apr 2023 22:40:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232426AbjCaWmt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 31 Mar 2023 18:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58680 "EHLO
+        id S233103AbjDCUkn convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 3 Apr 2023 16:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbjCaWms (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 31 Mar 2023 18:42:48 -0400
-X-Greylist: delayed 461 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 31 Mar 2023 15:42:47 PDT
-Received: from mta.karlsbakk.net (mta.karlsbakk.net [5.183.95.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8609320C32
-        for <linux-xfs@vger.kernel.org>; Fri, 31 Mar 2023 15:42:47 -0700 (PDT)
-Received: from mta.karlsbakk.net (localhost.localdomain [127.0.0.1])
-        by mta.karlsbakk.net (Proxmox) with ESMTP id 53D9F211F5
-        for <linux-xfs@vger.kernel.org>; Sat,  1 Apr 2023 00:35:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=karlsbakk.net;
-         h=cc:content-transfer-encoding:content-type:content-type:date
-        :from:from:message-id:mime-version:reply-to:subject:subject:to
-        :to; s=sausages; bh=y+5DKlJ+XcHpwKq6ZucXYnQVVpngzqLZ6MMOlGfPyW0=; b=
-        D/DMgipjwtrU8L809s/AE0y90gQv2CeOgbgDvPMtX7Wp6PkEzv0CAr6Wgtaay9X+
-        ELEQRyn31L57kxjonkjcBqWPVnlNcGFl2n0S8g2DJNfIK4+ukBNmfsv0lUDi1iTV
-        EXDWNKFjLUkOhYvc+kQhaYK0DsrQiobo8LwrZZsvgZkI2zQ472PzI8j6hFNvAGnd
-        LL8T/i+zDXbwBVdx8fB/moP7gcqqvMc/+US/A/WYv5Iv3yeSlxqFMsPUjvVzoPxq
-        zMP4cjXrGE0LBELtWSVAorpN6aedWQmh/zZmR0b+kN4yC29cL0JzaHc6EB7G0MAf
-        e7stNZscom7L3njgwAiu4tbe1LynDTkfPD5ads9ILW+LhLqmtDYJOoNE/IVkM0SW
-        myOYA2ODyqqyjn8GyW8o5AK7UVdymKTAbFHWB29deVHwDJ1uESLkFD3D7vW7pxbu
-        b22vSBIp2sXw8HE84xqOqksNPf4pzrpIQkKnub/bpLW/rj7ic5XDBw+OapGZJLLf
-        l8NVCgyShIXPK3h0mNAVQJLlqU8fHHttMCdDs3bkXtbkYZEDY7UJkkQWvcTOX9UU
-        l6rJJAzc4lY5Wx3Atq1GSTglKzuPz8YEMGMDyxOvw58qWgZ9AGlJd8Z7qDSMLBDg
-        zXkPUBTa27k45Do/weZ6RczXhYUVV/GN1ZO8MR8Rup+nX2j9v0KVapN0S7wsxH21
-        ihvWpUEzh+wdrs0KGV+Ux25kVv6iXOKMwlSjvTq676xPrSQQReGIikg1yw1KAXKe
-        PkiSSBteg81f6nNG1PECOKCHJHSXFI2XQHyFoVRr6cKE2kEBbj9ghhHGNWMKyiUb
-        TG5wHuXE6hZpxJNl5JoWM7yHvLUj42RMLj/Mf9ttvLljxMSLb4B4Hi6P+eqKy/VV
-        Ayn/qpNX4dmuWKuiZPda5yiTddKagYZmW7oSVdRqegLmWKHnaOXS3NZMlTZ2k+eP
-        uou0P94gGZ+r9NlAG/k07Qpq0QzCdkCSsYKqsmDHZbCElrQQdoICGRidLanyInso
-        Rmt0IuiWcjZUBJxW44vE2rx6S82n/pgWdxq9KhI5Yf53/RFac1d+ej8PJN5+bNQV
-        SfyAzGXhKZ9DhuDQhxbXZPwr1e9vueJ2Nn05vofLv2zyAmnnTQVAHyCFeZRAXAhX
-        sQLsYkdIl4FoYJFBlcGJE47q2m0zpeu3CcKZQzbOsYzyqQJdv68C6RdrBAapZ+eC
-        H53lHbMIz8Ms9K/pNtzglpp/ru9i7Q/uaexWsGMp+MHBkLSiXBWCwip7O0yyKiGr
-        /d3Aj0IiddaFvA2YMXOCnT+5WDLKa5jlPx0BN06dt+OxWU1MXODn2pC2hOwQVWJR
-        0i/ECr5d4Tj+XLBWPiJVRQ==
-Received: from mail.karlsbakk.net (mail.karlsbakk.net [IPv6:2001:1608:1b:ac::2])
-        by mta.karlsbakk.net (Proxmox) with ESMTP id C89C9207AD
-        for <linux-xfs@vger.kernel.org>; Sat,  1 Apr 2023 00:35:01 +0200 (CEST)
-Received: from mail.karlsbakk.net ([::1])
-        by mail.karlsbakk.net with ESMTPA
-        id NborMBVgJ2TX6AIAVNCnFw
-        (envelope-from <roy@karlsbakk.net>)
-        for <linux-xfs@vger.kernel.org>; Sat, 01 Apr 2023 00:35:01 +0200
+        with ESMTP id S233473AbjDCUkl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 3 Apr 2023 16:40:41 -0400
+X-Greylist: delayed 54426 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 03 Apr 2023 13:40:37 PDT
+Received: from host208.bbsn.co.jp (host208.bbsn.co.jp [153.127.68.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF76170F
+        for <linux-xfs@vger.kernel.org>; Mon,  3 Apr 2023 13:40:37 -0700 (PDT)
+Received: from [0.4.188.31] ([103.161.96.78])
+        (authenticated bits=0)
+        by host208.bbsn.co.jp (8.13.1/8.13.1) with ESMTP id 3335OsV2011722
+        for <linux-xfs@vger.kernel.org>; Mon, 3 Apr 2023 14:33:30 +0900
+Message-Id: <202304030533.3335OsV2011722@host208.bbsn.co.jp>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Date:   Sat, 01 Apr 2023 00:35:01 +0200
-From:   Roy Sigurd Karlsbakk <roy@karlsbakk.net>
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Job vacancy    
 To:     linux-xfs@vger.kernel.org
-Subject: Shrink support?
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <e19e642a3b5faeccf51db4e04bc845d6@karlsbakk.net>
-X-Sender: roy@karlsbakk.net
-Organization: Roys rare rot
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=0.2 required=5.0 tests=DKIM_INVALID,DKIM_SIGNED,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+From:   "St. Thomas' Hospital UK" <stthomashospitaluk238@gmail.com>
+Date:   Mon, 03 Apr 2023 12:33:25 +0700
+Reply-To: jobsoffer@gstts-nhs-uk.online
+X-Spam-Status: No, score=3.4 required=5.0 tests=DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+        NML_ADSP_CUSTOM_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_SOFTFAIL,
+        SPOOFED_FREEMAIL,SPOOF_GMAIL_MID autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all
+St. Thomas' Hospital UK
 
-Was it something I was dreaming or was there shrink support coming to 
-XFS?
+  REF: HR/MED-004/06923
 
-roy
+St. Thomas' Hospital UK is a large NHS teaching hospital in Central
+London, England. It is one of the institutions that compose the King's
+Health Partners, an academic health science Center. Administratively
+part of the Guy's and St Thomas' NHS Foundation Trust, together with
+Guy's Hospital and King's College Hospital, it provides the location
+of the King's College London GKT School of Medical Education.
 
+It is ranked amongst the best Ten (10) hospitals in the United Kingdom
+with 840 beds. The hospital has provided healthcare freely or under
+charitable auspices since the 12th century. It is one of London's most
+famous hospitals, associated with names such as Sir Astley Cooper,
+William Cheselden, Florence Nightingale, Linda Richards, Edmund
+Montgomery, Agnes Elizabeth Jones and Sir Harold Ridley. It is a
+prominent London landmark =E2=80=93 largely due to its location on the
+opposite bank of the River Thames to the Houses of Parliament.
+
+The largest not-for-profit health system in the world, we provide high
+quality, personalized and compassionate care to our patients through
+our dedication to safety, rigorous self-assessment, performance
+improvement, corporate integrity and health service management. We are
+committed to being the per-eminent provider of acute inpatient and
+outpatient health care services.
+
+DESCRIPTION: Following the COVID-19 outbreak, expansion and
+development in our hospital, we are currently recruiting and employing
+the services of Medical Professionals  (Specialists, Consultants,
+General Practitioners) with relevant experiences to fill in the
+following below vacancies in our health care facility in the United
+Kingdom.
+
+AREAS OF VACANCIES:
+
+StH1. ALLERGY & IMMUNOLOGY StH2. ANAESTHESIOLOGY StH3. ANGIOLOGY StH4.
+ANTHROPOSOPHIC MEDICINE StH5. BREAST SURGERY  StH6. CARDIOLOGY StH7.
+CRANIOSACRAL PRACTITIONER / THERAPIST StH8. CARDIOTHORACIC SURGERY
+StH9. CARDIAC SURGERY
+
+StH10. CRITICAL CARE MEDICINE StH11. DENTISTS StH12. DENTAL SURGEON
+StH13. DERMATOLOGY StH14. ENDOCRINOLOGY
+
+StH15. EMERGENCY MEDICINE StH16. GASTROENTEROLOGY StH17. GENERAL
+SURGERY StH18. GENERAL PAEDIATRICS  StH19. GENERAL MEDICINE  StH20.
+HEMATOLOGY StH21. HYPERTENSION SPECIALIST StH22. INTERNAL MEDICINE
+StH23. INFECTOLOGY StH24. MORPHOLOGY StH25. NEPHROLOGY  StH26.
+NEUROSURGERY StH27. NEONATOLOGY StH28. ORTHOPAEDICS StH29. ORTHOPAEDIC
+SURGERY StH30. OTORHINOLARYNGOLOGY  StH31. ORTHODONTIST StH32.
+OCCUPATIONAL MEDICINE StH33. ORAL AND MAXILLOFACIAL SURGERY StH34.
+PATHOLOGY
+
+StH35. PLASTIC & RECONSTRUCTIVE SURGERY StH36. PNEUMOLOGY StH37.
+PAEDIATRIC SURGEON  StH38.  PSYCHOLOGIST StH39.  PHYSIOTHERAPY  StH40.
+PEDIATRICS StH41. PUBLIC HEALTH  StH42. RADIOLOGY StH43. RHEUMATOLOGY
+StH44. REHABILITATION MEDICINE StH45. RESPIRATORY MEDICINE  StH46.
+THORACIC SURGERY  StH47. TRAUMATOLOGY StH48. TRICHOLOGIST StH49.
+UROLOGY
+
+JOB LOCATION: London, United Kingdom
+
+JOB COMMENCEMENT: 2023
+
+EMPLOYMENT TYPE: Contract / Full-time
+
+EMPLOYMENT BENEFITS:
+
+Excellent Salary and Overtime Bonus, Health/life Insurance, Relocation
+expenses, Research and Educational assistance, Medical, Optical and
+Dental Care, Family/Single housing accommodation, 24/7 Official
+Vehicle, Scholarship for employee's dependent within UK schools.
+
+Interested applicants are to send a detailed attachment Resume via email  to:  jobsoffer@gstts-nhs-uk.online
+
+NOTE: APPLICATION IS OPEN TO INTERESTED PERSONS FROM ALL INTERNATIONAL
+LOCATIONS, ALL SUCCESSFUL APPLICANTS IN OUR RECRUITMENT PROCESS MUST
+BE WILLING TO RELOCATE TO THE UK FOR WORK.
+
+Coronavirus (COVID-19)- Stay at home if you feel unwell. If you have a
+fever, cough and difficulty breathing, seek medical attention and
+call-in advance. Follow the directions of your local health authority.
+Source: World Health Organization
+
+
+Sincerely,
+
+
+Julie Screaton,
+
+St. Thomas' Hospital Uk
+
+Guy's & St. Thomas NHS Foundation Trust
+
+London, United Kingdom @2023
+
+St Thomas' Hospital UK incorporated in England, UK (Reg. No: 06160266)
+having its registered address at Westminster Bridge Rd, London SE1
+7EH, England.
