@@ -2,79 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31D526DA1A9
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Apr 2023 21:42:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 929796DA1BC
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Apr 2023 21:42:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235437AbjDFTmB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Apr 2023 15:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43280 "EHLO
+        id S238258AbjDFTmy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 6 Apr 2023 15:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229845AbjDFTmA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Apr 2023 15:42:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96A394;
-        Thu,  6 Apr 2023 12:41:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 53B1860FA2;
-        Thu,  6 Apr 2023 19:41:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7CACC433D2;
-        Thu,  6 Apr 2023 19:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680810118;
-        bh=LH5q+aSG98FcQV9OMtAWhsX747vXiHbVLa2jpTrhpWc=;
-        h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=C/laM+53faBdiJCZOO5tmqUtBP33msOkiHU6YnJozgAu3qZMD4Onp7GUPj1O3Cpro
-         daZfDfzaCxqz0UePOtHhXP9RUwdKWCvgK7hByuvi5yTB+H9aJ9FJeIRaePW+BMT70/
-         ueiup5KcTkmzyStuTxwQi/POgwFACO40Mp1aSupVipo9ist8e6LdHFZd5n4sO3T8S7
-         zYpGzu/rGE4fL8IDA+Kjc1Ow67wX1NEIlWzAwdDc+hHG0SwklfOd9nvWmQwOmzKqvj
-         R0eUeTSXnKYs3PIS1FeW9x4iiS7rzqqys9v9gRCuZwyDDaJ81ks69MXGKdwoqztEzn
-         Qu/LhHUAy2IGg==
-Date:   Thu, 06 Apr 2023 12:41:58 -0700
-Subject: [PATCH 01/11] xfs/206: filter out the parent= status from mkfs
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Message-ID: <168080829020.618488.9961036807783357224.stgit@frogsfrogsfrogs>
-In-Reply-To: <168080829003.618488.1769223982280364994.stgit@frogsfrogsfrogs>
-References: <168080829003.618488.1769223982280364994.stgit@frogsfrogsfrogs>
-User-Agent: StGit/0.19
+        with ESMTP id S237708AbjDFTmi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Apr 2023 15:42:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90984A253;
+        Thu,  6 Apr 2023 12:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tmB9ef+i/tR2RuBXG/MztGedwZCTfoIM0/9hlfY16FE=; b=WS2ep4RielBa//Iw2N2zKAwJpB
+        qCW3YjQTQSwAfLWsSVsoutV7+iFjBH0DhQtPhkG887UABmFOFnrdWoBFNHbNrBDGCbea+U+ZLElHR
+        jpnGTSqsWJWh0+w3U9mnzIHezeB6zdA0kAhtzl4zo5p3DWPnrqay+5ChonJviuxlPMDAQG8hMWorV
+        2CC5n6nWzUM6tnRcyPe/cG3Kv4Sm0Ab2RHPfymfryGeBemgO975S3yOvUByubbHw2gtLGkrDa7AmR
+        Wsm44B7yKULXBY79o00EeBYucQQJa/sJzME5G+YJ/eYZV9hsFkGFwuEa6k6mHoenQ1IYFk4Rdb8AG
+        xKOLOPiw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pkVUg-0006hi-MQ; Thu, 06 Apr 2023 19:42:02 +0000
+Date:   Thu, 6 Apr 2023 20:42:02 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Yosry Ahmed <yosryahmed@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        David Hildenbrand <david@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Xu <peterx@redhat.com>, NeilBrown <neilb@suse.de>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@kernel.org>, Yu Zhao <yuzhao@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v5 2/2] mm: vmscan: refactor reclaim_state helpers
+Message-ID: <ZC8giqopXVj/KFIL@casper.infradead.org>
+References: <20230405185427.1246289-1-yosryahmed@google.com>
+ <20230405185427.1246289-3-yosryahmed@google.com>
+ <7ce03e4323b95c1e8fd3faed32c9b285162fe5a8.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ce03e4323b95c1e8fd3faed32c9b285162fe5a8.camel@linux.intel.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+On Thu, Apr 06, 2023 at 10:31:53AM -0700, Tim Chen wrote:
+> On Wed, 2023-04-05 at 18:54 +0000, Yosry Ahmed wrote:
+> > +	 * For all of these cases, we have no way of finding out whether these
+> > +	 * pages were related to the memcg under reclaim. For example, a freed
+> > +	 * slab page could have had only a single object charged to the memcg
+> 
+> Minor nits:
+> s/could have had/could have
 
-Filter out the parent pointer bits from the mkfs output so that we don't
-cause a regression in this test.
+No ... "could have had" is correct.  I'm a native English speaker, so I
+have no idea what the rule here is, but I can ask my linguist wife later
+if you want to know ;-)
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- tests/xfs/206 |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-
-diff --git a/tests/xfs/206 b/tests/xfs/206
-index cb346b6dc9..af86570a81 100755
---- a/tests/xfs/206
-+++ b/tests/xfs/206
-@@ -64,7 +64,8 @@ mkfs_filter()
- 	    -e "s/\(sunit=\)\([0-9]* blks,\)/\10 blks,/" \
- 	    -e "s/, lazy-count=[0-9]//" \
- 	    -e "/.*crc=/d" \
--	    -e "/^Default configuration/d"
-+	    -e "/^Default configuration/d" \
-+	    -e '/parent=/d'
- }
- 
- # mkfs slightly smaller than that, small log for speed.
+Maybe it's something like this:
+https://www.englishgrammar.org/have-had-and-had-had/
 
