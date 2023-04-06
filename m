@@ -2,153 +2,110 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BA2A6D8B23
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Apr 2023 01:38:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D8136D8B65
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Apr 2023 02:04:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233603AbjDEXiB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 5 Apr 2023 19:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34826 "EHLO
+        id S232896AbjDFAEo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 5 Apr 2023 20:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233470AbjDEXiA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Apr 2023 19:38:00 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB2B3C1F
-        for <linux-xfs@vger.kernel.org>; Wed,  5 Apr 2023 16:37:58 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id kq3so35881657plb.13
-        for <linux-xfs@vger.kernel.org>; Wed, 05 Apr 2023 16:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20210112.gappssmtp.com; s=20210112; t=1680737878;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KeGD4MyOApqEcxE+Vz2Xa5S1sUVL6ion9IBrFVNam5c=;
-        b=D9eCnKz/gG785yZ8Q0D0djMKMM/E6/FuIQMZkQe8yluN15Jtjl0WWLOX4IStp1C08L
-         ItwEOh3AAXqKT/go24yRu3jS9GEYP+RP1nIZ+ZUZ+36mLFGGnPtXnVp01qMubeetVlAT
-         b1hUJBs9OwkoomuM/1FLNornI+OpXF5L4L2+EHnE4nGJkMzNH6gzX39Mc7QTt2rtNoBb
-         CsEf1v/fsFm5Z4vQaq6Oj8nYtZDTfrfkrYDIuJzfPNYQKkUbyMT8xJAr1SONze5Mr4dD
-         dAIDN3VJ7CZcdTCJWV8kuCxhdA4u3XpgHMql+i+7pGTnpuEnDUYZzncmOgq7jMsH5S04
-         G4AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680737878;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KeGD4MyOApqEcxE+Vz2Xa5S1sUVL6ion9IBrFVNam5c=;
-        b=NvTEsn0EA2AqKA5g8oeUY0qKytQk90RpXBr04lLFXVGw4Ukq/jYXaN8utbL3HaQxey
-         DuU7uN1QX146B9x4osuypuC3LqDY8jZUlYHHB2iul+eWU4Vwn0YwVMq2EHpBEifGapLd
-         vP+eHghVR61e4EzLAwScUnrBZM1uYX0Si/x3jfamxxgP/WFtFlOiQWHmuf1YeT1sJZIC
-         PlU6SzQuOqCuk5IFEUjYPvC9gKvGlQg8F2PX5dvZZlMdcNOrBC8uFsRaiARkEzSy9mGx
-         UFXvR9vq6VmDoVd3MyWxZZF6n/JlZ9JWxcPLZ2+QuwZJF8zzaqxY4QE+xM9SI59ruOoj
-         JDGA==
-X-Gm-Message-State: AAQBX9enx+tAVSrWsEr8ZTRY45eaT1/kyder+0i66bhV0VD/uu172GO/
-        4JE3jvPPHpinM3b67KQY5fFj0g==
-X-Google-Smtp-Source: AKy350YPpczm2kLshRHm378imxeqOrGuMhMZKLP5TqBhKu/vDXjqcxQbAmKQSkLGeQMyYt/kagueXA==
-X-Received: by 2002:a05:6a20:bc96:b0:d9:18ab:16be with SMTP id fx22-20020a056a20bc9600b000d918ab16bemr883843pzb.29.1680737878121;
-        Wed, 05 Apr 2023 16:37:58 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-91-157.pa.nsw.optusnet.com.au. [49.181.91.157])
-        by smtp.gmail.com with ESMTPSA id m37-20020a635825000000b00502dc899394sm9641716pgb.66.2023.04.05.16.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 16:37:57 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1pkChN-00HVv9-Mh; Thu, 06 Apr 2023 09:37:53 +1000
-Date:   Thu, 6 Apr 2023 09:37:53 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Andrey Albershteyn <aalbersh@redhat.com>, dchinner@redhat.com,
-        hch@infradead.org, linux-xfs@vger.kernel.org,
-        fsverity@lists.linux.dev, rpeterso@redhat.com, agruenba@redhat.com,
-        xiang@kernel.org, chao@kernel.org,
-        damien.lemoal@opensource.wdc.com, jth@kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com
-Subject: Re: [PATCH v2 21/23] xfs: handle merkle tree block size != fs
- blocksize != PAGE_SIZE
-Message-ID: <20230405233753.GU3223426@dread.disaster.area>
-References: <20230404145319.2057051-1-aalbersh@redhat.com>
- <20230404145319.2057051-22-aalbersh@redhat.com>
- <20230404163602.GC109974@frogsfrogsfrogs>
- <20230405160221.he76fb5b45dud6du@aalbersh.remote.csb>
- <20230405163847.GG303486@frogsfrogsfrogs>
- <ZC264FSkDQidOQ4N@gmail.com>
- <20230405222646.GR3223426@dread.disaster.area>
- <ZC38DkQVPZBuZCZN@gmail.com>
+        with ESMTP id S232719AbjDFAEn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Apr 2023 20:04:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E010C7AA0
+        for <linux-xfs@vger.kernel.org>; Wed,  5 Apr 2023 17:03:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD6F664230
+        for <linux-xfs@vger.kernel.org>; Thu,  6 Apr 2023 00:02:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A35DC433D2;
+        Thu,  6 Apr 2023 00:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680739374;
+        bh=yj12B8O/0fRMGgy53F7lOAYt0cmsD2ElPQxs+3JwGRQ=;
+        h=Subject:From:To:Cc:Date:From;
+        b=YfsaxHsJASNJUNTwoETDB0oZKq0tOa8lJ51rdfalZ5x+5CqAs8uizgs8G16frxz9d
+         jUHWS+DKS5/u1InLufMagrsIzCp/hULBniHPpih8fSxtTSmzGx9Jy6Z1rsC0VzGZRQ
+         t/zTKdojNHN25m+kc4cM5zPRf1Jvc6NnPlP42oBM+S8EkzPQqWO1KMNo4DvHatSIdR
+         Wt/sAbDU6F8rT/TsajmyduGsCkBjLAlw+FJ8zte/bi6Vg6/0bo7MLtwbmpkAh6BNN8
+         4Xml37oUSYc10pAKH6UDwqFkzY++LODP3Tl6G0lzvXseCenGwUTsry82XSNnuUA4Uw
+         B78aw8fNGxdMw==
+Subject: [PATCHSET v2 0/4] xfs: fix ascii-ci problems, then kill it
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
+Date:   Wed, 05 Apr 2023 17:02:53 -0700
+Message-ID: <168073937339.1648023.5029899643925660515.stgit@frogsfrogsfrogs>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZC38DkQVPZBuZCZN@gmail.com>
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 10:54:06PM +0000, Eric Biggers wrote:
-> On Thu, Apr 06, 2023 at 08:26:46AM +1000, Dave Chinner wrote:
-> > > We could certainly think about moving to a design where fs/verity/ asks the
-> > > filesystem to just *read* a Merkle tree block, without adding it to a cache, and
-> > > then fs/verity/ implements the caching itself.  That would require some large
-> > > changes to each filesystem, though, unless we were to double-cache the Merkle
-> > > tree blocks which would be inefficient.
-> > 
-> > No, that's unnecessary.
-> > 
-> > All we need if for fsverity to require filesystems to pass it byte
-> > addressable data buffers that are externally reference counted. The
-> > filesystem can take a page reference before mapping the page and
-> > passing the kaddr to fsverity, then unmap and drop the reference
-> > when the merkle tree walk is done as per Andrey's new drop callout.
-> > 
-> > fsverity doesn't need to care what the buffer is made from, how it
-> > is cached, what it's life cycle is, etc. The caching mechanism and
-> > reference counting is entirely controlled by the filesystem callout
-> > implementations, and fsverity only needs to deal with memory buffers
-> > that are guaranteed to live for the entire walk of the merkle
-> > tree....
-> 
-> Sure.  Just a couple notes:
-> 
-> First, fs/verity/ does still need to be able to tell whether the buffer is newly
-> instantiated or not.
+Hi all,
 
-Boolean flag from the caller.
+Last week, I was fiddling around with the metadump name obfuscation code
+while writing a debugger command to generate directories full of names
+that all have the same hash name.  I had a few questions about how well
+all that worked with ascii-ci mode, and discovered a nasty discrepancy
+between the kernel and glibc's implementations of the tolower()
+function.
 
-> Second, fs/verity/ uses the ahash API to do the hashing.  ahash is a
-> scatterlist-based API.  Virtual addresses can still be used (see sg_set_buf()),
-> but the memory cannot be vmalloc'ed memory, since virt_to_page() needs to work.
-> Does XFS use vmalloc'ed memory for these buffers?
+I discovered that I could create a directory that is large enough to
+require separate leaf index blocks.  The hashes stored in the dabtree
+use the ascii-ci specific hash function, which uses a library function
+to convert the name to lowercase before hashing.  If the kernel and C
+library's versions of tolower do not behave exactly identically,
+xfs_ascii_ci_hashname will not produce the same results for the same
+inputs.  xfs_repair will deem the leaf information corrupt and rebuild
+the directory.  After that, lookups in the kernel will fail because the
+hash index doesn't work.
 
-Not vmalloc'ed, but vmapped. we allocate the pages individually, but
-then call vm_map_page() to present the higher level code with a
-single contiguous memory range if it is a multi-page buffer.
+The kernel's tolower function will convert extended ascii uppercase
+letters (e.g. A-with-umlaut) to extended ascii lowercase letters (e.g.
+a-with-umlaut), whereas glibc's will only do that if you force LANG to
+ascii.  Tiny embedded libc implementations just plain won't do it at
+all, and the result is a mess.  Stabilize the behavior of the hash
+function by encoding the name transformation function in libxfs, add it
+to the selftest, and fix all the userspace tools, none of which handle
+this transformation correctly.
 
-We do have the backing info held in the buffer, and that's what we
-use for IO. If fsverity needs a page based scatter/gather list
-for hardware offload, it could ask the filesystem to provide it
-for that given buffer...
+The v1 series generated a /lot/ of discussion, in which several things
+became very clear: (1) Linus is not enamored of case folding of any
+kind; (2) Dave and Christoph don't seem to agree on whether the feature
+is supposed to work for 7-bit ascii or latin1; (3) it trashes UTF8
+encoded names if those happen to show up; and (4) I don't want to
+maintain this mess any longer than I have to.  Kill it in 2030.
 
-> BTW, converting fs/verity/ from ahash to shash is an option; I've really never
-> been a fan of the scatterlist-based crypto APIs!  The disadvantage of doing
-> this, though, would be that it would remove support for all the hardware crypto
-> drivers.
->
-> That *might* actually be okay, as that approach to crypto acceleration
-> has mostly fallen out of favor, in favor of CPU-based acceleration.  But I do
-> worry about e.g. someone coming out of the woodwork and saying they need to use
-> fsverity on a low-powered ARM board that has a crypto accelerator like CAAM, and
-> they MUST use their crypto accelerator to get acceptable performance.
+v2: rename the functions to make it clear we're moving away from the
+letters t, o, l, o, w, e, and r; and deprecate the whole feature once
+we've fixed the bugs and added tests.
 
-True, but we are very unlikely to be using XFS on such small
-systems and I don't think we really care about XFS performance on
-android sized systems, either.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Cheers,
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-asciici-bugs-6.3
+---
+ Documentation/admin-guide/xfs.rst |    1 
+ fs/xfs/Kconfig                    |   27 +++++
+ fs/xfs/libxfs/xfs_dir2.c          |    4 -
+ fs/xfs/libxfs/xfs_dir2.h          |   31 +++++
+ fs/xfs/scrub/dir.c                |    7 +
+ fs/xfs/xfs_dahash_test.c          |  211 +++++++++++++++++++------------------
+ fs/xfs/xfs_super.c                |   13 ++
+ 7 files changed, 191 insertions(+), 103 deletions(-)
+
