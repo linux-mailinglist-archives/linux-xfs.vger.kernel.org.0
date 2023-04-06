@@ -2,47 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D8136D8B65
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Apr 2023 02:04:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 744186D8B63
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Apr 2023 02:04:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232896AbjDFAEo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 5 Apr 2023 20:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51672 "EHLO
+        id S229737AbjDFAEc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 5 Apr 2023 20:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232719AbjDFAEn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Apr 2023 20:04:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E010C7AA0
-        for <linux-xfs@vger.kernel.org>; Wed,  5 Apr 2023 17:03:55 -0700 (PDT)
+        with ESMTP id S231828AbjDFAEb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 Apr 2023 20:04:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56EC61AE
+        for <linux-xfs@vger.kernel.org>; Wed,  5 Apr 2023 17:03:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AD6F664230
-        for <linux-xfs@vger.kernel.org>; Thu,  6 Apr 2023 00:02:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A35DC433D2;
-        Thu,  6 Apr 2023 00:02:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 55FA662AF5
+        for <linux-xfs@vger.kernel.org>; Thu,  6 Apr 2023 00:03:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BACEBC4339B;
+        Thu,  6 Apr 2023 00:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680739374;
-        bh=yj12B8O/0fRMGgy53F7lOAYt0cmsD2ElPQxs+3JwGRQ=;
-        h=Subject:From:To:Cc:Date:From;
-        b=YfsaxHsJASNJUNTwoETDB0oZKq0tOa8lJ51rdfalZ5x+5CqAs8uizgs8G16frxz9d
-         jUHWS+DKS5/u1InLufMagrsIzCp/hULBniHPpih8fSxtTSmzGx9Jy6Z1rsC0VzGZRQ
-         t/zTKdojNHN25m+kc4cM5zPRf1Jvc6NnPlP42oBM+S8EkzPQqWO1KMNo4DvHatSIdR
-         Wt/sAbDU6F8rT/TsajmyduGsCkBjLAlw+FJ8zte/bi6Vg6/0bo7MLtwbmpkAh6BNN8
-         4Xml37oUSYc10pAKH6UDwqFkzY++LODP3Tl6G0lzvXseCenGwUTsry82XSNnuUA4Uw
-         B78aw8fNGxdMw==
-Subject: [PATCHSET v2 0/4] xfs: fix ascii-ci problems, then kill it
+        s=k20201202; t=1680739379;
+        bh=VznPBMb2PjIKMnxjCUcQkUlrzFoTT9wKpoHwu3lcdGw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=O8ebDZoEbYs+CZQcZ5v1tFcwRmFsxtvS7D1xkKdPMNEH3DWjVhL5mab3uPj/Q9faz
+         CbSHTi/qD+ezuJSO9UQKfSf5xbD0WnhKkfUlYsSdzAb0Kog8qaarcmBGdAi5pIuWrr
+         TyrEhaeVSfRVzbnkZHRNmUCdNOU0NfTgfEQaV/CqYNt/tz4g/iytllkdGKdjJdunmP
+         /r8oyY0Q1u9TT/FEFaFFImKZv+9cabL68lgL0eSXIZuEd7xnKgkwLxCRwcdA9D8EpC
+         fGpdm49tsq8P477H5tGvw1Jj8nQHfouNJMLGGfo73hHRaxYleMbCwMnqhP3wi8tqxQ
+         7HewF8MJlLXbA==
+Subject: [PATCH 1/4] xfs: stabilize the dirent name transformation function
+ used for ascii-ci dir hash computation
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
-Date:   Wed, 05 Apr 2023 17:02:53 -0700
-Message-ID: <168073937339.1648023.5029899643925660515.stgit@frogsfrogsfrogs>
+Date:   Wed, 05 Apr 2023 17:02:59 -0700
+Message-ID: <168073937927.1648023.2161829383787403331.stgit@frogsfrogsfrogs>
+In-Reply-To: <168073937339.1648023.5029899643925660515.stgit@frogsfrogsfrogs>
+References: <168073937339.1648023.5029899643925660515.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,62 +53,121 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Last week, I was fiddling around with the metadump name obfuscation code
-while writing a debugger command to generate directories full of names
-that all have the same hash name.  I had a few questions about how well
-all that worked with ascii-ci mode, and discovered a nasty discrepancy
-between the kernel and glibc's implementations of the tolower()
-function.
+Back in the old days, the "ascii-ci" feature was created to implement
+case-insensitive directory entry lookups for latin1-encoded names and
+remove the large overhead of Samba's case-insensitive lookup code.  UTF8
+names were not allowed, but nobody explicitly wrote in the documentation
+that this was only expected to work if the system used latin1 names.
+The kernel tolower function was selected to prepare names for hashed
+lookups.
 
-I discovered that I could create a directory that is large enough to
-require separate leaf index blocks.  The hashes stored in the dabtree
-use the ascii-ci specific hash function, which uses a library function
-to convert the name to lowercase before hashing.  If the kernel and C
-library's versions of tolower do not behave exactly identically,
-xfs_ascii_ci_hashname will not produce the same results for the same
-inputs.  xfs_repair will deem the leaf information corrupt and rebuild
-the directory.  After that, lookups in the kernel will fail because the
-hash index doesn't work.
+There's a major discrepancy in the function that computes directory entry
+hashes for filesystems that have ASCII case-insensitive lookups enabled.
+The root of this is that the kernel and glibc's tolower implementations
+have differing behavior for extended ASCII accented characters.  I wrote
+a program to spit out characters for which the tolower() return value is
+different from the input:
 
-The kernel's tolower function will convert extended ascii uppercase
-letters (e.g. A-with-umlaut) to extended ascii lowercase letters (e.g.
-a-with-umlaut), whereas glibc's will only do that if you force LANG to
-ascii.  Tiny embedded libc implementations just plain won't do it at
-all, and the result is a mess.  Stabilize the behavior of the hash
-function by encoding the name transformation function in libxfs, add it
-to the selftest, and fix all the userspace tools, none of which handle
-this transformation correctly.
+glibc tolower:
+65:A 66:B 67:C 68:D 69:E 70:F 71:G 72:H 73:I 74:J 75:K 76:L 77:M 78:N
+79:O 80:P 81:Q 82:R 83:S 84:T 85:U 86:V 87:W 88:X 89:Y 90:Z
 
-The v1 series generated a /lot/ of discussion, in which several things
-became very clear: (1) Linus is not enamored of case folding of any
-kind; (2) Dave and Christoph don't seem to agree on whether the feature
-is supposed to work for 7-bit ascii or latin1; (3) it trashes UTF8
-encoded names if those happen to show up; and (4) I don't want to
-maintain this mess any longer than I have to.  Kill it in 2030.
+kernel tolower:
+65:A 66:B 67:C 68:D 69:E 70:F 71:G 72:H 73:I 74:J 75:K 76:L 77:M 78:N
+79:O 80:P 81:Q 82:R 83:S 84:T 85:U 86:V 87:W 88:X 89:Y 90:Z 192:À 193:Á
+194:Â 195:Ã 196:Ä 197:Å 198:Æ 199:Ç 200:È 201:É 202:Ê 203:Ë 204:Ì 205:Í
+206:Î 207:Ï 208:Ð 209:Ñ 210:Ò 211:Ó 212:Ô 213:Õ 214:Ö 215:× 216:Ø 217:Ù
+218:Ú 219:Û 220:Ü 221:Ý 222:Þ
 
-v2: rename the functions to make it clear we're moving away from the
-letters t, o, l, o, w, e, and r; and deprecate the whole feature once
-we've fixed the bugs and added tests.
+Which means that the kernel and userspace do not agree on the hash value
+for a directory filename that contains those higher values.  The hash
+values are written into the leaf index block of directories that are
+larger than two blocks in size, which means that xfs_repair will flag
+these directories as having corrupted hash indexes and rewrite the index
+with hash values that the kernel now will not recognize.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+Because the ascii-ci feature is not frequently enabled and the kernel
+touches filesystems far more frequently than xfs_repair does, fix this
+by encoding the kernel's toupper predicate and tolower functions into
+libxfs.  Give the new functions less provocative names to make it really
+obvious that this is a pre-hash name preparation function, and nothing
+else.  This change makes userspace's behavior consistent with the
+kernel.
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
+Found by auditing obfuscate_name in xfs_metadump as part of working on
+parent pointers, wondering how it could possibly work correctly with ci
+filesystems, writing a test tool to create a directory with
+hash-colliding names, and watching xfs_repair flag it.
 
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-asciici-bugs-6.3
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- Documentation/admin-guide/xfs.rst |    1 
- fs/xfs/Kconfig                    |   27 +++++
- fs/xfs/libxfs/xfs_dir2.c          |    4 -
- fs/xfs/libxfs/xfs_dir2.h          |   31 +++++
- fs/xfs/scrub/dir.c                |    7 +
- fs/xfs/xfs_dahash_test.c          |  211 +++++++++++++++++++------------------
- fs/xfs/xfs_super.c                |   13 ++
- 7 files changed, 191 insertions(+), 103 deletions(-)
+ fs/xfs/libxfs/xfs_dir2.c |    4 ++--
+ fs/xfs/libxfs/xfs_dir2.h |   31 +++++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 2 deletions(-)
+
+
+diff --git a/fs/xfs/libxfs/xfs_dir2.c b/fs/xfs/libxfs/xfs_dir2.c
+index 92bac3373f1f..0c5b92d17f5f 100644
+--- a/fs/xfs/libxfs/xfs_dir2.c
++++ b/fs/xfs/libxfs/xfs_dir2.c
+@@ -64,7 +64,7 @@ xfs_ascii_ci_hashname(
+ 	int			i;
+ 
+ 	for (i = 0, hash = 0; i < name->len; i++)
+-		hash = tolower(name->name[i]) ^ rol32(hash, 7);
++		hash = xfs_ascii_ci_xfrm(name->name[i]) ^ rol32(hash, 7);
+ 
+ 	return hash;
+ }
+@@ -85,7 +85,7 @@ xfs_ascii_ci_compname(
+ 	for (i = 0; i < len; i++) {
+ 		if (args->name[i] == name[i])
+ 			continue;
+-		if (tolower(args->name[i]) != tolower(name[i]))
++		if (xfs_ascii_ci_xfrm(args->name[i]) != xfs_ascii_ci_xfrm(name[i]))
+ 			return XFS_CMP_DIFFERENT;
+ 		result = XFS_CMP_CASE;
+ 	}
+diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
+index dd39f17dd9a9..19af22a16c41 100644
+--- a/fs/xfs/libxfs/xfs_dir2.h
++++ b/fs/xfs/libxfs/xfs_dir2.h
+@@ -248,4 +248,35 @@ unsigned int xfs_dir3_data_end_offset(struct xfs_da_geometry *geo,
+ 		struct xfs_dir2_data_hdr *hdr);
+ bool xfs_dir2_namecheck(const void *name, size_t length);
+ 
++/*
++ * The "ascii-ci" feature was created to speed up case-insensitive lookups for
++ * a Samba product.  Because of the inherent problems with CI and UTF-8
++ * encoding, etc, it was decided that Samba would be configured to export
++ * latin1/iso 8859-1 encodings as that covered >90% of the target markets for
++ * the product.  Hence the "ascii-ci" casefolding code could be encoded into
++ * the XFS directory operations and remove all the overhead of casefolding from
++ * Samba.
++ *
++ * To provide consistent hashing behavior between the userspace and kernel,
++ * these functions prepare names for hashing by transforming specific bytes
++ * to other bytes.  Robustness with other encodings is not guaranteed.
++ */
++static inline bool xfs_ascii_ci_need_xfrm(unsigned char c)
++{
++	if (c >= 0x41 && c <= 0x5a)	/* A-Z */
++		return true;
++	if (c >= 0xc0 && c <= 0xd6)	/* latin A-O with accents */
++		return true;
++	if (c >= 0xd8 && c <= 0xde)	/* latin O-Y with accents */
++		return true;
++	return false;
++}
++
++static inline unsigned char xfs_ascii_ci_xfrm(unsigned char c)
++{
++	if (xfs_ascii_ci_need_xfrm(c))
++		c -= 'A' - 'a';
++	return c;
++}
++
+ #endif	/* __XFS_DIR2_H__ */
 
