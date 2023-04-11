@@ -2,69 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32CC16DE802
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Apr 2023 01:23:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 011FD6DE803
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Apr 2023 01:23:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjDKXXt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 11 Apr 2023 19:23:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33748 "EHLO
+        id S229521AbjDKXXu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 11 Apr 2023 19:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjDKXXs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Apr 2023 19:23:48 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E652D73
-        for <linux-xfs@vger.kernel.org>; Tue, 11 Apr 2023 16:23:47 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-51870e745bfso601590a12.2
-        for <linux-xfs@vger.kernel.org>; Tue, 11 Apr 2023 16:23:47 -0700 (PDT)
+        with ESMTP id S229531AbjDKXXt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Apr 2023 19:23:49 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103512D63
+        for <linux-xfs@vger.kernel.org>; Tue, 11 Apr 2023 16:23:48 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id m18so9406537plx.5
+        for <linux-xfs@vger.kernel.org>; Tue, 11 Apr 2023 16:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112; t=1681255427;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=74BW2jmA2l2bcdZ/oPhoGMqmDB9/XRTZqnGuuyumK8M=;
-        b=ab9/9FtSVT06XBFp3gKHNXfyQjLhL+nIxHj7O2ZmxTRvOuYR3IKX2AN9AU/GGCK709
-         K8i5HNGgBLWCWeL4JD+OWSv3vsOeTrmcTeIDa9xMqwClhJmuIeHh5nRtY2Ffn+F/C4+2
-         GvqPsBhXjiaXUPKpDjT/AdEJHOEG1V5DO0SoHAEVM4eS3D6PQsj2JZtBu+N6dq43vPmC
-         cqiCTm95ytki+MiCqgY6hmAFdTEB+xsMzWzQ2S28nulQCyuTTS4cqLcNz5uJaQM+wD6I
-         thBWIn3S5d3RBfTl3gu2hZclbBsjyzd8Kre+W6gzkhqUw87YUvzFnEzXS4554Rxstkfo
-         dVzw==
+        bh=obkA+aJ8m83DmNTBaASqYVwYt6AV+6XIxxI8ooHND2Y=;
+        b=LXbCOrwm5mEcv88xo1VEZDfF+1pt0OPZPMnm2/LOQ9IbAJ/K6kWjDLPTbRuInOcn2W
+         4kK8iG/B6/XUjPzGnjZqxi3tRdjadLk+pdzSZ4vezozll/livTYb4Sa9Bd9aN4v3jkoI
+         dsj1DDlsx51yVANyLP/fGaIknfmVwJDyV1DXqLdMSpn7BhL8Z3iM9HiKzC1DMf+lgszM
+         /vdKkJPIkp1Ju49YEpq9z2d94twAykW8fX9b/JQ5nHdriG6xjj/rkr9uiDsT0o6jFn+N
+         pDIIQNzw6ve1Mf2znpX2bOuWVr67EVjrlTEf96WkpMiUrSAKWBnsc4KnTwkpifMbsp+9
+         SOiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112; t=1681255427;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=74BW2jmA2l2bcdZ/oPhoGMqmDB9/XRTZqnGuuyumK8M=;
-        b=R4MSuCL9DCpKurjsy2w8522eBvRa01+QA7STs2c6yWYDeaPUL2XU4sg4ioCSk3onoD
-         pJlYKbqndjdcoYBNnmxIIHSUGLDTiCOLiNBOfad693pfLz6m3DFleB28F6T7px2OdH68
-         HQI20xqA8nHO7N1PIug3iiVBLmM5gmcBr/MEYNt/8r4Gpo0UPnRSAg/sZKYBMX1ypoWw
-         fL80Z2SS/zUWC1AXBl6e9aN2bokfmtWmOt2u5tWUQfg20OWNs7NG6vM4nG8l4E6EK0AK
-         Z5rV2G+MPK0LGxxZ+7Co+QwAI7TBUbNbyRaPk7KE/3ksRqjV+RBJRCBBTSPwp5VlaoW+
-         8yNQ==
-X-Gm-Message-State: AAQBX9dA+P+gMDBP4FqPBQK6MDeCKW7W26kQWRBNjSlbU6NO+gYDdBq4
-        imouN2hQwAMlxrt5jO1ZK9yGQOdya1fE/fUwshrXcUGp
-X-Google-Smtp-Source: AKy350YjFsXFswthkVFZOeuNsfKMKgEa4a6JMzh/1f4Ki7pJO+h2FUqRWbvssZB4h8utYMG8nj9PnA==
-X-Received: by 2002:a62:1a4f:0:b0:62d:b4ad:522c with SMTP id a76-20020a621a4f000000b0062db4ad522cmr15616839pfa.24.1681255427196;
+        bh=obkA+aJ8m83DmNTBaASqYVwYt6AV+6XIxxI8ooHND2Y=;
+        b=Siy/mm6hLzqi/gDyfcTQ0XTV8eU8WPpvxUE7X5PJ6qcHlPSauLbUB0oZD9lW/x4yhe
+         Q5DsUcMdMgr5u/xEP3lywRCgLgKdxG6T4Ce73ejem2GvxHMgnIfyirKUp9CVja4ivFTY
+         kaza7A0hIwyiC2DtxFJvNBKPlPjgTf9ddULYZEl0KRC/DJyO4Gu88/nsYj1fgW7pO53K
+         +s9sbgFVwQMXp2R/2kNgzWpbO78iUrTHcfGGbuVl6CFun9+psajLWF+ruPisygFohiJm
+         J9pL2MEn2vhCgJmGmt+giEU8PAQ6HN2AF5NF1lxmM0rFGT8gLKd/yC+DPE31U6ye3Smp
+         c11Q==
+X-Gm-Message-State: AAQBX9dRPhjMfDvB5Ke7yCUq1ouWfa8lQxjyHOOom23SFBGYcee/e4Be
+        t7mcxFaV8O7ENC7I19b2fIvXLtRtNGDBf0eFYcFNAYgF
+X-Google-Smtp-Source: AKy350ZY3M2Uqv4AUNJ1jwDvSym6/jxEeaYIR4J6ILAhw+bG7CHCcN3g7ysQRVRNPs/sIRbGT7gEcA==
+X-Received: by 2002:a17:902:f690:b0:1a2:296:9355 with SMTP id l16-20020a170902f69000b001a202969355mr19469254plg.16.1681255427462;
         Tue, 11 Apr 2023 16:23:47 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-41-174.pa.nsw.optusnet.com.au. [49.180.41.174])
-        by smtp.gmail.com with ESMTPSA id k10-20020aa7820a000000b0062db3444281sm10364326pfi.125.2023.04.11.16.23.46
+        by smtp.gmail.com with ESMTPSA id x10-20020a170902820a00b001948ff5cc32sm10075441pln.215.2023.04.11.16.23.46
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 11 Apr 2023 16:23:46 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <dave@fromorbit.com>)
-        id 1pmNKy-002H7j-As
+        id 1pmNKy-002H7m-DB
         for linux-xfs@vger.kernel.org; Wed, 12 Apr 2023 09:23:44 +1000
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1pmNKy-000ykp-11
+        id 1pmNKy-000ykt-1A
         for linux-xfs@vger.kernel.org;
         Wed, 12 Apr 2023 09:23:44 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/2] xfs: remove WARN when dquot cache insertion fails
-Date:   Wed, 12 Apr 2023 09:23:41 +1000
-Message-Id: <20230411232342.233433-2-david@fromorbit.com>
+Subject: [PATCH 2/2] xfs: don't consider future format versions valid
+Date:   Wed, 12 Apr 2023 09:23:42 +1000
+Message-Id: <20230411232342.233433-3-david@fromorbit.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230411232342.233433-1-david@fromorbit.com>
 References: <20230411232342.233433-1-david@fromorbit.com>
@@ -81,26 +81,57 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-It just creates unnecessary bot noise these days.
+In commit fe08cc504448 we reworked the valid superblock version
+checks. If it is a V5 filesystem, it is always valid, then we
+checked if the version was less than V4 (reject) and then checked
+feature fields in the V4 flags to determine if it was valid.
 
-Reported-by: syzbot+6ae213503fb12e87934f@syzkaller.appspotmail.com
+What we missed was that if the version is not V4 at this point,
+we shoudl reject the fs. i.e. the check current treats V6+
+filesystems as if it was a v4 filesystem. Fix this.
+
+cc: stable@vger.kernel.org
+Fixes: fe08cc504448 ("xfs: open code sb verifier feature checks")
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_dquot.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/xfs/libxfs/xfs_sb.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 8fb90da89787..7f071757f278 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -798,7 +798,6 @@ xfs_qm_dqget_cache_insert(
- 	error = radix_tree_insert(tree, id, dqp);
- 	if (unlikely(error)) {
- 		/* Duplicate found!  Caller must try again. */
--		WARN_ON(error != -EEXIST);
- 		mutex_unlock(&qi->qi_tree_lock);
- 		trace_xfs_dqget_dup(dqp);
- 		return error;
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 99cc03a298e2..ba0f17bc1dc0 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -72,7 +72,8 @@ xfs_sb_validate_v5_features(
+ }
+ 
+ /*
+- * We support all XFS versions newer than a v4 superblock with V2 directories.
++ * We current support XFS v5 formats with known features and v4 superblocks with
++ * at least V2 directories.
+  */
+ bool
+ xfs_sb_good_version(
+@@ -86,16 +87,16 @@ xfs_sb_good_version(
+ 	if (xfs_sb_is_v5(sbp))
+ 		return xfs_sb_validate_v5_features(sbp);
+ 
++	/* versions prior to v4 are not supported */
++	if (XFS_SB_VERSION_NUM(sbp) != XFS_SB_VERSION_4)
++		return false;
++
+ 	/* We must not have any unknown v4 feature bits set */
+ 	if ((sbp->sb_versionnum & ~XFS_SB_VERSION_OKBITS) ||
+ 	    ((sbp->sb_versionnum & XFS_SB_VERSION_MOREBITSBIT) &&
+ 	     (sbp->sb_features2 & ~XFS_SB_VERSION2_OKBITS)))
+ 		return false;
+ 
+-	/* versions prior to v4 are not supported */
+-	if (XFS_SB_VERSION_NUM(sbp) < XFS_SB_VERSION_4)
+-		return false;
+-
+ 	/* V4 filesystems need v2 directories and unwritten extents */
+ 	if (!(sbp->sb_versionnum & XFS_SB_VERSION_DIRV2BIT))
+ 		return false;
 -- 
 2.39.2
 
