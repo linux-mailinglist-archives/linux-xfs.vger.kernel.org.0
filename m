@@ -2,156 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50B296E0B72
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Apr 2023 12:34:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4BC96E0B8C
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Apr 2023 12:40:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230064AbjDMKeu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Apr 2023 06:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47690 "EHLO
+        id S230128AbjDMKkp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Apr 2023 06:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230403AbjDMKen (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Apr 2023 06:34:43 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415272D67
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Apr 2023 03:34:39 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33D6Xube006256;
-        Thu, 13 Apr 2023 10:34:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=references : from :
- to : cc : subject : date : in-reply-to : message-id : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=jz4nAq+t1WaRUqWfQ1a3g/2D4zaYc/B7kxYgkFVOnMA=;
- b=wgKTwpCpXY9VqprNevCMnB/VtL/5F6y8fR/Fba62N3rW/se+NTFXvTM/gOV3hFwTxwJ5
- PH1WyCLSQ3boa7N3ykZVNeWxXrFzw2iDI2hjQdDmkJDyyUDx6h5JnzBEd+X1ZtsACoXK
- IbMvQqf6HdEnhD8vk8IfbjQqGpHK+VO4FjzJSwltkD0H3cwzHJM2jO4dz43bCphwZ/no
- g0yI+J/Cnwqp7GhzqDWnKhiOU3ju3CfGmush8p6neh3fS+Pg32TQUfBswUga8cnM9rxK
- 4Eo90Oxp4iu9cvgo6erzqVxcgpose+rDTv8f+9xXeSGa40CsjN7JgwwmuDsXEe0gcBkM KA== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3pu0e7jgdn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Apr 2023 10:34:29 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33D8LpAq017447;
-        Thu, 13 Apr 2023 10:34:28 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2042.outbound.protection.outlook.com [104.47.51.42])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3puw8a8w99-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Apr 2023 10:34:28 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HC5tn79uKyBcIB5hZiLEXd8NthtIrVb2LHZhQnSt0SBaSPnSrW5Jn5xiZ8h/+1Eii4cLoq/cFdBDwVhPDUQ7fylF6+hxQ2zKDdMvedcVfBNdMpln6qg3tiW0pYBEpme/tN6DA/HS3zP3qLj9VjrHSXyLgg3s/it0zVmLv1oJlWBinrgKeogr55h5xrE/BxoZPotkzbG6BiExa6TAgvvQIBhZ34bsifgOec6qbdzf9NiBVdOFSHY8nWTP3Qm4240IYNcuIhGUNAm35mOLoTkR9z1Ma+JeSxVS5nT+euKoCtzFRroWuMDqRyY39znUHSOrzr71hHaG8adNZRaza53fZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jz4nAq+t1WaRUqWfQ1a3g/2D4zaYc/B7kxYgkFVOnMA=;
- b=U+8JO1s22bHEhxtqeFhzdbR82TKEuFTrvXlCnBUCjPzGZeIsqU+uvRqgOmAuh0vEfguH8FSrwpi60C7ROShM/AhYtP1IzwUOzFuG6eBieOsy6d2VhxJ4BJ4BvmzAFRV+mv20w8Zda+6W95410UD64af72Q5kZVRKiJ4uMj3PQ/syo+CF7HnzPvaDBnX/V328xTQltaVGqGfY7WGVAQ0UrcYDzD0CjULgKZX9f/9HRSJRCHKbE1W0NC8p2SCymptDIEBOYWDeKt4PnzUmf0gzqmnv5L24TuPSOutZTgBarkKhWqbwhTN6JcPphaoIJiTXR1/S3HuB8fJRw2sDntwiDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        with ESMTP id S230163AbjDMKkl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Apr 2023 06:40:41 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CAAE57
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Apr 2023 03:40:37 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id m21-20020a17090ab79500b002401201f1f9so6986750pjr.2
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Apr 2023 03:40:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jz4nAq+t1WaRUqWfQ1a3g/2D4zaYc/B7kxYgkFVOnMA=;
- b=U7IEQVs222gOAoePNSQ6Rlm/Xt1pn4s80DFh0sUS+eHi8WxrZ23eN7IsBdtocmEVdNMGz4eiiMf7H85YVAtN/uWHNlK7zGLMJsPuN2n7QpPk7rFI+MANkcpGSP7q8yQBVZiKMgsvCk46OSheL9iGK6j/vXY+chlaNxOLqdJWqEs=
-Received: from SA1PR10MB5867.namprd10.prod.outlook.com (2603:10b6:806:22b::9)
- by CO1PR10MB4706.namprd10.prod.outlook.com (2603:10b6:303:9d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Thu, 13 Apr
- 2023 10:34:26 +0000
-Received: from SA1PR10MB5867.namprd10.prod.outlook.com
- ([fe80::b3d4:e7f4:7f85:90b7]) by SA1PR10MB5867.namprd10.prod.outlook.com
- ([fe80::b3d4:e7f4:7f85:90b7%3]) with mapi id 15.20.6298.030; Thu, 13 Apr 2023
- 10:34:26 +0000
-References: <57B035ED-1926-4524-8063-EB0A8DB54AF7@flyingcircus.io>
- <CAOQ4uxg6cTF2YnW6anxMxOH_88+JZW+sC9rG468Pjy=XrNEgrQ@mail.gmail.com>
- <6AB6497D-18E5-41C4-B688-4DED6703534F@flyingcircus.io>
- <CAOQ4uxjj2UqA0h4Y31NbmpHksMhVrXfXjLG4Tnz3zq_UR-3gSA@mail.gmail.com>
-User-agent: mu4e 1.8.10; emacs 27.1
-From:   Chandan Babu R <chandan.babu@oracle.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Christian Theune <ct@flyingcircus.io>, linux-xfs@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Brian Foster <bfoster@redhat.com>
-Subject: Re: Backport of "xfs: open code ioend needs workqueue helper" to 5.10?
-Date:   Thu, 13 Apr 2023 16:01:17 +0530
-In-reply-to: <CAOQ4uxjj2UqA0h4Y31NbmpHksMhVrXfXjLG4Tnz3zq_UR-3gSA@mail.gmail.com>
-Message-ID: <87o7nsjck6.fsf@debian-BULLSEYE-live-builder-AMD64>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: SI2PR04CA0004.apcprd04.prod.outlook.com
- (2603:1096:4:197::22) To SA1PR10MB5867.namprd10.prod.outlook.com
- (2603:10b6:806:22b::9)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR10MB5867:EE_|CO1PR10MB4706:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8bb4ea04-afcd-44c5-6d0c-08db3c0aa745
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kBvKHQD6wQSDcp2QF1BHn/LC3x1owVbWtiExfPc149B8l0WyeaQ4+DgB3u2tAj8HgMYJEARpYBpaIiL1mZOhAgYfmoBJTrUj3TrTHdrQw/cAGQWNsohyTsnSRk04rnbZxAR4VK7HmPjveT0i6F4MsMIj0EMlFaZEwHNxkT2q5dZ8EYugWhoYzmPFsKiSXyYs1ulIgb6ZvSL45eXKquWARISNeObyzfdX4Kh9+CCWj3bT8bMZ+XfXE4EDE5/k4NgM00XLqTrecGkwv2rN0ibCdm7z6pxoo6pf7LjR8/TTpZ5Wmfk3OkHD3il6sucUbEbGx2v53Ld8Iq7ZvU7jNeTORGiLSlPPL1iP6UFTmdF+ZqTuZG1yJ+UFT+F7on5TEJP26dHlC/zrisrjua6OyixOabFU6l8R2sd2nYTMSjkqm12uUcQHDLXyq9EALieJ6T8sSYnZgz3leHZ90BdXg2qgv67M6ljKWPRcqnV60z0EIEGH0gMqSwJDv8ct1SO4RlRUGUrih6e0bas5JI7gxYXB2B/d5hWRVeQxbbVaGifwIz4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5867.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(136003)(396003)(346002)(376002)(39860400002)(366004)(451199021)(6666004)(6486002)(966005)(6916009)(66476007)(66556008)(66946007)(4326008)(2906002)(33716001)(86362001)(41300700001)(5660300002)(8676002)(8936002)(316002)(38100700002)(478600001)(54906003)(53546011)(9686003)(6512007)(6506007)(26005)(186003)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dDljM0l6ZFhSTzgxVzRocmFCNndzQSt6aTBwNVAwUVBpNEFveG9Rbjk5TFhx?=
- =?utf-8?B?TS9FL3VCc3M4ZmJDdlZQN1BYWER1em9sZlZiY2J6bTZWVkRXeS8xZGlqUWhL?=
- =?utf-8?B?cWdCeG1zeFpRbi90L0o3SlpxNkVXQk5NeHJ4Ulc5ZXhrdHRNdXp1UjlsaC9t?=
- =?utf-8?B?eFhjNC9Jd3ViR2lyZmdTMUErVHFHQTA3a2JYZTBzV09VZSt2dURHaG82UXBJ?=
- =?utf-8?B?dzhUNUM2aWxSS3ZxU25HTFJXUHpPZC9ZUE1QZkhUSFZSVjlweXB5QU9IMTIr?=
- =?utf-8?B?N1Y5SDB4UEF5Uk9uNW1kMUkrWEQ1dmVjZXlmTzdaRlhST0o1bUEzSjgvMVVZ?=
- =?utf-8?B?M0YwY0h1K1F2S0dDNkIyMHcxZUlUQjh2RVZPbG9PVm9iYTd3Q3lXZmFlenhk?=
- =?utf-8?B?bVE0Qlk5UWJuZVZEd0pxMHFNR0dQa0hGdHIxb3diL002NWsrTUd3TVVBS2Ru?=
- =?utf-8?B?Szc2c3NlYkQ3WkZEb0k1UW5vM2VoUmo2WTYzS2tzRFdDQkd1THZBVDVRbXlR?=
- =?utf-8?B?ZnNmUkMrWUFVem9xNENlMnZ0a2htTGFza1R2cVdoZ0t3Q29vSXFvTitMQmZJ?=
- =?utf-8?B?emZmNWltMHFCM1loZFpGSzcvYTdqdkp0UHh5SWhDV1JTNkVhTEdqQWx3aGJ1?=
- =?utf-8?B?R0ZRMGRQK1JSTE10SEdkMWVXM0hWdzhZVWl0QnRGaFJCTUgrbWdlYWtoZmdQ?=
- =?utf-8?B?T2Y1RWRDbDdhTk5WWngvRkJKUUg1QmFEcDJmT1BsREdxWUpNUEYzMFd0MDIx?=
- =?utf-8?B?QTF5d0ZkS2c2VllpZmo0TDcxVDkrOXJYRXROUkJGbm01ZUF4L2s5YTd6Mmdy?=
- =?utf-8?B?L1RsazVlUEtzNEVYaTZzMmtLaEgvcFlRc055Ry9ldEhzZlV6YWZ6aDlLRGNH?=
- =?utf-8?B?SHp5clZOTFB6YlZUaGxpaDdrMUdST3dBWW10eDhRTWdEakZMeTFTRnR2UmZa?=
- =?utf-8?B?ZHB4aUxhN1FwOFoxUzFvSDc4TEhYa3V0bXluUHU1aDYwYm5vNFNQd2JzWk9W?=
- =?utf-8?B?eTVnQ2tpTzMzUW9jMGY0Q1U4NFNBdUZEMnhXUmYrOWpEbTNkYnVXMm5xWHJ0?=
- =?utf-8?B?R3E0U1hBWTNZUkdJS3RMODQybEEyM2lWWGxWWmZqSkVsdmtUZ1c1RERMQ1FQ?=
- =?utf-8?B?aUJ2TEVmTVFLc1gzc0puQk8xazJqZ0QzVXpleVZTOXA5VDJMQTJYMkRaV1ln?=
- =?utf-8?B?UmUzaWs3UzI5TWoxOG0waGpjWjBXUE9YekhYS3RMOXNENXFsRG9VMEdvQ1Ni?=
- =?utf-8?B?TGt6a1J1Nk9CUVRPOU1hNWhsZHkyMGVpa3hOQ2drNVFwWFhIT0J6Z0tDQVdq?=
- =?utf-8?B?NTIvRW1KQlRZVGpsVFZLckI0UTBtMXY0UHh2STBPYnJLY1Z3SzFlazVQalNj?=
- =?utf-8?B?QlRNUjNicG1KM1F5M1I0N0ZZblNUQ205VzVCa3lKb3d5VitGWkhBL2F5WHM2?=
- =?utf-8?B?bEJYZ3RkcW1UeUpuemRnQXRtZjl4NG1WVHd0dDI4YjNvQ0lFZTZxN3MrZWJH?=
- =?utf-8?B?cmMyRFJwbUR2Y3dSQnVUemZyckVtOVpEZUNFYlZaSURJZ1pBZnR2UXBFK3Jq?=
- =?utf-8?B?d1ViYVppWFI2Wkg1R2drTmFYY3pycnBuTzhnVVRZRGhHSUhSK1c3Q2xIZGc0?=
- =?utf-8?B?dTBlclJTQ2phZUNOTDZEbk5IRVVOUWp2bnMrOUJHNnY0NlJicGxOTFRsWmpV?=
- =?utf-8?B?UVBGbUo5bEtxY1ZCRW15NDcxS0FsNmYvMFNmQk1iaHdxUHBiRVQ4SVBvYmsx?=
- =?utf-8?B?Y001dDVlVE5DMnQvYnBXdmhlOG95Yk9BL2pCUHM5Y1pNYjJyRWNsUWg5YmRR?=
- =?utf-8?B?d2VzckN3OWI4UTdhN1Vjdk5iZmt1RXFDTWNFVnREQjltTm5HSEorckhRZHNJ?=
- =?utf-8?B?Znk3TVFyK3dDNnEvZjhwcTRVeWQrVjdZbGNqUENSSTUxNVV0VWpNZ1kvZkZm?=
- =?utf-8?B?RkNIZC9XamdXcUwwLzdNWGJGemg5Y0I4TGZ3aGhERExtRWthN1RYVzRhajRP?=
- =?utf-8?B?MGFMVWo0cFBqcWtJNUY3eSt6d1RsMWFoVndkSytZS2RqQVB2WW5jU0lMczJk?=
- =?utf-8?B?dGovL1RIWU1rakJmVWVLZUgvdEUzUnBTU1M5MnZGZnJXaHR3M3YyWVJwaW11?=
- =?utf-8?B?QjM1YS9odTRjUTZSYVFsdVFrbm02WEdneVMwTmhXV1I1V25DNDZWbGZ0R0Q4?=
- =?utf-8?B?cGc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: yaZB9XL+Nn3UWaPvtNOLWWbSDoznUg4IIm2aU+QSGJ9tUMumd5ptsdA7bF3TTuhPAzhWM2ddEg2iKgLxOaUYeuWv7OT6xmObf4sQu5xq2YrvvgFswDw0bHzCsX8y3oFQi1rKJ46DSShBun1dTUE+vt/YzgJLOnAuJMno/GtMVyKclDbThEqpVCyuPIhFnt+iluz0liiwv9Kk8uf1hI9kjraGOH3mCvS/463QcP98dQP+ULtws/Ey7m3DIJTvJOxoDFv3wQI5S7IVEtFo7hY2W/5gIkbcmC22TTLPwoRAYnTSLFWPQjKnWa4NcVYQKM6SLB9HtqGjaFEL5bNyKQAy2zVgdA2lkr7wfAmoysRQutA6d7WsPswnTYqOIxsvAIFxb/+6sOjUeskouspF+upIspFaavcNb4nW0JxDFA6orw4Z8Ru/sQYBjsT1IicAwVtD/DcE7bKHYjd9daSlFHb+2YXSz+vk4vDV9Qzf7HlvLhoZcdMMT35pgKXCYFfT95QykgYCFlYHrYTQQm87L7RDbCmbe658mP9qdmFtb30tmw86TW+m6rYK8Q5AtECn1XEH1GEpR3Ykk346DbLPbdZ6+ny0HVkJK0oqfdfY0AMxDPmR0ZoMWincrf9Q5GigvhgwJINZTv3hfZDJNwHCWtvXxwIyUdk8msfHC/Z4KEOzTCqEJ2VI3NMLlisnEL1ZKyMtCSxnF1TZ54mg+lilpwLVAc5idCI3+j9e5AaWVxttBQrQutDkOxPBLGBQBKoTClJLBbDXEgUbHAh5SFTgsc9hadWfKqrLAjYD1tzRldW0ery3794TLg7pI6mYA1if5ESDWlvjDA/KfhF/6D4vkbDnRWrzOJYuygJAQOHNT/DSy1BwEaLWqrSSYPL4bKhS3kOA
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bb4ea04-afcd-44c5-6d0c-08db3c0aa745
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB5867.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2023 10:34:25.9851
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KwiiVMxMhSErKqAL6VRhnNjFio3q+0v+ie/1LATxjH1rTf+UjsYkJbsY3PFWvtJVqJ3VChWZvZGzp//PHBtuOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4706
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-13_06,2023-04-13_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304130095
-X-Proofpoint-ORIG-GUID: 5puRq6TwzSSosyPCYNtRV0zkv80emBu6
-X-Proofpoint-GUID: 5puRq6TwzSSosyPCYNtRV0zkv80emBu6
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
+        d=google.com; s=20221208; t=1681382437; x=1683974437;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5nwS1fyBbt8DCsnm68UGE4Io82ni7EltGX1ZDdiySc8=;
+        b=HVVoobkiezjfp6Y+BOD4SNMlrogZ39TsH1UXpB46VIMDpuP6g8jnu4Z1tFvSefqpa7
+         ibKeL8Y8v8nU89B6vMehbHdbQLqWet8dgNLfmXNet9Ipt1SE7lD//LOA5qZhJsd+TyzB
+         0NR3cw+wpAzpZDYLnkhBnZTCqUKAdsLrw1zJNZoMYbE0K5EXRK9zgOHKc6hd+xdDV6Wh
+         7oCtwbLRJC1FzkYCfIDMIgKZJ6uq6+eR3gCZXHpVFEFsNPt0I4yguZUs0ykjuPKeyKJv
+         TkAYIgT/O+m7d5+TGbrU5WfhSrVp7RMxUmdPVOLZgW6fMwK/WQDxq23MCj/rtwo8ySJK
+         trHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681382437; x=1683974437;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5nwS1fyBbt8DCsnm68UGE4Io82ni7EltGX1ZDdiySc8=;
+        b=eZZzHgfUpoMTpQZQzSK6bg0ourzB0PUhvFP+YSElXW7VP145RIrVUJDyOhbb6/4R3G
+         du2hQGMl7juJ5GRoDoMh92mH4/PnI1PEkSXtyI7lHZXZ3ByVYK/Ip70BSgwFrOy80mMg
+         QFC8uNY0AzlLJuaT+Ocof7bkoUPiNKVFvsfyLPct0Qq0EBXVUjAiBSZO0MV7Sc5SQdIF
+         WUg14jJ/fFD1hzliehVb4tXQ5J6WO4XtldmPhEdmCXGnigLt43J9+vY8e5XiMkc12adV
+         qP5r9ksEwQVHLuFjLZVTFj9re4dkRCJECfW6ebns9XMmvSpswx7bcXbPi8y//4k/SAr/
+         kzaw==
+X-Gm-Message-State: AAQBX9f8R3XsVWEA9w+k8xkV5zx+oSTFonHOIGW1lSRYrQ9PGsgwSDDg
+        nkr3Iizu4fvSb6cYvkJEEk7ko8Ahx1IwVT8K
+X-Google-Smtp-Source: AKy350Zyd2UqUy2DbXNw2G9qTq8DvjwykWuM+fBRJ4yT4p2uyKCDPpMTL/SCWAMTdDtoYDEHTj4HrbLDBQxJccn5
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:2327])
+ (user=yosryahmed job=sendgmr) by 2002:a65:5584:0:b0:51b:2e3f:9c41 with SMTP
+ id j4-20020a655584000000b0051b2e3f9c41mr358746pgs.1.1681382437184; Thu, 13
+ Apr 2023 03:40:37 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 10:40:31 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Message-ID: <20230413104034.1086717-1-yosryahmed@google.com>
+Subject: [PATCH v6 0/3] Ignore non-LRU-based reclaim in memcg reclaim
+From:   Yosry Ahmed <yosryahmed@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        David Hildenbrand <david@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Peter Xu <peterx@redhat.com>, NeilBrown <neilb@suse.de>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@kernel.org>, Yu Zhao <yuzhao@google.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+        Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -159,92 +83,58 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 10:44:43 AM +0300, Amir Goldstein wrote:
-> On Wed, Apr 12, 2023 at 6:58=E2=80=AFPM Christian Theune <ct@flyingcircus=
-.io> wrote:
->>
->> Hi,
->>
->> ugh. Sorry, looks like I jumped the gun. Mea culpa.
->>
->> We experienced a hang like this:
->>
->> Apr 05 11:51:27 kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_sec=
-s" disables this message.
->> Apr 05 11:51:27 kernel: task:xfs-conv/vdc1   state:D stack:    0 pid:  6=
-06 ppid:     2 flags:0x00004080
->> Apr 05 11:51:27 kernel: Workqueue: xfs-conv/vdc1 xfs_end_io [xfs]
->> Apr 05 11:51:27 kernel: Call Trace:
->> Apr 05 11:51:27 kernel:  __schedule+0x274/0x870
->> Apr 05 11:51:27 kernel:  schedule+0x46/0xb0
->> Apr 05 11:51:27 kernel:  xlog_grant_head_wait+0xc5/0x1d0 [xfs]
->> Apr 05 11:51:27 kernel:  xlog_grant_head_check+0xde/0x100 [xfs]
->> Apr 05 11:51:27 kernel:  xfs_log_reserve+0xbe/0x1b0 [xfs]
->> Apr 05 11:51:27 kernel:  xfs_trans_reserve+0x143/0x180 [xfs]
->> Apr 05 11:51:27 kernel:  xfs_trans_alloc+0xee/0x1a0 [xfs]
->> Apr 05 11:51:27 kernel:  xfs_iomap_write_unwritten+0x120/0x2e0 [xfs]
->> Apr 05 11:51:27 kernel:  ? record_times+0x15/0x90
->> Apr 05 11:51:27 kernel:  xfs_end_ioend+0xd8/0x140 [xfs]
->> Apr 05 11:51:27 kernel:  xfs_end_io+0xb8/0xf0 [xfs]
->> Apr 05 11:51:27 kernel:  process_one_work+0x1b6/0x350
->> Apr 05 11:51:27 kernel:  rescuer_thread+0x1d1/0x3a0
->> Apr 05 11:51:27 kernel:  ? worker_thread+0x3e0/0x3e0
->> Apr 05 11:51:27 kernel:  kthread+0x11b/0x140
->> Apr 05 11:51:27 kernel:  ? kthread_associate_blkcg+0xb0/0xb0
->> Apr 05 11:51:27 kernel:  ret_from_fork+0x22/0x30
->>
->> Which seems to be similar to this:
->> https://bugs.launchpad.net/bugs/1996269
->>
->> I followed their patchset here:
->> https://review.opendev.org/c/starlingx/kernel/+/864257
->>
->> And I was under the impression that I picked the right one to ask
->> for backporting, but it seems that was incorrect. I went through the
->> list again and I think the following patches are the ones missing
->> from 5.10:
->>
->> 8182ec00803085354761bbadf0287cad7eac0e2f -
->> https://review.opendev.org/c/starlingx/kernel/+/864257/5/kernel-std/cent=
-os/patches/0035-xfs-drop-submit-side-trans-alloc-for-append-ioends.patch
->> edbf1eb9032b84631031d9b43570e262f3461c24 -
->> https://review.opendev.org/c/starlingx/kernel/+/864257/5/kernel-std/cent=
-os/patches/0036-xfs-open-code-ioend-needs-workqueue-helper.patch
->> 170e31793806ce5e5a9647b6340954536244518e -
->> https://review.opendev.org/c/starlingx/kernel/+/864257/5/kernel-std/cent=
-os/patches/0037-xfs-drop-unused-ioend-private-merge-and-setfilesize-.patch
->> 2fd609b6c90a88630a50fb317473b210759b3873 -
->> https://review.opendev.org/c/starlingx/kernel/+/864257/5/kernel-std/cent=
-os/patches/0038-xfs-drop-unnecessary-setfilesize-helper.patch
->>
->
-> The only commit that fixes the bug is:
-> 7cd3099f4925 xfs: drop submit side trans alloc for append ioends
->
-> The rest are just code cleanups.
->
-> That fix was missed in my original backports from v5.13 because of a tool=
- error,
-> so thank you for pointing it out.
->
-> I have added it to my test branch and will follow up with posting to
-> stable later on.
->
-> Chandan,
->
-> Please make sure you include this fix when you get to considering
-> fixes from v5.13 to 5.4.y.
->
+Upon running some proactive reclaim tests using memory.reclaim, we
+noticed some tests flaking where writing to memory.reclaim would be
+successful even though we did not reclaim the requested amount fully
+Looking further into it, I discovered that *sometimes* we overestimate
+the number of reclaimed pages in memcg reclaim.
 
-Sure, I will do that. However ...
+Reclaimed pages through other means than LRU-based reclaim are tracked
+through reclaim_state in struct scan_control, which is stashed in
+current task_struct. These pages are added to the number of reclaimed
+pages through LRUs. For memcg reclaim, these pages generally cannot be
+linked to the memcg under reclaim and can cause an overestimated count
+of reclaimed pages. This short series tries to address that.
 
-> I will wait with posting this fix to 5.10.y until I get the v5.13
-> backports wish list from you.
->
+Patch 1 ignores pages reclaimed outside of LRU reclaim in memcg reclaim.
+The pages are uncharged anyway, so even if we end up under-reporting
+reclaimed pages we will still succeed in making progress during
+charging.
 
-Since I am working on another XFS work item there will be some delay before=
- I
-share the list of patches to be backported from v5.13 to 5.4.y.
+Patches 2-3 are just refactoring. Patch 2 moves set_reclaim_state()
+helper next to flush_reclaim_state(). Patch 3 adds a helper that wraps
+updating current->reclaim_state, and renames
+reclaim_state->reclaimed_slab to reclaim_state->reclaimed.
 
---=20
-chandan
+v5 -> v6:
+- Re-arranged the patches:
+  - Pulled flush_reclaim_state() helper with the clarifyng comment to
+    the first patch so that the patch is clear on its own (David
+    Hildenbrand).
+  - Separated moving set_reclaim_state() to a separate patch so that we
+    can easily drop it if deemed unnecessary (Questioned by Peter Xu).
+- Added a fixes tag (David Hildenbrand).
+- Reworded comment in flush_reclaim_state() (David Hildenbrand and Tim
+  Chen).
+- Dropped reclaim_state argument to flush_reclaim_state() and use
+  current->reclaim_state directly instead (Peter Xu).
+
+v5: https://lore.kernel.org/linux-mm/20230405185427.1246289-1-yosryahmed@google.com/
+
+Yosry Ahmed (3):
+  mm: vmscan: ignore non-LRU-based reclaim in memcg reclaim
+  mm: vmscan: move set_task_reclaim_state() near flush_reclaim_state()
+  mm: vmscan: refactor updating current->reclaim_state
+
+ fs/inode.c           |  3 +-
+ fs/xfs/xfs_buf.c     |  3 +-
+ include/linux/swap.h | 17 ++++++++++-
+ mm/slab.c            |  3 +-
+ mm/slob.c            |  6 ++--
+ mm/slub.c            |  5 ++-
+ mm/vmscan.c          | 72 ++++++++++++++++++++++++++++++++------------
+ 7 files changed, 76 insertions(+), 33 deletions(-)
+
+-- 
+2.40.0.577.gac1e443424-goog
+
