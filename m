@@ -2,44 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 697356E6510
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Apr 2023 14:55:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B10AA6E6F38
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Apr 2023 00:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232323AbjDRMzt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 Apr 2023 08:55:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
+        id S233184AbjDRWNe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 Apr 2023 18:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231539AbjDRMzr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Apr 2023 08:55:47 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2072.outbound.protection.outlook.com [40.107.244.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE03615600;
-        Tue, 18 Apr 2023 05:55:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nuMuo5oD6pIVumjH+KBZYL1suB99wt80mpJvq5lIX0TJ2L62vrhvdRGMUqwvYLylpipK6CNu5PQshZzpKNpCoQE8zgiVWDv/+jg1Asrz9k6EzGoDwwHiZrIywBAwkGYrS4PDSMF/kYluDUe4MTH3bRptcdxjXtXA1kguBIiLew1BrBZTxtB9DzgpoRA8OLQDuH++MgVM6UVzGcNbss+0XHyoPRrjXOCq0kYfod/zVx711Y92UfaLlKIchOA7cnd76aeshcBBkZGiNeL/stZIClKzrcF4bQKJGFlnpdsiXkuV39K1zie2gImiH0PdOxrg1JB49wkVqLExG/3h9FxiZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MCV82di+9P7zs/mroLltwFHIbqU1OKMsaJgOSXh8XDA=;
- b=RlPcnOI644oeXCMfWXkeiD8SGco1+9LNHrY1AIptGzjksU4JRiDYYHImFMT6+XFN4RkcREvc+61l7gWuD6gkMSIiTupuakvHaPGkD8Isn2PPOhWpO68l+uigfCsTz6ePSF3NCjna386WzjulGRaixjzyJ7m+djVz2/fUiZF/Bpa0G8xGnzh7864kJtaMQP17doat2QJqVnGaB35jQtkjnbpPIuzgS8dm1NjODlxkLoyC/VZ6A0KXOsNpv/7Un29sUoJw7LcfjpvPDCGJi67LOVJH0yoeki/aFf3+CB6Z01RgI++NbXZZoiDjJDSdh/Kh5yESOapc4yTSOXkymNQjGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
- header.d=ddn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MCV82di+9P7zs/mroLltwFHIbqU1OKMsaJgOSXh8XDA=;
- b=tvWU1sc6MHO+Z+kInuXaSVnhlCJBXJ6tDuuWHQqV80EuxIcxivJayMuLpSIaPPUVoRiV8TJHRZyzolYmRJ4fDYERmG81XtDvWTrFGStGvy91UZ30Mns7A43StM2zM30BgqoGALSm+CPbafKlut2kzzzQCY6nywYDgWOKvtnMetQ=
-Received: from DM5PR1901MB2037.namprd19.prod.outlook.com (2603:10b6:4:aa::29)
- by PH7PR19MB7098.namprd19.prod.outlook.com (2603:10b6:510:209::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.38; Tue, 18 Apr
- 2023 12:55:40 +0000
-Received: from DM5PR1901MB2037.namprd19.prod.outlook.com
- ([fe80::8cb3:ef5b:f815:7d8c]) by DM5PR1901MB2037.namprd19.prod.outlook.com
- ([fe80::8cb3:ef5b:f815:7d8c%6]) with mapi id 15.20.6277.031; Tue, 18 Apr 2023
- 12:55:40 +0000
-From:   Bernd Schubert <bschubert@ddn.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>, Jens Axboe <axboe@kernel.dk>
-CC:     "Darrick J. Wong" <djwong@kernel.org>,
+        with ESMTP id S233227AbjDRWNZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Apr 2023 18:13:25 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA0272A2
+        for <linux-xfs@vger.kernel.org>; Tue, 18 Apr 2023 15:13:03 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-63b60365f53so2582739b3a.0
+        for <linux-xfs@vger.kernel.org>; Tue, 18 Apr 2023 15:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1681855983; x=1684447983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JpFm5m6tO5mx05kVIN/ttwb3Qau/R4UqBZIeKrztNYA=;
+        b=FnQjklus3REFTnQ81KALNZESVQXH2keBj2dkRkYOlAz3Dgho0s+pjDXI5TzwS5e3G8
+         3D1Csr1z7hqDvbVuINHJoxalmL3zzIL6c4crYXxGs0ENxn2GpS1xdGUfuHoevhI6OC49
+         Jcq6yKYs3UojyLTG8FQxrmka1GRY9X8yQbsZVE30fb1EVeiiK7b+XxVjdBK4cUIJILhA
+         u49PC1WOafr9HrwZ2veM/dFW3xOgn/zi8yCjfYGjk125kKAUxkTZ91ZG2h54mV+KMXOK
+         bZ+AIQ7JhIswIsa+YYq+egllYyc24SiGUt4GrEU3hejwIYIrUjupm79+uXXRFA/qp0Bm
+         NO8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681855983; x=1684447983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JpFm5m6tO5mx05kVIN/ttwb3Qau/R4UqBZIeKrztNYA=;
+        b=jbB/9a9rLyCNL0Z3Eh28MbgHpYDKrfM2C6Mqgr5ytL+QAG3iX2TGhkFSzgFalyU/hy
+         MupGVN8bcMX6HOpsDvVeaK1CRm4dGNQNm3v96PhZzxnr3AiWZEHk5ueso6bZRSd+awNo
+         wQJyfTEziKMcGJbwnHissz/WF0gH2VZsOD5YtrLBmufnP8gBOEh4ZAXvXAOEH6lAfjPM
+         lroVCwQMlsNhnTaiw+qHYs3Qh2yNXDkzlCx4meLGyVIPA1zWw9kDoYUhs+fpvZbVMf/i
+         SfOKmnK4ld+GK+2l5gUT3iu6QVkrkVcO64Gx4bEiCkz9y7fDMeVx4bD/na46PaRHbIwG
+         jhvA==
+X-Gm-Message-State: AAQBX9cQqGvrzlAgoQOVlssBHAyNZqxXrIERoC0Kyw2hxAe9EQtEV4Ul
+        cm9j4w87K/oqDGBWpMjCKVc0sg==
+X-Google-Smtp-Source: AKy350YhJ+naK8yn0hGO1Ed15RZSTssdd0aSp9Ef+Sl9MG9f2/gT4cORtcXENiAC0RpQlOhU4anHLg==
+X-Received: by 2002:a17:903:2348:b0:1a5:2fbd:d094 with SMTP id c8-20020a170903234800b001a52fbdd094mr4139805plh.9.1681855982883;
+        Tue, 18 Apr 2023 15:13:02 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-41-174.pa.nsw.optusnet.com.au. [49.180.41.174])
+        by smtp.gmail.com with ESMTPSA id u1-20020a170902a60100b001a671a396efsm10093392plq.214.2023.04.18.15.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 15:13:02 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1potZM-0051YJ-3Z; Wed, 19 Apr 2023 08:13:00 +1000
+Date:   Wed, 19 Apr 2023 08:13:00 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Bernd Schubert <bschubert@ddn.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Jens Axboe <axboe@kernel.dk>,
+        "Darrick J. Wong" <djwong@kernel.org>,
         Christoph Hellwig <hch@infradead.org>,
         "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
         "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
@@ -47,119 +63,88 @@ CC:     "Darrick J. Wong" <djwong@kernel.org>,
         "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
         Dharmendra Singh <dsingh@ddn.com>
 Subject: Re: [PATCH 1/2] fs: add FMODE_DIO_PARALLEL_WRITE flag
-Thread-Topic: [PATCH 1/2] fs: add FMODE_DIO_PARALLEL_WRITE flag
-Thread-Index: AQHZbUSFJ5BWwL3ovkmLZXgJpNfXLq8o2+eAgAFosgCAAK6MAIABaxyAgAStj4CAAAPNgA==
-Date:   Tue, 18 Apr 2023 12:55:40 +0000
-Message-ID: <e4855cfa-3683-f12c-e865-6e5c4d0e5602@ddn.com>
+Message-ID: <20230418221300.GT3223426@dread.disaster.area>
 References: <20230307172015.54911-2-axboe@kernel.dk>
  <20230412134057.381941-1-bschubert@ddn.com>
  <CAJfpegt_ZCVodOhQCzF9OqKnCr65mKax0Gu4OTN8M51zP+8TcA@mail.gmail.com>
- <ZDjggMCGautPUDpW@infradead.org> <20230414153612.GB360881@frogsfrogsfrogs>
+ <ZDjggMCGautPUDpW@infradead.org>
+ <20230414153612.GB360881@frogsfrogsfrogs>
  <cfeade24-81fc-ab73-1fd9-89f12a402486@kernel.dk>
  <CAJfpegvv-SPJRjWrR_+JY-H=xmYq0pnTfAtj-N8kG7AnQvWd=w@mail.gmail.com>
-In-Reply-To: <CAJfpegvv-SPJRjWrR_+JY-H=xmYq0pnTfAtj-N8kG7AnQvWd=w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=ddn.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM5PR1901MB2037:EE_|PH7PR19MB7098:EE_
-x-ms-office365-filtering-correlation-id: 9e28eaf3-d75a-41cd-ad40-08db400c3695
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: F4j65jfIO3gonrJ0Of7VTnOJaFNWhx/w6TDCLJMacPpRJ6EF+OWjjxBkJlOdITWb1rIcf9mZ4vJCXCrGuqfCkRwf87nu4BCp6vlUlquEbdkFQCB9JWvFNMQo+a6S5AtrbIpLiMiImcq2JiABssyHr7z6nmdWmhXKzJQqXpMXyhhBgAQnkOM/puoQu7Yz6294pL1A7BCK07OSoGrHGGA6F4TGwORQvVwICPGutWAaZgJNhfYOe7gyRCA3gURu6szI6NjzJXWH26qrezASjM0v1OIqoSwPRfLq9wife7ezhynPn5bIimXqn5Kboqea3JnTRWG/3qeutWpf0gIveONDqlq0otzzdb7/iEACe1YiFyykxSOrq0d4GYRdkBGttusxRHgFzCduD30PT8cd420I3K6S3YQgLNdjRyxa+yip29edfaiWm3k63fzWZS46qNbCbZeLA8TjTzJIBaF+bp1BwYaAA/EAxCj3ICpld8rICyUB5ytXwRH+Aa6jBsYAO9NXQuP3t/jjcfx/ZM2Qw84nMa9REz9eUhnbWvxfwKI7ez3wHvahTQ/uso+ttCcfJSM+6tUFeBpKY+o8PQtTY/6/r1LY+nLqWTzhEhk8a2sb0OEq1CjiGTtqHk4CbzlQzTp+DhfIW8XOWXq9DAjrLCzJn+R5GTtFSRKRwGA6HLAtrmVywqHkrfTcOh/Khk8S/Tx+
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1901MB2037.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39850400004)(376002)(366004)(346002)(396003)(451199021)(2616005)(36756003)(91956017)(6486002)(71200400001)(86362001)(31686004)(5660300002)(83380400001)(2906002)(38070700005)(110136005)(6512007)(54906003)(6506007)(186003)(38100700002)(478600001)(53546011)(31696002)(122000001)(76116006)(64756008)(4326008)(66556008)(66946007)(66476007)(66446008)(8936002)(316002)(41300700001)(8676002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dTNKU2pKaW1wa0cyQW5hT2VTK1kwbHhDdDNJTlpWU3ExakplbHRkQVhvditR?=
- =?utf-8?B?YVBTZUpFZGpsQ2F1aXBWMWtJYjllNHlCVDNWdlFscE5BbC9zZWVYaHF4NVV2?=
- =?utf-8?B?cWRabWNqMXBKTGdud1pjeTA0SmJvYm9EMFRoQy9oeU0vRlBScjV5YTJ6Q1lm?=
- =?utf-8?B?VVRvSEFxK2FJSGViZGpuSWNzekRpODQwT3pJWXZQQlJYNDFKN0QremllMi9t?=
- =?utf-8?B?WkhXVVVsaG90UFg2RGZCaG9hNThwL2JTakJoTTNERmY2QklxWTBnSEdvNS85?=
- =?utf-8?B?Rmt6YVZWamlVY2xpOEN2bVVkTzZGUVF1c1dKbEx4c0FYWUo2cWFSL2J5aU9u?=
- =?utf-8?B?em5xTmIxbmtiL2ZXcEJnekRWTTd2ZEh4M0JzamZ4YnFrRVEvNzdlKzhWMVpr?=
- =?utf-8?B?bVMrUWFCbjNnMEFQcEh5eExWQ3Y1WmU5QW1GY2JUc0UzSWdkendVVTlFNW5a?=
- =?utf-8?B?cVhOOUo3d09vRE8rMFAwYUJFY1ZnS0RmVnFWWEJLaWNIeFREb0psbnd1Wkl1?=
- =?utf-8?B?dG9xbEs2ejVCb3hmMkdWNVJqZjkyN1VQbks0NlpRK2RvanE0NlFUQkZDQUk0?=
- =?utf-8?B?WkZ5OFNvQTNYdXdGTXBNOEUvd1pNS29iczJNbStybFJOMFgzUDdLMGdkWG5a?=
- =?utf-8?B?K3puWXdPT1E2MlFEUG9DekdBNzVmU3VaMnBxV29DQ2FWcXEvUnpTNFIrWTFo?=
- =?utf-8?B?M29uWXlVeFhSQ0d6T29Td0k3c25hN2dqanl2ZFZrRHhOZnpUQWFJVDArRUgr?=
- =?utf-8?B?UXQrcy8zaERJcnNtU0hMeEwwaEhNblg4TFdUTVl5djVjdmpXaU1DU1FMQmJ4?=
- =?utf-8?B?S3JxQU5yTFg5N2ZRcWNNWEVQMElZNnlud3hQajBlOEhQSXQ5US9MZE1kRnNS?=
- =?utf-8?B?NjZaMW5PbUg4a1VOZThid2VVMHhnVmN1L04zV1JJOEhzaGxBbjRML2x1M00y?=
- =?utf-8?B?YmUwK3N2T2pVTVVtVzJVcURybWlQQ3lSYlc5M3hGRVlXaW0rdnZzbE9VRnpR?=
- =?utf-8?B?UFpIK1NaT05qRHhqSzc2WllQUFJWc1ZwbXBjWFBMc1JBNGd6NjVBelBadlov?=
- =?utf-8?B?UUFZYUQ1QkFlaE5vaFNwOUpHUUZ4WVJzdjZjeGJXakVyY0lwV01YbFRDcE81?=
- =?utf-8?B?N1BWQ1ZzWElYd3hZb1ArZVM1VCtzS3VJSTZPemM3emJadllocGlST25kUGFl?=
- =?utf-8?B?QzNzQUcrQk9OaDJSNzI4WVdqS2U1cFZGS0JqR2Vlclp5Y2N2UGZUQ09YaFhx?=
- =?utf-8?B?dGVNRjQ0U3JGM0krQ1AwbEE1bUIzUmNsa3pnWHo1cC80QWVTMGVmc0lwSGto?=
- =?utf-8?B?aWY2OTkxSFd5aHpJdVNzVTRGaHJtVlRna2diK2JLdG9BSUp3MS92ZU1NZnl6?=
- =?utf-8?B?c2wvMU44a3NpaUVmUVdKR3RteTMyT0JIUVljTE1xVE5zOGd1Q3RLYmc0Q2lF?=
- =?utf-8?B?d1VOQXZjdktaaU8wbEZWS01hcUoxSXRPVVBXYmNoeTJzaStSS3IyQXd1V3Mv?=
- =?utf-8?B?aGpBaDJ3aDduaTk2bnVFQlRTZGFtN3pLUlRLUUVPaVZ1TWlDM2s3a25pbVc1?=
- =?utf-8?B?a2Fob1ZtWVBWNTlCWnkvb2p4V0JUcWtucFFYcTNHRElhT0VFUDVTTjROWU5O?=
- =?utf-8?B?T0dIUjNQZkFjOTRNM3pDbDZNYWdGZ0QrZnVBL3RiTDVjbHZiVW5oR3Z6STY3?=
- =?utf-8?B?emNkRlJyZ0E2ZXl4S1d5VXJWMTdKZkRhRUxGd1IxWEpRMlhnUTdGa3pmS2Z1?=
- =?utf-8?B?YzFTQjRDNE5Ud0RWOTNxM0lvQnFQUzJPWFhITnNoeDRuVElSdmZzcGh0WUFw?=
- =?utf-8?B?bW16d0ZqbVlOaWVzQzYxVm1HY3MzUkY2UjE2QnlHN0dnZjRjZUJaYVBtc2NV?=
- =?utf-8?B?RU1tZmgzdEZkVk51bVZxdlhDNk1MU3Q2QjB6UmV5eGtaVDNLM0Yrc2xWQXk4?=
- =?utf-8?B?Rm9BTEw4TlhleDE5M1phK0ZONUljSnB0cXlqa082d3J4WXZDWnR3ckN3TDlZ?=
- =?utf-8?B?N0J1aWpueURVL1JTRW1tUlNDa2JLNjRFSFNnblBlSTFGREphYm91VFVQVFVa?=
- =?utf-8?B?MWwrd3RPZnA4ejFiZTFGMm9rQXJNdGhscFBGUDVUaE9XRkltRUxQdlZObUJW?=
- =?utf-8?B?S040NzZRbVo2TmE1d1huUFkzRlpuZTdhS3dKQXpUQXljcmxFTkhpb1BCQ0Nj?=
- =?utf-8?Q?IIa9C/Phzu52j3nwLgduHlE=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <71752716967B454DBBC5499EAF99A7A6@namprd19.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <e4855cfa-3683-f12c-e865-6e5c4d0e5602@ddn.com>
 MIME-Version: 1.0
-X-OriginatorOrg: ddn.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1901MB2037.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e28eaf3-d75a-41cd-ad40-08db400c3695
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2023 12:55:40.2465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iT0KS5NvbYwskuPksNP0/czuw0m6lJ3Ud+nvehob9vxxO5mdgEaye72KIlwDbbIVcRR8t+Dlqrp4EKGmqr1GRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR19MB7098
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4855cfa-3683-f12c-e865-6e5c4d0e5602@ddn.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-T24gNC8xOC8yMyAxNDo0MiwgTWlrbG9zIFN6ZXJlZGkgd3JvdGU6DQo+IE9uIFNhdCwgMTUgQXBy
-IDIwMjMgYXQgMTU6MTUsIEplbnMgQXhib2UgPGF4Ym9lQGtlcm5lbC5kaz4gd3JvdGU6DQo+IA0K
-Pj4gWWVwLCB0aGF0IGlzIHByZXR0eSBtdWNoIGl0LiBJZiBhbGwgd3JpdGVzIHRvIHRoYXQgaW5v
-ZGUgYXJlIHNlcmlhbGl6ZWQNCj4+IGJ5IGEgbG9jayBvbiB0aGUgZnMgc2lkZSwgdGhlbiB3ZSds
-bCBnZXQgYSBsb3Qgb2YgY29udGVudGlvbiBvbiB0aGF0DQo+PiBtdXRleC4gQW5kIHNpbmNlLCBv
-cmlnaW5hbGx5LCBub3RoaW5nIHN1cHBvcnRlZCBhc3luYyB3cml0ZXMsIGV2ZXJ5dGhpbmcNCj4+
-IHdvdWxkIGdldCBwdW50ZWQgdG8gdGhlIGlvLXdxIHdvcmtlcnMuIGlvX3VyaW5nIGFkZGVkIHBl
-ci1pbm9kZSBoYXNoaW5nDQo+PiBmb3IgdGhpcywgc28gdGhhdCBhbnkgcHVudCB0byBpby13cSBv
-ZiBhIHdyaXRlIHdvdWxkIGdldCBzZXJpYWxpemVkLg0KPj4NCj4+IElPVywgaXQncyBhbiBlZmZp
-Y2llbmN5IHRoaW5nLCBub3QgYSBjb3JyZWN0bmVzcyB0aGluZy4NCj4gDQo+IFdlIGNvdWxkIHN0
-aWxsIGdldCBhIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24gaWYgdGhlIG1ham9yaXR5IG9mIHdyaXRl
-cw0KPiBzdGlsbCB0cmlnZ2VyIHRoZSBleGNsdXNpdmUgbG9ja2luZy4gIFRoZSBxdWVzdGlvbnMg
-YXJlOg0KPiANCj4gICAtIGhvdyBvZnRlbiBkb2VzIHRoYXQgaGFwcGVuIGluIHJlYWwgbGlmZT8N
-Cg0KQXBwbGljYXRpb24gZGVwZW5kaW5nPyBNeSBwZXJzb25hbCBvcGluaW9uIGlzIHRoYXQgDQph
-cHBsaWNhdGlvbnMvZGV2ZWxvcGVycyBrbm93aW5nIGFib3V0IHVyaW5nIHdvdWxkIGFsc28ga25v
-dyB0aGF0IHRoZXkgDQpzaG91bGQgc2V0IHRoZSByaWdodCBmaWxlIHNpemUgZmlyc3QuIExpa2Ug
-TVBJSU8gaXMgZXh0ZW5kaW5nIGZpbGVzIA0KcGVyc2lzdGVudGx5IGFuZCBpdCBpcyBoYXJkIHRv
-IGZpeCB3aXRoIGFsbCB0aGVzZSBkaWZmZXJlbnQgTVBJIHN0YWNrcyANCihJIGNhbiB0cnkgdG8g
-bm90aWZ5IG1waWNoIGFuZCBtdmFwaWNoIGRldmVsb3BlcnMpLiBTbyBiZXN0IHdvdWxkIGJlIHRv
-IA0KZG9jdW1lbnQgaXQgc29tZXdoZXJlIGluIHRoZSB1cmluZyBtYW4gcGFnZSB0aGF0IHBhcmFs
-bGVsIGV4dGVuZGluZyANCmZpbGVzIG1pZ2h0IGhhdmUgbmVnYXRpdmUgc2lkZSBlZmZlY3RzPw0K
-DQoNCj4gICAtIGhvdyBiYWQgdGhlIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24gd291bGQgYmU/DQoN
-CkkgY2FuIGdpdmUgaXQgYSB0cnkgd2l0aCBmaW8gYW5kIGZhbGxvY2F0ZT1ub25lIG92ZXIgZnVz
-ZSBkdXJpbmcgdGhlIA0KbmV4dCBkYXlzLg0KDQo+IA0KPiBXaXRob3V0IGZpcnN0IGF0dGVtcHRp
-bmcgdG8gYW5zd2VyIHRob3NlIHF1ZXN0aW9ucywgSSdkIGJlIHJlbHVjdGFudA0KPiB0byBhZGQg
-IEZNT0RFX0RJT19QQVJBTExFTF9XUklURSB0byBmdXNlLg0KPiANCg0KDQpCZXJuZA0K
+On Tue, Apr 18, 2023 at 12:55:40PM +0000, Bernd Schubert wrote:
+> On 4/18/23 14:42, Miklos Szeredi wrote:
+> > On Sat, 15 Apr 2023 at 15:15, Jens Axboe <axboe@kernel.dk> wrote:
+> > 
+> >> Yep, that is pretty much it. If all writes to that inode are serialized
+> >> by a lock on the fs side, then we'll get a lot of contention on that
+> >> mutex. And since, originally, nothing supported async writes, everything
+> >> would get punted to the io-wq workers. io_uring added per-inode hashing
+> >> for this, so that any punt to io-wq of a write would get serialized.
+> >>
+> >> IOW, it's an efficiency thing, not a correctness thing.
+> > 
+> > We could still get a performance regression if the majority of writes
+> > still trigger the exclusive locking.  The questions are:
+> > 
+> >   - how often does that happen in real life?
+> 
+> Application depending? My personal opinion is that 
+> applications/developers knowing about uring would also know that they 
+> should set the right file size first. Like MPIIO is extending files 
+> persistently and it is hard to fix with all these different MPI stacks 
+> (I can try to notify mpich and mvapich developers). So best would be to 
+> document it somewhere in the uring man page that parallel extending 
+> files might have negative side effects?
+
+There are relatively few applications running concurrent async
+RWF_APPEND DIO writes. IIRC SycallaDB was the first we came across a
+few years ago. Apps that use RWF_APPEND for individual DIOs expect
+that it doesn't cause performance anomolies.
+
+These days XFS will run concurrent append DIO writes and it doesn't
+serialise RWF_APPEND IO against other RWF_APPEND IOs. Avoiding data
+corruption due to racing append IOs doing file extension has been
+delegated to the userspace application similar to how we delegate
+the responsibility for avoiding data corruption due to overlapping
+concurrent DIO to userspace.
+
+> >   - how bad the performance regression would be?
+> 
+> I can give it a try with fio and fallocate=none over fuse during the 
+> next days.
+
+It depends on where the lock that triggers serialisation is, and how
+bad the contention on it is. rwsems suck for write contention
+because of the "spin on owner" "optimisations" for write locking and
+long write holds that occur in the IO path. In general, it will be
+no worse than using userspace threads to issue the exact same IO
+pattern using concurrent sync IO.
+
+> > Without first attempting to answer those questions, I'd be reluctant
+> > to add  FMODE_DIO_PARALLEL_WRITE to fuse.
+
+I'd tag it with this anyway - for the majority of apps that are
+doing concurrent DIO within EOF, shared locking is big win. If
+there's a corner case that apps trigger that is slow, deal with them
+when they are reported....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
