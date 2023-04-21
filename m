@@ -2,121 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 487476EA8C0
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Apr 2023 13:01:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45C8B6EA9B0
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Apr 2023 13:53:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230074AbjDULB1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Apr 2023 07:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44246 "EHLO
+        id S229877AbjDULx2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Apr 2023 07:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbjDULB0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Apr 2023 07:01:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7719016
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Apr 2023 04:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682074839;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=/8L50GWpN6fABWIe9m8wcqKsoNVJGE9elISSDzejuGk=;
-        b=bFPdhbC++5LkvyjQx1A/nmqg4v5FvAZA7ZID19hVx6vtaLpjcjRr40SNauTxvpEKwzs+uN
-        /9sFHahR2Losu1CihBsKBxRbluEgQvOjBNfmffipKALZ4SeJkR2FQe9WaOJ1xJSwnqa5ti
-        2H2YjApY9eiLK2EJmDsiy0jIfpfBwqs=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-575-l6sQO2D8PoqMQtcn0Mpg_Q-1; Fri, 21 Apr 2023 07:00:37 -0400
-X-MC-Unique: l6sQO2D8PoqMQtcn0Mpg_Q-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-5ef640838f6so10305656d6.1
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Apr 2023 04:00:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682074836; x=1684666836;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/8L50GWpN6fABWIe9m8wcqKsoNVJGE9elISSDzejuGk=;
-        b=fTpsVGPhCXLBy0rYNnTPrR6lx5UrMQtyGldbLZUxUNQsTmigM1qR3pEtLG+CTruJHD
-         IAsOVaVFoK87JiIEVnW+8Yu9rebDsG2vgLEpEV3JTYo2btzncW+W5AoVSQWunNRdc54F
-         VMGQQhH4e4KR6PZ8Tf/rgny5yjM+CwgU3rNcISeQzYcnpPu6ccH8uNhhBHIOp5HgrSD9
-         UxmR6khuvjDkZGJXfdF+O8Zh3J4QllENgQHo+0mBOgNltBF+zXNVCMrwVmfImvuIu9If
-         LDp2DYBH0w9Vg6w0rI9ITup+JWfi95ASR9I+Oi5KdbshPyPvDJx7iuuyXOMMbBdiCfNz
-         GU2Q==
-X-Gm-Message-State: AAQBX9ccpjEEP8/rI/Y+hw1vsdH53sQxUKzdqXteL2Tj6Qh/lMEmUwaD
-        sxhS3AfcfzW205vOv3dtCwP7fWKYR0tF53/CCi14QNEraejKf+Qi07KHwQXWP3K5efCjfEESf+s
-        GrZhHB5PhdhdrBzhKTgtx/gZ7cpRifCAdrzoVZfIkjpIFt8wvSRtw4CejIgKuvYOfuHYmscJvR9
-        SMSUE=
-X-Received: by 2002:ad4:5fcb:0:b0:5e7:56cc:c04a with SMTP id jq11-20020ad45fcb000000b005e756ccc04amr7033517qvb.47.1682074836627;
-        Fri, 21 Apr 2023 04:00:36 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YeTcSVxc3fRI3TWNJBAp8psTOBYfkWiuPkSnoqT5PEh2oC3LIbfp7SNkOKxWBD4/jQ6EUZhw==
-X-Received: by 2002:ad4:5fcb:0:b0:5e7:56cc:c04a with SMTP id jq11-20020ad45fcb000000b005e756ccc04amr7033484qvb.47.1682074836356;
-        Fri, 21 Apr 2023 04:00:36 -0700 (PDT)
-Received: from bfoster (c-24-61-119-116.hsd1.ma.comcast.net. [24.61.119.116])
-        by smtp.gmail.com with ESMTPSA id 17-20020a370411000000b0074e19c4daeasm1255688qke.5.2023.04.21.04.00.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Apr 2023 04:00:35 -0700 (PDT)
-Date:   Fri, 21 Apr 2023 07:02:39 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>
-Subject: [BUG] XFS (delalloc) writeback livelock writing to -ENOSPC on dm-thin
-Message-ID: <ZEJtT7vJ9RA4pno4@bfoster>
+        with ESMTP id S230299AbjDULx2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Apr 2023 07:53:28 -0400
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC646181
+        for <linux-xfs@vger.kernel.org>; Fri, 21 Apr 2023 04:53:19 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.228])
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Q2shg0lyWz9v7Q5
+        for <linux-xfs@vger.kernel.org>; Fri, 21 Apr 2023 19:28:03 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.170])
+        by APP2 (Coremail) with SMTP id BqC_BwDH+IJudUJkSOICBg--.28716S2;
+        Fri, 21 Apr 2023 11:37:23 +0000 (GMT)
+From:   Guo Xuenan <guoxuenan@huawei.com>
+To:     djwong@kernel.org, dchinner@redhat.com, linux-xfs@vger.kernel.org
+Cc:     sandeen@redhat.com, guoxuenan@huawei.com,
+        guoxuenan@huaweicloud.com, houtao1@huawei.com, fangwei1@huawei.com,
+        jack.qiu@huawei.com, yi.zhang@huawei.com
+Subject: [PATCH v2 0/2] xfs fix and clean up
+Date:   Fri, 21 Apr 2023 19:37:14 +0800
+Message-Id: <20230421113716.1890274-1-guoxuenan@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: BqC_BwDH+IJudUJkSOICBg--.28716S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF45KFWrXr4xWFW7CF43GFg_yoWxCFX_Aa
+        yI9F97Gw12qFy7Aay8JFnrtry7GrWxXrsrJayUJF4akr12yFyxXrZrZrs0vr18urs8Kry8
+        Jr1UXr95trySvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+        A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+        67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267
+        AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7Iv64x0x7Aq67IIx4CEVc8vx2IErcIFxwAC
+        I402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCF04k20xvEw4C26cxK6c8Ij2
+        8IcwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+        Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+        IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+        6cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
+        0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAnYwUUUUU=
+Sender: guoxuenan@huaweicloud.com
+X-CM-SenderInfo: xjxr53hhqd0q5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+Hi Dave & Darrick,
 
-The test case is a simple sequential write to XFS backed by a thin
-volume. The test vm is running latest 6.3.0-rc7, has 8xcpu and 8GB RAM,
-and the thin volume is backed by sufficient space in the thin pool.
-I.e.:
+Recent xfs work, I found xfs debug print code doesn't work properly.
+The two patches for fix print level parsing and try to make it works.
 
-lvcreate --type thin-pool -n tpool -L30G test
-lvcreate -V 20G -n tvol test/tpool
-mkfs.xfs /dev/test/tvol
-mount /dev/test/tvol /mnt
-dd if=/dev/zero of=/mnt/file bs=1M
+v1: fix parsing failed of `kstrtoint` by skip KERN_SOH 
+v2: with Dave's suggestion, directly set loglevel in their definition
 
-The dd command writes until ~1GB or so free space is left in the fs and
-then seems to hit a livelock. From a quick look at tracepoints, XFS
-seems to be spinning in the xfs_convert_blocks() writeback path. df
-shows space consumption no longer changing, the flush worker is spinning
-at 100% and dd is blocked in balance_dirty_pages(). If I kill dd, the
-writeback worker continues spinning and an fsync of the file blocks
-indefinitely.
+Thanks.
 
-If I reset the vm, remount and run the following:
+Guo Xuenan (2):
+  xfs: fix xfs print level wrong parsing
+  xfs: clean up some unnecessary xfs_stack_trace
 
-dd if=/dev/zero of=/mnt/file bs=1M conv=notrunc oflag=append
+ fs/xfs/libxfs/xfs_ialloc.c |  1 -
+ fs/xfs/xfs_error.c         |  9 ---------
+ fs/xfs/xfs_fsops.c         |  2 --
+ fs/xfs/xfs_log.c           |  2 --
+ fs/xfs/xfs_message.c       |  5 ++---
+ fs/xfs/xfs_message.h       | 28 ++++++++++++++--------------
+ 6 files changed, 16 insertions(+), 31 deletions(-)
 
-... it then runs to -ENOSPC, as expected.
-
-I haven't seen this occur when running on a non-thin lvm volume, not
-sure why. What is also interesting is that if I rm the file and repeat
-on the thin volume (so the the thin volume is pretty much fully mapped
-at this point), the problem still occurs.
-
-This doesn't reproduce on v6.2. Given the number of XFS changes and the
-behavior above, it sort of smells more like an XFS issue than dm, but
-I've no real evidence of that. Regardless, I ran a bisect over related
-XFS commits and it implicated either of the two following commits:
-
-  85843327094f ("xfs: factor xfs_bmap_btalloc()")
-  74c36a8689d3 ("xfs: use xfs_alloc_vextent_this_ag() where appropriate")
-
-More specifically, 85843327094f is the first commit that conclusively
-exhibits the problem. 74c36a8689d3 is inconclusive because I run into an
-almost instant shutdown when running the test. If I take one more step
-back to commit 4811c933ea1a ("xfs: combine __xfs_alloc_vextent_this_ag
-and xfs_alloc_ag_vextent"), the problem doesn't occur.
-
-Brian
+-- 
+2.31.1
 
