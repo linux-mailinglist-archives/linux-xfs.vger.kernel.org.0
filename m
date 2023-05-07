@@ -2,33 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB0AE6FA32D
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 May 2023 11:24:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E75D56FB0CC
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 May 2023 15:01:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233265AbjEHJYP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 May 2023 05:24:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57394 "EHLO
+        id S234204AbjEHNBl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 May 2023 09:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232050AbjEHJYN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 May 2023 05:24:13 -0400
-Received: from out28-82.mail.aliyun.com (out28-82.mail.aliyun.com [115.124.28.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6390C226AE
-        for <linux-xfs@vger.kernel.org>; Mon,  8 May 2023 02:24:11 -0700 (PDT)
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2331686|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0420147-0.000836042-0.957149;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047192;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=1;RT=1;SR=0;TI=SMTPD_---.SbWHb.N_1683537845;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.SbWHb.N_1683537845)
-          by smtp.aliyun-inc.com;
-          Mon, 08 May 2023 17:24:05 +0800
-Date:   Mon, 08 May 2023 17:24:07 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     linux-xfs@vger.kernel.org
-Subject: performance regression between 6.1.x and 5.15.x
-Message-Id: <20230508172406.1CF3.409509F4@e16-tech.com>
+        with ESMTP id S232069AbjEHNBf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 May 2023 09:01:35 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74A6394BA;
+        Mon,  8 May 2023 06:01:32 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 3105721F5C;
+        Mon,  8 May 2023 13:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1683550891; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qFCh73A4sxmR/z8hbrywbKblKOGm63yRahFfaFJq1dU=;
+        b=B9e3LxDyZgvZ6bVvEBO8thqaY/eGz3vBFrU1Hg+5bvlewzyygcK6Q8wC35Snhh9bmmDs/z
+        d9RKG129n7FSws9P8t5vHy3lq86dz7knGPEvhQIvcJBlPeW1/qpMW9kUkS5NRlS63LrOsH
+        80VWL7Zz8NiY85bvP+PZ/lgMoObBDwo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1683550891;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qFCh73A4sxmR/z8hbrywbKblKOGm63yRahFfaFJq1dU=;
+        b=iG4Bjs7XvhjXfe+PdDT8RPV9RlujTCToaBNGFyYpZGXNlJi6kornkwJ1dvfYZOM3y4pLLe
+        EqjPijYGzAozc/Bg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F101713A13;
+        Mon,  8 May 2023 13:01:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id rpG5OqryWGSjXQAAMHmgww
+        (envelope-from <jack@suse.cz>); Mon, 08 May 2023 13:01:30 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id D5AF9A074F; Sun,  7 May 2023 21:05:20 +0200 (CEST)
+Date:   Sun, 7 May 2023 21:05:20 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/9] block: avoid repeated work in blk_mark_disk_dead
+Message-ID: <20230507190520.chcti63xrvcfqgol@quack3>
+References: <20230505175132.2236632-1-hch@lst.de>
+ <20230505175132.2236632-3-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.81.04 [en]
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230505175132.2236632-3-hch@lst.de>
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -36,56 +73,40 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
+On Fri 05-05-23 13:51:25, Christoph Hellwig wrote:
+> Check if GD_DEAD is already set in blk_mark_disk_dead, and don't
+> duplicate the work already done.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-I noticed a performance regression of xfs 6.1.27/6.1.23,
-with the compare to xfs 5.15.110.
+Looks good to me. Feel free to add:
 
-It is yet not clear whether  it is a problem of xfs or lvm2.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-any guide to troubleshoot it?
+								Honza
 
-test case:
-  disk: NVMe PCIe3 SSD *4 
-  LVM: raid0 default strip size 64K.
-  fio -name write-bandwidth -rw=write -bs=1024Ki -size=32Gi -runtime=30
-   -iodepth 1 -ioengine sync -zero_buffers=1 -direct=0 -end_fsync=1 -numjobs=4
-   -directory=/mnt/test
-
-
-6.1.27/6.1.23
-fio bw=2623MiB/s (2750MB/s)
-perf report:
-Samples: 330K of event 'cycles', Event count (approx.): 120739812790
-Overhead  Command  Shared Object        Symbol
-  31.07%  fio      [kernel.kallsyms]    [k] copy_user_enhanced_fast_string
-   5.11%  fio      [kernel.kallsyms]    [k] iomap_set_range_uptodate.part.24
-   3.36%  fio      [kernel.kallsyms]    [k] asm_exc_nmi
-   3.29%  fio      [kernel.kallsyms]    [k] native_queued_spin_lock_slowpath
-   2.27%  fio      [kernel.kallsyms]    [k] iomap_write_begin
-   2.18%  fio      [kernel.kallsyms]    [k] get_page_from_freelist
-   2.11%  fio      [kernel.kallsyms]    [k] xas_load
-   2.10%  fio      [kernel.kallsyms]    [k] xas_descend
-
-5.15.110
-fio bw=6796MiB/s (7126MB/s)
-perf report:
-Samples: 267K of event 'cycles', Event count (approx.): 186688803871
-Overhead  Command  Shared Object       Symbol
-  38.09%  fio      [kernel.kallsyms]   [k] copy_user_enhanced_fast_string
-   6.76%  fio      [kernel.kallsyms]   [k] iomap_set_range_uptodate
-   4.40%  fio      [kernel.kallsyms]   [k] xas_load
-   3.94%  fio      [kernel.kallsyms]   [k] get_page_from_freelist
-   3.04%  fio      [kernel.kallsyms]   [k] asm_exc_nmi
-   1.97%  fio      [kernel.kallsyms]   [k] native_queued_spin_lock_slowpath
-   1.88%  fio      [kernel.kallsyms]   [k] __pagevec_lru_add
-   1.53%  fio      [kernel.kallsyms]   [k] iomap_write_begin
-   1.53%  fio      [kernel.kallsyms]   [k] __add_to_page_cache_locked
-   1.41%  fio      [kernel.kallsyms]   [k] xas_start
-
-
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2023/05/08
-
-
+> ---
+>  block/genhd.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 461999e9489937..9a35b8443f0b5f 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -586,7 +586,9 @@ void blk_mark_disk_dead(struct gendisk *disk)
+>  	/*
+>  	 * Fail any new I/O.
+>  	 */
+> -	set_bit(GD_DEAD, &disk->state);
+> +	if (test_and_set_bit(GD_DEAD, &disk->state))
+> +		return;
+> +
+>  	if (test_bit(GD_OWNS_QUEUE, &disk->state))
+>  		blk_queue_flag_set(QUEUE_FLAG_DYING, disk->queue);
+>  
+> -- 
+> 2.39.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
