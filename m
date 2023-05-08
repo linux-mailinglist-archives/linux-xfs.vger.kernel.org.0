@@ -2,161 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F9B6FB0CA
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 May 2023 15:01:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE406FAFA0
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 May 2023 14:06:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234688AbjEHNBj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 May 2023 09:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56022 "EHLO
+        id S232894AbjEHMGl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 May 2023 08:06:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234300AbjEHNBf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 May 2023 09:01:35 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FD139B83;
-        Mon,  8 May 2023 06:01:32 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 4715821FBB;
-        Mon,  8 May 2023 13:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1683550891; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OzoUvL9aj4orkqwyXqIQaZaU3/l176K6F3PuwHlLL6Y=;
-        b=ELdn+jd+3/dtgSrcrL6u1jo0dQrJtA0//tU8Z/zhUIIesfMARy1JYYwXtKZyVt/XzlGLV0
-        JBkS8/0/F+zyQNhheRiHIWzM5IDt7M1g0lsbfqzHa9Gso60/uwVtjmV3urG1GOzLoEu86c
-        z2E6Z6NbWwBu8FmivoCxBmr0XMpH2MY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1683550891;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OzoUvL9aj4orkqwyXqIQaZaU3/l176K6F3PuwHlLL6Y=;
-        b=vCK6TAG4k4/MK2pTzxkjqMy+EThHuJwxTXptnYhjm90o+eapYRjs0hKAmD+z3tXszzwli9
-        IzvF+/Jua5PcwkCg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 06C2C13A5F;
-        Mon,  8 May 2023 13:01:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Jag8AKvyWGSqXQAAMHmgww
-        (envelope-from <jack@suse.cz>); Mon, 08 May 2023 13:01:31 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id B0054A0764; Sun,  7 May 2023 21:20:50 +0200 (CEST)
-Date:   Sun, 7 May 2023 21:20:50 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 7/9] fs: add a method to shut down the file system
-Message-ID: <20230507192050.h7amddtghearusxi@quack3>
-References: <20230505175132.2236632-1-hch@lst.de>
- <20230505175132.2236632-8-hch@lst.de>
+        with ESMTP id S232429AbjEHMGk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 May 2023 08:06:40 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB9D1727
+        for <linux-xfs@vger.kernel.org>; Mon,  8 May 2023 05:06:37 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:6a18:41e7:fcfe:24c0])
+        by xavier.telenet-ops.be with bizsmtp
+        id uC6b2900D2WBekD01C6byZ; Mon, 08 May 2023 14:06:35 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1pvzdM-001Vg5-I6;
+        Mon, 08 May 2023 14:06:35 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1pvzdT-00Au3m-8z;
+        Mon, 08 May 2023 14:06:35 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     "Darrick J . Wong" <djwong@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] xfs: Fix undefined behavior of shift into sign bit
+Date:   Mon,  8 May 2023 14:06:34 +0200
+Message-Id: <20230508120634.2598765-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230505175132.2236632-8-hch@lst.de>
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri 05-05-23 13:51:30, Christoph Hellwig wrote:
-> Add a new ->shutdown super operation that can be used to tell the file
-> system to shut down, and call it from newly created holder ops when the
-> block device under a file system shuts down.
-> 
-> This only covers the main block device for "simple" file systems using
-> get_tree_bdev / mount_bdev.  File systems their own get_tree method
-> or opening additional devices will need to set up their own
-> blk_holder_ops.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+With gcc-5:
 
-Looks good. Feel free to add:
+    In file included from ./include/trace/define_trace.h:102:0,
+		     from ./fs/xfs/scrub/trace.h:988,
+		     from fs/xfs/scrub/trace.c:40:
+    ./fs/xfs/./scrub/trace.h: In function ‘trace_raw_output_xchk_fsgate_class’:
+    ./fs/xfs/scrub/scrub.h:111:28: error: initializer element is not constant
+     #define XREP_ALREADY_FIXED (1 << 31) /* checking our repair work */
+				^
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Shifting the (signed) value 1 into the sign bit is undefined behavior.
 
-								Honza
+Fix this for all definitions in the file by shifting "1U" instead of
+"1".
 
-> ---
->  fs/super.c         | 21 +++++++++++++++++++--
->  include/linux/fs.h |  1 +
->  2 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/super.c b/fs/super.c
-> index 012ce140080375..f127589700ab25 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -1206,6 +1206,22 @@ int get_tree_keyed(struct fs_context *fc,
->  EXPORT_SYMBOL(get_tree_keyed);
->  
->  #ifdef CONFIG_BLOCK
-> +static void fs_mark_dead(struct block_device *bdev)
-> +{
-> +	struct super_block *sb;
-> +
-> +	sb = get_super(bdev);
-> +	if (!sb)
-> +		return;
-> +
-> +	if (sb->s_op->shutdown)
-> +		sb->s_op->shutdown(sb);
-> +	drop_super(sb);
-> +}
-> +
-> +static const struct blk_holder_ops fs_holder_ops = {
-> +	.mark_dead		= fs_mark_dead,
-> +};
->  
->  static int set_bdev_super(struct super_block *s, void *data)
->  {
-> @@ -1248,7 +1264,8 @@ int get_tree_bdev(struct fs_context *fc,
->  	if (!fc->source)
->  		return invalf(fc, "No source specified");
->  
-> -	bdev = blkdev_get_by_path(fc->source, mode, fc->fs_type, NULL);
-> +	bdev = blkdev_get_by_path(fc->source, mode, fc->fs_type,
-> +				  &fs_holder_ops);
->  	if (IS_ERR(bdev)) {
->  		errorf(fc, "%s: Can't open blockdev", fc->source);
->  		return PTR_ERR(bdev);
-> @@ -1333,7 +1350,7 @@ struct dentry *mount_bdev(struct file_system_type *fs_type,
->  	if (!(flags & SB_RDONLY))
->  		mode |= FMODE_WRITE;
->  
-> -	bdev = blkdev_get_by_path(dev_name, mode, fs_type, NULL);
-> +	bdev = blkdev_get_by_path(dev_name, mode, fs_type, &fs_holder_ops);
->  	if (IS_ERR(bdev))
->  		return ERR_CAST(bdev);
->  
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 21a98168085641..cf3042641b9b30 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1932,6 +1932,7 @@ struct super_operations {
->  				  struct shrink_control *);
->  	long (*free_cached_objects)(struct super_block *,
->  				    struct shrink_control *);
-> +	void (*shutdown)(struct super_block *sb);
->  };
->  
->  /*
-> -- 
-> 2.39.2
-> 
+This was exposed by the first user added in commit 466c525d6d35e691
+("xfs: minimize overhead of drain wakeups by using jump labels").
+
+Fixes: 160b5a784525e8a4 ("xfs: hoist the already_fixed variable to the scrub context")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ fs/xfs/scrub/scrub.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/xfs/scrub/scrub.h b/fs/xfs/scrub/scrub.h
+index b38e93830ddea2b0..e113f2f5c254b085 100644
+--- a/fs/xfs/scrub/scrub.h
++++ b/fs/xfs/scrub/scrub.h
+@@ -105,10 +105,10 @@ struct xfs_scrub {
+ };
+ 
+ /* XCHK state flags grow up from zero, XREP state flags grown down from 2^31 */
+-#define XCHK_TRY_HARDER		(1 << 0)  /* can't get resources, try again */
+-#define XCHK_FSGATES_DRAIN	(1 << 2)  /* defer ops draining enabled */
+-#define XCHK_NEED_DRAIN		(1 << 3)  /* scrub needs to drain defer ops */
+-#define XREP_ALREADY_FIXED	(1 << 31) /* checking our repair work */
++#define XCHK_TRY_HARDER		(1U << 0)  /* can't get resources, try again */
++#define XCHK_FSGATES_DRAIN	(1U << 2)  /* defer ops draining enabled */
++#define XCHK_NEED_DRAIN		(1U << 3)  /* scrub needs to drain defer ops */
++#define XREP_ALREADY_FIXED	(1U << 31) /* checking our repair work */
+ 
+ /*
+  * The XCHK_FSGATES* flags reflect functionality in the main filesystem that
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
