@@ -2,52 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 941686FAFB8
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 May 2023 14:14:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C156FB334
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 May 2023 16:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233926AbjEHMOw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 May 2023 08:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47100 "EHLO
+        id S233513AbjEHOqi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 May 2023 10:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233824AbjEHMOr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 May 2023 08:14:47 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D8093846C
-        for <linux-xfs@vger.kernel.org>; Mon,  8 May 2023 05:14:45 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:6a18:41e7:fcfe:24c0])
-        by albert.telenet-ops.be with bizsmtp
-        id uCEY2900F2WBekD06CEYzh; Mon, 08 May 2023 14:14:43 +0200
-Received: from geert (helo=localhost)
-        by ramsan.of.borg with local-esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1pvzlA-001VjV-5u;
-        Mon, 08 May 2023 14:14:32 +0200
-Date:   Mon, 8 May 2023 14:14:32 +0200 (CEST)
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-kernel@vger.kernel.org
-cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Pratyush Yadav <pratyush@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-um@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-xfs@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
-        sparclinux@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.4-rc1
-In-Reply-To: <20230508115727.2597864-1-geert@linux-m68k.org>
-Message-ID: <749c2fc2-93dc-585-3826-dea581602d6e@linux-m68k.org>
-References: <CAHk-=wiUxm-NZ1si8dXWVTTJ9n3c+1SRTC0V+Lk7hOE4bDVwJQ@mail.gmail.com> <20230508115727.2597864-1-geert@linux-m68k.org>
+        with ESMTP id S233442AbjEHOqg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 May 2023 10:46:36 -0400
+Received: from out28-68.mail.aliyun.com (out28-68.mail.aliyun.com [115.124.28.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C525251
+        for <linux-xfs@vger.kernel.org>; Mon,  8 May 2023 07:46:19 -0700 (PDT)
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3324625|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00243102-3.31984e-06-0.997566;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047194;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=1;RT=1;SR=0;TI=SMTPD_---.SbiXoIF_1683557170;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.SbiXoIF_1683557170)
+          by smtp.aliyun-inc.com;
+          Mon, 08 May 2023 22:46:10 +0800
+Date:   Mon, 08 May 2023 22:46:12 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     linux-xfs@vger.kernel.org
+Subject: Re: performance regression between 6.1.x and 5.15.x
+In-Reply-To: <20230508172406.1CF3.409509F4@e16-tech.com>
+References: <20230508172406.1CF3.409509F4@e16-tech.com>
+Message-Id: <20230508224611.0651.409509F4@e16-tech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.81.04 [en]
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,66 +38,126 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, 8 May 2023, Geert Uytterhoeven wrote:
-> Below is the list of build error/warning regressions/improvements in
-> v6.4-rc1[1] compared to v6.3[2].
->
-> Summarized:
->  - build errors: +9/-16
->  - build warnings: +1/-1439
->
-> Happy fixing! ;-)
->
-> Thanks to the linux-next team for providing the build service.
->
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/ac9a78681b921877518763ba0e89202254349d1b/ (all 152 configs)
-> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/457391b0380335d5e9a5babdec90ac53928b23b4/ (all 152 configs)
->
->
-> *** ERRORS ***
->
-> 9 error regressions:
->  + /kisskb/src/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c: error: 'mxc_isi_pm_resume' defined but not used [-Werror=unused-function]:  => 328:12
->  + /kisskb/src/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c: error: 'mxc_isi_pm_suspend' defined but not used [-Werror=unused-function]:  => 314:12
+Hi,
 
-sparc64-gcc{5,11}/sparc-allmodconfig
-(fix was available before the merge window)
+> Hi,
+> 
+> I noticed a performance regression of xfs 6.1.27/6.1.23,
+> with the compare to xfs 5.15.110.
+> 
+> It is yet not clear whether  it is a problem of xfs or lvm2.
+> 
+> any guide to troubleshoot it?
+> 
+> test case:
+>   disk: NVMe PCIe3 SSD *4 
+>   LVM: raid0 default strip size 64K.
+>   fio -name write-bandwidth -rw=write -bs=1024Ki -size=32Gi -runtime=30
+>    -iodepth 1 -ioengine sync -zero_buffers=1 -direct=0 -end_fsync=1 -numjobs=4
+>    -directory=/mnt/test
+> 
+> 
+> 6.1.27/6.1.23
+> fio bw=2623MiB/s (2750MB/s)
+> perf report:
+> Samples: 330K of event 'cycles', Event count (approx.): 120739812790
+> Overhead  Command  Shared Object        Symbol
+>   31.07%  fio      [kernel.kallsyms]    [k] copy_user_enhanced_fast_string
+>    5.11%  fio      [kernel.kallsyms]    [k] iomap_set_range_uptodate.part.24
+>    3.36%  fio      [kernel.kallsyms]    [k] asm_exc_nmi
+>    3.29%  fio      [kernel.kallsyms]    [k] native_queued_spin_lock_slowpath
+>    2.27%  fio      [kernel.kallsyms]    [k] iomap_write_begin
+>    2.18%  fio      [kernel.kallsyms]    [k] get_page_from_freelist
+>    2.11%  fio      [kernel.kallsyms]    [k] xas_load
+>    2.10%  fio      [kernel.kallsyms]    [k] xas_descend
+> 
+> 5.15.110
+> fio bw=6796MiB/s (7126MB/s)
+> perf report:
+> Samples: 267K of event 'cycles', Event count (approx.): 186688803871
+> Overhead  Command  Shared Object       Symbol
+>   38.09%  fio      [kernel.kallsyms]   [k] copy_user_enhanced_fast_string
+>    6.76%  fio      [kernel.kallsyms]   [k] iomap_set_range_uptodate
+>    4.40%  fio      [kernel.kallsyms]   [k] xas_load
+>    3.94%  fio      [kernel.kallsyms]   [k] get_page_from_freelist
+>    3.04%  fio      [kernel.kallsyms]   [k] asm_exc_nmi
+>    1.97%  fio      [kernel.kallsyms]   [k] native_queued_spin_lock_slowpath
+>    1.88%  fio      [kernel.kallsyms]   [k] __pagevec_lru_add
+>    1.53%  fio      [kernel.kallsyms]   [k] iomap_write_begin
+>    1.53%  fio      [kernel.kallsyms]   [k] __add_to_page_cache_locked
+>    1.41%  fio      [kernel.kallsyms]   [k] xas_start
+> 
 
->  + /kisskb/src/drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c: error: "CONFIG_ARCH_DMA_ADDR_T_64BIT" is not defined [-Werror=undef]:  => 66:5, 33:5, 51:5
->  + /kisskb/src/drivers/media/platform/nxp/imx8-isi/imx8-isi-hw.c: error: "CONFIG_ARCH_DMA_ADDR_T_64BIT" is not defined, evaluates to 0 [-Werror=undef]:  => 51:5, 66:5, 33:5
 
-mips-gcc{8,11}/mips-allmodconfig
-xtensa-gcc11/xtensa-allmodconfig
-powerpc-gcc5/ppc32_allmodconfig
-(fix was available before the merge window)
+more info:
 
->  + /kisskb/src/drivers/mtd/spi-nor/spansion.c: error: 'op' is used uninitialized [-Werror=uninitialized]:  => 495:27, 364:27
+1, 6.2.14 have same performance as 6.1.x
 
-um-x86_64-gcc12/um-allyesconfig
+2,  6.1.x fio performance detail:
+Jobs: 4 (f=4): [W(4)][16.7%][w=10.2GiB/s][w=10.4k IOPS][eta 00m:15s]
+Jobs: 4 (f=4): [W(4)][25.0%][w=9949MiB/s][w=9949 IOPS][eta 00m:12s] 
+Jobs: 4 (f=4): [W(4)][31.2%][w=9618MiB/s][w=9618 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][37.5%][w=7970MiB/s][w=7970 IOPS][eta 00m:10s]
+Jobs: 4 (f=4): [W(4)][41.2%][w=5048MiB/s][w=5047 IOPS][eta 00m:10s]
+Jobs: 4 (f=4): [W(4)][42.1%][w=2489MiB/s][w=2488 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][42.9%][w=3227MiB/s][w=3226 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][45.5%][w=3622MiB/s][w=3622 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][47.8%][w=3651MiB/s][w=3650 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][52.2%][w=3435MiB/s][w=3435 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][52.0%][w=2464MiB/s][w=2463 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][53.8%][w=2438MiB/s][w=2438 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][55.6%][w=2435MiB/s][w=2434 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][57.1%][w=2449MiB/s][w=2448 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][60.7%][w=2422MiB/s][w=2421 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][62.1%][w=2457MiB/s][w=2457 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][63.3%][w=2436MiB/s][w=2436 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][64.5%][w=2432MiB/s][w=2431 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][67.7%][w=2440MiB/s][w=2440 IOPS][eta 00m:10s]
+Jobs: 4 (f=4): [W(4)][71.0%][w=2437MiB/s][w=2437 IOPS][eta 00m:09s]
+Jobs: 4 (f=4): [W(4)][74.2%][w=2442MiB/s][w=2442 IOPS][eta 00m:08s]
+Jobs: 4 (f=4): [W(4)][77.4%][w=2425MiB/s][w=2424 IOPS][eta 00m:07s]
+Jobs: 4 (f=4): [W(4)][80.6%][w=2459MiB/s][w=2459 IOPS][eta 00m:06s]
+Jobs: 4 (f=4): [W(4)][86.7%][w=2428MiB/s][w=2427 IOPS][eta 00m:04s]
+Jobs: 4 (f=4): [W(4)][90.0%][w=2441MiB/s][w=2440 IOPS][eta 00m:03s]
+Jobs: 4 (f=4): [W(4)][93.3%][w=2438MiB/s][w=2437 IOPS][eta 00m:02s]
+Jobs: 4 (f=4): [W(4)][96.7%][w=2450MiB/s][w=2449 IOPS][eta 00m:01s]
+Jobs: 4 (f=4): [W(4)][100.0%][w=2430MiB/s][w=2430 IOPS][eta 00m:00s]
+Jobs: 4 (f=4): [F(4)][100.0%][w=2372MiB/s][w=2372 IOPS][eta 00m:00s]
 
->  + /kisskb/src/fs/xfs/scrub/scrub.h: error: initializer element is not constant:  => 112:28
+5.15 fio performance detail:
+Jobs: 4 (f=4): [W(4)][14.3%][w=8563MiB/s][w=8563 IOPS][eta 00m:18s]
+Jobs: 4 (f=4): [W(4)][18.2%][w=6376MiB/s][w=6375 IOPS][eta 00m:18s]
+Jobs: 4 (f=4): [W(4)][20.8%][w=4566MiB/s][w=4565 IOPS][eta 00m:19s]
+Jobs: 4 (f=4): [W(4)][23.1%][w=3947MiB/s][w=3947 IOPS][eta 00m:20s]
+Jobs: 4 (f=4): [W(4)][25.9%][w=4601MiB/s][w=4601 IOPS][eta 00m:20s]
+Jobs: 4 (f=4): [W(4)][28.6%][w=5797MiB/s][w=5796 IOPS][eta 00m:20s]
+Jobs: 4 (f=4): [W(4)][32.1%][w=6802MiB/s][w=6801 IOPS][eta 00m:19s]
+Jobs: 4 (f=4): [W(4)][35.7%][w=7411MiB/s][w=7411 IOPS][eta 00m:18s]
+Jobs: 4 (f=4): [W(4)][40.7%][w=8445MiB/s][w=8444 IOPS][eta 00m:16s]
+Jobs: 4 (f=4): [W(4)][46.2%][w=7992MiB/s][w=7992 IOPS][eta 00m:14s]
+Jobs: 4 (f=4): [W(4)][52.0%][w=8118MiB/s][w=8117 IOPS][eta 00m:12s]
+Jobs: 4 (f=4): [W(4)][56.0%][w=7742MiB/s][w=7741 IOPS][eta 00m:11s]
+Jobs: 4 (f=4): [W(4)][62.5%][w=7497MiB/s][w=7496 IOPS][eta 00m:09s]
+Jobs: 4 (f=4): [W(4)][66.7%][w=7248MiB/s][w=7248 IOPS][eta 00m:08s]
+Jobs: 4 (f=4): [W(4)][70.8%][w=7461MiB/s][w=7460 IOPS][eta 00m:07s]
+Jobs: 4 (f=4): [W(4)][75.0%][w=7959MiB/s][w=7959 IOPS][eta 00m:06s]
+Jobs: 4 (f=4): [W(3),F(1)][79.2%][w=6982MiB/s][w=6982 IOPS][eta 00m:05s]
+Jobs: 1 (f=1): [_(2),W(1),_(1)][87.0%][w=2809MiB/s][w=2808 IOPS][eta 00m:03s]
+Jobs: 1 (f=1): [_(2),W(1),_(1)][95.5%][w=2669MiB/s][w=2668 IOPS][eta 00m:01s]
+Jobs: 1 (f=1): [_(2),F(1),_(1)][100.0%][w=2552MiB/s][w=2552 IOPS][eta 00m:00s]
 
-powerpc-gcc5/ppc64_book3e_allmodconfig
-powerpc-gcc5/powerpc-allmodconfig
-powerpc-gcc5/ppc32_allmodconfig
-powerpc-gcc5/powerpc-allyesconfig
-powerpc-gcc5/ppc64le_allmodconfig
-arm64-gcc5/arm64-allmodconfig
-(fix sent)
 
->  + error: modpost: "__floatunsidf" [drivers/phy/mediatek/phy-mtk-hdmi-drv.ko] undefined!:  => N/A
->  + error: modpost: "__gedf2" [drivers/phy/mediatek/phy-mtk-hdmi-drv.ko] undefined!:  => N/A
->  + error: modpost: "__ltdf2" [drivers/phy/mediatek/phy-mtk-hdmi-drv.ko] undefined!:  => N/A
+3, 'sysctl -a |grep dirty'  of 6.1.x and 5.15.x
+vm.dirty_background_bytes = 1073741824
+vm.dirty_background_ratio = 0
+vm.dirty_bytes = 8589934592
+vm.dirty_expire_centisecs = 600
+vm.dirty_ratio = 0
+vm.dirty_writeback_centisecs = 200
+vm.dirtytime_expire_seconds = 43200
 
-sparc64-gcc5/sparc64-allmodconfig
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2023/05/08
 
-Gr{oetje,eeting}s,
 
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
