@@ -2,49 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 060257053AE
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 May 2023 18:25:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEA2A7053D4
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 May 2023 18:30:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjEPQZe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 16 May 2023 12:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
+        id S230283AbjEPQac (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 16 May 2023 12:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230059AbjEPQZb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 May 2023 12:25:31 -0400
+        with ESMTP id S230356AbjEPQ3t (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 May 2023 12:29:49 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8134D9029;
-        Tue, 16 May 2023 09:25:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A557A8F;
+        Tue, 16 May 2023 09:29:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3341863C4C;
-        Tue, 16 May 2023 16:24:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B96C433EF;
-        Tue, 16 May 2023 16:24:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2881F63253;
+        Tue, 16 May 2023 16:29:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 974BDC433EF;
+        Tue, 16 May 2023 16:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684254270;
-        bh=+cdE3XO2ofjWYrDpSaVHslgYMqqdXTsji8DOg+lgKvo=;
+        s=k20201202; t=1684254572;
+        bh=BR2jGf209iwLPopt1wDme2mGVNDwrbRLw//F8qKYVQ0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XWziwsNbetXdwK4zSEcGZKamgzKP07aNDbfosE7PBvUNv1rUD2ABk0a75rXrG4j4R
-         jgexCkIlrKc1dwX5SBnJGCShUndMbhY2euOO4qOkjRG1piCVvF5Dkje+G6z8xk2OAG
-         NbapHWCDOitt8SjviAbz4vrzzlL+0a1ct+7so3WV30k2s3QwylXLgtcIGtGAd/p25a
-         zHflIl7vz+AEpMJlykVkJU4JAPQdbVYL/VfFdQheRj3705Cg7xnVOKzX1moUlYx2/w
-         Hf1f7wbrNK3YSL0yDJhXegwE/vy5qap9qGdGhK42vNLQYsCOBTsgpJ0tDo68XFqtR9
-         ACfmIJEqOe4rg==
-Date:   Tue, 16 May 2023 18:24:25 +0200
+        b=bsPI6lg5XfrMkImV+wD+hd9xtJRJK6a4WgB0i+wL5itNcruGqXo2WTJ/1GuQauama
+         S2nnRKgGI/8f5nKYl4V8taBIKOx21cZsm6xO4TNjhB1hT56h90I4R2LXp8uNXTPpqS
+         az/eWUXXnSZmKqV+XV2BrB/OEoup6XAtZv7nNu27IeEyBYEv8I3yW/gn8R0JgaxcH5
+         th4wAxUeDpZNuQlk4L12LWbH54d27MrR8ruuLW/uvqHVSsMptt9hmO7yLA4ycsl/xl
+         8OlFSV3uuVDpWdDKOxHWd6qiyBVF+Tha4VYLjh0Q0bPQDni3gTpngr064+Jx4zITOk
+         QxKvqaO+woRdA==
+Date:   Tue, 16 May 2023 18:29:27 +0200
 From:   Christian Brauner <brauner@kernel.org>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
         "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 4/9] block: turn bdev_lock into a mutex
-Message-ID: <20230516-gefasst-kredit-ee4b0a2e2359@brauner>
+Subject: Re: [PATCH 3/9] block: factor out a bd_end_claim helper from
+ blkdev_put
+Message-ID: <20230516-holzweg-fachpersonal-2aa7f7ca3d03@brauner>
 References: <20230505175132.2236632-1-hch@lst.de>
- <20230505175132.2236632-5-hch@lst.de>
+ <20230505175132.2236632-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230505175132.2236632-5-hch@lst.de>
+In-Reply-To: <20230505175132.2236632-4-hch@lst.de>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,9 +56,8 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 05, 2023 at 01:51:27PM -0400, Christoph Hellwig wrote:
-> There is no reason for this lock to spin, and being able to sleep under
-> it will come in handy soon.
+On Fri, May 05, 2023 at 01:51:26PM -0400, Christoph Hellwig wrote:
+> Move all the logic to release an exclusive claim into a helper.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
