@@ -2,130 +2,74 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06EE3709534
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 May 2023 12:39:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 107F9709655
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 May 2023 13:19:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbjESKjV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 May 2023 06:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58588 "EHLO
+        id S231576AbjESLSm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 May 2023 07:18:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231602AbjESKjR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 May 2023 06:39:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BDF419BA;
-        Fri, 19 May 2023 03:38:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2312D65665;
-        Fri, 19 May 2023 10:37:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 355FBC433EF;
-        Fri, 19 May 2023 10:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684492625;
-        bh=wml5FX+iifwiN9GWfcWZwLOn5yYaW+2EgAm1pGQ4wag=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LesqHPpJFvmUzFRNKNrXorR1EYqX2OH4PzpfMnfkwpXBNMAdG0ZQ2/EhXWk4IygXG
-         2SChx7zSoJ0YLPAx8NLZvJ6SOzp1REqqg2W4zVp5wbwe7o+dIDPVWUoxCl/qyUoiC6
-         Hc8K5v1h61MJ/2+pFTwgJ2RbfpliI2uZCFdccGPMr9bJ2ILACO3fq5ktbLX9Ih9mt7
-         borB3WCTF8vBovAIwJK2NJXzqkEsDom9vEZ+pqPWJpam+HPFNvtn25M8aQT5NRfCtp
-         AGEEcDIESrx+0PUP4SCR9bC6eWarMtHEgUXfuLLSvsE0ZBK7mZlQH/I+SzX7bqFsFt
-         94cgCHIsObdWA==
-Date:   Fri, 19 May 2023 12:36:51 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Neil Brown <neilb@suse.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Theodore T'so <tytso@mit.edu>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Tom Talpey <tom@talpey.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-XFS <linux-xfs@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>
-Subject: Re: [PATCH v4 4/9] nfsd: ensure we use ctime_peek to grab the
- inode->i_ctime
-Message-ID: <20230519-zierde-legieren-e769c19a29cb@brauner>
-References: <20230518114742.128950-1-jlayton@kernel.org>
- <20230518114742.128950-5-jlayton@kernel.org>
- <2B6A4DDD-0356-4765-9CED-B22A29767254@oracle.com>
- <b046f7e3c86d1c9dd45e932d3f25785fce921f4a.camel@kernel.org>
+        with ESMTP id S232041AbjESLS2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 May 2023 07:18:28 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE22173B
+        for <linux-xfs@vger.kernel.org>; Fri, 19 May 2023 04:18:24 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-96652cb7673so504780566b.0
+        for <linux-xfs@vger.kernel.org>; Fri, 19 May 2023 04:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684495103; x=1687087103;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
+        b=YrB/oM/9+DfdWsBYK5tE+VKexgOscQSdsQfyNuKsAEzaTYQrmV8QTOqw+n6ncFEG7/
+         NrzWtVQUP7+OiIp81BAxWp4/UA25FSfMBP8v31Vr27/6mv+gpWeEjdQtXcTyd5QbQRXQ
+         jQsq3ZZiseoC7dbmEKV/v7W5pMditEv8MtmfbU+xJe27P/r6UpIIOa1tC9UGmpl2zp50
+         MzUJDLpg49H8SzwE6tQuOsZmLJqfmdmj+F1UdmogGeAKG+63if08XOvkcQ3hE8tURB/u
+         e+KtIjmw1bhP1l1fiAyUwAswvZk0EPc4O8/eM+CpYABwaPGP/JS50wZnv1wX2QAcz1gX
+         wwDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684495103; x=1687087103;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
+        b=Jc4SDmOVOCPDrOLLCeGTEuVDiS0a6tTUOsNP6KZTDyZW5H0czfJHic96k0EBDfMSLb
+         g8zWRLAYo+sxYHGPTAHkv9utUP2trjbhO2wxn9u/AXDN45/uWCxmg6N1ucxWe/QJVnvT
+         wB+u2gBfym2EftyHhxwy6mguFEXcogtm0Wu/fnX+qSFV0sMtLq8Nnio39D4dcxsrq68K
+         7iCBH29muOhVCO+5jK/zdJ9hhLCKG3BzJL9MC20Of+e/Lcp+3SPIOTS/kxso1lZ5dNaH
+         WXVOOwv9Kv1JzfUBNkNC92T4hDyTdUb9qN4JUk+HMHETemn7M+Gzn51pjado6T/l+kcj
+         lQbQ==
+X-Gm-Message-State: AC+VfDwxOd257RVz3C+Areo9CTjKfzwoyGSEqKl0DvA/8+C9n4OAmL5L
+        GgbBCkxb0PXFibkG/Yh+J+H1rVO7oji9Jjd+tiV7+C6Z7szcuw==
+X-Google-Smtp-Source: ACHHUZ4u0RD9o3Kl8FtNeecPkKIUUkqQP5EKCQy8Odb3BCVRQ/plvct7PNXp53hldLkfZ7jyXh0W2roGP4wdAWIFYf4=
+X-Received: by 2002:a17:906:af64:b0:966:5730:c3fe with SMTP id
+ os4-20020a170906af6400b009665730c3femr1223003ejb.52.1684495082502; Fri, 19
+ May 2023 04:18:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b046f7e3c86d1c9dd45e932d3f25785fce921f4a.camel@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a17:907:7dab:b0:94f:7d03:8e8b with HTTP; Fri, 19 May 2023
+ 04:18:02 -0700 (PDT)
+Reply-To: ninacoulibaly03@myself.com
+From:   nina coulibaly <ninacoulibaly199@gmail.com>
+Date:   Fri, 19 May 2023 04:18:02 -0700
+Message-ID: <CAM7Z2JAs+q6RsD5Hw352ZDFruUVR5ngjAamir+4ZCakNdZyceg@mail.gmail.com>
+Subject: from nina coulibaly
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, May 18, 2023 at 11:31:45AM -0400, Jeff Layton wrote:
-> On Thu, 2023-05-18 at 13:43 +0000, Chuck Lever III wrote:
-> > 
-> > > On May 18, 2023, at 7:47 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> > > 
-> > > If getattr fails, then nfsd can end up scraping the time values directly
-> > > out of the inode for pre and post-op attrs. This may or may not be the
-> > > right thing to do, but for now make it at least use ctime_peek in this
-> > > situation to ensure that the QUERIED flag is masked.
-> > 
-> > That code comes from:
-> > 
-> > commit 39ca1bf624b6b82cc895b0217889eaaf572a7913
-> > Author:     Amir Goldstein <amir73il@gmail.com>
-> > AuthorDate: Wed Jan 3 17:14:35 2018 +0200
-> > Commit:     J. Bruce Fields <bfields@redhat.com>
-> > CommitDate: Thu Feb 8 13:40:17 2018 -0500
-> > 
-> >     nfsd: store stat times in fill_pre_wcc() instead of inode times
-> > 
-> >     The time values in stat and inode may differ for overlayfs and stat time
-> >     values are the correct ones to use. This is also consistent with the fact
-> >     that fill_post_wcc() also stores stat time values.
-> > 
-> >     This means introducing a stat call that could fail, where previously we
-> >     were just copying values out of the inode.  To be conservative about
-> >     changing behavior, we fall back to copying values out of the inode in
-> >     the error case.  It might be better just to clear fh_pre_saved (though
-> >     note the BUG_ON in set_change_info).
-> > 
-> >     Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> >     Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-> > 
-> > I was thinking it might have been added to handle odd corner
-> > cases around re-exporting NFS mounts, but that does not seem
-> > to be the case.
-> > 
-> > The fh_getattr() can fail for legitimate reasons -- like the
-> > file is in the middle of being deleted or renamed over -- I
-> > would think. This code should really deal with that by not
-> > adding pre-op attrs, since they are optional.
-> > 
-> 
-> That sounds fine to me. I'll plan to drop this patch from the series and
-> I'll send a separate patch to just remove those branches altogether
-> (which should DTRT).
+Dear,
 
-I'll wait with reviewing this until you send the next version then.
+Please grant me permission to share a very crucial discussion with
+you. I am looking forward to hearing from you at your earliest
+convenience.
+
+Mrs. Nina Coulibal
