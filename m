@@ -2,53 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30D2370D831
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8134C70D833
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235835AbjEWJBP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 May 2023 05:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35890 "EHLO
+        id S236216AbjEWJBQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 May 2023 05:01:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236216AbjEWJBM (ORCPT
+        with ESMTP id S236241AbjEWJBM (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 May 2023 05:01:12 -0400
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A590118
-        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F50100
+        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:10 -0700 (PDT)
 Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6ECWX024675;
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6E76i024594;
         Tue, 23 May 2023 09:01:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2023-03-30;
- bh=LJTMmG0ek1MTW2XB20wSQuCtnZYkPFTg87U5pQUa3SU=;
- b=E0OSHI6GB7Vum6Ls0HQQqkiQzA9hAyNo/lhwPX4qzlC9XvpGxfun97KLZesH43KWvy/i
- u+msNaE+5DAG4dHMlq8JMsTukDs59emGhnQovz8LEgcchO38dHy+A+ww7YtwElVkaY9X
- 8yGjwFT8QaMOA2Ik0NS6iTRYtvBIKcBuAzKlbRzZKiecAmtFw4Z4yTdNOPL+Klak5neF
- QfePNSt/HsFKa5Nx264/xnJIXqMZ6hX0a/t1bHm004sKnJZWqvUikye8mqdMLzPtY36+
- VHdVSaSkKkNr6Rw83LCttKR/9cQHJ3gRQYsjCbwjn3K8fLIY/tq3ouyi4jtFhzLIHxBy 1Q== 
+ bh=KJkDGVJOXmrl5iGEvfYj3Ybc32jXyhfjugjTtkqJuPE=;
+ b=4VE44iMHlOcRxUZfdYHIw2AU13JSLRUjp5Z2Rtosfbd71o3jz1qh+N5l36qJ0rRm+0iJ
+ Ht+tVHo9Zubny48BBCeYPyiNsxS4RMZ6zaiH4/dygU3lFcGGpxQEN7Dijn3dSRgGFcvN
+ X+luQB8iD9p68S1tif4ldqPFTEQTgEIXPJh+hEHs4MLWovn4UGPvnpVQ/YWg9pdYT2aM
+ 8TjM85Bqftdq+qEYRtNvOyJ9JObJIDpe1rwnXcxwUOMSmfcnMUORkPZow2L1AXasIjpd
+ BospuG2/UPFAYPZ8iasOQuPfs3T+KLG6RjpoX2MO8Q04M1Rgmhx9tqwb0MRumH/xwR5A AQ== 
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp7yvkwb-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp7yvkwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 May 2023 09:01:06 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6u8aC029064;
+        Tue, 23 May 2023 09:01:05 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj797-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 23 May 2023 09:01:05 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N8v8oH029531;
-        Tue, 23 May 2023 09:01:04 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj78d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 May 2023 09:01:04 +0000
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrP007681;
-        Tue, 23 May 2023 09:01:04 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrR007681;
+        Tue, 23 May 2023 09:01:05 GMT
 Received: from chanbabu-fstest.osdevelopmeniad.oraclevcn.com (chanbabu-fstesting.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.250.50])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-2;
-        Tue, 23 May 2023 09:01:04 +0000
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-3;
+        Tue, 23 May 2023 09:01:05 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     cem@kernel.org
 Cc:     Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org
-Subject: [PATCH 01/24] metadump: Use boolean values true/false instead of 1/0
-Date:   Tue, 23 May 2023 14:30:27 +0530
-Message-Id: <20230523090050.373545-2-chandan.babu@oracle.com>
+Subject: [PATCH 02/24] mdrestore: Fix logic used to check if target device is large enough
+Date:   Tue, 23 May 2023 14:30:28 +0530
+Message-Id: <20230523090050.373545-3-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230523090050.373545-1-chandan.babu@oracle.com>
 References: <20230523090050.373545-1-chandan.babu@oracle.com>
@@ -58,11 +58,11 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
  definitions=2023-05-23_05,2023-05-22_03,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=969 phishscore=0 bulkscore=0 suspectscore=0 adultscore=0
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2304280000 definitions=main-2305230074
-X-Proofpoint-ORIG-GUID: PtkSGQZIde4hWCWVpgiCIO2ILTW9aTcI
-X-Proofpoint-GUID: PtkSGQZIde4hWCWVpgiCIO2ILTW9aTcI
+X-Proofpoint-ORIG-GUID: T7jfGyR8amLBbQtVli-FO7ez-yr9rgPf
+X-Proofpoint-GUID: T7jfGyR8amLBbQtVli-FO7ez-yr9rgPf
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -73,57 +73,28 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+The device size verification code should be writing XFS_MAX_SECTORSIZE bytes
+to the end of the device rather than "sizeof(char *) * XFS_MAX_SECTORSIZE"
+bytes.
+
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- db/metadump.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ mdrestore/xfs_mdrestore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/db/metadump.c b/db/metadump.c
-index 27d1df432..6bcfd5bba 100644
---- a/db/metadump.c
-+++ b/db/metadump.c
-@@ -2421,12 +2421,12 @@ process_inode(
- 		case S_IFDIR:
- 			rval = process_inode_data(dip, TYP_DIR2);
- 			if (dip->di_format == XFS_DINODE_FMT_LOCAL)
--				need_new_crc = 1;
-+				need_new_crc = true;
- 			break;
- 		case S_IFLNK:
- 			rval = process_inode_data(dip, TYP_SYMLINK);
- 			if (dip->di_format == XFS_DINODE_FMT_LOCAL)
--				need_new_crc = 1;
-+				need_new_crc = true;
- 			break;
- 		case S_IFREG:
- 			rval = process_inode_data(dip, TYP_DATA);
-@@ -2436,7 +2436,7 @@ process_inode(
- 		case S_IFBLK:
- 		case S_IFSOCK:
- 			process_dev_inode(dip);
--			need_new_crc = 1;
-+			need_new_crc = true;
- 			break;
- 		default:
- 			break;
-@@ -2450,7 +2450,7 @@ process_inode(
- 		attr_data.remote_val_count = 0;
- 		switch (dip->di_aformat) {
- 			case XFS_DINODE_FMT_LOCAL:
--				need_new_crc = 1;
-+				need_new_crc = true;
- 				if (obfuscate || zero_stale_data)
- 					process_sf_attr(dip);
- 				break;
-@@ -2469,7 +2469,7 @@ process_inode(
- done:
- 	/* Heavy handed but low cost; just do it as a catch-all. */
- 	if (zero_stale_data)
--		need_new_crc = 1;
-+		need_new_crc = true;
+diff --git a/mdrestore/xfs_mdrestore.c b/mdrestore/xfs_mdrestore.c
+index 7c1a66c40..333282ed2 100644
+--- a/mdrestore/xfs_mdrestore.c
++++ b/mdrestore/xfs_mdrestore.c
+@@ -115,7 +115,7 @@ perform_restore(
+ 	} else  {
+ 		/* ensure device is sufficiently large enough */
  
- 	if (crc_was_ok && need_new_crc)
- 		libxfs_dinode_calc_crc(mp, dip);
+-		char		*lb[XFS_MAX_SECTORSIZE] = { NULL };
++		char		lb[XFS_MAX_SECTORSIZE] = { 0 };
+ 		off64_t		off;
+ 
+ 		off = sb.sb_dblocks * sb.sb_blocksize - sizeof(lb);
 -- 
 2.39.1
 
