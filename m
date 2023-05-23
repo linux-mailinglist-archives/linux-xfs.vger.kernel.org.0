@@ -2,53 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6D9370D83C
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D92E770D83D
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235537AbjEWJBW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 May 2023 05:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36012 "EHLO
+        id S235827AbjEWJBX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 May 2023 05:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235827AbjEWJBT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 May 2023 05:01:19 -0400
+        with ESMTP id S236245AbjEWJBU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 May 2023 05:01:20 -0400
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF0B109
-        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:17 -0700 (PDT)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6EF9o027118;
-        Tue, 23 May 2023 09:01:15 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FC88FE
+        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:19 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6E7KL018830;
+        Tue, 23 May 2023 09:01:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2023-03-30;
- bh=Lwr5U15JmUjh17Ts8ZhFj0Kqpr/F6zbqkmi9G0yk9As=;
- b=3X2mJ0sOnuFSC3mvuS2uGkZH0TaojPty0Red/8J196MHjhcsOpHgHygL/65Djf4ABTrX
- kRuyHyzYgjWtUwgPkwyQcrR6iyKrF57qENQKyELRCqynovirLIWfyQ1HaS1tfIgNvBb6
- MBqBwDy36mQVr5amZUIKk0WE6TSr189V3gFAGcdaiyWSca7xyCYU1dVGAeMP5rLVJygF
- ZnJf9kB8240NE+eCRMykAl8b3fDuobUVpCmNfZfTt0DXHEOIJ3pD1u3V5rDGuiQrgNZu
- +owCE2NQXgCyKTDZ7n71Vl5iBVwHCj0KEXr6FDiTZrZ3ZgodN9bEBuNME1p+TaANLtmP GA== 
+ bh=BRmTfGYqBT84VMTSDOA5n6aX34AoTwePLwN1BvYiyjM=;
+ b=QzgwFyzfTOHc00SZqr+0slRYa9vD6JfE2uNmv9Nom3z1nor2/TLQg5i3sCSQMvmiIlaq
+ fo6uWuMLFJm5ddOIcWrv8bXlKchLUORXFAsUgyYu6efhnYtjwdz7UNwtD1yr2nFfGgtw
+ Enkw5r/UqszijPLMgdebr5Hzy5g4czgob2qImiUlUvYF6fjVdUmvicg/cZPDrosYaePk
+ ZZ4BmUhhFgJdEzFvStKrac7N6v/ixIBBrBrnx7st7XvxjaTwr47LI0/apDCCCazb8Lnu
+ EdxVcNw7WFNq9WKTTYJelRxOWGO1F2v2Aa/5n82WhWQ019+d9jxWx+QtqgOsJmB7A5Be eA== 
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp8ccp8s-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp3qmkug-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 May 2023 09:01:14 +0000
+        Tue, 23 May 2023 09:01:15 +0000
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N8v8oO029531;
-        Tue, 23 May 2023 09:01:14 GMT
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6tBgU029028;
+        Tue, 23 May 2023 09:01:15 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj7j2-1
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj7jm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 23 May 2023 09:01:14 +0000
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrl007681;
-        Tue, 23 May 2023 09:01:13 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrn007681;
+        Tue, 23 May 2023 09:01:14 GMT
 Received: from chanbabu-fstest.osdevelopmeniad.oraclevcn.com (chanbabu-fstesting.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.250.50])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-13;
-        Tue, 23 May 2023 09:01:13 +0000
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-14;
+        Tue, 23 May 2023 09:01:14 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     cem@kernel.org
 Cc:     Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org
-Subject: [PATCH 12/24] metadump: Define metadump ops for v2 format
-Date:   Tue, 23 May 2023 14:30:38 +0530
-Message-Id: <20230523090050.373545-13-chandan.babu@oracle.com>
+Subject: [PATCH 13/24] metadump: Add support for passing version option
+Date:   Tue, 23 May 2023 14:30:39 +0530
+Message-Id: <20230523090050.373545-14-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230523090050.373545-1-chandan.babu@oracle.com>
 References: <20230523090050.373545-1-chandan.babu@oracle.com>
@@ -61,8 +61,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 ml
  mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0 adultscore=0
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2304280000 definitions=main-2305230074
-X-Proofpoint-ORIG-GUID: knDoZdKgI-4LwYePe3RnwcF-1vkugHj5
-X-Proofpoint-GUID: knDoZdKgI-4LwYePe3RnwcF-1vkugHj5
+X-Proofpoint-GUID: xQ2x5igoy_vz4vsEfuY2Q0v6Sm8wbJhO
+X-Proofpoint-ORIG-GUID: xQ2x5igoy_vz4vsEfuY2Q0v6Sm8wbJhO
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -73,119 +73,78 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit adds functionality to dump metadata from an XFS filesystem in
-newly introduced v2 format.
+The new option allows the user to explicitly specify the version of metadump
+to use. However, we will default to using the v1 format.
 
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- db/metadump.c | 73 ++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 70 insertions(+), 3 deletions(-)
+ db/metadump.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
 diff --git a/db/metadump.c b/db/metadump.c
-index 9d7ad76ae..627436e68 100644
+index 627436e68..df508b987 100644
 --- a/db/metadump.c
 +++ b/db/metadump.c
-@@ -3037,6 +3037,69 @@ static struct metadump_ops metadump1_ops = {
- 	.release_metadump = release_metadump_v1,
- };
+@@ -37,7 +37,7 @@ static void	metadump_help(void);
  
-+static int
-+init_metadump_v2(void)
-+{
-+	struct xfs_metadump_header xmh = {0};
-+	uint32_t compat_flags = 0;
-+
-+	xmh.xmh_magic = cpu_to_be32(XFS_MD_MAGIC_V2);
-+	xmh.xmh_version = 2;
-+
-+	if (metadump.obfuscate)
-+		compat_flags |= XFS_MD2_INCOMPAT_OBFUSCATED;
-+	if (!metadump.zero_stale_data)
-+		compat_flags |= XFS_MD2_INCOMPAT_FULLBLOCKS;
-+	if (metadump.dirty_log)
-+		compat_flags |= XFS_MD2_INCOMPAT_DIRTYLOG;
-+
-+	xmh.xmh_compat_flags = cpu_to_be32(compat_flags);
-+
-+	if (fwrite(&xmh, sizeof(xmh), 1, metadump.outf) != 1) {
-+		print_warning("error writing to target file");
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+write_metadump_v2(
-+	enum typnm	type,
-+	char		*data,
-+	int64_t		off,
-+	int		len)
-+{
-+	struct xfs_meta_extent	xme;
-+	uint64_t		addr;
-+
-+	addr = off;
-+	if (type == TYP_ELOG)
-+		addr |= XME_ADDR_LOG_DEVICE;
-+	else
-+		addr |= XME_ADDR_DATA_DEVICE;
-+
-+	xme.xme_addr = cpu_to_be64(addr);
-+	xme.xme_len = cpu_to_be32(len);
-+
-+	if (fwrite(&xme, sizeof(xme), 1, metadump.outf) != 1) {
-+		print_warning("error writing to target file");
-+		return -EIO;
-+	}
-+
-+	if (fwrite(data, len << BBSHIFT, 1, metadump.outf) != 1) {
-+		print_warning("error writing to target file");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct metadump_ops metadump2_ops = {
-+	.init_metadump = init_metadump_v2,
-+	.write_metadump = write_metadump_v2,
-+};
-+
- static int
- metadump_f(
- 	int 		argc,
-@@ -3178,7 +3241,10 @@ metadump_f(
- 		}
+ static const cmdinfo_t	metadump_cmd =
+ 	{ "metadump", NULL, metadump_f, 0, -1, 0,
+-		N_("[-a] [-e] [-g] [-m max_extent] [-w] [-o] filename"),
++		N_("[-a] [-e] [-g] [-m max_extent] [-w] [-o] [-v 1|2] filename"),
+ 		N_("dump metadata to a file"), metadump_help };
+ 
+ struct metadump_ops {
+@@ -91,6 +91,7 @@ metadump_help(void)
+ "   -g -- Display dump progress\n"
+ "   -m -- Specify max extent size in blocks to copy (default = %d blocks)\n"
+ "   -o -- Don't obfuscate names and extended attributes\n"
++"   -v -- Metadump version to be used\n"
+ "   -w -- Show warnings of bad metadata information\n"
+ "\n"), DEFAULT_MAX_EXT_SIZE);
+ }
+@@ -3112,6 +3113,7 @@ metadump_f(
+ 	int		outfd = -1;
+ 	int		ret;
+ 	char		*p;
++	bool		version_opt_set = false;
+ 
+ 	exitcode = 1;
+ 
+@@ -3140,7 +3142,7 @@ metadump_f(
+ 		return 0;
  	}
  
--	metadump.mdops = &metadump1_ops;
-+	if (metadump.version == 1)
-+		metadump.mdops = &metadump1_ops;
-+	else
-+		metadump.mdops = &metadump2_ops;
+-	while ((c = getopt(argc, argv, "aegm:ow")) != EOF) {
++	while ((c = getopt(argc, argv, "aegm:ov:w")) != EOF) {
+ 		switch (c) {
+ 			case 'a':
+ 				metadump.zero_stale_data = 0;
+@@ -3164,6 +3166,15 @@ metadump_f(
+ 			case 'o':
+ 				metadump.obfuscate = 0;
+ 				break;
++			case 'v':
++				metadump.version = (int)strtol(optarg, &p, 0);
++				if (*p != '\0' || (metadump.version != 1 && metadump.version != 2)) {
++					print_warning("bad metadump version: %s",
++						optarg);
++					return 0;
++				}
++				version_opt_set = true;
++				break;
+ 			case 'w':
+ 				metadump.show_warnings = 1;
+ 				break;
+@@ -3178,6 +3189,9 @@ metadump_f(
+ 		return 0;
+ 	}
  
- 	ret = metadump.mdops->init_metadump();
- 	if (ret)
-@@ -3203,7 +3269,7 @@ metadump_f(
- 		exitcode = !copy_log(log_type);
- 
- 	/* write the remaining index */
--	if (!exitcode)
-+	if (!exitcode && metadump.mdops->end_write_metadump)
- 		exitcode = metadump.mdops->end_write_metadump() < 0;
- 
- 	if (metadump.progress_since_warning)
-@@ -3223,7 +3289,8 @@ metadump_f(
- 	while (iocur_sp > start_iocur_sp)
- 		pop_cur();
- 
--	metadump.mdops->release_metadump();
-+	if (metadump.mdops->release_metadump)
-+		metadump.mdops->release_metadump();
- 
- out:
- 	return 0;
++	if (mp->m_logdev_targp != mp->m_ddev_targp && version_opt_set == false)
++		metadump.version = 2;
++
+ 	/* If we'll copy the log, see if the log is dirty */
+ 	if (mp->m_logdev_targp == mp->m_ddev_targp || metadump.version == 2) {
+ 		log_type = TYP_LOG;
 -- 
 2.39.1
 
