@@ -2,53 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 356D670D832
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E19F70D835
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236055AbjEWJBP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 May 2023 05:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35922 "EHLO
+        id S236256AbjEWJBR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 May 2023 05:01:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236245AbjEWJBM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 May 2023 05:01:12 -0400
+        with ESMTP id S235827AbjEWJBO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 May 2023 05:01:14 -0400
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F35A121
-        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:11 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6E7fg024604;
-        Tue, 23 May 2023 09:01:08 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE0A109
+        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:13 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6E87j018838;
+        Tue, 23 May 2023 09:01:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2023-03-30;
- bh=HVj0Vur7L3aHcILUSMuz4/pjMpNEnP1voyfXidwocOQ=;
- b=nAQ9Pa+0RsY5jDOQjnV7fb3zUOVfar4qpwmNmqsLPHNHcDlh7GeeKKEZOJ5INg6un16Z
- DwZWQp1pSGXgNC2ei2u9wZsTT1Aldv4APhjnn847VYxi7aWCmjIbpBrSwfVwlSoNGw8N
- dmc0kVqY8sTIRz15+0jPldV3RrUkGn/73FgEEo+k06uN2t5vaVIiimEXstHn06ikqgeZ
- qnU4ob9Y9nB0GeYqt8BDNMXMjcKb9iX+dwiLV2zmFCvVn0yACq6oV85zJMi3TJqeDAgc
- 1fZejLxwIelfCgMMJOX/jrAUwloFWFdT0xHFgfNmEwTKTvs1xqUbd+LnloRVr1WIg4OV yw== 
+ bh=sUdgl5UAhQH+c06U7m1qU0bIy/BRWiheyrHyGx1gbDY=;
+ b=uJdQaY1q1B4OKYQaLZOXTwQqYFQxSWo/POgXy3Tw19lsVUnmccOEYaeBGq4oeh2cbEm9
+ xv8IzoPU5KWiaoO+tjoi3sc6Ma456hNBk8UpjYhtE4Dq7CngDF/KzYWEGZJPr1gR8z5A
+ a4dDQJIa2usJSqkXWIPDS07DhNmzryZufXC1eUaCSS62MHE1NMqVUgTFk0G6I93t8A8o
+ YjIKf+Mx9HFYrOP6gvkdeYB2xBtUDT6eXZZK9IqVQyPQuohWacMFR9Kd5+qnyAMK75W4
+ nSnu5kkWRXF/7tFKYp9KqaFtkfLed5E9Qy5jJ54JT9wNpYOVIllnsd7kGDHI9LedLdIJ Tw== 
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp7yvkwh-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp3qmku2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 May 2023 09:01:09 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N8KSV8029007;
+        Tue, 23 May 2023 09:01:08 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj7c9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 23 May 2023 09:01:08 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N8l5Qq028926;
-        Tue, 23 May 2023 09:01:07 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj7bg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 May 2023 09:01:07 +0000
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrV007681;
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrX007681;
         Tue, 23 May 2023 09:01:07 GMT
 Received: from chanbabu-fstest.osdevelopmeniad.oraclevcn.com (chanbabu-fstesting.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.250.50])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-5;
-        Tue, 23 May 2023 09:01:06 +0000
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-6;
+        Tue, 23 May 2023 09:01:07 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     cem@kernel.org
 Cc:     Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org
-Subject: [PATCH 04/24] metadump: Add initialization and release functions
-Date:   Tue, 23 May 2023 14:30:30 +0530
-Message-Id: <20230523090050.373545-5-chandan.babu@oracle.com>
+Subject: [PATCH 05/24] set_cur: Add support to read from external log device
+Date:   Tue, 23 May 2023 14:30:31 +0530
+Message-Id: <20230523090050.373545-6-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230523090050.373545-1-chandan.babu@oracle.com>
 References: <20230523090050.373545-1-chandan.babu@oracle.com>
@@ -58,11 +58,11 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
  definitions=2023-05-23_05,2023-05-22_03,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- mlxlogscore=831 phishscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0 adultscore=0
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2304280000 definitions=main-2305230074
-X-Proofpoint-ORIG-GUID: YGgPNYVj0rdZ3M6MBgyp7x5awJeEwhaI
-X-Proofpoint-GUID: YGgPNYVj0rdZ3M6MBgyp7x5awJeEwhaI
+X-Proofpoint-GUID: hEak6Q2aiE-12P52W-GRczpbfVz7VXV_
+X-Proofpoint-ORIG-GUID: hEak6Q2aiE-12P52W-GRczpbfVz7VXV_
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -73,134 +73,102 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move metadump initialization and release functionality into corresponding
-functions.
+This commit changes set_cur() to be able to read from external log
+devices. This is required by a future commit which will add the ability to
+dump metadata from external log devices.
 
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- db/metadump.c | 88 ++++++++++++++++++++++++++++++---------------------
- 1 file changed, 52 insertions(+), 36 deletions(-)
+ db/io.c   | 22 +++++++++++++++-------
+ db/type.c |  2 ++
+ db/type.h |  2 +-
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/db/metadump.c b/db/metadump.c
-index 806cdfd68..e7a433c21 100644
---- a/db/metadump.c
-+++ b/db/metadump.c
-@@ -2984,6 +2984,54 @@ done:
- 	return !write_buf(iocur_top);
- }
+diff --git a/db/io.c b/db/io.c
+index 3d2572364..e8c8f57e2 100644
+--- a/db/io.c
++++ b/db/io.c
+@@ -516,12 +516,13 @@ set_cur(
+ 	int		ring_flag,
+ 	bbmap_t		*bbmap)
+ {
+-	struct xfs_buf	*bp;
+-	xfs_ino_t	dirino;
+-	xfs_ino_t	ino;
+-	uint16_t	mode;
++	struct xfs_buftarg	*btargp;
++	struct xfs_buf		*bp;
++	xfs_ino_t		dirino;
++	xfs_ino_t		ino;
++	uint16_t		mode;
+ 	const struct xfs_buf_ops *ops = type ? type->bops : NULL;
+-	int		error;
++	int			error;
  
-+static int
-+init_metadump(void)
-+{
-+	metadump.metablock = (xfs_metablock_t *)calloc(BBSIZE + 1, BBSIZE);
-+	if (metadump.metablock == NULL) {
-+		print_warning("memory allocation failure");
-+		return -1;
-+	}
-+	metadump.metablock->mb_blocklog = BBSHIFT;
-+	metadump.metablock->mb_magic = cpu_to_be32(XFS_MD_MAGIC);
-+
-+	/* Set flags about state of metadump */
-+	metadump.metablock->mb_info = XFS_METADUMP_INFO_FLAGS;
-+	if (metadump.obfuscate)
-+		metadump.metablock->mb_info |= XFS_METADUMP_OBFUSCATED;
-+	if (!metadump.zero_stale_data)
-+		metadump.metablock->mb_info |= XFS_METADUMP_FULLBLOCKS;
-+	if (metadump.dirty_log)
-+		metadump.metablock->mb_info |= XFS_METADUMP_DIRTYLOG;
-+
-+	metadump.block_index = (__be64 *)((char *)metadump.metablock +
-+				sizeof(xfs_metablock_t));
-+	metadump.block_buffer = (char *)(metadump.metablock) + BBSIZE;
-+	metadump.num_indices = (BBSIZE - sizeof(xfs_metablock_t)) / sizeof(__be64);
-+
-+	/*
-+	 * A metadump block can hold at most num_indices of BBSIZE sectors;
-+	 * do not try to dump a filesystem with a sector size which does not
-+	 * fit within num_indices (i.e. within a single metablock).
-+	 */
-+	if (mp->m_sb.sb_sectsize > metadump.num_indices * BBSIZE) {
-+		print_warning("Cannot dump filesystem with sector size %u",
-+			      mp->m_sb.sb_sectsize);
-+		free(metadump.metablock);
-+		return -1;
+ 	if (iocur_sp < 0) {
+ 		dbprintf(_("set_cur no stack element to set\n"));
+@@ -534,7 +535,14 @@ set_cur(
+ 	pop_cur();
+ 	push_cur();
+ 
++	btargp = mp->m_ddev_targp;
++	if (type->typnm == TYP_ELOG) {
++		ASSERT(mp->m_ddev_targp != mp->m_logdev_targp);
++		btargp = mp->m_logdev_targp;
 +	}
 +
-+	metadump.cur_index = 0;
-+
-+        return 0;
-+}
-+
-+static void
-+release_metadump(void)
-+{
-+	free(metadump.metablock);
-+}
-+
- static int
- metadump_f(
- 	int 		argc,
-@@ -3076,48 +3124,16 @@ metadump_f(
- 		pop_cur();
+ 	if (bbmap) {
++		ASSERT(btargp == mp->m_ddev_targp);
+ #ifdef DEBUG_BBMAP
+ 		int i;
+ 		printf(_("xfs_db got a bbmap for %lld\n"), (long long)blknum);
+@@ -548,11 +556,11 @@ set_cur(
+ 		if (!iocur_top->bbmap)
+ 			return;
+ 		memcpy(iocur_top->bbmap, bbmap, sizeof(struct bbmap));
+-		error = -libxfs_buf_read_map(mp->m_ddev_targp, bbmap->b,
++		error = -libxfs_buf_read_map(btargp, bbmap->b,
+ 				bbmap->nmaps, LIBXFS_READBUF_SALVAGE, &bp,
+ 				ops);
+ 	} else {
+-		error = -libxfs_buf_read(mp->m_ddev_targp, blknum, len,
++		error = -libxfs_buf_read(btargp, blknum, len,
+ 				LIBXFS_READBUF_SALVAGE, &bp, ops);
+ 		iocur_top->bbmap = NULL;
  	}
+diff --git a/db/type.c b/db/type.c
+index efe704456..cc406ae4c 100644
+--- a/db/type.c
++++ b/db/type.c
+@@ -100,6 +100,7 @@ static const typ_t	__typtab_crc[] = {
+ 	{ TYP_INODE, "inode", handle_struct, inode_crc_hfld,
+ 		&xfs_inode_buf_ops, TYP_F_CRC_FUNC, xfs_inode_set_crc },
+ 	{ TYP_LOG, "log", NULL, NULL, NULL, TYP_F_NO_CRC_OFF },
++	{ TYP_ELOG, "elog", NULL, NULL, NULL, TYP_F_NO_CRC_OFF },
+ 	{ TYP_RTBITMAP, "rtbitmap", handle_text, NULL, NULL, TYP_F_NO_CRC_OFF },
+ 	{ TYP_RTSUMMARY, "rtsummary", handle_text, NULL, NULL, TYP_F_NO_CRC_OFF },
+ 	{ TYP_SB, "sb", handle_struct, sb_hfld, &xfs_sb_buf_ops,
+@@ -144,6 +145,7 @@ static const typ_t	__typtab_spcrc[] = {
+ 	{ TYP_INODE, "inode", handle_struct, inode_crc_hfld,
+ 		&xfs_inode_buf_ops, TYP_F_CRC_FUNC, xfs_inode_set_crc },
+ 	{ TYP_LOG, "log", NULL, NULL, NULL, TYP_F_NO_CRC_OFF },
++	{ TYP_ELOG, "elog", NULL, NULL, NULL, TYP_F_NO_CRC_OFF },
+ 	{ TYP_RTBITMAP, "rtbitmap", handle_text, NULL, NULL, TYP_F_NO_CRC_OFF },
+ 	{ TYP_RTSUMMARY, "rtsummary", handle_text, NULL, NULL, TYP_F_NO_CRC_OFF },
+ 	{ TYP_SB, "sb", handle_struct, sb_hfld, &xfs_sb_buf_ops,
+diff --git a/db/type.h b/db/type.h
+index 411bfe90d..feb5c8219 100644
+--- a/db/type.h
++++ b/db/type.h
+@@ -14,7 +14,7 @@ typedef enum typnm
+ 	TYP_AGF, TYP_AGFL, TYP_AGI, TYP_ATTR, TYP_BMAPBTA,
+ 	TYP_BMAPBTD, TYP_BNOBT, TYP_CNTBT, TYP_RMAPBT, TYP_REFCBT, TYP_DATA,
+ 	TYP_DIR2, TYP_DQBLK, TYP_INOBT, TYP_INODATA, TYP_INODE,
+-	TYP_LOG, TYP_RTBITMAP, TYP_RTSUMMARY, TYP_SB, TYP_SYMLINK,
++	TYP_LOG, TYP_ELOG, TYP_RTBITMAP, TYP_RTSUMMARY, TYP_SB, TYP_SYMLINK,
+ 	TYP_TEXT, TYP_FINOBT, TYP_NONE
+ } typnm_t;
  
--	metadump.metablock = (xfs_metablock_t *)calloc(BBSIZE + 1, BBSIZE);
--	if (metadump.metablock == NULL) {
--		print_warning("memory allocation failure");
--		return -1;
--	}
--	metadump.metablock->mb_blocklog = BBSHIFT;
--	metadump.metablock->mb_magic = cpu_to_be32(XFS_MD_MAGIC);
--
--	/* Set flags about state of metadump */
--	metadump.metablock->mb_info = XFS_METADUMP_INFO_FLAGS;
--	if (metadump.obfuscate)
--		metadump.metablock->mb_info |= XFS_METADUMP_OBFUSCATED;
--	if (!metadump.zero_stale_data)
--		metadump.metablock->mb_info |= XFS_METADUMP_FULLBLOCKS;
--	if (metadump.dirty_log)
--		metadump.metablock->mb_info |= XFS_METADUMP_DIRTYLOG;
--
--	metadump.block_index = (__be64 *)((char *)metadump.metablock +
--					sizeof(xfs_metablock_t));
--	metadump.block_buffer = (char *)metadump.metablock + BBSIZE;
--	metadump.num_indices = (BBSIZE - sizeof(xfs_metablock_t)) /
--		sizeof(__be64);
--
--	/*
--	 * A metadump block can hold at most num_indices of BBSIZE sectors;
--	 * do not try to dump a filesystem with a sector size which does not
--	 * fit within num_indices (i.e. within a single metablock).
--	 */
--	if (mp->m_sb.sb_sectsize > metadump.num_indices * BBSIZE) {
--		print_warning("Cannot dump filesystem with sector size %u",
--			      mp->m_sb.sb_sectsize);
--		free(metadump.metablock);
-+	ret = init_metadump();
-+	if (ret)
- 		return 0;
--	}
- 
- 	start_iocur_sp = iocur_sp;
- 
- 	if (strcmp(argv[optind], "-") == 0) {
- 		if (isatty(fileno(stdout))) {
- 			print_warning("cannot write to a terminal");
--			free(metadump.metablock);
--			return 0;
-+			goto out;
- 		}
- 		/*
- 		 * Redirect stdout to stderr for the duration of the
-@@ -3194,7 +3210,7 @@ metadump_f(
- 	while (iocur_sp > start_iocur_sp)
- 		pop_cur();
- out:
--	free(metadump.metablock);
-+	release_metadump();
- 
- 	return 0;
- }
 -- 
 2.39.1
 
