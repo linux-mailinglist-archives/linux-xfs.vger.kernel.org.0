@@ -2,53 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6BBD70D834
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB8AD70D837
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 May 2023 11:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236253AbjEWJBQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 May 2023 05:01:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
+        id S236134AbjEWJBT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 May 2023 05:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235537AbjEWJBO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 May 2023 05:01:14 -0400
+        with ESMTP id S236245AbjEWJBQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 May 2023 05:01:16 -0400
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A86102
-        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:13 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6EBVQ032759;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F846102
+        for <linux-xfs@vger.kernel.org>; Tue, 23 May 2023 02:01:15 -0700 (PDT)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6EH2I027651;
         Tue, 23 May 2023 09:01:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2023-03-30;
- bh=/8u15Jh1AadZ7uP9o0wFKSIhTaau/NjPrOnsopZcqUI=;
- b=owXEqL88evE/Q65fzgWEjP7aNO5W5MdP+/A6WJWTnFxUo83b+D5JZLqp7o7+73hVm5kG
- aSzmU8ePqq8EQsQRZqyCv3lLECjtxVnrwnwmKxDQpJOGxKl1aqtrAwke0YHg/fOSGusO
- 8CWYMScNjzWgJif3Flzqxdkk+I7Fv+kQ34z+rmaGrs4n7uz5v3DEijWHd0sjl4nnrmSZ
- ydzuoZV/e8L1TUa9AxOTJYnJP8FjO7KcYT8chUT7kZ5iP4cKviKvydFdNCW7IKoyrQ68
- Bx1lwzTKOeSGqnnFsLHZAWii+xTbhFEpRag19vfM9fc4puMDRkk+wnttSSPWSNjbDBZh sg== 
+ bh=5OFkoXsQTRnwt3MwZi2MvSdGy1qxNFC37HDKMj1/AcM=;
+ b=OuykondSwfHHk1LCzjB6fKzu/9yv9iAljEqooB16TLHQhvN+kyRkRh83pFmvF2GqSkUE
+ ebWRrOmLGP6wyHTkIMYksHowcBVBOC9nnlAhn0emRqYRO3n7ImycLPJvuSCUuamUwOuY
+ tRPL437KNH0Kv4q+3qwuD67Zht6IjQwL+rGcLaHq7M6hJy9kObCRDGXAeB1W7ork64gS
+ V9ZpnoTK4owZ369gZlLEubZ43VCwWfpgcP5Fiire4jtbAcVK4QA/k0Xod6FJnx/JbTaD
+ Z0OuHy8tZkPKm78iBHp08uhkDHpfLzXhYN4HJn5mUkNWg80t8aPvlp0GgL0N1mX0OUda dQ== 
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp44mjh4-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp8ccp8f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 May 2023 09:01:10 +0000
+        Tue, 23 May 2023 09:01:11 +0000
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N6wqRN028906;
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34N8ZZVu029026;
         Tue, 23 May 2023 09:01:10 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj7d4-1
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2aj7e1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 23 May 2023 09:01:09 +0000
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrZ007681;
-        Tue, 23 May 2023 09:01:08 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34N8xwrb007681;
+        Tue, 23 May 2023 09:01:09 GMT
 Received: from chanbabu-fstest.osdevelopmeniad.oraclevcn.com (chanbabu-fstesting.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.250.50])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-7;
-        Tue, 23 May 2023 09:01:08 +0000
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2aj76a-8;
+        Tue, 23 May 2023 09:01:09 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     cem@kernel.org
 Cc:     Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org
-Subject: [PATCH 06/24] metadump: Dump external log device contents
-Date:   Tue, 23 May 2023 14:30:32 +0530
-Message-Id: <20230523090050.373545-7-chandan.babu@oracle.com>
+Subject: [PATCH 07/24] metadump: Postpone invocation of init_metadump()
+Date:   Tue, 23 May 2023 14:30:33 +0530
+Message-Id: <20230523090050.373545-8-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230523090050.373545-1-chandan.babu@oracle.com>
 References: <20230523090050.373545-1-chandan.babu@oracle.com>
@@ -61,8 +61,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 ml
  mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0 adultscore=0
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2304280000 definitions=main-2305230074
-X-Proofpoint-GUID: uj-Wg4MaFFPwiEwLXnNW3i2czRn4DnOT
-X-Proofpoint-ORIG-GUID: uj-Wg4MaFFPwiEwLXnNW3i2czRn4DnOT
+X-Proofpoint-ORIG-GUID: M7_jvOkTnxcIfIsGIymDQ8NEwIlhzwnd
+X-Proofpoint-GUID: M7_jvOkTnxcIfIsGIymDQ8NEwIlhzwnd
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -73,74 +73,51 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-metadump will now read and dump from external log device when the log is
-placed on an external device and metadump v2 is supported by xfsprogs.
+A future commit will require that the metadump file be opened before execution
+of init_metadump().
 
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- db/metadump.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ db/metadump.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/db/metadump.c b/db/metadump.c
-index e7a433c21..62a36427d 100644
+index 62a36427d..212b484a2 100644
 --- a/db/metadump.c
 +++ b/db/metadump.c
-@@ -2921,7 +2921,7 @@ copy_sb_inodes(void)
- }
- 
- static int
--copy_log(void)
-+copy_log(enum typnm log_type)
- {
- 	struct xlog	log;
- 	int		dirty;
-@@ -2934,7 +2934,7 @@ copy_log(void)
- 		print_progress("Copying log");
- 
- 	push_cur();
--	set_cur(&typtab[TYP_LOG], XFS_FSB_TO_DADDR(mp, mp->m_sb.sb_logstart),
-+	set_cur(&typtab[log_type], XFS_FSB_TO_DADDR(mp, mp->m_sb.sb_logstart),
- 			mp->m_sb.sb_logblocks * blkbb, DB_RING_IGN, NULL);
- 	if (iocur_top->data == NULL) {
+@@ -3129,10 +3129,6 @@ metadump_f(
  		pop_cur();
-@@ -3038,6 +3038,7 @@ metadump_f(
- 	char 		**argv)
- {
- 	xfs_agnumber_t	agno;
-+	enum typnm	log_type;
- 	int		c;
- 	int		start_iocur_sp;
- 	int		outfd = -1;
-@@ -3110,9 +3111,13 @@ metadump_f(
  	}
  
- 	/* If we'll copy the log, see if the log is dirty */
--	if (mp->m_sb.sb_logstart) {
-+	if (mp->m_logdev_targp == mp->m_ddev_targp || metadump.version == 2) {
-+		log_type = TYP_LOG;
-+		if (mp->m_logdev_targp != mp->m_ddev_targp)
-+			log_type = TYP_ELOG;
+-	ret = init_metadump();
+-	if (ret)
+-		return 0;
+-
+ 	start_iocur_sp = iocur_sp;
+ 
+ 	if (strcmp(argv[optind], "-") == 0) {
+@@ -3177,6 +3173,10 @@ metadump_f(
+ 		}
+ 	}
+ 
++	ret = init_metadump();
++	if (ret)
++		return 0;
 +
- 		push_cur();
--		set_cur(&typtab[TYP_LOG],
-+		set_cur(&typtab[log_type],
- 			XFS_FSB_TO_DADDR(mp, mp->m_sb.sb_logstart),
- 			mp->m_sb.sb_logblocks * blkbb, DB_RING_IGN, NULL);
- 		if (iocur_top->data) {	/* best effort */
-@@ -3185,9 +3190,10 @@ metadump_f(
- 	if (!exitcode)
- 		exitcode = !copy_sb_inodes();
+ 	exitcode = 0;
  
--	/* copy log if it's internal */
--	if ((mp->m_sb.sb_logstart != 0) && !exitcode)
--		exitcode = !copy_log();
-+	/* copy log */
-+	if (!exitcode && (mp->m_logdev_targp == mp->m_ddev_targp ||
-+				metadump.version == 2))
-+		exitcode = !copy_log(log_type);
+ 	for (agno = 0; agno < mp->m_sb.sb_agcount; agno++) {
+@@ -3215,8 +3215,9 @@ metadump_f(
+ 	/* cleanup iocur stack */
+ 	while (iocur_sp > start_iocur_sp)
+ 		pop_cur();
+-out:
++
+ 	release_metadump();
  
- 	/* write the remaining index */
- 	if (!exitcode)
++out:
+ 	return 0;
+ }
 -- 
 2.39.1
 
