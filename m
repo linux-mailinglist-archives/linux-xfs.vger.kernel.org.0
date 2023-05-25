@@ -2,180 +2,165 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 590F57109FB
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 May 2023 12:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C0677122B6
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 10:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241021AbjEYKVg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 May 2023 06:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
+        id S242831AbjEZIx1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 26 May 2023 04:53:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241020AbjEYKVR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 06:21:17 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7021F1A2;
-        Thu, 25 May 2023 03:20:39 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2af318fa2b8so4148181fa.0;
-        Thu, 25 May 2023 03:20:39 -0700 (PDT)
+        with ESMTP id S242870AbjEZIxR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 26 May 2023 04:53:17 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3C219A
+        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 01:53:14 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34Q8YVo3013719;
+        Fri, 26 May 2023 08:53:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=references : from :
+ to : cc : subject : date : in-reply-to : message-id : content-type :
+ mime-version; s=corp-2023-03-30;
+ bh=FzSmMv7ZCbUdGRftAC0JMsbYFQQnsL8DTKWeqjZJXAA=;
+ b=d4ezO3CWNLrFloIY06IpEdXJZcTLqvpQcbIZ+x/iJ2oOSrdUyD81IGhuEso8ZANVn7EF
+ 3f9sQ726E2Akz5F5B5e2ezUOjjy/aFOYooxxMzKlaQCfJUFGVRQfT29W42g/6duW1Gqo
+ ABdmJdpQw9TPuP7bqQScpTrehd7iBLEUzI5SsQyj0s8fRBdKbXRLwJRlS6D3FDgcEj3V
+ 8kU1BomhdJo7QJortFMLmx3uSTf9SuC5867YPqBpsJpQgXOpi7x84A/IEaVXPYaGcpal
+ vd67DFq+nlD+VYMoktDrZoLxxI+GVE5VNinztSzg1C9y05fqo7NlPIVHG8ED133d2Op3 gg== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qtscd81gd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 May 2023 08:53:11 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34Q81mCI013061;
+        Fri, 26 May 2023 08:53:10 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2103.outbound.protection.outlook.com [104.47.58.103])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk7jrpu1-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 May 2023 08:53:10 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iHLOR/eu6F8bUeIzCA44RsgbvNX9Of3G6W/PfRj6fLPDMaLZih7GZUKO20xcpqEn+x83Ns6+EO637cl/6vJaUaNTjh+phW1/O3EjLh9MJ6ynCXMt+Bec1Tx9lZrBoBpWL1EBlIsKJ+hzk5Fqitjs7yE8kbsCph2JBlotV8jEd16NfIYX5ZJ45swB/6BpqktlqlmP+z2icnGeJiXArl5AxReBm0+2iX4vNu+ijkma56TdkZrSYB3RrJpwj+bx1300/Gn6Lpxby/5tsaTCurN/pKt+53CIkufk78LIazZPEWAmSYH+tyRiaQjJSVSWD+c1Fx+c/12UKZCg0WmNFfjbEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FzSmMv7ZCbUdGRftAC0JMsbYFQQnsL8DTKWeqjZJXAA=;
+ b=fOV3+Y1BnNz3M/wDq28/iVPzjrhNo3eyWD2D+/p8qAyI1MS+z7HycM5bO4XzBuvZnmZjtUR/aCdxuj3YfkwMBMm1C996z7d3HQpNgAmURqWRp8HWUIQrEwD55cdnha5BQ1HIP3ZeELGPgbXjHLXlGTRv+xG41angWnAS3DSv+ay2lI4YBzGZLKmK592eKGBKz+YrS0yBph3xb02D1StzNSGVMjQLO179OiEFiGclxQAJPYkmBwerVOJ3N6iadgA9RYk0l7ugb/V0G92jAvkockXPGN0DPLvo2CWVYmA4dD/J1ocdDRvYT6fyLunYhC5Tzp+ZEOUrGkT+KJ1B5TDa6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685010038; x=1687602038;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sKTxoI+93bAIesA0outxo0/LkqsnMtrIeM8EPXBLaGM=;
-        b=EP4wH3TcMzGQvrjNpxSmcpliomfcgcSpXFDtVbADG7nXItV0KO7c5H3ErQUKRcsLiv
-         X8aGCGDERCQys08Mdu8fGaCufpXUP0kqQm1fJR9lKVq2yGash1b2UMUoHfup8iPmvBE4
-         Cg3+MLQbgP4GfVuxADVSHFnN/GoM/HRc9oGdX5WtoT0nd2zsn2L9uVFBatDvyXb/ObNi
-         ZtQniUVQf4dlMYjdYLnXBp97gpHTZSnLIGzhbCmBqGsIv5OldhYNbNh5D/HR1JUHWI0B
-         +CQCZ2kvE0aI6sbDdf8bFnEbmhNbBeVFpVzuCoyswkGY+hpdVcFwxdNDLROYEeA5UvYz
-         PlUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685010038; x=1687602038;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sKTxoI+93bAIesA0outxo0/LkqsnMtrIeM8EPXBLaGM=;
-        b=koKgMag0UDcIMqnfQ2vEOvO0ru6eb9eEhYPiIaLwW8M9TzEGmHfjuFi28aNJPL3FSo
-         vG896IpK4uaUk3XzmNUItOQRsudq7BRckrTeIykubtQUyNcqENafi2IZr1lqaqcVGfRg
-         VrX8YlaDuiMVQGsSFp00HMY9dbj/9nkfiuEVZn/NbDHIPcDzEvK15gXalNtcrkeAmFl3
-         z/5rmyJ4KIfc2WRRsQx+06tpRs+u5XANP07NroN8DoHduPGp+JEh4hNOeaDhLwx+KnPG
-         TcF5WEkYpt5Ug3e80UhdGSA8qzb1MLkDBUENGcD/gtWbUI5+7l1KECI58zeWs2lunXZy
-         XxeA==
-X-Gm-Message-State: AC+VfDyz7OJuMKK4gpZiRXb0jePt9fxZM9JjNN66uFF9MYHuC91rkqWO
-        kJzG1gUIaP0kYbA2bJnFdTA=
-X-Google-Smtp-Source: ACHHUZ6cvCJ7fl4YemnOhhNmxtMKSJrQrkm0PvdEtVa52SjGhqXx97JNXm3GE91koWePebmkiftUCw==
-X-Received: by 2002:a05:651c:102f:b0:2af:b260:fd4d with SMTP id w15-20020a05651c102f00b002afb260fd4dmr1165908ljm.44.1685010037360;
-        Thu, 25 May 2023 03:20:37 -0700 (PDT)
-Received: from pc636 (host-90-235-19-70.mobileonline.telia.com. [90.235.19.70])
-        by smtp.gmail.com with ESMTPSA id y28-20020a05651c021c00b002adf8d948dasm186282ljn.35.2023.05.25.03.20.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 03:20:36 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Thu, 25 May 2023 12:20:34 +0200
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 0/9] Mitigate a vmap lock contention
-Message-ID: <ZG82ch1AdrAbpkJ6@pc636>
-References: <20230522110849.2921-1-urezki@gmail.com>
- <ZGyqiaRnMJPFhxR6@debian-BULLSEYE-live-builder-AMD64>
- <ZGzX3vRMlGHIcYCe@pc636>
- <ZG0AE9mjHkRZIGmr@debian-BULLSEYE-live-builder-AMD64>
- <ZG3d1FUXiCk3QL3D@pc636>
- <ZG6IKE7yNEkJhge+@dread.disaster.area>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FzSmMv7ZCbUdGRftAC0JMsbYFQQnsL8DTKWeqjZJXAA=;
+ b=mnXs782+V70cXAhJFMypPiz5zijNxPsLJ7PgjRI0wmNFIAGPR9dWizsGL+DYt4RPD1i8ZFqFZYbUN/JnPgQp6ueut4XEWu4zBJCEavJsaDq7Yn8Y4YJJYLwS03EBfWz/ZF6ws99F4i9g0aH/FIvqy8SEB4iubnZ0aMQlghQmL1E=
+Received: from SA1PR10MB5867.namprd10.prod.outlook.com (2603:10b6:806:22b::9)
+ by PH0PR10MB4439.namprd10.prod.outlook.com (2603:10b6:510:41::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.17; Fri, 26 May
+ 2023 08:52:57 +0000
+Received: from SA1PR10MB5867.namprd10.prod.outlook.com
+ ([fe80::1827:534d:7d96:20f1]) by SA1PR10MB5867.namprd10.prod.outlook.com
+ ([fe80::1827:534d:7d96:20f1%6]) with mapi id 15.20.6433.017; Fri, 26 May 2023
+ 08:52:57 +0000
+References: <20230523090050.373545-1-chandan.babu@oracle.com>
+ <20230523090050.373545-19-chandan.babu@oracle.com>
+ <20230523174449.GY11620@frogsfrogsfrogs>
+User-agent: mu4e 1.8.10; emacs 27.1
+From:   Chandan Babu R <chandan.babu@oracle.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     cem@kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 18/24] mdrestore: Introduce struct mdrestore_ops
+Date:   Thu, 25 May 2023 16:04:12 +0530
+In-reply-to: <20230523174449.GY11620@frogsfrogsfrogs>
+Message-ID: <87v8gfiie6.fsf@debian-BULLSEYE-live-builder-AMD64>
+Content-Type: text/plain
+X-ClientProxiedBy: TYWPR01CA0016.jpnprd01.prod.outlook.com
+ (2603:1096:400:a9::21) To SA1PR10MB5867.namprd10.prod.outlook.com
+ (2603:10b6:806:22b::9)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZG6IKE7yNEkJhge+@dread.disaster.area>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR10MB5867:EE_|PH0PR10MB4439:EE_
+X-MS-Office365-Filtering-Correlation-Id: 058e3cf9-6569-4b6a-50d5-08db5dc69a35
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: o4nE1jGlWsabDP1/ruKhmcspWCGZvfZyMcVK70puqGP18BRgeyr/hrWnMqAapcogXZbWUb3patjognhAUj4Osj9lPNBVHG5Pyf4uLtIjek53/wAkBq/7XpM85hOmd6z5fyjsYMt7jBreTE84dYKeyiXpvE2rDhuRqemYjD8BXIOoKaCHJmLyPmWvqPAN6q1bqahDV0eKZYzMD6l8iHSZD5u2bOLvHav0QaMvXBdqNwxjRCYZ4d9PS0qlVP/vxJx8E34/oR45C1CeYxEFZKnTvyyFQgwYSJs/mVgNNPk90N9ra6hZflxbn1x0hOUsnv2styb0mvhcBhu+LKHgOe96GA4bRtKaCw7LyxeeB+2AIpMfw8JIDxLyNbXlqkN8e5KnCjLZ5+zaRqI/QCi0s1iGDVETdgClslfIrJlA+N+Ggn4IGO/dlJ2mJLgmukF/axcKjrVcC49RDEfqd0A9X63sqQs3XL0CNnI8DjSbdL9VEiqvNHObsijzABLuCTsdCwu6rM6/wY0ReVGRQYSnCZhyZ6x8e3F3mHDH5fhCZ4LDeMFGwRxaFvc3y3P9/b5bJYzj
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5867.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(346002)(396003)(136003)(366004)(39860400002)(376002)(451199021)(4744005)(83380400001)(2906002)(186003)(33716001)(86362001)(38100700002)(66476007)(5660300002)(66556008)(66946007)(316002)(6486002)(6666004)(41300700001)(8676002)(8936002)(4326008)(6916009)(478600001)(26005)(53546011)(6506007)(6512007)(9686003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OQaYe4sUdmeuwVW72m5YDaZIsgfZpDU74QC5xGQZjO2wtbhw9Sero1HF/pzT?=
+ =?us-ascii?Q?VCntEGhhmGQPjqjuhpty3qkQ92cn8kjNfEMGy/gA2Ld15kiJERzWieQJq1NF?=
+ =?us-ascii?Q?IzBXgn6EmZcKRA5iDzejQj2xVTU7JHGinIEs1Ks9E5uLdkU/HSuO0Fkc5ucg?=
+ =?us-ascii?Q?YJj5WllZPfgg3WA+Q11gZk63AmD5BpwnEEyL7tebvsE4NzOstmi+WMwRvE0C?=
+ =?us-ascii?Q?21PNsHGUcvniYKpRTzKMAnifIg+wlH7Qy+TmxK37ZHru3VuzhR+oU4iJzJzE?=
+ =?us-ascii?Q?/Q72v034MNrR/QobSW78PUvCsaxORtomeBUMQAqYJ8z/9kesumRUFrT9gF3p?=
+ =?us-ascii?Q?Y+ZK6+WK+olllPFCw8j2vquJwMT4kG7V0NiSAjWmJO9VqsLGBWdhm7KiGlza?=
+ =?us-ascii?Q?eAACacLhVgtyIwn4zp5VXSRkriXBAC6+r4fiKnXXbki4f4qGM+BxpWk09kHP?=
+ =?us-ascii?Q?JtUJbRSip0j4pNL1yMwkD2DVqFnWRznvt+QjiwbABlWmHbTseSUwoFhJaIl1?=
+ =?us-ascii?Q?ozchJ64v7twNu9ai1OvwFq0ijN46DhyGxyB1ETC4B6fH5091bcP1awN95K3i?=
+ =?us-ascii?Q?M09dBDqjfIPL9zvz16Pwq+9kQ7d1QW+oxEFs2sv+heGiO+FEVEbWds/MhGXk?=
+ =?us-ascii?Q?+aSJt4rXO7Sb+nZ+xDkX/rK67m7G8MPzLZrWPvnFuKUKtfVDTjUnmDER4olf?=
+ =?us-ascii?Q?UIjAw+dX4f35CPvD+EmdD2Erxnb5ffwP3aEKRd61cAZGAQvl0DJugsED8ReU?=
+ =?us-ascii?Q?sN2i/X7pRbvuh/L7b4bmgnBPUYNPq+LEIdc+csxNrNaeYg9cHOt9m5tVAHBi?=
+ =?us-ascii?Q?879kSEqKMIT6UdtOascBj1rSMn2DlNDnXBttL9bsdVhQ00fs4NXDZEFAK4aO?=
+ =?us-ascii?Q?VkSqa5JSwVj0PDpZPpXtAo6W+YuxDoTW8AzYtfcKyfXtxinTqTG8D/n7ATXT?=
+ =?us-ascii?Q?Qmeyefn5O3H2kqp5IBzYkB00K0YZFUhg89d4vUv5Dw4w1mkvLhIO3/yUeGAG?=
+ =?us-ascii?Q?laNJPTOOQ7hi11YkKnqnd1dt6TLVIdTbC/BASjwLMwl2qcBxGmNwhc27NDmZ?=
+ =?us-ascii?Q?aWg3fXidNYe2v+Fc4tTz4AT1OfxdFPw0fcWH5dlQeNjH/5STqmtb8uzh7pkK?=
+ =?us-ascii?Q?x2PCBbdZoLitiXISJY1ZqP4vmIMhYm10giZ7/1MMoaViZvlQirzw9DFUtpnB?=
+ =?us-ascii?Q?bejhxQLDXiOMqwbX9Rci8QeAQ0F81zutGT4yMdrSluLVNClVnRDLmvdYo20H?=
+ =?us-ascii?Q?mY4jY/HHH4ppAxmeaUYCTEC04Uhsygs4vdxC5zkn8PiKTXdIOz29R1WiCVlT?=
+ =?us-ascii?Q?Jhjufnr2Kn1zdTl/SFTW4tem6VXSdZQBzaRhicGTe9AWNFlVFZpama7UxAQp?=
+ =?us-ascii?Q?hm9B6O5h+fn8Ca04zHSwv5ZoYqZFeMyqTZ8IhuEOlW7ljcq0LiM4qxjIlAE8?=
+ =?us-ascii?Q?tc4VDvrHGDAfcpnpYyVVq2yni71emi7WZmKAttLzLxXjj/GmErHfQwzhqFbP?=
+ =?us-ascii?Q?Vg1XpUEFdAliii7s1GaTUyKB0HRCcE5DOpDVolTT+pThW80VRrYmj6MWVPyC?=
+ =?us-ascii?Q?CyKzSnab7fWE0e6sFoYqv4AfFZ4FnBVwYG/ml0FPPz0QPgrp4BRxmi6NOTyO?=
+ =?us-ascii?Q?BQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: jTyAkI0iQX9+/D9Ygd8+0jZ2jRk8ALbaytBWVlTT/LbehUll0rHDzD2v+CEtCHkl0+5m3Jbat+d5nakla2ZPNTd2pv5xpKrwSm7b/s6SALLwNV9TUQHMrYJZOhVK2E4+Reh6C7bTVaoXD8N9ViBz3XUdpd3uD/Wv2gI8Ao7jotJcmbHoJXM7Czs0yh9TPcMv1LhJm7PQZu2ngiwFS2eGPROIO+9Q5hYXOV1M9lT9mdQOYZGPotI8uTVzO7rpFs/BS0Vc5j5j4pn/mdHFa6uf/ITb9yNJJ6EXlRpXuVrZFlGLnxKZnBRwiwNjhoio8zg3wf7N1qAepJhm6l2nU5Q2AR16wx9XwUAEVg7eWZusglHfXRFcLK2vQJSebUFCRC7DVk8spyH3oLnqXFBaE8j6iZnMJGpEN+R/f778SCHbKrd0jsFwjiZlm7p/geFMzF3db6LWCpn6rNwrxn+TmOio2wGsEAshMZX6cOEx41iebvUAgmzxqPJz1eQgHg9BjfgbEVE+aDsIraMMsZj1aecmtv0mU9O69Y0Hp5KWquG0FEktEIJ7SXD28uT/kJSeW1eqPjqpmuAttsBGK2ZxajC9+/oxejhHqO5yyoWYl4iqjaMTcg7QqgtXpQE12CIZ73/4O03XwBaaz74uKrmu4mZTh73c8a/Oswrpza07gh4NTZ4DnpYS9wwdI9x3pAe1AYt/PSXlrayzXRcnActVUtJtwQiK1EYrpw3pjGpsQKr5hkg0B215y4VQy7xYx9RsBSje0GfD/qmaM8irU9M1uu9u9qSsw+hGltRuHJ9bvUEDez4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 058e3cf9-6569-4b6a-50d5-08db5dc69a35
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB5867.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2023 08:52:57.6486
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vNggYxrE3B4yFIp3kFweC0FxxLEvF0eYq+Wg/bPajI2w0Fl+5O2yEeeUltQaE50b9n7S3xRqAu4RUPHROBLY7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4439
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-26_01,2023-05-25_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxscore=0 spamscore=0 mlxlogscore=974 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305260076
+X-Proofpoint-GUID: gm40XqeT4NhI0VdnVTm6Jdk8rfvkJ5FA
+X-Proofpoint-ORIG-GUID: gm40XqeT4NhI0VdnVTm6Jdk8rfvkJ5FA
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, May 25, 2023 at 07:56:56AM +1000, Dave Chinner wrote:
-> On Wed, May 24, 2023 at 11:50:12AM +0200, Uladzislau Rezki wrote:
-> > On Wed, May 24, 2023 at 03:04:28AM +0900, Hyeonggon Yoo wrote:
-> > > On Tue, May 23, 2023 at 05:12:30PM +0200, Uladzislau Rezki wrote:
-> > > And I would like to ask some side questions:
-> > > 
-> > > 1. Is vm_[un]map_ram() API still worth with this patchset?
-> > > 
-> > It is up to community to decide. As i see XFS needs it also. Maybe in
-> > the future it can be removed(who knows). If the vmalloc code itself can
-> > deliver such performance as vm_map* APIs.
-> 
-> vm_map* APIs cannot be replaced with vmalloc, they cover a very
-> different use case.  i.e.  vmalloc allocates mapped memory,
-> vm_map_ram() maps allocated memory....
-> 
-> > vm_map_ram() and friends interface was added because of vmalloc drawbacks.
-> 
-> No. vm_map*() were scalability improvements added in 2009 to replace
-> on vmap() and vunmap() to avoid global lock contention in the vmap
-> allocator that XFS had been working around for years with it's own
-> internal vmap cache....
-> 
-> commit 95f8e302c04c0b0c6de35ab399a5551605eeb006
-> Author: Nicholas Piggin <npiggin@gmail.com>
-> Date:   Tue Jan 6 14:43:09 2009 +1100
-> 
->     [XFS] use scalable vmap API
->     
->     Implement XFS's large buffer support with the new vmap APIs. See the vmap
->     rewrite (db64fe02) for some numbers. The biggest improvement that comes from
->     using the new APIs is avoiding the global KVA allocation lock on every call.
->     
->     Signed-off-by: Nick Piggin <npiggin@suse.de>
->     Reviewed-by: Christoph Hellwig <hch@infradead.org>
->     Signed-off-by: Lachlan McIlroy <lachlan@sgi.com>
-> 
-> vmap/vunmap() themselves were introduce in 2.5.32 (2002) and before
-> that XFS was using remap_page_array() and vfree() in exactly the
-> same way it uses vm_map_ram() and vm_unmap_ram() today....
-> 
-> XFS has a long, long history of causing virtual memory allocator
-> scalability and contention problems. As you can see, this isn't our
-> first rodeo...
-> 
-Let me be more specific, sorry it looks like there is misunderstanding.
-I am talking about removing of vb_alloc()/vb_free() per-cpu stuff. If
-alloc_vmap_area() gives same performance:
+On Tue, May 23, 2023 at 10:44:49 AM -0700, Darrick J. Wong wrote:
+> On Tue, May 23, 2023 at 02:30:44PM +0530, Chandan Babu R wrote:
+>> We will need two sets of functions to work with two versions of metadump
+>> formats. This commit adds the definition for 'struct mdrestore_ops' to hold
+>> pointers to version specific mdrestore functions.
+>> 
+>> Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
+>
+> Looks ok, though I think those three int fields are really bool, right?
+>
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index d50c551592fc..a1687bbdad30 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2503,12 +2503,6 @@ void vm_unmap_ram(const void *mem, unsigned int count)
+Yes, you are right. I will change the data type of these variables.
 
-        kasan_poison_vmalloc(mem, size);
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+>
 
--       if (likely(count <= VMAP_MAX_ALLOC)) {
--               debug_check_no_locks_freed(mem, size);
--               vb_free(addr, size);
--               return;
--       }
--
-        va = find_unlink_vmap_area(addr);
-        if (WARN_ON_ONCE(!va))
-                return;
-@@ -2539,12 +2533,6 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node)
-        unsigned long addr;
-        void *mem;
-
--       if (likely(count <= VMAP_MAX_ALLOC)) {
--               mem = vb_alloc(size, GFP_KERNEL);
--               if (IS_ERR(mem))
--                       return NULL;
--               addr = (unsigned long)mem;
--       } else {
-                struct vmap_area *va;
-                va = alloc_vmap_area(size, PAGE_SIZE,
-                                VMALLOC_START, VMALLOC_END,
-@@ -2554,7 +2542,6 @@ void *vm_map_ram(struct page **pages, unsigned int count, int node)
-
-                addr = va->va_start;
-                mem = (void *)addr;
--       }
-
-        if (vmap_pages_range(addr, addr + size, PAGE_KERNEL,
-                                pages, PAGE_SHIFT) < 0) {
-
-
-+ other related parts.
-
---
-Uladzislau Rezki
+-- 
+chandan
