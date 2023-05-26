@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6DF6711D6A
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 04:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16FB6711D6C
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 04:08:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbjEZCHE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 May 2023 22:07:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        id S230099AbjEZCHf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 May 2023 22:07:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235135AbjEZCGt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 22:06:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0DD18D
-        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 19:06:48 -0700 (PDT)
+        with ESMTP id S230091AbjEZCHF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 22:07:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B160E7
+        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 19:07:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0731E64C4F
-        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 02:06:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672D5C433EF;
-        Fri, 26 May 2023 02:06:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C35964C49
+        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 02:07:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFDA1C433D2;
+        Fri, 26 May 2023 02:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685066807;
-        bh=xfhqaMfECqHPo03/ZR5tYNwrTwDzKrdntLYne1rrnkQ=;
+        s=k20201202; t=1685066823;
+        bh=6JW+e2bS8Gt6nRuVPzcFsf33D45O2z/WNWI0Q+hBPco=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=lq7OcslCCrgIGuS2TQgf9Mve34NRuDV3Kap8cOI9s2munKjT+Jr6ohqYlF9t4sYix
-         b/FV74kzmn8zq+0pUx+r9eHA/fDhz2sFZGWokBRMbo8nqCza8lrWEcWM8mtuXI/XnB
-         iKuauZJQCGh+pfzO2nSuthQGoiZGH8wRyROWzcNDPHZ2yO8LNHA9RVd6alDPMiGnne
-         q3go9StZlU5+u/Kp3K7U8AwkUv340qahArZeu+lSbkvVEEwfxYorC/kEK0OOutXrfV
-         J1m86QVEVZ6aWVjYEPrh6JpHIV2XHzjzd16x+RMPLeoSLpnPjFy4Xkx1ZhuVYbqoCq
-         6eQpVdgb+n8fg==
-Date:   Thu, 25 May 2023 19:06:46 -0700
-Subject: [PATCH 7/7] xfs: unlock new repair tempfiles after creation
+        b=fXruE3WWQa2D9G5HBOs+BGfubM1Z6pZxnPawlpwxXo0eFh5rxphQTbw4W5IJfIWot
+         6e0VWERkyoDOrSJvXSgdniGRu/MaM0Uhx22JlgDqIGZ/BtcEYGq4Jkz/gmeEqmBSfd
+         KJjk9odzuN58lCki6w2vhJM0xlHa3gZcDjXgpsTyK5OTpU1VwRWZpMYfcPt245pMaG
+         QMPYU2/2X4V/k5wae/N6Uk921O/9s/GebTppk8GYyp67XfdxtKSQvssZaj6SCylawV
+         HeSWrh2+hXWm1CFCM0Zc2SbNfMH+zMl0iGZNnVXd4W1ptl8PETnrwA6VaOm3CPGwHa
+         tmpCjVKB4+lSg==
+Date:   Thu, 25 May 2023 19:07:02 -0700
+Subject: [PATCH 01/12] xfs: check opcode and iovec count match in
+ xlog_recover_attri_commit_pass2
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, allison.henderson@oracle.com,
         catherine.hoang@oracle.com
-Message-ID: <168506071864.3743141.12943535834639153909.stgit@frogsfrogsfrogs>
-In-Reply-To: <168506071753.3743141.6199971931108916142.stgit@frogsfrogsfrogs>
-References: <168506071753.3743141.6199971931108916142.stgit@frogsfrogsfrogs>
+Message-ID: <168506072196.3743652.12252845506159015907.stgit@frogsfrogsfrogs>
+In-Reply-To: <168506072168.3743652.12378764451724622618.stgit@frogsfrogsfrogs>
+References: <168506072168.3743652.12378764451724622618.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,33 +57,58 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-After creation, drop the ILOCK on temporary files that have been created
-to stage a repair.
+Check that the number of recovered log iovecs is what is expected for
+the xattri opcode is expecting.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/tempfile.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/xfs_attr_item.c |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 
-diff --git a/fs/xfs/scrub/tempfile.c b/fs/xfs/scrub/tempfile.c
-index 1297f1b2e6a6..6c3e338f1118 100644
---- a/fs/xfs/scrub/tempfile.c
-+++ b/fs/xfs/scrub/tempfile.c
-@@ -145,6 +145,7 @@ xrep_tempfile_create(
- 	xfs_qm_dqrele(pdqp);
+diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
+index 0891d739666e..35d67bf38186 100644
+--- a/fs/xfs/xfs_attr_item.c
++++ b/fs/xfs/xfs_attr_item.c
+@@ -711,6 +711,7 @@ xlog_recover_attri_commit_pass2(
+ 	const void			*attr_value = NULL;
+ 	const void			*attr_name;
+ 	size_t				len;
++	unsigned int			op;
  
- 	/* Finish setting up the incore / vfs context. */
-+	xfs_iunlock(sc->tempip, XFS_ILOCK_EXCL);
- 	xfs_setup_iops(sc->tempip);
- 	xfs_finish_inode_setup(sc->tempip);
- 
-@@ -160,6 +161,7 @@ xrep_tempfile_create(
- 	 * transactions and deadlocks from xfs_inactive.
- 	 */
- 	if (sc->tempip) {
-+		xfs_iunlock(sc->tempip, XFS_ILOCK_EXCL);
- 		xfs_finish_inode_setup(sc->tempip);
- 		xchk_irele(sc, sc->tempip);
+ 	attri_formatp = item->ri_buf[0].i_addr;
+ 	attr_name = item->ri_buf[1].i_addr;
+@@ -729,6 +730,32 @@ xlog_recover_attri_commit_pass2(
+ 		return -EFSCORRUPTED;
  	}
+ 
++	/* Check the number of log iovecs makes sense for the op code. */
++	op = attri_formatp->alfi_op_flags & XFS_ATTRI_OP_FLAGS_TYPE_MASK;
++	switch (op) {
++	case XFS_ATTRI_OP_FLAGS_SET:
++	case XFS_ATTRI_OP_FLAGS_REPLACE:
++		/* Log item, attr name, attr value */
++		if (item->ri_total != 3) {
++			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
++					     attri_formatp, len);
++			return -EFSCORRUPTED;
++		}
++		break;
++	case XFS_ATTRI_OP_FLAGS_REMOVE:
++		/* Log item, attr name */
++		if (item->ri_total != 2) {
++			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
++					     attri_formatp, len);
++			return -EFSCORRUPTED;
++		}
++		break;
++	default:
++		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
++				     attri_formatp, len);
++		return -EFSCORRUPTED;
++	}
++
+ 	/* Validate the attr name */
+ 	if (item->ri_buf[1].i_len !=
+ 			xlog_calc_iovec_len(attri_formatp->alfi_name_len)) {
 
