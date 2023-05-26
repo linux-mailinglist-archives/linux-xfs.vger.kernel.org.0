@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB10D711D6F
+	by mail.lfdr.de (Postfix) with ESMTP id 9FA89711D6E
 	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 04:08:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231344AbjEZCII (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229689AbjEZCII (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Thu, 25 May 2023 22:08:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46764 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230103AbjEZCHv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 22:07:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5207A3
-        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 19:07:50 -0700 (PDT)
+        with ESMTP id S231495AbjEZCIH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 22:08:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A300E7
+        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 19:08:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5432C64C4F
-        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 02:07:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5FF6C433EF;
-        Fri, 26 May 2023 02:07:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E978D64C4F
+        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 02:08:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53894C433EF;
+        Fri, 26 May 2023 02:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685066869;
-        bh=OG8frxnH6VX2sp3lQjJTi1cJ2qrH1U/Yh7zP+al7tP4=;
+        s=k20201202; t=1685066885;
+        bh=eAvlvzVk3lpUk4bkKTDe0hp6yzmyjtXIufg5qQebGdw=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=DVXtwywXCSbYWWg72dfILLKVabDPNKPNpJfsagaL0E3h58XlbfWAfoKAX/ee8yqih
-         q97P44J1MMsokRP+iTLJigCHqC05BElzz78EDbB90trnYRj9O6qRqGUcKTscf0KirJ
-         zZTBuKF0/AEDonbhhcbLPPZdJUhFhUxKGEUEQJNDY0BsBJ8YqoHXvDynTzfzd/EJrx
-         OftOKtXOLsJoPPKlMayErLSwUFZJ4+md59FZfZ/12FEFPoGXFB14BoVcmf35Jp1xG3
-         ZbUl1WzzX0QXQ2fRsV+8tS22DAuLfLq+3z0Nhvriny34bpau3JYNC59ombuOizU1d3
-         hAeD84gr2hJHA==
-Date:   Thu, 25 May 2023 19:07:49 -0700
-Subject: [PATCH 04/12] xfs: preserve NVLOOKUP in xfs_attr_set
+        b=K8hwQTM58knmBx8LpklU2N45HcdKOUclPAWpgQkXDMDotsJbUmHGIeyyLfGBQrAGf
+         LZJJ/4MUBhZ4BV5KmCQIFQ1+URkNwDTmzR4vgodqz1SDtDXwdxUS2A6dPOBXkinhdM
+         2o5bcvbrogHzzmtmTr9LDTgU6Yd5nOXBOQExyWniIT4YyxLUwXZNj0PASl05st9uZ1
+         aiFXOxHRsbF08/xQwqE39eB6a2nd4i8tulc7Hu90PK/kkOYXmwNjZc2jJXD04TOFSo
+         oTuKe7YxiOYwFwKQpbvM3fOY1EBETWg79PnghSQiV4FvJp+BOknMX5qVAl28rFRIEO
+         PSfpL6g9hvrIQ==
+Date:   Thu, 25 May 2023 19:08:04 -0700
+Subject: [PATCH 05/12] xfs: restructure xfs_attr_complete_op a bit
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, allison.henderson@oracle.com,
         catherine.hoang@oracle.com
-Message-ID: <168506072239.3743652.9612896925228984723.stgit@frogsfrogsfrogs>
+Message-ID: <168506072253.3743652.8697122643701102076.stgit@frogsfrogsfrogs>
 In-Reply-To: <168506072168.3743652.12378764451724622618.stgit@frogsfrogsfrogs>
 References: <168506072168.3743652.12378764451724622618.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,33 +56,35 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Preserve the attr-value lookup flag when calling xfs_attr_set.  Normal
-xattr users will never use this, but parent pointer fsck will.
+Reduce the indentation in this function by flattening the nested if
+statements.  We're going to add more code later to this function later,
+hence the early cleanup.  No functional changes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 343fa2bf0227..3c999b145a6a 100644
+index 3c999b145a6a..b7484251a21a 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -986,11 +986,11 @@ xfs_attr_set(
- 	/*
- 	 * We have no control over the attribute names that userspace passes us
- 	 * to remove, so we have to allow the name lookup prior to attribute
--	 * removal to fail as well.  Preserve the logged flag, since we need
--	 * to pass that through to the logging code.
-+	 * removal to fail as well.  Preserve the logged and vlookup flags,
-+	 * since we need to pass them through to the lower levels.
- 	 */
--	args->op_flags = XFS_DA_OP_OKNOENT |
--					(args->op_flags & XFS_DA_OP_LOGGED);
-+	args->op_flags &= (XFS_DA_OP_LOGGED | XFS_DA_OP_NVLOOKUP);
-+	args->op_flags |= XFS_DA_OP_OKNOENT;
+@@ -421,11 +421,11 @@ xfs_attr_complete_op(
+ 	bool			do_replace = args->op_flags & XFS_DA_OP_REPLACE;
  
- 	if (!is_remove) {
- 		XFS_STATS_INC(mp, xs_attr_set);
+ 	args->op_flags &= ~XFS_DA_OP_REPLACE;
+-	if (do_replace) {
+-		args->attr_filter &= ~XFS_ATTR_INCOMPLETE;
+-		return replace_state;
+-	}
+-	return XFS_DAS_DONE;
++	if (!do_replace)
++		return XFS_DAS_DONE;
++
++	args->attr_filter &= ~XFS_ATTR_INCOMPLETE;
++	return replace_state;
+ }
+ 
+ static int
 
