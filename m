@@ -2,46 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39B5C711CDC
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 03:40:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFC82711CB2
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 03:34:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233344AbjEZBkg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 May 2023 21:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35808 "EHLO
+        id S229827AbjEZBef (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 May 2023 21:34:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233300AbjEZBkf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 21:40:35 -0400
-X-Greylist: delayed 360 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 May 2023 18:40:33 PDT
-Received: from out-14.mta1.migadu.com (out-14.mta1.migadu.com [95.215.58.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12251A4
-        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 18:40:33 -0700 (PDT)
-Date:   Thu, 25 May 2023 21:34:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1685064871;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6NBltaxcvPexbX2OhvX6CBqCLsP7PXDw7sii/NG22oc=;
-        b=QlfagXEr72rtl8UdEI4zy61ZOm6SIFoBNyo79sTjBGYcDohPQbsJx2jpE7cs1wEcQuR+by
-        K4e11fZLK/v3oDpJWABih8Baq/1c034L3JHCwalRSBEqhXf5UfhXBk9OPCQfd012k2/upT
-        8J1ks4zi3xwwiTaABETHKisC7T/kEEE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/7] xfs: create a big array data structure
-Message-ID: <ZHAMpeyu/KmXtRw8@moria.home.lan>
-References: <168506056447.3729324.13624212283929857624.stgit@frogsfrogsfrogs>
- <168506056469.3729324.10116553858401440150.stgit@frogsfrogsfrogs>
+        with ESMTP id S232288AbjEZBee (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 21:34:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD5D125
+        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 18:34:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 388FB61A8E
+        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 01:34:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C62CC433EF;
+        Fri, 26 May 2023 01:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685064871;
+        bh=JoJiP8Y9FPbhOU7aYoBCgNic4//m4sA158gp7oY+nK0=;
+        h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+        b=Duq3+RXZfeCiuLMHksXSoYuVHNkiHeaY4OJtr/kaotwalRjcVF0xw4VQ8AgIx97If
+         kJE9x31LDH6RpNiZM9iUK2AGbi+YZfvdlC7rt1hsBfo4Fbd+jv1uW8afjSoePvvleT
+         qwfAC/JA1twpGhzMXjV+XpjgT0lBQTfKf+ZabsWvIH8hPhi7h/b938gVlGZRUD62mu
+         +kjj0yaLihwgFMC6y+UlTt1KPLhOYHShsmlW3W8PqVBWuHhGFeSeh+iIwmsl06mcqn
+         t0raoE83wlFI1PrNUk1DzIzYgCeqgcncN+H5uw7vFfoqTxhKNINb5l47oqrQch5M30
+         rQvRRdD7XO95w==
+Date:   Thu, 25 May 2023 18:34:31 -0700
+Subject: [PATCH 2/7] xfs: ensure unlinked list state is consistent with nlink
+ during scrub
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Message-ID: <168506067259.3737555.11982182097894235550.stgit@frogsfrogsfrogs>
+In-Reply-To: <168506067222.3737555.8668637245740627164.stgit@frogsfrogsfrogs>
+References: <168506067222.3737555.8668637245740627164.stgit@frogsfrogsfrogs>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168506056469.3729324.10116553858401440150.stgit@frogsfrogsfrogs>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,139 +54,151 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, May 25, 2023 at 05:47:08PM -0700, Darrick J. Wong wrote:
-> +struct xfarray {
-> +	/* Underlying file that backs the array. */
-> +	struct xfile	*xfile;
-> +
-> +	/* Number of array elements. */
-> +	xfarray_idx_t	nr;
-> +
-> +	/* Maximum possible array size. */
-> +	xfarray_idx_t	max_nr;
-> +
-> +	/* Number of unset slots in the array below @nr. */
-> +	uint64_t	unset_slots;
-> +
-> +	/* Size of an array element. */
-> +	size_t		obj_size;
-> +
-> +	/* log2 of array element size, if possible. */
-> +	int		obj_size_log;
-> +};
-> +
-> +int xfarray_create(struct xfs_mount *mp, const char *descr,
-> +		unsigned long long required_capacity, size_t obj_size,
-> +		struct xfarray **arrayp);
-> +void xfarray_destroy(struct xfarray *array);
-> +int xfarray_load(struct xfarray *array, xfarray_idx_t idx, void *ptr);
-> +int xfarray_unset(struct xfarray *array, xfarray_idx_t idx);
-> +int xfarray_store(struct xfarray *array, xfarray_idx_t idx, const void *ptr);
-> +int xfarray_store_anywhere(struct xfarray *array, const void *ptr);
-> +bool xfarray_element_is_null(struct xfarray *array, const void *ptr);
+From: Darrick J. Wong <djwong@kernel.org>
 
-Nice simple external interface... +1
+Now that we have the means to tell if an inode is on an unlinked inode
+list or not, we can check that an inode with zero link count is on the
+unlinked list; and an inode that has nonzero link count is not on that
+list.  Make repair clean things up too.
 
-Since you're storing fixed size elements, if you wanted to make it
-slicker you could steal the generic-radix tree approach of using a
-wrapper type to make the object size known at compile time, which lets
-you constant propagate through the index -> offset calculations.
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+---
+ fs/xfs/scrub/inode.c        |   19 +++++++++++++++++++
+ fs/xfs/scrub/inode_repair.c |   42 +++++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_inode.c          |    5 +----
+ fs/xfs/xfs_inode.h          |    2 ++
+ 4 files changed, 63 insertions(+), 5 deletions(-)
 
-But not worth it from a performance POV with the current implementation,
-because...
 
-> +/*
-> + * Read a memory object directly from the xfile's page cache.  Unlike regular
-> + * pread, we return -E2BIG and -EFBIG for reads that are too large or at too
-> + * high an offset, instead of truncating the read.  Otherwise, we return
-> + * bytes read or an error code, like regular pread.
-> + */
-> +ssize_t
-> +xfile_pread(
-> +	struct xfile		*xf,
-> +	void			*buf,
-> +	size_t			count,
-> +	loff_t			pos)
-> +{
-> +	struct inode		*inode = file_inode(xf->file);
-> +	struct address_space	*mapping = inode->i_mapping;
-> +	struct page		*page = NULL;
-> +	ssize_t			read = 0;
-> +	unsigned int		pflags;
-> +	int			error = 0;
-> +
-> +	if (count > MAX_RW_COUNT)
-> +		return -E2BIG;
-> +	if (inode->i_sb->s_maxbytes - pos < count)
-> +		return -EFBIG;
-> +
-> +	trace_xfile_pread(xf, pos, count);
-> +
-> +	pflags = memalloc_nofs_save();
-> +	while (count > 0) {
-> +		void		*p, *kaddr;
-> +		unsigned int	len;
-> +
-> +		len = min_t(ssize_t, count, PAGE_SIZE - offset_in_page(pos));
-> +
-> +		/*
-> +		 * In-kernel reads of a shmem file cause it to allocate a page
-> +		 * if the mapping shows a hole.  Therefore, if we hit ENOMEM
-> +		 * we can continue by zeroing the caller's buffer.
-> +		 */
-> +		page = shmem_read_mapping_page_gfp(mapping, pos >> PAGE_SHIFT,
-> +				__GFP_NOWARN);
-> +		if (IS_ERR(page)) {
-> +			error = PTR_ERR(page);
-> +			if (error != -ENOMEM)
-> +				break;
-> +
-> +			memset(buf, 0, len);
-> +			goto advance;
-> +		}
-> +
-> +		if (PageUptodate(page)) {
-> +			/*
-> +			 * xfile pages must never be mapped into userspace, so
-> +			 * we skip the dcache flush.
-> +			 */
-> +			kaddr = kmap_local_page(page);
-> +			p = kaddr + offset_in_page(pos);
-> +			memcpy(buf, p, len);
-> +			kunmap_local(kaddr);
-> +		} else {
-> +			memset(buf, 0, len);
-> +		}
-> +		put_page(page);
-> +
-> +advance:
-> +		count -= len;
-> +		pos += len;
-> +		buf += len;
-> +		read += len;
-> +	}
-> +	memalloc_nofs_restore(pflags);
-> +
-> +	if (read > 0)
-> +		return read;
-> +	return error;
-> +}
+diff --git a/fs/xfs/scrub/inode.c b/fs/xfs/scrub/inode.c
+index fcd6e9df618f..df5b4f22f049 100644
+--- a/fs/xfs/scrub/inode.c
++++ b/fs/xfs/scrub/inode.c
+@@ -738,6 +738,23 @@ xchk_inode_check_reflink_iflag(
+ 		xchk_ino_set_corrupt(sc, ino);
+ }
+ 
++/*
++ * If this inode has zero link count, it must be on the unlinked list.  If
++ * it has nonzero link count, it must not be on the unlinked list.
++ */
++STATIC void
++xchk_inode_check_unlinked(
++	struct xfs_scrub	*sc)
++{
++	if (VFS_I(sc->ip)->i_nlink == 0) {
++		if (!xfs_inode_on_unlinked_list(sc->ip))
++			xchk_ino_set_corrupt(sc, sc->ip->i_ino);
++	} else {
++		if (xfs_inode_on_unlinked_list(sc->ip))
++			xchk_ino_set_corrupt(sc, sc->ip->i_ino);
++	}
++}
++
+ /* Scrub an inode. */
+ int
+ xchk_inode(
+@@ -770,6 +787,8 @@ xchk_inode(
+ 	if (S_ISREG(VFS_I(sc->ip)->i_mode))
+ 		xchk_inode_check_reflink_iflag(sc, sc->ip->i_ino);
+ 
++	xchk_inode_check_unlinked(sc);
++
+ 	xchk_inode_xref(sc, sc->ip->i_ino, &di);
+ out:
+ 	return error;
+diff --git a/fs/xfs/scrub/inode_repair.c b/fs/xfs/scrub/inode_repair.c
+index 6d301c84270f..37b228a4b5ae 100644
+--- a/fs/xfs/scrub/inode_repair.c
++++ b/fs/xfs/scrub/inode_repair.c
+@@ -1576,6 +1576,46 @@ xrep_inode_problems(
+ 	return xrep_roll_trans(sc);
+ }
+ 
++/*
++ * Make sure this inode's unlinked list pointers are consistent with its
++ * link count.
++ */
++STATIC int
++xrep_inode_unlinked(
++	struct xfs_scrub	*sc)
++{
++	unsigned int		nlink = VFS_I(sc->ip)->i_nlink;
++	int			error;
++
++	/*
++	 * If this inode is linked from the directory tree and on the unlinked
++	 * list, remove it from the unlinked list.
++	 */
++	if (nlink > 0 && xfs_inode_on_unlinked_list(sc->ip)) {
++		struct xfs_perag	*pag;
++		int			error;
++
++		pag = xfs_perag_get(sc->mp,
++				XFS_INO_TO_AGNO(sc->mp, sc->ip->i_ino));
++		error = xfs_iunlink_remove(sc->tp, pag, sc->ip);
++		xfs_perag_put(pag);
++		if (error)
++			return error;
++	}
++
++	/*
++	 * If this inode is not linked from the directory tree yet not on the
++	 * unlinked list, put it on the unlinked list.
++	 */
++	if (nlink == 0 && !xfs_inode_on_unlinked_list(sc->ip)) {
++		error = xfs_iunlink(sc->tp, sc->ip);
++		if (error)
++			return error;
++	}
++
++	return 0;
++}
++
+ /* Repair an inode's fields. */
+ int
+ xrep_inode(
+@@ -1615,5 +1655,5 @@ xrep_inode(
+ 	if (xfs_is_reflink_inode(sc->ip))
+ 		return xfs_reflink_clear_inode_flag(sc->ip, &sc->tp);
+ 
+-	return 0;
++	return xrep_inode_unlinked(sc);
+ }
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 04c4cd6c4cda..1fb58de0b8ec 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -42,9 +42,6 @@
+ 
+ struct kmem_cache *xfs_inode_cache;
+ 
+-STATIC int xfs_iunlink_remove(struct xfs_trans *tp, struct xfs_perag *pag,
+-	struct xfs_inode *);
+-
+ /*
+  * helper function to extract extent size hint from inode
+  */
+@@ -2160,7 +2157,7 @@ xfs_iunlink_remove_inode(
+ /*
+  * Pull the on-disk inode from the AGI unlinked list.
+  */
+-STATIC int
++int
+ xfs_iunlink_remove(
+ 	struct xfs_trans	*tp,
+ 	struct xfs_perag	*pag,
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 3b8470c2db7b..2fe629eede76 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -594,6 +594,8 @@ extern struct kmem_cache	*xfs_inode_cache;
+ bool xfs_inode_needs_inactive(struct xfs_inode *ip);
+ 
+ int xfs_iunlink(struct xfs_trans *tp, struct xfs_inode *ip);
++int xfs_iunlink_remove(struct xfs_trans *tp, struct xfs_perag *pag,
++		struct xfs_inode *ip);
+ 
+ void xfs_end_io(struct work_struct *work);
+ 
 
-this all, and the write path, looks a bit heavy - you're calling through
-shmem_read_mapping_page_gfp() on every lookup. Does it matter?
-
-If we care about performance, we want to get it as much as possible down
-to just the page cache radix tree lookup - and possibly cache the last
-page returned if we care about sequential performance.
-
-OTOH, maybe shmem_get_folio_gfp() and __filemap_get_folio() could
-benefit from some early returns -
-	if (likely(got_the_thing_we_want)) return folio;
-
-Another thought... if obj_size <= PAGE_SIZE, maybe you could do what
-genradix does and not have objects span pages? That would let you get
-rid of the loop in read/write - but then you'd want to be doing an
-interface that works in terms of pages/folios, which wouldn't be as
-clean as what you've got.
-
-Just spitballing random ideas, looks good :)
