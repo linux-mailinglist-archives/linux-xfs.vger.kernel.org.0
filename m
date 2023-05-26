@@ -2,55 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BBA0711D44
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 04:00:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80C9B711D45
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 04:00:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjEZCAF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 May 2023 22:00:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43844 "EHLO
+        id S229631AbjEZCAU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 May 2023 22:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbjEZCAE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 22:00:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FEDE7;
-        Thu, 25 May 2023 19:00:02 -0700 (PDT)
+        with ESMTP id S229842AbjEZCAT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 22:00:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690A918D
+        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 19:00:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F86064C45;
-        Fri, 26 May 2023 02:00:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8632C433D2;
-        Fri, 26 May 2023 02:00:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EED2464C1F
+        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 02:00:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595F9C433EF;
+        Fri, 26 May 2023 02:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685066401;
-        bh=NUXboTrnOb/PC+9DQwpQyEXWw6zheVznB+um4a1CUBM=;
+        s=k20201202; t=1685066417;
+        bh=xAZuG00JZz3OK5uiJizH2/zUq20rXO7XaU7v/YK1dco=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=q/uKEpR+ftOpj+0dXx7h8TdAbAJL19z65u3owC+KYjjUR+uDi/6VzDmAkcWiuMC1/
-         d3Pt9ROnjgTajvhg3CT6R60CfU95TT2jPm8CX+mDZUcHzcdTeLkxieclihUEJ3Xbzk
-         7/eWOEOWGqQ3cuZtdzKlAhFpGAb8m2+kf4FE/H9EYCcVnQCJ+oNmQiVG6S3X0J0J6U
-         QbTPwC3GjwSsuui7urnhD3oYclcFrRBfhiu7pBRFWvgXX3YjCND3OGdabtCFS3BaJp
-         2XWXkxtbXo96ewjIyQwnKhi5pBBQQtELEf6hn1S4QcNP9H9HfCQzwRz+//LVSWuTjJ
-         0Gw7z7pIBSgGQ==
-Date:   Thu, 25 May 2023 19:00:01 -0700
-Subject: [PATCHSET RFC v12.0 00/11] fstests: adjust tests for xfs parent
- pointers
+        b=Gsd2IFwTY34keoDwof61etWD2Jiwm37kq3Q61vt/wkNtqOhg3MmJegO4gZwL+D/Dm
+         zyuMmoeW1EKRrLRr+cmuLA+A9HVduto1Zp0nz++w32gJsWtJVMWh02Q0122yxxzKBZ
+         0ZzwnpDKWC6xvxHm9tIy6+Lex5qbVnskpwLX4q2Ts6vpK5Exae6VUKKBM6EbEUzLBC
+         XT+V8jj0SbW1l9bF6rb7WL3ityHgp/CubFzy6xx5Ho3ZB4AUxqEo37/3+JsHy2UYUn
+         9ePcO8SAQgyeX7TbdhiFOkcH3d6ZmYvPRrePNCwuF53KJLS08IRDThyOFF0LYni6ql
+         l3OD0wrdJOA7A==
+Date:   Thu, 25 May 2023 19:00:16 -0700
+Subject: [PATCHSET v12.0 0/7] xfs: retain ILOCK during directory updates
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     Allison Henderson <allison.henderson@oracle.com>,
         Catherine Hoang <catherine.hoang@oracle.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me,
-        allison.henderson@oracle.com, catherine.hoang@oracle.com
-Message-ID: <168506060845.3732476.15364197106064737675.stgit@frogsfrogsfrogs>
+        linux-xfs@vger.kernel.org, allison.henderson@oracle.com,
+        catherine.hoang@oracle.com
+Message-ID: <168506071753.3743141.6199971931108916142.stgit@frogsfrogsfrogs>
 In-Reply-To: <20230526000710.GG11642@frogsfrogsfrogs>
 References: <20230526000710.GG11642@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -59,14 +58,15 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-These are the test adjustments that are required for parent pointers.
-There's also a few new tests to ensure that the GETPARENTS ioctl (and
- file extent can cross an rtgroup boundary.
+This series changes the directory update code to retain the ILOCK on all
+files involved in a rename until the end of the operation.  The upcoming
+parent pointers patchset applies parent pointers in a separate chained
+update from the actual directory update, which is why it is now
+necessary to keep the ILOCK instead of dropping it after the first
+transaction in the chain.
 
-The best advantage for rtgroups will become evident later when we get to
-adding rmap and reflink to the realtime volume, since the geometry
-constraints are the same for rt groups and AGs.  Hence we can reuse all
-that code directly.
+As a side effect, we no longer need to hold the IOLOCK during an rmapbt
+scan of inodes to serialize the scan with ongoing directory updates.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
@@ -77,49 +77,23 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=pptrs
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=retain-ilock-during-dir-ops
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=pptrs
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=pptrs
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=retain-ilock-during-dir-ops
 ---
- common/parent                        |  209 +++++++
- common/populate                      |   38 +
- common/rc                            |    7 
- common/xfs                           |   12 
- doc/group-names.txt                  |    1 
- src/popdir.pl                        |   11 
- tests/generic/050                    |   20 +
- tests/generic/050.cfg                |    1 
- tests/generic/050.out.xfsquotaparent |   23 +
- tests/xfs/018                        |    7 
- tests/xfs/021                        |   15 -
- tests/xfs/021.cfg                    |    1 
- tests/xfs/021.out.default            |    0 
- tests/xfs/021.out.parent             |   62 ++
- tests/xfs/122.out                    |    3 
- tests/xfs/191                        |    7 
- tests/xfs/206                        |    3 
- tests/xfs/288                        |    7 
- tests/xfs/306                        |    9 
- tests/xfs/851                        |  116 ++++
- tests/xfs/851.out                    |   69 ++
- tests/xfs/852                        |   69 ++
- tests/xfs/852.out                    | 1002 ++++++++++++++++++++++++++++++++++
- tests/xfs/853                        |   85 +++
- tests/xfs/853.out                    |   14 
- 25 files changed, 1778 insertions(+), 13 deletions(-)
- create mode 100644 common/parent
- create mode 100644 tests/generic/050.out.xfsquotaparent
- create mode 100644 tests/xfs/021.cfg
- rename tests/xfs/{021.out => 021.out.default} (100%)
- create mode 100644 tests/xfs/021.out.parent
- create mode 100755 tests/xfs/851
- create mode 100644 tests/xfs/851.out
- create mode 100755 tests/xfs/852
- create mode 100644 tests/xfs/852.out
- create mode 100755 tests/xfs/853
- create mode 100644 tests/xfs/853.out
+ fs/xfs/libxfs/xfs_defer.c  |    6 ++-
+ fs/xfs/libxfs/xfs_defer.h  |    8 +++-
+ fs/xfs/scrub/rmap_repair.c |   16 -------
+ fs/xfs/scrub/tempfile.c    |    2 +
+ fs/xfs/xfs_dquot.c         |   38 +++++++++++++++++
+ fs/xfs/xfs_dquot.h         |    1 
+ fs/xfs/xfs_inode.c         |   98 ++++++++++++++++++++++++++++++++------------
+ fs/xfs/xfs_inode.h         |    2 +
+ fs/xfs/xfs_qm.c            |    4 +-
+ fs/xfs/xfs_qm.h            |    2 -
+ fs/xfs/xfs_symlink.c       |    6 ++-
+ fs/xfs/xfs_trans.c         |    9 +++-
+ fs/xfs/xfs_trans_dquot.c   |   15 ++++---
+ 13 files changed, 153 insertions(+), 54 deletions(-)
 
