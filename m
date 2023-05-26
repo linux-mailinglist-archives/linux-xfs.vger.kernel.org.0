@@ -2,49 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37929711B3A
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 02:32:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49A94711B3C
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 May 2023 02:32:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjEZAcG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 May 2023 20:32:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41886 "EHLO
+        id S233159AbjEZAcW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 May 2023 20:32:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233106AbjEZAcF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 20:32:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD252195
-        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 17:32:04 -0700 (PDT)
+        with ESMTP id S231451AbjEZAcV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 May 2023 20:32:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B7EEE
+        for <linux-xfs@vger.kernel.org>; Thu, 25 May 2023 17:32:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 61C6964B2A
-        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 00:32:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C502FC433EF;
-        Fri, 26 May 2023 00:32:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 00EF964AFD
+        for <linux-xfs@vger.kernel.org>; Fri, 26 May 2023 00:32:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61305C433D2;
+        Fri, 26 May 2023 00:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685061123;
-        bh=b4Ii1y4zFZF8euxcU31L/ZfxZdic+9CXRlR9Rd5D4j0=;
+        s=k20201202; t=1685061139;
+        bh=KIvqt49YqJP7m0GgBO4z104zqwozlSskB04jBk3vL7o=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=Ac03K26X3MgjgtIDM31y9HZZa3BlbpwNwDZG10yibhhZYKDcPVDgvRAqX+KFeTqLa
-         uU+YC6j/gkcP5LgN0XC8hKKlZ/sEQdelpn6yKhQRVSrCTp5xKIvplGT0ZZcPXc+Iwg
-         WYp9ZcWml+c+hYHdRFOYfzIYOVYBOI8YQurNoQit7yOQLqQltKGysFgGpCbnU32sWv
-         5LzpN6RopnszuU7FTl7anXtGDkclyPAQlmA5JeKghbjlng7S5uVLUC8bGEA45mj790
-         CnSypsY5Hya5X5paJOD9LzSjYWUrkAh6XwHxE6qJHdD9xSKXaRGzVVXLxzI4gPsfwP
-         PG9qDKR22XThw==
-Date:   Thu, 25 May 2023 17:32:03 -0700
-Subject: [PATCHSET v25.0 0/3] xfs: indirect health reporting
+        b=qMMBAKBlPoksmeH1cUvQIZBhUuqEoSGlkz434j9eV/zSBXYCt5pbZJfo+yOo0Al8j
+         yqe7jvdKXBqVlp+43guyuQAt/mU5X8IVgQh8byReS3z6wXaSFiqIcNNc5BNkK5FW5z
+         UeZ71IZck5X054JAGAxaEq2M/LMVyx+/ei/NnKj31TXGhKFmKoHdvNYS+5r/QBEd14
+         wDViTfiGSamnWXX7cNEcXIu8Ysih6OcmiCuu+5CRC3cgruV87qfQUdBlSpoAmJX0RW
+         +usi4F4fUyB4wvcp13KJKBHNl56+ELdo0zWEzrIp0nB8aRTwxIFZ99qrQATB3zEpEL
+         m/qMILTqsvIrw==
+Date:   Thu, 25 May 2023 17:32:18 -0700
+Subject: [PATCHSET v25.0 0/3] xfs: online repair for fs summary counters
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Message-ID: <168506061141.3732817.12069555992432067658.stgit@frogsfrogsfrogs>
+Message-ID: <168506061483.3732954.5178462816967376906.stgit@frogsfrogsfrogs>
 In-Reply-To: <20230526000020.GJ11620@frogsfrogsfrogs>
 References: <20230526000020.GJ11620@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -55,16 +55,20 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-This series enables the XFS health reporting infrastructure to remember
-indirect health concerns when resources are scarce.  For example, if a
-scrub notices that there's something wrong with an inode's metadata but
-memory reclaim needs to free the incore inode, we want to record in the
-perag data the fact that there was some inode somewhere with an error.
-The perag structures never go away.
+A longstanding deficiency in the online fs summary counter scrubbing
+code is that it hasn't any means to quiesce the incore percpu counters
+while it's running.  There is no way to coordinate with other threads
+are reserving or freeing free space simultaneously, which leads to false
+error reports.  Right now, if the discrepancy is large, we just sort of
+shrug and bail out with an incomplete flag, but this is lame.
 
-The first two patches in this series set that up, and the third one
-provides a means for xfs_scrub to tell the kernel that it can forget the
-indirect problem report.
+For repair activity, we actually /do/ need to stabilize the counters to
+get an accurate reading and install it in the percpu counter.  To
+improve the former and enable the latter, allow the fscounters online
+fsck code to perform an exclusive mini-freeze on the filesystem.  The
+exclusivity prevents userspace from thawing while we're running, and the
+mini-freeze means that we don't wait for the log to quiesce, which will
+make both speedier.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
@@ -75,21 +79,23 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=indirect-health-reporting
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-fscounters
 
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=indirect-health-reporting
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-fscounters
 ---
- fs/xfs/libxfs/xfs_fs.h        |    4 ++
- fs/xfs/libxfs/xfs_health.h    |   45 ++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_inode_buf.c |    2 +
- fs/xfs/scrub/health.c         |   76 ++++++++++++++++++++++++++++++++++++++++-
- fs/xfs/scrub/health.h         |    1 +
- fs/xfs/scrub/repair.c         |    1 +
- fs/xfs/scrub/scrub.c          |    6 +++
- fs/xfs/scrub/trace.h          |    4 ++
- fs/xfs/xfs_health.c           |   25 +++++++++----
- fs/xfs/xfs_inode.c            |   35 +++++++++++++++++++
- fs/xfs/xfs_trace.h            |    1 +
- 11 files changed, 188 insertions(+), 12 deletions(-)
+ fs/super.c                       |  172 +++++++++++++++++++++++++++++++++--
+ fs/xfs/Makefile                  |    1 
+ fs/xfs/scrub/fscounters.c        |  185 ++++++++++++++++++++++++++++----------
+ fs/xfs/scrub/fscounters.h        |   20 ++++
+ fs/xfs/scrub/fscounters_repair.c |   72 +++++++++++++++
+ fs/xfs/scrub/repair.h            |    2 
+ fs/xfs/scrub/scrub.c             |    8 +-
+ fs/xfs/scrub/scrub.h             |    1 
+ fs/xfs/scrub/trace.c             |    1 
+ fs/xfs/scrub/trace.h             |   22 ++++-
+ include/linux/fs.h               |    8 +-
+ 11 files changed, 428 insertions(+), 64 deletions(-)
+ create mode 100644 fs/xfs/scrub/fscounters.h
+ create mode 100644 fs/xfs/scrub/fscounters_repair.c
 
