@@ -2,88 +2,194 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEF76717B8C
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 May 2023 11:15:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF3D1717CBF
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 May 2023 12:04:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232546AbjEaJPp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 31 May 2023 05:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56108 "EHLO
+        id S235806AbjEaKE2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 31 May 2023 06:04:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235309AbjEaJPl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 May 2023 05:15:41 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F337F124
-        for <linux-xfs@vger.kernel.org>; Wed, 31 May 2023 02:15:39 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-969f90d71d4so787555166b.3
-        for <linux-xfs@vger.kernel.org>; Wed, 31 May 2023 02:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1685524538; x=1688116538;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/bYqGFJ4VOGoB5+32Mcq8JR70Vd1T1ITCSeV7/3ifk=;
-        b=UZJgvu6uIJY01EjK7iQN8XWB6pp1lB8CKfw+N0J9F6PgtqlKRqH1SLE+0gJUsS//CY
-         frv0e589K6FPUxK3WlywVEVU5EIXgi5CrlyDlCnTpxW2lWKTjmwY/duejSbBA4/xINGF
-         cl9p3WvJMPfMA2wH+RIqqUtbNfejKb30vQfU0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685524538; x=1688116538;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T/bYqGFJ4VOGoB5+32Mcq8JR70Vd1T1ITCSeV7/3ifk=;
-        b=Fw94DogXsKr8ATnLT1n/QDshQYpK/XPIoJx1omyr1TXTn12QEQz8kMnPktC9m4ZmY9
-         dSyCEJT2s/dJ5rvfIhPpXhvZynVOD4aoXCb6sIhRSwcJHBPP0tK1Ainaq0rD8ey6kz0t
-         X6bWAtDcn8WKSE+49QTxgzPj1WcQAYqzqxGH3ANSeH/LhrWIp9bRzjCQxofdoJnm8V6E
-         2XZJP5R3qQ+SgnBLV8xfKQaL6u5wgMvx5N7IjJaai/JAwBCwfzwGNNxw5rQi3DjCat72
-         +/A3Yw81WHJn2gBRFIAZwfk/PPezdtA9B2KhsyvSKm4Msuow6MhkSVkmwnLpzI95aPcu
-         IpRQ==
-X-Gm-Message-State: AC+VfDwpA9ZIBjzvhJ665nQ2XxWLQr+6Ns3gkLoojZMAdVN6JtT1vNYi
-        JpBxaHNKqm5S7l960zxPUU0MoXRG87TFIxAsm1ygCg==
-X-Google-Smtp-Source: ACHHUZ4+FWciM8qyJY0wuGopESAGDBSeuypok3sj/I3YbiV8yhFjyVDeVyjcnaAR9QRVCUk4jCbe3rFAcVDPPt68Cvo=
-X-Received: by 2002:a17:906:9756:b0:967:21:5887 with SMTP id
- o22-20020a170906975600b0096700215887mr4163471ejy.40.1685524538465; Wed, 31
- May 2023 02:15:38 -0700 (PDT)
+        with ESMTP id S235789AbjEaKEX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 May 2023 06:04:23 -0400
+Received: from out-38.mta0.migadu.com (out-38.mta0.migadu.com [IPv6:2001:41d0:1004:224b::26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0347B126
+        for <linux-xfs@vger.kernel.org>; Wed, 31 May 2023 03:04:19 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1685527095;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PItdhrJgOO6Uf9HQuBa9pn2dZV15hG06si+vWLwhY4U=;
+        b=HibbmKwHH6i0eqMj0ivFsqhZE4MS2V1GSStWp+7t0p4zPvhN090WskQM6WID4MuKhmoHYh
+        HbPpUh5MXnJlOxmVcpX5w1o3mJx5mVhfQl/IvoUYnLrgBzNTOTzS1pmFtZVvKS5aN8F/hC
+        8xlSAR6vOuOlLS1YfL7BM8u6CG2jE14=
+From:   Qi Zheng <qi.zheng@linux.dev>
+To:     akpm@linux-foundation.org, tkhai@ya.ru, roman.gushchin@linux.dev,
+        vbabka@suse.cz, viro@zeniv.linux.org.uk, brauner@kernel.org,
+        djwong@kernel.org, hughd@google.com, paulmck@kernel.org,
+        muchun.song@linux.dev
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: [PATCH 0/8] make unregistration of super_block shrinker more faster
+Date:   Wed, 31 May 2023 09:57:34 +0000
+Message-Id: <20230531095742.2480623-1-qi.zheng@linux.dev>
 MIME-Version: 1.0
-References: <20230531075026.480237-1-hch@lst.de> <20230531075026.480237-10-hch@lst.de>
-In-Reply-To: <20230531075026.480237-10-hch@lst.de>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 31 May 2023 11:15:27 +0200
-Message-ID: <CAJfpegtPM_=3uGdxxkb9xP8LVg5P0Lm-w4TNLYhw+MqcNi8c1g@mail.gmail.com>
-Subject: Re: [PATCH 09/12] fs: factor out a direct_write_fallback helper
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, 31 May 2023 at 09:50, Christoph Hellwig <hch@lst.de> wrote:
->
-> Add a helper dealing with handling the syncing of a buffered write fallback
-> for direct I/O.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
 
-Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
+Hi all,
+
+This patch series aims to make unregistration of super_block shrinker more
+faster.
+
+1. Background
+=============
+
+The kernel test robot noticed a -88.8% regression of stress-ng.ramfs.ops_per_sec
+on commit f95bdb700bc6 ("mm: vmscan: make global slab shrink lockless"). More
+details can be seen from the link[1] below.
+
+[1]. https://lore.kernel.org/lkml/202305230837.db2c233f-yujie.liu@intel.com/
+
+We can just use the following command to reproduce the result:
+
+stress-ng --timeout 60 --times --verify --metrics-brief --ramfs 9 &
+
+1) before commit f95bdb700bc6b:
+
+stress-ng: info:  [11023] dispatching hogs: 9 ramfs
+stress-ng: info:  [11023] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s
+stress-ng: info:  [11023]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
+stress-ng: info:  [11023] ramfs            774966     60.00     10.18    169.45     12915.89        4314.26
+stress-ng: info:  [11023] for a 60.00s run time:
+stress-ng: info:  [11023]    1920.11s available CPU time
+stress-ng: info:  [11023]      10.18s user time   (  0.53%)
+stress-ng: info:  [11023]     169.44s system time (  8.82%)
+stress-ng: info:  [11023]     179.62s total time  (  9.35%)
+stress-ng: info:  [11023] load average: 8.99 2.69 0.93
+stress-ng: info:  [11023] successful run completed in 60.00s (1 min, 0.00 secs)
+
+2) after commit f95bdb700bc6b:
+
+stress-ng: info:  [37676] dispatching hogs: 9 ramfs
+stress-ng: info:  [37676] stressor       bogo ops real time  usrtime  sys time   bogo ops/s     bogo ops/s
+stress-ng: info:  [37676]                           (secs)    (secs)   (secs)   (real time) (usr+sys time)
+stress-ng: info:  [37676] ramfs            168673     60.00     1.61    39.66      2811.08        4087.47
+stress-ng: info:  [37676] for a 60.10s run time:
+stress-ng: info:  [37676]    1923.36s available CPU time
+stress-ng: info:  [37676]       1.60s user time   (  0.08%)
+stress-ng: info:  [37676]      39.66s system time (  2.06%)
+stress-ng: info:  [37676]      41.26s total time  (  2.15%)
+stress-ng: info:  [37676] load average: 7.69 3.63 2.36
+stress-ng: info:  [37676] successful run completed in 60.10s (1 min, 0.10 secs)
+
+The root cause is that SRCU has to be careful to not frequently check for srcu
+read-side critical section exits. Paul E. McKenney gave a detailed explanation:
+
+```
+In practice, the act of checking to see if there is anyone in an SRCU
+read-side critical section is a heavy-weight operation, involving at
+least one cache miss per CPU along with a number of full memory barriers.
+```
+
+Therefore, even if no one is currently in the SRCU read-side critical section,
+synchronize_srcu() cannot return quickly. That's why unregister_shrinker() has
+become slower.
+
+2. Idea
+=======
+
+2.1 use synchronize_srcu_expedited() ?
+--------------------------------------
+
+The synchronize_srcu_expedited() will let SRCU to be much more aggressive.
+If we use it to replace synchronize_srcu() in the unregister_shrinker(), the
+ops/s will return to previous levels:
+
+stress-ng: info:  [13159] dispatching hogs: 9 ramfs
+stress-ng: info:  [13159] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s
+stress-ng: info:  [13159]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
+stress-ng: info:  [13159] ramfs            710062     60.00      9.63    157.26     11834.18        4254.75
+stress-ng: info:  [13159] for a 60.00s run time:
+stress-ng: info:  [13159]    1920.14s available CPU time
+stress-ng: info:  [13159]       9.62s user time   (  0.50%)
+stress-ng: info:  [13159]     157.26s system time (  8.19%)
+stress-ng: info:  [13159]     166.88s total time  (  8.69%)
+stress-ng: info:  [13159] load average: 9.49 4.02 1.65
+stress-ng: info:  [13159] successful run completed in 60.00s (1 min, 0.00 secs)
+
+But because SRCU (Sleepable RCU) is used here, the reader is allowed to sleep in
+the read-side critical section, so synchronize_srcu_expedited() may cause a lot
+of CPU consumption, so this is not a good choice.
+
+2.2 move synchronize_srcu() to the asynchronous delayed work
+------------------------------------------------------------
+
+Kirill Tkhai proposed a better idea[2] in 2018: move synchronize_srcu() to the
+asynchronous delayed work, then it doesn't affect on user-visible unregistration
+speed.
+
+[2]. https://lore.kernel.org/lkml/153365636747.19074.12610817307548583381.stgit@localhost.localdomain/
+
+After applying his patches ([PATCH RFC 04/10]~[PATCH RFC 10/10], with few
+conflicts), the ops/s is of course back to the previous levels:
+
+stress-ng: info:  [11506] setting to a 60 second run per stressor
+stress-ng: info:  [11506] dispatching hogs: 9 ramfs
+stress-ng: info:  [11506] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s
+stress-ng: info:  [11506]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
+stress-ng: info:  [11506] ramfs            829462     60.00     10.81    174.25     13824.14        4482.08
+stress-ng: info:  [11506] for a 60.00s run time:
+stress-ng: info:  [11506]    1920.12s available CPU time
+stress-ng: info:  [11506]      10.81s user time   (  0.56%)
+stress-ng: info:  [11506]     174.25s system time (  9.07%)
+stress-ng: info:  [11506]     185.06s total time  (  9.64%)
+stress-ng: info:  [11506] load average: 8.96 2.60 0.89
+stress-ng: info:  [11506] successful run completed in 60.00s (1 min, 0.00 secs)
+
+In order to continue to advance this patch set, I rebase these patches onto the
+next-20230525. Any comments and suggestions are welcome.
+
+Note: This patch serise is only for super_block shrinker, all further
+time-critical for unregistration places may be written in the same conception.
+
+Thanks,
+Qi
+
+Kirill Tkhai (7):
+  mm: vmscan: split unregister_shrinker()
+  fs: move list_lru_destroy() to destroy_super_work()
+  fs: shrink only (SB_ACTIVE|SB_BORN) superblocks in super_cache_scan()
+  fs: introduce struct super_operations::destroy_super() callback
+  xfs: introduce xfs_fs_destroy_super()
+  shmem: implement shmem_destroy_super()
+  fs: use unregister_shrinker_delayed_{initiate, finalize} for
+    super_block shrinker
+
+Qi Zheng (1):
+  mm: vmscan: move shrinker_debugfs_remove() before synchronize_srcu()
+
+ fs/super.c               | 32 ++++++++++++++++++--------------
+ fs/xfs/xfs_super.c       | 25 ++++++++++++++++++++++---
+ include/linux/fs.h       |  6 ++++++
+ include/linux/shrinker.h |  2 ++
+ mm/shmem.c               |  8 ++++++++
+ mm/vmscan.c              | 26 ++++++++++++++++++++------
+ 6 files changed, 76 insertions(+), 23 deletions(-)
+
+-- 
+2.30.2
+
