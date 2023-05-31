@@ -2,66 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 389BD717702
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 May 2023 08:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1E43717705
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 May 2023 08:42:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230452AbjEaGlk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 31 May 2023 02:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41806 "EHLO
+        id S232239AbjEaGmy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 31 May 2023 02:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbjEaGlj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 May 2023 02:41:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B6A183
-        for <linux-xfs@vger.kernel.org>; Tue, 30 May 2023 23:40:48 -0700 (PDT)
+        with ESMTP id S230201AbjEaGmy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 May 2023 02:42:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26ACD99
+        for <linux-xfs@vger.kernel.org>; Tue, 30 May 2023 23:42:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685515248;
+        s=mimecast20190719; t=1685515326;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=kP3fciMgk/5qy3IHjrvWMiNRmiOvSWrbsCKGKCz1Tw8=;
-        b=U/kCC3dqKN/QtdrAo+vtlpPvocSX/vwDd5VTG6RZDSIl4GZWpaiT10LQa4tGn+wsB4SP7V
-        3aAJDrHetZZr99sbr89jfJZ/J2ll9iJoT6LkJj1DZWwCeUqpXieA5Nw1BupsCAFE2WgXln
-        00jbj5zAbzW5k3Hmi4j5S77ZDD5JkJs=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=aJL/w4UwwgjzVijVeDcfFBV89FGjEVBP8YLSDjcGqBM=;
+        b=QQeAWZzvcWvPII1CqU5L1gngTqDrd2zdAAiaUd218QysKZMeBRBjKjPsJUDI2Arhe3U2Sn
+        2QQO/l6CTx2wm7ErMTLf1zkWSt5Vyq6pZ9DxzEeyhJQyjCOpIU2dnFb2kYLusIu8RjgDUB
+        haQwK5ykpUiQbxA7q0uJVXqXxq+3GQg=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-284-q7XOxdd1OyCZM8UdMi8gQw-1; Wed, 31 May 2023 02:40:47 -0400
-X-MC-Unique: q7XOxdd1OyCZM8UdMi8gQw-1
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-6af87ea95c6so4146724a34.2
-        for <linux-xfs@vger.kernel.org>; Tue, 30 May 2023 23:40:47 -0700 (PDT)
+ us-mta-135-hUnGILiKP8We-3-laOZtZw-1; Wed, 31 May 2023 02:42:04 -0400
+X-MC-Unique: hUnGILiKP8We-3-laOZtZw-1
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-528ab7097afso4715435a12.1
+        for <linux-xfs@vger.kernel.org>; Tue, 30 May 2023 23:42:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685515246; x=1688107246;
+        d=1e100.net; s=20221208; t=1685515323; x=1688107323;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kP3fciMgk/5qy3IHjrvWMiNRmiOvSWrbsCKGKCz1Tw8=;
-        b=AdRTRoGluHUPFCIlLxu2tF3P3g3yMHxSd/P9rIMgx6CntVZfiEXpV3kUj6dLp0ySZO
-         8+SOlIJl1Tpr5dqTWPtQ8B8BFvFD+yBp7pFK9xe9JmC9kL8WlD6vMSI3QJdb/UcxeKeg
-         jSNt+VevRplgbfwSIg7OB9HeGliY5PJM5EItnB7xt8Cn3jvDSVr4x7pCBCPTEKs2pKse
-         7sm4+q+DFXOu7mHGMmvVRd28Tg5fHWR3Yj6fnDbWoCiG79KeLwa8YGDn6K5Nq4VYcvbO
-         CYsZJyQsQ5j4LteAQPGNOB4qQDD4EIhKe3ChWhZwsDtMeSG8IqdZF1SpQ5Rkp0zMY7cV
-         eVmA==
-X-Gm-Message-State: AC+VfDyByc7EbGJ8lCSHN5ZxB8F/8KQzWZnzSSeABqIc5DOzesP/AHhL
-        9tQr+z9eKrubOWX6ch4Vg9Fj5d+fDLV5hoQNbuJ9nJzkFxYXQU9zcPq7W4l85Vor8R6u0AcIQ/E
-        WTOYVYiEzs0EssX1iNnvSPtdWsFGqqEdZt26WwUGvHFMffq90vRDoCQuQ6vi9+2zPm3AEoqngwM
-        Y1Pqqu
-X-Received: by 2002:a05:6830:e05:b0:6af:7d71:c9fd with SMTP id do5-20020a0568300e0500b006af7d71c9fdmr1506475otb.13.1685515246048;
-        Tue, 30 May 2023 23:40:46 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5TQmzMHtreVHDFnOAyF8g+KzYgf1uj/6qUpbub4hwOGdmSk2JoxZdMZoJrOv8qeOipzod47w==
-X-Received: by 2002:a05:6830:e05:b0:6af:7d71:c9fd with SMTP id do5-20020a0568300e0500b006af7d71c9fdmr1506456otb.13.1685515245754;
-        Tue, 30 May 2023 23:40:45 -0700 (PDT)
+        bh=aJL/w4UwwgjzVijVeDcfFBV89FGjEVBP8YLSDjcGqBM=;
+        b=iRkp5fsNllAgMur0SM5ib0xIsKMcqU3wdyp+nNv0bZRr2vHBq2iQsk1MZ4gd3bKP8I
+         LW2dlkEy5FGyn2zUpVn0XUysYJbquDRqip1nStahBEcIx+NXYGupXOmKGkL59diPfdJu
+         dLZ4Hv/Wxb5HQOKF8lBlvMKGozysHQ2XibxvKMmT8JU+eb6hNuqGbbd5kJNz30i40Y9Z
+         Ji0An6VPdZNEbghJOK/kKYWVWwcri8/D5gCLnZOgWdLrXHvJzJNUxfhrsvGa28X9yulM
+         UT5QqvGCJ0IUhuc2Q2uU2b5wq+/n/ge74kCIb7KPjrwV68Pg+o3yEXb0FE+2D+9k+kxF
+         1u1w==
+X-Gm-Message-State: AC+VfDycyCS4/g6DZ3rKj+lxmwF1QWEA3ONk1Zzikl6d6fm4kQ1qT1GO
+        KymQ4FY22D/Fdb0B+qN9l0McP4rluReApmWzDTs25Uc1Wk2QXIyR/0GvAwMU2S5xpNApfTqi+yh
+        FnsdQW3tOQZlpB+sC0ocj6gvoXhFB2nIcrCnZOo6XmnbHiqhW7HPZrdrVBOoS2BElti5udjI58H
+        vvf63H
+X-Received: by 2002:a05:6a20:158b:b0:10b:6e18:b698 with SMTP id h11-20020a056a20158b00b0010b6e18b698mr5028950pzj.49.1685515323222;
+        Tue, 30 May 2023 23:42:03 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4/Xdc7oDXolRxxQl1VRyPgacYRY9yBDoaDrh2ERo6+eygSL1fHMIsvaDYhgST2eJ3/YAy2pg==
+X-Received: by 2002:a05:6a20:158b:b0:10b:6e18:b698 with SMTP id h11-20020a056a20158b00b0010b6e18b698mr5028931pzj.49.1685515322725;
+        Tue, 30 May 2023 23:42:02 -0700 (PDT)
 Received: from anathem.redhat.com ([2001:8003:4b08:fb00:e45d:9492:62e8:873c])
-        by smtp.gmail.com with ESMTPSA id g19-20020aa78193000000b0064d566f658esm2635220pfi.135.2023.05.30.23.40.43
+        by smtp.gmail.com with ESMTPSA id x11-20020a63cc0b000000b0053f2037d639sm494171pgf.81.2023.05.30.23.42.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 23:40:45 -0700 (PDT)
+        Tue, 30 May 2023 23:42:02 -0700 (PDT)
 From:   Donald Douwsma <ddouwsma@redhat.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Donald Douwsma <ddouwsma@redhat.com>
-Subject: [PATCH v4] xfstests: add test for xfs_repair progress reporting
-Date:   Wed, 31 May 2023 16:40:24 +1000
-Message-Id: <20230531064024.1737213-2-ddouwsma@redhat.com>
+Subject: [PATCH] xfs_repair: always print an estimate when reporting progress
+Date:   Wed, 31 May 2023 16:41:43 +1000
+Message-Id: <20230531064143.1737591-1-ddouwsma@redhat.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20230531064024.1737213-1-ddouwsma@redhat.com>
 References: <20230531064024.1737213-1-ddouwsma@redhat.com>
@@ -69,130 +69,68 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Confirm that xfs_repair reports on its progress if -o ag_stride is
-enabled.
+If xfs_repair completes the work for a given phase while allocation
+groups are still being processed the estimated time may be zero, when
+this occures xfs_repair prints an incomplete string.
+
+ # xfs_repair -o ag_stride=4 -t 1 /dev/sdc
+ Phase 1 - find and verify superblock...
+         - reporting progress in intervals of 1 second
+ Phase 2 - using internal log
+         - zero log...
+         - 20:52:11: zeroing log - 0 of 2560 blocks done
+         - 20:52:12: zeroing log - 2560 of 2560 blocks done
+         - scan filesystem freespace and inode maps...
+         - 20:52:12: scanning filesystem freespace - 3 of 4 allocation groups done
+         - 20:52:13: scanning filesystem freespace - 4 of 4 allocation groups done
+         - found root inode chunk
+ Phase 3 - for each AG...
+         - scan and clear agi unlinked lists...
+         - 20:52:13: scanning agi unlinked lists - 4 of 4 allocation groups done
+         - process known inodes and perform inode discovery...
+         - agno = 0
+         - 20:52:13: process known inodes and inode discovery - 3456 of 40448 inodes done
+         - 20:52:14: process known inodes and inode discovery - 3456 of 40448 inodes done
+         - 20:52:14: Phase 3: elapsed time 1 second - processed 207360 inodes per minute
+         - 20:52:14: Phase 3: 8% done - estimated remaining time 10 seconds
+         - 20:52:15: process known inodes and inode discovery - 3456 of 40448 inodes done
+         - 20:52:15: Phase 3: elapsed time 2 seconds - processed 103680 inodes per minute
+         - 20:52:15: Phase 3: 8% done - estimated remaining time 21 seconds
+         - 20:52:16: process known inodes and inode discovery - 33088 of 40448 inodes done
+         - 20:52:16: Phase 3: elapsed time 3 seconds - processed 661760 inodes per minute
+         - 20:52:16: Phase 3: 81% done - estimated remaining time
+         - agno = 1
+ 	...
+
+Make this more consistent by printing 'estimated remaining time 0
+seconds' if there is a 0 estimate.
 
 Signed-off-by: Donald Douwsma <ddouwsma@redhat.com>
 ---
-Changes since v3
-- Rebase after tests/xfs/groups removal (tools/convert-group), drop _supported_os
-- Shorten the delay, remove superfluous dm-delay parameters
-Changes since v2:
-- Fix cleanup handling and function naming
-- Added to auto group
-Changes since v1:
-- Use _scratch_xfs_repair
-- Filter only repair output
-- Make the filter more tolerant of whitespace and plurals
-- Take golden output from 'xfs_repair: fix progress reporting'
+ repair/progress.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- tests/xfs/999     | 66 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/999.out | 15 +++++++++++
- 2 files changed, 81 insertions(+)
- create mode 100755 tests/xfs/999
- create mode 100644 tests/xfs/999.out
-
-diff --git a/tests/xfs/999 b/tests/xfs/999
-new file mode 100755
-index 00000000..9e799f66
---- /dev/null
-+++ b/tests/xfs/999
-@@ -0,0 +1,66 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2020 Red Hat, Inc.  All Rights Reserved.
-+#
-+# FS QA Test 521
-+#
-+# Test xfs_repair's progress reporting
-+#
-+. ./common/preamble
-+_begin_fstest auto repair
-+
-+# Override the default cleanup function.
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+	_cleanup_delay > /dev/null 2>&1
-+}
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/dmdelay
-+. ./common/populate
-+
-+# real QA test starts here
-+
-+# Modify as appropriate.
-+_supported_fs xfs
-+_require_scratch
-+_require_dm_target delay
-+
-+# Filter output specific to the formatters in xfs_repair/progress.c
-+# Ideally we'd like to see hits on anything that matches
-+# awk '/{FMT/' xfsprogs-dev/repair/progress.c
-+filter_repair()
-+{
-+	sed -nre '
-+	s/[0-9]+/#/g;
-+	s/^\s+/ /g;
-+	s/(# (week|day|hour|minute|second)s?(, )?)+/{progres}/g;
-+	/#:#:#:/p
-+	'
-+}
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+echo "Introduce a dmdelay"
-+_init_delay
-+DELAY_MS=38
-+
-+# Introduce a read I/O delay
-+# The default in common/dmdelay is a bit too agressive
-+BLK_DEV_SIZE=`blockdev --getsz $SCRATCH_DEV`
-+DELAY_TABLE_RDELAY="0 $BLK_DEV_SIZE delay $SCRATCH_DEV 0 $DELAY_MS"
-+_load_delay_table $DELAY_READ
-+
-+echo "Run repair"
-+SCRATCH_DEV=$DELAY_DEV _scratch_xfs_repair -o ag_stride=4 -t 1 2>&1 |
-+        tee -a $seqres.full > $tmp.repair
-+
-+cat $tmp.repair | filter_repair | sort -u
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/999.out b/tests/xfs/999.out
-new file mode 100644
-index 00000000..e27534d8
---- /dev/null
-+++ b/tests/xfs/999.out
-@@ -0,0 +1,15 @@
-+QA output created by 999
-+Format and populate
-+Introduce a dmdelay
-+Run repair
-+ - #:#:#: Phase #: #% done - estimated remaining time {progres}
-+ - #:#:#: Phase #: elapsed time {progres} - processed # inodes per minute
-+ - #:#:#: check for inodes claiming duplicate blocks - # of # inodes done
-+ - #:#:#: process known inodes and inode discovery - # of # inodes done
-+ - #:#:#: process newly discovered inodes - # of # allocation groups done
-+ - #:#:#: rebuild AG headers and trees - # of # allocation groups done
-+ - #:#:#: scanning agi unlinked lists - # of # allocation groups done
-+ - #:#:#: scanning filesystem freespace - # of # allocation groups done
-+ - #:#:#: setting up duplicate extent list - # of # allocation groups done
-+ - #:#:#: verify and correct link counts - # of # allocation groups done
-+ - #:#:#: zeroing log - # of # blocks done
+diff --git a/repair/progress.c b/repair/progress.c
+index f6c4d988..9fb6e3eb 100644
+--- a/repair/progress.c
++++ b/repair/progress.c
+@@ -501,6 +501,8 @@ duration(int length, char *buf)
+ 			strcat(buf, _(", "));
+ 		strcat(buf, temp);
+ 	}
++	if (!(weeks|days|hours|minutes|seconds))
++		sprintf(buf, _("0 seconds"));
+ 
+ 	return(buf);
+ }
 -- 
 2.39.3
 
