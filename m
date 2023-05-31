@@ -2,110 +2,134 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A83B71897A
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 May 2023 20:41:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB4BF718BD3
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 May 2023 23:30:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjEaSk7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 31 May 2023 14:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35810 "EHLO
+        id S229521AbjEaVaf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 31 May 2023 17:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjEaSk6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 May 2023 14:40:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95861B2;
-        Wed, 31 May 2023 11:40:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28F6B63805;
-        Wed, 31 May 2023 18:40:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37C8C4339B;
-        Wed, 31 May 2023 18:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1685558456;
-        bh=jXLhgEASQyAknkS65fQC98zs5uvzjshg6q1Wuk42knc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m6hRFYjGE73M78kuem2RzITeOJ+vVJaQ+eGXVGnw9DnBr1ZAaN23Fsyr3fR/qZ+3m
-         kgGPyGKAU6HrIJM0a6r5q6xmqDSdgkbZoyUlh35O1eBTZITmXambbpOZx5KGmZsw9B
-         W08wSSNe4uwX7HYDuAu6Qfulxg8VbZZlYto+Ni8I=
-Date:   Wed, 31 May 2023 11:40:54 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Qi Zheng <qi.zheng@linux.dev>
-Cc:     tkhai@ya.ru, roman.gushchin@linux.dev, vbabka@suse.cz,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, djwong@kernel.org,
-        hughd@google.com, paulmck@kernel.org, muchun.song@linux.dev,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: Re: [PATCH 0/8] make unregistration of super_block shrinker more
- faster
-Message-Id: <20230531114054.bf077db642aa9c58c0831687@linux-foundation.org>
-In-Reply-To: <20230531095742.2480623-1-qi.zheng@linux.dev>
-References: <20230531095742.2480623-1-qi.zheng@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229484AbjEaVae (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 31 May 2023 17:30:34 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD501A5
+        for <linux-xfs@vger.kernel.org>; Wed, 31 May 2023 14:30:07 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-ba1815e12efso77115276.3
+        for <linux-xfs@vger.kernel.org>; Wed, 31 May 2023 14:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685568603; x=1688160603;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=97KPdziRgY2DYFT+BtnYBVgMhbdu7cgPl6xNPpa2Mtc=;
+        b=ZMlIR6r29VRr9aPfahQu8lYD82h2FIiOGPzrFUa09mcWC2K+mXkMQ1z/e5nz+eb0Nb
+         EupGWHH0yxZCAqjxPOhCaZ1lvnUCg6lUKaGlcqHVCd6vSOFwfcLmn7DvOr+ckWUDDVbg
+         k6gay445tXjauyST+6RAdM2qGExFJYUXHOHAnFaOmfT378MkDeSehx9XhWpu3GRf5d6R
+         gyfd8hgBVxRmfu8bhGUMxh5ay2XPfPs2fARNgJiKZricXd2yrWhyReqItXqfYQa93RfR
+         v6d7D0ydVN/f/0dRJfFlWfC2HJ15Kif0VYzsuisdlFWKNTsNRfX5twhUlPIynbJZvN2p
+         VT7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685568603; x=1688160603;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=97KPdziRgY2DYFT+BtnYBVgMhbdu7cgPl6xNPpa2Mtc=;
+        b=M4/EoJlBC/e/h3t2CfvEBBnEHfF8S1D0QT3BJczplTPeaoqkctVgDj+7JAMiiIQ4Sa
+         MFusOq4CLeS6/J0H/6lmvHZqghJr+CQ67RbmtUivYqL0NF9XbYGUECOb0FGWts8MTCq8
+         bPTUHTinXCYrndwOfT9x2DdkEULeLvQbHnOBjHdHfd/xkoLMPVb/YvVO45IcRSwtbQdv
+         Mdnr+xiCnTzZth95HIlBEnhBJPycdx6tJQpRkjC9GOhJmWe2tdPZEt3lXG/ST8xkofOt
+         sQ3kwEhKBCoeE2q87CTQHtMx/R0mdCtHqNDGn3Qqdo3wkmcybw6w2Hi9cX3mY8+jHlID
+         5n6w==
+X-Gm-Message-State: AC+VfDyUZtXbcMssAudUc6VjZnhznYoi0/WQGxbUBGZRnDGeCNQEpaq7
+        N9eDBbjFl7Vhdz/PRsrwXEyay8evgODyjm0lBmC9jDQfX2Q=
+X-Google-Smtp-Source: ACHHUZ4XxD+GSH67zRFn5T3Hv/33KFE7h6jt5m3P8YZYCJTrF2FjEa+6ttycdtJbUhxibE7YzS5tbZbRK3Gohm9yXCc=
+X-Received: by 2002:a25:6e0a:0:b0:bb1:76ca:d1ff with SMTP id
+ j10-20020a256e0a000000b00bb176cad1ffmr2042198ybc.20.1685568603480; Wed, 31
+ May 2023 14:30:03 -0700 (PDT)
+MIME-Version: 1.0
+From:   Jianan Wang <wangjianan.zju@gmail.com>
+Date:   Wed, 31 May 2023 14:29:52 -0700
+Message-ID: <CAMj1M42L6hH9weqroQNaWu_SG+Yg8NrAuzgNO1b8jiWPJ2M-5A@mail.gmail.com>
+Subject: Question on the xfs inode slab memory
+To:     linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, 31 May 2023 09:57:34 +0000 Qi Zheng <qi.zheng@linux.dev> wrote:
+Hi all,
 
-> From: Qi Zheng <zhengqi.arch@bytedance.com>
-> 
-> Hi all,
-> 
-> This patch series aims to make unregistration of super_block shrinker more
-> faster.
-> 
-> 1. Background
-> =============
-> 
-> The kernel test robot noticed a -88.8% regression of stress-ng.ramfs.ops_per_sec
-> on commit f95bdb700bc6 ("mm: vmscan: make global slab shrink lockless"). More
-> details can be seen from the link[1] below.
-> 
-> [1]. https://lore.kernel.org/lkml/202305230837.db2c233f-yujie.liu@intel.com/
-> 
-> We can just use the following command to reproduce the result:
-> 
-> stress-ng --timeout 60 --times --verify --metrics-brief --ramfs 9 &
-> 
-> 1) before commit f95bdb700bc6b:
-> 
-> stress-ng: info:  [11023] dispatching hogs: 9 ramfs
-> stress-ng: info:  [11023] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s
-> stress-ng: info:  [11023]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
-> stress-ng: info:  [11023] ramfs            774966     60.00     10.18    169.45     12915.89        4314.26
-> stress-ng: info:  [11023] for a 60.00s run time:
-> stress-ng: info:  [11023]    1920.11s available CPU time
-> stress-ng: info:  [11023]      10.18s user time   (  0.53%)
-> stress-ng: info:  [11023]     169.44s system time (  8.82%)
-> stress-ng: info:  [11023]     179.62s total time  (  9.35%)
-> stress-ng: info:  [11023] load average: 8.99 2.69 0.93
-> stress-ng: info:  [11023] successful run completed in 60.00s (1 min, 0.00 secs)
-> 
-> 2) after commit f95bdb700bc6b:
-> 
-> stress-ng: info:  [37676] dispatching hogs: 9 ramfs
-> stress-ng: info:  [37676] stressor       bogo ops real time  usrtime  sys time   bogo ops/s     bogo ops/s
-> stress-ng: info:  [37676]                           (secs)    (secs)   (secs)   (real time) (usr+sys time)
-> stress-ng: info:  [37676] ramfs            168673     60.00     1.61    39.66      2811.08        4087.47
-> stress-ng: info:  [37676] for a 60.10s run time:
-> stress-ng: info:  [37676]    1923.36s available CPU time
-> stress-ng: info:  [37676]       1.60s user time   (  0.08%)
-> stress-ng: info:  [37676]      39.66s system time (  2.06%)
-> stress-ng: info:  [37676]      41.26s total time  (  2.15%)
-> stress-ng: info:  [37676] load average: 7.69 3.63 2.36
-> stress-ng: info:  [37676] successful run completed in 60.10s (1 min, 0.10 secs)
+I have a question regarding the xfs slab memory usage when operating a
+filesystem with 1-2 billion inodes (raid 0 with 6 disks, totally
+18TB). On this partition, whenever there is a high disk io operation,
+like removing millions of small files, the slab kernel memory usage
+will increase a lot, leading to many OOM issues happening for the
+services running on this node. You could check some of the stats as
+the following (only includes the xfs related):
 
-Is this comparison reversed?  It appears to demonstrate that
-f95bdb700bc6b made the operation faster.
+#########################################################################
+Active / Total Objects (% used):  281803052 / 317485764 (88.8%)
+Active / Total Slabs (% used): 13033144 / 13033144 (100.0%)
+Active / Total Caches (% used): 126 / 180 (70.0%)
+Active / Total Size (% used): 114671057.99K / 127265108.19K (90.1%)
+Minium / Average / Maximum Object : 0.01K / 0.40K / 16.75K
 
+OBJS               ACTIVE      USE     OBJ SIZE     SLABS
+OBJ/SLAB    CACHE SIZE    NAME
+78207920      70947541      0%       1.00K           7731010
+ 32            247392320K     xfs_inode
+59945928      46548798      0%       0.19K           1433102
+ 42              11464816K     dentry
+25051296      25051282      0%       0.38K           599680
+  42            9594880K         xfs_buf
+#########################################################################
+
+The peak slab memory usage could spike all the way to 100GB+.
+
+We are using Ubuntu 18.04 and the xfs version is 4.9, kernel version is 5.4
+
+#########################################################################
+Linux# cat /etc/*-release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=18.04
+DISTRIB_CODENAME=bionic
+DISTRIB_DESCRIPTION="Ubuntu 18.04.5 LTS"
+NAME="Ubuntu"
+VERSION="18.04.5 LTS (Bionic Beaver)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 18.04.5 LTS"
+VERSION_ID="18.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=bionic
+UBUNTU_CODENAME=bionic
+
+Linux# sudo apt list | grep xfs
+libguestfs-xfs/bionic-updates 1:1.36.13-1ubuntu3.3 amd64
+nfs-ganesha-xfs/bionic 2.6.0-2 amd64
+obexfs/bionic 0.11-2build1 amd64
+x11-xfs-utils/bionic 7.7+2build1 amd64
+xfsdump/bionic 3.1.6+nmu2 amd64
+xfslibs-dev/bionic 4.9.0+nmu1ubuntu2 amd64
+xfsprogs/bionic,now 4.9.0+nmu1ubuntu2 amd64 [installed]
+xfstt/bionic 1.9.3-3 amd64
+xfswitch-plugin/bionic 0.0.1-5ubuntu5 amd64
+
+Linux# uname -a
+Linux linux-host 5.4.0-45-generic #49~18.04.2-Ubuntu SMP Wed Aug 26
+16:29:02 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+#########################################################################
+
+Is there any potential way to limit the slab memory increase for a
+node as a whole, or the only thing we could do is to reduce the
+filesystem inode or iops usage?
+
+Thanks in advance!
+Jianan Wang
