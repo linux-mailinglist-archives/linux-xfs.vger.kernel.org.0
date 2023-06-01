@@ -2,300 +2,118 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B72571F0D5
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 19:32:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B868E71F4F7
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 23:44:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232222AbjFARcT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Jun 2023 13:32:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
+        id S230166AbjFAVoC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Jun 2023 17:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231790AbjFARcS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 13:32:18 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABC6D1;
-        Thu,  1 Jun 2023 10:32:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685640736; x=1717176736;
-  h=date:from:to:cc:subject:message-id;
-  bh=PwsoXWiLBDAbQJFI4tD6NtsrJe7S2Evx4gR71sHvmOw=;
-  b=SyHE0gWlhbs/Uoa0obaOmw6eFiONuoaOgi7rGSb/0WmYJOqC/ZDK4XOf
-   tLVrKDTw6Y1+ArS1WaWOSifNyOjtEJaC8BsT6Au0S/8NewnrpQIBI2x08
-   5YGBx27C/4suo48o9WmqEaH3+KHhI67zFtlFjqDT7SWfZDxylWYisQCO3
-   xrb0A613OpvJNWUaGD7VJ6RFGchC3NOq/ddEdyXJccRHYy5/W1fF/eYwV
-   /CuILvyl8oUJQagKabYF/Z5dIr7ViTMIV8wOy7slStwz2D8TT3wY9PoWj
-   iIN58X2eFWXdc2KwBSG69TOeHZPcGxKkuFAnj85E5C/4oMJxsY0pw6s0H
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="335251261"
-X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
-   d="scan'208";a="335251261"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 10:31:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="740441477"
-X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
-   d="scan'208";a="740441477"
-Received: from lkp-server01.sh.intel.com (HELO fb1ced2c09fb) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2023 10:31:34 -0700
-Received: from kbuild by fb1ced2c09fb with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q4m97-0002XC-0h;
-        Thu, 01 Jun 2023 17:31:33 +0000
-Date:   Fri, 02 Jun 2023 01:30:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-cifs@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-xfs@vger.kernel.org,
-        netdev@vger.kernel.org, samba-technical@lists.samba.org
-Subject: [linux-next:master] BUILD REGRESSION
- 571d71e886a5edc89b4ea6d0fe6f445282938320
-Message-ID: <20230601173059.4lk2w%lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231398AbjFAVoB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 17:44:01 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A09D1
+        for <linux-xfs@vger.kernel.org>; Thu,  1 Jun 2023 14:44:00 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b039168ba0so11949485ad.3
+        for <linux-xfs@vger.kernel.org>; Thu, 01 Jun 2023 14:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1685655840; x=1688247840;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rWE7fUtKddKIOSlE+ELrznceRtgHPDSIPev1IKzGaBw=;
+        b=LbWybZTdw30aR9X91q+XrjraUiEcjfvjSftDilWu/k1cz8dDro7CCFgyL0IbWPdae7
+         HawlqXiMjESR1LkUqdPU/4D9XPnPrBHbGzNpLS+mf0wXXO16ZNV6grszBn7cSDaKfoez
+         fwtZRyQSRaKwiWwwTdn+QBO0LPg/UpQ2GB8f1fkGgaKnLA5+I/HiKSJn4tl2OJVKS5l0
+         duefUGa2aF7yISBi0+TaXRxps29/BUwZqch/HVvVFxJ502oRCTTYRpveirHgdWCXU2Fs
+         PgNOyA7RywLwtSXGVap/baNCUGgV+/3gMNYJxHxijl9KSdOzvGPh2XjvjwRruSBL7KZr
+         jOBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685655840; x=1688247840;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rWE7fUtKddKIOSlE+ELrznceRtgHPDSIPev1IKzGaBw=;
+        b=HfKiGM/IPvzRKhtYN6hBT6+LipzyseKyvEPOps3DXfqugGI3xbUMVpyoOJITzZ4BKk
+         Vbazu16EctkFFEpUY4ve0nLJQrkwoAVhB6NpjXZNHsLIE3K3AOeSUFw/TGITJcuzezGP
+         G2Hi73kn5nuDjqDw0pcVebZWSVdkgCKvbvn0nVZlUlAhQ9W3/5TVb17pQjzz/yO3EyWO
+         5Pl5qQ8rsJJvI1wVpF7wvpURahuy2YtSjdzYNq85YI1XSePskz5nuLIPDFAxi5WcpQBJ
+         k0QkWyX1Xu4oUXfVwaGu3HFFq77/5yKA1eyQYjzRLsJw1/ABO7QU06qc98Rz+dqTThpT
+         wpAw==
+X-Gm-Message-State: AC+VfDyPSfSephcNgIgD8DVUwW3VzM/csl7eWB+faZVeIzqV5Ht+mTra
+        o6XOSikNVeTEZnTzTC9z+9PgBpT3vXgmAv0tKqI=
+X-Google-Smtp-Source: ACHHUZ7NmGQeuJzb0lbjhvgqFi5enz75rgoLDPpSU3w2ti/kO09jRF2EwzRV3INcieNLAe07fwmn/Q==
+X-Received: by 2002:a17:902:f7d4:b0:1b0:2f15:e0b3 with SMTP id h20-20020a170902f7d400b001b02f15e0b3mr525686plw.50.1685655839943;
+        Thu, 01 Jun 2023 14:43:59 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-0-188.pa.nsw.optusnet.com.au. [49.179.0.188])
+        by smtp.gmail.com with ESMTPSA id b13-20020a170902d50d00b001b02bd00c61sm3969131plg.237.2023.06.01.14.43.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 14:43:59 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1q4q5N-006eze-0B;
+        Fri, 02 Jun 2023 07:43:57 +1000
+Date:   Fri, 2 Jun 2023 07:43:57 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jianan Wang <wangjianan.zju@gmail.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: Question on the xfs inode slab memory
+Message-ID: <ZHkRHW9Fd19du0Zv@dread.disaster.area>
+References: <CAMj1M42L6hH9weqroQNaWu_SG+Yg8NrAuzgNO1b8jiWPJ2M-5A@mail.gmail.com>
+ <ZHfhYsqln68N1HyO@dread.disaster.area>
+ <7572072d-8132-d918-285c-3391cb041cff@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7572072d-8132-d918-285c-3391cb041cff@gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 571d71e886a5edc89b4ea6d0fe6f445282938320  Add linux-next specific files for 20230601
+On Wed, May 31, 2023 at 11:21:41PM -0700, Jianan Wang wrote:
+> Seems the auto-wraping issue is on my gmail.... using thunderbird should be better...
 
-Error/Warning reports:
+Thanks!
 
-https://lore.kernel.org/oe-kbuild-all/202305230552.WOByQyYa-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202305311652.OP9x8xkW-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306010248.g3ZqQg4W-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306011356.MNtU7Q9Z-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306011435.2BxsHFUE-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306011753.7eXAmz0M-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306011915.bWdy8AJ8-lkp@intel.com
+> Resend the slabinfo and meminfo output here:
+> 
+> Linux # cat /proc/slabinfo
+> slabinfo - version: 2.1
+> # name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
+.....
+> xfs_dqtrx              0      0    528   31    4 : tunables    0    0    0 : slabdata      0      0      0
+> xfs_dquot              0      0    496   33    4 : tunables    0    0    0 : slabdata      0      0      0
+> xfs_buf           2545661 3291582    384   42    4 : tunables    0    0    0 : slabdata  78371  78371      0
+> xfs_rui_item           0      0    696   47    8 : tunables    0    0    0 : slabdata      0      0      0
+> xfs_rud_item           0      0    176   46    2 : tunables    0    0    0 : slabdata      0      0      0
+> xfs_inode         23063278 77479540   1024   32    8 : tunables    0    0    0 : slabdata 2425069 2425069      0
+> xfs_efd_item        4662   4847    440   37    4 : tunables    0    0    0 : slabdata    131    131      0
+> xfs_buf_item        8610   8760    272   30    2 : tunables    0    0    0 : slabdata    292    292      0
+> xfs_trans           1925   1925    232   35    2 : tunables    0    0    0 : slabdata     55     55      0
+> xfs_da_state        1632   1632    480   34    4 : tunables    0    0    0 : slabdata     48     48      0
+> xfs_btree_cur       1728   1728    224   36    2 : tunables    0    0    0 : slabdata     48     48      0
 
-Error/Warning: (recently discovered and may have been fixed)
+There's no xfs_ili slab cache - this kernel must be using merged
+slabs, so I'm going to have to infer how many inodes are dirty from
+other slabs. The inode log item is ~190 bytes in size, so....
 
-drivers/net/dsa/qca/qca8k-leds.c:377:31: error: 'struct led_classdev' has no member named 'hw_control_is_supported'
-drivers/net/dsa/qca/qca8k-leds.c:378:31: error: 'struct led_classdev' has no member named 'hw_control_set'
-drivers/net/dsa/qca/qca8k-leds.c:379:31: error: 'struct led_classdev' has no member named 'hw_control_get'
-drivers/net/dsa/qca/qca8k-leds.c:380:31: error: 'struct led_classdev' has no member named 'hw_control_trigger'
-drivers/net/dsa/qca/qca8k-leds.c:406:18: error: no member named 'hw_control_get_device' in 'struct led_classdev'
-drivers/net/dsa/qca/qca8k-leds.c:406:31: error: 'struct led_classdev' has no member named 'hw_control_get_device'
-include/drm/drm_print.h:456:39: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
-include/linux/usb/typec_mux.h:76:33: warning: 'fwnode_typec_mux_get' used but never defined
-include/linux/usb/typec_mux.h:77:1: error: expected identifier or '('
-include/linux/usb/typec_mux.h:77:1: error: expected identifier or '(' before '{' token
-mm/zswap.c:1183:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+> skbuff_ext_cache  16454495 32746392    192   42    2 : tunables    0    0    0 : slabdata 779676 779676      0
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+Yup, there were - 192 byte slab, 16 million active objects. Not all
+of those inodes will be dirty right now, but ~65% of the inodes
+cached in memory have been dirty at some point. 
 
-arch/arm64/kvm/mmu.c:147:3-9: preceding lock on line 140
-fs/smb/client/cifsfs.c:982 cifs_smb3_do_mount() warn: possible memory leak of 'cifs_sb'
-fs/smb/client/cifssmb.c:4089 CIFSFindFirst() warn: missing error code? 'rc'
-fs/smb/client/cifssmb.c:4216 CIFSFindNext() warn: missing error code? 'rc'
-fs/smb/client/connect.c:2725 cifs_match_super() error: 'tlink' dereferencing possible ERR_PTR()
-fs/smb/client/connect.c:2924 generic_ip_connect() error: we previously assumed 'socket' could be null (see line 2912)
-fs/xfs/scrub/fscounters.c:459 xchk_fscounters() warn: ignoring unreachable code.
-kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
-{standard input}:1078: Error: pcrel too far
+So, yes, it is highly likely that your memory reclaim/OOM problems
+are caused by blocking on dirty inodes in memory reclaim, which you
+can only fix by upgrading to a newer kernel.
 
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- arc-randconfig-c004-20230531
-|   |-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(-before-token
-|   `-- include-linux-usb-typec_mux.h:warning:fwnode_typec_mux_get-used-but-never-defined
-|-- arm64-randconfig-c033-20230531
-|   |-- arch-arm64-kvm-mmu.c:preceding-lock-on-line
-|   |-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(-before-token
-|   `-- include-linux-usb-typec_mux.h:warning:fwnode_typec_mux_get-used-but-never-defined
-|-- arm64-randconfig-r001-20230531
-|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_get
-|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_get_device
-|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_is_supported
-|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_set
-|   `-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_trigger
-|-- arm64-randconfig-r016-20230601
-|   `-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(-before-token
-|-- i386-allyesconfig
-|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
-|-- i386-randconfig-m021-20230531
-|   |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
-|   |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
-|   |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
-|   |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
-|   |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
-|   |-- fs-xfs-scrub-fscounters.c-xchk_fscounters()-warn:ignoring-unreachable-code.
-|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|-- riscv-randconfig-m031-20230531
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c-amdgpu_gfx_enable_kcq()-warn:inconsistent-indenting
-|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|-- sh-allmodconfig
-|   `-- standard-input:Error:pcrel-too-far
-`-- x86_64-randconfig-m001-20230601
-    |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
-    |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
-    |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
-    |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
-    |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
-    `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-clang_recent_errors
-|-- arm-randconfig-r006-20230531
-|   `-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(
-|-- hexagon-randconfig-r045-20230531
-|   `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
-|-- mips-randconfig-r003-20230531
-|   `-- drivers-net-dsa-qca-qca8k-leds.c:error:no-member-named-hw_control_get_device-in-struct-led_classdev
-|-- s390-randconfig-r044-20230531
-|   `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
-`-- x86_64-randconfig-x063-20230531
-    `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
-
-elapsed time: 799m
-
-configs tested: 134
-configs skipped: 7
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r006-20230531   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r034-20230531   gcc  
-arc                              alldefconfig   gcc  
-arc                              allyesconfig   gcc  
-arc          buildonly-randconfig-r005-20230531   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230531   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r001-20230531   gcc  
-arm                                 defconfig   gcc  
-arm                   milbeaut_m10v_defconfig   clang
-arm                  randconfig-r006-20230531   clang
-arm                  randconfig-r046-20230531   gcc  
-arm                        spear6xx_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r036-20230531   gcc  
-csky         buildonly-randconfig-r002-20230531   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r005-20230531   clang
-hexagon              randconfig-r022-20230531   clang
-hexagon              randconfig-r041-20230531   clang
-hexagon              randconfig-r045-20230531   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230531   gcc  
-i386                 randconfig-i002-20230531   gcc  
-i386                 randconfig-i003-20230531   gcc  
-i386                 randconfig-i004-20230531   gcc  
-i386                 randconfig-i005-20230531   gcc  
-i386                 randconfig-i006-20230531   gcc  
-i386                 randconfig-i011-20230531   clang
-i386                 randconfig-i012-20230531   clang
-i386                 randconfig-i013-20230531   clang
-i386                 randconfig-i014-20230531   clang
-i386                 randconfig-i015-20230531   clang
-i386                 randconfig-i016-20230531   clang
-i386                 randconfig-i051-20230531   gcc  
-i386                 randconfig-i052-20230531   gcc  
-i386                 randconfig-i053-20230531   gcc  
-i386                 randconfig-i054-20230531   gcc  
-i386                 randconfig-i055-20230531   gcc  
-i386                 randconfig-i056-20230531   gcc  
-i386                 randconfig-i061-20230531   gcc  
-i386                 randconfig-i062-20230531   gcc  
-i386                 randconfig-i063-20230531   gcc  
-i386                 randconfig-i064-20230531   gcc  
-i386                 randconfig-i065-20230531   gcc  
-i386                 randconfig-i066-20230531   gcc  
-i386                 randconfig-r004-20230531   gcc  
-i386                 randconfig-r016-20230531   clang
-ia64                         bigsur_defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r023-20230531   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r013-20230531   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                           ip22_defconfig   clang
-mips                           jazz_defconfig   gcc  
-mips                malta_qemu_32r6_defconfig   clang
-mips                           mtx1_defconfig   clang
-mips                 randconfig-r003-20230531   clang
-mips                 randconfig-r012-20230531   gcc  
-nios2        buildonly-randconfig-r004-20230531   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r011-20230531   gcc  
-nios2                randconfig-r026-20230531   gcc  
-openrisc                            defconfig   gcc  
-openrisc             randconfig-r035-20230531   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                     akebono_defconfig   clang
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                   lite5200b_defconfig   clang
-powerpc                 mpc834x_itx_defconfig   gcc  
-powerpc              randconfig-r025-20230531   clang
-powerpc                     stx_gp3_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230531   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r002-20230531   gcc  
-s390                 randconfig-r031-20230531   gcc  
-s390                 randconfig-r044-20230531   clang
-sh                               allmodconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r015-20230531   gcc  
-sparc64              randconfig-r033-20230531   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230531   gcc  
-x86_64               randconfig-a002-20230531   gcc  
-x86_64               randconfig-a003-20230531   gcc  
-x86_64               randconfig-a004-20230531   gcc  
-x86_64               randconfig-a005-20230531   gcc  
-x86_64               randconfig-a006-20230531   gcc  
-x86_64               randconfig-a011-20230531   clang
-x86_64               randconfig-a012-20230531   clang
-x86_64               randconfig-a013-20230531   clang
-x86_64               randconfig-a014-20230531   clang
-x86_64               randconfig-a015-20230531   clang
-x86_64               randconfig-a016-20230531   clang
-x86_64               randconfig-k001-20230531   clang
-x86_64               randconfig-x051-20230531   clang
-x86_64               randconfig-x052-20230531   clang
-x86_64               randconfig-x053-20230531   clang
-x86_64               randconfig-x054-20230531   clang
-x86_64               randconfig-x055-20230531   clang
-x86_64               randconfig-x056-20230531   clang
-x86_64               randconfig-x061-20230531   clang
-x86_64               randconfig-x063-20230531   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r014-20230531   gcc  
-
+-Dave.
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Dave Chinner
+david@fromorbit.com
