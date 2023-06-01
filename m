@@ -2,140 +2,169 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 371F3719A49
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 12:58:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC482719CE0
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 15:04:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233240AbjFAK6j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Jun 2023 06:58:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
+        id S229880AbjFAND6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Jun 2023 09:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233126AbjFAK6f (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 06:58:35 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF9412C;
-        Thu,  1 Jun 2023 03:58:32 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S233330AbjFAND5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 09:03:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4855397
+        for <linux-xfs@vger.kernel.org>; Thu,  1 Jun 2023 06:03:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 1FFBE1FD99;
-        Thu,  1 Jun 2023 10:58:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1685617111; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MzXOzo95g617qUk7Z949h4EoD3WLK3t1qcqqyGoLxTU=;
-        b=JnxZsTeRlkpGAeNVzMjBvMt7Um93iLPpsI45FFwBn30paVGGbNnEWH9M38MdENSm/kGngr
-        DioDvnCcG1CcHf7FQaY8W0HEFG7aKNjvivi3Ap/HmVOb0RlNIIEAtXneeUIB3XUbbBvMbk
-        zXCS+ZxYtK5OM8dZmOv8TRYohjVDer8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1685617111;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MzXOzo95g617qUk7Z949h4EoD3WLK3t1qcqqyGoLxTU=;
-        b=12MljAV3Jn4lWXoFOIkKiAO7uA5l6sXWVPVfp8DSkd5pTHVzE2MnGWF2CEZjuth948cp5s
-        BtU9qfzM+5cVWrBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 122FA13A34;
-        Thu,  1 Jun 2023 10:58:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id mmNoBNd5eGSCWAAAMHmgww
-        (envelope-from <jack@suse.cz>); Thu, 01 Jun 2023 10:58:31 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 2CDDBA0764; Thu,  1 Jun 2023 12:58:30 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     <linux-fsdevel@vger.kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "Darrick J. Wong" <djwong@kernel.org>, Ted Tso <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, <linux-ext4@vger.kernel.org>,
-        <linux-xfs@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>
-Subject: [PATCH v2 6/6] fs: Restrict lock_two_nondirectories() to non-directory inodes
-Date:   Thu,  1 Jun 2023 12:58:26 +0200
-Message-Id: <20230601105830.13168-6-jack@suse.cz>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230601104525.27897-1-jack@suse.cz>
-References: <20230601104525.27897-1-jack@suse.cz>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D99D56411F
+        for <linux-xfs@vger.kernel.org>; Thu,  1 Jun 2023 13:03:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7677FC433EF;
+        Thu,  1 Jun 2023 13:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685624635;
+        bh=rbqZmBeCpR6Lmn+S+1jKxSzciVAm4dkdfY4iJG1614A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ownh3PEWrG3WlIyy+RGGcdoYQ6AfVQs2Dxj40ObZrbMGW87Trfn9nl3AL3iDs2LkJ
+         RB/VFsYc0s8q5c7Fmc/jkt2sKzSXxdXTARfvIG6nNHGOM9gs3EQKMe6Y7DSgIeTE1d
+         /saNd00kRtDwcfXyS/bcfBJ8gpVZwgYnNEJN/N065TwwFOuw6UbpxAkfLPDSMSRF5S
+         Zu5k4jsZIV5F+g6RfJIFOMbEfgNpcLhnctF5GmCARN4Tf+e8LJYWNuXZHVO1ANjHB5
+         CLE/ZdFNb4LbGmVhFeRDquqg0g45kPvRH6BjEz4waE2ITCQ1JFcMtbI8XIo5yT9y2B
+         KKTx9q+oUDtZA==
+Date:   Thu, 1 Jun 2023 14:03:51 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH] xfs: verify buffer contents when we skip log replay
+Message-ID: <20230601130351.GA1787684@google.com>
+References: <20230411233159.GH360895@frogsfrogsfrogs>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2200; i=jack@suse.cz; h=from:subject; bh=yzjONH0NaYO0JExUsRNFVNqF61b/6Z8qTkqJfHdGKlg=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBkeHnRAOKwOpYmoYaDVDZoAJJC7iZvp0hWjbPFBMUr e9B2zauJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZHh50QAKCRCcnaoHP2RA2ZLRB/ 9A5mErZNr1GSw4bvqyRiHpBJmYLCWR4lihVK9MrTDZk08vVOCpc8BAsxg5oODQk0iMm3VyWYYLKWrR tZpGfLNVVN9J+mp08tZRHTqzVmO2Vg1q/2eiHEQkWYSPHnJHAmAPXsS2XuUUkxDmK5B+rPgf+hKsFQ 5qg5tUZAuaUsZGy1zMAqXObFZSzjefBZrc251g++8ukB03T/LNLAVwtjvKgGmesBoq8BJdO93TYFlB INP8z2ollQ8Oqi7hSsJH2uhrQleqLb+y1+OfV/Ocf+LM4vBCuWoJGtGua+7Rg5bpG/kpJEXZmghiEY 6HGqXDo1+FmRvBPkx7nJT/lFffiE8I
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230411233159.GH360895@frogsfrogsfrogs>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Currently lock_two_nondirectories() is skipping any passed directories.
-After vfs_rename() uses lock_two_inodes(), all the remaining four users
-of this function pass only regular files to it. So drop the somewhat
-unusual "skip directory" logic and instead warn if anybody passes
-directory to it. This also allows us to use lock_two_inodes() in
-lock_two_nondirectories() to concentrate the lock ordering logic in less
-places.
+Hi Darrick,
 
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- fs/inode.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+On Tue, 11 Apr 2023, Darrick J. Wong wrote:
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 4000ab08bbc0..e8d10fd18378 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1148,7 +1148,7 @@ void lock_two_inodes(struct inode *inode1, struct inode *inode2,
- /**
-  * lock_two_nondirectories - take two i_mutexes on non-directory objects
-  *
-- * Lock any non-NULL argument that is not a directory.
-+ * Lock any non-NULL argument. Passed objects must not be directories.
-  * Zero, one or two objects may be locked by this function.
-  *
-  * @inode1: first inode to lock
-@@ -1156,13 +1156,9 @@ void lock_two_inodes(struct inode *inode1, struct inode *inode2,
-  */
- void lock_two_nondirectories(struct inode *inode1, struct inode *inode2)
- {
--	if (inode1 > inode2)
--		swap(inode1, inode2);
--
--	if (inode1 && !S_ISDIR(inode1->i_mode))
--		inode_lock(inode1);
--	if (inode2 && !S_ISDIR(inode2->i_mode) && inode2 != inode1)
--		inode_lock_nested(inode2, I_MUTEX_NONDIR2);
-+	WARN_ON_ONCE(S_ISDIR(inode1->i_mode));
-+	WARN_ON_ONCE(S_ISDIR(inode2->i_mode));
-+	lock_two_inodes(inode1, inode2, I_MUTEX_NORMAL, I_MUTEX_NONDIR2);
- }
- EXPORT_SYMBOL(lock_two_nondirectories);
- 
-@@ -1173,9 +1169,11 @@ EXPORT_SYMBOL(lock_two_nondirectories);
-  */
- void unlock_two_nondirectories(struct inode *inode1, struct inode *inode2)
- {
--	if (inode1 && !S_ISDIR(inode1->i_mode))
-+	WARN_ON_ONCE(S_ISDIR(inode1->i_mode));
-+	WARN_ON_ONCE(S_ISDIR(inode2->i_mode));
-+	if (inode1)
- 		inode_unlock(inode1);
--	if (inode2 && !S_ISDIR(inode2->i_mode) && inode2 != inode1)
-+	if (inode2 && inode2 != inode1)
- 		inode_unlock(inode2);
- }
- EXPORT_SYMBOL(unlock_two_nondirectories);
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> syzbot detected a crash during log recovery:
+> 
+> XFS (loop0): Mounting V5 Filesystem bfdc47fc-10d8-4eed-a562-11a831b3f791
+> XFS (loop0): Torn write (CRC failure) detected at log block 0x180. Truncating head block from 0x200.
+> XFS (loop0): Starting recovery (logdev: internal)
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in xfs_btree_lookup_get_block+0x15c/0x6d0 fs/xfs/libxfs/xfs_btree.c:1813
+> Read of size 8 at addr ffff88807e89f258 by task syz-executor132/5074
+> 
+> CPU: 0 PID: 5074 Comm: syz-executor132 Not tainted 6.2.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/26/2022
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x1b1/0x290 lib/dump_stack.c:106
+>  print_address_description+0x74/0x340 mm/kasan/report.c:306
+>  print_report+0x107/0x1f0 mm/kasan/report.c:417
+>  kasan_report+0xcd/0x100 mm/kasan/report.c:517
+>  xfs_btree_lookup_get_block+0x15c/0x6d0 fs/xfs/libxfs/xfs_btree.c:1813
+>  xfs_btree_lookup+0x346/0x12c0 fs/xfs/libxfs/xfs_btree.c:1913
+>  xfs_btree_simple_query_range+0xde/0x6a0 fs/xfs/libxfs/xfs_btree.c:4713
+>  xfs_btree_query_range+0x2db/0x380 fs/xfs/libxfs/xfs_btree.c:4953
+>  xfs_refcount_recover_cow_leftovers+0x2d1/0xa60 fs/xfs/libxfs/xfs_refcount.c:1946
+>  xfs_reflink_recover_cow+0xab/0x1b0 fs/xfs/xfs_reflink.c:930
+>  xlog_recover_finish+0x824/0x920 fs/xfs/xfs_log_recover.c:3493
+>  xfs_log_mount_finish+0x1ec/0x3d0 fs/xfs/xfs_log.c:829
+>  xfs_mountfs+0x146a/0x1ef0 fs/xfs/xfs_mount.c:933
+>  xfs_fs_fill_super+0xf95/0x11f0 fs/xfs/xfs_super.c:1666
+>  get_tree_bdev+0x400/0x620 fs/super.c:1282
+>  vfs_get_tree+0x88/0x270 fs/super.c:1489
+>  do_new_mount+0x289/0xad0 fs/namespace.c:3145
+>  do_mount fs/namespace.c:3488 [inline]
+>  __do_sys_mount fs/namespace.c:3697 [inline]
+>  __se_sys_mount+0x2d3/0x3c0 fs/namespace.c:3674
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x3d/0xb0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> RIP: 0033:0x7f89fa3f4aca
+> Code: 83 c4 08 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fffd5fb5ef8 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
+> RAX: ffffffffffffffda RBX: 00646975756f6e2c RCX: 00007f89fa3f4aca
+> RDX: 0000000020000100 RSI: 0000000020009640 RDI: 00007fffd5fb5f10
+> RBP: 00007fffd5fb5f10 R08: 00007fffd5fb5f50 R09: 000000000000970d
+> R10: 0000000000200800 R11: 0000000000000206 R12: 0000000000000004
+> R13: 0000555556c6b2c0 R14: 0000000000200800 R15: 00007fffd5fb5f50
+>  </TASK>
+> 
+> The fuzzed image contains an AGF with an obviously garbage
+> agf_refcount_level value of 32, and a dirty log with a buffer log item
+> for that AGF.  The ondisk AGF has a higher LSN than the recovered log
+> item.  xlog_recover_buf_commit_pass2 reads the buffer, compares the
+> LSNs, and decides to skip replay because the ondisk buffer appears to be
+> newer.
+> 
+> Unfortunately, the ondisk buffer is corrupt, but recovery just read the
+> buffer with no buffer ops specified:
+> 
+> 	error = xfs_buf_read(mp->m_ddev_targp, buf_f->blf_blkno,
+> 			buf_f->blf_len, buf_flags, &bp, NULL);
+> 
+> Skipping the buffer leaves its contents in memory unverified.  This sets
+> us up for a kernel crash because xfs_refcount_recover_cow_leftovers
+> reads the buffer (which is still around in XBF_DONE state, so no read
+> verification) and creates a refcountbt cursor of height 32.  This is
+> impossible so we run off the end of the cursor object and crash.
+> 
+> Fix this by invoking the verifier on all skipped buffers and aborting
+> log recovery if the ondisk buffer is corrupt.  It might be smarter to
+> force replay the log item atop the buffer and then see if it'll pass the
+> write verifier (like ext4 does) but for now let's go with the
+> conservative option where we stop immediately.
+> 
+> Link: https://syzkaller.appspot.com/bug?extid=7e9494b8b399902e994e
+> Fixes: 67dc288c2106 ("xfs: ensure verifiers are attached to recovered buffers")
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  fs/xfs/xfs_buf_item_recover.c |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+
+Rightly or wrongly, CVE-2023-212 has been raised against this issue.
+
+It looks as though the Fixes: tag above was stripped when applied.
+
+Should this still be submitted to Stable?
+
+> diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
+> index 5368a0d34452..ebe7f2c3cf63 100644
+> --- a/fs/xfs/xfs_buf_item_recover.c
+> +++ b/fs/xfs/xfs_buf_item_recover.c
+> @@ -971,6 +971,16 @@ xlog_recover_buf_commit_pass2(
+>  	if (lsn && lsn != -1 && XFS_LSN_CMP(lsn, current_lsn) >= 0) {
+>  		trace_xfs_log_recover_buf_skip(log, buf_f);
+>  		xlog_recover_validate_buf_type(mp, bp, buf_f, NULLCOMMITLSN);
+> +
+> +		/*
+> +		 * We're skipping replay of this buffer log item due to the log
+> +		 * item LSN being behind the ondisk buffer.  Verify the buffer
+> +		 * contents since we aren't going to run the write verifier.
+> +		 */
+> +		if (bp->b_ops) {
+> +			bp->b_ops->verify_read(bp);
+> +			error = bp->b_error;
+> +		}
+>  		goto out_release;
+>  	}
+>  
+
 -- 
-2.35.3
-
+Lee Jones [李琼斯]
