@@ -2,146 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFB4F71EF26
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 18:34:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1EEE71F124
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 19:53:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231741AbjFAQe0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Thu, 1 Jun 2023 12:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51974 "EHLO
+        id S229648AbjFARxp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Jun 2023 13:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231728AbjFAQeZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 12:34:25 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931B9128
-        for <linux-xfs@vger.kernel.org>; Thu,  1 Jun 2023 09:34:05 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-118-HGYaWkwuPHeTz2fi0dWn6Q-1; Thu, 01 Jun 2023 17:34:02 +0100
-X-MC-Unique: HGYaWkwuPHeTz2fi0dWn6Q-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 1 Jun
- 2023 17:33:58 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 1 Jun 2023 17:33:58 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jan Kara' <jack@suse.cz>
-CC:     Christian Brauner <brauner@kernel.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Miklos Szeredi" <miklos@szeredi.hu>,
-        "Darrick J. Wong" <djwong@kernel.org>, Ted Tso <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 4/6] fs: Establish locking order for unrelated
- directories
-Thread-Topic: [PATCH v2 4/6] fs: Establish locking order for unrelated
- directories
-Thread-Index: AQHZlJ1FZufsO2GDRE+EhxV9kbhF9692EqgQ///7d4CAABPFwA==
-Date:   Thu, 1 Jun 2023 16:33:58 +0000
-Message-ID: <eb70760399ae4222904c62c64dc529b6@AcuMS.aculab.com>
-References: <20230601104525.27897-1-jack@suse.cz>
- <20230601105830.13168-4-jack@suse.cz>
- <20230601-gebracht-gesehen-c779a56b3bf3@brauner>
- <20230601152449.h4ur5zrfqjqygujd@quack3>
- <c5f209a6263b4f039c5eafcafddf90ca@AcuMS.aculab.com>
- <20230601161353.4o6but7hb7i7qfki@quack3>
-In-Reply-To: <20230601161353.4o6but7hb7i7qfki@quack3>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S229992AbjFARxm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 13:53:42 -0400
+X-Greylist: delayed 4033 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 01 Jun 2023 10:53:40 PDT
+Received: from fallback25.i.mail.ru (fallback25.i.mail.ru [79.137.243.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2D819F;
+        Thu,  1 Jun 2023 10:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail4;
+        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=QC8kKFJR/m9AQyibARQiuD0wUjEmKDnjvmmz3whDd9Y=;
+        t=1685642020;x=1685732020; 
+        b=AwxD/4zimcLgXjhxeccICtxpBpRJSqxJN7FUHhiM2uEsMRZLQXDV+SGnjjyAUnBo7ooqyYDT6m/IVKjhSYx4beFdD+yp+StITkyAun33IR7Vxnkaectx4ATYJZmTZNMkw8L0+0n9W5RUzCDUabkPH0hzKdo9XBCt6htSbioT2THMDW8mEAjbWwfRsuWpBRcvuvH+cUtpeQEGq8MLJ26/YLxi3T1HN9Oh2D9VDgFNQPQ7WmyLUYVT0+FhkZ+TM2icdetPYziV+SiOIcbufrWCopGyKkel04nJUOOm10iaqBzuRtgS3H1wUdpPt7eEBBqBkYt35a5b9FyZrjtpzzgsTg==;
+Received: from [10.12.4.19] (port=44594 helo=smtp43.i.mail.ru)
+        by fallback25.i.mail.ru with esmtp (envelope-from <listdansp@mail.ru>)
+        id 1q4lRP-007BJj-UN; Thu, 01 Jun 2023 19:46:24 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail4;
+        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=QC8kKFJR/m9AQyibARQiuD0wUjEmKDnjvmmz3whDd9Y=;
+        t=1685637983;x=1685727983; 
+        b=vqAC7dzzfDPiptCRecvzo1vGSIt4i5p7V2bWEIh2alwItcVzrOtG9KXLs4WmL//NUZ8Qa+HeD+Jvi3vjO1Ntbi2lmdgugLTGB2G1sVUBfG18wjgLrw538IHTOwMgTzuiATKbYN1z+ZBvsCmVLjvf01gJR30LxwND4OFxXZqrWwbXADbanIpvASXGdtXERxVhk++NxhabwbqHD3143ww8pUrVLAgcuUMTufElyLhL77rGdRi/CMFFZnOlYRf6NQsI9Jj2XcCCGFMESlaIsHHUO48iElwjGBAPAXjYiGvkJ/eBCbZ+kTVzpiNqBJWtfr0oWxT/vF32yuXaUUQUxN6fdg==;
+Received: by smtp43.i.mail.ru with esmtpa (envelope-from <listdansp@mail.ru>)
+        id 1q4lRC-00HDXO-Jf; Thu, 01 Jun 2023 19:46:10 +0300
+From:   Danila Chernetsov <listdansp@mail.ru>
+To:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Danila Chernetsov <listdansp@mail.ru>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 5.10 0/1] xfs: verify buffer contents when we skip log replay
+Date:   Thu,  1 Jun 2023 16:44:38 +0000
+Message-Id: <20230601164439.15404-1-listdansp@mail.ru>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Mailru-Src: smtp
+X-7564579A: B8F34718100C35BD
+X-77F55803: 4F1203BC0FB41BD988F25420CCA9469A2BB1E2660ECA1581064044AB7613D518182A05F53808504088B01F9919C9967A328D8412528A2B181377013899F85E7B248D376E6EAE18D2
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7811C3E343B302E2EEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637FA81DCE0280C9CC68F08D7030A58E5AD1A62830130A00468AEEEE3FBA3A834EE7353EFBB55337566E73BB9F70E9C8FACA03128D410FCB164D28D34A51C0A89D01DF9E95F17B0083B26EA987F6312C9EC9ECD01F8117BC8BEA471835C12D1D977725E5C173C3A84C3B5963347A33BF957117882F4460429728AD0CFFFB425014E868A13BD56FB6657D81D268191BDAD3DC09775C1D3CA48CFF82EDF9CA04B820DBA3038C0950A5D36C8A9BA7A39EFB766EC990983EF5C0329BA3038C0950A5D36D5E8D9A59859A8B6D8523C45A811685676E601842F6C81A1F004C906525384303E02D724532EE2C3F43C7A68FF6260569E8FC8737B5C2249D082881546D93491E827F84554CEF50127C277FBC8AE2E8BA83251EDC214901ED5E8D9A59859A8B6F6B3B5B76D0D00FF089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
+X-C1DE0DAB: 0D63561A33F958A5261F2145C60440E14571F9C29A6D89D6690F1823D3D25F9AF87CCE6106E1FC07E67D4AC08A07B9B06A1CB4668A9CA5FA9C5DF10A05D560A950611B66E3DA6D700B0A020F03D25A09B861051D4BA689FCCB5012B2E24CD356
+X-C8649E89: 1C3962B70DF3F0ADBF74143AD284FC7177DD89D51EBB7742DC8270968E61249B1004E42C50DC4CA955A7F0CF078B5EC49A30900B95165D34ECB3E21D3CD9CB4F001A01FCD74F83025413CDBF077FE4D2A39624195389AC264D4C18295C8998F61D7E09C32AA3244CE8610B4F36DC6CD7D10FC6B0217BCB481DD47778AE04E04D175B47BDB6F167205DA084F8E80FEBD3D42CA810AD4FA7D0A8069D772E6E5B8583DB18EBE73F7D69
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojItsbmePJJf1bTvbEmsb/6g==
+X-Mailru-Sender: 4CE1109FD677D2770147F6A9E21DCA7B5F0536A82FBE00723316D0EE98F40EFEC8282E0A62FD83227E3C9C7AF06D9E7B78274A4A9E9E44FD3C3897ABF9FF211DE8284E426C7B2D9A5FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4FA5F4CC6668110EA225A1FBE07D3D9FE4346EDDC6699553B049FFFDB7839CE9EE83D3DC30F0B9ED019F24E9A657C10225F28490FC053D1E2151065E8FD824313
+X-7FA49CB5: 0D63561A33F958A5959B4A74319D22C0E3579B1C885432E396CE3074ABAB2777CACD7DF95DA8FC8BD5E8D9A59859A8B66B00444BA4711156
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5xhPKz0ZEsZ5k6NOOPWz5QAiZSCXKGQRq3/7KxbCLSB2ESzQkaOXqCBFZPLWFrEGlV1shfWe2EVcxl5toh0c/aCGOghz/frdRhzMe95NxDFdZdU6KX1s6V6NU7Kc7AL+oQ==
+X-Mailru-MI: C000000000000800
+X-Mras: Ok
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
-> Sent: 01 June 2023 17:14
-> 
-> On Thu 01-06-23 15:37:32, David Laight wrote:
-> > ...
-> > > > > + * Lock any non-NULL argument. The caller must make sure that if he is passing
-> > > > > + * in two directories, one is not ancestor of the other
-> >
-> > Not directly relevant to this change but is the 'not an ancestor'
-> > check actually robust?
-> >
-> > I found a condition in which the kernel 'pwd' code (which follows
-> > the inode chain) failed to stop at the base of a chroot.
-> >
-> > I suspect that the ancestor check would fail the same way.
-> 
-> Honestly, I'm not sure how this could be the case but I'm not a dcache
-> expert. d_ancestor() works on dentries and the whole dcache code pretty
-> much relies on the fact that there always is at most one dentry for any
-> directory. Also in case we call d_ancestor() from this code, we have the
-> whole filesystem locked from any other directory moves so the ancestor
-> relationship of two dirs cannot change (which is different from pwd code
-> AFAIK). So IMHO no failure is possible in our case.
-
-I've found the test program.
-This uses readlinkat() to get the full path /proc/self/fd/0.
-It should be inside the chroot, but the comparison done
-to detect the 'root' fails.
-
-Now maybe any rename that would hit this is invalid
-for other reasons.
-But something is awry somewhere.
-
-	David
-
-The program below reproduces this when run with stdin
-redirected to a file in the current directory.
-
-This sequence is used by 'ip netns exec' so isn't actually
-that unusual.
-
-	David
-
-#define _GNU_SOURCE
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <sched.h>
-
-static void print_link(const char *where, int fd)
-{
-        char buf[256];
-
-        printf("%s: %.*s\n", where, (int)readlinkat(fd, "", buf, sizeof buf), buf);
-}
-
-int main(int argc, char **argv)
-{
-        int link_fd = open("/proc/self/fd/0", O_PATH | O_NOFOLLOW);
-
-        print_link("initial", link_fd);
-        if (chroot("."))
-                return 1;
-        print_link("after chroot", link_fd);
-        if (unshare(CLONE_NEWNS))
-                return 2;
-        print_link("after unshare", link_fd);
-        return 0;
-}
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+This patch is needed to fix CVE-2023-2124
