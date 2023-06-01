@@ -2,125 +2,112 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB7B471A112
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 16:55:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 855C471A19D
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 17:01:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232380AbjFAOyy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Jun 2023 10:54:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38200 "EHLO
+        id S234323AbjFAPAV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Jun 2023 11:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234622AbjFAOyt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 10:54:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7310B123
-        for <linux-xfs@vger.kernel.org>; Thu,  1 Jun 2023 07:54:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C4B36462C
-        for <linux-xfs@vger.kernel.org>; Thu,  1 Jun 2023 14:54:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A5BFC433EF;
-        Thu,  1 Jun 2023 14:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685631287;
-        bh=97goLPjPaI2F40S4OZHEywmBHBPohZlZ/j0TiCaEwrw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jcge2uN1oMivrwcGfQSzO3wDowDmdoxQVn5RpLv4Y0WnntLX6c7VwZAWYIj9hgBWN
-         1HmdeLxGpP9APuxXp9WhSD6ezbuU9zd5RezK8Yk2K13/MVjvOvNb3oiAFzpUZ69MG3
-         zt3mCWroAa4oYkaG9EThVCwbXMcdn96gyY313l2dWCmlGLnxzOlF+dPWIq7cIaBU+T
-         HwzMN2TTAduZUUdWySN961BtfsKUW19qi+YVBgoyw+QP6DmaGzNF4miMgrEHGVCjUr
-         7zDg8a8V0UbCd4DJFKpO/Rg7vgaYys/tCVPxCF5hY9w0R/VQba6TgDe7UkHfFWAFCw
-         7CCiYKCtSJNfg==
-Date:   Thu, 1 Jun 2023 07:54:46 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix double xfs_perag_rele() in
- xfs_filestream_pick_ag()
-Message-ID: <20230601145446.GF16865@frogsfrogsfrogs>
-References: <20230529025950.2972685-1-david@fromorbit.com>
+        with ESMTP id S234771AbjFAO7u (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 10:59:50 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B40010E3;
+        Thu,  1 Jun 2023 07:59:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=XbbWN9vPp1Xk6I5ta8jq/xbBcX0bF+DntmFOOCcIAP8=; b=TPdEsrmYwQDcbibO2u6xuPEn+F
+        cVqnIFAGztBdzvqIg4dgzXeaGWODyzx/nMQJGSLcpbm/FYzckDj7ONjDiFbguAGwm1Edz1ErTv5Xq
+        dmUfwy6z9Mm278yt2cBQIO3TEjO41LezfuQ+hI0Uoq85CDA65HTJ8oUZMRDVOGbhUFQaPasrNKcZ9
+        Eu32hX3WLCij9TzhijOx9RcgOZEJx4LRtJG3IzRBzVMPWMTYkmpqf58tHPY2g6rZs7Ffjk2zLEgkE
+        xFLBvv0gVJvkzvSmP7yzapeyAfNI1nHgBrDGo52sGrhFJUoFO1j2LLleoHnmhrG4pQCdtQgXyXQuu
+        kGAxXLCQ==;
+Received: from [2001:4bb8:182:6d06:eacb:c751:971:73eb] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q4jla-003w1Z-1c;
+        Thu, 01 Jun 2023 14:59:06 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chao Yu <chao@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: cleanup the filemap / direct I/O interaction v4
+Date:   Thu,  1 Jun 2023 16:58:52 +0200
+Message-Id: <20230601145904.1385409-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230529025950.2972685-1-david@fromorbit.com>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, May 29, 2023 at 12:59:50PM +1000, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> xfs_bmap_longest_free_extent() can return an error when accessing
-> the AGF fails. In this case, the behaviour of
-> xfs_filestream_pick_ag() is conditional on the error. We may
-> continue the loop, or break out of it. The error handling after the
-> loop cleans up the perag reference held when the break occurs. If we
-> continue, the next loop iteration handles cleaning up the perag
-> reference.
-> 
-> EIther way, we don't need to release the active perag reference when
-> xfs_bmap_longest_free_extent() fails. Doing so means we do a double
-> decrement on the active reference count, and this causes tha active
-> reference count to fall to zero. At this point, new active
-> references will fail.
-> 
-> This leads to unmount hanging because it tries to grab active
-> references to that perag, only for it to fail. This happens inside a
-> loop that retries until a inode tree radix tree tag is cleared,
-> which cannot happen because we can't get an active reference to the
-> perag.
+Hi all,
 
-Wouldn't it be nice if C had^W^Wthe kernel coding rules allowed
-iterators that managed these active refs for us...
+this series cleans up some of the generic write helper calling
+conventions and the page cache writeback / invalidation for
+direct I/O.  This is a spinoff from the no-bufferhead kernel
+project, for which we'll want to an use iomap based buffered
+write path in the block layer.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Changes since v3:
+ - fix a generic_sync_file that got lost in fuse
+ - fix fuse to call fuse_perform_write and not generic_perform_write
 
---D
+Changes since v2:
+ - stick to the existing behavior of returning a short write
+   if the buffer fallback write or sync fails
+ - bring back "fuse: use direct_write_fallback" which accidentally
+   got lost in v2
 
+Changes since v1:
+ - remove current->backing_dev_info entirely
+ - fix the pos/end calculation in direct_write_fallback
+ - rename kiocb_invalidate_post_write to
+   kiocb_invalidate_post_direct_write
+ - typo fixes
 
-> The unmount livelocks in this path:
-> 
->   xfs_reclaim_inodes+0x80/0xc0
->   xfs_unmount_flush_inodes+0x5b/0x70
->   xfs_unmountfs+0x5b/0x1a0
->   xfs_fs_put_super+0x49/0x110
->   generic_shutdown_super+0x7c/0x1a0
->   kill_block_super+0x27/0x50
->   deactivate_locked_super+0x30/0x90
->   deactivate_super+0x3c/0x50
->   cleanup_mnt+0xc2/0x160
->   __cleanup_mnt+0x12/0x20
->   task_work_run+0x5e/0xa0
->   exit_to_user_mode_prepare+0x1bc/0x1c0
->   syscall_exit_to_user_mode+0x16/0x40
->   do_syscall_64+0x40/0x80
->   entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> 
-> Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-> Fixes: eb70aa2d8ed9 ("xfs: use for_each_perag_wrap in xfs_filestream_pick_ag")
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_filestream.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
-> index 22c13933c8f8..2fc98d313708 100644
-> --- a/fs/xfs/xfs_filestream.c
-> +++ b/fs/xfs/xfs_filestream.c
-> @@ -78,7 +78,6 @@ xfs_filestream_pick_ag(
->  		*longest = 0;
->  		err = xfs_bmap_longest_free_extent(pag, NULL, longest);
->  		if (err) {
-> -			xfs_perag_rele(pag);
->  			if (err != -EAGAIN)
->  				break;
->  			/* Couldn't lock the AGF, skip this AG. */
-> -- 
-> 2.40.1
-> 
+diffstat:
+ block/fops.c            |   18 ----
+ fs/btrfs/file.c         |    6 -
+ fs/ceph/file.c          |    6 -
+ fs/direct-io.c          |   10 --
+ fs/ext4/file.c          |   11 --
+ fs/f2fs/file.c          |    3 
+ fs/fuse/file.c          |   45 ++---------
+ fs/gfs2/file.c          |    6 -
+ fs/iomap/buffered-io.c  |    9 +-
+ fs/iomap/direct-io.c    |   88 ++++++++-------------
+ fs/libfs.c              |   41 ++++++++++
+ fs/nfs/file.c           |    6 -
+ fs/ntfs/file.c          |    2 
+ fs/ntfs3/file.c         |    3 
+ fs/xfs/xfs_file.c       |    6 -
+ fs/zonefs/file.c        |    4 
+ include/linux/fs.h      |    7 -
+ include/linux/pagemap.h |    4 
+ include/linux/sched.h   |    3 
+ mm/filemap.c            |  194 +++++++++++++++++++++---------------------------
+ 20 files changed, 194 insertions(+), 278 deletions(-)
