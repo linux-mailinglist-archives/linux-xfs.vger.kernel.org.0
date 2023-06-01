@@ -2,119 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F5097195ED
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 10:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2198719762
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Jun 2023 11:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232248AbjFAIq5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Jun 2023 04:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48802 "EHLO
+        id S232441AbjFAJp1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Jun 2023 05:45:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232320AbjFAIqW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 04:46:22 -0400
-Received: from out-24.mta1.migadu.com (out-24.mta1.migadu.com [IPv6:2001:41d0:203:375::18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095E4136
-        for <linux-xfs@vger.kernel.org>; Thu,  1 Jun 2023 01:46:11 -0700 (PDT)
-Message-ID: <ce82b32c-95b5-c6ad-9466-39c68dcf5119@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1685609168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=viwhASMvyk0Cjm0jq9ZeM+ouB4uWAEMzGdt0PzGjYnA=;
-        b=b4INK5nOSvj+75WjbDesPWXE9AWkPJLkn0CqnTqvUvZPjLpeC/weObuZD0D9N+pq2TyM+Q
-        SLt6WHzcqRMkacOE6fFeTGK0DV1zDWyMJCvSGdyA9fkcu7loNxzGDd4xlLT3zo7YLqAg8O
-        CHFEm/Rhuq4aIM7H7jTCHMz2EGYRaiY=
-Date:   Thu, 1 Jun 2023 16:46:00 +0800
+        with ESMTP id S233002AbjFAJpI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Jun 2023 05:45:08 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF71DD7;
+        Thu,  1 Jun 2023 02:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=RgPQEJTrg1rM26x8tIHPsFz0jTbDPDxkcQcrRlHgraU=; b=vmPOM6LBHPBRi89knPe58DFAAX
+        iNj7FQ0pznpRJtvZofXWhwXaSR5tgoxRW+KE2g6uRwONMst9+PX0sto3iuwFgXVVu8Osez/UIk6ic
+        fNXZLubHe5yLauPrYvvZCIm/3rdTX9tkvodnaDJRueci0SXMFUeIiWAj8evLkd4OMnE5TJmBZnCF+
+        kGuY7dhhl0em8nfGMKMaytkd8EvLKOI/1E/As8cMuDlaW9qpwClzMQtl0AdGF0NHMpCz6/NefGubW
+        1sQG/OP8mkWmqoCtyvhUD8UBMFe2di/cHhy/iO4rpcxsJA4lQ5cwdoA8QFpFlRkqHG9HebW6sTfas
+        CGzrzDiQ==;
+Received: from [2001:4bb8:182:6d06:35f3:1da0:1cc3:d86d] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q4ere-002lwh-1r;
+        Thu, 01 Jun 2023 09:45:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: introduce bdev holder ops and a file system shutdown method v3
+Date:   Thu,  1 Jun 2023 11:44:43 +0200
+Message-Id: <20230601094459.1350643-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/8] make unregistration of super_block shrinker more
- faster
-Content-Language: en-US
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     tkhai@ya.ru, roman.gushchin@linux.dev, vbabka@suse.cz,
-        viro@zeniv.linux.org.uk, brauner@kernel.org, djwong@kernel.org,
-        hughd@google.com, paulmck@kernel.org, muchun.song@linux.dev,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qi Zheng <zhengqi.arch@bytedance.com>
-References: <20230531095742.2480623-1-qi.zheng@linux.dev>
- <20230531114054.bf077db642aa9c58c0831687@linux-foundation.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Qi Zheng <qi.zheng@linux.dev>
-In-Reply-To: <20230531114054.bf077db642aa9c58c0831687@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Hi all,
 
+this series fixes the long standing problem that we never had a good way
+to communicate block device events to the user of the block device.
 
-On 2023/6/1 02:40, Andrew Morton wrote:
-> On Wed, 31 May 2023 09:57:34 +0000 Qi Zheng <qi.zheng@linux.dev> wrote:
-> 
->> From: Qi Zheng <zhengqi.arch@bytedance.com>
->>
->> Hi all,
->>
->> This patch series aims to make unregistration of super_block shrinker more
->> faster.
->>
->> 1. Background
->> =============
->>
->> The kernel test robot noticed a -88.8% regression of stress-ng.ramfs.ops_per_sec
->> on commit f95bdb700bc6 ("mm: vmscan: make global slab shrink lockless"). More
->> details can be seen from the link[1] below.
->>
->> [1]. https://lore.kernel.org/lkml/202305230837.db2c233f-yujie.liu@intel.com/
->>
->> We can just use the following command to reproduce the result:
->>
->> stress-ng --timeout 60 --times --verify --metrics-brief --ramfs 9 &
->>
->> 1) before commit f95bdb700bc6b:
->>
->> stress-ng: info:  [11023] dispatching hogs: 9 ramfs
->> stress-ng: info:  [11023] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s
->> stress-ng: info:  [11023]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
->> stress-ng: info:  [11023] ramfs            774966     60.00     10.18    169.45     12915.89        4314.26
->> stress-ng: info:  [11023] for a 60.00s run time:
->> stress-ng: info:  [11023]    1920.11s available CPU time
->> stress-ng: info:  [11023]      10.18s user time   (  0.53%)
->> stress-ng: info:  [11023]     169.44s system time (  8.82%)
->> stress-ng: info:  [11023]     179.62s total time  (  9.35%)
->> stress-ng: info:  [11023] load average: 8.99 2.69 0.93
->> stress-ng: info:  [11023] successful run completed in 60.00s (1 min, 0.00 secs)
->>
->> 2) after commit f95bdb700bc6b:
->>
->> stress-ng: info:  [37676] dispatching hogs: 9 ramfs
->> stress-ng: info:  [37676] stressor       bogo ops real time  usrtime  sys time   bogo ops/s     bogo ops/s
->> stress-ng: info:  [37676]                           (secs)    (secs)   (secs)   (real time) (usr+sys time)
->> stress-ng: info:  [37676] ramfs            168673     60.00     1.61    39.66      2811.08        4087.47
->> stress-ng: info:  [37676] for a 60.10s run time:
->> stress-ng: info:  [37676]    1923.36s available CPU time
->> stress-ng: info:  [37676]       1.60s user time   (  0.08%)
->> stress-ng: info:  [37676]      39.66s system time (  2.06%)
->> stress-ng: info:  [37676]      41.26s total time  (  2.15%)
->> stress-ng: info:  [37676] load average: 7.69 3.63 2.36
->> stress-ng: info:  [37676] successful run completed in 60.10s (1 min, 0.10 secs)
-> 
-> Is this comparison reversed?  It appears to demonstrate that
-> f95bdb700bc6b made the operation faster.
+It fixes this by introducing a new set of holder ops registered at
+blkdev_get_by_* time for the exclusive holder, and then wire that up
+to a shutdown super operation to report the block device remove to the
+file systems.
 
-Maybe not. IIUC, the bogo ops/s (real time) bigger the better.
+Changes since v2:
+ - rename a method in xfs
+ - add ext4 support
 
-Thanks,
-Qi
+Changes since v1:
+ - add a patch to refactor bd_may_claim
+ - add a sanity check for mismatching holder ops in bd_may_claim
+ - move partition removal later in del_gendisk so that partitions
+   are still around for the shutdown notification
+ - add SHUTDOWN_DEVICE_REMOVED to XFS_SHUTDOWN_STRINGS
 
-> 
-
+Diffstat:
+ block/bdev.c                        |  159 ++++++++++++++++++++----------------
+ block/blk.h                         |    2 
+ block/fops.c                        |    2 
+ block/genhd.c                       |   78 +++++++++++++----
+ block/ioctl.c                       |    3 
+ block/partitions/core.c             |   31 +++----
+ drivers/block/drbd/drbd_nl.c        |    3 
+ drivers/block/loop.c                |    2 
+ drivers/block/pktcdvd.c             |    5 -
+ drivers/block/rnbd/rnbd-srv.c       |    2 
+ drivers/block/xen-blkback/xenbus.c  |    2 
+ drivers/block/zram/zram_drv.c       |    2 
+ drivers/md/bcache/super.c           |    2 
+ drivers/md/dm.c                     |    2 
+ drivers/md/md.c                     |    2 
+ drivers/mtd/devices/block2mtd.c     |    4 
+ drivers/nvme/target/io-cmd-bdev.c   |    2 
+ drivers/s390/block/dasd_genhd.c     |    2 
+ drivers/target/target_core_iblock.c |    2 
+ drivers/target/target_core_pscsi.c  |    3 
+ fs/btrfs/dev-replace.c              |    2 
+ fs/btrfs/volumes.c                  |    6 -
+ fs/erofs/super.c                    |    2 
+ fs/ext4/ext4.h                      |    1 
+ fs/ext4/ioctl.c                     |   24 +++--
+ fs/ext4/super.c                     |   18 +++-
+ fs/f2fs/super.c                     |    4 
+ fs/jfs/jfs_logmgr.c                 |    2 
+ fs/nfs/blocklayout/dev.c            |    5 -
+ fs/nilfs2/super.c                   |    2 
+ fs/ocfs2/cluster/heartbeat.c        |    2 
+ fs/reiserfs/journal.c               |    5 -
+ fs/super.c                          |   21 ++++
+ fs/xfs/xfs_fsops.c                  |    3 
+ fs/xfs/xfs_mount.h                  |    4 
+ fs/xfs/xfs_super.c                  |   21 ++++
+ include/linux/blk_types.h           |    2 
+ include/linux/blkdev.h              |   12 ++
+ include/linux/fs.h                  |    1 
+ kernel/power/swap.c                 |    4 
+ mm/swapfile.c                       |    3 
+ 41 files changed, 297 insertions(+), 157 deletions(-)
