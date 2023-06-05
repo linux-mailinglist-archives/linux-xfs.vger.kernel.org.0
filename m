@@ -2,50 +2,47 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FDCC722B52
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 Jun 2023 17:37:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1594B722B53
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 Jun 2023 17:37:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231912AbjFEPhe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 5 Jun 2023 11:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41432 "EHLO
+        id S231881AbjFEPhi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 5 Jun 2023 11:37:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234769AbjFEPhc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Jun 2023 11:37:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989DAFF
-        for <linux-xfs@vger.kernel.org>; Mon,  5 Jun 2023 08:37:31 -0700 (PDT)
+        with ESMTP id S234726AbjFEPhg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Jun 2023 11:37:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F379EA
+        for <linux-xfs@vger.kernel.org>; Mon,  5 Jun 2023 08:37:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CFD2621D8
-        for <linux-xfs@vger.kernel.org>; Mon,  5 Jun 2023 15:37:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852B5C433EF;
-        Mon,  5 Jun 2023 15:37:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A014461539
+        for <linux-xfs@vger.kernel.org>; Mon,  5 Jun 2023 15:37:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C9EC433D2;
+        Mon,  5 Jun 2023 15:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685979450;
-        bh=ewtMeBAX8pSfOuzp6vIiJnlxHsUgNx/HwJrD+QF7G88=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=EevYRwfpZ3ZNPW6FwreGtGyxQrd3n6yJ4YjibBi+cStUXuKd6+9rYoh7GlScC7Xb0
-         WCpRS6BeHepX8sgpU2HH2163DqMWwrmEGX2vOXEwqD+I2PzDrqg27oahZgv1ISXpF0
-         5tdGBeC5zjVTwvyFNEM7eVbQ/iDCdDUXplg2Xsj1BYq3JRpqAGm34fsLf6wwX4q5lg
-         VbTiCnSYzJppMWOG44p28bFkKsy405e6XOBWLNldTPrc/NYIWffLGJoiVCJauP3qO0
-         pBZMPP8xzi1BqaJEzXFFMeoZWcNGMigl6eiUxejS65Z7nyTdvJg+faMH3x3OwzR7Va
-         YmI3PpncaJM3Q==
-Subject: [PATCH 2/2] xfs_repair: always perform extended xattr checks on
- uncertain inodes
+        s=k20201202; t=1685979454;
+        bh=8ZvmVa3riron01S1N/B0sAFXpJkza74pidEkO0CVZm4=;
+        h=Subject:From:To:Cc:Date:From;
+        b=mwcQ46+Wn8ob98ewfiK+X220TXSFPVkF34HlR0Njvxzw8XMFb9/iTSM0EwuVbtgya
+         n31p2aiVX6IFv3u7rQIrDDpWkyJyTT/+zKGb8lEnJj9Z66CXIg4mTmOayFSphPWT0i
+         V/ltMCe/hCe+9GfW2bBh9TnKmvfEs/wP0ObmyzyHTKz3abwqaVM6ApH7Ep/1VSGN9q
+         3nr3n4DEHr/bRcVPmMqUoXAikj/ZBQ/xwtNbh+SAPEbLjAp3LEV0UgxMsYt7TshIkw
+         twjrFxPtT3aTzUsA2va2ILZpW5YZHqre4BsxUlwxA17EXqQW5p0/uM+pRAmDOE6ryD
+         zIy7/d2fVg7aQ==
+Subject: [PATCHSET 0/5] xfs_repair: fix corruption messaging with verbose mode
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 05 Jun 2023 08:37:30 -0700
-Message-ID: <168597945009.1226372.4924137788610504146.stgit@frogsfrogsfrogs>
-In-Reply-To: <168597943893.1226372.1356501443716713637.stgit@frogsfrogsfrogs>
-References: <168597943893.1226372.1356501443716713637.stgit@frogsfrogsfrogs>
+Date:   Mon, 05 Jun 2023 08:37:33 -0700
+Message-ID: <168597945354.1226461.5438962607608083851.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,37 +51,26 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-When we're processing uncertain inodes, we need to perform the extended
-checks on the xattr structure, because the processing might decide that
-an uncertain inode is in fact a certain inode, and to restore it to the
-filesystem.  If that's the case, xfs_repair fails to catch problems in
-the attr structure.
+While I was running xfs/155 and fuzz testing of the parent pointers
+patchset, I noticed that there were quite a few places in xfs_repair
+where adding the -v flag caused repair either not to say that it was
+correcting something, or that it would spit out the wrong action message
+entirely.  This series resolves all of those problems.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-fix-corruption-messaging
 ---
- repair/dino_chunks.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-
-diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
-index 0e09132b0b1..cf6a5e399d4 100644
---- a/repair/dino_chunks.c
-+++ b/repair/dino_chunks.c
-@@ -1289,10 +1289,12 @@ process_uncertain_aginodes(xfs_mount_t *mp, xfs_agnumber_t agno)
- 			 * process the inode record we just added
- 			 * to the good inode tree.  The inode
- 			 * processing may add more records to the
--			 * uncertain inode lists.
-+			 * uncertain inode lists.  always process the
-+			 * extended attribute structure because we might
-+			 * decide that some inodes are still in use
- 			 */
- 			if (process_inode_chunk(mp, agno, igeo->ialloc_inos,
--						nrec, 1, 0, 0, &bogus))  {
-+						nrec, 1, 0, 1, &bogus))  {
- 				/* XXX - i/o error, we've got a problem */
- 				abort();
- 			}
+ repair/dino_chunks.c |    8 +++-----
+ repair/phase6.c      |   43 ++++++++++++++++++-------------------------
+ 2 files changed, 21 insertions(+), 30 deletions(-)
 
