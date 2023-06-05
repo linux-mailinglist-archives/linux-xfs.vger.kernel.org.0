@@ -2,212 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23730722D7E
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 Jun 2023 19:19:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E20BD722D88
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 Jun 2023 19:22:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234541AbjFERTN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 5 Jun 2023 13:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43338 "EHLO
+        id S234236AbjFERWK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 5 Jun 2023 13:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235358AbjFERTL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Jun 2023 13:19:11 -0400
-Received: from sandeen.net (sandeen.net [63.231.237.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E4B110A
-        for <linux-xfs@vger.kernel.org>; Mon,  5 Jun 2023 10:19:10 -0700 (PDT)
-Received: from [10.0.0.71] (liberator.sandeen.net [10.0.0.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPS id 3190A48C71A;
-        Mon,  5 Jun 2023 12:19:10 -0500 (CDT)
-Message-ID: <60597c59-5f07-0b2a-5a6d-a32ce644b4a2@sandeen.net>
-Date:   Mon, 5 Jun 2023 12:19:09 -0500
+        with ESMTP id S231472AbjFERWH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Jun 2023 13:22:07 -0400
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CAF10A
+        for <linux-xfs@vger.kernel.org>; Mon,  5 Jun 2023 10:22:03 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3985d75c9b0so194549b6e.1
+        for <linux-xfs@vger.kernel.org>; Mon, 05 Jun 2023 10:22:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1685985722; x=1688577722;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9HBzAKQ8EWkIuzHq6aIJ4mqwm9+DaKYAj6ps+F/vuTI=;
+        b=jh2UmAQ3NsKFC/MrynS5s4VOiwEkVYskRKYwmk2+r9IhdcNLaWSoRFhCITHNAwpw2w
+         bTVPEyYGpdrWg/AfDmiWW5LMgBNHD7iPyGbjQ38kps2Kwq4XW1CMRIkFXj2etTskPemV
+         GWWUMdq0FhYa5jHjFZZOn2STiHFEJMPEx6Vh9Lx2pkmbyH/bPw3UTOzEkwq9oVe+6Gvu
+         mVeRryP8psvMA5OaaANvxrFw3MTbHBXsJI31FRRwpBUQKSd9aSH095es87US3bTcGYpF
+         dZxTINVrQN/BTouOpqCAhoEMlsXUP3gbmYISyXWbPAshVYhvfYFI+BDRDMPBLMWzG2QA
+         N1Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685985722; x=1688577722;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9HBzAKQ8EWkIuzHq6aIJ4mqwm9+DaKYAj6ps+F/vuTI=;
+        b=JRs3DzZLD8jWmUwk8jAaVCbuknNS32wzd/Xl5OUsioAS1Kvoc+/LmbPmC5xrynkKRq
+         5LrLJcJEiyolmR5WfPn2gJOovDG4gOb9+mATT6iOd0a4e7XBI4avWaXTWTjLHGXZkPOo
+         c/UeJhZMLeQT1a/dE/IvU/7VdLqw71/k1/FJ7H6WqN3nxBSCOUQoLLpCRfaehs8qGinw
+         0PKfpXnoOtNPCkc2ZsbWKM64jHAdcIeODLQFO8Rhsa/3DjvcThssyZOpk7dSiEaTKVGE
+         MS9YGacJThbsUwtn/keBazftunRiNPU6nDO8sfHIdBlUWEWtcM7B0M7EXHuIuj1Z3ti3
+         EACg==
+X-Gm-Message-State: AC+VfDzCDyOOc6LjwMxm52gBLr2Ji8I6xbvm2wZliO6PK0uTFXOvt8ZA
+        PWxB2iRtBJbQn6MH30ePmR0c0Q==
+X-Google-Smtp-Source: ACHHUZ6PL62Ib5H4QB3rPGiaQRZcV0rInc/UOc81HCQF8mpjnx0vviMbWu8Zk38mJqV6Qj9LKxCzMg==
+X-Received: by 2002:a05:6358:cc27:b0:127:fa1b:fb0e with SMTP id gx39-20020a056358cc2700b00127fa1bfb0emr1263873rwb.1.1685985722606;
+        Mon, 05 Jun 2023 10:22:02 -0700 (PDT)
+Received: from [127.0.0.1] ([2600:380:c01c:32f0:eff8:7692:bf8a:abc6])
+        by smtp.gmail.com with ESMTPSA id cl9-20020a17090af68900b0025643e5da99sm7993666pjb.37.2023.06.05.10.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jun 2023 10:22:01 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+In-Reply-To: <20230601094459.1350643-1-hch@lst.de>
+References: <20230601094459.1350643-1-hch@lst.de>
+Subject: Re: introduce bdev holder ops and a file system shutdown method v3
+Message-Id: <168598572109.2504.8975232011754082233.b4-ty@kernel.dk>
+Date:   Mon, 05 Jun 2023 11:22:01 -0600
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH 3/5] xfs_db: fix metadump name obfuscation for ascii-ci
- filesystems
-Content-Language: en-US
-To:     "Darrick J. Wong" <djwong@kernel.org>, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, hch@infradead.org
-References: <168597938725.1226098.18077307069307502725.stgit@frogsfrogsfrogs>
- <168597940416.1226098.14610650380180437820.stgit@frogsfrogsfrogs>
-From:   Eric Sandeen <sandeen@sandeen.net>
-In-Reply-To: <168597940416.1226098.14610650380180437820.stgit@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_FILL_THIS_FORM_SHORT,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Mailer: b4 0.13-dev-c6835
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 6/5/23 10:36 AM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Now that we've stabilized the dirent hash function for ascii-ci
-> filesystems, adapt the metadump name obfuscation code to detect when
-> it's obfuscating a directory entry name on an ascii-ci filesystem and
-> spit out names that actually have the same hash.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+On Thu, 01 Jun 2023 11:44:43 +0200, Christoph Hellwig wrote:
+> this series fixes the long standing problem that we never had a good way
+> to communicate block device events to the user of the block device.
+> 
+> It fixes this by introducing a new set of holder ops registered at
+> blkdev_get_by_* time for the exclusive holder, and then wire that up
+> to a shutdown super operation to report the block device remove to the
+> file systems.
+> 
+> [...]
 
-> ---
->   db/metadump.c |   77 ++++++++++++++++++++++++++++++++++++++++++++++++++-------
->   1 file changed, 68 insertions(+), 9 deletions(-)
-> 
-> 
-> diff --git a/db/metadump.c b/db/metadump.c
-> index 317ff72802d..4f8b3adb163 100644
-> --- a/db/metadump.c
-> +++ b/db/metadump.c
-> @@ -817,13 +817,17 @@ static void
->   obfuscate_name(
->   	xfs_dahash_t	hash,
->   	size_t		name_len,
-> -	unsigned char	*name)
-> +	unsigned char	*name,
-> +	bool		is_dirent)
->   {
-> -	unsigned char	*newp = name;
-> +	unsigned char	*oldname = NULL;
-> +	unsigned char	*newp;
->   	int		i;
-> -	xfs_dahash_t	new_hash = 0;
-> +	xfs_dahash_t	new_hash;
->   	unsigned char	*first;
->   	unsigned char	high_bit;
-> +	int		tries = 0;
-> +	bool		is_ci_name = is_dirent && xfs_has_asciici(mp);
->   	int		shift;
->   
->   	/*
-> @@ -836,6 +840,24 @@ obfuscate_name(
->   	if (name_len < 5)
->   		return;
->   
-> +	if (is_ci_name) {
-> +		oldname = alloca(name_len);
-> +		memcpy(oldname, name, name_len);
-> +	}
-> +
-> +again:
-> +	newp = name;
-> +	new_hash = 0;
-> +
-> +	/*
-> +	 * If we cannot generate a ci-compatible obfuscated name after 1000
-> +	 * tries, don't bother obfuscating the name.
-> +	 */
-> +	if (tries++ > 1000) {
-> +		memcpy(name, oldname, name_len);
-> +		return;
-> +	}
-> +
->   	/*
->   	 * The beginning of the obfuscated name can be pretty much
->   	 * anything, so fill it in with random characters.
-> @@ -843,7 +865,11 @@ obfuscate_name(
->   	 */
->   	for (i = 0; i < name_len - 5; i++) {
->   		*newp = random_filename_char();
-> -		new_hash = *newp ^ rol32(new_hash, 7);
-> +		if (is_ci_name)
-> +			new_hash = xfs_ascii_ci_xfrm(*newp) ^
-> +							rol32(new_hash, 7);
-> +		else
-> +			new_hash = *newp ^ rol32(new_hash, 7);
->   		newp++;
->   	}
->   
-> @@ -867,6 +893,17 @@ obfuscate_name(
->   			high_bit = 0x80;
->   		} else
->   			high_bit = 0;
-> +
-> +		/*
-> +		 * If ascii-ci is enabled, uppercase characters are converted
-> +		 * to lowercase characters while computing the name hash.  If
-> +		 * any of the necessary correction bytes are uppercase, the
-> +		 * hash of the new name will not match.  Try again with a
-> +		 * different prefix.
-> +		 */
-> +		if (is_ci_name && xfs_ascii_ci_need_xfrm(*newp))
-> +			goto again;
-> +
->   		ASSERT(!is_invalid_char(*newp));
->   		newp++;
->   	}
-> @@ -880,6 +917,10 @@ obfuscate_name(
->   	 */
->   	if (high_bit) {
->   		*first ^= 0x10;
-> +
-> +		if (is_ci_name && xfs_ascii_ci_need_xfrm(*first))
-> +			goto again;
-> +
->   		ASSERT(!is_invalid_char(*first));
->   	}
->   }
-> @@ -1177,6 +1218,24 @@ handle_duplicate_name(xfs_dahash_t hash, size_t name_len, unsigned char *name)
->   	return 1;
->   }
->   
-> +static inline xfs_dahash_t
-> +dirattr_hashname(
-> +	bool		is_dirent,
-> +	const uint8_t	*name,
-> +	int		namelen)
-> +{
-> +	if (is_dirent) {
-> +		struct xfs_name	xname = {
-> +			.name	= name,
-> +			.len	= namelen,
-> +		};
-> +
-> +		return libxfs_dir2_hashname(mp, &xname);
-> +	}
-> +
-> +	return libxfs_da_hashname(name, namelen);
-> +}
-> +
->   static void
->   generate_obfuscated_name(
->   	xfs_ino_t		ino,
-> @@ -1205,9 +1264,9 @@ generate_obfuscated_name(
->   
->   	/* Obfuscate the name (if possible) */
->   
-> -	hash = libxfs_da_hashname(name, namelen);
-> -	obfuscate_name(hash, namelen, name);
-> -	ASSERT(hash == libxfs_da_hashname(name, namelen));
-> +	hash = dirattr_hashname(ino != 0, name, namelen);
-> +	obfuscate_name(hash, namelen, name, ino != 0);
-> +	ASSERT(hash == dirattr_hashname(ino != 0, name, namelen));
->   
->   	/*
->   	 * Make sure the name is not something already seen.  If we
-> @@ -1320,7 +1379,7 @@ obfuscate_path_components(
->   			/* last (or single) component */
->   			namelen = strnlen((char *)comp, len);
->   			hash = libxfs_da_hashname(comp, namelen);
-> -			obfuscate_name(hash, namelen, comp);
-> +			obfuscate_name(hash, namelen, comp, false);
->   			ASSERT(hash == libxfs_da_hashname(comp, namelen));
->   			break;
->   		}
-> @@ -1332,7 +1391,7 @@ obfuscate_path_components(
->   			continue;
->   		}
->   		hash = libxfs_da_hashname(comp, namelen);
-> -		obfuscate_name(hash, namelen, comp);
-> +		obfuscate_name(hash, namelen, comp, false);
->   		ASSERT(hash == libxfs_da_hashname(comp, namelen));
->   		comp += namelen + 1;
->   		len -= namelen + 1;
-> 
+Applied, thanks!
+
+[01/16] block: factor out a bd_end_claim helper from blkdev_put
+        commit: 0783b1a7cbd9a02ddc35fe531b5966b674b304f0
+[02/16] block: refactor bd_may_claim
+        commit: ae5f855ead6b41422ca0c971ebda509c0414f8ec
+[03/16] block: turn bdev_lock into a mutex
+        commit: 74e6464a987b2572771ac19163e961777fd0252e
+[04/16] block: consolidate the shutdown logic in blk_mark_disk_dead and del_gendisk
+        commit: 66fddc25fe182fd7d28b35f4173113f3eefc7fb5
+[05/16] block: avoid repeated work in blk_mark_disk_dead
+        commit: a4f75764d16bed317276b05a9fe2c179ef61680d
+[06/16] block: unhash the inode earlier in delete_partition
+        commit: 69f90b70bdb62e1a930239d33579e04884cd0b9a
+[07/16] block: delete partitions later in del_gendisk
+        commit: eec1be4c30df73238b936fa9f3653773a6f8b15c
+[08/16] block: remove blk_drop_partitions
+        commit: 00080f7fb7a599c26523037b202fb945f3141811
+[09/16] block: introduce holder ops
+        commit: 0718afd47f70cf46877c39c25d06b786e1a3f36c
+[10/16] block: add a mark_dead holder operation
+        commit: f55e017c642051ddc01d77a89ab18f5ee71d6276
+[11/16] fs: add a method to shut down the file system
+        commit: 87efb39075be6a288cd7f23858f15bd01c83028a
+[12/16] xfs: wire up sops->shutdown
+        commit: e7caa877e5ddac63886f4a8376cb3ffbd4dfe569
+[13/16] xfs: wire up the ->mark_dead holder operation for log and RT devices
+        commit: 8067ca1dcdfcc2a5e0a51bff3730ad3eef0623d6
+[14/16] ext4: split ext4_shutdown
+        commit: 97524b454bc562f4052751f0e635a61dad78f1b2
+[15/16] ext4: wire up sops->shutdown
+        commit: f5db130d4443ddf63b49e195782038ebaab0bec9
+[16/16] ext4: wire up the ->mark_dead holder operation for log devices
+        commit: dd2e31afba9e3a3107aa202726b6199c55075f59
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
