@@ -2,85 +2,84 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09FA1722F0B
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 Jun 2023 21:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBAEA722F59
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 Jun 2023 21:10:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232280AbjFETAJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 5 Jun 2023 15:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
+        id S234915AbjFETKG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 5 Jun 2023 15:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232195AbjFES75 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Jun 2023 14:59:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D833EC
-        for <linux-xfs@vger.kernel.org>; Mon,  5 Jun 2023 11:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685991551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EEyYVTiGw3OlrG8jSICt8MG1vJ0jvDwR1X9zlI6s70I=;
-        b=B4tfSEOI8pbXyfXSPy1SC0pxnFPsscVl4L+iRPhScBFTKX2Z+Z3tPoohgwqFaIl+FqZg3i
-        Mhl+gGKcV51drtXDvXsy/dxD9yXD9OPBZfvX2uGXBg1PUTjrSS1DbQuZelk9GWuigQ2iSQ
-        aBfgAIt+BhtyCylE7NOX3nUUdpfq0C0=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-526-afy-KAcPNheIT5TJN-OwSQ-1; Mon, 05 Jun 2023 14:59:10 -0400
-X-MC-Unique: afy-KAcPNheIT5TJN-OwSQ-1
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-3f6bb50f250so64396311cf.3
-        for <linux-xfs@vger.kernel.org>; Mon, 05 Jun 2023 11:59:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685991549; x=1688583549;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EEyYVTiGw3OlrG8jSICt8MG1vJ0jvDwR1X9zlI6s70I=;
-        b=blZXaK44uOmByQ9t0f1FXpmcZHi/ktpl/6rjYoavlyT3ouHQ8APVE28GeRifgXf+OR
-         GmTFv/IyaQ+IX2RlR6rWgUg0cpLrij8f9jf8MkQSL+Tdfe+GjB5CRicGUiw/+nCWYJZj
-         8NDt4nDQamQIONtEyRBaRQp+Mh7YSNY+g2SlDbunHZxD63qm5V+yRexlQullND8iUIdl
-         cNZJV9/6Qkyz5udE6ruroNRC33Jdf1o8MlUZWzbvrLKceAsuyGB9k7A2WiXWpjysj3HX
-         R5EzI+KAyM3s4ePoAl61qjWaFSKRpBvKF1Qv5/zhEfc6Hz5qfqgFoMW2wBR1zvjcwfpW
-         wblg==
-X-Gm-Message-State: AC+VfDxUU7TAHGsXauKuSQmSM4EnLVYpAOjNZUn9fYTyobKWemGvAo3v
-        S24aTLFKfhFwQYuuYxL/Q4hsr809B9YqbbvwgakHnka4wYqMNNmvWyhuKTecmZsxVw37YmQDXfB
-        eT6NlImxKInpKiTgK62aV
-X-Received: by 2002:a05:6214:2687:b0:626:3bb1:b9b3 with SMTP id gm7-20020a056214268700b006263bb1b9b3mr9693199qvb.4.1685991549734;
-        Mon, 05 Jun 2023 11:59:09 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5OUyXN7w3MaZS5peUuKUSLCo/YuBwBr2BrhjK2kpP/42Suo64iI7uuXUq5uFMsqkqV8ypCww==
-X-Received: by 2002:a05:6214:2687:b0:626:3bb1:b9b3 with SMTP id gm7-20020a056214268700b006263bb1b9b3mr9693187qvb.4.1685991549510;
-        Mon, 05 Jun 2023 11:59:09 -0700 (PDT)
-Received: from [192.168.1.103] (gw19-pha-stl-mmo-2.avonet.cz. [131.117.213.218])
-        by smtp.gmail.com with ESMTPSA id lw4-20020a05621457c400b006238b37fb05sm4797722qvb.119.2023.06.05.11.59.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Jun 2023 11:59:08 -0700 (PDT)
-Message-ID: <40c48265-52da-6015-475a-f396cebc1fa3@redhat.com>
-Date:   Mon, 5 Jun 2023 20:59:06 +0200
+        with ESMTP id S235416AbjFETJs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 5 Jun 2023 15:09:48 -0400
+X-Greylist: delayed 406 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 05 Jun 2023 12:09:46 PDT
+Received: from forward202a.mail.yandex.net (forward202a.mail.yandex.net [178.154.239.91])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BAB1A8;
+        Mon,  5 Jun 2023 12:09:46 -0700 (PDT)
+Received: from forward103a.mail.yandex.net (forward103a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d103])
+        by forward202a.mail.yandex.net (Yandex) with ESMTP id 443814A48F;
+        Mon,  5 Jun 2023 22:03:03 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0f:4c8e:0:640:3460:0])
+        by forward103a.mail.yandex.net (Yandex) with ESMTP id E5B1F42B17;
+        Mon,  5 Jun 2023 22:02:56 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id k2Y4EiCDXOs0-wyUCMDug;
+        Mon, 05 Jun 2023 22:02:56 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail; t=1685991776;
+        bh=d2A7a/fXdJ0HjFXvaIDBfJccZIVLybmyhd3Ml8uMPl8=;
+        h=Message-Id:Date:Subject:To:From;
+        b=vlX7aUUym6OiLqJo1vzOwZQebF2A87eqINyFK8QRZ2kFXHDYWuV1dkXFc3WzsroCg
+         HL3EIidYcs4s4reIg/mcheFHbs1fXQrFz/6qLbTCL2+oBlaMRK7C6+oeCsNG3i18jD
+         5a6FRObcYyOLT6GWimAnCJPy7GkKAKe9hiDPECMU=
+Authentication-Results: mail-nwsmtp-smtp-production-main-68.vla.yp-c.yandex.net; dkim=pass header.i=@ya.ru
+From:   Kirill Tkhai <tkhai@ya.ru>
+To:     akpm@linux-foundation.org, tkhai@ya.ru, roman.gushchin@linux.dev,
+        vbabka@suse.cz, viro@zeniv.linux.org.uk, brauner@kernel.org,
+        djwong@kernel.org, hughd@google.com, paulmck@kernel.org,
+        muchun.song@linux.dev, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhengqi.arch@bytedance.com,
+        david@fromorbit.com
+Subject: [PATCH v2 0/3] mm: Make unregistration of super_block shrinker more faster
+Date:   Mon,  5 Jun 2023 22:02:46 +0300
+Message-Id: <168599103578.70911.9402374667983518835.stgit@pro.pro>
+X-Mailer: git-send-email 2.40.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCHSET 0/5] xfs_repair: fix corruption messaging with verbose
- mode
-Content-Language: en-US
-To:     "Darrick J. Wong" <djwong@kernel.org>, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-References: <168597945354.1226461.5438962607608083851.stgit@frogsfrogsfrogs>
-From:   Pavel Reichl <preichl@redhat.com>
-In-Reply-To: <168597945354.1226461.5438962607608083851.stgit@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Whole patchset LGTM & Builds
+This patch set introduces a new scheme of shrinker unregistration. It allows to split
+the unregistration in two parts: fast and slow. This allows to hide slow part from
+a user, so user-visible unregistration becomes fast.
 
-Reviewed-by: Pavel Reichl <preichl@redhat.com>
+This fixes the -88.8% regression of stress-ng.ramfs.ops_per_sec noticed
+by kernel test robot:
 
+https://lore.kernel.org/lkml/202305230837.db2c233f-yujie.liu@intel.com/
+
+---
+
+Kirill Tkhai (2):
+      mm: Split unregister_shrinker() in fast and slow part
+      fs: Use delayed shrinker unregistration
+
+Qi Zheng (1):
+      mm: vmscan: move shrinker_debugfs_remove() before synchronize_srcu()
+
+
+ fs/super.c               |    3 ++-
+ include/linux/shrinker.h |    4 ++++
+ mm/vmscan.c              |   39 +++++++++++++++++++++++++++++++--------
+ 3 files changed, 37 insertions(+), 9 deletions(-)
+
+--
+Signed-off-by: Kirill Tkhai <tkhai@ya.ru>
