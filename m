@@ -2,140 +2,181 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96E0572BC2B
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jun 2023 11:25:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 617C572BB9C
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jun 2023 11:04:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230248AbjFLJZ0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 12 Jun 2023 05:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
+        id S230186AbjFLJEY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Jun 2023 05:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234552AbjFLJYu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Jun 2023 05:24:50 -0400
-X-Greylist: delayed 2008 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 12 Jun 2023 02:18:50 PDT
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E693525B;
-        Mon, 12 Jun 2023 02:18:49 -0700 (PDT)
-Received: from in02.mta.xmission.com ([166.70.13.52]:58520)
-        by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1q8dAu-00GXSG-LO; Mon, 12 Jun 2023 02:45:20 -0600
-Received: from ip68-110-29-46.om.om.cox.net ([68.110.29.46]:39804 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1q8dAt-00FC9s-H1; Mon, 12 Jun 2023 02:45:20 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
+        with ESMTP id S230140AbjFLJD4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Jun 2023 05:03:56 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C924686;
+        Mon, 12 Jun 2023 02:00:12 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b3cc77ccbfso4626595ad.1;
+        Mon, 12 Jun 2023 02:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686560412; x=1689152412;
+        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vwAnSv3gRombx0EqlbwbUh+TEz0wTaqk905f3XF/Ynw=;
+        b=KMSWjXpALt2LN4sAGcDkMRqaZGoCpMNbfqH7y54A1LAZBIPxTVwc3bY9a94K7zNnoP
+         gkszhUjq1OlDEol5P0DWbgf1qAyqnywoDDsMFt9Wm3lMHObbERvHLwRr8gzd5Ks/54sF
+         6vY8NuJp3QoY+9Ww/Oy2QKRUQLz/OSoD81xSeDfSvFm1Wnca43KD6CswXDmdLm152wwW
+         l1Sjh+/FZUktcMRH9EIcW6/Z5elXur8IhARbPHC16u1pKRuCtn1QVO5lE1m3Q+KAsdmH
+         9GiGY+L7dORJyEdILwWg/QbP1mMO5j/Uzlf0crXe1jp4sscegxjJm/h++zkOdD9Sk1wR
+         irYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686560412; x=1689152412;
+        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vwAnSv3gRombx0EqlbwbUh+TEz0wTaqk905f3XF/Ynw=;
+        b=O9BPG+vLN6qlB22wKZCCgZEqWquLkQf2vmvuk0BhIDaUF4zDumbRhXlxWj8c1gbV9V
+         nhev6r6P404NcgZwrlVdu0WAftfbHMv1N51CeI6xStX2UkheaJm78ITlKp+cSro8GWdN
+         Ju65N0N73GVdMo6NEq/gEvgItV53KJxXf5Sv9kb7NWWXfC6QH0SPrfpnTKg1eEDDaF53
+         AdU1bV5bnr6DC8pN11nDI84WI/nmL8cimGd7WR0+yJo8UGV2ViJwHfqEsWNJe2OwYbW5
+         wdpGvkkbr6+JuVzAfg6pBsuYv7wPpzDoOmKt/qGqF0y7SWBVJC0lavFFYDchTjy6U8ga
+         w2wQ==
+X-Gm-Message-State: AC+VfDxaRdIoQZCZjw9VDl8Rh30dKYSKZp44a+RXN45oIRq2hrU2q5k6
+        IlRLLFsuv2Lnd5QCUhpRRMk=
+X-Google-Smtp-Source: ACHHUZ6foTcIrsFUqabvqs8ScvaYRDBKOHkybKdnGzWPKCmDHl2U7fJnFS0RQdqNByi7FOgQ9vlMhw==
+X-Received: by 2002:a17:902:cec5:b0:1aa:ef83:34be with SMTP id d5-20020a170902cec500b001aaef8334bemr6354597plg.47.1686560411666;
+        Mon, 12 Jun 2023 02:00:11 -0700 (PDT)
+Received: from dw-tp ([129.41.58.23])
+        by smtp.gmail.com with ESMTPSA id n6-20020a170902968600b001ae469ca0c0sm7702232plp.245.2023.06.12.02.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 02:00:11 -0700 (PDT)
+Date:   Mon, 12 Jun 2023 14:30:05 +0530
+Message-Id: <875y7thx7u.fsf@doe.com>
+From:   Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
         "Darrick J. Wong" <djwong@kernel.org>,
-        Zorro Lang <zlang@redhat.com>, linux-xfs@vger.kernel.org,
-        Mike Christie <michael.christie@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-References: <20230611124836.whfktwaumnefm5z5@zlang-mailbox>
-        <ZIZSPyzReZkGBEFy@dread.disaster.area>
-        <20230612015145.GA11441@frogsfrogsfrogs>
-        <ZIaBQnCKJ6NsqGhd@dread.disaster.area>
-        <CAHk-=whJqZLKPR-cpX-V4wJTXVX-_tG5Vjuj2q9knvKGCPdfkg@mail.gmail.com>
-        <ZIaqMpGISWKgHLK6@dread.disaster.area>
-        <CAHk-=wgwJptCbaHwt+TpGgh04fTVAHd60AY3Jj1rX+Spf0fVyg@mail.gmail.com>
-        <ZIax1FLfNajWk25A@dread.disaster.area>
-        <CAHk-=wj0NuJaRNC4o6FVAJgKAFJ5HWcBV5VJw6RGV0ZahqOOZA@mail.gmail.com>
-Date:   Mon, 12 Jun 2023 03:45:12 -0500
-In-Reply-To: <CAHk-=wj0NuJaRNC4o6FVAJgKAFJ5HWcBV5VJw6RGV0ZahqOOZA@mail.gmail.com>
-        (Linus Torvalds's message of "Sun, 11 Jun 2023 23:11:28 -0700")
-Message-ID: <87r0qhrrvr.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1q8dAt-00FC9s-H1;;;mid=<87r0qhrrvr.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.110.29.46;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19zDZ9UDOy2LwKxs184+u4u0p0/xsgHgcs=
-X-SA-Exim-Connect-IP: 68.110.29.46
-X-SA-Exim-Mail-From: ebiederm@xmission.com
+        Matthew Wilcox <willy@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+        Disha Goel <disgoel@linux.ibm.com>,
+        Aravinda Herle <araherle@in.ibm.com>
+Subject: Re: [PATCHv9 6/6] iomap: Add per-block dirty state tracking to improve performance
+In-Reply-To: <ZIa7dFb42FkI5jgp@infradead.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Linus Torvalds <torvalds@linux-foundation.org>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 544 ms - load_scoreonly_sql: 0.08 (0.0%),
-        signal_user_changed: 12 (2.3%), b_tie_ro: 11 (2.0%), parse: 1.32
-        (0.2%), extract_message_metadata: 18 (3.3%), get_uri_detail_list: 1.97
-        (0.4%), tests_pri_-2000: 20 (3.7%), tests_pri_-1000: 2.6 (0.5%),
-        tests_pri_-950: 1.30 (0.2%), tests_pri_-900: 1.09 (0.2%),
-        tests_pri_-200: 0.91 (0.2%), tests_pri_-100: 4.7 (0.9%),
-        tests_pri_-90: 94 (17.2%), check_bayes: 83 (15.3%), b_tokenize: 7
-        (1.3%), b_tok_get_all: 8 (1.4%), b_comp_prob: 2.6 (0.5%),
-        b_tok_touch_all: 62 (11.4%), b_finish: 0.96 (0.2%), tests_pri_0: 371
-        (68.2%), check_dkim_signature: 0.54 (0.1%), check_dkim_adsp: 2.7
-        (0.5%), poll_dns_idle: 0.50 (0.1%), tests_pri_10: 2.9 (0.5%),
-        tests_pri_500: 10 (1.9%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [6.5-rc5 regression] core dump hangs (was Re: [Bug report]
- fstests generic/051 (on xfs) hang on latest linux v6.5-rc5+)
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+Christoph Hellwig <hch@infradead.org> writes:
 
-> On Sun, Jun 11, 2023 at 10:49 PM Dave Chinner <david@fromorbit.com> wrote:
->>
->> On Sun, Jun 11, 2023 at 10:34:29PM -0700, Linus Torvalds wrote:
->> >
->> > So that "!=" should obviously have been a "==".
->>
->> Same as without the condition - all the fsstress tasks hang in
->> do_coredump().
+> Just some nitpicks,
+
+Sure.
+
+> this otherwise looks fine.
+
+Thanks for the review.
+
 >
-> Ok, that at least makes sense. Your "it made things worse" made me go
-> "What?" until I noticed the stupid backwards test.
+> First during the last patches ifs as a variable name has started
+> to really annoy me and I'm not sure why.  I'd like to hear from the
+> others, bu maybe just state might be a better name that flows easier?
 >
-> I'm not seeing anything else that looks odd in that commit
-> f9010dbdce91 ("fork, vhost: Use CLONE_THREAD to fix freezer/ps
-> regression").
+
+Ok. Let's hear from others too.
+
+>> +static void iomap_clear_range_dirty(struct folio *folio, size_t off, size_t len)
+>> +{
+>> +	struct iomap_folio_state *ifs = iomap_get_ifs(folio);
+>> +
+>> +	if (!ifs)
+>> +		return;
+>> +	iomap_ifs_clear_range_dirty(folio, ifs, off, len);
 >
-> Let's see if somebody else goes "Ahh" when they wake up tomorrow...
+> Maybe just do
+>
+> 	if (ifs)
+> 		iomap_ifs_clear_range_dirty(folio, ifs, off, len);
+>
+> ?
 
-It feels like there have been about half a dozen bugs pointed out in
-that version of the patch.  I am going to have to sleep before I can get
-as far as "Ahh"
+Sure.
 
-One thing that really stands out for me is.
+>
+> But also do we even need the ifs argument to iomap_ifs_clear_range_dirty
+> after we've removed it everywhere else earlier?
+>
 
-if (test_if_loop_should_continue) {
-	set_current_state(TASK_INTERRUPTIBLE);
-        schedule();
-}
+Some of the previous discussions / reasoning behind it -
 
-/* elsewhere */
-llist_add(...);
-wake_up_process()
+- In one of the previous discussions we discussed that functions which
+has _ifs_ in their naming, then it generally should imply that we will
+be working on iomap_folio_state struct. So we should pass that as a
+argument.
 
-So it is possible that the code can sleep indefinitely waiting for a
-wake-up that has already come, because the order of set_current_state
-and the test are in the wrong order.
+- Also in most of these *_ifs_* functions we have "ifs" as a non-null
+  function argument.
 
-Unfortunately I don't see what would effect a coredump on a process that
-does not trigger the vhost_worker code.
+- At some places where we are calling these _ifs_ functions, we
+already have derived ifs, so why not just pass it.
 
+FYI - We dropped "ifs" argument in one of the function which is
+iomap_set_range_uptodate(), because we would like this function
+to work in both cases.
+    1. When we have non-null folio->private (ifs)
+    2. When it is null.
 
+So API wise it looks good in my humble opinion. But sure, in
+case if someone has better ideas, I can look into that.
 
-About the only thing I can image is if io_uring is involved.  Some of
-the PF_IO_WORKER code was changed, and the test
-"((t->flags & (PF_USER_WORKER | PF_IO_WORKER)) != PF_USER_WORKER)"
-was sprinkled around.
+>> +	/*
+>> +	 * When we have per-block dirty tracking, there can be
+>> +	 * blocks within a folio which are marked uptodate
+>> +	 * but not dirty. In that case it is necessary to punch
+>> +	 * out such blocks to avoid leaking any delalloc blocks.
+>> +	 */
+>> +	ifs = iomap_get_ifs(folio);
+>> +	if (!ifs)
+>> +		goto skip_ifs_punch;
+>> +
+>> +	last_byte = min_t(loff_t, end_byte - 1,
+>> +		(folio_next_index(folio) << PAGE_SHIFT) - 1);
+>> +	first_blk = offset_in_folio(folio, start_byte) >> blkbits;
+>> +	last_blk = offset_in_folio(folio, last_byte) >> blkbits;
+>> +	for (i = first_blk; i <= last_blk; i++) {
+>> +		if (!iomap_ifs_is_block_dirty(folio, ifs, i)) {
+>> +			ret = punch(inode, folio_pos(folio) + (i << blkbits),
+>> +				    1 << blkbits);
+>> +			if (ret)
+>> +				goto out;
+>> +		}
+>> +	}
+>> +
+>> +skip_ifs_punch:
+>
+> And happy to hear from the others, but to me having a helper for
+> all the iomap_folio_state manipulation rather than having it in
+> the middle of the function and jumped over if not needed would
+> improve the code structure.
 
-That is the only code outside of vhost specific code that was changed.
+I think Darrick was also pointing towards having a separate funciton.
+But let's hear from him & others too. I can consider adding a separate
+function for above.
 
+Does this look good?
 
-Is io_uring involved in the cases that hang?
+static int iomap_write_delalloc_ifs_punch(struct inode *inode, struct folio *folio,
+		struct iomap_folio_state *ifs, loff_t start_byte, loff_t end_byte,
+		int (*punch)(struct inode *inode, loff_t offset, loff_t length))
 
+The function argument are kept similar to what we have for
+iomap_write_delalloc_punch(), except maybe *punch_start_byte (which is
+not required).
 
-Eric
-
+-ritesh
