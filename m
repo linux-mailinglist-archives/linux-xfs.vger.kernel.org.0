@@ -2,48 +2,75 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5523872D0B9
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jun 2023 22:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD63F72D4AF
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Jun 2023 00:49:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjFLUjv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Jun 2023 16:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58814 "EHLO
+        id S229480AbjFLWtM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Jun 2023 18:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236989AbjFLUje (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Jun 2023 16:39:34 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A491739;
-        Mon, 12 Jun 2023 13:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=EkLmyaB6DA8CYGOh1SGUaX5l8dYnTWVJEORmgXgZcN8=; b=R4++hr39ESEVaBhBKwvgXoki8+
-        XyhvyjhtQPZvlNvPojo9/BakFsoohm4U/VqtxhH+l6rJDjrin+mZtWzSsQokP8EsdChfXLjmhBHRp
-        W/yQviM47ooc72QH5qvQv1YlgRxs6LBSvg+44G4KK1LCpgIVTOa0IdCOARbFlga8qqN10jjk0tk6h
-        pYeWlKT28FEytcUzoOmdkKw0knvIW3y3z23uZ1P1AsxVtMp1GGualEk0jCc6jVzeCt/V6/hINkOO5
-        1ma2qPNvsq8Erv8MwWt/YWxDjlI8EHmk/B82dkR4p2RLtJPk3nZNarGjUwDnL/5zvT9QZrO5pB06L
-        eXzATyjg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8oJm-0032Sn-3S; Mon, 12 Jun 2023 20:39:14 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, Wang Yugui <wangyugui@e16-tech.com>,
-        Dave Chinner <david@fromorbit.com>,
+        with ESMTP id S229982AbjFLWtL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Jun 2023 18:49:11 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F535134
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Jun 2023 15:49:10 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1b3ce6607cbso14145605ad.2
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Jun 2023 15:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1686610150; x=1689202150;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yMmxc/ZlzSp2pSayA1Jf1ORJAaDDiWOvtHQDYBNVV8M=;
+        b=NH3KQ5JfGCKVpwqPaAEgYXMxvNFw5MkhqRqv7qrZCuIPXEElqQsUUnR5gbea6hySqt
+         uUdx5wCCaElTMw0wi9fMb/R4D9iwEt7ivJRqlLcBYfspx/rc2suctrnU1X+iAVnuuUSa
+         NeJKwayhxt8MfmXwSOf6opiuvlro2pYjcOARrb5DZ4Gath9jpIKRwU7/mhObrpSxnNz3
+         KA11fLu9Miu0dXi15GGqv6sXHOCPflKscboXmmb2EYLUfLlb8UwsWDrQlqaFyHFs78Kz
+         aRXRSLoi/OfgaqOMMukpt0HKkmQBltzIRtsu74VQEoS2fzbQ2+NPLT9HqTA42fS716YZ
+         xn5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686610150; x=1689202150;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yMmxc/ZlzSp2pSayA1Jf1ORJAaDDiWOvtHQDYBNVV8M=;
+        b=kfqC6z6vw4+rM1dunDt2bxW4Gy8hyDBkF96uEOQrTCdkxaHrFQRDKiAIi0qdH7WlW7
+         MTbq2ny0PFtSv1zbT4sKhozij2ig681Y4KDO943uxpyH4LIjcQFutkSmz3HlcKXpItzf
+         2Vyk5XdIoappGaoH1K0+Tho6TUEs6a8Y6VLb1gXtara3R6+1z/pxMxOSVz1w/SreZazD
+         7drLpZfU9+/ta0rBx8gbM90K4WL4GhKetw9qvrNZhnmmnuNRhQXlfKsYNJJexQIumzBb
+         vmYt6KYt72zTUBER895OrZI7tJSqHr7+5pdtMJRq0zbVesgJ46gi8C8jbklm4kTiFBMD
+         Mk6A==
+X-Gm-Message-State: AC+VfDzBHwSA0HJIRh+0/l28vIcXsLvCSoagzdOHHEGvEE5y0ZUOO+SI
+        xtjhhAHe8pAmJrHOawL0N8mfwg==
+X-Google-Smtp-Source: ACHHUZ6TSeaogH4KYTW1IoJN8v9NiL+QRZJAZ96mx033PX6idn2fqyo+u1Ja4kGseUdUrRBTdYpvWw==
+X-Received: by 2002:a17:902:b008:b0:1b3:bd59:8c9 with SMTP id o8-20020a170902b00800b001b3bd5908c9mr5957005plr.43.1686610149884;
+        Mon, 12 Jun 2023 15:49:09 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-79-151.pa.nsw.optusnet.com.au. [49.179.79.151])
+        by smtp.gmail.com with ESMTPSA id jo23-20020a170903055700b001993a1fce7bsm8738946plb.196.2023.06.12.15.49.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 15:49:09 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1q8qLR-00B3Dh-1L;
+        Tue, 13 Jun 2023 08:49:05 +1000
+Date:   Tue, 13 Jun 2023 08:49:05 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Wang Yugui <wangyugui@e16-tech.com>,
         Christoph Hellwig <hch@infradead.org>,
         "Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH v3 8/8] iomap: Copy larger chunks from userspace
-Date:   Mon, 12 Jun 2023 21:39:10 +0100
-Message-Id: <20230612203910.724378-9-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230612203910.724378-1-willy@infradead.org>
+Subject: Re: [PATCH v3 6/8] filemap: Allow __filemap_get_folio to allocate
+ large folios
+Message-ID: <ZIeg4Uak9meY1tZ7@dread.disaster.area>
 References: <20230612203910.724378-1-willy@infradead.org>
+ <20230612203910.724378-7-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230612203910.724378-7-willy@infradead.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,74 +78,42 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-If we have a large folio, we can copy in larger chunks than PAGE_SIZE.
-Start at the maximum page cache size and shrink by half every time we
-hit the "we are short on memory" problem.
+On Mon, Jun 12, 2023 at 09:39:08PM +0100, Matthew Wilcox (Oracle) wrote:
+> Allow callers of __filemap_get_folio() to specify a preferred folio
+> order in the FGP flags.  This is only honoured in the FGP_CREATE path;
+> if there is already a folio in the page cache that covers the index,
+> we will return it, no matter what its order is.  No create-around is
+> attempted; we will only create folios which start at the specified index.
+> Unmodified callers will continue to allocate order 0 folios.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+.....
+> -		/* Init accessed so avoid atomic mark_page_accessed later */
+> -		if (fgp_flags & FGP_ACCESSED)
+> -			__folio_set_referenced(folio);
+> +		if (!mapping_large_folio_support(mapping))
+> +			order = 0;
+> +		if (order > MAX_PAGECACHE_ORDER)
+> +			order = MAX_PAGECACHE_ORDER;
+> +		/* If we're not aligned, allocate a smaller folio */
+> +		if (index & ((1UL << order) - 1))
+> +			order = __ffs(index);
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/iomap/buffered-io.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+If I read this right, if we pass in an unaligned index, we won't get
+the size of the folio we ask for?
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index a5d62c9640cf..818dc350ffc5 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -768,6 +768,7 @@ static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
- static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- {
- 	loff_t length = iomap_length(iter);
-+	size_t chunk = PAGE_SIZE << MAX_PAGECACHE_ORDER;
- 	loff_t pos = iter->pos;
- 	ssize_t written = 0;
- 	long status = 0;
-@@ -776,15 +777,13 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 
- 	do {
- 		struct folio *folio;
--		struct page *page;
--		unsigned long offset;	/* Offset into pagecache page */
--		unsigned long bytes;	/* Bytes to write to page */
-+		size_t offset;		/* Offset into folio */
-+		unsigned long bytes;	/* Bytes to write to folio */
- 		size_t copied;		/* Bytes copied from user */
- 
--		offset = offset_in_page(pos);
--		bytes = min_t(unsigned long, PAGE_SIZE - offset,
--						iov_iter_count(i));
- again:
-+		offset = pos & (chunk - 1);
-+		bytes = min(chunk - offset, iov_iter_count(i));
- 		status = balance_dirty_pages_ratelimited_flags(mapping,
- 							       bdp_flags);
- 		if (unlikely(status))
-@@ -814,11 +813,14 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 		if (iter->iomap.flags & IOMAP_F_STALE)
- 			break;
- 
--		page = folio_file_page(folio, pos >> PAGE_SHIFT);
-+		offset = offset_in_folio(folio, pos);
-+		if (bytes > folio_size(folio) - offset)
-+			bytes = folio_size(folio) - offset;
-+
- 		if (mapping_writably_mapped(mapping))
--			flush_dcache_page(page);
-+			flush_dcache_folio(folio);
- 
--		copied = copy_page_from_iter_atomic(page, offset, bytes, i);
-+		copied = copy_page_from_iter_atomic(&folio->page, offset, bytes, i);
- 
- 		status = iomap_write_end(iter, pos, bytes, copied, folio);
- 
-@@ -835,6 +837,8 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 			 */
- 			if (copied)
- 				bytes = copied;
-+			if (chunk > PAGE_SIZE)
-+				chunk /= 2;
- 			goto again;
- 		}
- 		pos += status;
+e.g. if we want an order-4 folio (64kB) because we have a 64kB block
+size in the filesystem, then we have to pass in an index that
+order-4 aligned, yes?
+
+I ask this, because the later iomap code that asks for large folios
+only passes in "pos >> PAGE_SHIFT" so it looks to me like it won't
+allocate large folios for anything other than large folio aligned
+writes, even if we need them.
+
+What am I missing?
+
+-Dave.
 -- 
-2.39.2
-
+Dave Chinner
+david@fromorbit.com
