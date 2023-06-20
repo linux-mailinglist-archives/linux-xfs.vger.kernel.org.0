@@ -2,70 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4134F736096
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jun 2023 02:20:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C904736095
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jun 2023 02:20:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbjFTAUc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 19 Jun 2023 20:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34648 "EHLO
+        id S229571AbjFTAUb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 19 Jun 2023 20:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229562AbjFTAUa (ORCPT
+        with ESMTP id S229558AbjFTAUa (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Jun 2023 20:20:30 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C19C2B4
-        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:28 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-25eb777c7f2so1485388a91.0
-        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:28 -0700 (PDT)
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121BEE63
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:29 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6686c74183cso2152707b3a.1
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1687220428; x=1689812428;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NLP327MMWpN0gaDSq2FAK+W7XNQLf/vMnB1vg0PLl4U=;
-        b=iOcIawzye+gEhdrMXm4408jgHRgPgg5QJJ7eARGovuyMV2JE26xpw/efdBDdhtS2M/
-         bUi2sj/rRFavYF1hjR+WJ8r3dFpKUJmGEg2wMxMODTLW0VA0UGGoMyTM5x0gYjwWKQi3
-         q4cqA87VO4itXm+CMdI5y9J6EPvNqiUTIdsqZ8E6e/KVNgHJUzRPrkXPk/xUymHUyV6c
-         2FLCA8kVJ7sGmgA/7sbtqvsFKiPT1RaNcEBBmIuW1ChwNpWVZcnzYpNXvi1n/iERE21d
-         uYwgstxA6dWJtCK66ANwNnOI1KAajVssV8LSbz6qAS/zVnAEnOhBgkPtcNU/zDVy66zB
-         +npg==
+        bh=4O2k46lv/gI7xyqpvXtBgdwqM0g/QagZozuLf4U9K4c=;
+        b=gr33BJTkGOl4AblCFa56HE8E1lBftwfVo+IRVo6oWtlom1TI4ZziwAMKONfL/PM8fC
+         vOVIsmMCkTu57tBSuTtPiDkqGV2QTFDbl1Vj0y+k9qYf1D77tHqN3s5ei3KU/RijQ8A9
+         Sxi7cVNHOqHBtlsmU7dXxY0Dwfd41EAhAb1C4gaZT+d9SrLJkUm0VJPTgrL9ekqK+vtz
+         4zS5LjdbQWJmI5MiSsu5c/KcxRya7K7uIt6zgSqfhm3gBG9E7bEsRnl5vuOkbnr9WKdU
+         8R7y5Wwp0X3D2UjNJ3a0JPQzyKUjssbqOJrbRGHQvXtsH4rolSePGqUBehXShDUNaEDi
+         vy3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20221208; t=1687220428; x=1689812428;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NLP327MMWpN0gaDSq2FAK+W7XNQLf/vMnB1vg0PLl4U=;
-        b=HDV+ckNZZK6FMwX4b1yZxe8LM/bIJ+UeeGWyn/1/M9t9a72imXTLeK4gy5cAKzkEVR
-         R9SGsV2EId8zEYY5GPe2rgFCAqmGwwAMcweHHYDX+AL7DfSI8CSOjilvzScN8h/iGUo/
-         i/QvsQhU+2jfc25HHkbZaqwbfP+eR3uBPhHlIJPNZkGALOVH4OUwVZi2aL8uK9T1fmHK
-         bXvbzR3rHEp6LfQtb6C9TbQohHPH0fVDhtl9LOgRNLUXi7ZVo4DqWXwIIozK94YI3ZVp
-         4t8o8hB906vmj0CfbW0P6dEdY53fajuK4MbQJEQTTkVPaPoYM+HE/NTqx90LJeTy6xgR
-         Uujw==
-X-Gm-Message-State: AC+VfDxaLuCWcoMQtP2l0ULxeR6YXrMXK/ChWv+OVJZ8/DE542kEggSY
-        5rpk1QN9OM9tIVkI1FfapqmgmpyfRNfaoTfLbAM=
-X-Google-Smtp-Source: ACHHUZ6JJ5mwLGoePntK3SDpVYz1QRTfj6ZKpWdRbT0EXbu2IRxfV4qw+ENx1Ly3lIC+ycLYg/9NPA==
-X-Received: by 2002:a17:90a:ee4b:b0:25e:a451:19fd with SMTP id bu11-20020a17090aee4b00b0025ea45119fdmr5161515pjb.49.1687220428049;
+        bh=4O2k46lv/gI7xyqpvXtBgdwqM0g/QagZozuLf4U9K4c=;
+        b=I93ZqS6t2Ci89nLfFSVeh9JJsos1XPKIHdlQZwKgSEJr6ybMr+NPu+bnmxDuinrp7x
+         5g28CtZRJKZJ0AYzsEgOhsyrqcBUBa3LezVYGzdDkRr+vNVH7/HVMyaLVoFkT0tyCJaH
+         Ix77MAeQuUS1CclHorMp7u2WWhDGuV51r7AQGyx1gEf+uA0HUKBWkEfpGFTds0ddnbya
+         Ul+BHRF6EjGilrw4lk7Sl/gtwsTYEdzGnV0DcRmiY+Bj5sL6cMOjp4OBASy8ogqYA2zK
+         ptlxxIRAJYjM6TXcrmitlNAyhVFCLq8OXz1druS6hjTabalUBZr7syo56stlOoycqt6y
+         Pbhg==
+X-Gm-Message-State: AC+VfDxSrwFndMzknrCvHVApP9RofAm7C4faQI0dB4Fogk1r6/xLWauq
+        lO61jm305iczfbDXfVVwVYqLW+C4ypGBOQpR3QE=
+X-Google-Smtp-Source: ACHHUZ7UzAEOiTrFp1pW9Y2BUyZUOPLyzl3PQ/QsgV0MvgFU50aCnXfs+xV/DcqQOwk7kLOG8A+pYw==
+X-Received: by 2002:a05:6a00:182a:b0:668:6eed:7c18 with SMTP id y42-20020a056a00182a00b006686eed7c18mr9750623pfa.9.1687220428477;
         Mon, 19 Jun 2023 17:20:28 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-13-202.pa.nsw.optusnet.com.au. [49.180.13.202])
-        by smtp.gmail.com with ESMTPSA id 5-20020a17090a190500b00256dff5f8e3sm343930pjg.49.2023.06.19.17.20.25
+        by smtp.gmail.com with ESMTPSA id a16-20020aa78650000000b00659b8313d08sm203104pfo.78.2023.06.19.17.20.25
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 19 Jun 2023 17:20:27 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.96)
         (envelope-from <dave@fromorbit.com>)
-        id 1qBP6d-00DqgK-1c
+        id 1qBP6d-00DqgO-1p
         for linux-xfs@vger.kernel.org;
         Tue, 20 Jun 2023 10:20:23 +1000
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1qBP6d-004dmC-0Y
+        id 1qBP6d-004dmH-0j
         for linux-xfs@vger.kernel.org;
         Tue, 20 Jun 2023 10:20:23 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/5] xfs: don't block in busy flushing when freeing extents
-Date:   Tue, 20 Jun 2023 10:20:20 +1000
-Message-Id: <20230620002021.1038067-5-david@fromorbit.com>
+Subject: [PATCH 5/5] xfs: journal geometry is not properly bounds checked
+Date:   Tue, 20 Jun 2023 10:20:21 +1000
+Message-Id: <20230620002021.1038067-6-david@fromorbit.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230620002021.1038067-1-david@fromorbit.com>
 References: <20230620002021.1038067-1-david@fromorbit.com>
@@ -82,321 +82,203 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-If the current transaction holds a busy extent and we are trying to
-allocate a new extent to fix up the free list, we can deadlock if
-the AG is entirely empty except for the busy extent held by the
-transaction.
+If the journal geometry results in a sector or log stripe unit
+validation problem, it indicates that we cannot set the log up to
+safely write to the the journal. In these cases, we must abort the
+mount because the corruption needs external intervention to resolve.
+Similarly, a journal that is too large cannot be written to safely,
+either, so we shouldn't allow those geometries to mount, either.
 
-This can occur at runtime processing an XEFI with multiple extents
-in this path:
+If the log is too small, we risk having transaction reservations
+overruning the available log space and the system hanging waiting
+for space it can never provide. This is purely a runtime hang issue,
+not a corruption issue as per the first cases listed above. We abort
+mounts of the log is too small for V5 filesystems, but we must allow
+v4 filesystems to mount because, historically, there was no log size
+validity checking and so some systems may still be out there with
+undersized logs.
 
-__schedule+0x22f at ffffffff81f75e8f
-schedule+0x46 at ffffffff81f76366
-xfs_extent_busy_flush+0x69 at ffffffff81477d99
-xfs_alloc_ag_vextent_size+0x16a at ffffffff8141711a
-xfs_alloc_ag_vextent+0x19b at ffffffff81417edb
-xfs_alloc_fix_freelist+0x22f at ffffffff8141896f
-xfs_free_extent_fix_freelist+0x6a at ffffffff8141939a
-__xfs_free_extent+0x99 at ffffffff81419499
-xfs_trans_free_extent+0x3e at ffffffff814a6fee
-xfs_extent_free_finish_item+0x24 at ffffffff814a70d4
-xfs_defer_finish_noroll+0x1f7 at ffffffff81441407
-xfs_defer_finish+0x11 at ffffffff814417e1
-xfs_itruncate_extents_flags+0x13d at ffffffff8148b7dd
-xfs_inactive_truncate+0xb9 at ffffffff8148bb89
-xfs_inactive+0x227 at ffffffff8148c4f7
-xfs_fs_destroy_inode+0xb8 at ffffffff81496898
-destroy_inode+0x3b at ffffffff8127d2ab
-do_unlinkat+0x1d1 at ffffffff81270df1
-do_syscall_64+0x40 at ffffffff81f6b5f0
-entry_SYSCALL_64_after_hwframe+0x44 at ffffffff8200007c
+The problem is that on V4 filesystems, when we discover a log
+geometry problem, we skip all the remaining checks and then allow
+the log to continue mounting. This mean that if one of the log size
+checks fails, we skip the log stripe unit check. i.e. we allow the
+mount because a "non-fatal" geometry is violated, and then fail to
+check the hard fail geometries that should fail the mount.
 
-This can also happen in log recovery when processing an EFI
-with multiple extents through this path:
+Move all these fatal checks to the superblock verifier, and add a
+new check for the two log sector size geometry variables having the
+same values. This will prevent any attempt to mount a log that has
+invalid or inconsistent geometries long before we attempt to mount
+the log.
 
-context_switch() kernel/sched/core.c:3881
-__schedule() kernel/sched/core.c:5111
-schedule() kernel/sched/core.c:5186
-xfs_extent_busy_flush() fs/xfs/xfs_extent_busy.c:598
-xfs_alloc_ag_vextent_size() fs/xfs/libxfs/xfs_alloc.c:1641
-xfs_alloc_ag_vextent() fs/xfs/libxfs/xfs_alloc.c:828
-xfs_alloc_fix_freelist() fs/xfs/libxfs/xfs_alloc.c:2362
-xfs_free_extent_fix_freelist() fs/xfs/libxfs/xfs_alloc.c:3029
-__xfs_free_extent() fs/xfs/libxfs/xfs_alloc.c:3067
-xfs_trans_free_extent() fs/xfs/xfs_extfree_item.c:370
-xfs_efi_recover() fs/xfs/xfs_extfree_item.c:626
-xlog_recover_process_efi() fs/xfs/xfs_log_recover.c:4605
-xlog_recover_process_intents() fs/xfs/xfs_log_recover.c:4893
-xlog_recover_finish() fs/xfs/xfs_log_recover.c:5824
-xfs_log_mount_finish() fs/xfs/xfs_log.c:764
-xfs_mountfs() fs/xfs/xfs_mount.c:978
-xfs_fs_fill_super() fs/xfs/xfs_super.c:1908
-mount_bdev() fs/super.c:1417
-xfs_fs_mount() fs/xfs/xfs_super.c:1985
-legacy_get_tree() fs/fs_context.c:647
-vfs_get_tree() fs/super.c:1547
-do_new_mount() fs/namespace.c:2843
-do_mount() fs/namespace.c:3163
-ksys_mount() fs/namespace.c:3372
-__do_sys_mount() fs/namespace.c:3386
-__se_sys_mount() fs/namespace.c:3383
-__x64_sys_mount() fs/namespace.c:3383
-do_syscall_64() arch/x86/entry/common.c:296
-entry_SYSCALL_64() arch/x86/entry/entry_64.S:180
+However, for the minimum log size checks, we can only do that once
+we've setup up the log and calculated all the iclog sizes and
+roundoffs. Hence this needs to remain in the log mount code after
+the log has been initialised. It is also the only case where we
+should allow a v4 filesystem to continue running, so leave that
+handling in place, too.
 
-To avoid this deadlock, we should not block in
-xfs_extent_busy_flush() if we hold a busy extent in the current
-transaction.
-
-Now that the EFI processing code can handle requeuing a partially
-completed EFI, we can detect this situation in
-xfs_extent_busy_flush() and return -EAGAIN rather than going to
-sleep forever. The -EAGAIN get propagated back out to the
-xfs_trans_free_extent() context, where the EFD is populated and the
-transaction is rolled, thereby moving the busy extents into the CIL.
-
-At this point, we can retry the extent free operation again with a
-clean transaction. If we hit the same "all free extents are busy"
-situation when trying to fix up the free list, we can safely call
-xfs_extent_busy_flush() and wait for the busy extents to resolve
-and wake us. At this point, the allocation search can make progress
-again and we can fix up the free list.
-
-This deadlock was first reported by Chandan in mid-2021, but I
-couldn't make myself understood during review, and didn't have time
-to fix it myself.
-
-It was reported again in March 2023, and again I have found myself
-unable to explain the complexities of the solution needed during
-review.
-
-As such, I don't have hours more time to waste trying to get the
-fix written the way it needs to be written, so I'm just doing it
-myself. This patchset is largely based on Wengang Wang's last patch,
-but with all the unnecessary stuff removed, split up into multiple
-patches and cleaned up somewhat.
-
-Reported-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reported-by: Wengang Wang <wen.gang.wang@oracle.com>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c | 68 ++++++++++++++++++++++++++++-----------
- fs/xfs/libxfs/xfs_alloc.h | 11 ++++---
- fs/xfs/xfs_extent_busy.c  | 33 ++++++++++++++++---
- fs/xfs/xfs_extent_busy.h  |  6 ++--
- 4 files changed, 88 insertions(+), 30 deletions(-)
+ fs/xfs/libxfs/xfs_sb.c | 56 +++++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_log.c       | 47 +++++++++++------------------------
+ 2 files changed, 70 insertions(+), 33 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 11bd0a1756a1..7c675aae0a0f 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -1556,6 +1556,8 @@ xfs_alloc_ag_vextent_near(
- 	if (args->agbno > args->max_agbno)
- 		args->agbno = args->max_agbno;
- 
-+	/* Retry once quickly if we find busy extents before blocking. */
-+	alloc_flags |= XFS_ALLOC_FLAG_TRYFLUSH;
- restart:
- 	len = 0;
- 
-@@ -1611,9 +1613,20 @@ xfs_alloc_ag_vextent_near(
- 	 */
- 	if (!acur.len) {
- 		if (acur.busy) {
-+			/*
-+			 * Our only valid extents must have been busy. Flush and
-+			 * retry the allocation again. If we get an -EAGAIN
-+			 * error, we're being told that a deadlock was avoided
-+			 * and the current transaction needs committing before
-+			 * the allocation can be retried.
-+			 */
- 			trace_xfs_alloc_near_busy(args);
--			xfs_extent_busy_flush(args->mp, args->pag,
--					      acur.busy_gen, alloc_flags);
-+			error = xfs_extent_busy_flush(args->tp, args->pag,
-+					acur.busy_gen, alloc_flags);
-+			if (error)
-+				goto out;
-+
-+			alloc_flags &= ~XFS_ALLOC_FLAG_TRYFLUSH;
- 			goto restart;
- 		}
- 		trace_xfs_alloc_size_neither(args);
-@@ -1653,6 +1666,8 @@ xfs_alloc_ag_vextent_size(
- 	int			error;
- 	int			i;
- 
-+	/* Retry once quickly if we find busy extents before blocking. */
-+	alloc_flags |= XFS_ALLOC_FLAG_TRYFLUSH;
- restart:
- 	/*
- 	 * Allocate and initialize a cursor for the by-size btree.
-@@ -1710,19 +1725,25 @@ xfs_alloc_ag_vextent_size(
- 			error = xfs_btree_increment(cnt_cur, 0, &i);
- 			if (error)
- 				goto error0;
--			if (i == 0) {
--				/*
--				 * Our only valid extents must have been busy.
--				 * Make it unbusy by forcing the log out and
--				 * retrying.
--				 */
--				xfs_btree_del_cursor(cnt_cur,
--						     XFS_BTREE_NOERROR);
--				trace_xfs_alloc_size_busy(args);
--				xfs_extent_busy_flush(args->mp, args->pag,
--						busy_gen, alloc_flags);
--				goto restart;
--			}
-+			if (i)
-+				continue;
-+
-+			/*
-+			 * Our only valid extents must have been busy. Flush and
-+			 * retry the allocation again. If we get an -EAGAIN
-+			 * error, we're being told that a deadlock was avoided
-+			 * and the current transaction needs committing before
-+			 * the allocation can be retried.
-+			 */
-+			trace_xfs_alloc_size_busy(args);
-+			error = xfs_extent_busy_flush(args->tp, args->pag,
-+					busy_gen, alloc_flags);
-+			if (error)
-+				goto error0;
-+
-+			alloc_flags &= ~XFS_ALLOC_FLAG_TRYFLUSH;
-+			xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
-+			goto restart;
- 		}
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index ba0f17bc1dc0..5e174685a77c 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -412,7 +412,6 @@ xfs_validate_sb_common(
+ 	    sbp->sb_inodelog < XFS_DINODE_MIN_LOG			||
+ 	    sbp->sb_inodelog > XFS_DINODE_MAX_LOG			||
+ 	    sbp->sb_inodesize != (1 << sbp->sb_inodelog)		||
+-	    sbp->sb_logsunit > XLOG_MAX_RECORD_BSIZE			||
+ 	    sbp->sb_inopblock != howmany(sbp->sb_blocksize,sbp->sb_inodesize) ||
+ 	    XFS_FSB_TO_B(mp, sbp->sb_agblocks) < XFS_MIN_AG_BYTES	||
+ 	    XFS_FSB_TO_B(mp, sbp->sb_agblocks) > XFS_MAX_AG_BYTES	||
+@@ -430,6 +429,61 @@ xfs_validate_sb_common(
+ 		return -EFSCORRUPTED;
  	}
  
-@@ -1802,10 +1823,21 @@ xfs_alloc_ag_vextent_size(
- 	args->len = rlen;
- 	if (rlen < args->minlen) {
- 		if (busy) {
--			xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
-+			/*
-+			 * Our only valid extents must have been busy. Flush and
-+			 * retry the allocation again. If we get an -EAGAIN
-+			 * error, we're being told that a deadlock was avoided
-+			 * and the current transaction needs committing before
-+			 * the allocation can be retried.
-+			 */
- 			trace_xfs_alloc_size_busy(args);
--			xfs_extent_busy_flush(args->mp, args->pag, busy_gen,
--					alloc_flags);
-+			error = xfs_extent_busy_flush(args->tp, args->pag,
-+					busy_gen, alloc_flags);
-+			if (error)
-+				goto error0;
-+
-+			alloc_flags &= ~XFS_ALLOC_FLAG_TRYFLUSH;
-+			xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
- 			goto restart;
- 		}
- 		goto out_nominleft;
-diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index d1aa7c63eafe..f267842e36ba 100644
---- a/fs/xfs/libxfs/xfs_alloc.h
-+++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -19,11 +19,12 @@ unsigned int xfs_agfl_size(struct xfs_mount *mp);
- /*
-  * Flags for xfs_alloc_fix_freelist.
-  */
--#define	XFS_ALLOC_FLAG_TRYLOCK	0x00000001  /* use trylock for buffer locking */
--#define	XFS_ALLOC_FLAG_FREEING	0x00000002  /* indicate caller is freeing extents*/
--#define	XFS_ALLOC_FLAG_NORMAP	0x00000004  /* don't modify the rmapbt */
--#define	XFS_ALLOC_FLAG_NOSHRINK	0x00000008  /* don't shrink the freelist */
--#define	XFS_ALLOC_FLAG_CHECK	0x00000010  /* test only, don't modify args */
-+#define	XFS_ALLOC_FLAG_TRYLOCK	(1U << 0)  /* use trylock for buffer locking */
-+#define	XFS_ALLOC_FLAG_FREEING	(1U << 1)  /* indicate caller is freeing extents*/
-+#define	XFS_ALLOC_FLAG_NORMAP	(1U << 2)  /* don't modify the rmapbt */
-+#define	XFS_ALLOC_FLAG_NOSHRINK	(1U << 3)  /* don't shrink the freelist */
-+#define	XFS_ALLOC_FLAG_CHECK	(1U << 4)  /* test only, don't modify args */
-+#define	XFS_ALLOC_FLAG_TRYFLUSH	(1U << 5)  /* don't wait in busy extent flush */
- 
- /*
-  * Argument structure for xfs_alloc routines.
-diff --git a/fs/xfs/xfs_extent_busy.c b/fs/xfs/xfs_extent_busy.c
-index 5f44936eae1c..7c2fdc71e42d 100644
---- a/fs/xfs/xfs_extent_busy.c
-+++ b/fs/xfs/xfs_extent_busy.c
-@@ -566,10 +566,21 @@ xfs_extent_busy_clear(
- 
- /*
-  * Flush out all busy extents for this AG.
-+ *
-+ * If the current transaction is holding busy extents, the caller may not want
-+ * to wait for committed busy extents to resolve. If we are being told just to
-+ * try a flush or progress has been made since we last skipped a busy extent,
-+ * return immediately to allow the caller to try again.
-+ *
-+ * If we are freeing extents, we might actually be holding the only free extents
-+ * in the transaction busy list and the log force won't resolve that situation.
-+ * In this case, we must return -EAGAIN to avoid a deadlock by informing the
-+ * caller it needs to commit the busy extents it holds before retrying the
-+ * extent free operation.
-  */
--void
-+int
- xfs_extent_busy_flush(
--	struct xfs_mount	*mp,
-+	struct xfs_trans	*tp,
- 	struct xfs_perag	*pag,
- 	unsigned		busy_gen,
- 	uint32_t		alloc_flags)
-@@ -577,10 +588,23 @@ xfs_extent_busy_flush(
- 	DEFINE_WAIT		(wait);
- 	int			error;
- 
--	error = xfs_log_force(mp, XFS_LOG_SYNC);
-+	error = xfs_log_force(tp->t_mountp, XFS_LOG_SYNC);
- 	if (error)
--		return;
-+		return error;
- 
-+	/* Avoid deadlocks on uncommitted busy extents. */
-+	if (!list_empty(&tp->t_busy)) {
-+		if (alloc_flags & XFS_ALLOC_FLAG_TRYFLUSH)
-+			return 0;
-+
-+		if (busy_gen != READ_ONCE(pag->pagb_gen))
-+			return 0;
-+
-+		if (alloc_flags & XFS_ALLOC_FLAG_FREEING)
-+			return -EAGAIN;
++	/*
++	 * Logs that are too large are not supported at all. Reject them
++	 * outright. Logs that are too small are tolerated on v4 filesystems,
++	 * but we can only check that when mounting the log. Hence we skip
++	 * those checks here.
++	 */
++	if (sbp->sb_logblocks > XFS_MAX_LOG_BLOCKS) {
++		xfs_notice(mp,
++		"Log size 0x%x blocks too large, maximum size is 0x%llx blocks",
++			 sbp->sb_logblocks, XFS_MAX_LOG_BLOCKS);
++		return -EFSCORRUPTED;
 +	}
 +
-+	/* Wait for committed busy extents to resolve. */
- 	do {
- 		prepare_to_wait(&pag->pagb_wait, &wait, TASK_KILLABLE);
- 		if  (busy_gen != READ_ONCE(pag->pagb_gen))
-@@ -589,6 +613,7 @@ xfs_extent_busy_flush(
- 	} while (1);
++	if (XFS_FSB_TO_B(mp, sbp->sb_logblocks) > XFS_MAX_LOG_BYTES) {
++		xfs_warn(mp,
++		"log size 0x%llx bytes too large, maximum size is 0x%llx bytes",
++			 XFS_FSB_TO_B(mp, sbp->sb_logblocks),
++			 XFS_MAX_LOG_BYTES);
++		return -EFSCORRUPTED;
++	}
++
++	/*
++	 * Do not allow filesystems with corrupted log sector or stripe units to
++	 * be mounted. We cannot safely size the iclogs or write to the log if
++	 * the log stripe unit is not valid.
++	 */
++	if (sbp->sb_versionnum & XFS_SB_VERSION_SECTORBIT) {
++		if (sbp->sb_logsectsize != (1U << sbp->sb_logsectlog)) {
++			xfs_notice(mp,
++			"log sector size in bytes/log2 (0x%x/0x%x) must match",
++				sbp->sb_logsectsize, 1U << sbp->sb_logsectlog);
++			return -EFSCORRUPTED;
++		}
++	} else if (sbp->sb_logsectsize || sbp->sb_logsectlog) {
++		xfs_notice(mp,
++		"log sector size in bytes/log2 (0x%x/0x%x) are not zero",
++			sbp->sb_logsectsize, sbp->sb_logsectlog);
++		return -EFSCORRUPTED;
++	}
++
++	if (sbp->sb_logsunit > 1) {
++		if (sbp->sb_logsunit % sbp->sb_blocksize) {
++			xfs_notice(mp,
++		"log stripe unit 0x%x bytes must be a multiple of block size",
++				sbp->sb_logsunit);
++			return -EFSCORRUPTED;
++		}
++		if (sbp->sb_logsunit > XLOG_MAX_RECORD_BSIZE) {
++			xfs_notice(mp,
++		"log stripe unit 0x%x bytes over maximum size (0x%x bytes)",
++				sbp->sb_logsunit, XLOG_MAX_RECORD_BSIZE);
++			return -EFSCORRUPTED;
++		}
++	}
++
+ 	/* Validate the realtime geometry; stolen from xfs_repair */
+ 	if (sbp->sb_rextsize * sbp->sb_blocksize > XFS_MAX_RTEXTSIZE ||
+ 	    sbp->sb_rextsize * sbp->sb_blocksize < XFS_MIN_RTEXTSIZE) {
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index fc61cc024023..79004d193e54 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -639,7 +639,6 @@ xfs_log_mount(
+ 	int		num_bblks)
+ {
+ 	struct xlog	*log;
+-	bool		fatal = xfs_has_crc(mp);
+ 	int		error = 0;
+ 	int		min_logfsbs;
  
- 	finish_wait(&pag->pagb_wait, &wait);
-+	return 0;
- }
+@@ -663,53 +662,37 @@ xfs_log_mount(
+ 	mp->m_log = log;
  
- void
-diff --git a/fs/xfs/xfs_extent_busy.h b/fs/xfs/xfs_extent_busy.h
-index 7a82c689bfa4..c37bf87e6781 100644
---- a/fs/xfs/xfs_extent_busy.h
-+++ b/fs/xfs/xfs_extent_busy.h
-@@ -51,9 +51,9 @@ bool
- xfs_extent_busy_trim(struct xfs_alloc_arg *args, xfs_agblock_t *bno,
- 		xfs_extlen_t *len, unsigned *busy_gen);
- 
--void
--xfs_extent_busy_flush(struct xfs_mount *mp, struct xfs_perag *pag,
--	unsigned busy_gen, uint32_t alloc_flags);
-+int
-+xfs_extent_busy_flush(struct xfs_trans *tp, struct xfs_perag *pag,
-+		unsigned busy_gen, uint32_t alloc_flags);
- 
- void
- xfs_extent_busy_wait_all(struct xfs_mount *mp);
+ 	/*
+-	 * Validate the given log space and drop a critical message via syslog
+-	 * if the log size is too small that would lead to some unexpected
+-	 * situations in transaction log space reservation stage.
++	 * Now that we have set up the log and it's internal geometry
++	 * parameters, we can validate the given log space and drop a critical
++	 * message via syslog if the log size is too small. A log that is too
++	 * small can lead to unexpected situations in transaction log space
++	 * reservation stage. The superblock verifier has already validated all
++	 * the other log geometry constraints, so we don't have to check those
++	 * here.
+ 	 *
+-	 * Note: we can't just reject the mount if the validation fails.  This
+-	 * would mean that people would have to downgrade their kernel just to
+-	 * remedy the situation as there is no way to grow the log (short of
+-	 * black magic surgery with xfs_db).
++	 * Note: For v4 filesystems, we can't just reject the mount if the
++	 * validation fails.  This would mean that people would have to
++	 * downgrade their kernel just to remedy the situation as there is no
++	 * way to grow the log (short of black magic surgery with xfs_db).
+ 	 *
+-	 * We can, however, reject mounts for CRC format filesystems, as the
++	 * We can, however, reject mounts for V5 format filesystems, as the
+ 	 * mkfs binary being used to make the filesystem should never create a
+ 	 * filesystem with a log that is too small.
+ 	 */
+ 	min_logfsbs = xfs_log_calc_minimum_size(mp);
+-
+ 	if (mp->m_sb.sb_logblocks < min_logfsbs) {
+ 		xfs_warn(mp,
+ 		"Log size %d blocks too small, minimum size is %d blocks",
+ 			 mp->m_sb.sb_logblocks, min_logfsbs);
+-		error = -EINVAL;
+-	} else if (mp->m_sb.sb_logblocks > XFS_MAX_LOG_BLOCKS) {
+-		xfs_warn(mp,
+-		"Log size %d blocks too large, maximum size is %lld blocks",
+-			 mp->m_sb.sb_logblocks, XFS_MAX_LOG_BLOCKS);
+-		error = -EINVAL;
+-	} else if (XFS_FSB_TO_B(mp, mp->m_sb.sb_logblocks) > XFS_MAX_LOG_BYTES) {
+-		xfs_warn(mp,
+-		"log size %lld bytes too large, maximum size is %lld bytes",
+-			 XFS_FSB_TO_B(mp, mp->m_sb.sb_logblocks),
+-			 XFS_MAX_LOG_BYTES);
+-		error = -EINVAL;
+-	} else if (mp->m_sb.sb_logsunit > 1 &&
+-		   mp->m_sb.sb_logsunit % mp->m_sb.sb_blocksize) {
+-		xfs_warn(mp,
+-		"log stripe unit %u bytes must be a multiple of block size",
+-			 mp->m_sb.sb_logsunit);
+-		error = -EINVAL;
+-		fatal = true;
+-	}
+-	if (error) {
++
+ 		/*
+ 		 * Log check errors are always fatal on v5; or whenever bad
+ 		 * metadata leads to a crash.
+ 		 */
+-		if (fatal) {
++		if (xfs_has_crc(mp)) {
+ 			xfs_crit(mp, "AAIEEE! Log failed size checks. Abort!");
+ 			ASSERT(0);
++			error = -EINVAL;
+ 			goto out_free_log;
+ 		}
+ 		xfs_crit(mp, "Log size out of supported range.");
 -- 
 2.40.1
 
