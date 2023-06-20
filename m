@@ -2,70 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CAC2736097
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jun 2023 02:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26FE3736094
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jun 2023 02:20:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbjFTAUc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 19 Jun 2023 20:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        id S229453AbjFTAUa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 19 Jun 2023 20:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbjFTAUb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Jun 2023 20:20:31 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2624E60
-        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:29 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-666ecb21f86so3086004b3a.3
-        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:29 -0700 (PDT)
+        with ESMTP id S229470AbjFTAU3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Jun 2023 20:20:29 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB76E60
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:27 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6b470ebd670so1432509a34.0
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Jun 2023 17:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1687220429; x=1689812429;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1687220427; x=1689812427;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Vx4uH8XPgrdFkJimt04R4BVo47B66ThPyx1EWCCIzZg=;
-        b=vb47Sze5Z7zy1br9RsbEo/dr4nGCzS201O+3yjORJVgo30OpsjobNP1xyhT4huRVSS
-         8vWd2fAtCInsRKBxl5BIENSzTIGg3O79zdb22HCCKd1nHusl8WBQBYQMa1VjXyWpw1QN
-         wbGtUyKRyucjx15XSCFyN4Kcu5qSiDMNTMOByo3WebKzQC47GxJvt2pwgMaPLzEKTQh6
-         L/9QHmjm+2yuzLsSfclUxLxzMx7bO5lcJ03EFW/2Cw6BTVLSvfYn8jRY6YMZjYEyXyKF
-         t+7CPADypFpoMt3QlhZ5pxXqrfa20sTu63sNNgScQG7WkMlguik4EWeLrCXbnuI8H7HM
-         Vt4w==
+        bh=9uLmVHOOqlEGVnpu4pCCDXlxJ24nmdDN/r/cZHq3dGE=;
+        b=lm6k1E3znpxkir8K6LpNw4X6eckqK7yoLdY+0nllQWzgB2uqX0Un32dka03j8+JlCk
+         LLKuDSdZYJYLHfSGv768zLUCd3guXX//oJRk6XX+Oplv7j0W0wmYrj8VfH+p+eYdfNoF
+         e1LIbSqQNIXSLA8XJWvV6X8fnLXljRxKuZpH6QTPupzMHAS8Xl2hTGTkPXQ7/4YU4lB8
+         XRPDLVaUI58btaONE1+goVrjg7sDudlrkbcmzLQj80dUMJn6tT6ZvJRi9hkd9xcc1Mft
+         7PcqagW9obAYLNLDsV18ummcZrMUSixGNZlWEer5ttITjTEI+bM+vA297ddmF3H9TTVO
+         kemg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687220429; x=1689812429;
+        d=1e100.net; s=20221208; t=1687220427; x=1689812427;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Vx4uH8XPgrdFkJimt04R4BVo47B66ThPyx1EWCCIzZg=;
-        b=jdtB47SCUXDSjIj8asxyiuUObIbShp4AKEhq7MnVs3sP+aG3MOk6dpCsDzHArdEo9h
-         7sf5xxqxe0+3WAlcztVHDBgXgaE9D6Otp2Rz4sgYSJCJodDqBsKmX/K/ti+EGeTi43/n
-         6y6m1XnuIFN62aQZplgo9R7Yu2+ahhwnK0NCxJnGfZmhdN93Yl8Hmme312Z/blX9krIf
-         oQKXmTZfRYMTgEiB2yo5fNwMHbqewRFOY1X/nFGiHdRye6BgRnQmqGC1gj4ykZ52H1o+
-         19xUDNb51IRWawz/1j2W+zdHibhpmdxUonV8ktIR/QV+38AdNhEpM6RrSZ+9B3eEaNmh
-         XF+g==
-X-Gm-Message-State: AC+VfDy9QFvFDyZQ95oOwbhBirogOvS1HKRz6lob0bOvc2P0Ftghs0eR
-        tNXMM+/02f0RHynsSyESb8TuGoBVp6ivtNbmjhw=
-X-Google-Smtp-Source: ACHHUZ6Ch1i9GUZCx7DpIsr2lvumZA2RZpzupRaShRl60jZarv3DCPXsclKWJwm4P8UejqzgbiFYFA==
-X-Received: by 2002:a05:6a20:1455:b0:11f:1b6f:6658 with SMTP id a21-20020a056a20145500b0011f1b6f6658mr12588089pzi.11.1687220429118;
-        Mon, 19 Jun 2023 17:20:29 -0700 (PDT)
+        bh=9uLmVHOOqlEGVnpu4pCCDXlxJ24nmdDN/r/cZHq3dGE=;
+        b=Cru/SE+24nWvpYtY/Lup8O+sCKdd8LRGlprKIPx18K34V2oy5hF+ptzaUYnDlbahex
+         TM27AgU028aSB2+3PuzF4yCRAxUh0ikNA+ZuwAvmrvuyqgIcmDCLpIoab1HVeSXT1X9W
+         cGJvSFgzwhVZI9wjmNqFREieEvPq7qKuikh5SalzxO9sDi0UxEZpFHY9h5S2SndMhLR0
+         UgmHu+YhSMZjOG4KHNYVjuWvxw6x1ZB1xogpABlkI13JM1ZcJ6E22tFZdQhb6Th98MF3
+         LUMmDrpTKdvoY/Uci3PwJfmBzykd3Plg9QuP9OoFW5ghBQ+tzNGapRakp1KU7YM/1iYA
+         KqQA==
+X-Gm-Message-State: AC+VfDy6fdKrapKJq14Dzx7YIhZ8VSuApz7FmLTPlXuaE8RCUfK8Jbgz
+        PtQ6rP1SfT+ch3schQoyiB3n/qWlO45ZP3magpk=
+X-Google-Smtp-Source: ACHHUZ7AAcy+sf6o+aJEwyBkfbDlIC1/1oxFsv0mb5UYyY87j7IzpbjIvh3kCYRYSDdTGo5bqnSNSQ==
+X-Received: by 2002:a05:6808:188d:b0:39e:5886:3dde with SMTP id bi13-20020a056808188d00b0039e58863ddemr13311074oib.12.1687220426820;
+        Mon, 19 Jun 2023 17:20:26 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-13-202.pa.nsw.optusnet.com.au. [49.180.13.202])
-        by smtp.gmail.com with ESMTPSA id j19-20020a62b613000000b00640f51801e6sm187126pff.159.2023.06.19.17.20.26
+        by smtp.gmail.com with ESMTPSA id nd8-20020a17090b4cc800b0025ed38d7dddsm304106pjb.54.2023.06.19.17.20.25
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jun 2023 17:20:27 -0700 (PDT)
+        Mon, 19 Jun 2023 17:20:25 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.96)
         (envelope-from <dave@fromorbit.com>)
-        id 1qBP6d-00DqgA-1K
+        id 1qBP6d-00DqgG-1U
         for linux-xfs@vger.kernel.org;
         Tue, 20 Jun 2023 10:20:23 +1000
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1qBP6d-004dm2-0B
+        id 1qBP6d-004dm8-0P
         for linux-xfs@vger.kernel.org;
         Tue, 20 Jun 2023 10:20:23 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/5] xfs: pass alloc flags through to xfs_extent_busy_flush()
-Date:   Tue, 20 Jun 2023 10:20:18 +1000
-Message-Id: <20230620002021.1038067-3-david@fromorbit.com>
+Subject: [PATCH 3/5] xfs: allow extent free intents to be retried
+Date:   Tue, 20 Jun 2023 10:20:19 +1000
+Message-Id: <20230620002021.1038067-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230620002021.1038067-1-david@fromorbit.com>
 References: <20230620002021.1038067-1-david@fromorbit.com>
@@ -82,366 +82,143 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-To avoid blocking in xfs_extent_busy_flush() when freeing extents
-and the only busy extents are held by the current transaction, we
-need to pass the XFS_ALLOC_FLAG_FREEING flag context all the way
-into xfs_extent_busy_flush().
+Extent freeing neeeds to be able to avoid a busy extent deadlock
+when the transaction itself holds the only busy extents in the
+allocation group. This may occur if we have an EFI that contains
+multiple extents to be freed, and the freeing the second intent
+requires the space the first extent free released to expand the
+AGFL. If we block on the busy extent at this point, we deadlock.
+
+We hold a dirty transaction that contains a entire atomic extent
+free operations within it, so if we can abort the extent free
+operation and commit the progress that we've made, the busy extent
+can be resolved by a log force. Hence we can restart the aborted
+extent free with a new transaction and continue to make
+progress without risking deadlocks.
+
+To enable this, we need the EFI processing code to be able to handle
+an -EAGAIN error to tell it to commit the current transaction and
+retry again. This mechanism is already built into the defer ops
+processing (used bythe refcount btree modification intents), so
+there's relatively little handling we need to add to the EFI code to
+enable this.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c | 96 +++++++++++++++++++++------------------
- fs/xfs/libxfs/xfs_alloc.h |  2 +-
- fs/xfs/xfs_extent_busy.c  |  3 +-
- fs/xfs/xfs_extent_busy.h  |  2 +-
- 4 files changed, 56 insertions(+), 47 deletions(-)
+ fs/xfs/xfs_extfree_item.c | 72 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 69 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index c20fe99405d8..11bd0a1756a1 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -1536,7 +1536,8 @@ xfs_alloc_ag_vextent_lastblock(
-  */
- STATIC int
- xfs_alloc_ag_vextent_near(
--	struct xfs_alloc_arg	*args)
-+	struct xfs_alloc_arg	*args,
-+	uint32_t		alloc_flags)
- {
- 	struct xfs_alloc_cur	acur = {};
- 	int			error;		/* error code */
-@@ -1612,7 +1613,7 @@ xfs_alloc_ag_vextent_near(
- 		if (acur.busy) {
- 			trace_xfs_alloc_near_busy(args);
- 			xfs_extent_busy_flush(args->mp, args->pag,
--					      acur.busy_gen);
-+					      acur.busy_gen, alloc_flags);
- 			goto restart;
- 		}
- 		trace_xfs_alloc_size_neither(args);
-@@ -1635,21 +1636,22 @@ xfs_alloc_ag_vextent_near(
-  * and of the form k * prod + mod unless there's nothing that large.
-  * Return the starting a.g. block, or NULLAGBLOCK if we can't do it.
-  */
--STATIC int				/* error */
-+static int
- xfs_alloc_ag_vextent_size(
--	xfs_alloc_arg_t	*args)		/* allocation argument structure */
-+	struct xfs_alloc_arg	*args,
-+	uint32_t		alloc_flags)
- {
--	struct xfs_agf	*agf = args->agbp->b_addr;
--	struct xfs_btree_cur *bno_cur;	/* cursor for bno btree */
--	struct xfs_btree_cur *cnt_cur;	/* cursor for cnt btree */
--	int		error;		/* error result */
--	xfs_agblock_t	fbno;		/* start of found freespace */
--	xfs_extlen_t	flen;		/* length of found freespace */
--	int		i;		/* temp status variable */
--	xfs_agblock_t	rbno;		/* returned block number */
--	xfs_extlen_t	rlen;		/* length of returned extent */
--	bool		busy;
--	unsigned	busy_gen;
-+	struct xfs_agf		*agf = args->agbp->b_addr;
-+	struct xfs_btree_cur	*bno_cur;
-+	struct xfs_btree_cur	*cnt_cur;
-+	xfs_agblock_t		fbno;		/* start of found freespace */
-+	xfs_extlen_t		flen;		/* length of found freespace */
-+	xfs_agblock_t		rbno;		/* returned block number */
-+	xfs_extlen_t		rlen;		/* length of returned extent */
-+	bool			busy;
-+	unsigned		busy_gen;
-+	int			error;
-+	int			i;
+diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+index f9e36b810663..840df1f66a1a 100644
+--- a/fs/xfs/xfs_extfree_item.c
++++ b/fs/xfs/xfs_extfree_item.c
+@@ -336,6 +336,34 @@ xfs_trans_get_efd(
+ 	return efdp;
+ }
  
- restart:
++/*
++ * Fill the EFD with all extents from the EFI when we need to roll the
++ * transaction and continue with a new EFI.
++ *
++ * This simply copies all the extents in the EFI to the EFD rather than make
++ * assumptions about which extents in the EFI have already been processed. We
++ * currently keep the xefi list in the same order as the EFI extent list, but
++ * that may not always be the case. Copying everything avoids leaving a landmine
++ * were we fail to cancel all the extents in an EFI if the xefi list is
++ * processed in a different order to the extents in the EFI.
++ */
++static void
++xfs_efd_from_efi(
++	struct xfs_efd_log_item	*efdp)
++{
++	struct xfs_efi_log_item *efip = efdp->efd_efip;
++	uint                    i;
++
++	ASSERT(efip->efi_format.efi_nextents > 0);
++	ASSERT(efdp->efd_next_extent < efip->efi_format.efi_nextents);
++
++	for (i = 0; i < efip->efi_format.efi_nextents; i++) {
++	       efdp->efd_format.efd_extents[i] =
++		       efip->efi_format.efi_extents[i];
++	}
++	efdp->efd_next_extent = efip->efi_format.efi_nextents;
++}
++
+ /*
+  * Free an extent and log it to the EFD. Note that the transaction is marked
+  * dirty regardless of whether the extent free succeeds or fails to support the
+@@ -378,6 +406,17 @@ xfs_trans_free_extent(
+ 	tp->t_flags |= XFS_TRANS_DIRTY | XFS_TRANS_HAS_INTENT_DONE;
+ 	set_bit(XFS_LI_DIRTY, &efdp->efd_item.li_flags);
+ 
++	/*
++	 * If we need a new transaction to make progress, the caller will log a
++	 * new EFI with the current contents. It will also log an EFD to cancel
++	 * the existing EFI, and so we need to copy all the unprocessed extents
++	 * in this EFI to the EFD so this works correctly.
++	 */
++	if (error == -EAGAIN) {
++		xfs_efd_from_efi(efdp);
++		return error;
++	}
++
+ 	next_extent = efdp->efd_next_extent;
+ 	ASSERT(next_extent < efdp->efd_format.efd_nextents);
+ 	extp = &(efdp->efd_format.efd_extents[next_extent]);
+@@ -495,6 +534,13 @@ xfs_extent_free_finish_item(
+ 
+ 	error = xfs_trans_free_extent(tp, EFD_ITEM(done), xefi);
+ 
++	/*
++	 * Don't free the XEFI if we need a new transaction to complete
++	 * processing of it.
++	 */
++	if (error == -EAGAIN)
++		return error;
++
+ 	xfs_extent_free_put_group(xefi);
+ 	kmem_cache_free(xfs_extfree_item_cache, xefi);
+ 	return error;
+@@ -620,6 +666,7 @@ xfs_efi_item_recover(
+ 	struct xfs_trans		*tp;
+ 	int				i;
+ 	int				error = 0;
++	bool				requeue_only = false;
+ 
  	/*
-@@ -1717,8 +1719,8 @@ xfs_alloc_ag_vextent_size(
- 				xfs_btree_del_cursor(cnt_cur,
- 						     XFS_BTREE_NOERROR);
- 				trace_xfs_alloc_size_busy(args);
--				xfs_extent_busy_flush(args->mp,
--							args->pag, busy_gen);
-+				xfs_extent_busy_flush(args->mp, args->pag,
-+						busy_gen, alloc_flags);
- 				goto restart;
- 			}
- 		}
-@@ -1802,7 +1804,8 @@ xfs_alloc_ag_vextent_size(
- 		if (busy) {
- 			xfs_btree_del_cursor(cnt_cur, XFS_BTREE_NOERROR);
- 			trace_xfs_alloc_size_busy(args);
--			xfs_extent_busy_flush(args->mp, args->pag, busy_gen);
-+			xfs_extent_busy_flush(args->mp, args->pag, busy_gen,
-+					alloc_flags);
- 			goto restart;
- 		}
- 		goto out_nominleft;
-@@ -2568,7 +2571,7 @@ xfs_exact_minlen_extent_available(
- int			/* error */
- xfs_alloc_fix_freelist(
- 	struct xfs_alloc_arg	*args,	/* allocation argument structure */
--	int			flags)	/* XFS_ALLOC_FLAG_... */
-+	uint32_t		alloc_flags)
- {
- 	struct xfs_mount	*mp = args->mp;
- 	struct xfs_perag	*pag = args->pag;
-@@ -2584,7 +2587,7 @@ xfs_alloc_fix_freelist(
- 	ASSERT(tp->t_flags & XFS_TRANS_PERM_LOG_RES);
+ 	 * First check the validity of the extents described by the
+@@ -652,9 +699,28 @@ xfs_efi_item_recover(
+ 		fake.xefi_startblock = extp->ext_start;
+ 		fake.xefi_blockcount = extp->ext_len;
  
- 	if (!xfs_perag_initialised_agf(pag)) {
--		error = xfs_alloc_read_agf(pag, tp, flags, &agbp);
-+		error = xfs_alloc_read_agf(pag, tp, alloc_flags, &agbp);
- 		if (error) {
- 			/* Couldn't lock the AGF so skip this AG. */
- 			if (error == -EAGAIN)
-@@ -2600,13 +2603,13 @@ xfs_alloc_fix_freelist(
- 	 */
- 	if (xfs_perag_prefers_metadata(pag) &&
- 	    (args->datatype & XFS_ALLOC_USERDATA) &&
--	    (flags & XFS_ALLOC_FLAG_TRYLOCK)) {
--		ASSERT(!(flags & XFS_ALLOC_FLAG_FREEING));
-+	    (alloc_flags & XFS_ALLOC_FLAG_TRYLOCK)) {
-+		ASSERT(!(alloc_flags & XFS_ALLOC_FLAG_FREEING));
- 		goto out_agbp_relse;
- 	}
- 
- 	need = xfs_alloc_min_freelist(mp, pag);
--	if (!xfs_alloc_space_available(args, need, flags |
-+	if (!xfs_alloc_space_available(args, need, alloc_flags |
- 			XFS_ALLOC_FLAG_CHECK))
- 		goto out_agbp_relse;
- 
-@@ -2615,7 +2618,7 @@ xfs_alloc_fix_freelist(
- 	 * Can fail if we're not blocking on locks, and it's held.
- 	 */
- 	if (!agbp) {
--		error = xfs_alloc_read_agf(pag, tp, flags, &agbp);
-+		error = xfs_alloc_read_agf(pag, tp, alloc_flags, &agbp);
- 		if (error) {
- 			/* Couldn't lock the AGF so skip this AG. */
- 			if (error == -EAGAIN)
-@@ -2630,7 +2633,7 @@ xfs_alloc_fix_freelist(
- 
- 	/* If there isn't enough total space or single-extent, reject it. */
- 	need = xfs_alloc_min_freelist(mp, pag);
--	if (!xfs_alloc_space_available(args, need, flags))
-+	if (!xfs_alloc_space_available(args, need, alloc_flags))
- 		goto out_agbp_relse;
- 
- #ifdef DEBUG
-@@ -2668,11 +2671,12 @@ xfs_alloc_fix_freelist(
- 	 */
- 	memset(&targs, 0, sizeof(targs));
- 	/* struct copy below */
--	if (flags & XFS_ALLOC_FLAG_NORMAP)
-+	if (alloc_flags & XFS_ALLOC_FLAG_NORMAP)
- 		targs.oinfo = XFS_RMAP_OINFO_SKIP_UPDATE;
- 	else
- 		targs.oinfo = XFS_RMAP_OINFO_AG;
--	while (!(flags & XFS_ALLOC_FLAG_NOSHRINK) && pag->pagf_flcount > need) {
-+	while (!(alloc_flags & XFS_ALLOC_FLAG_NOSHRINK) &&
-+			pag->pagf_flcount > need) {
- 		error = xfs_alloc_get_freelist(pag, tp, agbp, &bno, 0);
- 		if (error)
- 			goto out_agbp_relse;
-@@ -2700,7 +2704,7 @@ xfs_alloc_fix_freelist(
- 		targs.resv = XFS_AG_RESV_AGFL;
- 
- 		/* Allocate as many blocks as possible at once. */
--		error = xfs_alloc_ag_vextent_size(&targs);
-+		error = xfs_alloc_ag_vextent_size(&targs, alloc_flags);
- 		if (error)
- 			goto out_agflbp_relse;
- 
-@@ -2710,7 +2714,7 @@ xfs_alloc_fix_freelist(
- 		 * on a completely full ag.
- 		 */
- 		if (targs.agbno == NULLAGBLOCK) {
--			if (flags & XFS_ALLOC_FLAG_FREEING)
-+			if (alloc_flags & XFS_ALLOC_FLAG_FREEING)
- 				break;
- 			goto out_agflbp_relse;
- 		}
-@@ -3226,7 +3230,7 @@ xfs_alloc_vextent_check_args(
- static int
- xfs_alloc_vextent_prepare_ag(
- 	struct xfs_alloc_arg	*args,
--	uint32_t		flags)
-+	uint32_t		alloc_flags)
- {
- 	bool			need_pag = !args->pag;
- 	int			error;
-@@ -3235,7 +3239,7 @@ xfs_alloc_vextent_prepare_ag(
- 		args->pag = xfs_perag_get(args->mp, args->agno);
- 
- 	args->agbp = NULL;
--	error = xfs_alloc_fix_freelist(args, flags);
-+	error = xfs_alloc_fix_freelist(args, alloc_flags);
- 	if (error) {
- 		trace_xfs_alloc_vextent_nofix(args);
- 		if (need_pag)
-@@ -3357,6 +3361,7 @@ xfs_alloc_vextent_this_ag(
- {
- 	struct xfs_mount	*mp = args->mp;
- 	xfs_agnumber_t		minimum_agno;
-+	uint32_t		alloc_flags = 0;
- 	int			error;
- 
- 	ASSERT(args->pag != NULL);
-@@ -3375,9 +3380,9 @@ xfs_alloc_vextent_this_ag(
- 		return error;
- 	}
- 
--	error = xfs_alloc_vextent_prepare_ag(args, 0);
-+	error = xfs_alloc_vextent_prepare_ag(args, alloc_flags);
- 	if (!error && args->agbp)
--		error = xfs_alloc_ag_vextent_size(args);
-+		error = xfs_alloc_ag_vextent_size(args, alloc_flags);
- 
- 	return xfs_alloc_vextent_finish(args, minimum_agno, error, false);
- }
-@@ -3406,20 +3411,20 @@ xfs_alloc_vextent_iterate_ags(
- 	xfs_agnumber_t		minimum_agno,
- 	xfs_agnumber_t		start_agno,
- 	xfs_agblock_t		target_agbno,
--	uint32_t		flags)
-+	uint32_t		alloc_flags)
- {
- 	struct xfs_mount	*mp = args->mp;
- 	xfs_agnumber_t		restart_agno = minimum_agno;
- 	xfs_agnumber_t		agno;
- 	int			error = 0;
- 
--	if (flags & XFS_ALLOC_FLAG_TRYLOCK)
-+	if (alloc_flags & XFS_ALLOC_FLAG_TRYLOCK)
- 		restart_agno = 0;
- restart:
- 	for_each_perag_wrap_range(mp, start_agno, restart_agno,
- 			mp->m_sb.sb_agcount, agno, args->pag) {
- 		args->agno = agno;
--		error = xfs_alloc_vextent_prepare_ag(args, flags);
-+		error = xfs_alloc_vextent_prepare_ag(args, alloc_flags);
- 		if (error)
- 			break;
- 		if (!args->agbp) {
-@@ -3433,10 +3438,10 @@ xfs_alloc_vextent_iterate_ags(
- 		 */
- 		if (args->agno == start_agno && target_agbno) {
- 			args->agbno = target_agbno;
--			error = xfs_alloc_ag_vextent_near(args);
-+			error = xfs_alloc_ag_vextent_near(args, alloc_flags);
- 		} else {
- 			args->agbno = 0;
--			error = xfs_alloc_ag_vextent_size(args);
-+			error = xfs_alloc_ag_vextent_size(args, alloc_flags);
- 		}
- 		break;
- 	}
-@@ -3453,8 +3458,8 @@ xfs_alloc_vextent_iterate_ags(
- 	 * constraining flags by the caller, drop them and retry the allocation
- 	 * without any constraints being set.
- 	 */
--	if (flags) {
--		flags = 0;
-+	if (alloc_flags & XFS_ALLOC_FLAG_TRYLOCK) {
-+		alloc_flags &= ~XFS_ALLOC_FLAG_TRYLOCK;
- 		restart_agno = minimum_agno;
- 		goto restart;
- 	}
-@@ -3482,6 +3487,7 @@ xfs_alloc_vextent_start_ag(
- 	xfs_agnumber_t		start_agno;
- 	xfs_agnumber_t		rotorstep = xfs_rotorstep;
- 	bool			bump_rotor = false;
-+	uint32_t		alloc_flags = XFS_ALLOC_FLAG_TRYLOCK;
- 	int			error;
- 
- 	ASSERT(args->pag == NULL);
-@@ -3508,7 +3514,7 @@ xfs_alloc_vextent_start_ag(
- 
- 	start_agno = max(minimum_agno, XFS_FSB_TO_AGNO(mp, target));
- 	error = xfs_alloc_vextent_iterate_ags(args, minimum_agno, start_agno,
--			XFS_FSB_TO_AGBNO(mp, target), XFS_ALLOC_FLAG_TRYLOCK);
-+			XFS_FSB_TO_AGBNO(mp, target), alloc_flags);
- 
- 	if (bump_rotor) {
- 		if (args->agno == start_agno)
-@@ -3535,6 +3541,7 @@ xfs_alloc_vextent_first_ag(
- 	struct xfs_mount	*mp = args->mp;
- 	xfs_agnumber_t		minimum_agno;
- 	xfs_agnumber_t		start_agno;
-+	uint32_t		alloc_flags = XFS_ALLOC_FLAG_TRYLOCK;
- 	int			error;
- 
- 	ASSERT(args->pag == NULL);
-@@ -3553,7 +3560,7 @@ xfs_alloc_vextent_first_ag(
- 
- 	start_agno = max(minimum_agno, XFS_FSB_TO_AGNO(mp, target));
- 	error = xfs_alloc_vextent_iterate_ags(args, minimum_agno, start_agno,
--			XFS_FSB_TO_AGBNO(mp, target), 0);
-+			XFS_FSB_TO_AGBNO(mp, target), alloc_flags);
- 	return xfs_alloc_vextent_finish(args, minimum_agno, error, true);
- }
- 
-@@ -3606,6 +3613,7 @@ xfs_alloc_vextent_near_bno(
- 	struct xfs_mount	*mp = args->mp;
- 	xfs_agnumber_t		minimum_agno;
- 	bool			needs_perag = args->pag == NULL;
-+	uint32_t		alloc_flags = 0;
- 	int			error;
- 
- 	if (!needs_perag)
-@@ -3626,9 +3634,9 @@ xfs_alloc_vextent_near_bno(
- 	if (needs_perag)
- 		args->pag = xfs_perag_grab(mp, args->agno);
- 
--	error = xfs_alloc_vextent_prepare_ag(args, 0);
-+	error = xfs_alloc_vextent_prepare_ag(args, alloc_flags);
- 	if (!error && args->agbp)
--		error = xfs_alloc_ag_vextent_near(args);
-+		error = xfs_alloc_ag_vextent_near(args, alloc_flags);
- 
- 	return xfs_alloc_vextent_finish(args, minimum_agno, error, needs_perag);
- }
-diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index 85ac470be0da..d1aa7c63eafe 100644
---- a/fs/xfs/libxfs/xfs_alloc.h
-+++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -195,7 +195,7 @@ int xfs_alloc_read_agfl(struct xfs_perag *pag, struct xfs_trans *tp,
- 		struct xfs_buf **bpp);
- int xfs_free_agfl_block(struct xfs_trans *, xfs_agnumber_t, xfs_agblock_t,
- 			struct xfs_buf *, struct xfs_owner_info *);
--int xfs_alloc_fix_freelist(struct xfs_alloc_arg *args, int flags);
-+int xfs_alloc_fix_freelist(struct xfs_alloc_arg *args, uint32_t alloc_flags);
- int xfs_free_extent_fix_freelist(struct xfs_trans *tp, struct xfs_perag *pag,
- 		struct xfs_buf **agbp);
- 
-diff --git a/fs/xfs/xfs_extent_busy.c b/fs/xfs/xfs_extent_busy.c
-index f3d328e4a440..5f44936eae1c 100644
---- a/fs/xfs/xfs_extent_busy.c
-+++ b/fs/xfs/xfs_extent_busy.c
-@@ -571,7 +571,8 @@ void
- xfs_extent_busy_flush(
- 	struct xfs_mount	*mp,
- 	struct xfs_perag	*pag,
--	unsigned		busy_gen)
-+	unsigned		busy_gen,
-+	uint32_t		alloc_flags)
- {
- 	DEFINE_WAIT		(wait);
- 	int			error;
-diff --git a/fs/xfs/xfs_extent_busy.h b/fs/xfs/xfs_extent_busy.h
-index 4a118131059f..7a82c689bfa4 100644
---- a/fs/xfs/xfs_extent_busy.h
-+++ b/fs/xfs/xfs_extent_busy.h
-@@ -53,7 +53,7 @@ xfs_extent_busy_trim(struct xfs_alloc_arg *args, xfs_agblock_t *bno,
- 
- void
- xfs_extent_busy_flush(struct xfs_mount *mp, struct xfs_perag *pag,
--	unsigned busy_gen);
-+	unsigned busy_gen, uint32_t alloc_flags);
- 
- void
- xfs_extent_busy_wait_all(struct xfs_mount *mp);
+-		xfs_extent_free_get_group(mp, &fake);
+-		error = xfs_trans_free_extent(tp, efdp, &fake);
+-		xfs_extent_free_put_group(&fake);
++		if (!requeue_only) {
++			xfs_extent_free_get_group(mp, &fake);
++			error = xfs_trans_free_extent(tp, efdp, &fake);
++			xfs_extent_free_put_group(&fake);
++		}
++
++		/*
++		 * If we can't free the extent without potentially deadlocking,
++		 * requeue the rest of the extents to a new so that they get
++		 * run again later with a new transaction context.
++		 */
++		if (error == -EAGAIN || requeue_only) {
++			error = xfs_free_extent_later(tp, fake.xefi_startblock,
++					fake.xefi_blockcount,
++					&XFS_RMAP_OINFO_ANY_OWNER);
++			if (!error) {
++				requeue_only = true;
++				error = 0;
++				continue;
++			}
++		};
++
+ 		if (error == -EFSCORRUPTED)
+ 			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
+ 					extp, sizeof(*extp));
 -- 
 2.40.1
 
