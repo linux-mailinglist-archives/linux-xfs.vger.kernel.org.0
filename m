@@ -2,168 +2,175 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F41573B0C2
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jun 2023 08:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B97973B2BC
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jun 2023 10:30:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231168AbjFWG3r (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 23 Jun 2023 02:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
+        id S231492AbjFWIaN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 23 Jun 2023 04:30:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbjFWG3q (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Jun 2023 02:29:46 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55241BE1
-        for <linux-xfs@vger.kernel.org>; Thu, 22 Jun 2023 23:29:43 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b52bf6e669so2085345ad.2
-        for <linux-xfs@vger.kernel.org>; Thu, 22 Jun 2023 23:29:43 -0700 (PDT)
+        with ESMTP id S229451AbjFWIaK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Jun 2023 04:30:10 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA4B2105
+        for <linux-xfs@vger.kernel.org>; Fri, 23 Jun 2023 01:30:07 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-25edd424306so164386a91.1
+        for <linux-xfs@vger.kernel.org>; Fri, 23 Jun 2023 01:30:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1687501783; x=1690093783;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zCEqJX5mm9cbUE56OVCDucRVQniQh/jh7QjO1tCYRyw=;
-        b=VCN1cKAzYZWGpOm/hUHuPZp8plVnErZlG9G0OlFzhPpXaNGHYvVufkX79JUDsPqJVj
-         SxdYAM9A9ivCYhtFxc3SyvMZr6s5SlnDngyF1CSlxpEdm/HUuOSGwHgmJomuuYgedrRX
-         aqax0M2Dw9QUTGwitN8bpL0qLseKhs7EVUc6lepS488qyivLAQHSFGtevNE0LyqUhWPi
-         NKkNR95/QZWn2OoaLsjXJllgmMFsp0mHDlbo5o60jR1YeUkdYXlMSdAiD7/jZsXdB48G
-         reDdzoxXO5mM4WdQ8i9rMsSwtC5huiBFlnlMXvIXzYTlsiTrC5P7Z8F16npWgNIfnf8B
-         ShDw==
+        d=gmail.com; s=20221208; t=1687509007; x=1690101007;
+        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hn0zfldQfegiutsOWnC6DiYOTUjHi4DbT1yTVMIyFWw=;
+        b=p9ZB09LTSJmXmvcBP4SLGbgUoOM6C6K3GMw+Gg81P9/M8I9xOCoFBe0VXJw72KxuWx
+         /w71bGmzfLnMpmf3xEFo8eDc6cNKsNiVmVCVU9P2UIqDUGV2nRSTWUTUtPSTZ2kjPVlo
+         0j9Ncmj3tiF6Sv2qffS3ASedqkdgF3apVH77x1xP19olOjFFfzImapgEVvvj1nA9R8uV
+         qpSAqiwWXYqG3Y5jRPKIiZsjfNGiJKTG83Enyp82FFz5oIjUHQLEo7ZXf4oWsvUDIJaZ
+         DxvrpOYA+FAfnS5xTU3vlFYPliSCKBz+q3OCnZ3KUaOqFd0Bqqavy2hOlmgk88CAUKL4
+         Vm2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687501783; x=1690093783;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zCEqJX5mm9cbUE56OVCDucRVQniQh/jh7QjO1tCYRyw=;
-        b=Jn3b5gdeVO6RKXhG+d6cz/D05pzLBSziyxSsV2tD4dXP/NAvx9w87YzjtpYoiCZRG6
-         w10RvJhY3Yzpf6Zvw61K66nEzkH12m7PRQgxInfOgdHB7Eojxw7aepDMQZBDplCnlP7b
-         AuhgfQZ8IFLMdZqPdTYogL3xfM+X/Z84w9y3A+bEkl9siN93UC9xoGxckho5dG4u3f6V
-         804WHfY8+WgC5aMQJCUZ5tAzj11xe6ac+I1AyrxItXGhH0OkcQV1CaXWilFp/N8qgFgj
-         b5FF0gjC0iO7vZS+tUKPZ47jY97Iq2HmxmD7xOJJS4OGeYUYcr2F7bVGt1AcKdpzutBy
-         VtGQ==
-X-Gm-Message-State: AC+VfDzR8SBOD7e7naE/nRap9W3zJiCVp+jcr2C9du48Qc8X9E2OL9tr
-        U3WRGqE6cQAlzF1O+QAH16LvXw==
-X-Google-Smtp-Source: ACHHUZ6xCu/M/0AOwG5LVLb8OX3DoTsqyFTeplRrHsUG1u2SLkBGduWAm9ZrSI41Zhf0Zeq1UunMJA==
-X-Received: by 2002:a17:902:8214:b0:1aa:d971:4623 with SMTP id x20-20020a170902821400b001aad9714623mr18870991pln.38.1687501783228;
-        Thu, 22 Jun 2023 23:29:43 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-13-202.pa.nsw.optusnet.com.au. [49.180.13.202])
-        by smtp.gmail.com with ESMTPSA id x5-20020a1709027c0500b001b246dcffb7sm6311389pll.300.2023.06.22.23.29.42
+        d=1e100.net; s=20221208; t=1687509007; x=1690101007;
+        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hn0zfldQfegiutsOWnC6DiYOTUjHi4DbT1yTVMIyFWw=;
+        b=QArajP/PVKVXrhRML8/pG+/AcN92LUDeCDaSdtApfaucHCMtcZ9zy4tJM4KIUyuyGd
+         MziX4tR+olQ9IvV6kYt7609RbGxYDcWSLhuRaQxVN9r4bv/A4rbKUSi7ECqofqEcCN/0
+         UC6emeS6K7RJ/EP+RFDVnPj1XCzXdAzM5RUa0lsH6ObE/2Zi/6ZNv6f+RPrRBf25xCAN
+         WbrporqVZBvOYgcJylK8JzjHl9lP+nZ+oJ8b/AeBd7eOUW5S+Xwfy8xFuhPjONlFUTVq
+         aLUiF4iIEAz4B8hL9qc1eHY8YXR910AmAgXBcP/7thXSOEA2+8uq9OnaNVx5SaZc3GCs
+         6SyA==
+X-Gm-Message-State: AC+VfDyoOZX+ayaNKZchbhIaD0uj0ZkXXl3LAODigf8oqAPpqKCUhJna
+        MxrhE8IIHEM29dRKde5VAG5pyDWYYOQ=
+X-Google-Smtp-Source: ACHHUZ4d0Ybyk0lViNzgqSWUBOeRJ774JNydRC09LIlSqFEBd7u0UqdZAVkttbJ+LU6lHgHBANGnZg==
+X-Received: by 2002:a17:90a:eb0c:b0:253:727e:4b41 with SMTP id j12-20020a17090aeb0c00b00253727e4b41mr10224995pjz.34.1687509006589;
+        Fri, 23 Jun 2023 01:30:06 -0700 (PDT)
+Received: from dw-tp ([49.207.220.159])
+        by smtp.gmail.com with ESMTPSA id b1-20020a17090a800100b002599ef80ab9sm953306pjn.3.2023.06.23.01.30.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 23:29:42 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qCaId-00F8x8-0s;
-        Fri, 23 Jun 2023 16:29:39 +1000
-Date:   Fri, 23 Jun 2023 16:29:39 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Qi Zheng <zhengqi.arch@bytedance.com>, akpm@linux-foundation.org,
-        tkhai@ya.ru, roman.gushchin@linux.dev, djwong@kernel.org,
-        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, dm-devel@redhat.com,
-        linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 24/29] mm: vmscan: make global slab shrink lockless
-Message-ID: <ZJU708VIyJ/3StAX@dread.disaster.area>
-References: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
- <20230622085335.77010-25-zhengqi.arch@bytedance.com>
- <cf0d9b12-6491-bf23-b464-9d01e5781203@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf0d9b12-6491-bf23-b464-9d01e5781203@suse.cz>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Fri, 23 Jun 2023 01:30:05 -0700 (PDT)
+Date:   Fri, 23 Jun 2023 13:59:58 +0530
+Message-Id: <874jmy4m49.fsf@doe.com>
+From:   Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To:     Dave Chinner <david@fromorbit.com>,
+        Masahiko Sawada <sawada.mshk@gmail.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: Question on slow fallocate
+In-Reply-To: <ZJTrrwirZqykiVxn@dread.disaster.area>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 05:12:02PM +0200, Vlastimil Babka wrote:
-> On 6/22/23 10:53, Qi Zheng wrote:
-> > @@ -1067,33 +1068,27 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
-> >  	if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
-> >  		return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
-> >  
-> > -	if (!down_read_trylock(&shrinker_rwsem))
-> > -		goto out;
-> > -
-> > -	list_for_each_entry(shrinker, &shrinker_list, list) {
-> > +	rcu_read_lock();
-> > +	list_for_each_entry_rcu(shrinker, &shrinker_list, list) {
-> >  		struct shrink_control sc = {
-> >  			.gfp_mask = gfp_mask,
-> >  			.nid = nid,
-> >  			.memcg = memcg,
-> >  		};
-> >  
-> > +		if (!shrinker_try_get(shrinker))
-> > +			continue;
-> > +		rcu_read_unlock();
-> 
-> I don't think you can do this unlock?
-> 
-> > +
-> >  		ret = do_shrink_slab(&sc, shrinker, priority);
-> >  		if (ret == SHRINK_EMPTY)
-> >  			ret = 0;
-> >  		freed += ret;
-> > -		/*
-> > -		 * Bail out if someone want to register a new shrinker to
-> > -		 * prevent the registration from being stalled for long periods
-> > -		 * by parallel ongoing shrinking.
-> > -		 */
-> > -		if (rwsem_is_contended(&shrinker_rwsem)) {
-> > -			freed = freed ? : 1;
-> > -			break;
-> > -		}
-> > -	}
-> >  
-> > -	up_read(&shrinker_rwsem);
-> > -out:
-> > +		rcu_read_lock();
-> 
-> That new rcu_read_lock() won't help AFAIK, the whole
-> list_for_each_entry_rcu() needs to be under the single rcu_read_lock() to be
-> safe.
+Dave Chinner <david@fromorbit.com> writes:
 
-Yeah, that's the pattern we've been taught and the one we can look
-at and immediately say "this is safe".
+> On Thu, Jun 22, 2023 at 02:34:18PM +0900, Masahiko Sawada wrote:
+>> Hi all,
+>> 
+>> When testing PostgreSQL, I found a performance degradation. After some
+>> investigation, it ultimately reached the attached simple C program and
+>> turned out that the performance degradation happens on only the xfs
+>> filesystem (doesn't happen on neither ext3 nor ext4). In short, the
+>> program alternately does two things to extend a file (1) call
+>> posix_fallocate() to extend by 8192 bytes
+>
+> This is a well known anti-pattern - it always causes problems. Do
+> not do this.
+>
+>> and (2) call pwrite() to
+>> extend by 8192 bytes. If I do only either (1) or (2), the program is
+>> completed in 2 sec, but if I do (1) and (2) alternatively, it is
+>> completed in 90 sec.
+>
+> Well, yes. Using fallocate to extend the file has very different
+> constraints to using pwrite to extend the file.
+>
+>> $ gcc -o test test.c
+>> $ time ./test test.1 1
+>> total   200000
+>> fallocate       200000
+>> filewrite       0
+>
+> No data is written here, so this is just a series of 8kB allocations
+> and file size extension operations. There are no constraints here
+> because it is a pure metadata operation.
+>
+>> real    0m1.305s
+>> user    0m0.050s
+>> sys     0m1.255s
+>> 
+>> $ time ./test test.2 2
+>> total   200000
+>> fallocate       100000
+>> filewrite       100000
+>>
+>> real    1m29.222s
+>> user    0m0.139s
+>> sys     0m3.139s
+>
+> Now we have fallocate extending the file and doing unwritten extent
+> allocation, followed by writing into that unwritten extent which
+> then does unwritten extent conversion.
+>
+> This introduces data vs metadata update ordering constraints to the
+> workload.
+>
+> The problem here in that the "truncate up" operation that
+> fallocate is doing to move the file size. The "truncate up" is going
+> to move the on-disk file size to the end of the fallocated range via
+> a journal transaction, and so it will expose the range of the
+> previous write as containing valid data.
+>
+> However, the previous data write is still only in memory and not on
+> disk. The result of journalling the file size change is that if we
+> crash after the size change is made but the data is not on disk,
+> we end up with lost data - the file contains zeros (or NULLs) where
+> the in memory data previously existed.
+>
+> Go google for "NULL file data exposure" and you'll see this is a
+> problem we fixed in ~2006, caused by extending the file size on disk
+> without first having written all the in-memory data into the file.
 
-This is a different pattern, as has been explained bi Qi, and I
-think it *might* be safe.
+I guess here is the <patch> you are speaking of. So this prevents from
+exposing nulls within a file in case of a crash.
 
-*However.*
+I guess the behavior is not the same with ext4. ext4 does not seem to be
+doing filemap_write_and_wait_range() if the new i_disksize is more than
+oldsize. So then I think ext4 must be ok if in case of a crash the
+file has nulls in between. That's why I think the observation of slow
+performance is not seen in ext4.
 
-Right now I don't have time to go through a novel RCU list iteration
-pattern it one step at to determine the correctness of the
-algorithm. I'm mostly worried about list manipulations that can
-occur outside rcu_read_lock() section bleeding into the RCU
-critical section because rcu_read_lock() by itself is not a memory
-barrier.
+Few queres-
+- If the user doesn't issue a flush and if the system crashes, then
+  anyways it is not expected that the file will have all the data right?
 
-Maybe Paul has seen this pattern often enough he could simply tell
-us what conditions it is safe in. But for me to work that out from
-first principles? I just don't have the time to do that right now.
+- Also is that "data/inode size update order" which you are mentioning in
+  this patch. Is this something that all filesystems should follow?
 
-> IIUC this is why Dave in [4] suggests unifying shrink_slab() with
-> shrink_slab_memcg(), as the latter doesn't iterate the list but uses IDR.
+- I was wondering what exactly it breaks which the applications depend
+  upon? Because not all filesystems tend to follow this practice right?
 
-Yes, I suggested the IDR route because radix tree lookups under RCU
-with reference counted objects are a known safe pattern that we can
-easily confirm is correct or not.  Hence I suggested the unification
-+ IDR route because it makes the life of reviewers so, so much
-easier...
 
-Cheers,
+Thanks for the detailed explaination! I got interested in this thread
+after looking at your explaination and since the thread mention this
+happens with postgres.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+-ritesh
+
+<patch>
+[XFS] Fix inode size update before data write in xfs_setattr
+
+When changing the file size by a truncate() call, we log the change in the
+inode size. However, we do not flush any outstanding data that might not
+have been written to disk, thereby violating the data/inode size update
+order. This can leave files full of NULLs on crash.
+
+Hence if we are truncating the file, flush any unwritten data that may lie
+between the curret on disk inode size and the new inode size that is being
+logged to ensure that ordering is preserved.
+
+
+
