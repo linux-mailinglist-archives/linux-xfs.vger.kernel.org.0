@@ -2,70 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1A4F740699
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jun 2023 00:44:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 362D9740695
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jun 2023 00:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229948AbjF0Wob (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 27 Jun 2023 18:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
+        id S229840AbjF0Wo2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 27 Jun 2023 18:44:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbjF0Wo2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Jun 2023 18:44:28 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44302947
+        with ESMTP id S229944AbjF0Wo0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Jun 2023 18:44:26 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217812944
         for <linux-xfs@vger.kernel.org>; Tue, 27 Jun 2023 15:44:22 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-668730696a4so2754812b3a.1
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-666e3b15370so3359840b3a.0
         for <linux-xfs@vger.kernel.org>; Tue, 27 Jun 2023 15:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1687905862; x=1690497862;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1687905861; x=1690497861;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4O2k46lv/gI7xyqpvXtBgdwqM0g/QagZozuLf4U9K4c=;
-        b=cKgdrZ43YU4na7peEhU2pWxrT3ycVrcStWKlDD3d2SXyyHQ7Gjh4tFS42r8SJJiH/6
-         /zUvTh93MiFUtvP/TE9L811XX2NhSCzEH1QuSQcW6uJy/ovkdhFpHhnNnZpcxxQapB7g
-         nX4xeBx+GTklHAdtT6qGawUEtlumdu3EFexBoXxeveA1Q29hzIPGCs51wDWz6hLQZKTv
-         LsUg13Q4jpjrOOBbPTaIWTOWu8DfBrb629f2GL/PMcBHZ2kcoN0YU0Rm4OqoNULWeLzb
-         dtpSPFqCDE9m89SGLt6h2ptDUkOXkYCwHSNI/mPe4eu8ECPrd5NdXithj+aAJUCEwZVh
-         mcbQ==
+        bh=XgXhhqNbFi+/MFXpR0K7xhzjAOkJwBg8lJjaklWSvcA=;
+        b=itAlwsAQZXNYjX+H/2/t6ZfBld3O31tQQMTJbzz/MpxIyTpNGkKoU7fE+8lfqirKRh
+         Yyi5U8aNwzIvfjYgmg3u992g5uUzuPmvly/0F6GTjik/hu+D8GYk/jXj23/ObH50I0gc
+         si3L0z9MN8cjJ/FhboVLkDnyn/cnC7aApLkv8jBv/nHxQbdqzrUEe/WdsYlgJjD9WkKd
+         ZeVaJ9MFcZ/gB/MsE2CZl/wldBaQIYEFATEwlt2YNQSNPmnVwhhsFxBF+XL+11PafdqY
+         /NbJvLd5h+kjW2ggxclXxOhzbo1Xdr2qGGcsm4Vqtjk/PUWVZEm/C6AndHG5tF5H1YM/
+         DSXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687905862; x=1690497862;
+        d=1e100.net; s=20221208; t=1687905861; x=1690497861;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4O2k46lv/gI7xyqpvXtBgdwqM0g/QagZozuLf4U9K4c=;
-        b=C94+GuXpolvh+I1JHhgM5QYneJbs9P9DJCyRNpZ35wqytRTIndtK2ams9aW2OLsa4w
-         r5uSSxSIysWqhubjtmULJeB1kDDj70s0SvGZdRJiRcbRDvpSeFAfaBiZDEPg9IOew1UK
-         6NnuhY8gQ7ekT/sAc7tNKCqfHsK2S56nuxqP+Y0TQqAdYzJSqvS7vuHjqp8RRQdCxdAU
-         8sCprtU8qiLcnHLeY4NnVD1I89kXftuUuPi5+l6w4TpFT3uONuVwDgZYjodOk1AZrWhu
-         JEhCUbMmrJeyHoBmQ37JLOsxnD46jHcZY7FySumPI3m15nDKlv5Cknlp/V0B5CB5jR72
-         I20A==
-X-Gm-Message-State: AC+VfDwTH+Twc7AQberqwn65hlUSgxypFgabSy/hE4ZZOUAXIAIyLeAy
-        cNfQ8sexSeHUMQ2aB5ZBLM30DCfWr7joIcWFjrk=
-X-Google-Smtp-Source: ACHHUZ67g6fUTtjziPJRgLpZIRQA/oKWq6w5y0mzV755YfeWH4uh55MmcDS+M5kxUbWXnjw+4Rwd2w==
-X-Received: by 2002:a05:6a00:3919:b0:643:aa8d:8cd7 with SMTP id fh25-20020a056a00391900b00643aa8d8cd7mr24682916pfb.32.1687905861960;
+        bh=XgXhhqNbFi+/MFXpR0K7xhzjAOkJwBg8lJjaklWSvcA=;
+        b=AZvZvaxX0UeSWypw1qLR0cziwjpebkV3BOkMHBVbQbaNbh7/cQwYtJIsmNkuY5tspL
+         FZ8KjlfU2qxi+Z0n9arYL9thEETkaap7MdXiRNTiC0D2cXCO4+U7WWkBsedjvpFeTH/h
+         WFps0c9TKkkTREMCxTRh+khO3PjMK6TugeXoU47aQ55iNPLlg/L2lhShBYT9y8+eixxS
+         BMxw5Z9bRnacNM+Y1Fm2NXq0pEK+l9Dg2iixdrYJXvIOm4Yj9fMeM5Ur39uLMfK8I3oA
+         GJFopMgAejwfGTyrD/UjTqpGuAm2WeINj9AiToBXQvYJLExvWBWowpJS4W+pkw7pyzHe
+         CMaA==
+X-Gm-Message-State: AC+VfDwDIEY3zwzTcrX83JRRxi1XTbLmOmb2INkVJ5n2s0qW4vlttHCq
+        bifWxVtVHZ/wwzkZjrpmqSZ/4C39bdUNBq22yIs=
+X-Google-Smtp-Source: ACHHUZ49aXbvIzsF9AeTj++Gor4TVgJelxbvNl1FVSZxXSSsfsnLLt8xpYOEGMdev0yrWeHWUQ/nsA==
+X-Received: by 2002:a05:6a00:99c:b0:673:8dfb:af32 with SMTP id u28-20020a056a00099c00b006738dfbaf32mr8611000pfg.26.1687905861294;
         Tue, 27 Jun 2023 15:44:21 -0700 (PDT)
 Received: from dread.disaster.area (pa49-186-94-37.pa.vic.optusnet.com.au. [49.186.94.37])
-        by smtp.gmail.com with ESMTPSA id y11-20020a62b50b000000b0063f0068cf6csm5878864pfe.198.2023.06.27.15.44.18
+        by smtp.gmail.com with ESMTPSA id p15-20020a63e64f000000b0051b0e564963sm6350434pgj.49.2023.06.27.15.44.18
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 27 Jun 2023 15:44:20 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.96)
         (envelope-from <dave@fromorbit.com>)
-        id 1qEHPz-00Gzwh-1m
+        id 1qEHPz-00Gzwk-1y
         for linux-xfs@vger.kernel.org;
         Wed, 28 Jun 2023 08:44:15 +1000
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1qEHPz-009ZmV-0e
+        id 1qEHPz-009Zma-0o
         for linux-xfs@vger.kernel.org;
         Wed, 28 Jun 2023 08:44:15 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 6/8] xfs: journal geometry is not properly bounds checked
-Date:   Wed, 28 Jun 2023 08:44:10 +1000
-Message-Id: <20230627224412.2242198-7-david@fromorbit.com>
+Subject: [PATCH 7/8] xfs: AGF length has never been bounds checked
+Date:   Wed, 28 Jun 2023 08:44:11 +1000
+Message-Id: <20230627224412.2242198-8-david@fromorbit.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230627224412.2242198-1-david@fromorbit.com>
 References: <20230627224412.2242198-1-david@fromorbit.com>
@@ -82,203 +82,158 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-If the journal geometry results in a sector or log stripe unit
-validation problem, it indicates that we cannot set the log up to
-safely write to the the journal. In these cases, we must abort the
-mount because the corruption needs external intervention to resolve.
-Similarly, a journal that is too large cannot be written to safely,
-either, so we shouldn't allow those geometries to mount, either.
+The AGF verifier does not check that the AGF length field is within
+known good bounds. This has never been checked by runtime kernel
+code (i.e. the lack of verification goes back to 1993) yet we assume
+in many places that it is correct and verify other metdata against
+it.
 
-If the log is too small, we risk having transaction reservations
-overruning the available log space and the system hanging waiting
-for space it can never provide. This is purely a runtime hang issue,
-not a corruption issue as per the first cases listed above. We abort
-mounts of the log is too small for V5 filesystems, but we must allow
-v4 filesystems to mount because, historically, there was no log size
-validity checking and so some systems may still be out there with
-undersized logs.
+Add length verification to the AGF verifier. The length of the AGF
+must be equal to the size of the AG specified in the superblock,
+unless it is the last AG in the filesystem. In that case, it must be
+less than or equal to sb->sb_agblocks and greater than
+XFS_MIN_AG_BLOCKS, which is the smallest AG a growfs operation will
+allow to exist.
 
-The problem is that on V4 filesystems, when we discover a log
-geometry problem, we skip all the remaining checks and then allow
-the log to continue mounting. This mean that if one of the log size
-checks fails, we skip the log stripe unit check. i.e. we allow the
-mount because a "non-fatal" geometry is violated, and then fail to
-check the hard fail geometries that should fail the mount.
+This requires a bit of rework of the verifier function. We want to
+verify metadata before we use it to verify other metadata. Hence
+we need to verify the AGF sequence numbers before using them to
+verify the length of the AGF. Then we can verify the AGF length
+before we verify AGFL fields. Then we can verifier other fields that
+are bounds limited by the AGF length.
 
-Move all these fatal checks to the superblock verifier, and add a
-new check for the two log sector size geometry variables having the
-same values. This will prevent any attempt to mount a log that has
-invalid or inconsistent geometries long before we attempt to mount
-the log.
-
-However, for the minimum log size checks, we can only do that once
-we've setup up the log and calculated all the iclog sizes and
-roundoffs. Hence this needs to remain in the log mount code after
-the log has been initialised. It is also the only case where we
-should allow a v4 filesystem to continue running, so leave that
-handling in place, too.
+And, finally, by calculating agf_length only once into a local
+variable, we can collapse repeated "if (xfs_has_foo() &&"
+conditionaly checks into single checks. This makes the code much
+easier to follow as all the checks for a given feature are obviously
+in the same place.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_sb.c | 56 +++++++++++++++++++++++++++++++++++++++++-
- fs/xfs/xfs_log.c       | 47 +++++++++++------------------------
- 2 files changed, 70 insertions(+), 33 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c | 86 +++++++++++++++++++++++----------------
+ 1 file changed, 51 insertions(+), 35 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index ba0f17bc1dc0..5e174685a77c 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -412,7 +412,6 @@ xfs_validate_sb_common(
- 	    sbp->sb_inodelog < XFS_DINODE_MIN_LOG			||
- 	    sbp->sb_inodelog > XFS_DINODE_MAX_LOG			||
- 	    sbp->sb_inodesize != (1 << sbp->sb_inodelog)		||
--	    sbp->sb_logsunit > XLOG_MAX_RECORD_BSIZE			||
- 	    sbp->sb_inopblock != howmany(sbp->sb_blocksize,sbp->sb_inodesize) ||
- 	    XFS_FSB_TO_B(mp, sbp->sb_agblocks) < XFS_MIN_AG_BYTES	||
- 	    XFS_FSB_TO_B(mp, sbp->sb_agblocks) > XFS_MAX_AG_BYTES	||
-@@ -430,6 +429,61 @@ xfs_validate_sb_common(
- 		return -EFSCORRUPTED;
- 	}
- 
-+	/*
-+	 * Logs that are too large are not supported at all. Reject them
-+	 * outright. Logs that are too small are tolerated on v4 filesystems,
-+	 * but we can only check that when mounting the log. Hence we skip
-+	 * those checks here.
-+	 */
-+	if (sbp->sb_logblocks > XFS_MAX_LOG_BLOCKS) {
-+		xfs_notice(mp,
-+		"Log size 0x%x blocks too large, maximum size is 0x%llx blocks",
-+			 sbp->sb_logblocks, XFS_MAX_LOG_BLOCKS);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	if (XFS_FSB_TO_B(mp, sbp->sb_logblocks) > XFS_MAX_LOG_BYTES) {
-+		xfs_warn(mp,
-+		"log size 0x%llx bytes too large, maximum size is 0x%llx bytes",
-+			 XFS_FSB_TO_B(mp, sbp->sb_logblocks),
-+			 XFS_MAX_LOG_BYTES);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	/*
-+	 * Do not allow filesystems with corrupted log sector or stripe units to
-+	 * be mounted. We cannot safely size the iclogs or write to the log if
-+	 * the log stripe unit is not valid.
-+	 */
-+	if (sbp->sb_versionnum & XFS_SB_VERSION_SECTORBIT) {
-+		if (sbp->sb_logsectsize != (1U << sbp->sb_logsectlog)) {
-+			xfs_notice(mp,
-+			"log sector size in bytes/log2 (0x%x/0x%x) must match",
-+				sbp->sb_logsectsize, 1U << sbp->sb_logsectlog);
-+			return -EFSCORRUPTED;
-+		}
-+	} else if (sbp->sb_logsectsize || sbp->sb_logsectlog) {
-+		xfs_notice(mp,
-+		"log sector size in bytes/log2 (0x%x/0x%x) are not zero",
-+			sbp->sb_logsectsize, sbp->sb_logsectlog);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	if (sbp->sb_logsunit > 1) {
-+		if (sbp->sb_logsunit % sbp->sb_blocksize) {
-+			xfs_notice(mp,
-+		"log stripe unit 0x%x bytes must be a multiple of block size",
-+				sbp->sb_logsunit);
-+			return -EFSCORRUPTED;
-+		}
-+		if (sbp->sb_logsunit > XLOG_MAX_RECORD_BSIZE) {
-+			xfs_notice(mp,
-+		"log stripe unit 0x%x bytes over maximum size (0x%x bytes)",
-+				sbp->sb_logsunit, XLOG_MAX_RECORD_BSIZE);
-+			return -EFSCORRUPTED;
-+		}
-+	}
-+
- 	/* Validate the realtime geometry; stolen from xfs_repair */
- 	if (sbp->sb_rextsize * sbp->sb_blocksize > XFS_MAX_RTEXTSIZE ||
- 	    sbp->sb_rextsize * sbp->sb_blocksize < XFS_MIN_RTEXTSIZE) {
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index fc61cc024023..79004d193e54 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -639,7 +639,6 @@ xfs_log_mount(
- 	int		num_bblks)
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index 1e72b91daff6..7c86a69354fb 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -2974,6 +2974,7 @@ xfs_agf_verify(
  {
- 	struct xlog	*log;
--	bool		fatal = xfs_has_crc(mp);
- 	int		error = 0;
- 	int		min_logfsbs;
+ 	struct xfs_mount	*mp = bp->b_mount;
+ 	struct xfs_agf		*agf = bp->b_addr;
++	uint32_t		agf_length = be32_to_cpu(agf->agf_length);
  
-@@ -663,53 +662,37 @@ xfs_log_mount(
- 	mp->m_log = log;
+ 	if (xfs_has_crc(mp)) {
+ 		if (!uuid_equal(&agf->agf_uuid, &mp->m_sb.sb_meta_uuid))
+@@ -2985,18 +2986,43 @@ xfs_agf_verify(
+ 	if (!xfs_verify_magic(bp, agf->agf_magicnum))
+ 		return __this_address;
  
- 	/*
--	 * Validate the given log space and drop a critical message via syslog
--	 * if the log size is too small that would lead to some unexpected
--	 * situations in transaction log space reservation stage.
-+	 * Now that we have set up the log and it's internal geometry
-+	 * parameters, we can validate the given log space and drop a critical
-+	 * message via syslog if the log size is too small. A log that is too
-+	 * small can lead to unexpected situations in transaction log space
-+	 * reservation stage. The superblock verifier has already validated all
-+	 * the other log geometry constraints, so we don't have to check those
-+	 * here.
- 	 *
--	 * Note: we can't just reject the mount if the validation fails.  This
--	 * would mean that people would have to downgrade their kernel just to
--	 * remedy the situation as there is no way to grow the log (short of
--	 * black magic surgery with xfs_db).
-+	 * Note: For v4 filesystems, we can't just reject the mount if the
-+	 * validation fails.  This would mean that people would have to
-+	 * downgrade their kernel just to remedy the situation as there is no
-+	 * way to grow the log (short of black magic surgery with xfs_db).
- 	 *
--	 * We can, however, reject mounts for CRC format filesystems, as the
-+	 * We can, however, reject mounts for V5 format filesystems, as the
- 	 * mkfs binary being used to make the filesystem should never create a
- 	 * filesystem with a log that is too small.
- 	 */
- 	min_logfsbs = xfs_log_calc_minimum_size(mp);
--
- 	if (mp->m_sb.sb_logblocks < min_logfsbs) {
- 		xfs_warn(mp,
- 		"Log size %d blocks too small, minimum size is %d blocks",
- 			 mp->m_sb.sb_logblocks, min_logfsbs);
--		error = -EINVAL;
--	} else if (mp->m_sb.sb_logblocks > XFS_MAX_LOG_BLOCKS) {
--		xfs_warn(mp,
--		"Log size %d blocks too large, maximum size is %lld blocks",
--			 mp->m_sb.sb_logblocks, XFS_MAX_LOG_BLOCKS);
--		error = -EINVAL;
--	} else if (XFS_FSB_TO_B(mp, mp->m_sb.sb_logblocks) > XFS_MAX_LOG_BYTES) {
--		xfs_warn(mp,
--		"log size %lld bytes too large, maximum size is %lld bytes",
--			 XFS_FSB_TO_B(mp, mp->m_sb.sb_logblocks),
--			 XFS_MAX_LOG_BYTES);
--		error = -EINVAL;
--	} else if (mp->m_sb.sb_logsunit > 1 &&
--		   mp->m_sb.sb_logsunit % mp->m_sb.sb_blocksize) {
--		xfs_warn(mp,
--		"log stripe unit %u bytes must be a multiple of block size",
--			 mp->m_sb.sb_logsunit);
--		error = -EINVAL;
--		fatal = true;
--	}
--	if (error) {
+-	if (!(XFS_AGF_GOOD_VERSION(be32_to_cpu(agf->agf_versionnum)) &&
+-	      be32_to_cpu(agf->agf_freeblks) <= be32_to_cpu(agf->agf_length) &&
+-	      be32_to_cpu(agf->agf_flfirst) < xfs_agfl_size(mp) &&
+-	      be32_to_cpu(agf->agf_fllast) < xfs_agfl_size(mp) &&
+-	      be32_to_cpu(agf->agf_flcount) <= xfs_agfl_size(mp)))
++	if (!XFS_AGF_GOOD_VERSION(be32_to_cpu(agf->agf_versionnum)))
+ 		return __this_address;
+ 
+-	if (be32_to_cpu(agf->agf_length) > mp->m_sb.sb_dblocks)
++	/*
++	 * Both agf_seqno and agf_length need to validated before anything else
++	 * block number related in the AGF or AGFL can be checked.
++	 *
++	 * During growfs operations, the perag is not fully initialised,
++	 * so we can't use it for any useful checking. growfs ensures we can't
++	 * use it by using uncached buffers that don't have the perag attached
++	 * so we can detect and avoid this problem.
++	 */
++	if (bp->b_pag && be32_to_cpu(agf->agf_seqno) != bp->b_pag->pag_agno)
++		return __this_address;
 +
- 		/*
- 		 * Log check errors are always fatal on v5; or whenever bad
- 		 * metadata leads to a crash.
- 		 */
--		if (fatal) {
-+		if (xfs_has_crc(mp)) {
- 			xfs_crit(mp, "AAIEEE! Log failed size checks. Abort!");
- 			ASSERT(0);
-+			error = -EINVAL;
- 			goto out_free_log;
- 		}
- 		xfs_crit(mp, "Log size out of supported range.");
++	/*
++	 * Only the last AGF in the filesytsem is allowed to be shorter
++	 * than the AG size recorded in the superblock.
++	 */
++	if (agf_length != mp->m_sb.sb_agblocks) {
++		if (be32_to_cpu(agf->agf_seqno) != mp->m_sb.sb_agcount - 1)
++			return __this_address;
++		if (agf_length < XFS_MIN_AG_BLOCKS)
++			return __this_address;
++		if (agf_length > mp->m_sb.sb_agblocks)
++			return __this_address;
++	}
++
++	if (be32_to_cpu(agf->agf_flfirst) >= xfs_agfl_size(mp))
++		return __this_address;
++	if (be32_to_cpu(agf->agf_fllast) >= xfs_agfl_size(mp))
++		return __this_address;
++	if (be32_to_cpu(agf->agf_flcount) > xfs_agfl_size(mp))
+ 		return __this_address;
+ 
+ 	if (be32_to_cpu(agf->agf_freeblks) < be32_to_cpu(agf->agf_longest) ||
+-	    be32_to_cpu(agf->agf_freeblks) > be32_to_cpu(agf->agf_length))
++	    be32_to_cpu(agf->agf_freeblks) > agf_length)
+ 		return __this_address;
+ 
+ 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
+@@ -3007,38 +3033,28 @@ xfs_agf_verify(
+ 						mp->m_alloc_maxlevels)
+ 		return __this_address;
+ 
+-	if (xfs_has_rmapbt(mp) &&
+-	    (be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) < 1 ||
+-	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) >
+-						mp->m_rmap_maxlevels))
+-		return __this_address;
+-
+-	if (xfs_has_rmapbt(mp) &&
+-	    be32_to_cpu(agf->agf_rmap_blocks) > be32_to_cpu(agf->agf_length))
+-		return __this_address;
+-
+-	/*
+-	 * during growfs operations, the perag is not fully initialised,
+-	 * so we can't use it for any useful checking. growfs ensures we can't
+-	 * use it by using uncached buffers that don't have the perag attached
+-	 * so we can detect and avoid this problem.
+-	 */
+-	if (bp->b_pag && be32_to_cpu(agf->agf_seqno) != bp->b_pag->pag_agno)
+-		return __this_address;
+-
+ 	if (xfs_has_lazysbcount(mp) &&
+-	    be32_to_cpu(agf->agf_btreeblks) > be32_to_cpu(agf->agf_length))
++	    be32_to_cpu(agf->agf_btreeblks) > agf_length)
+ 		return __this_address;
+ 
+-	if (xfs_has_reflink(mp) &&
+-	    be32_to_cpu(agf->agf_refcount_blocks) >
+-	    be32_to_cpu(agf->agf_length))
+-		return __this_address;
++	if (xfs_has_rmapbt(mp)) {
++		if (be32_to_cpu(agf->agf_rmap_blocks) > agf_length)
++			return __this_address;
+ 
+-	if (xfs_has_reflink(mp) &&
+-	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
+-	     be32_to_cpu(agf->agf_refcount_level) > mp->m_refc_maxlevels))
+-		return __this_address;
++		if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) < 1 ||
++		    be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) >
++							mp->m_rmap_maxlevels)
++			return __this_address;
++	}
++
++	if (xfs_has_reflink(mp)) {
++		if (be32_to_cpu(agf->agf_refcount_blocks) > agf_length)
++			return __this_address;
++
++		if (be32_to_cpu(agf->agf_refcount_level) < 1 ||
++		    be32_to_cpu(agf->agf_refcount_level) > mp->m_refc_maxlevels)
++			return __this_address;
++	}
+ 
+ 	return NULL;
+ }
 -- 
 2.40.1
 
