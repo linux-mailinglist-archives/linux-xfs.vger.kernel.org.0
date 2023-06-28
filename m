@@ -2,172 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C371740C39
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jun 2023 11:02:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BC01740BAB
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jun 2023 10:38:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234337AbjF1JBv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 28 Jun 2023 05:01:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234296AbjF1IZ4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Jun 2023 04:25:56 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EABD294C
-        for <linux-xfs@vger.kernel.org>; Wed, 28 Jun 2023 01:17:34 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-4008b90d2f9so47674231cf.2
-        for <linux-xfs@vger.kernel.org>; Wed, 28 Jun 2023 01:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1687940253; x=1690532253;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uHAgK31V+qto7lF6nuR/80Td2cQl7pkgJYcZX0wiCp0=;
-        b=leRJ3DCLBProlSABh12KVuGRuXb9dOS74ytKKjQlFBJ+Nckv7hCmqzbFWfVrefC8xv
-         KgKbRvw6sJQLSO0oJfwwPoMifszxniTBp3YH4skmhKkK6zD1MJMhhHOKQsv/ctnzS7M5
-         HwXELPUSfKBF3uxbI480imS7glFwJtEXQP2NEgYEkobo145Cu3fUXXZJ8lvFQMleQyHm
-         1WyMC0WmGKVR0AijvBi/D6u+Ws+esPF/qGBCyWqluWSoKHVAzxUdMD/HFeHzFOfRWZJV
-         J1Oc7UZXWMyVMpLPSLoF3GXPxGDVxluAl2/2y5zp2t9MrujhLmJyUwcUAQigwUUw4cIY
-         EShg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687940253; x=1690532253;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uHAgK31V+qto7lF6nuR/80Td2cQl7pkgJYcZX0wiCp0=;
-        b=SMb3YHS8N84R0jrGPIw8KDfJNSZsW4NsY4FUzla/6ALozJ/gDr+dlFLwTIYbUAFo5U
-         05aC90Y6ILIjEf/S+FK/X7vqlRdpv9pqzwO72ZmwDTjRXk4oEq5+0nY0HdO6r7TG8wN1
-         qvRLg3BL1eYKggwk8lFsnYpcAnJj1QY5YDwc3reDXkI0fF3/wODd7b7FCIMmfmeJXwmc
-         2oVkx1vuBfMBZcwX66yLeXfamtW5Xd4XUwad+79cjjcQMn5dilORGE0tygsA7ps/L88a
-         jiECcXXCVsxQFDR/P9eRNAOiJZJvQjXxAmFzA/vMjyKhahUJQVbzLv+BxbR/rhagRi7m
-         FlSA==
-X-Gm-Message-State: AC+VfDyK9fwMA8jJYZYUcYJa02NqqXWItXnArA3OhDXkAyaMOmKixWiz
-        PkklldYrNKo7T92mZtRsJCZQMuGZHDmsGuABCA4=
-X-Google-Smtp-Source: ACHHUZ5pcyU1ZdsQRDTFTZhqk3lwq5J3PYJPPfCxFLzmOpkCbD/rrIPtsr4daA6QuGSFAL44K0Qikg==
-X-Received: by 2002:a05:6a00:1a87:b0:66a:386c:e6a6 with SMTP id e7-20020a056a001a8700b0066a386ce6a6mr27418447pfv.6.1687934300968;
-        Tue, 27 Jun 2023 23:38:20 -0700 (PDT)
-Received: from dread.disaster.area (pa49-186-94-37.pa.vic.optusnet.com.au. [49.186.94.37])
-        by smtp.gmail.com with ESMTPSA id v26-20020aa7851a000000b0064f708ca12asm4682222pfn.70.2023.06.27.23.38.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Jun 2023 23:38:20 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qEOoi-00H80M-2E;
-        Wed, 28 Jun 2023 16:38:16 +1000
-Date:   Wed, 28 Jun 2023 16:38:16 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 6/8] xfs: journal geometry is not properly bounds checked
-Message-ID: <ZJvVWOHGnW/KGfe2@dread.disaster.area>
-References: <20230627224412.2242198-1-david@fromorbit.com>
- <20230627224412.2242198-7-david@fromorbit.com>
- <ZJvObtDmbYVyR+KO@infradead.org>
+        id S232252AbjF1Iid (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Jun 2023 04:38:33 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:21996 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231221AbjF1Idm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Jun 2023 04:33:42 -0400
+Received: from dggpemm500014.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QrXSB22ZvzlWMg;
+        Wed, 28 Jun 2023 14:56:42 +0800 (CST)
+Received: from [10.174.177.211] (10.174.177.211) by
+ dggpemm500014.china.huawei.com (7.185.36.153) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Wed, 28 Jun 2023 14:59:26 +0800
+Message-ID: <6129fa9a-73aa-99e5-6231-88a1cc60f189@huawei.com>
+Date:   Wed, 28 Jun 2023 14:59:25 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZJvObtDmbYVyR+KO@infradead.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.0.3
+Subject: Re: [PATCH] mkfs.xfs: fix segmentation fault caused by accessing a
+ null pointer
+To:     Dave Chinner <david@fromorbit.com>
+CC:     <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+        <linux-xfs@vger.kernel.org>, <louhongxiang@huawei.com>,
+        <liuzhiqiang26@huawei.com>
+References: <48402a8a-95db-f7b5-196e-32f3b4b2bf4e@huawei.com>
+ <ZJNxj+Tm0cIDKaAR@dread.disaster.area>
+From:   Wu Guanghao <wuguanghao3@huawei.com>
+In-Reply-To: <ZJNxj+Tm0cIDKaAR@dread.disaster.area>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.211]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500014.china.huawei.com (7.185.36.153)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 11:08:46PM -0700, Christoph Hellwig wrote:
-> > +	if (sbp->sb_logblocks > XFS_MAX_LOG_BLOCKS) {
-> > +		xfs_notice(mp,
-> > +		"Log size 0x%x blocks too large, maximum size is 0x%llx blocks",
-> > +			 sbp->sb_logblocks, XFS_MAX_LOG_BLOCKS);
+
+
+在 2023/6/22 5:54, Dave Chinner 写道:
+> On Wed, Jun 21, 2023 at 05:25:27PM +0800, Wu Guanghao wrote:
+>> We encountered a segfault while testing the mkfs.xfs + iscsi.
+>>
+>> (gdb) bt
+>> #0 libxfs_log_sb (tp=0xaaaafaea0630) at xfs_sb.c:810
+>> #1 0x0000aaaaca991468 in __xfs_trans_commit (tp=<optimized out>, tp@entry=0xaaaafaea0630, regrant=regrant@entry=true) at trans.c:995
+>> #2 0x0000aaaaca991790 in libxfs_trans_roll (tpp=tpp@entry=0xfffffe1f3018) at trans.c:103
+>> #3 0x0000aaaaca9bcde8 in xfs_dialloc_roll (agibp=0xaaaafaea2fa0, tpp=0xfffffe1f31c8) at xfs_ialloc.c:1561
+>> #4 xfs_dialloc_try_ag (ok_alloc=true, new_ino=<synthetic pointer>, parent=0, pag=0xaaaafaea0210, tpp=0xfffffe1f31c8) at xfs_ialloc.c:1698
+>> #5 xfs_dialloc (tpp=tpp@entry=0xfffffe1f31c8, parent=0, mode=mode@entry=16877, new_ino=new_ino@entry=0xfffffe1f3128) at xfs_ialloc.c:1776
+>> #6 0x0000aaaaca9925b0 in libxfs_dir_ialloc (tpp=tpp@entry=0xfffffe1f31c8, dp=dp@entry=0x0, mode=mode@entry=16877, nlink=nlink@entry=1, rdev=rdev@entry=0, cr=cr@entry=0xfffffe1f31d0,
+>>     fsx=fsx@entry=0xfffffe1f36a4, ipp=ipp@entry=0xfffffe1f31c0) at util.c:525
+>> #7 0x0000aaaaca988fac in parseproto (mp=0xfffffe1f36c8, pip=0x0, fsxp=0xfffffe1f36a4, pp=0xfffffe1f3370, name=0x0) at proto.c:552
+>> #8 0x0000aaaaca9867a4 in main (argc=<optimized out>, argv=<optimized out>) at xfs_mkfs.c:4217
+>>
+>> (gdb) p bp
+>> $1 = 0x0
+>>
+>> ```
+>> void
+>> xfs_log_sb(
+>>         struct xfs_trans        *tp)
+>> {
+>>         // iscsi offline
+>>         ...
+>>         // failed to read sb, bp = NULL
+>>         struct xfs_buf          *bp = xfs_trans_getsb(tp);
+>>         ...
+>> }
+>> ```
+>>
+>> When writing data to sb, if the device is abnormal at this time,
+>> the bp may be empty. Using it without checking will result in
+>> a segfault.
 > 
-> Just a little nitpick, didn't we traditionally align the overly
-> long format strings with a single tab and not to the same line as
-> the xfs_notice/warn/etc?
-
-I don't think we have a particluarly formal definition of that.
- 
-I mean, just look at all the different variants in
-xfs_sb_validate_common:
-
-	if (xfs_sb_is_v5(sbp)) {
-                if (sbp->sb_blocksize < XFS_MIN_CRC_BLOCKSIZE) {
-                        xfs_notice(mp,
-"Block size (%u bytes) too small for Version 5 superblock (minimum %d bytes)",
-                                sbp->sb_blocksize, XFS_MIN_CRC_BLOCKSIZE);
-                        return -EFSCORRUPTED;
-                }
-
-                /* V5 has a separate project quota inode */
-                if (sbp->sb_qflags & (XFS_OQUOTA_ENFD | XFS_OQUOTA_CHKD)) {
-                        xfs_notice(mp,
-                           "Version 5 of Super block has XFS_OQUOTA bits.");
-                        return -EFSCORRUPTED;
-                }
-
-                /*
-                 * Full inode chunks must be aligned to inode chunk size when
-                 * sparse inodes are enabled to support the sparse chunk
-                 * allocation algorithm and prevent overlapping inode records.
-                 */
-                if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_SPINODES) {
-                        uint32_t        align;
-
-                        align = XFS_INODES_PER_CHUNK * sbp->sb_inodesize
-                                        >> sbp->sb_blocklog;
-                        if (sbp->sb_inoalignmt != align) {
-                                xfs_warn(mp,
-"Inode block alignment (%u) must match chunk size (%u) for sparse inodes.",
-                                         sbp->sb_inoalignmt, align);
-                                return -EINVAL;
-                        }
-                }
-        } else if (sbp->sb_qflags & (XFS_PQUOTA_ENFD | XFS_GQUOTA_ENFD |
-                                XFS_PQUOTA_CHKD | XFS_GQUOTA_CHKD)) {
-                        xfs_notice(mp,
-"Superblock earlier than Version 5 has XFS_{P|G}QUOTA_{ENFD|CHKD} bits.");
-                        return -EFSCORRUPTED;
-        }
-
-        if (unlikely(
-            sbp->sb_logstart == 0 && mp->m_logdev_targp == mp->m_ddev_targp)) {
-                xfs_warn(mp,
-                "filesystem is marked as having an external log; "
-                "specify logdev on the mount command line.");
-                return -EINVAL;
-        }
-
-        if (unlikely(
-            sbp->sb_logstart != 0 && mp->m_logdev_targp != mp->m_ddev_targp)) {
-                xfs_warn(mp,
-                "filesystem is marked as having an internal log; "
-                "do not specify logdev on the mount command line.");
-                return -EINVAL;
-        }
-
-There's 4-5 different variations in indenting in 6-7 warning
-messages. And there are more variations in that function, too.
-
-There's no consistent rule to follow, so I just set the indenting
-such that the format string didn't run over 80 columns and didn't
-think any further..
-
-I think that if we really care, a separate cleanup patch to make all
-the long format strings use consistent zero-indenting and the
-variables one tab like this one:
-
-                        xfs_notice(mp,
-"Block size (%u bytes) too small for Version 5 superblock (minimum %d bytes)",
-                                sbp->sb_blocksize, XFS_MIN_CRC_BLOCKSIZE);
-
-Could be done. If I'm ever lacking for something to do...
-
-> Otherwise looks good:
+> xfs_trans_getsb() is not supposed to fail. In the kernel code (which
+> this is a copy of) it can't fail because the superblock buffer is
+> always pinned in memory at mount time and so is *never read from the
+> storage* after mount.
 > 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+Thank you for your suggestion. Later, I will send a patch for the V2 patch.
 
-Thanks!
-
-_dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks,
+Guanghao
+> Hence something similar needs to be in userspace with libxfs_getsb()
+> so that the superblock is only read when setting up the initial
+> mount state in libxfs....
+> 
+>> diff --git a/libxfs/xfs_attr_leaf.c b/libxfs/xfs_attr_leaf.c
+>> index 6cac2531..73079df1 100644
+>> --- a/libxfs/xfs_attr_leaf.c
+>> +++ b/libxfs/xfs_attr_leaf.c
+>> @@ -668,7 +668,7 @@ xfs_sbversion_add_attr2(
+>>         spin_lock(&mp->m_sb_lock);
+>>         xfs_add_attr2(mp);
+>>         spin_unlock(&mp->m_sb_lock);
+>> -       xfs_log_sb(tp);
+>> +       ASSERT(!xfs_log_sb(tp));
+> 
+> FWIW, that's never a valid conversion nor a valid way to handle
+> something that can fail. That turns the code into code that is only
+> executed on debug builds, and it will panic the debug build rather
+> than handle the error.....
+> 
+> -Dave.
+> 
