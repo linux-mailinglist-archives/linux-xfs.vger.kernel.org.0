@@ -2,43 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA66D740A33
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jun 2023 10:00:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A362C740CD5
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jun 2023 11:31:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbjF1H7o (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 28 Jun 2023 03:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34562 "EHLO
+        id S231697AbjF1J23 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Jun 2023 05:28:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231462AbjF1H5j (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Jun 2023 03:57:39 -0400
+        with ESMTP id S231654AbjF1H4M (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Jun 2023 03:56:12 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEA5358E
-        for <linux-xfs@vger.kernel.org>; Wed, 28 Jun 2023 00:56:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F38A430F1
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Jun 2023 00:55:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=MCDS6NmzyoRCV6IJnepJ+hjfjYnFg72qgWpC8ZlvMVQ=; b=g8J+bI6NjwHwO1Cv4qlDfT4RFU
-        OSMunrAgiXxuWBijx+0G1yp7n60IEHda9L/vc+TmxsU5FIZeVuPKGOnoXBENCFstwCKVcv7DleqGC
-        6H7dwwhe1vSZrkkn4mj50Lbz1+6C0qUk+xCboBmqgREXs+vVLkAVTULt8e8mBQ3+QsSAIvHcbE4GF
-        G60bEQFgh9yKy9upqXl29EmgzhhqCxZRP2wJIUsfre7lEdleivo6mnOx1NxqqxFnznHSSI1AohdRL
-        9DSZnUrut6OZTfjDCHZ9KtUZJakMFxSteqaTiX4moWYQDYKB3BFiecPYpc0BEFWsajogAPyZWISm1
-        b3RupZ/g==;
+        bh=Ez/Z2zHWUBd1mh8aHsFgJlAr7+zbfSoMLzqwmgQ88JE=; b=YIBw1Ig1zbkSY8+mAUUC7KJQ5O
+        rohB7QgwYN4aq7VZjcHA9glWCz/c8syWP6qPpyH5R7NvCSd4ajaOZrB4ycNPC4URhScvnD7J5JAvS
+        0ISlOGKcHhrI5WE/uhXp9mo2TjfGLmZUXvakK3Hpr2Q+VGX96+tzbkNYa4BJT3FpqkchuRv28aR4d
+        g+qnL5FitruxGRMKGSSFwcKV80nd1/Z88f+Zdji4jsfwlqILgNCcEoT5FQ2ZjUYSgIY5qz/0s9FEm
+        7Je/K8H4VU2lokIfzM5mtpKKPso8OEx0zcBsSntrfXhWVJNiR0F9wmEsqL0z9fZ2BytS9pTSMul88
+        yvRVZb0g==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qEON1-00EwCq-1q;
-        Wed, 28 Jun 2023 06:09:39 +0000
-Date:   Tue, 27 Jun 2023 23:09:39 -0700
+        id 1qENEX-00EpbI-0Y;
+        Wed, 28 Jun 2023 04:56:49 +0000
+Date:   Tue, 27 Jun 2023 21:56:49 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 8/8] xfs: fix bounds check in xfs_defer_agfl_block()
-Message-ID: <ZJvOowANw4U+ymi6@infradead.org>
-References: <20230627224412.2242198-1-david@fromorbit.com>
- <20230627224412.2242198-9-david@fromorbit.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Masahiko Sawada <sawada.mshk@gmail.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: Question on slow fallocate
+Message-ID: <ZJu9kb14LcXgGmjA@infradead.org>
+References: <CAD21AoCWW20ga6GKR+7RwRtvPU0VyFt3_acut_y+Fg7E-4nzWw@mail.gmail.com>
+ <ZJTrrwirZqykiVxn@dread.disaster.area>
+ <CAD21AoC9=8Q2o3-+ueuP05+8298z--5vgBWtvSxMHHF2jdyr_w@mail.gmail.com>
+ <3f604849-877b-f519-8cae-4694c82ac7e4@sandeen.net>
+ <CAD21AoBHd35HhFpbh9YBHPsLN+F_TZX5b47iy+-s44jPT+fyZQ@mail.gmail.com>
+ <82b74cbc-8a1d-6b6f-fa2f-5f120d958dad@sandeen.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230627224412.2242198-9-david@fromorbit.com>
+In-Reply-To: <82b74cbc-8a1d-6b6f-fa2f-5f120d958dad@sandeen.net>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -50,15 +55,15 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 08:44:12AM +1000, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> Need to happen before we allocate and then leak the xefi. Found by
-> coverity via an xfsprogs libxfs scan.
+On Tue, Jun 27, 2023 at 11:12:01AM -0500, Eric Sandeen wrote:
+> Ok, but what is the reason for zeroing out the blocks prior to them being
+> written with real data? I'm wondering what the core requirement here is for
+> the zeroing, either via fallocate (which btw posix_fallocate does not
+> guarantee) or pwrites of zeros.
 
-... and also fixes the type of the agbno argument, which probably should
-be here in the commit log.
+Note that even a plain truncate will zero the data visible to the
+user.  I could see this tring to reduce fragmentation by making sure
+the whole file extension is allocated together insted of split up
+as the difference processes write their areas.  But is there data
+showing this fragmentation even happens and actually hurts?
 
-Otherwise looks good:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
