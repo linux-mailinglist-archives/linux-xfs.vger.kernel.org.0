@@ -2,66 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0513974F921
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jul 2023 22:33:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 663FA74F924
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jul 2023 22:33:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230352AbjGKUdh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 11 Jul 2023 16:33:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44836 "EHLO
+        id S230360AbjGKUdi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 11 Jul 2023 16:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230289AbjGKUdg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Jul 2023 16:33:36 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 565E9170C
-        for <linux-xfs@vger.kernel.org>; Tue, 11 Jul 2023 13:33:35 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-676cc97ca74so1390664b3a.1
-        for <linux-xfs@vger.kernel.org>; Tue, 11 Jul 2023 13:33:35 -0700 (PDT)
+        with ESMTP id S229884AbjGKUdh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 11 Jul 2023 16:33:37 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D80F195
+        for <linux-xfs@vger.kernel.org>; Tue, 11 Jul 2023 13:33:36 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-66d6a9851f3so979259b3a.0
+        for <linux-xfs@vger.kernel.org>; Tue, 11 Jul 2023 13:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1689107615; x=1689712415;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1689107616; x=1691699616;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rd5q4QGxS59bSAw+JDmQ90OVbkUJjAQIgvePrWiPffo=;
-        b=GDFBVXHrRbHPsPVU4DCmRN6oNIWp52f4jpnmeWVWuO5m92w0TVuR59FJTTN+ga1vtS
-         CDq7NW98kbb95PEhjGTPtMyAZ00nxb4mMve2wzye7sZ2Rgos0LiFLINEeUtipY7/lT3C
-         zxQJbjNL29IIqWIaMbK/uCju3tUA3gmNKiaaQABjaNlVJO/0oCvZA3bDCqBk8h+J9iTC
-         8w2MnI3/l08WbdKv5OTadqfBMma7qlYKK+n7F5Yzrs/rLEOPJPjW/ZMJngZ8uS64+h6m
-         9Zv8jBnVRjjg6+bDrfwAd5q4S7p/RFoLs2h4rymbI22cMnbzzvS/A+hx4fdBQ/1hm/1r
-         Uy6A==
+        bh=K4lQMN8Le/C1jdSB9yTI2JvyEXlu5Hktu+P+yNzyi4U=;
+        b=mrcVeQl9YidPXEIu0qrh18WlOJZDdWABWgO6kgrZ0XmOagDqRVENP+qucVgSkt0anB
+         +pzV8VXABn00CAVK3nnZMcHXaOdjUl2w7xmMgqnmWkndLe0qc6+gSZCODFghShrs5bRf
+         36qWmIuSDuFGFtg89nYValQI+DF8vXfGPo4qgnSocLzbH1rDTipwGSA/KIVd5yiL3jDh
+         BwJioibL7LoWa761AFiHPra/rVJLfaiZ0Ji4vvd4xLWe7gEVofVPknUDeExtPHttAoPg
+         EubpbxwUozHnSrcrOowG8jDm2DWhVo6O2YK5O4KEuvCaAKvOlbrQV/HKlzNoHPz73RgN
+         b+OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689107615; x=1689712415;
+        d=1e100.net; s=20221208; t=1689107616; x=1691699616;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Rd5q4QGxS59bSAw+JDmQ90OVbkUJjAQIgvePrWiPffo=;
-        b=Df63tXEXpWjNMBQ4vB8zk6rpjNG1LhfdwRujsuDmJtincXmMRKZtkooukWg55/63sZ
-         q5JKBHOUxGm2S1t1Mfw3vuDwwRYJZFCydGuHptCaC2L1cMRcKr7Pu0F/PxEW88AOsK0M
-         Xcl6jSDy5HpAUPfetHgabtWfP/UHcHeTKpGl/jrwmLvkXA8i9C1CvzoFjKbiRwjCtD4x
-         ShOBaF/XRcTHtFrvl/8nhmBPv3gGt1hJM5RrlGZWeDglZ8Pw2hWBKPSE2y2dEuV7IRHe
-         xX4XAGGPNvnvYoa6yKkA33QnzdeqlQHYHjPey/grVIEpE5n/S8F/1VCU+Mlli0h+vnD0
-         UDVQ==
-X-Gm-Message-State: ABy/qLaP6vY5aEvusbqXC3F+ttEgSsuipneSSzzrCpv+x4u6NZiRbw6Z
-        Kkq/WBm2w2NorQi85yhyf2iuo+Vt29mdoSn3x28=
-X-Google-Smtp-Source: APBJJlHh4R8H8y0q7l/+iJSpHFtPMwjZxdkfJxKb3+C34QPTz5vRIWajkTtepebKwCc5RmqimcURtw==
-X-Received: by 2002:a05:6a20:7da6:b0:12f:dce2:b381 with SMTP id v38-20020a056a207da600b0012fdce2b381mr20396148pzj.3.1689107614789;
-        Tue, 11 Jul 2023 13:33:34 -0700 (PDT)
+        bh=K4lQMN8Le/C1jdSB9yTI2JvyEXlu5Hktu+P+yNzyi4U=;
+        b=lCqNmg+fr3CjvSGdH85EVzfdwzh8VPWvzgp4Td5nUFTCO9ntQiFrzh+KbKoS26ifIi
+         nAHlnVfmbWiDIswR6MfVAGfy6s4AH62T4f2BfUuEar+Opxiw2r1I6GeGP2c7kPJ31phv
+         leuFILuo4p1Yl87M8h1KKwfVAUa4J9Ysdc8oaRcgaav/KPFE4Drc/FKIxNg4iLFjozTX
+         Q1tDQU3L6nXdzbIjjMv9t04/hj09lLha3moMC8jeUbpNIivj4KTA8pu/o8ZudrLF6CRC
+         Iaps+BdEJ3+gsoh+MjedYbqeW/SCPN47pEMoDsCZPEqhlVKVLlKhhcxqdkvA1GP2J8cw
+         RADQ==
+X-Gm-Message-State: ABy/qLa8qGJNPVuGlzjbhW5GgZnfY33hfoZDgL4LUeSh/wmAOY+XdR+d
+        8/0Sm3GWPXeelPUxoEy/4jcM/w==
+X-Google-Smtp-Source: APBJJlHGZD2pToOKcRdBqvrpeDqGNCC7/KU1/F7yZ4nORGQegCZgWoU5k+zvAQYTDatQpmPxq6XajQ==
+X-Received: by 2002:a05:6a20:8e2a:b0:130:9af7:bf1 with SMTP id y42-20020a056a208e2a00b001309af70bf1mr16939638pzj.6.1689107616082;
+        Tue, 11 Jul 2023 13:33:36 -0700 (PDT)
 Received: from localhost.localdomain ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id fk13-20020a056a003a8d00b0067903510abbsm2108081pfb.163.2023.07.11.13.33.33
+        by smtp.gmail.com with ESMTPSA id fk13-20020a056a003a8d00b0067903510abbsm2108081pfb.163.2023.07.11.13.33.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 13:33:34 -0700 (PDT)
+        Tue, 11 Jul 2023 13:33:35 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     io-uring@vger.kernel.org, linux-xfs@vger.kernel.org
 Cc:     hch@lst.de, andres@anarazel.de, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 3/5] io_uring/rw: add write support for IOCB_DIO_DEFER
-Date:   Tue, 11 Jul 2023 14:33:23 -0600
-Message-Id: <20230711203325.208957-4-axboe@kernel.dk>
+Subject: [PATCH 4/5] iomap: add local 'iocb' variable in iomap_dio_bio_end_io()
+Date:   Tue, 11 Jul 2023 14:33:24 -0600
+Message-Id: <20230711203325.208957-5-axboe@kernel.dk>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230711203325.208957-1-axboe@kernel.dk>
 References: <20230711203325.208957-1-axboe@kernel.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,70 +69,41 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-If the filesystem dio handler understands IOCB_DIO_DEFER, we'll get
-a kiocb->ki_complete() callback with kiocb->dio_complete set. In that
-case, rather than complete the IO directly through task_work, queue
-up an intermediate task_work handler that first processes this
-callback and then immediately completes the request.
-
-For XFS, this avoids a punt through a workqueue, which is a lot less
-efficient and adds latency to lower queue depth (or sync) O_DIRECT
-writes.
+We use this multiple times, add a local variable for the kiocb.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- io_uring/rw.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ fs/iomap/direct-io.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/io_uring/rw.c b/io_uring/rw.c
-index 1bce2208b65c..4ed378c70249 100644
---- a/io_uring/rw.c
-+++ b/io_uring/rw.c
-@@ -285,6 +285,14 @@ static inline int io_fixup_rw_res(struct io_kiocb *req, long res)
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 343bde5d50d3..94ef78b25b76 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -157,18 +157,20 @@ void iomap_dio_bio_end_io(struct bio *bio)
+ 		iomap_dio_set_error(dio, blk_status_to_errno(bio->bi_status));
  
- void io_req_rw_complete(struct io_kiocb *req, struct io_tw_state *ts)
- {
-+	struct io_rw *rw = io_kiocb_to_cmd(req, struct io_rw);
+ 	if (atomic_dec_and_test(&dio->ref)) {
++		struct kiocb *iocb = dio->iocb;
 +
-+	if (rw->kiocb.dio_complete) {
-+		long res = rw->kiocb.dio_complete(rw->kiocb.private);
-+
-+		io_req_set_res(req, io_fixup_rw_res(req, res), 0);
-+	}
-+
- 	io_req_io_end(req);
+ 		if (dio->wait_for_completion) {
+ 			struct task_struct *waiter = dio->submit.waiter;
+ 			WRITE_ONCE(dio->submit.waiter, NULL);
+ 			blk_wake_io_task(waiter);
+ 		} else if ((bio->bi_opf & REQ_POLLED) ||
+ 			   !(dio->flags & IOMAP_DIO_WRITE)) {
+-			WRITE_ONCE(dio->iocb->private, NULL);
++			WRITE_ONCE(iocb->private, NULL);
+ 			iomap_dio_complete_work(&dio->aio.work);
+ 		} else {
+-			struct inode *inode = file_inode(dio->iocb->ki_filp);
++			struct inode *inode = file_inode(iocb->ki_filp);
  
- 	if (req->flags & (REQ_F_BUFFER_SELECTED|REQ_F_BUFFER_RING)) {
-@@ -300,9 +308,11 @@ static void io_complete_rw(struct kiocb *kiocb, long res)
- 	struct io_rw *rw = container_of(kiocb, struct io_rw, kiocb);
- 	struct io_kiocb *req = cmd_to_io_kiocb(rw);
- 
--	if (__io_complete_rw_common(req, res))
--		return;
--	io_req_set_res(req, io_fixup_rw_res(req, res), 0);
-+	if (!rw->kiocb.dio_complete) {
-+		if (__io_complete_rw_common(req, res))
-+			return;
-+		io_req_set_res(req, io_fixup_rw_res(req, res), 0);
-+	}
- 	req->io_task_work.func = io_req_rw_complete;
- 	__io_req_task_work_add(req, IOU_F_TWQ_LAZY_WAKE);
- }
-@@ -914,7 +924,13 @@ int io_write(struct io_kiocb *req, unsigned int issue_flags)
- 		__sb_writers_release(file_inode(req->file)->i_sb,
- 					SB_FREEZE_WRITE);
- 	}
--	kiocb->ki_flags |= IOCB_WRITE;
-+
-+	/*
-+	 * Set IOCB_DIO_DEFER, stating that our handler groks deferring the
-+	 * completion to task context.
-+	 */
-+	kiocb->ki_flags |= IOCB_WRITE | IOCB_DIO_DEFER;
-+	kiocb->dio_complete = NULL;
- 
- 	if (likely(req->file->f_op->write_iter))
- 		ret2 = call_write_iter(req->file, kiocb, &s->iter);
+-			WRITE_ONCE(dio->iocb->private, NULL);
++			WRITE_ONCE(iocb->private, NULL);
+ 			INIT_WORK(&dio->aio.work, iomap_dio_complete_work);
+ 			queue_work(inode->i_sb->s_dio_done_wq, &dio->aio.work);
+ 		}
 -- 
 2.40.1
 
