@@ -2,52 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19180750C8E
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jul 2023 17:33:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97915750CE8
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Jul 2023 17:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233695AbjGLPdC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Jul 2023 11:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48898 "EHLO
+        id S233792AbjGLPo5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Jul 2023 11:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232884AbjGLPc6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jul 2023 11:32:58 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70720C2;
-        Wed, 12 Jul 2023 08:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=689SEK0ciFY8KgDlRHFBreHHAC2z+cvH0wQ011Q2aMI=; b=df/VKiT91ZqRa0x7ofoJaXGlph
-        PM7CRP4KkwoXZKNJlvYdkig+/LLrQ9LVGVf40H6Qaywx20JwTqHlizlUxF15FF/hdi7QMcfJ88rOM
-        Tk9o3z44pMTcermnTCrLWAF39fzqRsD0ms+1lMmZtzToJzTD0SUcPG6eXBFgIigvbDeEBrSIYXiW/
-        GnykGmmqxl8DWPpBQb6tfrtLGgdO7lnddHDuy7SXW0bC9E1PhpCLadB/V3QSWJPX+bNFvOifeRdsy
-        3Vg5gSGOgGr74Cyg+9z9dxsezgnvq5bViTggfgF6K6g7cj7jT1ssxpJXUEt4gBcr4IJbEN74vqTce
-        EZsIkLBg==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qJboy-000MRl-20;
-        Wed, 12 Jul 2023 15:32:04 +0000
-Message-ID: <03e153ce-328b-f279-2a40-4074bea2bc8f@infradead.org>
-Date:   Wed, 12 Jul 2023 08:31:55 -0700
+        with ESMTP id S231856AbjGLPo4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Jul 2023 11:44:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F58810C4
+        for <linux-xfs@vger.kernel.org>; Wed, 12 Jul 2023 08:44:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C13DD61871
+        for <linux-xfs@vger.kernel.org>; Wed, 12 Jul 2023 15:44:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210CAC433C7;
+        Wed, 12 Jul 2023 15:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689176694;
+        bh=4HynN4gJAuFfP5i5kPqYkjPpt+kinSyN6YDdbdAqeXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hVyeTvRK12AyjCf3Kc1yOu5EejJsKYUgbRBAEtdudoRYtOswvKVMTGnlaJB3b+qYw
+         NIVDBaL2dgIZ2BmHSz1RqXKmwT+RCu4or2ZNTS5nTYdZTrzYfSBoGavQnHF05e24c+
+         ntaTwFoxnPKZe3bM3VgVnfFUkV0bGWjLOYfNXKPXTxmnVGgGHgo5a695+7QQTfbKZc
+         mxYTjIxhtVAK6xnGaj4Siu2rHN/7VDFDKtCcldKevc+JNILkQ9Efl+mMPUnqGzYTMh
+         x5wshmCx1Qg+QXYxD3mg3jwtGK0Qbr9rauALwY7UFDcHpzvcBSdo5bKeB/edgC8RCS
+         w1ENufTlwfVOg==
+Date:   Wed, 12 Jul 2023 08:44:53 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Chandan Babu R <chandan.babu@oracle.com>,
+        Leah Rumancik <leah.rumancik@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Chris Dunlop <chris@onthe.net.au>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 6.1 CANDIDATE 0/3] xfs inodegc fixes for 6.1.y (from v6.4)
+Message-ID: <20230712154453.GE108251@frogsfrogsfrogs>
+References: <20230712094733.1265038-1-amir73il@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 01/79] fs: add ctime accessors infrastructure
-Content-Language: en-US
-To:     Jeff Layton <jlayton@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>
-References: <20230621144507.55591-1-jlayton@kernel.org>
- <20230621144507.55591-2-jlayton@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230621144507.55591-2-jlayton@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230712094733.1265038-1-amir73il@gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,15 +56,54 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Jeff,
+On Wed, Jul 12, 2023 at 12:47:30PM +0300, Amir Goldstein wrote:
+> Darrick,
+> 
+> These are the patches we discussed that Leah requested for the 5.15.y
+> backport of non-blocking inodegc pushes series [1].
+> 
+> They may or may not help the 5.15.y -> 6.1.y regression that was
+> reported by Chris [2].
+> 
+> Note that I did not include:
+> 2d5f38a31980 ("xfs: disable reaping in fscounters scrub")
+> in this backport set, because I generally do not want to deal with
+> backporting fixes for experimental features.
 
-On arch/um/, (subarch i386 or x86_64), hostfs build fails with:
+I don't agree with this decision because the comment for
+xfs_inodegc_stop now says that callers must hold s_umount.
+xchk_stop_reaping definitely does /not/ hold that lock, which means it's
+now buggy.  Someone downstream could be using scrub, even if it's still
+experimental.
 
-../fs/hostfs/hostfs_kern.c:520:36: error: incompatible type for arg
-ument 2 of 'inode_set_ctime_to_ts'
-../include/linux/fs.h:1499:73: note: expected 'struct timespec64' b
-ut argument is of type 'const struct hostfs_timespec *'
+I've generally said not to bother with scrub fixes, but I don't think
+it's correct to introduce a bug in an LTS kernel.  Please backport
+2d5f38a31980 since all it does is removes the offending call and turns
+off code in fscounters.c.
 
+--D
 
--- 
-~Randy
+> This series has gone through the usual kdevops testing routine.
+> 
+> Please ACK.
+> 
+> Thanks,
+> Amir.
+> 
+> [1] https://www.spinics.net/lists/linux-xfs/msg61813.html
+> [2] https://lore.kernel.org/all/ZK4E%2FgGuaBu+qvKL@dread.disaster.area/
+> 
+> Darrick J. Wong (3):
+>   xfs: explicitly specify cpu when forcing inodegc delayed work to run
+>     immediately
+>   xfs: check that per-cpu inodegc workers actually run on that cpu
+>   xfs: fix xfs_inodegc_stop racing with mod_delayed_work
+> 
+>  fs/xfs/xfs_icache.c | 40 +++++++++++++++++++++++++++++++++-------
+>  fs/xfs/xfs_mount.h  |  3 +++
+>  fs/xfs/xfs_super.c  |  3 +++
+>  3 files changed, 39 insertions(+), 7 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
