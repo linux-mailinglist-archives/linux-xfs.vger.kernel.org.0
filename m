@@ -2,260 +2,400 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEDEA758B49
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jul 2023 04:19:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53675758DCE
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jul 2023 08:32:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229708AbjGSCTS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 Jul 2023 22:19:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50662 "EHLO
+        id S230205AbjGSGcW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 19 Jul 2023 02:32:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbjGSCTS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Jul 2023 22:19:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B023A1BC1
-        for <linux-xfs@vger.kernel.org>; Tue, 18 Jul 2023 19:19:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 39FF8615D5
-        for <linux-xfs@vger.kernel.org>; Wed, 19 Jul 2023 02:19:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAD2C433C8;
-        Wed, 19 Jul 2023 02:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689733155;
-        bh=Ux8w6l1/PeBGqE3q2NDqf/Xy03mKQRL/gK8q8FDX4oA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P9JvgOYH89WMWXMv0j4XpnV7NCTmFOLtiNjM5VVDncEF7z8Kei5nvLnZGu5wr9xZ1
-         AxER5Am9k3VJBUfc3JaKYapj738nnXCOhKjfo6YPMa4jp0HMqr34aGxYM0qhcMS9Fi
-         F4uWvgkFhO9nT2hg6/dGrBv4nTHpep3a+J9SuwvhBuSQ2ToH2jm7i7C7eV0dvwjbze
-         Tx5GgsjsBlg2BN6EJ0RqibJJ59Mtw1xS26EkGzJZHrBVXHWhw67vbH2gLIXyVcmF9U
-         QX7e3fahaL/nLB02s+odFHRJWiTKhI6qJALFo+FQlWB+kSKXAgMnEbCAzduXtmSMEe
-         pGW1/uDjN8s5Q==
-Date:   Tue, 18 Jul 2023 19:19:14 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Long Li <leo.lilong@huawei.com>
-Cc:     david@fromorbit.com, linux-xfs@vger.kernel.org,
-        yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 3/3] xfs: make sure done item committed before cancel
- intents
-Message-ID: <20230719021914.GF11352@frogsfrogsfrogs>
-References: <20230715063647.2094989-1-leo.lilong@huawei.com>
- <20230715063647.2094989-4-leo.lilong@huawei.com>
+        with ESMTP id S230029AbjGSGcU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Jul 2023 02:32:20 -0400
+X-Greylist: delayed 579 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 18 Jul 2023 23:32:16 PDT
+Received: from out-19.mta1.migadu.com (out-19.mta1.migadu.com [95.215.58.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CA51FCB
+        for <linux-xfs@vger.kernel.org>; Tue, 18 Jul 2023 23:32:16 -0700 (PDT)
+Message-ID: <00d67c43-462d-6cb3-3480-95dd7c0b9371@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1689747753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=71n4Xa7UFYGKpDrvw+b0UFZFwOJM8DPjWTmV1p9m74M=;
+        b=UhG2005Y1mu4XM2jOQjdWyYR2PGe2u+BTkKXuyEi6SLx/eBWqAyh6M7Ya5voKPxqxQPkhC
+        Mtmxuddv30bt84P00O2sP0MvYcoPIqrRuYewAtdJvCTmLX7idT8hScff17y1nqQJHRiF0A
+        ZwjYIZPFfv8D2k1hNB1BbLUreEHRtec=
+Date:   Wed, 19 Jul 2023 14:22:20 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230715063647.2094989-4-leo.lilong@huawei.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Fwd: [PATCH 4/5] xfs: add NOWAIT semantics for readdir
+References: <20230718132112.461218-5-hao.xu@linux.dev>
+Content-Language: en-US
+To:     linux-xfs@vger.kernel.org
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Hao Xu <hao.xu@linux.dev>
+In-Reply-To: <20230718132112.461218-5-hao.xu@linux.dev>
+X-Forwarded-Message-Id: <20230718132112.461218-5-hao.xu@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jul 15, 2023 at 02:36:47PM +0800, Long Li wrote:
-> KASAN report a uaf when recover intents fails:
-> 
->  ==================================================================
->  BUG: KASAN: slab-use-after-free in xfs_cui_release+0xb7/0xc0
->  Read of size 4 at addr ffff888012575e60 by task kworker/u8:3/103
->  CPU: 3 PID: 103 Comm: kworker/u8:3 Not tainted 6.4.0-rc7-next-20230619-00003-g94543a53f9a4-dirty #166
->  Workqueue: xfs-cil/sda xlog_cil_push_work
->  Call Trace:
->   <TASK>
->   dump_stack_lvl+0x50/0x70
->   print_report+0xc2/0x600
->   kasan_report+0xb6/0xe0
->   xfs_cui_release+0xb7/0xc0
->   xfs_cud_item_release+0x3c/0x90
->   xfs_trans_committed_bulk+0x2d5/0x7f0
->   xlog_cil_committed+0xaba/0xf20
->   xlog_cil_push_work+0x1a60/0x2360
->   process_one_work+0x78e/0x1140
->   worker_thread+0x58b/0xf60
->   kthread+0x2cd/0x3c0
->   ret_from_fork+0x1f/0x30
->   </TASK>
-> 
->  Allocated by task 531:
->   kasan_save_stack+0x22/0x40
->   kasan_set_track+0x25/0x30
->   __kasan_slab_alloc+0x55/0x60
->   kmem_cache_alloc+0x195/0x5f0
->   xfs_cui_init+0x198/0x1d0
->   xlog_recover_cui_commit_pass2+0x133/0x5f0
->   xlog_recover_items_pass2+0x107/0x230
->   xlog_recover_commit_trans+0x3e7/0x9c0
->   xlog_recovery_process_trans+0x140/0x1d0
->   xlog_recover_process_ophdr+0x1a0/0x3d0
->   xlog_recover_process_data+0x108/0x2d0
->   xlog_recover_process+0x1f6/0x280
->   xlog_do_recovery_pass+0x609/0xdb0
->   xlog_do_log_recovery+0x84/0xe0
->   xlog_do_recover+0x7d/0x470
->   xlog_recover+0x25f/0x490
->   xfs_log_mount+0x2dd/0x6f0
->   xfs_mountfs+0x11ce/0x1e70
->   xfs_fs_fill_super+0x10ec/0x1b20
->   get_tree_bdev+0x3c8/0x730
->   vfs_get_tree+0x89/0x2c0
->   path_mount+0xecf/0x1800
->   do_mount+0xf3/0x110
->   __x64_sys_mount+0x154/0x1f0
->   do_syscall_64+0x39/0x80
->   entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> 
->  Freed by task 531:
->   kasan_save_stack+0x22/0x40
->   kasan_set_track+0x25/0x30
->   kasan_save_free_info+0x2b/0x40
->   __kasan_slab_free+0x114/0x1b0
->   kmem_cache_free+0xf8/0x510
->   xfs_cui_item_free+0x95/0xb0
->   xfs_cui_release+0x86/0xc0
->   xlog_recover_cancel_intents.isra.0+0xf8/0x210
->   xlog_recover_finish+0x7e7/0x980
->   xfs_log_mount_finish+0x2bb/0x4a0
->   xfs_mountfs+0x14bf/0x1e70
->   xfs_fs_fill_super+0x10ec/0x1b20
->   get_tree_bdev+0x3c8/0x730
->   vfs_get_tree+0x89/0x2c0
->   path_mount+0xecf/0x1800
->   do_mount+0xf3/0x110
->   __x64_sys_mount+0x154/0x1f0
->   do_syscall_64+0x39/0x80
->   entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> 
->  The buggy address belongs to the object at ffff888012575dc8
->   which belongs to the cache xfs_cui_item of size 432
->  The buggy address is located 152 bytes inside of
->   freed 432-byte region [ffff888012575dc8, ffff888012575f78)
-> 
->  The buggy address belongs to the physical page:
->  page:ffffea0000495d00 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888012576208 pfn:0x12574
->  head:ffffea0000495d00 order:2 entire_mapcount:0 nr_pages_mapped:0 pincount:0
->  flags: 0x1fffff80010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
->  page_type: 0xffffffff()
->  raw: 001fffff80010200 ffff888012092f40 ffff888014570150 ffff888014570150
->  raw: ffff888012576208 00000000001e0010 00000001ffffffff 0000000000000000
->  page dumped because: kasan: bad access detected
-> 
->  Memory state around the buggy address:
->   ffff888012575d00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
->   ffff888012575d80: fc fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb
->  >ffff888012575e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                                         ^
->   ffff888012575e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffff888012575f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc
->  ==================================================================
-> 
-> If process intents fails, intent items left in AIL will be delete
-> from AIL and freed in error handling, even intent items that have been
-> recovered and created done items. After this, uaf will be triggered when
-> done item commited, because at this point the released intent item will
-> be accessed.
-> 
-> xlog_recover_finish                     xlog_cil_push_work
-> ----------------------------            ---------------------------
-> xlog_recover_process_intents
->   xfs_cui_item_recover//cui_refcount == 1
->     xfs_trans_get_cud
->     xfs_trans_commit
->       <add cud item to cil>
->   xfs_cui_item_recover
->     <error occurred and return>
-> xlog_recover_cancel_intents
->   xfs_cui_release     //cui_refcount == 0
->     xfs_cui_item_free //free cui
->   <release other intent items>
-> xlog_force_shutdown   //shutdown
->                                <...>
->                                         <push items in cil>
->                                         xlog_cil_committed
->                                           xfs_cud_item_release
->                                             xfs_cui_release // UAF
-> 
-> Fix it by move log force forward to make sure done items committed before
-> cancel intents.
-> 
-> Fixes: 2e76f188fd90 ("xfs: cancel intents immediately if process_intents fails")
-> Signed-off-by: Long Li <leo.lilong@huawei.com>
-> ---
->  fs/xfs/xfs_log_recover.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index fdaa0ffe029b..c37031e64db5 100644
-> --- a/fs/xfs/xfs_log_recover.c
-> +++ b/fs/xfs/xfs_log_recover.c
-> @@ -3444,6 +3444,13 @@ xlog_recover_finish(
->  	int	error;
->  
->  	error = xlog_recover_process_intents(log);
-> +	/*
-> +	 * Sync the log to get all the intents that have done item out of
 
-"...that have intent done items out of the AIL."
+Forward to xfs mail list as well.
 
-> +	 * the AIL.  This isn't absolutely necessary, but it helps in case
-> +	 * the unlink transactions would have problems pushing the intents
-> +	 * out of the way.
-> +	 */
-> +	xfs_log_force(log->l_mp, XFS_LOG_SYNC);
 
-Hmm.  Why doesn't the shutdown force the (now dead) dead log items out
-of memory?
+-------- Forwarded Message --------
+Subject: [PATCH 4/5] xfs: add NOWAIT semantics for readdir
+Date: Tue, 18 Jul 2023 21:21:11 +0800
+From: Hao Xu <hao.xu@linux.dev>
+To: io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+CC: Dominique Martinet <asmadeus@codewreck.org>, Pavel Begunkov 
+<asml.silence@gmail.com>, Christian Brauner <brauner@kernel.org>, 
+Alexander Viro <viro@zeniv.linux.org.uk>, Stefan Roesch <shr@fb.com>, 
+Clay Harris <bugs@claycon.org>, Dave Chinner <david@fromorbit.com>, 
+linux-fsdevel@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>
+Newsgroups: org.kernel.vger.io-uring,org.kernel.vger.linux-fsdevel
+References: <20230718132112.461218-1-hao.xu@linux.dev>
 
-	/*
-	 * Flush all the completed transactions to disk before marking the log
-	 * being shut down. We need to do this first as shutting down the log
-	 * before the force will prevent the log force from flushing the iclogs
-	 * to disk.
-	 *
-	 * When we are in recovery, there are no transactions to flush, and
-	 * we don't want to touch the log because we don't want to perturb the
-	 * current head/tail for future recovery attempts. Hence we need to
-	 * avoid a log force in this case.
-	 *
-	 * If we are shutting down due to a log IO error, then we must avoid
-	 * trying to write the log as that may just result in more IO errors and
-	 * an endless shutdown/force loop.
-	 */
-	if (!log_error && !xlog_in_recovery(log))
-		xfs_log_force(log->l_mp, XFS_LOG_SYNC);
+From: Hao Xu <howeyxu@tencent.com>
 
-Oh.  We're in recovery, but we've passed the part where we've finished
-with the log/inode/dquot items that we read from the disk.  IOWs, now
-we've gotten to the part of recovery where we're actually standing up
-new transactions to finish the work that was in the intents ... with new
-incore intents.
+Implement NOWAIT semantics for readdir. Return EAGAIN error to the
+caller if it would block, like failing to get locks, or going to
+do IO.
 
-I wonder, does the problem go away if you (hackishly)
-clear_bit(XLOG_ACTIVE_RECOVERY, &log->l_opstate); before the
-xlog_force_shutdown?
+Co-developed-by: Dave Chinner <dchinner@redhat.com>
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Signed-off-by: Hao Xu <howeyxu@tencent.com>
+[fixes deadlock issue, tweak code style]
+---
+  fs/xfs/libxfs/xfs_da_btree.c   | 16 ++++++++++
+  fs/xfs/libxfs/xfs_da_btree.h   |  1 +
+  fs/xfs/libxfs/xfs_dir2_block.c |  7 ++--
+  fs/xfs/libxfs/xfs_dir2_priv.h  |  2 +-
+  fs/xfs/scrub/dir.c             |  2 +-
+  fs/xfs/scrub/readdir.c         |  2 +-
+  fs/xfs/xfs_dir2_readdir.c      | 58 +++++++++++++++++++++++++++-------
+  fs/xfs/xfs_inode.c             | 17 ++++++++++
+  fs/xfs/xfs_inode.h             | 15 +++++----
+  9 files changed, 96 insertions(+), 24 deletions(-)
 
---D
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index e576560b46e9..7a1a0af24197 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -2643,16 +2643,32 @@ xfs_da_read_buf(
+  	struct xfs_buf_map	map, *mapp = &map;
+  	int			nmap = 1;
+  	int			error;
++	int			buf_flags = 0;
+   	*bpp = NULL;
+  	error = xfs_dabuf_map(dp, bno, flags, whichfork, &mapp, &nmap);
+  	if (error || !nmap)
+  		goto out_free;
+  +	/*
++	 * NOWAIT semantics mean we don't wait on the buffer lock nor do we
++	 * issue IO for this buffer if it is not already in memory. Caller will
++	 * retry. This will return -EAGAIN if the buffer is in memory and cannot
++	 * be locked, and no buffer and no error if it isn't in memory.  We
++	 * translate both of those into a return state of -EAGAIN and *bpp =
++	 * NULL.
++	 */
++	if (flags & XFS_DABUF_NOWAIT)
++		buf_flags |= XBF_TRYLOCK | XBF_INCORE;
+  	error = xfs_trans_read_buf_map(mp, tp, mp->m_ddev_targp, mapp, nmap, 0,
+  			&bp, ops);
+  	if (error)
+  		goto out_free;
++	if (!bp) {
++		ASSERT(flags & XFS_DABUF_NOWAIT);
++		error = -EAGAIN;
++		goto out_free;
++	}
+   	if (whichfork == XFS_ATTR_FORK)
+  		xfs_buf_set_ref(bp, XFS_ATTR_BTREE_REF);
+diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
+index ffa3df5b2893..32e7b1cca402 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.h
++++ b/fs/xfs/libxfs/xfs_da_btree.h
+@@ -205,6 +205,7 @@ int	xfs_da3_node_read_mapped(struct xfs_trans *tp, 
+struct xfs_inode *dp,
+   */
+   #define XFS_DABUF_MAP_HOLE_OK	(1u << 0)
++#define XFS_DABUF_NOWAIT	(1u << 1)
+   int	xfs_da_grow_inode(xfs_da_args_t *args, xfs_dablk_t *new_blkno);
+  int	xfs_da_grow_inode_int(struct xfs_da_args *args, xfs_fileoff_t *bno,
+diff --git a/fs/xfs/libxfs/xfs_dir2_block.c b/fs/xfs/libxfs/xfs_dir2_block.c
+index 00f960a703b2..59b24a594add 100644
+--- a/fs/xfs/libxfs/xfs_dir2_block.c
++++ b/fs/xfs/libxfs/xfs_dir2_block.c
+@@ -135,13 +135,14 @@ int
+  xfs_dir3_block_read(
+  	struct xfs_trans	*tp,
+  	struct xfs_inode	*dp,
++	unsigned int		flags,
+  	struct xfs_buf		**bpp)
+  {
+  	struct xfs_mount	*mp = dp->i_mount;
+  	xfs_failaddr_t		fa;
+  	int			err;
+  -	err = xfs_da_read_buf(tp, dp, mp->m_dir_geo->datablk, 0, bpp,
++	err = xfs_da_read_buf(tp, dp, mp->m_dir_geo->datablk, flags, bpp,
+  				XFS_DATA_FORK, &xfs_dir3_block_buf_ops);
+  	if (err || !*bpp)
+  		return err;
+@@ -380,7 +381,7 @@ xfs_dir2_block_addname(
+  	tp = args->trans;
+   	/* Read the (one and only) directory block into bp. */
+-	error = xfs_dir3_block_read(tp, dp, &bp);
++	error = xfs_dir3_block_read(tp, dp, 0, &bp);
+  	if (error)
+  		return error;
+  @@ -695,7 +696,7 @@ xfs_dir2_block_lookup_int(
+  	dp = args->dp;
+  	tp = args->trans;
+  -	error = xfs_dir3_block_read(tp, dp, &bp);
++	error = xfs_dir3_block_read(tp, dp, 0, &bp);
+  	if (error)
+  		return error;
+  diff --git a/fs/xfs/libxfs/xfs_dir2_priv.h b/fs/xfs/libxfs/xfs_dir2_priv.h
+index 7404a9ff1a92..7d4cf8a0f15b 100644
+--- a/fs/xfs/libxfs/xfs_dir2_priv.h
++++ b/fs/xfs/libxfs/xfs_dir2_priv.h
+@@ -51,7 +51,7 @@ extern int xfs_dir_cilookup_result(struct xfs_da_args 
+*args,
+   /* xfs_dir2_block.c */
+  extern int xfs_dir3_block_read(struct xfs_trans *tp, struct xfs_inode *dp,
+-			       struct xfs_buf **bpp);
++			       unsigned int flags, struct xfs_buf **bpp);
+  extern int xfs_dir2_block_addname(struct xfs_da_args *args);
+  extern int xfs_dir2_block_lookup(struct xfs_da_args *args);
+  extern int xfs_dir2_block_removename(struct xfs_da_args *args);
+diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
+index 0b491784b759..5cc51f201bd7 100644
+--- a/fs/xfs/scrub/dir.c
++++ b/fs/xfs/scrub/dir.c
+@@ -313,7 +313,7 @@ xchk_directory_data_bestfree(
+  		/* dir block format */
+  		if (lblk != XFS_B_TO_FSBT(mp, XFS_DIR2_DATA_OFFSET))
+  			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, lblk);
+-		error = xfs_dir3_block_read(sc->tp, sc->ip, &bp);
++		error = xfs_dir3_block_read(sc->tp, sc->ip, 0, &bp);
+  	} else {
+  		/* dir data format */
+  		error = xfs_dir3_data_read(sc->tp, sc->ip, lblk, 0, &bp);
+diff --git a/fs/xfs/scrub/readdir.c b/fs/xfs/scrub/readdir.c
+index e51c1544be63..f0a727311632 100644
+--- a/fs/xfs/scrub/readdir.c
++++ b/fs/xfs/scrub/readdir.c
+@@ -101,7 +101,7 @@ xchk_dir_walk_block(
+  	unsigned int		off, next_off, end;
+  	int			error;
+  -	error = xfs_dir3_block_read(sc->tp, dp, &bp);
++	error = xfs_dir3_block_read(sc->tp, dp, 0, &bp);
+  	if (error)
+  		return error;
+  diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
+index 9f3ceb461515..55bccc2d0da7 100644
+--- a/fs/xfs/xfs_dir2_readdir.c
++++ b/fs/xfs/xfs_dir2_readdir.c
+@@ -149,6 +149,7 @@ xfs_dir2_block_getdents(
+  	struct xfs_da_geometry	*geo = args->geo;
+  	unsigned int		offset, next_offset;
+  	unsigned int		end;
++	unsigned int		flags = 0;
+   	/*
+  	 * If the block number in the offset is out of range, we're done.
+@@ -156,7 +157,9 @@ xfs_dir2_block_getdents(
+  	if (xfs_dir2_dataptr_to_db(geo, ctx->pos) > geo->datablk)
+  		return 0;
+  -	error = xfs_dir3_block_read(args->trans, dp, &bp);
++	if (ctx->flags & DIR_CONTEXT_F_NOWAIT)
++		flags |= XFS_DABUF_NOWAIT;
++	error = xfs_dir3_block_read(args->trans, dp, flags, &bp);
+  	if (error)
+  		return error;
+  @@ -240,6 +243,7 @@ xfs_dir2_block_getdents(
+  STATIC int
+  xfs_dir2_leaf_readbuf(
+  	struct xfs_da_args	*args,
++	struct dir_context	*ctx,
+  	size_t			bufsize,
+  	xfs_dir2_off_t		*cur_off,
+  	xfs_dablk_t		*ra_blk,
+@@ -258,10 +262,15 @@ xfs_dir2_leaf_readbuf(
+  	struct xfs_iext_cursor	icur;
+  	int			ra_want;
+  	int			error = 0;
+-
+-	error = xfs_iread_extents(args->trans, dp, XFS_DATA_FORK);
+-	if (error)
+-		goto out;
++	unsigned int		flags = 0;
++
++	if (ctx->flags & DIR_CONTEXT_F_NOWAIT) {
++		flags |= XFS_DABUF_NOWAIT;
++	} else {
++		error = xfs_iread_extents(args->trans, dp, XFS_DATA_FORK);
++		if (error)
++			goto out;
++	}
+   	/*
+  	 * Look for mapped directory blocks at or above the current offset.
+@@ -280,7 +289,7 @@ xfs_dir2_leaf_readbuf(
+  	new_off = xfs_dir2_da_to_byte(geo, map.br_startoff);
+  	if (new_off > *cur_off)
+  		*cur_off = new_off;
+-	error = xfs_dir3_data_read(args->trans, dp, map.br_startoff, 0, &bp);
++	error = xfs_dir3_data_read(args->trans, dp, map.br_startoff, flags, &bp);
+  	if (error)
+  		goto out;
+  @@ -337,6 +346,16 @@ xfs_dir2_leaf_readbuf(
+  	goto out;
+  }
+  +static inline int
++xfs_ilock_for_readdir(
++	struct xfs_inode	*dp,
++	bool			nowait)
++{
++	if (nowait)
++		return xfs_ilock_data_map_shared_nowait(dp);
++	return xfs_ilock_data_map_shared(dp);
++}
++
+  /*
+   * Getdents (readdir) for leaf and node directories.
+   * This reads the data blocks only, so is the same for both forms.
+@@ -360,6 +379,7 @@ xfs_dir2_leaf_getdents(
+  	int			byteoff;	/* offset in current block */
+  	unsigned int		offset = 0;
+  	int			error = 0;	/* error return value */
++	int			written = 0;
+   	/*
+  	 * If the offset is at or past the largest allowed value,
+@@ -391,10 +411,16 @@ xfs_dir2_leaf_getdents(
+  				bp = NULL;
+  			}
+  -			if (*lock_mode == 0)
+-				*lock_mode = xfs_ilock_data_map_shared(dp);
+-			error = xfs_dir2_leaf_readbuf(args, bufsize, &curoff,
+-					&rablk, &bp);
++			if (*lock_mode == 0) {
++				*lock_mode = xfs_ilock_for_readdir(dp,
++					ctx->flags & DIR_CONTEXT_F_NOWAIT);
++				if (!*lock_mode) {
++					error = -EAGAIN;
++					break;
++				}
++			}
++			error = xfs_dir2_leaf_readbuf(args, ctx, bufsize,
++					&curoff, &rablk, &bp);
+  			if (error || !bp)
+  				break;
+  @@ -479,6 +505,7 @@ xfs_dir2_leaf_getdents(
+  		 */
+  		offset += length;
+  		curoff += length;
++		written += length;
+  		/* bufsize may have just been a guess; don't go negative */
+  		bufsize = bufsize > length ? bufsize - length : 0;
+  	}
+@@ -492,6 +519,8 @@ xfs_dir2_leaf_getdents(
+  		ctx->pos = xfs_dir2_byte_to_dataptr(curoff) & 0x7fffffff;
+  	if (bp)
+  		xfs_trans_brelse(args->trans, bp);
++	if (error == -EAGAIN && written > 0)
++		error = 0;
+  	return error;
+  }
+  @@ -514,6 +543,7 @@ xfs_readdir(
+  	unsigned int		lock_mode;
+  	bool			isblock;
+  	int			error;
++	bool			nowait;
+   	trace_xfs_readdir(dp);
+  @@ -531,7 +561,11 @@ xfs_readdir(
+  	if (dp->i_df.if_format == XFS_DINODE_FMT_LOCAL)
+  		return xfs_dir2_sf_getdents(&args, ctx);
+  -	lock_mode = xfs_ilock_data_map_shared(dp);
++	nowait = ctx->flags & DIR_CONTEXT_F_NOWAIT;
++	lock_mode = xfs_ilock_for_readdir(dp, nowait);
++	if (!lock_mode)
++		return -EAGAIN;
++
+  	error = xfs_dir2_isblock(&args, &isblock);
+  	if (error)
+  		goto out_unlock;
+@@ -546,5 +580,7 @@ xfs_readdir(
+  out_unlock:
+  	if (lock_mode)
+  		xfs_iunlock(dp, lock_mode);
++	if (error == -EAGAIN)
++		ASSERT(nowait);
+  	return error;
+  }
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 9e62cc500140..48b1257b3ec4 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -120,6 +120,23 @@ xfs_ilock_data_map_shared(
+  	return lock_mode;
+  }
+  +/*
++ * Similar to xfs_ilock_data_map_shared(), except that it will only try 
+to lock
++ * the inode in shared mode if the extents are already in memory. If it 
+fails to
++ * get the lock or has to do IO to read the extent list, fail the 
+operation by
++ * returning 0 as the lock mode.
++ */
++uint
++xfs_ilock_data_map_shared_nowait(
++	struct xfs_inode	*ip)
++{
++	if (xfs_need_iread_extents(&ip->i_df))
++		return 0;
++	if (!xfs_ilock_nowait(ip, XFS_ILOCK_SHARED))
++		return 0;
++	return XFS_ILOCK_SHARED;
++}
++
+  uint
+  xfs_ilock_attr_map_shared(
+  	struct xfs_inode	*ip)
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 7547caf2f2ab..2cdb4daadacf 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -490,13 +490,14 @@ int		xfs_rename(struct mnt_idmap *idmap,
+  			   struct xfs_name *target_name,
+  			   struct xfs_inode *target_ip, unsigned int flags);
+  -void		xfs_ilock(xfs_inode_t *, uint);
+-int		xfs_ilock_nowait(xfs_inode_t *, uint);
+-void		xfs_iunlock(xfs_inode_t *, uint);
+-void		xfs_ilock_demote(xfs_inode_t *, uint);
+-bool		xfs_isilocked(struct xfs_inode *, uint);
+-uint		xfs_ilock_data_map_shared(struct xfs_inode *);
+-uint		xfs_ilock_attr_map_shared(struct xfs_inode *);
++void		xfs_ilock(struct xfs_inode *ip, uint lockmode);
++int		xfs_ilock_nowait(struct xfs_inode *ip, uint lockmode);
++void		xfs_iunlock(struct xfs_inode *ip, uint lockmode);
++void		xfs_ilock_demote(struct xfs_inode *ip, uint lockmode);
++bool		xfs_isilocked(struct xfs_inode *ip, uint lockmode);
++uint		xfs_ilock_data_map_shared(struct xfs_inode *ip);
++uint		xfs_ilock_data_map_shared_nowait(struct xfs_inode *ip);
++uint		xfs_ilock_attr_map_shared(struct xfs_inode *ip);
+   uint		xfs_ip2xflags(struct xfs_inode *);
+  int		xfs_ifree(struct xfs_trans *, struct xfs_inode *);
+-- 
+2.25.1
 
->  	if (error) {
->  		/*
->  		 * Cancel all the unprocessed intent items now so that we don't
-> @@ -3458,13 +3465,6 @@ xlog_recover_finish(
->  		return error;
->  	}
->  
-> -	/*
-> -	 * Sync the log to get all the intents out of the AIL.  This isn't
-> -	 * absolutely necessary, but it helps in case the unlink transactions
-> -	 * would have problems pushing the intents out of the way.
-> -	 */
-> -	xfs_log_force(log->l_mp, XFS_LOG_SYNC);
-> -
->  	/*
->  	 * Now that we've recovered the log and all the intents, we can clear
->  	 * the log incompat feature bits in the superblock because there's no
-> -- 
-> 2.31.1
-> 
