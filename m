@@ -2,60 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23FF975CE22
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jul 2023 18:18:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A42875CE27
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jul 2023 18:18:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232503AbjGUQSh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Jul 2023 12:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45744 "EHLO
+        id S232569AbjGUQSi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Jul 2023 12:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232675AbjGUQSD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jul 2023 12:18:03 -0400
-Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D06F4210
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jul 2023 09:17:01 -0700 (PDT)
-Received: by mail-io1-xd34.google.com with SMTP id ca18e2360f4ac-785ccd731a7so26077239f.0
-        for <linux-xfs@vger.kernel.org>; Fri, 21 Jul 2023 09:17:01 -0700 (PDT)
+        with ESMTP id S232698AbjGUQSG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jul 2023 12:18:06 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAB9421A
+        for <linux-xfs@vger.kernel.org>; Fri, 21 Jul 2023 09:17:02 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-7835bbeb6a0so28197239f.0
+        for <linux-xfs@vger.kernel.org>; Fri, 21 Jul 2023 09:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1689956218; x=1690561018;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1689956219; x=1690561019;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l7cLLw1JpMnOMXLNHlH7JagCdHX69bYdsN+9qujHNmA=;
-        b=vAUGNAgV1Vbq0eLmgbSiSvCxRWW2+Cw9dLYbFJT3lDY7TdJ5AZFO7HBSWJdLUoNNIA
-         XdMVnORN2Hq+gCapIl1iD8L515U+oRRCx5H8wKu4bfBM13MOfjjNqDlTcimtvilsRWFt
-         h6RVxA+lgtJl9gnjCNmQqTi/HI3+iOmdW5lnItmg+NDFaLFRT4EUUW/FJ4OuKFHIPZxq
-         BrWLIAmRfd+v7rLsQnNBbiVPJWO+xH3VoDmfomiD9AdisfnGxvlMrFhDUHSIPIT5arF/
-         m61tR+TRcbo23cOs5c9J4YdLTUd5kw+IKQxzRmndPACj0Rvd0hc1zHVtKOKQ3e4PXYIW
-         VOmw==
+        bh=z7yoihIdu5UPPNOooKn2vi0vzZ8WciIEgPTPhkQQaos=;
+        b=x8Lt3uasN44rcnJmIUZvfnrKhQLZC36ZOXD3rCJZ6chD4Xkj6qYJjWRuYnex7ZraWp
+         s7gKjMrw0rzE7502lXlPwomvek+ykNBFkBzcWkfcrjAiK/EKMI1nx0LotnxFsmlbAegI
+         8l4NmDuosjGN5VnB+pgPWQ4PHX34au0MFG25qAgMkaSoM0Azdy8mxoEuaoue66L1mhai
+         ma8PDpwJSawKMohbp2YQEW0hf9kXBlbv6pxvuao/xAAIxJ0OBn40pUmxevKU5485HXDg
+         ESZyV6R5cclSYgFMyl16KYVT643Kh6s4HkfAQQMAJhJtuAe25ea9BZTlfD/YNhQafTYr
+         MBWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689956218; x=1690561018;
+        d=1e100.net; s=20221208; t=1689956219; x=1690561019;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l7cLLw1JpMnOMXLNHlH7JagCdHX69bYdsN+9qujHNmA=;
-        b=VDh6NSJqsKubMpE54KxVprJ6t6oToFpxVrSfRPqH2TPTdnEdZbJ5Aztt9ncg7zouFD
-         wpZ6lr83YgTRx9vivEAijszPCzhwqwcssVeKHv172kb55ErN+9fopqoe+vhAykGUfUo1
-         6N6Lout92chc90F6gdZ/Dupkr9chWx5nX52fdR6tgd8Qd6moxjARLkTW3xkCEtS00FLc
-         kUNSeGJl6MLWryW1bpduNdXJav3lN/9awJ7eP7MSKIpQ7pAExp3imr1XVTN+fiq3u8/x
-         kqHuANchYLi4J3yy/4oRgsqLEzatZ+8tXgKORz0W1OGMN97OfdFoJoeiIWP/EHXZrD8S
-         UuQQ==
-X-Gm-Message-State: ABy/qLbe1i60TTI5G2v7OKCSp0Zhhq6t7xoovu21C4nfDPJgK90mu7Ne
-        PlB5X7j9E+U47X+2huoVpWg8Hg==
-X-Google-Smtp-Source: APBJJlFG0eKMp+V3bd8Ngr/HkKy7BtsI6srIw0YeAKla/vxNKEZgZUFepNJgNUqes7/7Q1N6HppK3A==
-X-Received: by 2002:a05:6602:14d2:b0:783:6ec1:65f6 with SMTP id b18-20020a05660214d200b007836ec165f6mr3086501iow.1.1689956218099;
-        Fri, 21 Jul 2023 09:16:58 -0700 (PDT)
+        bh=z7yoihIdu5UPPNOooKn2vi0vzZ8WciIEgPTPhkQQaos=;
+        b=Q+LfCXbl3ZDGfCvcqaJn1QFMun12kflnGnnfyYPJyGKYobfiM35D8LN9lWjenRJxTQ
+         mFKhGqmBnl93ciHehzOaYVxVyth/t9xNH3lCQ753S3SwDAwjaLMIEdwI7KYRzsbnz9uK
+         9WzVRFwC6WPn8JN3ipX+yuaImCB8CnBvc0wDnsKyJ1jahsDGpTM5X8KsJnWkbj4WryEg
+         NYpE+KUBdH5A6klQtHq02aQkGQtISyn2w3gLQfVwKV56Q/iZFjnDHMKAtL+f+7vFRZcY
+         KqSHU6TmmUkOJK40oxSHTOIKGBH0NBpF5ZRgrKJgAhbtwJVXSgAdD0GG2Zvs02r4QQaT
+         x2Ew==
+X-Gm-Message-State: ABy/qLanS1KjUDUOj+ZrYbDWjhvj0DmVbrrQpGKlFJIRcn3uF8qpdVBm
+        D7/HIUctRpFCImXbneGdEuaBdw==
+X-Google-Smtp-Source: APBJJlEcEMTariaTZWPEkwzOzKZajcPLUhmagDsKQgxPwC2xgu7zprXfCI6DVPyp3uqZ0W+mgc1V8Q==
+X-Received: by 2002:a05:6602:1a05:b0:780:c6bb:ad8d with SMTP id bo5-20020a0566021a0500b00780c6bbad8dmr2382978iob.0.1689956219453;
+        Fri, 21 Jul 2023 09:16:59 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id l7-20020a02a887000000b0042b599b224bsm1150450jam.121.2023.07.21.09.16.56
+        by smtp.gmail.com with ESMTPSA id l7-20020a02a887000000b0042b599b224bsm1150450jam.121.2023.07.21.09.16.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 09:16:57 -0700 (PDT)
+        Fri, 21 Jul 2023 09:16:58 -0700 (PDT)
 From:   Jens Axboe <axboe@kernel.dk>
 To:     io-uring@vger.kernel.org, linux-xfs@vger.kernel.org
 Cc:     hch@lst.de, andres@anarazel.de, david@fromorbit.com,
         djwong@kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 2/9] iomap: add IOMAP_DIO_INLINE_COMP
-Date:   Fri, 21 Jul 2023 10:16:43 -0600
-Message-Id: <20230721161650.319414-3-axboe@kernel.dk>
+Subject: [PATCH 3/9] iomap: treat a write through cache the same as FUA
+Date:   Fri, 21 Jul 2023 10:16:44 -0600
+Message-Id: <20230721161650.319414-4-axboe@kernel.dk>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230721161650.319414-1-axboe@kernel.dk>
 References: <20230721161650.319414-1-axboe@kernel.dk>
@@ -70,55 +70,105 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Rather than gate whether or not we need to punt a dio completion to a
-workqueue on whether the IO is a write or not, add an explicit flag for
-it. For now we treat them the same, reads always set the flags and async
-writes do not.
+Whether we have a write back cache and are using FUA or don't have
+a write back cache at all is the same situation. Treat them the same.
 
-No functional changes in this patch.
+This makes the IOMAP_DIO_WRITE_FUA name a bit misleading, as we have
+two cases that provide stable writes:
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+1) Volatile write cache with FUA writes
+2) Normal write without a volatile write cache
+
+Rename that flag to IOMAP_DIO_STABLE_WRITE to make that clearer, and
+update some of the FUA comments as well.
+
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- fs/iomap/direct-io.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/iomap/direct-io.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
 diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 0ce60e80c901..c654612b24e5 100644
+index c654612b24e5..17b695b0e9d6 100644
 --- a/fs/iomap/direct-io.c
 +++ b/fs/iomap/direct-io.c
-@@ -20,6 +20,7 @@
-  * Private flags for iomap_dio, must not overlap with the public ones in
+@@ -21,7 +21,7 @@
   * iomap.h:
   */
-+#define IOMAP_DIO_INLINE_COMP	(1 << 27)
- #define IOMAP_DIO_WRITE_FUA	(1 << 28)
+ #define IOMAP_DIO_INLINE_COMP	(1 << 27)
+-#define IOMAP_DIO_WRITE_FUA	(1 << 28)
++#define IOMAP_DIO_WRITE_THROUGH	(1 << 28)
  #define IOMAP_DIO_NEED_SYNC	(1 << 29)
  #define IOMAP_DIO_WRITE		(1 << 30)
-@@ -171,8 +172,10 @@ void iomap_dio_bio_end_io(struct bio *bio)
- 		goto release_bio;
+ #define IOMAP_DIO_DIRTY		(1 << 31)
+@@ -222,7 +222,7 @@ static void iomap_dio_zero(const struct iomap_iter *iter, struct iomap_dio *dio,
+ /*
+  * Figure out the bio's operation flags from the dio request, the
+  * mapping, and whether or not we want FUA.  Note that we can end up
+- * clearing the WRITE_FUA flag in the dio request.
++ * clearing the WRITE_THROUGH flag in the dio request.
+  */
+ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
+ 		const struct iomap *iomap, bool use_fua)
+@@ -236,7 +236,7 @@ static inline blk_opf_t iomap_dio_bio_opflags(struct iomap_dio *dio,
+ 	if (use_fua)
+ 		opflags |= REQ_FUA;
+ 	else
+-		dio->flags &= ~IOMAP_DIO_WRITE_FUA;
++		dio->flags &= ~IOMAP_DIO_WRITE_THROUGH;
+ 
+ 	return opflags;
+ }
+@@ -276,11 +276,13 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+ 		 * Use a FUA write if we need datasync semantics, this is a pure
+ 		 * data IO that doesn't require any metadata updates (including
+ 		 * after IO completion such as unwritten extent conversion) and
+-		 * the underlying device supports FUA. This allows us to avoid
+-		 * cache flushes on IO completion.
++		 * the underlying device either supports FUA or doesn't have
++		 * a volatile write cache. This allows us to avoid cache flushes
++		 * on IO completion.
+ 		 */
+ 		if (!(iomap->flags & (IOMAP_F_SHARED|IOMAP_F_DIRTY)) &&
+-		    (dio->flags & IOMAP_DIO_WRITE_FUA) && bdev_fua(iomap->bdev))
++		    (dio->flags & IOMAP_DIO_WRITE_THROUGH) &&
++		    (bdev_fua(iomap->bdev) || !bdev_write_cache(iomap->bdev)))
+ 			use_fua = true;
  	}
  
--	/* Read completion can always complete inline. */
--	if (!(dio->flags & IOMAP_DIO_WRITE)) {
-+	/*
-+	 * Flagged with IOMAP_DIO_INLINE_COMP, we can complete it inline
-+	 */
-+	if (dio->flags & IOMAP_DIO_INLINE_COMP) {
- 		WRITE_ONCE(iocb->private, NULL);
- 		iomap_dio_complete_work(&dio->aio.work);
- 		goto release_bio;
-@@ -527,6 +530,9 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		iomi.flags |= IOMAP_NOWAIT;
+@@ -560,12 +562,15 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
  
- 	if (iov_iter_rw(iter) == READ) {
-+		/* reads can always complete inline */
-+		dio->flags |= IOMAP_DIO_INLINE_COMP;
-+
- 		if (iomi.pos >= dio->i_size)
- 			goto out_free_dio;
+ 		       /*
+ 			* For datasync only writes, we optimistically try
+-			* using FUA for this IO.  Any non-FUA write that
+-			* occurs will clear this flag, hence we know before
+-			* completion whether a cache flush is necessary.
++			* using WRITE_THROUGH for this IO. Stable writes are
++			* either FUA with a write cache, or a normal write to
++			* a device without a volatile write cache. For the
++			* former, Any non-FUA write that occurs will clear this
++			* flag, hence we know before completion whether a cache
++			* flush is necessary.
+ 			*/
+ 			if (!(iocb->ki_flags & IOCB_SYNC))
+-				dio->flags |= IOMAP_DIO_WRITE_FUA;
++				dio->flags |= IOMAP_DIO_WRITE_THROUGH;
+ 		}
  
+ 		/*
+@@ -627,10 +632,10 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+ 		iomap_dio_set_error(dio, ret);
+ 
+ 	/*
+-	 * If all the writes we issued were FUA, we don't need to flush the
++	 * If all the writes we issued were stable, we don't need to flush the
+ 	 * cache on IO completion. Clear the sync flag for this case.
+ 	 */
+-	if (dio->flags & IOMAP_DIO_WRITE_FUA)
++	if (dio->flags & IOMAP_DIO_WRITE_THROUGH)
+ 		dio->flags &= ~IOMAP_DIO_NEED_SYNC;
+ 
+ 	WRITE_ONCE(iocb->private, dio->submit.poll_bio);
 -- 
 2.40.1
 
