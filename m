@@ -2,111 +2,151 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 214BB76C4A3
-	for <lists+linux-xfs@lfdr.de>; Wed,  2 Aug 2023 07:12:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52E2776C500
+	for <lists+linux-xfs@lfdr.de>; Wed,  2 Aug 2023 07:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231309AbjHBFMp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 2 Aug 2023 01:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
+        id S231164AbjHBFqy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 2 Aug 2023 01:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232222AbjHBFMo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 2 Aug 2023 01:12:44 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E077C10B
-        for <linux-xfs@vger.kernel.org>; Tue,  1 Aug 2023 22:12:42 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-99c10ba30afso108997066b.1
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Aug 2023 22:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690953161; x=1691557961;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BpHjTifPZTHZJC0mhyywdWJpPNNsyiBvnryQcIT18iI=;
-        b=mpXnpXdrJj7s+7UmpBc4B37s2Ix1alDMYsY4xkneZDXccdVx1qs3nm8ZTxpmnZ3hiO
-         tr1BnTEUds07sUoeUePowXyHMUIL3Es/HATHC/JliuRlRWWNFMwBvUi4V9OMCAawJjzn
-         W/K7BLIbnKLoxTRq/tHuZHqdSci2ra/iK2B3+XEdIMeMDvxAaMTzbAc28YesciV8uWOu
-         NisANJTKHzVu6kUlW5rs3YTUvlQLlrCnO4dmPwMgSDr3mYqx9XpKaAqUX1VsmLrUjz1G
-         YnN29OmC501CxPymQ3KVYrWOvPz3UN8pcKJmjavU0LaywOfLU4fKCjyNXDWY6bGMafm8
-         dgRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690953161; x=1691557961;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BpHjTifPZTHZJC0mhyywdWJpPNNsyiBvnryQcIT18iI=;
-        b=Uz+k0KHTKFFcD0T7mwIQjdzqwAWPE99MAuNSYJjwlERL11bRpW6zAYJTTnbcSuunnI
-         oL4IYpS+xvt8Edho8cdcTStqbAeHTIm0AIqFjc7YSa/RleCeYFYPyIdf7eDNFptgOOi9
-         uXPXEaTqU8fniwQ8QEZhDjFaEZORyD4yMCFu8eO5loqsOB1rMwtkIQcfTNTRds8jl/ox
-         oAvvS0QIrYKDAY+PGxQ7gx/In3+qSe6EdEMIqxkuadAIBkOCg+7kTtIRiih9eRj3DC2F
-         AW/BzBeJD54OovdD0Vgxni/bQ1iv3Qe7w+mAaMcGJ5LG4su1tf2jrqR6pfb3XutGFlj4
-         uMfQ==
-X-Gm-Message-State: ABy/qLZDuGMkGh7MdLkb9Ln7nzu4lqexBjgr7iCtdWKjq0iaE9YSLSRI
-        H6Mpf9RyAEY2tZ69myNJOmodiyiUlTYJosVK4Lo=
-X-Google-Smtp-Source: APBJJlF9wC5J/GcJxyZ5tGHONAJ5Bcfgmh1/+Vde6L1WMl0Y9lUD7sIXoJfIlkCyNn5mNuK0Tz+ikCTbXZ0tgubaMSI=
-X-Received: by 2002:a05:6402:27c8:b0:51f:ef58:da87 with SMTP id
- c8-20020a05640227c800b0051fef58da87mr6599584ede.2.1690953150408; Tue, 01 Aug
- 2023 22:12:30 -0700 (PDT)
+        with ESMTP id S229508AbjHBFqx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 2 Aug 2023 01:46:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704F110EA;
+        Tue,  1 Aug 2023 22:46:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0331A6176A;
+        Wed,  2 Aug 2023 05:46:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0263DC433C7;
+        Wed,  2 Aug 2023 05:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690955211;
+        bh=VTi5vtYmcAxDfFm9ccl96vXNKm5WSfox4vUnYsxBQv4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=k4cIJnis+/71SpqriYqgsNFV9iqcYiVjBD9XZLXcJ+bmUbzFfZwVGGSl7ifRvMxmv
+         RHGC1D9QiEBElBZMjnvTX2rZFEUUxW1/UxMmW/uq8EqbzyjkBYw2afsAaFTAa2xNs0
+         cKIZT1vKRfAndwD588zSTXEgQHs98nOSD/g5WqNYEjTVtsFcUfrd3BmCjrK6NF8zB6
+         T2uWQGl9CJ4VrDOY5+/5dFtZfdhp/lE0+ZBOSLQ+lp63Bag/8DmLuWMWJrcksmND2h
+         W6hleWjLjBVaaF8aZSYA1Vi3vBvqPWq5VR9qr25gEY4gb27f9FBBS3jJrKGE/hWBWE
+         IUgh9Hev5C1bA==
+From:   Zorro Lang <zlang@kernel.org>
+To:     fstests@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH v2] nfs: test files written size as expected
+Date:   Wed,  2 Aug 2023 13:46:46 +0800
+Message-Id: <20230802054646.2197854-1-zlang@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Received: by 2002:a05:7208:5595:b0:70:8cb9:9fa8 with HTTP; Tue, 1 Aug 2023
- 22:12:29 -0700 (PDT)
-From:   Mr Chris Morgan <chrismorganuba@gmail.com>
-Date:   Wed, 2 Aug 2023 06:12:29 +0100
-Message-ID: <CAAP_aETZNca65Je95XJiFXVDvZRKhv-dq6a7__XbX9X1aZpYHQ@mail.gmail.com>
-Subject: Urgent.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.1 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_USD,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
-        *      DNSWL was blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [2a00:1450:4864:20:0:0:0:636 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [chrismorganuba[at]gmail.com]
-        *  0.6 MILLION_USD BODY: Talks about millions of dollars
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
-        *  2.9 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Test nfs and its underlying fs, make sure file size as expected
+after writting a file, and the speculative allocation space can
+be shrunken.
+
+Signed-off-by: Zorro Lang <zlang@kernel.org>
+---
+
+Last year I sent a patch to fstests@, but it sometimes fails on the upstream
+kernel that year:
+
+  https://lore.kernel.org/fstests/Y3vTbHqT64gsQ573@magnolia/
+
+And we didn't get a proper reason for that, so that patch was blocked. Now
+I found this case test passed on current upstream linux [1] (after loop
+running it a whole night). So I think it's time to rebase and re-send this
+patch to get review.
+
+Thanks,
+Zorro
+
+[1]
+FSTYP         -- nfs
+PLATFORM      -- Linux/x86_64 xxxx 6.5.0-rc4 #1 SMP PREEMPT_DYNAMIC Tue Aug  1 15:32:55 EDT 2023
+MKFS_OPTIONS  -- xxxx.redhat.com:/mnt/xfstests/scratch/nfs-server
+MOUNT_OPTIONS -- -o vers=4.2 -o context=system_u:object_r:root_t:s0 xxxx.redhat.com:/mnt/xfstests/scratch/nfs-server /mnt/xfstests/scratch/nfs-client
+
+nfs/002 4s ...  4s
+Ran: nfs/002
+Passed all 1 tests
+
+ tests/nfs/002     | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/nfs/002.out |  2 ++
+ 2 files changed, 48 insertions(+)
+ create mode 100755 tests/nfs/002
+ create mode 100644 tests/nfs/002.out
+
+diff --git a/tests/nfs/002 b/tests/nfs/002
+new file mode 100755
+index 00000000..b4b6554c
+--- /dev/null
++++ b/tests/nfs/002
+@@ -0,0 +1,46 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2023 Red Hat, Inc.  All Rights Reserved.
++#
++# FS QA Test 002
++#
++# Make sure nfs gets expected file size after writting a big sized file. It's
++# not only testing nfs, test its underlying fs too. For example a known old bug
++# on xfs (underlying fs) caused nfs get larger file size (e.g. 16M) after
++# writting 10M data to a file. It's fixed by a series of patches around
++# 579b62faa5fb16 ("xfs: add background scanning to clear eofblocks inodes")
++#
++. ./common/preamble
++_begin_fstest auto quick rw
++
++# real QA test starts here
++_supported_fs nfs
++# Need a series of patches related with this patch
++_fixed_by_kernel_commit 579b62faa5fb16 \
++	"xfs: add background scanning to clear eofblocks inodes"
++_require_test
++
++localfile=$TEST_DIR/testfile.$seq
++rm -rf $localfile
++
++$XFS_IO_PROG -f -t -c "pwrite 0 10m" -c "fsync" $localfile >>$seqres.full 2>&1
++block_size=`stat -c '%B' $localfile`
++iblocks_expected=$((10 * 1024 * 1024 / $block_size))
++# Try several times for the speculative allocated file size can be shrunken
++res=1
++for ((i=0; i<10; i++));do
++	iblocks_real=`stat -c '%b' $localfile`
++	if [ "$iblocks_expected" = "$iblocks_real" ];then
++		res=0
++		break
++	fi
++	sleep 10
++done
++if [ $res -ne 0 ];then
++	echo "Write $iblocks_expected blocks, but get $iblocks_real blocks"
++fi
++
++echo "Silence is golden"
++# success, all done
++status=0
++exit
+diff --git a/tests/nfs/002.out b/tests/nfs/002.out
+new file mode 100644
+index 00000000..61705c7c
+--- /dev/null
++++ b/tests/nfs/002.out
+@@ -0,0 +1,2 @@
++QA output created by 002
++Silence is golden
 -- 
-Attention: Sir/Madam,
+2.40.1
 
-Compliments of the season.
-
-I am Mr Chris Morgan, a senior staff of the Computer Department of
-Central bank of Nigeria.
-
-I decided to contact you because of the prevailing security report
-reaching my office and the intense nature of polity in Nigeria.
-
-This is to inform you about the recent plan of the federal government
-of Nigeria to send your fund to you via diplomatic immunity CASH
-DELIVERY SYSTEM valued at $10.6 Million United states dollars only.
-
-Contact me for further details.
-
-Regards,
-Mr Chris Morgan.
