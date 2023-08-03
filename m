@@ -2,35 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 263BB76E4D5
-	for <lists+linux-xfs@lfdr.de>; Thu,  3 Aug 2023 11:44:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B33C76E4CF
+	for <lists+linux-xfs@lfdr.de>; Thu,  3 Aug 2023 11:44:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232852AbjHCJos (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Aug 2023 05:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
+        id S232193AbjHCJor (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Aug 2023 05:44:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233244AbjHCJoY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Aug 2023 05:44:24 -0400
-Received: from out-84.mta1.migadu.com (out-84.mta1.migadu.com [IPv6:2001:41d0:203:375::54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B473AB6
+        with ESMTP id S231526AbjHCJoX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Aug 2023 05:44:23 -0400
+X-Greylist: delayed 429 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 03 Aug 2023 02:44:17 PDT
+Received: from out-90.mta1.migadu.com (out-90.mta1.migadu.com [IPv6:2001:41d0:203:375::5a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8675B30FD
         for <linux-xfs@vger.kernel.org>; Thu,  3 Aug 2023 02:44:17 -0700 (PDT)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1691055426;
+        t=1691055427;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=RlouW3YFFaE/nLb2+Vq4gYGLf7SAMMeK3fHcOrMathc=;
-        b=Iq5BYYTzPoX7wzAGlcfAU6i8bfZ48IHNR9scX3fZ3JjZHMOVGDLBumvd+MC+vTyN2P7EX9
-        qVM+3zLRX1z5torDBVd2X+c4r387ytyCgs04uCRGU9ba7AKgGhzezjvnviBV45+H/8zvOX
-        L1Cm6MpG77U/zromeIU7zCapfMOFFYA=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5atMtDdprR48uIPmh8rR5i0blTIGJGdOUuWf1374V5I=;
+        b=fGQI+yex66ImD5DchW4L2GEz/fxBXliMEekRKdVidAtlsCtBwLP/e2uRcF1VpSU+OoV9nP
+        3o2MtOEauSxfgTygImIeiZXDRwj6HZGnWSpL1buXbWY1XU5rNjncUmiOc4aKM/3vTlK/du
+        xq44f1YgY4hX5z13d4kQAbT92RvNE7U=
 From:   Guoqing Jiang <guoqing.jiang@linux.dev>
 To:     amir73il@gmail.com, djwong@kernel.org, dchinner@redhat.com,
         yangx.jy@fujitsu.com
 Cc:     linux-xfs@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 5.10 0/2] Fix xfs/179 for 5.10 stable
-Date:   Thu,  3 Aug 2023 17:36:50 +0800
-Message-Id: <20230803093652.7119-1-guoqing.jiang@linux.dev>
+Subject: [PATCH 5.10 1/2] xfs: hoist refcount record merge predicates
+Date:   Thu,  3 Aug 2023 17:36:51 +0800
+Message-Id: <20230803093652.7119-2-guoqing.jiang@linux.dev>
+In-Reply-To: <20230803093652.7119-1-guoqing.jiang@linux.dev>
+References: <20230803093652.7119-1-guoqing.jiang@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
@@ -44,47 +48,186 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
+From: "Darrick J. Wong" <djwong@kernel.org>
 
-With the two patches applied, xfs/179 can pass in 5.10.188. Otherwise I got
+commit 9d720a5a658f5135861773f26e927449bef93d61 upstream.
 
-[root@localhost xfstests]# ./check xfs/179
-FSTYP         -- xfs (non-debug)
-PLATFORM      -- Linux/x86_64 localhost 5.10.188-default #14 SMP Thu Aug 3 15:23:19 CST 2023
-MKFS_OPTIONS  -- -f /dev/loop1
-MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/loop1 /mnt/scratch
+Hoist these multiline conditionals into separate static inline helpers
+to improve readability and set the stage for corruption fixes that will
+be introduced in the next patch.
 
-xfs/179 1s ... [failed, exit status 1]- output mismatch (see /root/xfstests/results//xfs/179.out.bad)
-    --- tests/xfs/179.out	2023-07-13 16:12:27.000000000 +0800
-    +++ /root/xfstests/results//xfs/179.out.bad	2023-08-03 16:55:38.173787911 +0800
-    @@ -8,3 +8,5 @@
-     Check scratch fs
-     Remove reflinked files
-     Check scratch fs
-    +xfs_repair fails
-    +(see /root/xfstests/results//xfs/179.full for details)
-    ...
-    (Run 'diff -u /root/xfstests/tests/xfs/179.out /root/xfstests/results//xfs/179.out.bad'  to see the entire diff)
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Xiao Yang <yangx.jy@fujitsu.com>
+Signed-off-by: Guoqing Jiang <guoqing.jiang@linux.dev>
+---
+ fs/xfs/libxfs/xfs_refcount.c | 129 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 113 insertions(+), 16 deletions(-)
 
-HINT: You _MAY_ be missing kernel fix:
-      b25d1984aa88 xfs: estimate post-merge refcounts correctly
-
-Ran: xfs/179
-Failures: xfs/179
-Failed 1 of 1 tests
-
-Please review if they are approriate for 5.10 stable.
-
-Thanks,
-Guoqing
-
-Darrick J. Wong (2):
-  xfs: hoist refcount record merge predicates
-  xfs: estimate post-merge refcounts correctly
-
- fs/xfs/libxfs/xfs_refcount.c | 146 +++++++++++++++++++++++++++++++----
- 1 file changed, 130 insertions(+), 16 deletions(-)
-
+diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
+index 2076627243b0..9806942a13ea 100644
+--- a/fs/xfs/libxfs/xfs_refcount.c
++++ b/fs/xfs/libxfs/xfs_refcount.c
+@@ -781,11 +781,119 @@ xfs_refcount_find_right_extents(
+ /* Is this extent valid? */
+ static inline bool
+ xfs_refc_valid(
+-	struct xfs_refcount_irec	*rc)
++	const struct xfs_refcount_irec	*rc)
+ {
+ 	return rc->rc_startblock != NULLAGBLOCK;
+ }
+ 
++static inline bool
++xfs_refc_want_merge_center(
++	const struct xfs_refcount_irec	*left,
++	const struct xfs_refcount_irec	*cleft,
++	const struct xfs_refcount_irec	*cright,
++	const struct xfs_refcount_irec	*right,
++	bool				cleft_is_cright,
++	enum xfs_refc_adjust_op		adjust,
++	unsigned long long		*ulenp)
++{
++	unsigned long long		ulen = left->rc_blockcount;
++
++	/*
++	 * To merge with a center record, both shoulder records must be
++	 * adjacent to the record we want to adjust.  This is only true if
++	 * find_left and find_right made all four records valid.
++	 */
++	if (!xfs_refc_valid(left)  || !xfs_refc_valid(right) ||
++	    !xfs_refc_valid(cleft) || !xfs_refc_valid(cright))
++		return false;
++
++	/* There must only be one record for the entire range. */
++	if (!cleft_is_cright)
++		return false;
++
++	/* The shoulder record refcounts must match the new refcount. */
++	if (left->rc_refcount != cleft->rc_refcount + adjust)
++		return false;
++	if (right->rc_refcount != cleft->rc_refcount + adjust)
++		return false;
++
++	/*
++	 * The new record cannot exceed the max length.  ulen is a ULL as the
++	 * individual record block counts can be up to (u32 - 1) in length
++	 * hence we need to catch u32 addition overflows here.
++	 */
++	ulen += cleft->rc_blockcount + right->rc_blockcount;
++	if (ulen >= MAXREFCEXTLEN)
++		return false;
++
++	*ulenp = ulen;
++	return true;
++}
++
++static inline bool
++xfs_refc_want_merge_left(
++	const struct xfs_refcount_irec	*left,
++	const struct xfs_refcount_irec	*cleft,
++	enum xfs_refc_adjust_op		adjust)
++{
++	unsigned long long		ulen = left->rc_blockcount;
++
++	/*
++	 * For a left merge, the left shoulder record must be adjacent to the
++	 * start of the range.  If this is true, find_left made left and cleft
++	 * contain valid contents.
++	 */
++	if (!xfs_refc_valid(left) || !xfs_refc_valid(cleft))
++		return false;
++
++	/* Left shoulder record refcount must match the new refcount. */
++	if (left->rc_refcount != cleft->rc_refcount + adjust)
++		return false;
++
++	/*
++	 * The new record cannot exceed the max length.  ulen is a ULL as the
++	 * individual record block counts can be up to (u32 - 1) in length
++	 * hence we need to catch u32 addition overflows here.
++	 */
++	ulen += cleft->rc_blockcount;
++	if (ulen >= MAXREFCEXTLEN)
++		return false;
++
++	return true;
++}
++
++static inline bool
++xfs_refc_want_merge_right(
++	const struct xfs_refcount_irec	*cright,
++	const struct xfs_refcount_irec	*right,
++	enum xfs_refc_adjust_op		adjust)
++{
++	unsigned long long		ulen = right->rc_blockcount;
++
++	/*
++	 * For a right merge, the right shoulder record must be adjacent to the
++	 * end of the range.  If this is true, find_right made cright and right
++	 * contain valid contents.
++	 */
++	if (!xfs_refc_valid(right) || !xfs_refc_valid(cright))
++		return false;
++
++	/* Right shoulder record refcount must match the new refcount. */
++	if (right->rc_refcount != cright->rc_refcount + adjust)
++		return false;
++
++	/*
++	 * The new record cannot exceed the max length.  ulen is a ULL as the
++	 * individual record block counts can be up to (u32 - 1) in length
++	 * hence we need to catch u32 addition overflows here.
++	 */
++	ulen += cright->rc_blockcount;
++	if (ulen >= MAXREFCEXTLEN)
++		return false;
++
++	return true;
++}
++
+ /*
+  * Try to merge with any extents on the boundaries of the adjustment range.
+  */
+@@ -827,23 +935,15 @@ xfs_refcount_merge_extents(
+ 		 (cleft.rc_blockcount == cright.rc_blockcount);
+ 
+ 	/* Try to merge left, cleft, and right.  cleft must == cright. */
+-	ulen = (unsigned long long)left.rc_blockcount + cleft.rc_blockcount +
+-			right.rc_blockcount;
+-	if (xfs_refc_valid(&left) && xfs_refc_valid(&right) &&
+-	    xfs_refc_valid(&cleft) && xfs_refc_valid(&cright) && cequal &&
+-	    left.rc_refcount == cleft.rc_refcount + adjust &&
+-	    right.rc_refcount == cleft.rc_refcount + adjust &&
+-	    ulen < MAXREFCEXTLEN) {
++	if (xfs_refc_want_merge_center(&left, &cleft, &cright, &right, cequal,
++				adjust, &ulen)) {
+ 		*shape_changed = true;
+ 		return xfs_refcount_merge_center_extents(cur, &left, &cleft,
+ 				&right, ulen, aglen);
+ 	}
+ 
+ 	/* Try to merge left and cleft. */
+-	ulen = (unsigned long long)left.rc_blockcount + cleft.rc_blockcount;
+-	if (xfs_refc_valid(&left) && xfs_refc_valid(&cleft) &&
+-	    left.rc_refcount == cleft.rc_refcount + adjust &&
+-	    ulen < MAXREFCEXTLEN) {
++	if (xfs_refc_want_merge_left(&left, &cleft, adjust)) {
+ 		*shape_changed = true;
+ 		error = xfs_refcount_merge_left_extent(cur, &left, &cleft,
+ 				agbno, aglen);
+@@ -859,10 +959,7 @@ xfs_refcount_merge_extents(
+ 	}
+ 
+ 	/* Try to merge cright and right. */
+-	ulen = (unsigned long long)right.rc_blockcount + cright.rc_blockcount;
+-	if (xfs_refc_valid(&right) && xfs_refc_valid(&cright) &&
+-	    right.rc_refcount == cright.rc_refcount + adjust &&
+-	    ulen < MAXREFCEXTLEN) {
++	if (xfs_refc_want_merge_right(&cright, &right, adjust)) {
+ 		*shape_changed = true;
+ 		return xfs_refcount_merge_right_extent(cur, &right, &cright,
+ 				aglen);
 -- 
 2.33.0
 
