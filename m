@@ -2,68 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 963587748CA
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Aug 2023 21:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A912277477E
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Aug 2023 21:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236524AbjHHTj7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Aug 2023 15:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
+        id S234162AbjHHTPc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Aug 2023 15:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236515AbjHHTjq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Aug 2023 15:39:46 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0866892B
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 11:00:40 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-563de62f861so3545029a12.1
-        for <linux-xfs@vger.kernel.org>; Tue, 08 Aug 2023 11:00:40 -0700 (PDT)
+        with ESMTP id S235215AbjHHTPF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Aug 2023 15:15:05 -0400
+Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E09E3C206
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 09:38:02 -0700 (PDT)
+Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-56c4c4e822eso3959590eaf.3
+        for <linux-xfs@vger.kernel.org>; Tue, 08 Aug 2023 09:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1691517640; x=1692122440;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1691512665; x=1692117465;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZDl/slbJs9D1xKHBPHbGK/INn+cIEpxTOdRZQgeyYO0=;
-        b=qomode1iXGYc1B2ySxsLA1S8oYpqkBRfZef/E2CcQssBfOMbHQLLZs5WVtesWe0/4P
-         QMC9TL1390FDFyRIIwgFUElFp76a+yreDACSYa0+RrC6eWAKX/DxyxkzgKuOs+iYk5h5
-         b1u9N5/LXhTA2U+c4k9Qgks3GDsMzudWofnuwZlwyHTasXix61c5BQ3aUUCQmx1PmQ59
-         D4IsWfv4vQAKnqb/OG6hY6AkHKWJfGsvskslZRauZtSjDp9oMKbLdE1mQSYwvTeXQt4p
-         0SSQj1g3U+K3GaDpN+ZSkksJB/vbHw6POjVqEGLwG7AKjmhONgbaBVO/aV7V1etPthUE
-         WLrw==
+        bh=858PTVnbArXoQvcXi1UnX0dCap4cIAwhHqyVb6HI5O0=;
+        b=NWTjCchFU4AvhLA9LSOwArKZjNUGZn6YDPjN9rzt1bqOQdwlsrmEH3hCBidGY5a+Ti
+         pDBbkhRn8dJIij21nde3FwXOWcqB3IJhMoQn47ktQAXCqaBRo+tazMdFTrXytv0B0Owx
+         a/AR/SkU86H2Iuw5aNPgWHWHJCGlyG/GN24lKvvauKBR/t+AJoncMBKYAbSPyoU2Gu7b
+         z9aYA1Ull3sN1W7h4wApgEGOpYYxSRDwUAVTYt0GmNJnJ1XnbDCdw6StVKli7HiWrOnH
+         VCCQfR2kYqKGhK09vqaeZxD04olyDnYpVb0rXPBg/QjfmCyzCLmddW4AzuRoVAd/GObp
+         5TbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691517640; x=1692122440;
+        d=1e100.net; s=20221208; t=1691512665; x=1692117465;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZDl/slbJs9D1xKHBPHbGK/INn+cIEpxTOdRZQgeyYO0=;
-        b=SL0MoLGqHYyMu3X5k5t1ofH3owkRoVYQNjpKAsVLtBmc45lQUEET4lmWlHb+k9vaEr
-         fb0G1Tf9zhYYmL0KpXegB+lty6hAew3a+2nz2RCo4+6wRhBG3AvSWQTngBtKThEFTmth
-         SmJj+7kHler69xPDAs0nxAVchMIfXfxSdn1wUKcZB8+KiwQYjD66QcnLVNlQfITkDsjf
-         gbM41P3y+DWE9W8jycgpH/WlWcC8ja95TZ1O3etvcIUGPClDgd7y+vnfty5oXJIbv2HE
-         XCOqUqLUr/fxD6cebY/HAtvpc+aRdOfTDrTIlHNf/G9b4mLmI/KjpucD4caj7JaI0uBX
-         ASwA==
-X-Gm-Message-State: AOJu0Yx1SFsri5fQxmz632YqoZEyrHNofvYxorS7bLjL0niH8S7tDBRe
-        uIJwJh30TEVUGeQCKHR2TPCZqIn2OM0ItZ5zAXA=
-X-Google-Smtp-Source: AGHT+IFXn187w0E5tgoqmzdOZ+ABe7F+e3gdFsfzONbFjE0Qk42TXQW8ZKzCyruHnufi+wmHoRysWg==
-X-Received: by 2002:a17:902:b20e:b0:1bb:6eeb:7a08 with SMTP id t14-20020a170902b20e00b001bb6eeb7a08mr10642011plr.10.1691478562272;
-        Tue, 08 Aug 2023 00:09:22 -0700 (PDT)
+        bh=858PTVnbArXoQvcXi1UnX0dCap4cIAwhHqyVb6HI5O0=;
+        b=PMEIAlCqKi9gds4MjHAFnf/FbcfannB5y/44eTs9eV4+bMe1zVqYDsVQAmng88DJ37
+         1Dddwkkbs7sHH47jZ8QK6hYA0ajz0RJrXjXOWmJNoaVxDXS9gErPLVt1L0bNcvVhkvuG
+         /G0gi9uYdWfmDTb3LH6l6LNmmJAE6MSXDx4GS4xPhz2HRX4Dw5ccwnNDkBgBm3VXI/ar
+         dt9XmOnARrq4JtkO+mPDsVrAqd8i6y2FMEOH2VFqsSIWSugulqDawPuurbCK0m2QFMn2
+         yLTATWdMcESyvxHiJ5cuzRSRzkkrnwfeHg8sPboY8+3uXwfefiPWq/vvW9aNvnf5wzQx
+         LQxQ==
+X-Gm-Message-State: AOJu0Yz5118mIg+f90sHG0U6uEikIkRIjKbGBVwpuiD/XEGob7/fPX1w
+        Gw/9lNABw91iOHcq/v8Qfml8YdC1LKAmacLUvQ0=
+X-Google-Smtp-Source: AGHT+IGeyZWUacopLpfZ+SmQyi0KQMywspgbfiSHYDJXvBux1xRpXRP2LeuEDO3ufF3uTSAJb7KvOw==
+X-Received: by 2002:a17:902:b70e:b0:1b2:48c:4db with SMTP id d14-20020a170902b70e00b001b2048c04dbmr9636287pls.38.1691479004794;
+        Tue, 08 Aug 2023 00:16:44 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-166-213.pa.nsw.optusnet.com.au. [49.180.166.213])
-        by smtp.gmail.com with ESMTPSA id h4-20020a170902f7c400b001b8a3a0c928sm8197698plw.181.2023.08.08.00.09.21
+        by smtp.gmail.com with ESMTPSA id y23-20020a17090264d700b001bb24cb9a40sm8333547pli.39.2023.08.08.00.16.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 00:09:21 -0700 (PDT)
+        Tue, 08 Aug 2023 00:16:44 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
         (envelope-from <david@fromorbit.com>)
-        id 1qTGqF-002c7s-0v;
-        Tue, 08 Aug 2023 17:09:19 +1000
-Date:   Tue, 8 Aug 2023 17:09:19 +1000
+        id 1qTGxO-002cDO-1J;
+        Tue, 08 Aug 2023 17:16:42 +1000
+Date:   Tue, 8 Aug 2023 17:16:42 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCHSET v26.0 0/2] xfs: add usage counters for scrub
-Message-ID: <ZNHqHzFrtyy/kBSE@dread.disaster.area>
+Subject: Re: [PATCHSET v26.0 0/2] xfs: fixes for the block mapping checker
+Message-ID: <ZNHr2u0b2W2RTKdz@dread.disaster.area>
 References: <20230727221158.GE11352@frogsfrogsfrogs>
- <169049623967.921701.643201943864960800.stgit@frogsfrogsfrogs>
+ <169049626076.922440.10606459711846791721.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <169049623967.921701.643201943864960800.stgit@frogsfrogsfrogs>
+In-Reply-To: <169049626076.922440.10606459711846791721.stgit@frogsfrogsfrogs>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -73,24 +73,14 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 27, 2023 at 03:19:19PM -0700, Darrick J. Wong wrote:
+On Thu, Jul 27, 2023 at 03:20:53PM -0700, Darrick J. Wong wrote:
 > Hi all,
 > 
-> This series introduces simple usage and performance counters for the
-> online fsck subsystem.  The goal here is to enable developers and
-> sysadmins to look at summary counts of how many objects were checked and
-> repaired; what the outcomes were; and how much time the kernel has spent
-> on these operations.  The counter file is exposed in debugfs because
-> that's easier than cramming it into the device model, and debugfs
-> doesn't have rules against complex file contents, unlike sysfs.
+> This series amends the file extent map checking code so that nonexistent
+> cow/attr forks get the ENOENT return they're supposed to; and fixes some
+> incorrect logic about the presence of a cow fork vs. reflink iflag.
 
-I wish we could just put these in sysfs with all the other per-mount
-stats files we have. It's just stupid to have to put them somewhere
-else because we want to put all the stats in a single file and so
-grab them with a single read operation...
-
-
-Other than that, this series looks fine.
+Looks good.
 
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
