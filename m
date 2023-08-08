@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 005B3774116
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Aug 2023 19:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80B797741A4
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Aug 2023 19:25:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234129AbjHHROg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Aug 2023 13:14:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44888 "EHLO
+        id S234586AbjHHRZs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Aug 2023 13:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234128AbjHHRNx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Aug 2023 13:13:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2502819BF
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 09:05:48 -0700 (PDT)
+        with ESMTP id S234431AbjHHRZ1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Aug 2023 13:25:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C96420276
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 09:10:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4900C62574
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 13:39:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B2A3BC43391
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 13:39:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 81C17625AC
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 14:51:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DB314C433D9
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Aug 2023 14:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691501943;
-        bh=zwlHMeKVRflsP8gpUEVYWDWQrOcNP4C8mhhvTPiJ7Zg=;
+        s=k20201202; t=1691506313;
+        bh=/zBx8sqSYk6n/jXnkLEUwBLV1PH59HHTeeLdIpwGCmI=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=GbCcpsGu/+GSOWut7bLpCulXF2uz/6Mjnm4CNOqyqtrksbMvr7JknVNVwHSAdt5Ts
-         9/p/4BkAUIkoxYsqty1yFGkyXdNHgnxpBmSBpfSdvKaPGPwJ7B3meB1K4+qOEwUGtB
-         HTXtVCyLff+4mCz3HAfsFkg1bISAh6G0SqeM8pI/oRzxM1zvzxIfXwHIfn+sUBDWOD
-         FcXnWLhw8vwl8D4b2Q7sddSlsfsCyT5KX5a0cKBMIQyi1+u1133vpkmRcMLsGsacwi
-         siU7rwqM/QyIIBTBeEgyGSLZ4V7LOAJPp+fcPtGU+caspXsaqGIHgNpGaOzs8vtyST
-         TYxRbh9HeHl1w==
+        b=Zknrf2aZyhL1lDqfX9ts4ju5TK7fOxl+XABwxz3tstbXSzuNz0Zo9EKxweap/209V
+         yv3rvh6bLaZDEOcytj/gzN1X7lg5BrmmuSKDsTTwjJylEtuUf3p1Q9cGiFmjzlYuIa
+         jjMcLD2ag8/YWL+00QZdcrKZKU0KquA/fabHG7EyHF7yl1hMHZ6pU5TISL8SGtpz48
+         lIlVyOuiewMXI9tOrLjN9uKq7wB1LIAZK9ly8UMK2QHkkE/VTsJKBxsceE1m8YRCb9
+         JUnM927iUEQ4B3d/4w/D09JbUSlLXRtlNX82mXdNvMXA5njelVfIeCdU0Oi/9TPjwF
+         tqm/WaHiyg7UA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A2B14C53BD0; Tue,  8 Aug 2023 13:39:03 +0000 (UTC)
+        id CB6EDC4332E; Tue,  8 Aug 2023 14:51:53 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     linux-xfs@vger.kernel.org
 Subject: [Bug 217769] XFS crash on mount on kernels >= 6.1
-Date:   Tue, 08 Aug 2023 13:39:03 +0000
+Date:   Tue, 08 Aug 2023 14:51:53 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
@@ -46,14 +46,14 @@ X-Bugzilla-Component: XFS
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: sandeen@sandeen.net
+X-Bugzilla-Who: xani666@gmail.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-217769-201763-MUCyxTlmHt@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-217769-201763-8s0wjB9n3S@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-217769-201763@https.bugzilla.kernel.org/>
 References: <bug-217769-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -73,16 +73,10 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D217769
 
---- Comment #7 from Eric Sandeen (sandeen@sandeen.net) ---
-What might be most useful is to create an xfs_metadump image of the problem=
-atic
-filesystem (with -o if you are ok with showing filenames in the clear) and =
-from
-there we can examine things.
-
-A metadump image is metadata only, no file data, and compresses well. This =
-can
-then be turned back into a filesystem image for analysis.
+--- Comment #8 from Mariusz Gronczewski (xani666@gmail.com) ---
+Created attachment 304795
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D304795&action=3Dedit
+Metadata dump
 
 --=20
 You may reply to this email to add a comment.
