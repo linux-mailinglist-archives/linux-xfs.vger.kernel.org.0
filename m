@@ -2,68 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A37A87755A9
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Aug 2023 10:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B23D77569C
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Aug 2023 11:44:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230435AbjHIInG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 9 Aug 2023 04:43:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50854 "EHLO
+        id S229683AbjHIJoI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 9 Aug 2023 05:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231971AbjHIInF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 9 Aug 2023 04:43:05 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441831FDE
-        for <linux-xfs@vger.kernel.org>; Wed,  9 Aug 2023 01:43:03 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bc8b15c3c3so10409235ad.0
-        for <linux-xfs@vger.kernel.org>; Wed, 09 Aug 2023 01:43:03 -0700 (PDT)
+        with ESMTP id S229459AbjHIJoH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 9 Aug 2023 05:44:07 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D87BED
+        for <linux-xfs@vger.kernel.org>; Wed,  9 Aug 2023 02:44:07 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-686f8614ce5so6453524b3a.3
+        for <linux-xfs@vger.kernel.org>; Wed, 09 Aug 2023 02:44:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1691570583; x=1692175383;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1691574246; x=1692179046;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iOzUwpQ1cs4szofsoVqJoODrxn5mjUpuudTf/A+DKg4=;
-        b=ZMRJA80UJuqZV3cJui/GqBolq46kkJQbPWonNAi0ahPHdfvCExtrpy7rocg73VQcEx
-         Z1PniEuBHbHXhq9Zw0isvGS7v2OhqzP99tkjd/54WwPfz0q2T/+v6ueC6+Eqq2rXWHBN
-         j4g658y2KHRAiKCQZMB+4EXFA+MbL8GClfd6eL4SgsXdZecJzRdQ/9i47spdwXi/JAiV
-         odInJn3vFAi/+4Sb52XP63idn5nyXgEN4KLZnrWrU2n79eHMw94Oa+MHGsu3qyoZlG89
-         apeC/bz3LChAjZVgTyuNAvdNvv5JQWR8YSXVS6rvOF+Zt1iRnBFN9CvuTfBHOrI3s8F5
-         JMag==
+        bh=Ngdqj+DsTPcgR2O2EfsmzDi34kkv0FI5n2/Y8sp767U=;
+        b=axL3SrVJtDCADUAHBOu8BUzwlHgdUBV+G3N2yHuEyCbqdX5GA/DQ3KM2S+HFBFVjYX
+         pxl4ylIzBdCG/H+DkFBweo3sKXn7PEHUqglF6Iuo18EwXqFotTgM53tc0GjxBXsXzOfo
+         ssUVaRRwpiWVKCRri6DWJS8KL4AYetXx2icNpRsAsEREBnvO19M2OA6LzuaXh1Y6nOk0
+         ZLiHpVGFZYmsi9EnXhq2QB4EqqGpeWGA0D/yqAmTqt6v1FDg5wcKvEuk1pkFWG48VZqK
+         epbr6Io0BhK59PabReGGFZsze3s1XJHjSuhmRG9/w+s0HNVHFb2faTdYqTLBe8ffQuIn
+         R8ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691570583; x=1692175383;
+        d=1e100.net; s=20221208; t=1691574246; x=1692179046;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iOzUwpQ1cs4szofsoVqJoODrxn5mjUpuudTf/A+DKg4=;
-        b=G4tm74ZAEYOkiJ7NVhJ6jFLpC8ZLh7gcdN1HSDZJB3nzLLJTEoUrRBqrzkOFJIsBAm
-         M9WgecaIImLJu/p9EY6OtgrB5VwZBbhfCEj2Ufg3U7rT3gwS73bWas07UJs/N0Z51h3R
-         12X0r/0MsmfV3T5L913ndwr13PmV43sznLjNhC+PsPA4/Qqa0fn1+orBT7YGY67stS87
-         y5A/oUoKg2n4xwfy4+N6qkI5flKdQhTCDVUIcPxNvp7wpmK1pZN656yhwnnLGBvGrXPw
-         R5Azltx5dWp/c2kBZV62w+5CIobC8wHqHetvgwJMCWr/jo/oEn4e+8rhABebwcafOo7t
-         n0Fg==
-X-Gm-Message-State: AOJu0YyiM1uOGVivcERYC04PpUtZPk/u5r+uKUtChYKGJEIEPoBsN4it
-        T3UQwLQGmq1Goe+1xuA/H1Ppg8P6jfB12f8Uzec=
-X-Google-Smtp-Source: AGHT+IGAvv027kB0pmNJHWi6B4BhR4CPWUDg410rgrlUfnHewZqvXzcDYKCcgn2GsayLcGJMKer2XQ==
-X-Received: by 2002:a17:902:e550:b0:1b8:76fc:5bf6 with SMTP id n16-20020a170902e55000b001b876fc5bf6mr2337442plf.43.1691570582533;
-        Wed, 09 Aug 2023 01:43:02 -0700 (PDT)
+        bh=Ngdqj+DsTPcgR2O2EfsmzDi34kkv0FI5n2/Y8sp767U=;
+        b=GIjjvrr7f2bq7tMI6GA+HEqqN34cGI/3XtjeBE4MbqVaWC99vkCmeFQEaOc4/OMv9G
+         jYXqfem3G8xqL1ULLdNeG4A6/yI9IAyLYcbZ0Q1xOQZ1ZAGqrTrXl1Jc96EAqkoRhjsQ
+         3EswGXhxlK78nax+gwH973ec2jx0LO8oXiB4IJGEd0qqGfGwFcFd83AuSgY0nQ0zsKue
+         DBUiblbuRJsOsEGsUCeSDYERHy6IkeRQt23vJdE4BeFvDZco5yKT3ShzGlpUVmpAQGFU
+         YW8fX5EQevp7X7ROb4A8uDeuL6yM7rmtr1XJBRTv7qpK+DviITwXq3o70DxNKjcn6rz8
+         gGEw==
+X-Gm-Message-State: AOJu0YzE//Qa2K9jTouW9FXQ21qY3ctmcL/lJxfjDDcABmFTGYVlyek7
+        FYoO1UljzILr+DursR7cBEd5FpHQQ/9lHkwA2ic=
+X-Google-Smtp-Source: AGHT+IFvcP1+kZI2qNibETY264CT/OGrhtHYm8u9LHcweZLVBbc9JHZeX+7ZjGxZ8jyjgykw7iAE0g==
+X-Received: by 2002:a05:6a21:7787:b0:126:92de:b893 with SMTP id bd7-20020a056a21778700b0012692deb893mr1902088pzc.31.1691574246574;
+        Wed, 09 Aug 2023 02:44:06 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-166-213.pa.nsw.optusnet.com.au. [49.180.166.213])
-        by smtp.gmail.com with ESMTPSA id l6-20020a170902d34600b001b9df8f14d7sm10494281plk.267.2023.08.09.01.43.01
+        by smtp.gmail.com with ESMTPSA id k14-20020aa7820e000000b0063f00898245sm9729042pfi.146.2023.08.09.02.44.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 01:43:01 -0700 (PDT)
+        Wed, 09 Aug 2023 02:44:06 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
         (envelope-from <david@fromorbit.com>)
-        id 1qTemQ-0034px-1k;
-        Wed, 09 Aug 2023 18:42:58 +1000
-Date:   Wed, 9 Aug 2023 18:42:58 +1000
+        id 1qTfjW-0035z0-2D;
+        Wed, 09 Aug 2023 19:44:02 +1000
+Date:   Wed, 9 Aug 2023 19:44:02 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/6] xfs: repair inode records
-Message-ID: <ZNNRkggtITHqTjm9@dread.disaster.area>
-References: <169049626432.922543.2560381879385116722.stgit@frogsfrogsfrogs>
- <169049626483.922543.14635359971498732607.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCHSET v26.0 0/6] xfs: online repair of inodes and forks
+Message-ID: <ZNNf4gIZg7j3SMpg@dread.disaster.area>
+References: <20230727221158.GE11352@frogsfrogsfrogs>
+ <169049626432.922543.2560381879385116722.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <169049626483.922543.14635359971498732607.stgit@frogsfrogsfrogs>
+In-Reply-To: <169049626432.922543.2560381879385116722.stgit@frogsfrogsfrogs>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -73,430 +73,29 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 27, 2023 at 03:32:53PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On Thu, Jul 27, 2023 at 03:21:08PM -0700, Darrick J. Wong wrote:
+> Hi all,
 > 
-> If an inode is so badly damaged that it cannot be loaded into the cache,
-> fix the ondisk metadata and try again.  If there /is/ a cached inode,
-> fix any problems and apply any optimizations that can be solved incore.
+> In this series, online repair gains the ability to repair inode records.
+> To do this, we must repair the ondisk inode and fork information enough
+> to pass the iget verifiers and hence make the inode igettable again.
+> Once that's done, we can perform higher level repairs on the incore
+> inode.  The fstests counterpart of this patchset implements stress
+> testing of repair.
 > 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-.....
-> diff --git a/fs/xfs/scrub/inode_repair.c b/fs/xfs/scrub/inode_repair.c
-> new file mode 100644
-> index 0000000000000..952832e9fd029
-> --- /dev/null
-> +++ b/fs/xfs/scrub/inode_repair.c
-> @@ -0,0 +1,763 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2018-2023 Oracle.  All Rights Reserved.
-> + * Author: Darrick J. Wong <djwong@kernel.org>
-> + */
-> +#include "xfs.h"
-> +#include "xfs_fs.h"
-> +#include "xfs_shared.h"
-> +#include "xfs_format.h"
-> +#include "xfs_trans_resv.h"
-> +#include "xfs_mount.h"
-> +#include "xfs_defer.h"
-> +#include "xfs_btree.h"
-> +#include "xfs_bit.h"
-> +#include "xfs_log_format.h"
-> +#include "xfs_trans.h"
-> +#include "xfs_sb.h"
-> +#include "xfs_inode.h"
-> +#include "xfs_icache.h"
-> +#include "xfs_inode_buf.h"
-> +#include "xfs_inode_fork.h"
-> +#include "xfs_ialloc.h"
-> +#include "xfs_da_format.h"
-> +#include "xfs_reflink.h"
-> +#include "xfs_rmap.h"
-> +#include "xfs_bmap.h"
-> +#include "xfs_bmap_util.h"
-> +#include "xfs_dir2.h"
-> +#include "xfs_dir2_priv.h"
-> +#include "xfs_quota_defs.h"
-> +#include "xfs_quota.h"
-> +#include "xfs_ag.h"
-> +#include "scrub/xfs_scrub.h"
-> +#include "scrub/scrub.h"
-> +#include "scrub/common.h"
-> +#include "scrub/btree.h"
-> +#include "scrub/trace.h"
-> +#include "scrub/repair.h"
-> +
-> +/*
-> + * Inode Repair
-> + *
-> + * Roughly speaking, inode problems can be classified based on whether or not
-> + * they trip the dinode verifiers.  If those trip, then we won't be able to
-> + * _iget ourselves the inode.
-> + *
-> + * Therefore, the xrep_dinode_* functions fix anything that will cause the
-> + * inode buffer verifier or the dinode verifier.  The xrep_inode_* functions
-> + * fix things on live incore inodes.
-> + */
+> If you're going to start using this mess, you probably ought to just
+> pull from my git trees, which are linked below.
 
-I'd like to see some of the decisions made documented here. Stuff
-like:
-
-- "unknown di_mode converts inode to a regular file only root can
-  read" needs to be clearly documented because that "regular file"
-  that results might not actually contain user data....
-- what we do with setuid/setgid on repaired inodes
-- things we just trash and leave to other parts of repair to clean
-  up stuff we leak or trash...
-
-
-> +/* Fix any conflicting flags that the verifiers complain about. */
-> +STATIC void
-> +xrep_dinode_flags(
-> +	struct xfs_scrub	*sc,
-> +	struct xfs_dinode	*dip)
-> +{
-> +	struct xfs_mount	*mp = sc->mp;
-> +	uint64_t		flags2;
-> +	uint16_t		mode;
-> +	uint16_t		flags;
-> +
-> +	trace_xrep_dinode_flags(sc, dip);
-> +
-> +	mode = be16_to_cpu(dip->di_mode);
-> +	flags = be16_to_cpu(dip->di_flags);
-> +	flags2 = be64_to_cpu(dip->di_flags2);
-> +
-> +	if (xfs_has_reflink(mp) && S_ISREG(mode))
-> +		flags2 |= XFS_DIFLAG2_REFLINK;
-> +	else
-> +		flags2 &= ~(XFS_DIFLAG2_REFLINK | XFS_DIFLAG2_COWEXTSIZE);
-> +	if (flags & XFS_DIFLAG_REALTIME)
-> +		flags2 &= ~XFS_DIFLAG2_REFLINK;
-> +	if (flags2 & XFS_DIFLAG2_REFLINK)
-> +		flags2 &= ~XFS_DIFLAG2_DAX;
-
-IIRC, reflink and DAX co-exist just fine now....
-
-> +	if (!xfs_has_bigtime(mp))
-> +		flags2 &= ~XFS_DIFLAG2_BIGTIME;
-> +	if (!xfs_has_large_extent_counts(mp))
-> +		flags2 &= ~XFS_DIFLAG2_NREXT64;
-> +	if (flags2 & XFS_DIFLAG2_NREXT64)
-> +		dip->di_nrext64_pad = 0;
-> +	else if (dip->di_version >= 3)
-> +		dip->di_v3_pad = 0;
-> +	dip->di_flags = cpu_to_be16(flags);
-> +	dip->di_flags2 = cpu_to_be64(flags2);
-> +}
-> +
-> +/*
-> + * Blow out symlink; now it points to the current dir.  We don't have to worry
-> + * about incore state because this inode is failing the verifiers.
-> + */
-> +STATIC void
-> +xrep_dinode_zap_symlink(
-> +	struct xfs_scrub	*sc,
-> +	struct xfs_dinode	*dip)
-> +{
-> +	char			*p;
-> +
-> +	trace_xrep_dinode_zap_symlink(sc, dip);
-> +
-> +	dip->di_format = XFS_DINODE_FMT_LOCAL;
-> +	dip->di_size = cpu_to_be64(1);
-> +	p = XFS_DFORK_PTR(dip, XFS_DATA_FORK);
-> +	*p = '.';
-
-What if this was in extent form? Didn't we just leak an extent?
-
-> +}
-> +
-> +/*
-> + * Blow out dir, make it point to the root.  In the future repair will
-> + * reconstruct this directory for us.  Note that there's no in-core directory
-> + * inode because the sf verifier tripped, so we don't have to worry about the
-> + * dentry cache.
-> + */
-> +STATIC void
-> +xrep_dinode_zap_dir(
-> +	struct xfs_scrub	*sc,
-> +	struct xfs_dinode	*dip)
-> +{
-> +	struct xfs_mount	*mp = sc->mp;
-> +	struct xfs_dir2_sf_hdr	*sfp;
-> +	int			i8count;
-> +
-> +	trace_xrep_dinode_zap_dir(sc, dip);
-> +
-> +	dip->di_format = XFS_DINODE_FMT_LOCAL;
-> +	i8count = mp->m_sb.sb_rootino > XFS_DIR2_MAX_SHORT_INUM;
-> +	sfp = XFS_DFORK_PTR(dip, XFS_DATA_FORK);
-> +	sfp->count = 0;
-> +	sfp->i8count = i8count;
-> +	xfs_dir2_sf_put_parent_ino(sfp, mp->m_sb.sb_rootino);
-> +	dip->di_size = cpu_to_be64(xfs_dir2_sf_hdr_size(i8count));
-> +}
-
-Same here?
-
-> +
-> +/* Make sure we don't have a garbage file size. */
-> +STATIC void
-> +xrep_dinode_size(
-> +	struct xfs_scrub	*sc,
-> +	struct xfs_dinode	*dip)
-> +{
-> +	uint64_t		size;
-> +	uint16_t		mode;
-> +
-> +	trace_xrep_dinode_size(sc, dip);
-> +
-> +	mode = be16_to_cpu(dip->di_mode);
-> +	size = be64_to_cpu(dip->di_size);
-> +	switch (mode & S_IFMT) {
-> +	case S_IFIFO:
-> +	case S_IFCHR:
-> +	case S_IFBLK:
-> +	case S_IFSOCK:
-> +		/* di_size can't be nonzero for special files */
-> +		dip->di_size = 0;
-> +		break;
-> +	case S_IFREG:
-> +		/* Regular files can't be larger than 2^63-1 bytes. */
-> +		dip->di_size = cpu_to_be64(size & ~(1ULL << 63));
-> +		break;
-> +	case S_IFLNK:
-> +		/*
-> +		 * Truncate ridiculously oversized symlinks.  If the size is
-> +		 * zero, reset it to point to the current directory.  Both of
-> +		 * these conditions trigger dinode verifier errors, so there
-> +		 * is no in-core state to reset.
-> +		 */
-> +		if (size > XFS_SYMLINK_MAXLEN)
-> +			dip->di_size = cpu_to_be64(XFS_SYMLINK_MAXLEN);
-> +		else if (size == 0)
-> +			xrep_dinode_zap_symlink(sc, dip);
-> +		break;
-> +	case S_IFDIR:
-> +		/*
-> +		 * Directories can't have a size larger than 32G.  If the size
-> +		 * is zero, reset it to an empty directory.  Both of these
-> +		 * conditions trigger dinode verifier errors, so there is no
-> +		 * in-core state to reset.
-> +		 */
-> +		if (size > XFS_DIR2_SPACE_SIZE)
-> +			dip->di_size = cpu_to_be64(XFS_DIR2_SPACE_SIZE);
-> +		else if (size == 0)
-> +			xrep_dinode_zap_dir(sc, dip);
-> +		break;
-> +	}
-> +}
-> +
-> +/* Fix extent size hints. */
-> +STATIC void
-> +xrep_dinode_extsize_hints(
-> +	struct xfs_scrub	*sc,
-> +	struct xfs_dinode	*dip)
-> +{
-> +	struct xfs_mount	*mp = sc->mp;
-> +	uint64_t		flags2;
-> +	uint16_t		flags;
-> +	uint16_t		mode;
-> +	xfs_failaddr_t		fa;
-> +
-> +	trace_xrep_dinode_extsize_hints(sc, dip);
-> +
-> +	mode = be16_to_cpu(dip->di_mode);
-> +	flags = be16_to_cpu(dip->di_flags);
-> +	flags2 = be64_to_cpu(dip->di_flags2);
-> +
-> +	fa = xfs_inode_validate_extsize(mp, be32_to_cpu(dip->di_extsize),
-> +			mode, flags);
-> +	if (fa) {
-> +		dip->di_extsize = 0;
-> +		dip->di_flags &= ~cpu_to_be16(XFS_DIFLAG_EXTSIZE |
-> +					      XFS_DIFLAG_EXTSZINHERIT);
-> +	}
-> +
-> +	if (dip->di_version < 3)
-> +		return;
-> +
-> +	fa = xfs_inode_validate_cowextsize(mp, be32_to_cpu(dip->di_cowextsize),
-> +			mode, flags, flags2);
-> +	if (fa) {
-> +		dip->di_cowextsize = 0;
-> +		dip->di_flags2 &= ~cpu_to_be64(XFS_DIFLAG2_COWEXTSIZE);
-> +	}
-> +}
-> +
-> +/* Inode didn't pass verifiers, so fix the raw buffer and retry iget. */
-> +STATIC int
-> +xrep_dinode_core(
-> +	struct xrep_inode	*ri)
-> +{
-> +	struct xfs_scrub	*sc = ri->sc;
-> +	struct xfs_buf		*bp;
-> +	struct xfs_dinode	*dip;
-> +	xfs_ino_t		ino = sc->sm->sm_ino;
-> +	int			error;
-> +
-> +	/* Read the inode cluster buffer. */
-> +	error = xfs_trans_read_buf(sc->mp, sc->tp, sc->mp->m_ddev_targp,
-> +			ri->imap.im_blkno, ri->imap.im_len, XBF_UNMAPPED, &bp,
-> +			NULL);
-> +	if (error)
-> +		return error;
-> +
-> +	/* Make sure we can pass the inode buffer verifier. */
-> +	xrep_dinode_buf(sc, bp);
-> +	bp->b_ops = &xfs_inode_buf_ops;
-
-Hmmmmm. Don't we at least need to check this looks like an inode
-cluster buffer first?
-
-....
-> +
-> +/* Check for invalid uid/gid/prid. */
-> +STATIC void
-> +xrep_inode_ids(
-> +	struct xfs_scrub	*sc)
-> +{
-> +	trace_xrep_inode_ids(sc);
-> +
-> +	if (i_uid_read(VFS_I(sc->ip)) == -1U) {
-> +		i_uid_write(VFS_I(sc->ip), 0);
-> +		VFS_I(sc->ip)->i_mode &= ~(S_ISUID | S_ISGID);
-> +		if (XFS_IS_UQUOTA_ON(sc->mp))
-> +			xrep_force_quotacheck(sc, XFS_DQTYPE_USER);
-> +	}
-> +
-> +	if (i_gid_read(VFS_I(sc->ip)) == -1U) {
-> +		i_gid_write(VFS_I(sc->ip), 0);
-> +		VFS_I(sc->ip)->i_mode &= ~(S_ISUID | S_ISGID);
-> +		if (XFS_IS_GQUOTA_ON(sc->mp))
-> +			xrep_force_quotacheck(sc, XFS_DQTYPE_GROUP);
-> +	}
-
-IF we are repairing an inode that has setuid or setgid, I think we
-should just strip those permissions regardless of whether the
-uid/gid are valid. It think it's better to be cautious here rather
-than leave setuid on a file that we reconstructed but have no real
-way of knowing that data in the file is untainted.
-
-> +
-> +	if (sc->ip->i_projid == -1U) {
-> +		sc->ip->i_projid = 0;
-> +		if (XFS_IS_PQUOTA_ON(sc->mp))
-> +			xrep_force_quotacheck(sc, XFS_DQTYPE_PROJ);
-> +	}
-> +}
-> +
-> +static inline void
-> +xrep_clamp_nsec(
-> +	struct timespec64	*ts)
-> +{
-> +	ts->tv_nsec = clamp_t(long, ts->tv_nsec, 0, NSEC_PER_SEC);
-> +}
-> +
-> +/* Nanosecond counters can't have more than 1 billion. */
-> +STATIC void
-> +xrep_inode_timestamps(
-> +	struct xfs_inode	*ip)
-> +{
-> +	xrep_clamp_nsec(&VFS_I(ip)->i_atime);
-> +	xrep_clamp_nsec(&VFS_I(ip)->i_mtime);
-> +	xrep_clamp_nsec(&VFS_I(ip)->i_ctime);
-> +	xrep_clamp_nsec(&ip->i_crtime);
-> +}
-
-Should we be clamping the entire timestamp within the valid
-filesystem timestamp range here?
-
-> +
-> +/* Fix inode flags that don't make sense together. */
-> +STATIC void
-> +xrep_inode_flags(
-> +	struct xfs_scrub	*sc)
-> +{
-> +	uint16_t		mode;
-> +
-> +	trace_xrep_inode_flags(sc);
-....
-> +	/* No mixing reflink and DAX yet. */
-> +	if (sc->ip->i_diflags2 & XFS_DIFLAG2_REFLINK)
-> +		sc->ip->i_diflags2 &= ~XFS_DIFLAG2_DAX;
-
-This can go, too...
-
-.....
-> @@ -750,6 +750,38 @@ xrep_ino_dqattach(
->  }
->  #endif /* CONFIG_XFS_QUOTA */
->  
-> +/*
-> + * Ensure that the inode being repaired is ready to handle a certain number of
-> + * extents, or return EFSCORRUPTED.  Caller must hold the ILOCK of the inode
-> + * being repaired and have joined it to the scrub transaction.
-> + */
-> +int
-> +xrep_ino_ensure_extent_count(
-> +	struct xfs_scrub	*sc,
-> +	int			whichfork,
-> +	xfs_extnum_t		nextents)
-> +{
-> +	xfs_extnum_t		max_extents;
-> +	bool			large_extcount;
-> +
-> +	large_extcount = xfs_inode_has_large_extent_counts(sc->ip);
-> +	max_extents = xfs_iext_max_nextents(large_extcount, whichfork);
-> +	if (nextents <= max_extents)
-> +		return 0;
-> +	if (large_extcount)
-> +		return -EFSCORRUPTED;
-> +	if (!xfs_has_large_extent_counts(sc->mp))
-> +		return -EFSCORRUPTED;
-
-This logic took me a bit of peering at to work out. large_extcount says
-whether the inode has the large extcount flag set, which is
-different to whether the superblock has large extcoutn flag set.
-
-Can change large_extcount to inode_has_nrext64 or something like
-that just so it's really clear that there are two different flags
-being checked here?
-
-> diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
-> index ac8f0200b2963..e239b432d19e8 100644
-> --- a/fs/xfs/scrub/repair.h
-> +++ b/fs/xfs/scrub/repair.h
-> @@ -28,6 +28,16 @@ bool xrep_ag_has_space(struct xfs_perag *pag, xfs_extlen_t nr_blocks,
->  		enum xfs_ag_resv_type type);
->  xfs_extlen_t xrep_calc_ag_resblks(struct xfs_scrub *sc);
->  
-> +static inline int
-> +xrep_trans_commit(
-> +	struct xfs_scrub	*sc)
-> +{
-> +	int			error = xfs_trans_commit(sc->tp);
-> +
-> +	sc->tp = NULL;
-> +	return error;
-> +}
-
-That's .... interesting formatting. I'd be happy with using standard
-linux format for this:
-
-static inline int xrep_trans_commit(struct xfs_scrub *sc)
-{
-	int error = xfs_trans_commit(sc->tp);
-
-	sc->tp = NULL;
-	return error;
-}
-
-But that's just personal preference....
+Most of this makes sense. I think the main thing I'd suggest is
+documenting the repair decisions being made and how things that get
+zapped are then rebuilt - it seems like there is a lot of dependency
+on running other parts of repair after zapping for things to be
+rebuilt, but it's not immediately clear how the bits are supposed to
+go together so a little bit of documentation for that would go a
+long way....
 
 -Dave.
+
 -- 
 Dave Chinner
 david@fromorbit.com
