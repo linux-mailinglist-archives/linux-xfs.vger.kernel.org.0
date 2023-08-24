@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BAA8787BFE
-	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 01:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66C33787C14
+	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 01:46:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232300AbjHXX2N (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Aug 2023 19:28:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
+        id S232135AbjHXXpy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Aug 2023 19:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237312AbjHXX2J (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Aug 2023 19:28:09 -0400
+        with ESMTP id S239873AbjHXXpr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Aug 2023 19:45:47 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1CB19B0
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 16:28:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3515119AE
+        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 16:45:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1433060C16
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 23:28:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72211C433C7;
-        Thu, 24 Aug 2023 23:28:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B648363216
+        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 23:45:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19889C433C7;
+        Thu, 24 Aug 2023 23:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692919686;
-        bh=2GxWfyN7L7MXXz0DElcxJfxXrjphFMUoXKbRtKd9Cx0=;
+        s=k20201202; t=1692920741;
+        bh=xpZB8nS06qwCFIv1KqBF1XSy14wOgaAWMDH+ZadWZrc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=et/bUqza3PPlctb1VNS5XwC86tNUz6IP/JO11GSuqKcynsICcBX03f3zoP9ObriF4
-         ak8qagydKlMcwHVXN8SYEPaq98d25iGWOtHR07of81nqWXToSgK+m07ksWAMWxGp90
-         S0VT86QW1oOHrMAfP7RlGOT554l3qPtpRkQnTOzKAHuVqwJBhWWw6ktcQDZoXdbTrX
-         1kWMkKxID1YHsdpzpg55FIKD/tP56n8XFtu3C581a1NwAPpwqhXc3L3FnCbauUrVcB
-         TveOS7zRocbiRuiufLfpHwM6S+NP7UchHW90cYr6ojzFpiG5M3uwwzMC5ye2A4S1FS
-         8nHEaabEgm9Yw==
-Date:   Thu, 24 Aug 2023 16:28:05 -0700
+        b=JDiwjUH1/6pJl9HI8CacpIVRgsuLsdwlx9cK6Z1rL7cFOCGkueL788IZs0YoIIChp
+         l9CLCuRymHXOEvHU2XqgZDPAG8rrZs5l+bU4TzyNfeyJEYRhOhfLrBlznDdPl6VAEL
+         B3eKDObnRGKSdwbE6o9W2JEGjqscj9b4UnYpRgkJrAg3b377DVHZupqQ3GvUmsHg5g
+         itLg8SGDgMCoGNJJlQkUXEDOmXwotqLF+Zg2dbX/LEbUkqtFypE5/+jcIZkADOUh/N
+         YT2b1tFHsH9n9CArSfxUOgr6UerAZsNzYT9YcuncW5NXTD+zNxgB1P4oIpY/DkDLmF
+         0/p7zETwSbwig==
+Date:   Thu, 24 Aug 2023 16:45:40 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     chandan.babu@gmail.com
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, sandeen@sandeen.net
-Subject: [PATCH 5/3] xfs/270: actually test log recovery with unknown
- rocompat features
-Message-ID: <20230824232805.GC17912@frogsfrogsfrogs>
-References: <169291929524.220104.3844042018007786965.stgit@frogsfrogsfrogs>
+Cc:     peterz@infradead.org, ritesh.list@gmail.com, sandeen@sandeen.net,
+        tglx@linutronix.de, linux-xfs@vger.kernel.org, david@fromorbit.com
+Subject: [PATCH 4/3] generic/650: race mount and unmount with cpu hotplug too
+Message-ID: <20230824234540.GD17912@frogsfrogsfrogs>
+References: <169291927442.219974.9654062191833512358.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <169291929524.220104.3844042018007786965.stgit@frogsfrogsfrogs>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <169291927442.219974.9654062191833512358.stgit@frogsfrogsfrogs>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,130 +55,38 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that log recovery will not succeed if there are unknown
-rocompat features in the superblock and the log is dirty.
+Ritesh Harjani reported that mount and unmount can race with the xfs cpu
+hotplug notifier hooks and crash the kernel.  Extend this test to
+include that.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/270     |   81 ++++++++++++++++++++++++++++++++++++-----------------
- tests/xfs/270.out |    2 +
- 2 files changed, 57 insertions(+), 26 deletions(-)
+ tests/generic/650 |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/tests/xfs/270 b/tests/xfs/270
-index 511dfe9fcd..ee925b0fc6 100755
---- a/tests/xfs/270
-+++ b/tests/xfs/270
-@@ -21,41 +21,48 @@ _supported_fs xfs
- _require_scratch_nocheck
- # Only V5 XFS disallow rw mount/remount with unknown ro-compat features
- _require_scratch_xfs_crc
--
--_scratch_mkfs_xfs >>$seqres.full 2>&1
--_scratch_mount
--echo moo > $SCRATCH_MNT/testfile
--_scratch_unmount
-+_require_scratch_shutdown
- 
- # set the highest bit of features_ro_compat, use it as an unknown
- # feature bit. If one day this bit become known feature, please
- # change this case.
-+set_bad_rocompat() {
-+	ro_compat=$(_scratch_xfs_get_metadata_field "features_ro_compat" "sb 0")
-+	echo $ro_compat | grep -q -E '^0x[[:xdigit:]]$'
-+	if [[ $? != 0  ]]; then
-+		echo "features_ro_compat has an invalid value."
-+		return 1
-+	fi
- 
--ro_compat=$(_scratch_xfs_get_metadata_field "features_ro_compat" "sb 0")
--echo $ro_compat | grep -q -E '^0x[[:xdigit:]]$'
--if [[ $? != 0  ]]; then
--	echo "features_ro_compat has an invalid value."
--fi
-+	ro_compat=$(echo $ro_compat | \
-+			    awk '/^0x[[:xdigit:]]+/ {
-+					printf("0x%x\n", or(strtonum($1), 0x80000000))
-+				}')
- 
--ro_compat=$(echo $ro_compat | \
--		    awk '/^0x[[:xdigit:]]+/ {
--				printf("0x%x\n", or(strtonum($1), 0x80000000))
--			}')
-+	# write the new ro compat field to the superblock
-+	_scratch_xfs_set_metadata_field "features_ro_compat" "$ro_compat" "sb 0" \
-+					> $seqres.full 2>&1
- 
--# write the new ro compat field to the superblock
--_scratch_xfs_set_metadata_field "features_ro_compat" "$ro_compat" "sb 0" \
--				> $seqres.full 2>&1
-+	# read the newly set ro compat filed for verification
-+	new_ro_compat=$(_scratch_xfs_get_metadata_field "features_ro_compat" "sb 0" \
-+							2>/dev/null)
- 
--# read the newly set ro compat filed for verification
--new_ro_compat=$(_scratch_xfs_get_metadata_field "features_ro_compat" "sb 0" \
--						2>/dev/null)
-+	# verify the new ro_compat field is correct. Without xfsprogs commit
-+	# f4afdcb0ad ("xfs_db: clean up the salvage read callsites in set_cur()"),
-+	# we can't get new_ro_compat value.
-+	if [ "$new_ro_compat" != "$ro_compat" ]; then
-+		echo "Unable to set new features_ro_compat. Wanted $ro_compat, got $new_ro_compat"
-+		return 1
-+	fi
-+	return 0
-+}
- 
--# verify the new ro_compat field is correct. Without xfsprogs commit
--# f4afdcb0ad ("xfs_db: clean up the salvage read callsites in set_cur()"),
--# we can't get new_ro_compat value.
--if [ "$new_ro_compat" != "$ro_compat" ]; then
--	echo "Unable to set new features_ro_compat. Wanted $ro_compat, got $new_ro_compat"
--fi
-+# Once with a clean filesystem...
-+_scratch_mkfs_xfs >>$seqres.full 2>&1
-+_scratch_mount
-+echo moo > $SCRATCH_MNT/testfile
-+_scratch_unmount
-+set_bad_rocompat
- 
- # rw mount with unknown ro-compat feature should fail
- echo "rw mount test"
-@@ -85,6 +92,28 @@ fi
- 
- _scratch_unmount
- 
-+# And again with a dirty filesystem...
-+_scratch_mkfs_xfs >>$seqres.full 2>&1
-+_scratch_mount
-+echo moo > $SCRATCH_MNT/testfile
-+$XFS_IO_PROG -x -c 'shutdown -f' "${SCRATCH_MNT}"
-+_scratch_unmount
-+set_bad_rocompat
-+
-+# rw mount with unknown ro-compat feature should fail
-+echo "rw mount test"
-+_try_scratch_mount 2>>$seqres.full
-+if [ $? -eq 0 ]; then
-+	_fail "rw mount test failed"
+diff --git a/tests/generic/650 b/tests/generic/650
+index 05c939b84f..773f93c7cb 100755
+--- a/tests/generic/650
++++ b/tests/generic/650
+@@ -67,11 +67,18 @@ fsstress_args=(-w -d $stress_dir)
+ nr_cpus=$((LOAD_FACTOR * nr_hotplug_cpus))
+ test "$nr_cpus" -gt 1024 && nr_cpus="$nr_hotplug_cpus"
+ fsstress_args+=(-p $nr_cpus)
+-test -n "$SOAK_DURATION" && fsstress_args+=(--duration="$SOAK_DURATION")
++if [ -n "$SOAK_DURATION" ]; then
++	test "$SOAK_DURATION" -lt 10 && SOAK_DURATION=10
++	fsstress_args+=(--duration="$((SOAK_DURATION / 10))")
 +fi
+ 
+-nr_ops=$((25000 * TIME_FACTOR))
++nr_ops=$((2500 * TIME_FACTOR))
+ fsstress_args+=(-n $nr_ops)
+-$FSSTRESS_PROG $FSSTRESS_AVOID -w "${fsstress_args[@]}" >> $seqres.full
++for ((i = 0; i < 10; i++)); do
++	$FSSTRESS_PROG $FSSTRESS_AVOID -w "${fsstress_args[@]}" >> $seqres.full
++	_test_cycle_mount
++done
 +
-+# ro mount should not succeed due to log recovery
-+echo "ro mount test"
-+_try_scratch_mount -o ro 2>>$seqres.full
-+if [ $? -eq 0 ]; then
-+	_fail "ro mount test succeeded"
-+fi
-+
+ rm -f $sentinel_file
+ 
  # success, all done
- status=0
- exit
-diff --git a/tests/xfs/270.out b/tests/xfs/270.out
-index edf4c25489..a519d2f328 100644
---- a/tests/xfs/270.out
-+++ b/tests/xfs/270.out
-@@ -2,3 +2,5 @@ QA output created by 270
- rw mount test
- ro mount test
- rw remount test
-+rw mount test
-+ro mount test
