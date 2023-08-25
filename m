@@ -2,51 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB067787C5B
-	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 02:02:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B55C787C74
+	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 02:16:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231977AbjHYABb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Aug 2023 20:01:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
+        id S232979AbjHYANU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Aug 2023 20:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234441AbjHYABA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Aug 2023 20:01:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4936719BE
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 17:00:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DBDE863057
-        for <linux-xfs@vger.kernel.org>; Fri, 25 Aug 2023 00:00:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498C4C433C7;
-        Fri, 25 Aug 2023 00:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692921656;
-        bh=5wXt4ZMJsBCWkg66taAh0mh2BFhtrl+1Q2E0KsLDwUA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HilcCE8Ljnvtp+gIjitHkHC15A3ltykGE9Z8jv33opRU7kUnDdDEgLX4Vvv7RXEnc
-         Bu9Ca+n9aupCEuxpeh67+Vk6b+iJtJwWTMnQOQ8eioxOxU3mOZT1ySZqhrp0NdI9UC
-         qF2r7a6jNi8p7fEnZ6QUromNSEqf0M1fSEJ4jtIAKU3D/wQTuiloj0wdNdDSJEnhD9
-         TBo67ckhQIDrSBkqv3tfwohhM3luk736UdiBweLNMPQ1KTroJbIw9H6cYI7adGi7Rz
-         dozaKE+QPC83OsbAB5mWa+rJAd+Au6YUPIkz+bFrSWFcfsQ/JbuYaOAJCxLuuF5siI
-         aa/4l7UyEdK1A==
-Date:   Thu, 24 Aug 2023 17:00:55 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Carlos Maiolino <cem@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH v2] xfsprogs: don't allow udisks to automount XFS filesystems
- with no prompt
-Message-ID: <20230825000055.GE17912@frogsfrogsfrogs>
+        with ESMTP id S230421AbjHYAM5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Aug 2023 20:12:57 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A3A1BC8
+        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 17:12:53 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68bed286169so386942b3a.1
+        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 17:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1692922373; x=1693527173;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mzrXrogJitv6BDVLYlIt7ZKBxh9g6mnWAg1Uiv9yGnQ=;
+        b=Fa8Gv/4YlHiLWkQhyboVoiLvjCELusG2gToebaaaYWzT2DT2bm2zH219jEtNbieaCh
+         1LOnnn66c4E00QJqoRPYoJLPt4HlIq9ULk1HmV8XRaAAIuCwwPaOP1kR3MyvnIcB8jON
+         q4osCknqz42OhiPuw6aisvsLfbBmashSmMBy/GlD6Dwg4hZ3fTa7K7OTmJmc6qawqbxR
+         YGwZGgQf7UFvCeJHyek1cDLD5vbJyfU5fxCcAsgIAb8J5wo0fo5+JFHfmZkoD8hVyQzX
+         pQBKPzwTWVlHZZP1SarASL+QYto5yArx0KGK/cLKy3Zs74lgYNAymhDY4z2GRaLBAFzS
+         mzRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692922373; x=1693527173;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mzrXrogJitv6BDVLYlIt7ZKBxh9g6mnWAg1Uiv9yGnQ=;
+        b=lgM0+YOTRC1A45rN6yADoch6bYO3IWYXLkDPBCljTG9+MaHn+RSfVsAn34UOUFc4nb
+         iu1XSgaJdgsWsqr4hfuc4++5o/MgBXgjktWIKG98gMDa1KrZr8M+u41pdaiH8L5WwuKC
+         DLGWLGfIWtJ008qP6zxzsF4kBAxVJc0sr9/IAIZrZ15EarrI8FnmDEJcGCnDZbadPqXE
+         eXe83YTjyH0JnBfuFKH9nYlMqmeLd/rVO4sT7UZarAwFhZfvtBhOJFen0GZ8RMyiDlHc
+         eKDvbCR2rEiIWB6/v5fcgsdYYSFTHFoaSw6lCjR2CryAbPpXquVhhJ9w75RGS6fwdJgs
+         RqRA==
+X-Gm-Message-State: AOJu0Yx9HPW/Gk4lNitoCv7XSSeatxQL6YwKEVgJLHiF7Hbex0k7q46M
+        g0p82olIjgqgjfa0rxjJGKJNGA==
+X-Google-Smtp-Source: AGHT+IFeSRJUjnEf1ABs7Fx5BgYPjug2NKDOp7UsOC6sIg7l53b0VKxRqeftg/3k5cE+cT0EqserrQ==
+X-Received: by 2002:a05:6a20:7353:b0:140:6d68:ce07 with SMTP id v19-20020a056a20735300b001406d68ce07mr21725776pzc.52.1692922372943;
+        Thu, 24 Aug 2023 17:12:52 -0700 (PDT)
+Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
+        by smtp.gmail.com with ESMTPSA id n3-20020a62e503000000b006877a2e6285sm292300pff.128.2023.08.24.17.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Aug 2023 17:12:52 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qZKRV-0066cA-1K;
+        Fri, 25 Aug 2023 10:12:49 +1000
+Date:   Fri, 25 Aug 2023 10:12:49 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     chandan.babu@gmail.com, linux-xfs@vger.kernel.org,
+        ritesh.list@gmail.com, sandeen@sandeen.net
+Subject: Re: [PATCH 2/3] xfs: use per-mount cpumask to track nonempty percpu
+ inodegc lists
+Message-ID: <ZOfyASUg/A+GWE37@dread.disaster.area>
+References: <169291927442.219974.9654062191833512358.stgit@frogsfrogsfrogs>
+ <169291928586.219974.10915745531517859853.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <169291928586.219974.10915745531517859853.stgit@frogsfrogsfrogs>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,167 +75,143 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+On Thu, Aug 24, 2023 at 04:21:25PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> Directly track which CPUs have contributed to the inodegc percpu lists
+> instead of trusting the cpu online mask.  This eliminates a theoretical
+> problem where the inodegc flush functions might fail to flush a CPU's
+> inodes if that CPU happened to be dying at exactly the same time.  Most
+> likely nobody's noticed this because the CPU dead hook moves the percpu
+> inodegc list to another CPU and schedules that worker immediately.  But
+> it's quite possible that this is a subtle race leading to UAF if the
+> inodegc flush were part of an unmount.
+> 
+> Further benefits: This reduces the overhead of the inodegc flush code
+> slightly by allowing us to ignore CPUs that have empty lists.  Better
+> yet, it reduces our dependence on the cpu online masks, which have been
+> the cause of confusion and drama lately.
+> 
+> Fixes: ab23a7768739 ("xfs: per-cpu deferred inode inactivation queues")
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  fs/xfs/xfs_icache.c |   60 +++++++++++----------------------------------------
+>  fs/xfs/xfs_icache.h |    1 -
+>  fs/xfs/xfs_mount.h  |    6 +++--
+>  fs/xfs/xfs_super.c  |    4 +--
+>  4 files changed, 18 insertions(+), 53 deletions(-)
+> 
+> 
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index e541f5c0bc25..7fd876e94ecb 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -443,7 +443,7 @@ xfs_inodegc_queue_all(
+>  	int			cpu;
+>  	bool			ret = false;
+>  
+> -	for_each_online_cpu(cpu) {
+> +	for_each_cpu(cpu, &mp->m_inodegc_cpumask) {
+>  		gc = per_cpu_ptr(mp->m_inodegc, cpu);
+>  		if (!llist_empty(&gc->list)) {
+>  			mod_delayed_work_on(cpu, mp->m_inodegc_wq, &gc->work, 0);
+> @@ -463,7 +463,7 @@ xfs_inodegc_wait_all(
+>  	int			error = 0;
+>  
+>  	flush_workqueue(mp->m_inodegc_wq);
+> -	for_each_online_cpu(cpu) {
+> +	for_each_cpu(cpu, &mp->m_inodegc_cpumask) {
+>  		struct xfs_inodegc	*gc;
+>  
+>  		gc = per_cpu_ptr(mp->m_inodegc, cpu);
+> @@ -1845,10 +1845,12 @@ xfs_inodegc_worker(
+>  						struct xfs_inodegc, work);
+>  	struct llist_node	*node = llist_del_all(&gc->list);
+>  	struct xfs_inode	*ip, *n;
+> +	struct xfs_mount	*mp = gc->mp;
+>  	unsigned int		nofs_flag;
+>  
+>  	ASSERT(gc->cpu == smp_processor_id());
+>  
+> +	cpumask_test_and_clear_cpu(gc->cpu, &mp->m_inodegc_cpumask);
 
-The unending stream of syzbot bug reports and overwrought filing of CVEs
-for corner case handling (i.e. things that distract from actual user
-complaints) in XFS has generated all sorts of of overheated rhetoric
-about how every bug is a Serious Security Issue(tm) because anyone can
-craft a malicious filesystem on a USB stick, insert the stick into a
-victim machine, and mount will trigger a bug in the kernel driver that
-leads to some compromise or DoS or something.
+Why does this need to be a test-and-clear operation? If it is set,
+we clear it. If it is not set, clearing it is a no-op. Hence we
+don't need to test whether the bit is set first. Also,
+cpumask_clear_cpu() uses clear_bit(), which is an atomic operation,
+so clearing the bit isn't going to race with any other updates.
 
-I thought that nobody would be foolish enough to automount an XFS
-filesystem.  What a fool I was!  It turns out that udisks can be told
-that it's okay to automount things, and then GNOME will do exactly that.
-Including mounting mangled XFS filesystems!
+As it is, we probably want acquire semantics for the gc structure
+here (see below), so I think this likely should be:
 
-<delete angry rant about poor decisionmaking and armchair fs developers
-blasting us on X while not actually doing any of the work>
+	/*
+	 * Clear the cpu mask bit and ensure that we have seen the
+	 * latest update of the gc structure associated with this
+	 * CPU. This matches with the release semantics used when
+	 * setting the cpumask bit in xfs_inodegc_queue.
+	 */
+	cpumask_clear_cpu(gc->cpu, &mp->m_inodegc_cpumask);
+	smp_mb__after_atomic();
 
-Turn off /this/ idiocy by adding a udev rule to tell udisks not to
-automount XFS filesystems.
+>  	WRITE_ONCE(gc->items, 0);
+>  
+>  	if (!node)
+> @@ -1862,7 +1864,7 @@ xfs_inodegc_worker(
+>  	nofs_flag = memalloc_nofs_save();
+>  
+>  	ip = llist_entry(node, struct xfs_inode, i_gclist);
+> -	trace_xfs_inodegc_worker(ip->i_mount, READ_ONCE(gc->shrinker_hits));
+> +	trace_xfs_inodegc_worker(mp, READ_ONCE(gc->shrinker_hits));
+>  
+>  	WRITE_ONCE(gc->shrinker_hits, 0);
+>  	llist_for_each_entry_safe(ip, n, node, i_gclist) {
+> @@ -2057,6 +2059,7 @@ xfs_inodegc_queue(
+>  	struct xfs_inodegc	*gc;
+>  	int			items;
+>  	unsigned int		shrinker_hits;
+> +	unsigned int		cpu_nr;
+>  	unsigned long		queue_delay = 1;
+>  
+>  	trace_xfs_inode_set_need_inactive(ip);
+> @@ -2064,12 +2067,16 @@ xfs_inodegc_queue(
+>  	ip->i_flags |= XFS_NEED_INACTIVE;
+>  	spin_unlock(&ip->i_flags_lock);
+>  
+> -	gc = get_cpu_ptr(mp->m_inodegc);
+> +	cpu_nr = get_cpu();
+> +	gc = this_cpu_ptr(mp->m_inodegc);
+>  	llist_add(&ip->i_gclist, &gc->list);
+>  	items = READ_ONCE(gc->items);
+>  	WRITE_ONCE(gc->items, items + 1);
+>  	shrinker_hits = READ_ONCE(gc->shrinker_hits);
+>  
+> +	if (!cpumask_test_cpu(cpu_nr, &mp->m_inodegc_cpumask))
+> +		cpumask_test_and_set_cpu(cpu_nr, &mp->m_inodegc_cpumask);
+> +
+>  	/*
+>  	 * We queue the work while holding the current CPU so that the work
+>  	 * is scheduled to run on this CPU.
 
-This will not stop a logged in user from unwittingly inserting a
-malicious storage device and pressing [mount] and getting breached.
-This is not a substitute for a thorough audit.  This is not a substitute
-for lklfuse.  This does not solve the general problem of in-kernel fs
-drivers being a huge attack surface.  I just want a vacation from the
-sh*tstorm of bad ideas and threat models that I never agreed to support.
+I think we need release/acquire memory ordering on this atomic bit
+set now. i.e. to guarantee that if the worker sees the cpumask bit
+set (with acquire semantics), it will always see the latest item
+added to the list. i.e.
 
-v2: Add external logs to the list too, and document the var we set
+	/*
+	 * Ensure the list add is always seen by anyone that
+	 * find the cpumask bit set. This effectively gives
+	 * the cpumask bit set operation release ordering semantics.
+	 */
+	smp_mb__before_atomic();
+	if (!cpumask_test_cpu(cpu_nr, &mp->m_inodegc_cpumask))
+		cpumask_test_and_set_cpu(cpu_nr, &mp->m_inodegc_cpumask);
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
----
- configure.ac           |    1 +
- include/builddefs.in   |    2 ++
- m4/package_services.m4 |   42 ++++++++++++++++++++++++++++++++++++++++++
- scrub/Makefile         |   11 +++++++++++
- scrub/xfs.rules        |   13 +++++++++++++
- 5 files changed, 69 insertions(+)
- create mode 100644 scrub/xfs.rules
+Also, same comment about put_cpu() vs put_cpu_var() as the last patch.
 
-diff --git a/configure.ac b/configure.ac
-index 58f3b8e2e90..e447121a344 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -209,6 +209,7 @@ AC_HAVE_SG_IO
- AC_HAVE_HDIO_GETGEO
- AC_CONFIG_SYSTEMD_SYSTEM_UNIT_DIR
- AC_CONFIG_CROND_DIR
-+AC_CONFIG_UDEV_RULE_DIR
- 
- if test "$enable_blkid" = yes; then
- AC_HAVE_BLKID_TOPO
-diff --git a/include/builddefs.in b/include/builddefs.in
-index fb8e239cab2..3318e00316c 100644
---- a/include/builddefs.in
-+++ b/include/builddefs.in
-@@ -184,6 +184,8 @@ HAVE_SYSTEMD = @have_systemd@
- SYSTEMD_SYSTEM_UNIT_DIR = @systemd_system_unit_dir@
- HAVE_CROND = @have_crond@
- CROND_DIR = @crond_dir@
-+HAVE_UDEV = @have_udev@
-+UDEV_RULE_DIR = @udev_rule_dir@
- HAVE_LIBURCU_ATOMIC64 = @have_liburcu_atomic64@
- HAVE_MEMFD_CLOEXEC = @have_memfd_cloexec@
- HAVE_MEMFD_NOEXEC_SEAL = @have_memfd_noexec_seal@
-diff --git a/m4/package_services.m4 b/m4/package_services.m4
-index f2d888a099a..a683ddb93e0 100644
---- a/m4/package_services.m4
-+++ b/m4/package_services.m4
-@@ -75,3 +75,45 @@ AC_DEFUN([AC_CONFIG_CROND_DIR],
- 	AC_SUBST(have_crond)
- 	AC_SUBST(crond_dir)
- ])
-+
-+#
-+# Figure out where to put udev rule files
-+#
-+AC_DEFUN([AC_CONFIG_UDEV_RULE_DIR],
-+[
-+	AC_REQUIRE([PKG_PROG_PKG_CONFIG])
-+	AC_ARG_WITH([udev_rule_dir],
-+	  [AS_HELP_STRING([--with-udev-rule-dir@<:@=DIR@:>@],
-+		[Install udev rules into DIR.])],
-+	  [],
-+	  [with_udev_rule_dir=yes])
-+	AS_IF([test "x${with_udev_rule_dir}" != "xno"],
-+	  [
-+		AS_IF([test "x${with_udev_rule_dir}" = "xyes"],
-+		  [
-+			PKG_CHECK_MODULES([udev], [udev],
-+			  [
-+				with_udev_rule_dir="$($PKG_CONFIG --variable=udev_dir udev)/rules.d"
-+			  ], [
-+				with_udev_rule_dir=""
-+			  ])
-+			m4_pattern_allow([^PKG_(MAJOR|MINOR|BUILD|REVISION)$])
-+		  ])
-+		AC_MSG_CHECKING([for udev rule dir])
-+		udev_rule_dir="${with_udev_rule_dir}"
-+		AS_IF([test -n "${udev_rule_dir}"],
-+		  [
-+			AC_MSG_RESULT(${udev_rule_dir})
-+			have_udev="yes"
-+		  ],
-+		  [
-+			AC_MSG_RESULT(no)
-+			have_udev="no"
-+		  ])
-+	  ],
-+	  [
-+		have_udev="disabled"
-+	  ])
-+	AC_SUBST(have_udev)
-+	AC_SUBST(udev_rule_dir)
-+])
-diff --git a/scrub/Makefile b/scrub/Makefile
-index ab9c2d14832..2b9b8d977f6 100644
---- a/scrub/Makefile
-+++ b/scrub/Makefile
-@@ -41,6 +41,11 @@ endif
- 
- endif	# scrub_prereqs
- 
-+UDEV_RULES = xfs.rules
-+ifeq ($(HAVE_UDEV),yes)
-+	INSTALL_SCRUB += install-udev
-+endif
-+
- HFILES = \
- common.h \
- counter.h \
-@@ -180,6 +185,12 @@ install-scrub: default
- 	$(INSTALL) -m 755 $(XFS_SCRUB_ALL_PROG) $(PKG_SBIN_DIR)
- 	$(INSTALL) -m 755 -d $(PKG_STATE_DIR)
- 
-+install-udev: $(UDEV_RULES)
-+	$(INSTALL) -m 755 -d $(UDEV_RULE_DIR)
-+	for i in $(UDEV_RULES); do \
-+		$(INSTALL) -m 644 $$i $(UDEV_RULE_DIR)/64-$$i; \
-+	done
-+
- install-dev:
- 
- -include .dep
-diff --git a/scrub/xfs.rules b/scrub/xfs.rules
-new file mode 100644
-index 00000000000..c3f69b3ab90
---- /dev/null
-+++ b/scrub/xfs.rules
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+#
-+# Copyright (C) 2023 Oracle.  All rights reserved.
-+# Author: Darrick J. Wong <djwong@kernel.org>
-+#
-+# Don't let udisks automount XFS filesystems without even asking a user.
-+# This doesn't eliminate filesystems as an attack surface; it only prevents
-+# evil maid attacks when all sessions are locked.
-+#
-+# According to http://storaged.org/doc/udisks2-api/latest/udisks.8.html,
-+# supplying UDISKS_AUTO=0 here changes the HintAuto property of the block
-+# device abstraction to mean "do not automatically start" (e.g. mount).
-+SUBSYSTEM=="block", ENV{ID_FS_TYPE}=="xfs|xfs_external_log", ENV{UDISKS_AUTO}="0"
+Otherwise this seems sane.
+
+-Dave.
+
+-- 
+Dave Chinner
+david@fromorbit.com
