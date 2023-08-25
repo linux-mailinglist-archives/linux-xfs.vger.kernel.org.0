@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C03CF787EDA
-	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 06:05:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC839787EE5
+	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 06:08:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232404AbjHYEEl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 25 Aug 2023 00:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38478 "EHLO
+        id S232656AbjHYEH4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 25 Aug 2023 00:07:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231918AbjHYEEW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 25 Aug 2023 00:04:22 -0400
+        with ESMTP id S239734AbjHYEHe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 25 Aug 2023 00:07:34 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED671FCE
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 21:04:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC1131FEB
+        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 21:07:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0964662F8C
-        for <linux-xfs@vger.kernel.org>; Fri, 25 Aug 2023 04:04:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0FFC433C8;
-        Fri, 25 Aug 2023 04:04:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 50F5E60A08
+        for <linux-xfs@vger.kernel.org>; Fri, 25 Aug 2023 04:07:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0744C433C7;
+        Fri, 25 Aug 2023 04:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692936258;
-        bh=BX1faoj9uxdqeSH24mJzyZNYYfqJRpfdqGbIwTYaEHM=;
+        s=k20201202; t=1692936450;
+        bh=WCB+TdJzIiB8WmL4aASN5hj4LJMf14wvPMDhVqj6niQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=geyrhC9VVmMOhOIV21m6qGDpvqFIFuKWxl9m8N8lMAtcRInswqPnP/HpHZLDW1u1r
-         TsY5orPWWj1efaUXnTYzNqCmo+2/W28po3LozdvsreC12MhDGc9golBcDJJq1JcY+H
-         u4hPLV1RMbDbss3i2DCtl+0Brg/c5X4bLWO2Bfg/npsipuFWEbiE0H1DZ83BgY8pqT
-         J3YHH6FnUfwIjGiwK0m+aOvy9bmw0ZT8bLVLb20Ng864xlETwcgpz02QitC73oUEgL
-         YGBPd0tahwr5EHqHeYwiGfz/xkEScZn5jNVw7S9wV1VVKH+84Gz5ErCW3OxLVIdmtX
-         axVds+kEpvBfQ==
-Date:   Thu, 24 Aug 2023 21:04:17 -0700
+        b=d0qZz6cfz4iXwJ1rM/moGkDOD91TqydIEMt+soy5tlxu5m3aFXI54V/Q5YbmiArEu
+         ArjYFfcBSrI2Y/A6+VIm6TNzjtSfM1EPSfo5D0AwOS4zUm7Ieds+8VvB0JObbxvdrn
+         J8rEGK5YJgqlAQQZE0orFr+/9vojGSVRp7XLmj8i5UfVXRR9aOBhTd4cNkrQeG8OCn
+         /kdNb8D5VxwRkjWY3486Ro1Si4yY4XcnYXTxUr6lNFNAWkBG+jcYe6eEsX3HMbbsaS
+         dtR36XWGGS8DThUB7IdortJekj53IVC0HmwJMQyVwE4OOjsNVjxSvA9wk3+nQPJ/Ph
+         Vl/7LTE3a7DHg==
+Date:   Thu, 24 Aug 2023 21:07:30 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     chandan.babu@gmail.com, linux-xfs@vger.kernel.org,
-        sandeen@sandeen.net
-Subject: Re: [PATCH 2/3] xfs: don't allow log recovery when unknown rocompat
- bits are set
-Message-ID: <20230825040417.GF17912@frogsfrogsfrogs>
-References: <169291929524.220104.3844042018007786965.stgit@frogsfrogsfrogs>
- <169291930662.220104.8435560164784332097.stgit@frogsfrogsfrogs>
- <ZOf+7PqbeHj1Qs3y@dread.disaster.area>
+        ritesh.list@gmail.com, sandeen@sandeen.net
+Subject: Re: [PATCH 2/3] xfs: use per-mount cpumask to track nonempty percpu
+ inodegc lists
+Message-ID: <20230825040730.GG17912@frogsfrogsfrogs>
+References: <169291927442.219974.9654062191833512358.stgit@frogsfrogsfrogs>
+ <169291928586.219974.10915745531517859853.stgit@frogsfrogsfrogs>
+ <ZOfyASUg/A+GWE37@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZOf+7PqbeHj1Qs3y@dread.disaster.area>
+In-Reply-To: <ZOfyASUg/A+GWE37@dread.disaster.area>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -57,88 +57,157 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 11:07:56AM +1000, Dave Chinner wrote:
-> On Thu, Aug 24, 2023 at 04:21:46PM -0700, Darrick J. Wong wrote:
+On Fri, Aug 25, 2023 at 10:12:49AM +1000, Dave Chinner wrote:
+> On Thu, Aug 24, 2023 at 04:21:25PM -0700, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <djwong@kernel.org>
 > > 
-> > Don't allow log recovery to proceed on a readonly mount if the primary
-> > superblock advertises unknown rocompat bits.  We used to allow this, but
-> > due to a misunderstanding between Dave and Darrick back in 2016, we
-> > cannot do that anymore.  The XFS_SB_FEAT_RO_COMPAT_RMAPBT feature (4.8)
-> > protects RUI log items, and the REFLINK feature (4.9) protects CUI/BUI
-> > log items, which is why we can't allow older kernels to recover them.
+> > Directly track which CPUs have contributed to the inodegc percpu lists
+> > instead of trusting the cpu online mask.  This eliminates a theoretical
+> > problem where the inodegc flush functions might fail to flush a CPU's
+> > inodes if that CPU happened to be dying at exactly the same time.  Most
+> > likely nobody's noticed this because the CPU dead hook moves the percpu
+> > inodegc list to another CPU and schedules that worker immediately.  But
+> > it's quite possible that this is a subtle race leading to UAF if the
+> > inodegc flush were part of an unmount.
+> > 
+> > Further benefits: This reduces the overhead of the inodegc flush code
+> > slightly by allowing us to ignore CPUs that have empty lists.  Better
+> > yet, it reduces our dependence on the cpu online masks, which have been
+> > the cause of confusion and drama lately.
+> > 
+> > Fixes: ab23a7768739 ("xfs: per-cpu deferred inode inactivation queues")
+> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > ---
+> >  fs/xfs/xfs_icache.c |   60 +++++++++++----------------------------------------
+> >  fs/xfs/xfs_icache.h |    1 -
+> >  fs/xfs/xfs_mount.h  |    6 +++--
+> >  fs/xfs/xfs_super.c  |    4 +--
+> >  4 files changed, 18 insertions(+), 53 deletions(-)
+> > 
+> > 
+> > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> > index e541f5c0bc25..7fd876e94ecb 100644
+> > --- a/fs/xfs/xfs_icache.c
+> > +++ b/fs/xfs/xfs_icache.c
+> > @@ -443,7 +443,7 @@ xfs_inodegc_queue_all(
+> >  	int			cpu;
+> >  	bool			ret = false;
+> >  
+> > -	for_each_online_cpu(cpu) {
+> > +	for_each_cpu(cpu, &mp->m_inodegc_cpumask) {
+> >  		gc = per_cpu_ptr(mp->m_inodegc, cpu);
+> >  		if (!llist_empty(&gc->list)) {
+> >  			mod_delayed_work_on(cpu, mp->m_inodegc_wq, &gc->work, 0);
+> > @@ -463,7 +463,7 @@ xfs_inodegc_wait_all(
+> >  	int			error = 0;
+> >  
+> >  	flush_workqueue(mp->m_inodegc_wq);
+> > -	for_each_online_cpu(cpu) {
+> > +	for_each_cpu(cpu, &mp->m_inodegc_cpumask) {
+> >  		struct xfs_inodegc	*gc;
+> >  
+> >  		gc = per_cpu_ptr(mp->m_inodegc, cpu);
+> > @@ -1845,10 +1845,12 @@ xfs_inodegc_worker(
+> >  						struct xfs_inodegc, work);
+> >  	struct llist_node	*node = llist_del_all(&gc->list);
+> >  	struct xfs_inode	*ip, *n;
+> > +	struct xfs_mount	*mp = gc->mp;
+> >  	unsigned int		nofs_flag;
+> >  
+> >  	ASSERT(gc->cpu == smp_processor_id());
+> >  
+> > +	cpumask_test_and_clear_cpu(gc->cpu, &mp->m_inodegc_cpumask);
 > 
-> Ok, this would work for kernels that don't know waht the
-> REFLINK/RMAP features are, but upstream kernels will never fail to
-> recover these items because these are known ROCOMPAT bits.
-> 
-> The reason this problem exists is that we've accidentally
-> conflated RO_COMPAT with LOG_INCOMPAT. If RUI/CUI/BUI creation had
-> of set a log incompat bit whenever they are used (similar to the
-> new ATTRI stuff setting log incompat bits), then older kernels
-> would not have allow log recovery even if the reflink/rmap RO_COMPAT
-> features were set and they didn't understand them.
-> 
-> However, we can't do that on current kernels because then older
-> kernels that understand reflink/rmap just fine would see an unknown
-> log incompat bit and refuse to replay the log. So it comes back to
-> how we handle unknown ROCOMPAT flags on older kernels, not current
-> upstream kernels.
-> 
-> i.e. this patch needs to be backported to kernels that don't know
-> anything about RMAP/REFLINK to be useful to anyone. i.e. kernels
-> older than 4.9 that don't know what rmap/reflink are.  I suspect
-> that there are very few supported kernels that old that this might
-> get backported to.
-> 
-> Hence I wonder if this change is necessary at all.  If we can
-> guarantee that anything adding a new log item type to the journal
-> sets a LOG_INCOMPAT flag, then we don't need to change the RO_COMPAT
-> handling in current kernels to avoid log recovery at all - the
-> existing LOG_INCOMPAT flag handling will do that for us....
-> 
-> Yes, we can have a new feature that is RO_COMPAT + LOG_INCOMPAT; the
-> reflink and rmap features should have been defined this way as
-> that's where we went wrong. It's too late to set LOG_INCOMPAT for
-> them, and so the only way to fix old supported kernels is to prevent
-> log recovery when unknown RO_COMPAT bits are set.
-> 
-> Hence I don't see this solution as necessary for any kernel recent
-> enough to support rmap/reflink, nor do I see it necessary to protect
-> against making the same mistake about RO_COMPAT features in the
-> future. Everyone now knows that a log format change requires
-> LOG_INCOMPAT, not RO_COMPAT, so we should not be making that mistake
-> again.....
-> 
-> Thoughts?
+> Why does this need to be a test-and-clear operation? If it is set,
+> we clear it. If it is not set, clearing it is a no-op. Hence we
+> don't need to test whether the bit is set first. Also,
+> cpumask_clear_cpu() uses clear_bit(), which is an atomic operation,
+> so clearing the bit isn't going to race with any other updates.
 
-Hmm.  The most annoying thing about LOG_INCOMPAT features is that
-turning them on requires a synchronous write to the primary sb along
-with a transaction to log the sb that is immediately forced to disk.
-Every time the log cleans itself it clears the LOG_INCOMPAT features,
-and then we have to do that /again/.
+Aha, I didn't realize that clear_bit is atomic.  Oh, I guess
+atomic_bitops.txt mentions that an RMW operation is atomic if there's a
+separate '__' version.  Subtle. :(
 
-Parent pointers, since they require log intent items to guarantee the
-dirent and pptr update, cycle the logged xattr LOG_INCOMPAT feature on
-and off repeatedly.  A couple of weeks ago I decided to elide all that
-LOG_INCOMPAT cycling if parent pointers are enabled, and fstests runtime
-went from 4.9 hours back down to 4.4.  (Parent pointers, for whatever
-reason, got an INCOMPAT feature bit so it's ok).  I was a little
-surprised that xfs_log_clean ran that much, but there we go.
+> As it is, we probably want acquire semantics for the gc structure
+> here (see below), so I think this likely should be:
+> 
+> 	/*
+> 	 * Clear the cpu mask bit and ensure that we have seen the
+> 	 * latest update of the gc structure associated with this
+> 	 * CPU. This matches with the release semantics used when
+> 	 * setting the cpumask bit in xfs_inodegc_queue.
+> 	 */
+> 	cpumask_clear_cpu(gc->cpu, &mp->m_inodegc_cpumask);
+> 	smp_mb__after_atomic();
 
-A different way to solve the cycling problem could be to start a timer
-after the last caller drops l_incompat_xattrs and only clear the feature
-bit after 5 minutes of idleness or unmount, instead of the next time the
-log cleans itself.
+<nod>
 
-Alternately, we drop this patch and declare an INCOMPAT_RMAPREFLINKV2
-feature that wraps up all the other broken bits that we've found since
-2016 (overly large log reservations, incorrect units in xattr block
-reservation calculations, etc.)
+> >  	WRITE_ONCE(gc->items, 0);
+> >  
+> >  	if (!node)
+> > @@ -1862,7 +1864,7 @@ xfs_inodegc_worker(
+> >  	nofs_flag = memalloc_nofs_save();
+> >  
+> >  	ip = llist_entry(node, struct xfs_inode, i_gclist);
+> > -	trace_xfs_inodegc_worker(ip->i_mount, READ_ONCE(gc->shrinker_hits));
+> > +	trace_xfs_inodegc_worker(mp, READ_ONCE(gc->shrinker_hits));
+> >  
+> >  	WRITE_ONCE(gc->shrinker_hits, 0);
+> >  	llist_for_each_entry_safe(ip, n, node, i_gclist) {
+> > @@ -2057,6 +2059,7 @@ xfs_inodegc_queue(
+> >  	struct xfs_inodegc	*gc;
+> >  	int			items;
+> >  	unsigned int		shrinker_hits;
+> > +	unsigned int		cpu_nr;
+> >  	unsigned long		queue_delay = 1;
+> >  
+> >  	trace_xfs_inode_set_need_inactive(ip);
+> > @@ -2064,12 +2067,16 @@ xfs_inodegc_queue(
+> >  	ip->i_flags |= XFS_NEED_INACTIVE;
+> >  	spin_unlock(&ip->i_flags_lock);
+> >  
+> > -	gc = get_cpu_ptr(mp->m_inodegc);
+> > +	cpu_nr = get_cpu();
+> > +	gc = this_cpu_ptr(mp->m_inodegc);
+> >  	llist_add(&ip->i_gclist, &gc->list);
+> >  	items = READ_ONCE(gc->items);
+> >  	WRITE_ONCE(gc->items, items + 1);
+> >  	shrinker_hits = READ_ONCE(gc->shrinker_hits);
+> >  
+> > +	if (!cpumask_test_cpu(cpu_nr, &mp->m_inodegc_cpumask))
+> > +		cpumask_test_and_set_cpu(cpu_nr, &mp->m_inodegc_cpumask);
+> > +
+> >  	/*
+> >  	 * We queue the work while holding the current CPU so that the work
+> >  	 * is scheduled to run on this CPU.
+> 
+> I think we need release/acquire memory ordering on this atomic bit
+> set now. i.e. to guarantee that if the worker sees the cpumask bit
+> set (with acquire semantics), it will always see the latest item
+> added to the list. i.e.
+> 
+> 	/*
+> 	 * Ensure the list add is always seen by anyone that
+> 	 * find the cpumask bit set. This effectively gives
+> 	 * the cpumask bit set operation release ordering semantics.
+> 	 */
+> 	smp_mb__before_atomic();
+> 	if (!cpumask_test_cpu(cpu_nr, &mp->m_inodegc_cpumask))
+> 		cpumask_test_and_set_cpu(cpu_nr, &mp->m_inodegc_cpumask);
 
+<nod>
+
+> Also, same comment about put_cpu() vs put_cpu_var() as the last patch.
+
+<nod>
+
+> Otherwise this seems sane.
+
+Thanks!
 --D
 
 > -Dave.
+> 
 > -- 
 > Dave Chinner
 > david@fromorbit.com
