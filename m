@@ -2,100 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63AD8787EE4
-	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 06:08:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72D7A7881E8
+	for <lists+linux-xfs@lfdr.de>; Fri, 25 Aug 2023 10:17:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235153AbjHYEH5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 25 Aug 2023 00:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37984 "EHLO
+        id S229453AbjHYIQs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 25 Aug 2023 04:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240980AbjHYEH4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 25 Aug 2023 00:07:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65B51BCD
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Aug 2023 21:07:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7535663020
-        for <linux-xfs@vger.kernel.org>; Fri, 25 Aug 2023 04:07:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE689C433C8;
-        Fri, 25 Aug 2023 04:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692936473;
-        bh=GAwLR5EezNu5bfNPgC6SzQBgRQW2RnFEL3LDpGIIXKo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Fy9kaXdUio4b0J28dd+GU6qRZ76+c8E82FPo2gins777fk68DaVGX1eIOQBr0LGmM
-         kngAoX9qrHmD9rKZNJXGh02EzcBOS6P0oLLfiXxETIVWs/TrV7yaZmuZYHb39F6B4R
-         fZUMorC0vMXoeqkJ9ODNGosHUwoh9HpDC4c7Yfd2azhY0SWx+EDTpGqzGImTy3pSd+
-         xzyUzOnffyk6dvMPt9HLCvGPw9WrnJsWSW1hrlyfmCiWCtYkDfiH7anoqWO/6Vpxmj
-         8S2NlFzrm7mp9R7j/xcsahILQj5sqgZ1ZCStwXNLWJyjSrtVbQJlpLzREpxHbbGYQF
-         ANyWbqoUNZhYA==
-Date:   Thu, 24 Aug 2023 21:07:53 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     chandan.babu@gmail.com, tglx@linutronix.de, peterz@infradead.org,
-        ritesh.list@gmail.com, sandeen@sandeen.net,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] xfs: fix per-cpu CIL structure aggregation racing
- with dying cpus
-Message-ID: <20230825040753.GH17912@frogsfrogsfrogs>
-References: <169291927442.219974.9654062191833512358.stgit@frogsfrogsfrogs>
- <169291928016.219974.17814488726880866494.stgit@frogsfrogsfrogs>
- <ZOftYLqVCMSWxmk/@dread.disaster.area>
+        with ESMTP id S243856AbjHYIQp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 25 Aug 2023 04:16:45 -0400
+Received: from mail.bizcodes.pl (mail.bizcodes.pl [151.80.57.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30671FFE
+        for <linux-xfs@vger.kernel.org>; Fri, 25 Aug 2023 01:16:31 -0700 (PDT)
+Received: by mail.bizcodes.pl (Postfix, from userid 1002)
+        id E5512A4AB5; Fri, 25 Aug 2023 08:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizcodes.pl; s=mail;
+        t=1692951352; bh=5QPMt7jNntM5ZbstM20BWsHIeLbmRE8lVU4Iu89IleQ=;
+        h=Date:From:To:Subject:From;
+        b=dC/qmkNB+IDH9p1tULuKP84CYJmjMqtAOZ7fqtYhEQcuAnIz6KG3TTw+lpekIgBq7
+         w3W6xTdB/C8V7lvFhu9OJK0RjauaiysXaui5l1M+bKp3gJTrJBsXFur4mbm1F8k/8W
+         Xar2F9MuyR5lhdEAeDzgUw84hfxiNNh4/ejdGEr2YRKy6CiHjS27gigD9UccWlil+R
+         6fV0LpKzSvIpa0A6bT2++VDUWcg9X8hnX4Vu2LDLbjEy+uhs/5tGZ4i3VUDrINPp03
+         o5g/dBggXcv8RnQLCBtqixx2vX+idf9KlufH6L+7JPEZ20fbgF7PFewEuSaPnUlBJm
+         6kwNqN8yPuR3A==
+Received: by mail.bizcodes.pl for <linux-xfs@vger.kernel.org>; Fri, 25 Aug 2023 08:15:24 GMT
+Message-ID: <20230825064500-0.1.ba.1dfw7.0.qc83pg0gf9@bizcodes.pl>
+Date:   Fri, 25 Aug 2023 08:15:24 GMT
+From:   "Marcin Chruszcz" <marcin.chruszcz@bizcodes.pl>
+To:     <linux-xfs@vger.kernel.org>
+Subject: Prezentacja
+X-Mailer: mail.bizcodes.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZOftYLqVCMSWxmk/@dread.disaster.area>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 09:53:04AM +1000, Dave Chinner wrote:
-> On Thu, Aug 24, 2023 at 04:21:20PM -0700, Darrick J. Wong wrote:
-> > @@ -554,6 +560,7 @@ xlog_cil_insert_items(
-> >  	int			iovhdr_res = 0, split_res = 0, ctx_res = 0;
-> >  	int			space_used;
-> >  	int			order;
-> > +	unsigned int		cpu_nr;
-> >  	struct xlog_cil_pcp	*cilpcp;
-> >  
-> >  	ASSERT(tp);
-> > @@ -577,7 +584,12 @@ xlog_cil_insert_items(
-> >  	 * can't be scheduled away between split sample/update operations that
-> >  	 * are done without outside locking to serialise them.
-> >  	 */
-> > -	cilpcp = get_cpu_ptr(cil->xc_pcp);
-> > +	cpu_nr = get_cpu();
-> > +	cilpcp = this_cpu_ptr(cil->xc_pcp);
-> > +
-> > +	/* Tell the future push that there was work added by this CPU. */
-> > +	if (!cpumask_test_cpu(cpu_nr, &ctx->cil_pcpmask))
-> > +		cpumask_test_and_set_cpu(cpu_nr, &ctx->cil_pcpmask);
-> >  
-> >  	/*
-> >  	 * We need to take the CIL checkpoint unit reservation on the first
-> 
-> This code also needs the put_cpu_ptr(cil->xc_pcp) converted to
-> put_cpu(), even though they end up doing exactly the same thing.
-> 
-> Other than that, it looks good. I'll pull this into my test trees
-> and give it a run...
+Dzie=C5=84 dobry!
 
-Ok, I'll look forward to seeing what happens. :)
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
+=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
+zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
 
---D
+Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
+=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
+dostaw.
 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
+nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
+ co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+
+Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
+=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
+zania w Pa=C5=84stwa firmie.
+
+
+Pozdrawiam
+Marcin Chruszcz
