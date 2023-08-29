@@ -2,45 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D6B578CFCC
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 01:04:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 567FC78CFD1
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 01:05:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240292AbjH2XEE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Aug 2023 19:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53836 "EHLO
+        id S240668AbjH2XEj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Aug 2023 19:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240656AbjH2XDx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 19:03:53 -0400
+        with ESMTP id S240454AbjH2XEO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 19:04:14 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E62E9;
-        Tue, 29 Aug 2023 16:03:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7446BE9
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Aug 2023 16:04:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A4ED611BD;
-        Tue, 29 Aug 2023 23:03:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CC0C433C8;
-        Tue, 29 Aug 2023 23:03:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 065296395F
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Aug 2023 23:04:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B0AC433C8;
+        Tue, 29 Aug 2023 23:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693350229;
-        bh=VSiVaoQlcSEkq1iN9dd+YSoJfRX29w7hF3iGCShgk7E=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=sloXyKE7Vutb2trDLDL9RhZ24IhLJoLP9dwl/InfNXopUGkUSpXTQeCw2u5ksWTbC
-         MgQxs6tGbPbsrxS0w9vM0FRqP3bjdmGcaWiDfzgv4u7nA7MKzxBaHFdIy2G8kgDfw/
-         FkAA0xBdmktKSN2gtq2afFOE/aQ22cRp0tB+0IONFtJR4CV79/jkBb/HXKkinexYB3
-         CWyOP134wbKmTD4FejtcsIELhS/Asrvu4o43znDhwWVKsNtFfyW9YIOUmurHwilh81
-         wz2w+0O/7VIpEexVfYVPO6+hBxgoxb/4FbygJO/AzX+c3LDIffmb9nLrn1/QAnzZ0G
-         Jf09ok+julkvQ==
-Subject: [PATCH 3/3] xfs/559: adapt to kernels that use large folios for
- writes
+        s=k20201202; t=1693350251;
+        bh=jyD+0FGZ5G0zw0ed6mpPMui3D5tP3jqfxgZYiLroWgg=;
+        h=Subject:From:To:Cc:Date:From;
+        b=G+qa0nc9LTncQP4bGyaKKGdTUxt9oVwCrNgngRywXzHUcZJqWC1hBuLxw9WXhZ0FG
+         knJIJqLkwaCOUvUyWg1Cko6YTcGfK8xvGiJ7AAdBuamfDvREvZsw87YtlcN2L/QEm9
+         wpoO8LO7Awaj/MG8p4enF2fSLeLamz3vfnK299v0s3d6YKbGafK4Q6ClWyimIVmNjl
+         TP0ym5byOSJ1FKTqX6vMZnausOGcHn2OiaoPT8tT1s/8u50+gRff0hotyT5Q0FwY5t
+         xlVrlavyzuS8f4m4R2keIuYLL1X6xJbw8UBiY8rYx3qpOHOpoq8dbzgr9Ln6ThBHw9
+         SX1AjYZwNy+Bw==
+Subject: [PATCHSET v2 0/1] xfs: fix fsmap cursor handling
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 29 Aug 2023 16:03:49 -0700
-Message-ID: <169335022920.3517899.399149462227894457.stgit@frogsfrogsfrogs>
-In-Reply-To: <169335021210.3517899.17576674846994173943.stgit@frogsfrogsfrogs>
-References: <169335021210.3517899.17576674846994173943.stgit@frogsfrogsfrogs>
+To:     chandan.babu@gmail.com, djwong@kernel.org
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        david@fromorbit.com
+Date:   Tue, 29 Aug 2023 16:04:10 -0700
+Message-ID: <169335025080.3518128.2053884391855690989.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,60 +54,26 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-The write invalidation code in iomap can only be triggered for writes
-that span multiple folios.  If the kernel reports a huge page size,
-scale up the write size.
+This patchset addresses an integer overflow bug that Dave Chinner found
+in how fsmap handles figuring out where in the record set we left off
+when userspace calls back after the first call filled up all the
+designated record space.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+v2: add RVB tags
+
+If you're going to start using this code, I strongly recommend pulling
+from my git trees, which are linked below.
+
+This has been lightly tested with fstests.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-fsmap-6.6
 ---
- tests/xfs/559 |   29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
-
-
-diff --git a/tests/xfs/559 b/tests/xfs/559
-index cffe5045a5..64fc16ebfd 100755
---- a/tests/xfs/559
-+++ b/tests/xfs/559
-@@ -42,11 +42,38 @@ $XFS_IO_PROG -c 'chattr -x' $SCRATCH_MNT &> $seqres.full
- _require_pagecache_access $SCRATCH_MNT
- 
- blocks=10
--blksz=$(_get_page_size)
-+
-+# If this kernel advertises huge page support, it's possible that it could be
-+# using large folios for the page cache writes.  It is necessary to write
-+# multiple folios (large or regular) to triggering the write invalidation,
-+# so we'll scale the test write size accordingly.
-+blksz=$(_get_hugepagesize)
-+base_pagesize=$(_get_page_size)
-+test -z "$blksz" && blksz=${base_pagesize}
- filesz=$((blocks * blksz))
- dirty_offset=$(( filesz - 1 ))
- write_len=$(( ( (blocks - 1) * blksz) + 1 ))
- 
-+# The write invalidation that we're testing below can only occur as part of
-+# a single large write.  The kernel limits writes to one base page less than
-+# 2GiB to prevent lengthy IOs and integer overflows.  If the block size is so
-+# huge (e.g. 512M huge pages on arm64) that we'd exceed that, reduce the number
-+# of blocks to get us under the limit.
-+max_writesize=$((2147483647 - base_pagesize))
-+if ((write_len > max_writesize)); then
-+	blocks=$(( ( (max_writesize - 1) / blksz) + 1))
-+	# We need at least three blocks in the file to test invalidation
-+	# between writes to multiple folios.  If we drop below that,
-+	# reconfigure ourselves with base pages and hope for the best.
-+	if ((blocks < 3)); then
-+		blksz=$base_pagesize
-+		blocks=10
-+	fi
-+	filesz=$((blocks * blksz))
-+	dirty_offset=$(( filesz - 1 ))
-+	write_len=$(( ( (blocks - 1) * blksz) + 1 ))
-+fi
-+
- # Create a large file with a large unwritten range.
- $XFS_IO_PROG -f -c "falloc 0 $filesz" $SCRATCH_MNT/file >> $seqres.full
- 
+ fs/xfs/xfs_fsmap.c |   25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
