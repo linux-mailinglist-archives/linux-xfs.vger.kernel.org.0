@@ -2,92 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F5E078CFFE
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 01:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB82D78CFFD
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 01:10:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239246AbjH2XJ7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S239389AbjH2XJ7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 29 Aug 2023 19:09:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239389AbjH2XJv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 19:09:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7904E9;
-        Tue, 29 Aug 2023 16:09:49 -0700 (PDT)
+        with ESMTP id S239625AbjH2XJ5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 19:09:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55AACDB;
+        Tue, 29 Aug 2023 16:09:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 45B5A61208;
-        Tue, 29 Aug 2023 23:09:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EC5DC433C7;
-        Tue, 29 Aug 2023 23:09:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DFAEB61014;
+        Tue, 29 Aug 2023 23:09:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4872EC433C8;
+        Tue, 29 Aug 2023 23:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693350588;
-        bh=zbh/KIpXaqSHN3iY1UDPombtM5lSUPOKKyjLLqYfAcU=;
-        h=Subject:From:To:Cc:Date:From;
-        b=l7YEYG9ghVKGUmyqzmZwGVEg9MN8BGGywB6hB8m6CXyYq/2fr1PPVaf/pJn7kxBFc
-         IFjEPyf8uFF/Xg5VMaQs0JqruMeuHGEMxJs2IX4ET7VPWMmIQqr6Z/tUf0toRw4+dP
-         08cU24w/CKPoUIRc0KxPTC+U7Q7mrxFALVWkraUkU6wAbMtA0sH8FzkB0djVwwP6+8
-         y4NykfVImf22OFUK8GKP+tGD6luk4lGkEbG2w4O3ZHV3dYTylNobnhdzWmaLni38UF
-         SVp1yp0U7FKy4of6kqMEvqk4P7OcXR9x9tdpR1v+NH2D5aC5IofECgFBIieZyGop8p
-         4mQ9RJ3mQmXYQ==
-Subject: [PATCHSET v2 0/2] fstests: fix ro mounting with unknown rocompat
- features
+        s=k20201202; t=1693350594;
+        bh=AfNZ/oSuvjD3CbD6WRm7awj8lyEv3FwW6lXbQSp0qjE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=G83Jheld00+SSjXDV0qVEIRxxuK0V56JNO9T9aa8vkXYcEt0/5O+daH58WQzld8M+
+         6hLZ5PwBFRWy2/MNNviQPq821IAAZyE27TZTxGgkWYHHCoGTYGMfXbjFIbA1tpo94F
+         kdwHWiiEek4sUPhVZ9ffbJHH8ZowHqFdUN9CYdM/upoBz6kr+eBQOPAiigN1wS9RzX
+         D5jjTvf79fNnkNkh/yZOfxTey3po0lH4A/4GQzO4UTrmoH2aQsGPoj0IRu1OW5mgs0
+         yhM1GO8/2hMpwiWjiXZxfoEbAjZzuSLXCrX04EwU4Ey8OVRDZurRm04YN7R031X6IM
+         fRCqVx5ACmrzg==
+Subject: [PATCH 1/2] xfs/270: actually test file readability
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org, guan@eryu.me, david@fromorbit.com,
-        sandeen@sandeen.net
-Date:   Tue, 29 Aug 2023 16:09:48 -0700
-Message-ID: <169335058807.3526409.15604604578540143202.stgit@frogsfrogsfrogs>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me,
+        david@fromorbit.com, sandeen@sandeen.net
+Date:   Tue, 29 Aug 2023 16:09:53 -0700
+Message-ID: <169335059383.3526409.15894917295629170268.stgit@frogsfrogsfrogs>
+In-Reply-To: <169335058807.3526409.15604604578540143202.stgit@frogsfrogsfrogs>
+References: <169335058807.3526409.15604604578540143202.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Dave pointed out some failures in xfs/270 when he upgraded Debian
-unstable and util-linux started using the new mount apis.  Upon further
-inquiry I noticed that XFS is quite a hot mess when it encounters a
-filesystem with unrecognized rocompat bits set in the superblock.
+Make sure we can actually read files off the ro mounted filesystem that
+has an unknown rocompat feature set.
 
-Whereas we used to allow readonly mounts under these conditions, a
-change to the sb write verifier several years ago resulted in the
-filesystem going down immediately because the post-mount log cleaning
-writes the superblock, which trips the sb write verifier on the
-unrecognized rocompat bit.  I made the observation that the ROCOMPAT
-features RMAPBT and REFLINK both protect new log intent item types,
-which means that we actually cannot support recovering the log if we
-don't recognize all the rocompat bits.
-
-Therefore -- fix inode inactivation to work when we're recovering the
-log, disallow recovery when there's unrecognized rocompat bits, and
-don't clean the log if doing so would trip the rocompat checks.
-
-v2: change direction of series to allow log recovery on ro mounts
-
-If you're going to start using this code, I strongly recommend pulling
-from my git trees, which are linked below.
-
-This has been running on the djcloud for months with no problems.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=fix-ro-mounts
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/270     |   80 ++++++++++++++++++++++++++++++++++++++---------------
- tests/xfs/270.out |    2 +
- 2 files changed, 59 insertions(+), 23 deletions(-)
+ tests/xfs/270 |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+
+diff --git a/tests/xfs/270 b/tests/xfs/270
+index 7447ce87be..511dfe9fcd 100755
+--- a/tests/xfs/270
++++ b/tests/xfs/270
+@@ -23,6 +23,9 @@ _require_scratch_nocheck
+ _require_scratch_xfs_crc
+ 
+ _scratch_mkfs_xfs >>$seqres.full 2>&1
++_scratch_mount
++echo moo > $SCRATCH_MNT/testfile
++_scratch_unmount
+ 
+ # set the highest bit of features_ro_compat, use it as an unknown
+ # feature bit. If one day this bit become known feature, please
+@@ -68,6 +71,7 @@ if [ $? -ne 0 ]; then
+ 	_fail "ro mount test failed"
+ else
+ 	# no hang/panic is fine
++	cat $SCRATCH_MNT/testfile > /dev/null
+ 	$FSSTRESS_PROG -d $SCRATCH_MNT -p 4 -n 400 >>$seqres.full 2>&1
+ fi
+ 
 
