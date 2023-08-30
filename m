@@ -2,215 +2,153 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E45A78D17E
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 03:03:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2D6078D115
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 02:24:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238444AbjH3BCa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Aug 2023 21:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
+        id S241420AbjH3AXm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Aug 2023 20:23:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236947AbjH3BCI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 21:02:08 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4255CCA
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Aug 2023 18:01:58 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-68bee12e842so3494026b3a.3
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Aug 2023 18:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1693357318; x=1693962118; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ATWj4Im28e+CMik8K692QDJLfQFAhvpejHZZFdLpWBA=;
-        b=Ef50KcVZB+mj1U8U2f7ZVFn2K2QdVTsaexgDZ8gTl4tOvSHL9rMRoigoq2WCmoBCki
-         X8DhdJzFdPWD6Flzd6eAj484Z1nAMnXGlPiDiK59BUZl0OQPe7FKmrjHf8QS+WcLY3n2
-         Mi+Ph5J/yGbpUU1pNzou0FN/zDyYFLGmbGhJVHnelJdFA4IRtcHLi08KktKiMXMIhvg3
-         Ab/2ke/JYbzbu2TLHBmE1weZZfXWOm+tcYN3AjX5v5BUMGbtcJ3SEPe7yyQ2g1jSrzjN
-         CGirslsy9FnSq5YQTkxXZGGEa0H/STeXb78eCdiV5dlTJ/BP6rC/6Qwdc7Gsstr2lfOB
-         t16w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693357318; x=1693962118;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ATWj4Im28e+CMik8K692QDJLfQFAhvpejHZZFdLpWBA=;
-        b=XcqRa3UqgrlrGXzJA9IpijbqMIgl4VjofTEjo2iuNbyfpmjwG2BvgZnUSvJQm53Oe5
-         plmpTRs2TWuEddF6boZ9dC5/t13CO0rnwkpfv7cxz/wpfziQt+ViZfNO5A5tEMsp/Sq5
-         TT/hd9pph0YRGeFuHJr0Vzd5lw65Hf+THEhB3z+Z9Pz2TYBGPHUeHzT0dWUadtqmrgIX
-         1NQ9JCfqLLj4dGL6rBHAhvyUOpfwPkSu9IxcIkBZlB2xf/VsdqeL25tZfAlvuTYR3A/3
-         nbtXckc4h9X+A30NEJxZfL11uwsGRvS2SXYjnRhzazy5WDwYXsWwBXIqiwm7PB9Yeqda
-         1+yQ==
-X-Gm-Message-State: AOJu0Yx0htQdUptAe3sFBIPrFUXiHlNq70GDXgcdQ9xVL0cA8m4h0M9O
-        yQD2duEWAVCVCLrBI3ZbCQmdEg==
-X-Google-Smtp-Source: AGHT+IFKyM9BwiCtQXRbgVs+rPLG3+7fHb/mC4/fJ6wEjmNJlYvOqWWVQTZFBpzubVnJLFYWVXGTXQ==
-X-Received: by 2002:a05:6a20:3d93:b0:134:2b44:decf with SMTP id s19-20020a056a203d9300b001342b44decfmr918340pzi.21.1693357318184;
-        Tue, 29 Aug 2023 18:01:58 -0700 (PDT)
-Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
-        by smtp.gmail.com with ESMTPSA id b16-20020a170902d51000b00198d7b52eefsm9964942plg.257.2023.08.29.18.01.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Aug 2023 18:01:57 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qb8tl-008I9d-04;
-        Wed, 30 Aug 2023 10:17:29 +1000
-Date:   Wed, 30 Aug 2023 10:17:29 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     chandan.babu@gmail.com, Wengang Wang <wen.gang.wang@oracle.com>,
-        Srikanth C S <srikanth.c.s@oracle.com>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] xfs: reserve less log space when recovering log
- intent items
-Message-ID: <ZO6KmUd9LJPwb0GD@dread.disaster.area>
-References: <169335065467.3528394.5454470321177848433.stgit@frogsfrogsfrogs>
- <169335066034.3528394.15168907062088535034.stgit@frogsfrogsfrogs>
+        with ESMTP id S239507AbjH3AX0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 20:23:26 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496C7EA;
+        Tue, 29 Aug 2023 17:23:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zZxZUyqerb7julFXQ03Jti/01WDk420m8vSi4C3S7Zg=; b=C+B8K/E0jwmlP3x0ynEg/wW0oT
+        8W+g7CEhf7EdCVJx+aCWMaLZ8rDm21ORLwQNEzBBlnKI8nSnQEIfBUqrKOBnjUNllXW768GzG3qB7
+        +cpJ/jhntfWbFQ/3QFzCMkG1sg2st+PpzLnPrKtYydQR6EDaMR8Bc+aEbQhcPGU53TF4NXxBCLwrJ
+        Y+Cse/dfbORxx77QJVsCQ4BCKysmxvXtFDzxb882a/rtaocFDwQw24nZDPRB3CytP/MOuWTM+mTfa
+        +8MJ/m4rwupUEXN1Mh5oBPLgZehFHGmgz56mU9Gh95pn90zVDOFdIxrpzwqUqcKtUFnurzTC7a4a3
+        phr8qPBQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qb8vV-001xXV-0L;
+        Wed, 30 Aug 2023 00:19:17 +0000
+Date:   Wed, 30 Aug 2023 01:19:17 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     jk@ozlabs.org, arnd@arndb.de, mpe@ellerman.id.au,
+        npiggin@gmail.com, christophe.leroy@csgroup.eu, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
+        maco@android.com, joel@joelfernandes.org, brauner@kernel.org,
+        cmllamas@google.com, surenb@google.com,
+        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
+        leon@kernel.org, bwarrum@linux.ibm.com, rituagar@linux.ibm.com,
+        ericvh@kernel.org, lucho@ionkov.net, asmadeus@codewreck.org,
+        linux_oss@crudebyte.com, dsterba@suse.com, dhowells@redhat.com,
+        marc.dionne@auristor.com, raven@themaw.net, luisbg@kernel.org,
+        salah.triki@gmail.com, aivazian.tigran@gmail.com,
+        ebiederm@xmission.com, keescook@chromium.org, clm@fb.com,
+        josef@toxicpanda.com, xiubli@redhat.com, idryomov@gmail.com,
+        jaharkes@cs.cmu.edu, coda@cs.cmu.edu, jlbec@evilplan.org,
+        hch@lst.de, nico@fluxnic.net, rafael@kernel.org, code@tyhicks.com,
+        ardb@kernel.org, xiang@kernel.org, chao@kernel.org,
+        huyue2@coolpad.com, jefflexu@linux.alibaba.com,
+        linkinjeon@kernel.org, sj1557.seo@samsung.com, jack@suse.com,
+        tytso@mit.edu, adilger.kernel@dilger.ca, jaegeuk@kernel.org,
+        hirofumi@mail.parknet.co.jp, miklos@szeredi.hu,
+        rpeterso@redhat.com, agruenba@redhat.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        mikulas@artax.karlin.mff.cuni.cz, mike.kravetz@oracle.com,
+        muchun.song@linux.dev, dwmw2@infradead.org, shaggy@kernel.org,
+        tj@kernel.org, trond.myklebust@hammerspace.com, anna@kernel.org,
+        chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
+        Dai.Ngo@oracle.com, tom@talpey.com, konishi.ryusuke@gmail.com,
+        anton@tuxera.com, almaz.alexandrovich@paragon-software.com,
+        mark@fasheh.com, joseph.qi@linux.alibaba.com, me@bobcopeland.com,
+        hubcap@omnibond.com, martin@omnibond.com, amir73il@gmail.com,
+        mcgrof@kernel.org, yzaikin@google.com, tony.luck@intel.com,
+        gpiccoli@igalia.com, al@alarsen.net, sfrench@samba.org,
+        pc@manguebit.com, lsahlber@redhat.com, sprasad@microsoft.com,
+        senozhatsky@chromium.org, phillip@squashfs.org.uk,
+        rostedt@goodmis.org, mhiramat@kernel.org, dushistov@mail.ru,
+        hdegoede@redhat.com, djwong@kernel.org, dlemoal@kernel.org,
+        naohiro.aota@wdc.com, jth@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
+        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, hughd@google.com, akpm@linux-foundation.org,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, john.johansen@canonical.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        jgross@suse.com, stern@rowland.harvard.edu, lrh2000@pku.edu.cn,
+        sebastian.reichel@collabora.com, wsa+renesas@sang-engineering.com,
+        quic_ugoswami@quicinc.com, quic_linyyuan@quicinc.com,
+        john@keeping.me.uk, error27@gmail.com, quic_uaggarwa@quicinc.com,
+        hayama@lineo.co.jp, jomajm@gmail.com, axboe@kernel.dk,
+        dhavale@google.com, dchinner@redhat.com, hannes@cmpxchg.org,
+        zhangpeng362@huawei.com, slava@dubeyko.com, gargaditya08@live.com,
+        penguin-kernel@i-love.sakura.ne.jp, yifeliu@cs.stonybrook.edu,
+        madkar@cs.stonybrook.edu, ezk@cs.stonybrook.edu,
+        yuzhe@nfschina.com, willy@infradead.org, okanatov@gmail.com,
+        jeffxu@chromium.org, linux@treblig.org, mirimmad17@gmail.com,
+        yijiangshan@kylinos.cn, yang.yang29@zte.com.cn,
+        xu.xin16@zte.com.cn, chengzhihao1@huawei.com, shr@devkernel.io,
+        Liam.Howlett@oracle.com, adobriyan@gmail.com,
+        chi.minghao@zte.com.cn, roberto.sassu@huawei.com,
+        linuszeng@tencent.com, bvanassche@acm.org, zohar@linux.ibm.com,
+        yi.zhang@huawei.com, trix@redhat.com, fmdefrancesco@gmail.com,
+        ebiggers@google.com, princekumarmaurya06@gmail.com,
+        chenzhongjin@huawei.com, riel@surriel.com,
+        shaozhengchao@huawei.com, jingyuwang_vip@163.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
+        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+        autofs@vger.kernel.org, linux-mm@kvack.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, linux-um@lists.infradead.org,
+        linux-mtd@lists.infradead.org,
+        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org,
+        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Subject: Re: [PATCH v2 08/92] fs: new helper: simple_rename_timestamp
+Message-ID: <20230830001917.GC461907@ZenIV>
+References: <20230705185812.579118-1-jlayton@kernel.org>
+ <20230705185812.579118-3-jlayton@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <169335066034.3528394.15168907062088535034.stgit@frogsfrogsfrogs>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230705185812.579118-3-jlayton@kernel.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 29, 2023 at 04:11:00PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Wengang Wang reports that a customer's system was running a number of
-> truncate operations on a filesystem with a very small log.  Contention
-> on the reserve heads lead to other threads stalling on smaller updates
-> (e.g.  mtime updates) long enough to result in the node being rebooted
-> on account of the lack of responsivenes.  The node failed to recover
-> because log recovery of an EFI became stuck waiting for a grant of
-> reserve space.  From Wengang's report:
-> 
-> "For the file deletion, log bytes are reserved basing on
-> xfs_mount->tr_itruncate which is:
-> 
->     tr_logres = 175488,
->     tr_logcount = 2,
->     tr_logflags = XFS_TRANS_PERM_LOG_RES,
-> 
-> "You see it's a permanent log reservation with two log operations (two
-> transactions in rolling mode).  After calculation (xlog_calc_unit_res()
-> adds space for various log headers), the final log space needed per
-> transaction changes from  175488 to 180208 bytes.  So the total log
-> space needed is 360416 bytes (180208 * 2).  [That quantity] of log space
-> (360416 bytes) needs to be reserved for both run time inode removing
-> (xfs_inactive_truncate()) and EFI recover (xfs_efi_item_recover())."
-> 
-> In other words, runtime pre-reserves 360K of space in anticipation of
-> running a chain of two transactions in which each transaction gets a
-> 180K reservation.
-> 
-> Now that we've allocated the transaction, we delete the bmap mapping,
-> log an EFI to free the space, and roll the transaction as part of
-> finishing the deferops chain.  Rolling creates a new xfs_trans which
-> shares its ticket with the old transaction.  Next, xfs_trans_roll calls
-> __xfs_trans_commit with regrant == true, which calls xlog_cil_commit
-> with the same regrant parameter.
-> 
-> xlog_cil_commit calls xfs_log_ticket_regrant, which decrements t_cnt and
-> subtracts t_curr_res from the reservation and write heads.
-> 
-> If the filesystem is fresh and the first transaction only used (say)
-> 20K, then t_curr_res will be 160K, and we give that much reservation
-> back to the reservation head.  Or if the file is really fragmented and
-> the first transaction actually uses 170K, then t_curr_res will be 10K,
-> and that's what we give back to the reservation.
-> 
-> Having done that, we're now headed into the second transaction with an
-> EFI and 180K of reservation.  Other threads apparently consumed all the
-> reservation for smaller transactions, such as timestamp updates.
-> 
-> Now let's say the first transaction gets written to disk and we crash
-> without ever completing the second transaction.  Now we remount the fs,
-> log recovery finds the unfinished EFI, and calls xfs_efi_recover to
-> finish the EFI.  However, xfs_efi_recover starts a new tr_itruncate
-> tranasction, which asks for 360K log reservation.  This is a lot more
-> than the 180K that we had reserved at the time of the crash.  If the
-> first EFI to be recovered is also pinning the tail of the log, we will
-> be unable to free any space in the log, and recovery livelocks.
-> 
-> Wengang confirmed this:
-> 
-> "Now we have the second transaction which has 180208 log bytes reserved
-> too. The second transaction is supposed to process intents including
-> extent freeing.  With my hacking patch, I blocked the extent freeing 5
-> hours. So in that 5 hours, 180208 (NOT 360416) log bytes are reserved.
-> 
-> "With my test case, other transactions (update timestamps) then happen.
-> As my hacking patch pins the journal tail, those timestamp-updating
-> transactions finally use up (almost) all the left available log space
-> (in memory in on disk).  And finally the on disk (and in memory)
-> available log space goes down near to 180208 bytes.  Those 180208 bytes
-> are reserved by [the] second (extent-free) transaction [in the chain]."
-> 
-> Wengang and I noticed that EFI recovery starts a transaction, completes
-> one step of the chain, and commits the transaction without completing
-> any other steps of the chain.  Those subsequent steps are completed by
-> xlog_finish_defer_ops, which allocates yet another transaction to
-> finish the rest of the chain.  That transaction gets the same tr_logres
-> as the head transaction, but with tr_logcount = 1 to force regranting
-> with every roll to avoid livelocks.
-> 
-> In other words, we already figured this out in commit 929b92f64048d
-> ("xfs: xfs_defer_capture should absorb remaining transaction
-> reservation"), but should have applied that logic to each intent item's
-> recovery function.  For Wengang's case, the xfs_trans_alloc call in the
-> EFI recovery function should only be asking for a single transaction's
-> worth of log reservation -- 180K, not 360K.
-> 
-> Quoting Wengang again:
-> 
-> "With log recovery, during EFI recovery, we use tr_itruncate again to
-> reserve two transactions that needs 360416 log bytes.  Reserving 360416
-> bytes fails [stalls] because we now only have about 180208 available.
-> 
-> "Actually during the EFI recover, we only need one transaction to free
-> the extents just like the 2nd transaction at RUNTIME.  So it only needs
-> to reserve 180208 rather than 360416 bytes.  We have (a bit) more than
-> 180208 available log bytes on disk, so [if we decrease the reservation
-> to 180K] the reservation goes and the recovery [finishes].  That is to
-> say: we can fix the log recover part to fix the issue. We can introduce
-> a new xfs_trans_res xfs_mount->tr_ext_free
-> 
-> {
->   tr_logres = 175488,
->   tr_logcount = 0,
->   tr_logflags = 0,
-> }
-> 
-> "and use tr_ext_free instead of tr_itruncate in EFI recover."
-> 
-> However, I don't think it quite makes sense to create an entirely new
-> transaction reservation type to handle single-stepping during log
-> recovery.  Instead, we should copy the transaction reservation
-> information in the xfs_mount, change tr_logcount to 1, and pass that
-> into xfs_trans_alloc.  We know this won't risk changing the min log size
-> computation since we always ask for a fraction of the reservation for
-> all known transaction types.
-> 
-> This looks like it's been lurking in the codebase since commit
-> 3d3c8b5222b92, which changed the xfs_trans_reserve call in
-> xlog_recover_process_efi to use the tr_logcount in tr_itruncate.
-> That changed the EFI recovery transaction from making a
-> non-XFS_TRANS_PERM_LOG_RES request for one transaction's worth of log
-> space to a XFS_TRANS_PERM_LOG_RES request for two transactions worth.
-> 
-> Fixes: 3d3c8b5222b92 ("xfs: refactor xfs_trans_reserve() interface")
-> Complements: 929b92f64048d ("xfs: xfs_defer_capture should absorb remaining transaction reservation")
-> Suggested-by: Wengang Wang <wen.gang.wang@oracle.com>
-> Cc: Srikanth C S <srikanth.c.s@oracle.com>
-> [djwong: apply the same transformation to all log intent recovery]
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+On Wed, Jul 05, 2023 at 02:58:11PM -0400, Jeff Layton wrote:
 
-Looks fine.
+> + * POSIX mandates that the old and new parent directories have their ctime and
+> + * mtime updated, and that inodes of @old_dentry and @new_dentry (if any), have
+> + * their ctime updated.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
--- 
-Dave Chinner
-david@fromorbit.com
+APPLICATION USAGE
+Some implementations mark for update the last file status change timestamp
+of renamed files and some do not. Applications which make use of the
+last file status change timestamp may behave differently with respect
+to renamed files unless they are designed to allow for either behavior.
+
+So for children POSIX permits rather than mandates.  Doesn't really matter;
+Linux behaviour had been to touch ctime on children since way back, if
+not since the very beginning.
