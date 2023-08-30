@@ -2,50 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7497078DB3D
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 20:44:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68B6678DB32
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 20:44:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231694AbjH3Sit (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Aug 2023 14:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59140 "EHLO
+        id S237231AbjH3Sin (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Aug 2023 14:38:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245532AbjH3P1E (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Aug 2023 11:27:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA5783
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Aug 2023 08:27:00 -0700 (PDT)
+        with ESMTP id S245556AbjH3PeF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Aug 2023 11:34:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE86122;
+        Wed, 30 Aug 2023 08:34:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E92461341
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Aug 2023 15:27:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92FEFC433C8;
-        Wed, 30 Aug 2023 15:26:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AE9CF606DC;
+        Wed, 30 Aug 2023 15:34:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1606DC433C8;
+        Wed, 30 Aug 2023 15:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693409219;
-        bh=+54gYsbnpICHreXRRoYyz0j3V/KDsUGIEn4k0hnNwxA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lkBBqDI5cUGpTRr8zkKwrcSqmANWrCO4grG1cWvWrDcamhlCIl5Tj0vBmU+leaadU
-         eWToVJyZLWZ1L2c0Cn1oKOB1D0R/FSRy9gZ7FI9mT+lfiuYtU0SMHJoj+RG1ZSAllZ
-         lBHUUBfZmlH866ByIHnGnvSgB6+XnMZP5fLzCR2pc8d/1zYGRnAUtDeYEF8Nw22/Gx
-         5WjpDedu/YXbbUruV9tIMwS/igZVXXqlTmHGze0bQCXUpBEHJqxnNZa5rCb2eTiym/
-         /5QFqBZc5o6r1f2gCSK+Xg7fNUfDMFXv9uAczmF1iQ8VrlxXqtMT1eq01HRblst/cP
-         EDNpVwC0+Haug==
-Date:   Wed, 30 Aug 2023 08:26:59 -0700
+        s=k20201202; t=1693409641;
+        bh=CHMyxO/91Od73rdOLGw7J9vkSi2LaUR4zdW7l9KOsrY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gNNJ0tNhz/vZFL8Bu3pMiEwyEHgGlBJqjmdGA5cy00Wa3OApu1Wz5Yf/EDIoVYApE
+         lUxgENp9DsiecNWuZFR1+xQbfYO00ELF6cidlLM3SDOMkvAuW6YUU8g5h0mFNEqasx
+         6wvOxe+BlGS4LwWWMILYjN9jS1rM0/znVDGyFkrWgt2sqaBO/J0ekjfds/ttzlyzQi
+         xLHEvGejC2YjXQDUFYkVxLtw/w8qgQp4/a47C53WrK6syYUTwWh2mJ9JBlEcKWcFmD
+         TCcUvRXebSc5+3Qa+R5oWs7Lu+svkzK7WF4b+jD4M5Rgqi9yTwdG/De6jaohuyJJ0k
+         BijGbCSoEv/Rg==
+Date:   Wed, 30 Aug 2023 08:34:00 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>,
-        shrikanth hegde <sshegde@linux.vnet.ibm.com>,
-        Ritesh Harjani <ritesh.list@gmail.com>
-Subject: [PATCH v2] xfs: load uncached unlinked inodes into memory on demand
-Message-ID: <20230830152659.GJ28186@frogsfrogsfrogs>
+To:     Shiyang Ruan <ruansy.fnst@fujitsu.com>
+Cc:     linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
+        linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+        dan.j.williams@intel.com, willy@infradead.org, jack@suse.cz,
+        akpm@linux-foundation.org, mcgrof@kernel.org
+Subject: Re: [PATCH v14] mm, pmem, xfs: Introduce MF_MEM_PRE_REMOVE for unbind
+Message-ID: <20230830153400.GB28160@frogsfrogsfrogs>
+References: <20230629081651.253626-3-ruansy.fnst@fujitsu.com>
+ <20230828065744.1446462-1-ruansy.fnst@fujitsu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20230828065744.1446462-1-ruansy.fnst@fujitsu.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,202 +56,327 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+On Mon, Aug 28, 2023 at 02:57:44PM +0800, Shiyang Ruan wrote:
+> ====
+> Changes since v13:
+>  1. don't return error if _freeze(FREEZE_HOLDER_KERNEL) got other error
+> ====
+> 
+> Now, if we suddenly remove a PMEM device(by calling unbind) which
+> contains FSDAX while programs are still accessing data in this device,
+> e.g.:
+> ```
+>  $FSSTRESS_PROG -d $SCRATCH_MNT -n 99999 -p 4 &
+>  # $FSX_PROG -N 1000000 -o 8192 -l 500000 $SCRATCH_MNT/t001 &
+>  echo "pfn1.1" > /sys/bus/nd/drivers/nd_pmem/unbind
+> ```
+> it could come into an unacceptable state:
+>   1. device has gone but mount point still exists, and umount will fail
+>        with "target is busy"
+>   2. programs will hang and cannot be killed
+>   3. may crash with NULL pointer dereference
+> 
+> To fix this, we introduce a MF_MEM_PRE_REMOVE flag to let it know that we
+> are going to remove the whole device, and make sure all related processes
+> could be notified so that they could end up gracefully.
+> 
+> This patch is inspired by Dan's "mm, dax, pmem: Introduce
+> dev_pagemap_failure()"[1].  With the help of dax_holder and
+> ->notify_failure() mechanism, the pmem driver is able to ask filesystem
+> on it to unmap all files in use, and notify processes who are using
+> those files.
+> 
+> Call trace:
+> trigger unbind
+>  -> unbind_store()
+>   -> ... (skip)
+>    -> devres_release_all()
+>     -> kill_dax()
+>      -> dax_holder_notify_failure(dax_dev, 0, U64_MAX, MF_MEM_PRE_REMOVE)
+>       -> xfs_dax_notify_failure()
+>       `-> freeze_super()             // freeze (kernel call)
+>       `-> do xfs rmap
+>       ` -> mf_dax_kill_procs()
+>       `  -> collect_procs_fsdax()    // all associated processes
+>       `  -> unmap_and_kill()
+>       ` -> invalidate_inode_pages2_range() // drop file's cache
+>       `-> thaw_super()               // thaw (both kernel & user call)
+> 
+> Introduce MF_MEM_PRE_REMOVE to let filesystem know this is a remove
+> event.  Use the exclusive freeze/thaw[2] to lock the filesystem to prevent
+> new dax mapping from being created.  Do not shutdown filesystem directly
+> if configuration is not supported, or if failure range includes metadata
+> area.  Make sure all files and processes(not only the current progress)
+> are handled correctly.  Also drop the cache of associated files before
+> pmem is removed.
+> 
+> [1]: https://lore.kernel.org/linux-mm/161604050314.1463742.14151665140035795571.stgit@dwillia2-desk3.amr.corp.intel.com/
+> [2]: https://lore.kernel.org/linux-xfs/169116275623.3187159.16862410128731457358.stg-ugh@frogsfrogsfrogs/
+> 
+> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
 
-shrikanth hegde reports that filesystems fail shortly after mount with
-the following failure:
+Looks good, now who wants to take this patch?
 
-	WARNING: CPU: 56 PID: 12450 at fs/xfs/xfs_inode.c:1839 xfs_iunlink_lookup+0x58/0x80 [xfs]
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-This of course is the WARN_ON_ONCE in xfs_iunlink_lookup:
+--D
 
-	ip = radix_tree_lookup(&pag->pag_ici_root, agino);
-	if (WARN_ON_ONCE(!ip || !ip->i_ino)) { ... }
-
-From diagnostic data collected by the bug reporters, it would appear
-that we cleanly mounted a filesystem that contained unlinked inodes.
-Unlinked inodes are only processed as a final step of log recovery,
-which means that clean mounts do not process the unlinked list at all.
-
-Prior to the introduction of the incore unlinked lists, this wasn't a
-problem because the unlink code would (very expensively) traverse the
-entire ondisk metadata iunlink chain to keep things up to date.
-However, the incore unlinked list code complains when it realizes that
-it is out of sync with the ondisk metadata and shuts down the fs, which
-is bad.
-
-Ritesh proposed to solve this problem by unconditionally parsing the
-unlinked lists at mount time, but this imposes a mount time cost for
-every filesystem to catch something that should be very infrequent.
-Instead, let's target the places where we can encounter a next_unlinked
-pointer that refers to an inode that is not in cache, and load it into
-cache.
-
-Note: This patch does not address the problem of iget loading an inode
-from the middle of the iunlink list and needing to set i_prev_unlinked
-correctly.
-
-Reported-by: shrikanth hegde <sshegde@linux.vnet.ibm.com>
-Triaged-by: Ritesh Harjani <ritesh.list@gmail.com>
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
-v2: log that we're doing runtime recovery, dont mess with DONTCACHE,
-    and actually return ENOLINK
----
- fs/xfs/xfs_inode.c |   75 +++++++++++++++++++++++++++++++++++++++++++++++++---
- fs/xfs/xfs_trace.h |   25 +++++++++++++++++
- 2 files changed, 96 insertions(+), 4 deletions(-)
-
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 6ee266be45d4..2942002560b5 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1829,12 +1829,17 @@ xfs_iunlink_lookup(
- 
- 	rcu_read_lock();
- 	ip = radix_tree_lookup(&pag->pag_ici_root, agino);
-+	if (!ip) {
-+		/* Caller can handle inode not being in memory. */
-+		rcu_read_unlock();
-+		return NULL;
-+	}
- 
- 	/*
--	 * Inode not in memory or in RCU freeing limbo should not happen.
--	 * Warn about this and let the caller handle the failure.
-+	 * Inode in RCU freeing limbo should not happen.  Warn about this and
-+	 * let the caller handle the failure.
- 	 */
--	if (WARN_ON_ONCE(!ip || !ip->i_ino)) {
-+	if (WARN_ON_ONCE(!ip->i_ino)) {
- 		rcu_read_unlock();
- 		return NULL;
- 	}
-@@ -1858,7 +1863,8 @@ xfs_iunlink_update_backref(
- 
- 	ip = xfs_iunlink_lookup(pag, next_agino);
- 	if (!ip)
--		return -EFSCORRUPTED;
-+		return -ENOLINK;
-+
- 	ip->i_prev_unlinked = prev_agino;
- 	return 0;
- }
-@@ -1902,6 +1908,62 @@ xfs_iunlink_update_bucket(
- 	return 0;
- }
- 
-+/*
-+ * Load the inode @next_agino into the cache and set its prev_unlinked pointer
-+ * to @prev_agino.  Caller must hold the AGI to synchronize with other changes
-+ * to the unlinked list.
-+ */
-+STATIC int
-+xfs_iunlink_reload_next(
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*agibp,
-+	xfs_agino_t		prev_agino,
-+	xfs_agino_t		next_agino)
-+{
-+	struct xfs_perag	*pag = agibp->b_pag;
-+	struct xfs_mount	*mp = pag->pag_mount;
-+	struct xfs_inode	*next_ip = NULL;
-+	xfs_ino_t		ino;
-+	int			error;
-+
-+	ASSERT(next_agino != NULLAGINO);
-+
-+#ifdef DEBUG
-+	rcu_read_lock();
-+	next_ip = radix_tree_lookup(&pag->pag_ici_root, next_agino);
-+	ASSERT(next_ip == NULL);
-+	rcu_read_unlock();
-+#endif
-+
-+	xfs_info_ratelimited(mp,
-+ "Found unrecovered unlinked inode 0x%x in AG 0x%x.  Initiating recovery.",
-+			next_agino, pag->pag_agno);
-+
-+	/*
-+	 * Use an untrusted lookup to be cautious in case the AGI has been
-+	 * corrupted and now points at a free inode.  That shouldn't happen,
-+	 * but we'd rather shut down now since we're already running in a weird
-+	 * situation.
-+	 */
-+	ino = XFS_AGINO_TO_INO(mp, pag->pag_agno, next_agino);
-+	error = xfs_iget(mp, tp, ino, XFS_IGET_UNTRUSTED, 0, &next_ip);
-+	if (error)
-+		return error;
-+
-+	/* If this is not an unlinked inode, something is very wrong. */
-+	if (VFS_I(next_ip)->i_nlink != 0) {
-+		error = -EFSCORRUPTED;
-+		goto rele;
-+	}
-+
-+	next_ip->i_prev_unlinked = prev_agino;
-+	trace_xfs_iunlink_reload_next(next_ip);
-+rele:
-+	ASSERT(!(VFS_I(next_ip)->i_state & I_DONTCACHE));
-+	xfs_irele(next_ip);
-+	return error;
-+}
-+
- static int
- xfs_iunlink_insert_inode(
- 	struct xfs_trans	*tp,
-@@ -1933,6 +1995,8 @@ xfs_iunlink_insert_inode(
- 	 * inode.
- 	 */
- 	error = xfs_iunlink_update_backref(pag, agino, next_agino);
-+	if (error == -ENOLINK)
-+		error = xfs_iunlink_reload_next(tp, agibp, agino, next_agino);
- 	if (error)
- 		return error;
- 
-@@ -2027,6 +2091,9 @@ xfs_iunlink_remove_inode(
- 	 */
- 	error = xfs_iunlink_update_backref(pag, ip->i_prev_unlinked,
- 			ip->i_next_unlinked);
-+	if (error == -ENOLINK)
-+		error = xfs_iunlink_reload_next(tp, agibp, ip->i_prev_unlinked,
-+				ip->i_next_unlinked);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 36bd42ed9ec8..f4e46bac9b91 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -3832,6 +3832,31 @@ TRACE_EVENT(xfs_iunlink_update_dinode,
- 		  __entry->new_ptr)
- );
- 
-+TRACE_EVENT(xfs_iunlink_reload_next,
-+	TP_PROTO(struct xfs_inode *ip),
-+	TP_ARGS(ip),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(xfs_agnumber_t, agno)
-+		__field(xfs_agino_t, agino)
-+		__field(xfs_agino_t, prev_agino)
-+		__field(xfs_agino_t, next_agino)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = ip->i_mount->m_super->s_dev;
-+		__entry->agno = XFS_INO_TO_AGNO(ip->i_mount, ip->i_ino);
-+		__entry->agino = XFS_INO_TO_AGINO(ip->i_mount, ip->i_ino);
-+		__entry->prev_agino = ip->i_prev_unlinked;
-+		__entry->next_agino = ip->i_next_unlinked;
-+	),
-+	TP_printk("dev %d:%d agno 0x%x agino 0x%x prev_unlinked 0x%x next_unlinked 0x%x",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->agno,
-+		  __entry->agino,
-+		  __entry->prev_agino,
-+		  __entry->next_agino)
-+);
-+
- DECLARE_EVENT_CLASS(xfs_ag_inode_class,
- 	TP_PROTO(struct xfs_inode *ip),
- 	TP_ARGS(ip),
+> ---
+>  drivers/dax/super.c         |  3 +-
+>  fs/xfs/xfs_notify_failure.c | 99 ++++++++++++++++++++++++++++++++++---
+>  include/linux/mm.h          |  1 +
+>  mm/memory-failure.c         | 17 +++++--
+>  4 files changed, 109 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 0da9232ea175..f4b635526345 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -326,7 +326,8 @@ void kill_dax(struct dax_device *dax_dev)
+>  		return;
+>  
+>  	if (dax_dev->holder_data != NULL)
+> -		dax_holder_notify_failure(dax_dev, 0, U64_MAX, 0);
+> +		dax_holder_notify_failure(dax_dev, 0, U64_MAX,
+> +				MF_MEM_PRE_REMOVE);
+>  
+>  	clear_bit(DAXDEV_ALIVE, &dax_dev->flags);
+>  	synchronize_srcu(&dax_srcu);
+> diff --git a/fs/xfs/xfs_notify_failure.c b/fs/xfs/xfs_notify_failure.c
+> index 4a9bbd3fe120..79586abc75bf 100644
+> --- a/fs/xfs/xfs_notify_failure.c
+> +++ b/fs/xfs/xfs_notify_failure.c
+> @@ -22,6 +22,7 @@
+>  
+>  #include <linux/mm.h>
+>  #include <linux/dax.h>
+> +#include <linux/fs.h>
+>  
+>  struct xfs_failure_info {
+>  	xfs_agblock_t		startblock;
+> @@ -73,10 +74,16 @@ xfs_dax_failure_fn(
+>  	struct xfs_mount		*mp = cur->bc_mp;
+>  	struct xfs_inode		*ip;
+>  	struct xfs_failure_info		*notify = data;
+> +	struct address_space		*mapping;
+> +	pgoff_t				pgoff;
+> +	unsigned long			pgcnt;
+>  	int				error = 0;
+>  
+>  	if (XFS_RMAP_NON_INODE_OWNER(rec->rm_owner) ||
+>  	    (rec->rm_flags & (XFS_RMAP_ATTR_FORK | XFS_RMAP_BMBT_BLOCK))) {
+> +		/* Continue the query because this isn't a failure. */
+> +		if (notify->mf_flags & MF_MEM_PRE_REMOVE)
+> +			return 0;
+>  		notify->want_shutdown = true;
+>  		return 0;
+>  	}
+> @@ -92,14 +99,60 @@ xfs_dax_failure_fn(
+>  		return 0;
+>  	}
+>  
+> -	error = mf_dax_kill_procs(VFS_I(ip)->i_mapping,
+> -				  xfs_failure_pgoff(mp, rec, notify),
+> -				  xfs_failure_pgcnt(mp, rec, notify),
+> -				  notify->mf_flags);
+> +	mapping = VFS_I(ip)->i_mapping;
+> +	pgoff = xfs_failure_pgoff(mp, rec, notify);
+> +	pgcnt = xfs_failure_pgcnt(mp, rec, notify);
+> +
+> +	/* Continue the rmap query if the inode isn't a dax file. */
+> +	if (dax_mapping(mapping))
+> +		error = mf_dax_kill_procs(mapping, pgoff, pgcnt,
+> +					  notify->mf_flags);
+> +
+> +	/* Invalidate the cache in dax pages. */
+> +	if (notify->mf_flags & MF_MEM_PRE_REMOVE)
+> +		invalidate_inode_pages2_range(mapping, pgoff,
+> +					      pgoff + pgcnt - 1);
+> +
+>  	xfs_irele(ip);
+>  	return error;
+>  }
+>  
+> +static int
+> +xfs_dax_notify_failure_freeze(
+> +	struct xfs_mount	*mp)
+> +{
+> +	struct super_block	*sb = mp->m_super;
+> +	int			error;
+> +
+> +	error = freeze_super(sb, FREEZE_HOLDER_KERNEL);
+> +	if (error)
+> +		xfs_emerg(mp, "already frozen by kernel, err=%d", error);
+> +
+> +	return error;
+> +}
+> +
+> +static void
+> +xfs_dax_notify_failure_thaw(
+> +	struct xfs_mount	*mp,
+> +	bool			kernel_frozen)
+> +{
+> +	struct super_block	*sb = mp->m_super;
+> +	int			error;
+> +
+> +	if (kernel_frozen) {
+> +		error = thaw_super(sb, FREEZE_HOLDER_KERNEL);
+> +		if (error)
+> +			xfs_emerg(mp, "still frozen after notify failure, err=%d",
+> +				error);
+> +	}
+> +
+> +	/*
+> +	 * Also thaw userspace call anyway because the device is about to be
+> +	 * removed immediately.
+> +	 */
+> +	thaw_super(sb, FREEZE_HOLDER_USERSPACE);
+> +}
+> +
+>  static int
+>  xfs_dax_notify_ddev_failure(
+>  	struct xfs_mount	*mp,
+> @@ -112,15 +165,29 @@ xfs_dax_notify_ddev_failure(
+>  	struct xfs_btree_cur	*cur = NULL;
+>  	struct xfs_buf		*agf_bp = NULL;
+>  	int			error = 0;
+> +	bool			kernel_frozen = false;
+>  	xfs_fsblock_t		fsbno = XFS_DADDR_TO_FSB(mp, daddr);
+>  	xfs_agnumber_t		agno = XFS_FSB_TO_AGNO(mp, fsbno);
+>  	xfs_fsblock_t		end_fsbno = XFS_DADDR_TO_FSB(mp,
+>  							     daddr + bblen - 1);
+>  	xfs_agnumber_t		end_agno = XFS_FSB_TO_AGNO(mp, end_fsbno);
+>  
+> +	if (mf_flags & MF_MEM_PRE_REMOVE) {
+> +		xfs_info(mp, "Device is about to be removed!");
+> +		/*
+> +		 * Freeze fs to prevent new mappings from being created.
+> +		 * - Keep going on if others already hold the kernel forzen.
+> +		 * - Keep going on if other errors too because this device is
+> +		 *   starting to fail.
+> +		 * - If kernel frozen state is hold successfully here, thaw it
+> +		 *   here as well at the end.
+> +		 */
+> +		kernel_frozen = xfs_dax_notify_failure_freeze(mp) == 0;
+> +	}
+> +
+>  	error = xfs_trans_alloc_empty(mp, &tp);
+>  	if (error)
+> -		return error;
+> +		goto out;
+>  
+>  	for (; agno <= end_agno; agno++) {
+>  		struct xfs_rmap_irec	ri_low = { };
+> @@ -165,11 +232,23 @@ xfs_dax_notify_ddev_failure(
+>  	}
+>  
+>  	xfs_trans_cancel(tp);
+> +
+> +	/*
+> +	 * Determine how to shutdown the filesystem according to the
+> +	 * error code and flags.
+> +	 */
+>  	if (error || notify.want_shutdown) {
+>  		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_ONDISK);
+>  		if (!error)
+>  			error = -EFSCORRUPTED;
+> -	}
+> +	} else if (mf_flags & MF_MEM_PRE_REMOVE)
+> +		xfs_force_shutdown(mp, SHUTDOWN_FORCE_UMOUNT);
+> +
+> +out:
+> +	/* Thaw the fs if it is frozen before. */
+> +	if (mf_flags & MF_MEM_PRE_REMOVE)
+> +		xfs_dax_notify_failure_thaw(mp, kernel_frozen);
+> +
+>  	return error;
+>  }
+>  
+> @@ -197,6 +276,8 @@ xfs_dax_notify_failure(
+>  
+>  	if (mp->m_logdev_targp && mp->m_logdev_targp->bt_daxdev == dax_dev &&
+>  	    mp->m_logdev_targp != mp->m_ddev_targp) {
+> +		if (mf_flags & MF_MEM_PRE_REMOVE)
+> +			return 0;
+>  		xfs_err(mp, "ondisk log corrupt, shutting down fs!");
+>  		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_ONDISK);
+>  		return -EFSCORRUPTED;
+> @@ -210,6 +291,12 @@ xfs_dax_notify_failure(
+>  	ddev_start = mp->m_ddev_targp->bt_dax_part_off;
+>  	ddev_end = ddev_start + bdev_nr_bytes(mp->m_ddev_targp->bt_bdev) - 1;
+>  
+> +	/* Notify failure on the whole device. */
+> +	if (offset == 0 && len == U64_MAX) {
+> +		offset = ddev_start;
+> +		len = bdev_nr_bytes(mp->m_ddev_targp->bt_bdev);
+> +	}
+> +
+>  	/* Ignore the range out of filesystem area */
+>  	if (offset + len - 1 < ddev_start)
+>  		return -ENXIO;
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 2dd73e4f3d8e..a10c75bebd6d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3665,6 +3665,7 @@ enum mf_flags {
+>  	MF_UNPOISON = 1 << 4,
+>  	MF_SW_SIMULATED = 1 << 5,
+>  	MF_NO_RETRY = 1 << 6,
+> +	MF_MEM_PRE_REMOVE = 1 << 7,
+>  };
+>  int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
+>  		      unsigned long count, int mf_flags);
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index e245191e6b04..e71616ccc643 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -683,7 +683,7 @@ static void add_to_kill_fsdax(struct task_struct *tsk, struct page *p,
+>   */
+>  static void collect_procs_fsdax(struct page *page,
+>  		struct address_space *mapping, pgoff_t pgoff,
+> -		struct list_head *to_kill)
+> +		struct list_head *to_kill, bool pre_remove)
+>  {
+>  	struct vm_area_struct *vma;
+>  	struct task_struct *tsk;
+> @@ -691,8 +691,15 @@ static void collect_procs_fsdax(struct page *page,
+>  	i_mmap_lock_read(mapping);
+>  	read_lock(&tasklist_lock);
+>  	for_each_process(tsk) {
+> -		struct task_struct *t = task_early_kill(tsk, true);
+> +		struct task_struct *t = tsk;
+>  
+> +		/*
+> +		 * Search for all tasks while MF_MEM_PRE_REMOVE is set, because
+> +		 * the current may not be the one accessing the fsdax page.
+> +		 * Otherwise, search for the current task.
+> +		 */
+> +		if (!pre_remove)
+> +			t = task_early_kill(tsk, true);
+>  		if (!t)
+>  			continue;
+>  		vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
+> @@ -1788,6 +1795,7 @@ int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
+>  	dax_entry_t cookie;
+>  	struct page *page;
+>  	size_t end = index + count;
+> +	bool pre_remove = mf_flags & MF_MEM_PRE_REMOVE;
+>  
+>  	mf_flags |= MF_ACTION_REQUIRED | MF_MUST_KILL;
+>  
+> @@ -1799,9 +1807,10 @@ int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
+>  		if (!page)
+>  			goto unlock;
+>  
+> -		SetPageHWPoison(page);
+> +		if (!pre_remove)
+> +			SetPageHWPoison(page);
+>  
+> -		collect_procs_fsdax(page, mapping, index, &to_kill);
+> +		collect_procs_fsdax(page, mapping, index, &to_kill, pre_remove);
+>  		unmap_and_kill(&to_kill, page_to_pfn(page), mapping,
+>  				index, mf_flags);
+>  unlock:
+> -- 
+> 2.41.0
+> 
