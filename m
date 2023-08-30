@@ -2,154 +2,255 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A00C78D0E1
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 02:04:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD41578D17B
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Aug 2023 03:03:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239809AbjH3ADt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Aug 2023 20:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57846 "EHLO
+        id S239675AbjH3BCa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Aug 2023 21:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239708AbjH3ADm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 20:03:42 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B42E01BD;
-        Tue, 29 Aug 2023 17:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mhHf9bnOddbdauFdwTiNvB2pCJGntgXJjGP69XrW3To=; b=Bog5SZG0TYg0s2MQQfbUs9uVXk
-        XdtKROAwAGEUaoPB8IuJVEXbl9mZlm0jEhEk3H4E+vKRQyFUUSOp4nTdUWPuxI7Hp4HjDNA443+/y
-        /0fOLJMKC2WIb2tS4b+Rt+QMGMmK7PEfbf7jtUs42sJFP5+vBQdLHF+vLX+GuQ5QG1n3CXTQMflpP
-        3DlTErG3FOwEjKOWr7tFZ3fPuvJ3DhE+vRtnrlv2iBll7kd62LGwN6s1l2hycllZ+6XxX/OrWlMoY
-        fxqTZRWZnCLTwYTWHz4AyRowlDGrc1MtyEFAz5FrKLMLieuTK/6uE/WBBD7mLUNv8cYmrCXKVybDc
-        uCQ9Bpgw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qb8f7-001xNh-0Q;
-        Wed, 30 Aug 2023 00:02:21 +0000
-Date:   Wed, 30 Aug 2023 01:02:21 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Richard Weinberger <richard@nod.at>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Anthony Iliopoulos <ailiop@suse.com>, v9fs@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-nfs@vger.kernel.org,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 1/7] fs: pass the request_mask to generic_fillattr
-Message-ID: <20230830000221.GB3390869@ZenIV>
-References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
- <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
- <20230829224454.GA461907@ZenIV>
- <e1c4a6d5001d029548542a1f10425c5639ce28e4.camel@kernel.org>
+        with ESMTP id S238444AbjH3BCI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Aug 2023 21:02:08 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B97B4CCF
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Aug 2023 18:02:00 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68a41031768so3661038b3a.3
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Aug 2023 18:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1693357320; x=1693962120; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lUAoN2LL+wNxB4HFbzc1MNXMt8bLM1mD8DRWF9DdJpM=;
+        b=jIH9k15s/A9/4mr29EcsI+L+smLyUH6egd8HwWckJmBhlCNrt6srIrcSvbPUgD0QyJ
+         JzMTMYlCkfcg3NXLiIOSgYE33wyU+q3vmvcusz6NLtEVnOgttg8QL2Eu63JsH38/GAWU
+         vnUjG+XZaD602Adsb4c5/wcfFUuIXrWs4oIgM4xi6P/uuygtZ0TdgQD4b8F7HSNGOPfy
+         WFsJHzbpIi7Tou64IVxiXxuRkAyZrOPpM0gDly6l53ec23UPxOC6zkf/vQdHRHBpdUPV
+         P/Vnj7vfHpIJEI56IQazdg6SGtHPdPYlPMUn/syvhcODbJhunkcH0fGokfLMyu6zK997
+         H3bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693357320; x=1693962120;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lUAoN2LL+wNxB4HFbzc1MNXMt8bLM1mD8DRWF9DdJpM=;
+        b=DMckax2TVUYWZrPuqJjEihTmYmfIIdGXOvOlxs7j9ugY3auDzjt6p7NfF676n/zmfL
+         exns9V3S4werGKROEuPMoz0GBTY2XRifwjfKfoaT3Cqq/6zR5OuW/Bl4qMRBG5IKeS6j
+         wRcbj+RB0/3OfxWFT41bjn1TjEugKzQfJFbPc6SZxKceC3qAr7qRus+I6b876BC+fOXG
+         pScR4REsG5TRqTa5kr28kTg9WWZns4ndPdZXwBFPqgE2rNWE/7kHZNwtRGT/LgJwa3L5
+         XHLtlaTxPaoXibi4ih4K4P8c90RTnBi1yjrh8lO5/np7U1uwkiGAwU/ULLn7jfmvZLaf
+         B/hg==
+X-Gm-Message-State: AOJu0Yw3ynlBvtGphFrjizuMMa1X8XKiVQEmxawdxUQ6KKyCW9rlIr1U
+        HGU//ofGsAfB1mPKPrwFZUL+DQ==
+X-Google-Smtp-Source: AGHT+IE9Fa9rJ5dJK/ZUvqGA++6ZyBJzqK+SbSPBhREJGER0uiXBZXy5TEJZg6I4+ynNHjy+qLDTtA==
+X-Received: by 2002:a17:902:934c:b0:1bc:5924:2da2 with SMTP id g12-20020a170902934c00b001bc59242da2mr648690plp.56.1693357320149;
+        Tue, 29 Aug 2023 18:02:00 -0700 (PDT)
+Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
+        by smtp.gmail.com with ESMTPSA id b16-20020a170902d51000b00198d7b52eefsm9964942plg.257.2023.08.29.18.01.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Aug 2023 18:01:59 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qb8ps-008I69-1W;
+        Wed, 30 Aug 2023 10:13:28 +1000
+Date:   Wed, 30 Aug 2023 10:13:28 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Eric Sandeen <sandeen@redhat.com>, xfs <linux-xfs@vger.kernel.org>,
+        shrikanth hegde <sshegde@linux.vnet.ibm.com>,
+        Ritesh Harjani <ritesh.list@gmail.com>
+Subject: Re: [RFC PATCH] xfs: load uncached unlinked inodes into memory on
+ demand
+Message-ID: <ZO6JqOBOOUCcS4ac@dread.disaster.area>
+References: <20230829232043.GE28186@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e1c4a6d5001d029548542a1f10425c5639ce28e4.camel@kernel.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230829232043.GE28186@frogsfrogsfrogs>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 29, 2023 at 06:58:47PM -0400, Jeff Layton wrote:
-> On Tue, 2023-08-29 at 23:44 +0100, Al Viro wrote:
-> > On Tue, Jul 25, 2023 at 10:58:14AM -0400, Jeff Layton wrote:
-> > > generic_fillattr just fills in the entire stat struct indiscriminately
-> > > today, copying data from the inode. There is at least one attribute
-> > > (STATX_CHANGE_COOKIE) that can have side effects when it is reported,
-> > > and we're looking at adding more with the addition of multigrain
-> > > timestamps.
-> > > 
-> > > Add a request_mask argument to generic_fillattr and have most callers
-> > > just pass in the value that is passed to getattr. Have other callers
-> > > (e.g. ksmbd) just pass in STATX_BASIC_STATS. Also move the setting of
-> > > STATX_CHANGE_COOKIE into generic_fillattr.
-> > 
-> > Out of curiosity - how much PITA would it be to put request_mask into
-> > kstat?  Set it in vfs_getattr_nosec() (and those get_file_..._info()
-> > on smbd side) and don't bother with that kind of propagation boilerplate
-> > - just have generic_fillattr() pick it there...
-> > 
-> > Reduces the patchset size quite a bit...
+On Tue, Aug 29, 2023 at 04:20:43PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
 > 
-> It could be done. To do that right, I think we'd want to drop
-> request_mask from the ->getattr prototype as well and just have
-> everything use the mask in the kstat.
+> shrikanth hegde reports that filesystems fail shortly after mount with
+> the following failure:
 > 
-> I don't think it'd reduce the size of the patchset in any meaningful
-> way, but it might make for a more sensible API over the long haul.
+> 	WARNING: CPU: 56 PID: 12450 at fs/xfs/xfs_inode.c:1839 xfs_iunlink_lookup+0x58/0x80 [xfs]
+> 
+> This of course is the WARN_ON_ONCE in xfs_iunlink_lookup:
+> 
+> 	ip = radix_tree_lookup(&pag->pag_ici_root, agino);
+> 	if (WARN_ON_ONCE(!ip || !ip->i_ino)) { ... }
+> 
+> From diagnostic data collected by the bug reporters, it would appear
+> that we cleanly mounted a filesystem that contained unlinked inodes.
+> Unlinked inodes are only processed as a final step of log recovery,
+> which means that clean mounts do not process the unlinked list at all.
+> 
+> Prior to the introduction of the incore unlinked lists, this wasn't a
+> problem because the unlink code would (very expensively) traverse the
+> entire ondisk metadata iunlink chain to keep things up to date.
+> However, the incore unlinked list code complains when it realizes that
+> it is out of sync with the ondisk metadata and shuts down the fs, which
+> is bad.
+> 
+> Ritesh proposed to solve this problem by unconditionally parsing the
+> unlinked lists at mount time, but this imposes a mount time cost for
+> every filesystem to catch something that should be very infrequent.
+> Instead, let's target the places where we can encounter a next_unlinked
+> pointer that refers to an inode that is not in cache, and load it into
+> cache.
+> 
+> Note: This patch does not address the problem of iget loading an inode
+> from the middle of the iunlink list and needing to set i_prev_unlinked
+> correctly.
+> 
+> Link: https://lore.kernel.org/linux-xfs/e5004868-4a03-93e5-5077-e7ed0e533996@linux.vnet.ibm.com/
+> Reported-by: shrikanth hegde <sshegde@linux.vnet.ibm.com>
+> Triaged-by: Ritesh Harjani <ritesh.list@gmail.com>
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  fs/xfs/xfs_inode.c |   70 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+>  fs/xfs/xfs_trace.h |   25 +++++++++++++++++++
+>  2 files changed, 92 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index 6ee266be45d4..3ab140ec09bb 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -1829,12 +1829,17 @@ xfs_iunlink_lookup(
+>  
+>  	rcu_read_lock();
+>  	ip = radix_tree_lookup(&pag->pag_ici_root, agino);
+> +	if (!ip) {
+> +		/* Caller can handle inode not being in memory. */
+> +		rcu_read_unlock();
+> +		return NULL;
+> +	}
+>  
+>  	/*
+> -	 * Inode not in memory or in RCU freeing limbo should not happen.
+> -	 * Warn about this and let the caller handle the failure.
+> +	 * Inode in RCU freeing limbo should not happen.  Warn about this and
+> +	 * let the caller handle the failure.
+>  	 */
+> -	if (WARN_ON_ONCE(!ip || !ip->i_ino)) {
+> +	if (WARN_ON_ONCE(!ip->i_ino)) {
+>  		rcu_read_unlock();
+>  		return NULL;
+>  	}
 
-->getattr() prototype change would be decoupled from that - for your
-patchset you'd only need the field addition + setting in vfs_getattr_nosec()
-(and possibly in ksmbd), with the remainders of both series being
-independent from each other.
+I think we should still log a message about this situation, as it implies
+that we had an unrecovered unlinked list on the filesystem and that
+should "never happen" in normal conditions.
 
-What I suggest is
+i.e. something like:
 
-branchpoint -> field addition (trivial commit) -> argument removal
-		|
-		V
-your series, starting with "use stat->request_mask in generic_fillattr()"
+XFS(dev): Found unrecovered unlinked inodes in AG X. Runtime recovery initiated.
 
-Total size would be about the same, but it would be easier to follow
-the less trivial part of that.  Nothing in your branch downstream of
-that touches any ->getattr() instances, so it should have no
-conflicts with the argument removal side of things.
+which uses a perag state flag to only issue the message once per AG
+per mount. At least this way, if we get weird stuff happening
+because of loading an inode in the middle of an unlinked list (the
+unhandled prev_agino case) we know why weird stuff might be
+happening...
+
+> @@ -1902,6 +1907,60 @@ xfs_iunlink_update_bucket(
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Load the inode @next_agino into the cache and set its prev_unlinked pointer
+> + * to @prev_agino.  Caller must hold the AGI to synchronize with other changes
+> + * to the unlinked list.
+> + */
+> +STATIC int
+> +xfs_iunlink_reload_next(
+> +	struct xfs_trans	*tp,
+> +	struct xfs_buf		*agibp,
+> +	xfs_agino_t		prev_agino,
+> +	xfs_agino_t		next_agino)
+> +{
+> +	struct xfs_perag	*pag = agibp->b_pag;
+> +	struct xfs_mount	*mp = pag->pag_mount;
+> +	struct xfs_inode	*next_ip = NULL;
+> +	xfs_ino_t		ino;
+> +	int			error;
+> +
+> +	ASSERT(next_agino != NULLAGINO);
+> +
+> +#ifdef DEBUG
+> +	rcu_read_lock();
+> +	next_ip = radix_tree_lookup(&pag->pag_ici_root, next_agino);
+> +	ASSERT(next_ip == NULL);
+> +	rcu_read_unlock();
+> +#endif
+> +
+> +	ino = XFS_AGINO_TO_INO(mp, pag->pag_agno, next_agino);
+> +	error = xfs_iget(mp, tp, ino, XFS_IGET_UNTRUSTED, 0, &next_ip);
+> +	if (error)
+> +		return error;
+
+WHy are we using XFS_IGET_UNTRUSTED here? A comment explaining why
+we don't trust the agino on th eunlinked list we are about to try to
+recover (i.e. trust!) would be good.
+
+> +	/* If this is not an unlinked inode, something is very wrong. */
+> +	if (VFS_I(next_ip)->i_nlink != 0) {
+> +		error = -EFSCORRUPTED;
+> +		goto rele;
+> +	}
+
+*nod*
+
+> +
+> +	next_ip->i_prev_unlinked = prev_agino;
+> +	trace_xfs_iunlink_reload_next(next_ip);
+> +rele:
+> +	/*
+> +	 * We're running in transaction context, so we cannot run any inode
+> +	 * release code.  Clear DONTCACHE on this inode to prevent the VFS from
+> +	 * initiating writeback and to force the irele to push this inode to
+> +	 * the LRU instead of dropping it immediately.
+> +	 */
+> +	spin_lock(&VFS_I(next_ip)->i_lock);
+> +	VFS_I(next_ip)->i_state &= ~I_DONTCACHE;
+> +	spin_unlock(&VFS_I(next_ip)->i_lock);
+> +	xfs_irele(next_ip);
+
+Huh. We just loaded the next_ip into memory - how is it dirty,
+and what writeback will happen? Also, how would I_DONTCACHE get set
+in the first place here?
+
+
+> +	return error;
+> +}
+> +
+>  static int
+>  xfs_iunlink_insert_inode(
+>  	struct xfs_trans	*tp,
+> @@ -1933,6 +1992,8 @@ xfs_iunlink_insert_inode(
+>  	 * inode.
+>  	 */
+>  	error = xfs_iunlink_update_backref(pag, agino, next_agino);
+> +	if (error == -ENOLINK)
+> +		error = xfs_iunlink_reload_next(tp, agibp, agino, next_agino);
+>  	if (error)
+>  		return error;
+
+Where does this -ENOLINK error come from?
+xfs_iunlink_update_backref() returns either -EFSCORRUPTED or 0. Is
+the patch missing hunks or is it dependent on some other patch that
+does this?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
