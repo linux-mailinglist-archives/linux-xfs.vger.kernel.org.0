@@ -2,74 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0247E791F94
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Sep 2023 00:49:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 802B6792927
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Sep 2023 18:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231596AbjIDWtO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 Sep 2023 18:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
+        id S1350969AbjIEQZY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 5 Sep 2023 12:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbjIDWtN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 Sep 2023 18:49:13 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D954CC
-        for <linux-xfs@vger.kernel.org>; Mon,  4 Sep 2023 15:49:10 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-271c700efb2so867245a91.0
-        for <linux-xfs@vger.kernel.org>; Mon, 04 Sep 2023 15:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1693867749; x=1694472549; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lOJw9QtOqVLXG0JRL3SLxF9B+sgcvGsT1z/iSC2KP7Q=;
-        b=ub5Ye8iWpCKtNXTd0tS+myFQ4JV4jwtZl7fKZe/Q92JretEWnY8d/3/3xEPMahp+3X
-         jfO5ihCbfS5jZaa6mSidfPkDCPW2eTxVZNpCf+U1L2BbtiJhMkqFbFWlUsczK5hglCjI
-         mwu7yFdG8qk13Ns5kDKI+HTByQDnKN2eUQ53wjKXU4wUnSp4WW9thHik7w5dWTOWupqF
-         89CmQ2oOHvI+dk00CWYilgUGvEa/bXyc9228rwwdmCu9BOixk9xpwxwuYWmUOCllDH7K
-         mv/xOMeusfGU7xOJwQGdHEHGzfC9Jo3p8uI1n2VAWPPvlSMwl/jPVx0GIM71frQsTHXU
-         kZIA==
+        with ESMTP id S1350771AbjIEFEv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Sep 2023 01:04:51 -0400
+Received: from mail-pg1-f206.google.com (mail-pg1-f206.google.com [209.85.215.206])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45049CC7
+        for <linux-xfs@vger.kernel.org>; Mon,  4 Sep 2023 22:04:48 -0700 (PDT)
+Received: by mail-pg1-f206.google.com with SMTP id 41be03b00d2f7-5709e2551bcso1364340a12.3
+        for <linux-xfs@vger.kernel.org>; Mon, 04 Sep 2023 22:04:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693867749; x=1694472549;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lOJw9QtOqVLXG0JRL3SLxF9B+sgcvGsT1z/iSC2KP7Q=;
-        b=BN6a+5yAr4qsBOhVVdTPjOaUcXH4Clcm+QSG4d+MY+hXe8noEyENtUz2klWK1LptL0
-         oSQlw6VeiRyzK4suoPighGh/1XGDcqcJtg87fw5fgZ6syy4iSznyQadNWKy+Gmr4/gM3
-         pu9YVnQkF2WebWa2kCsgppY03Gjj2FsluQCRQHE+iIuyNSBa9Iu3WoaEKJ85ny2k+kBC
-         skHjc0z6aFNpUn3Hx5bObYtCIUyUubmw8g8oLbTVqPrkjIkrkuw0Llpgy6e7o7PYWvF4
-         tnRIJaXYEAsGWT1DHG3qDA+H+URr8SJwkZ6b99aYjXmiOLRaUxByfyHw03byjTdCN4cV
-         +9Cw==
-X-Gm-Message-State: AOJu0YyO6be35GmnAKcc0yUa8qGXsyIDey1NlwDMBgkeBVfhMe7MuHQx
-        j01fpO+SGGxqjC2epR15f5mJkw==
-X-Google-Smtp-Source: AGHT+IFtYJDqnJpah1PX3f33aAtM2uFyAolJh+xRbcsrU86Qc2utgFDYXg+rCm3zeG/jj9bYDryXlQ==
-X-Received: by 2002:a17:90b:3b44:b0:268:553f:1938 with SMTP id ot4-20020a17090b3b4400b00268553f1938mr8071130pjb.4.1693867749400;
-        Mon, 04 Sep 2023 15:49:09 -0700 (PDT)
-Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
-        by smtp.gmail.com with ESMTPSA id q18-20020a170902dad200b001b898595be7sm7986674plx.291.2023.09.04.15.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Sep 2023 15:49:08 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qdINV-00Atsn-2j;
-        Tue, 05 Sep 2023 08:49:05 +1000
-Date:   Tue, 5 Sep 2023 08:49:05 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     cheng.lin130@zte.com.cn
-Cc:     djwong@kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jiang.yong5@zte.com.cn,
-        wang.liang82@zte.com.cn, liu.dong3@zte.com.cn
-Subject: Re: [PATCH] xfs: introduce protection for drop nlink
-Message-ID: <ZPZe4VkpxVfn5qNL@dread.disaster.area>
-References: <ZOwu2vrzX/0dX89/@dread.disaster.area>
- <202309041042177773780@zte.com.cn>
+        d=1e100.net; s=20221208; t=1693890288; x=1694495088;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3jQMmqvgVuqqI0/4tn2U3AbzO0j9wRg/SU0o9IZdAvU=;
+        b=EJgmDopaZSIjvy5VoWPH6VeCwsaSUxtcise2th08SLOy/4MoVWGMjRuz1pwvl2femO
+         ETkA/ZDV4M6aRjXxLRbib79Tin/yLoO8ONI0Lj1AuJaS7Bdtqj+aDZe/6/vb6VMYpN3j
+         fSHxYsgH78BklEI5qeT8kkdVlqJzeIG+Og6I9LfLCkif3wGWAqmUGFDzq7USmk5n4WQi
+         kBmbkdWcG4ep1pDVCsi5KqeE3V+amanMfOm6OryDCcmgp6UvOY0Dt2bj58Wy9zB/4KoG
+         wD9wscvcdCd7raW/K90pLIOqYqkq5loJS+Lf/JVaoWnoNHzg2ZWC87uJs6czM+/47sf3
+         Rwlw==
+X-Gm-Message-State: AOJu0YyllD7QLclpkR+GTrt5jDzX3v8LrbzY1QN6bv8ZfWdiaBeRc/QW
+        9Gv1ft0ENCLVi8Lz/dO3BwVXRnAU9gF4y7dYhifRjAmHtC/f
+X-Google-Smtp-Source: AGHT+IGSp8NVJ2v6Vn3RHOrrpukycUEo09Q/eHQYzIbPWN9gBtznkdH8V9n+w50NgYe/Lxwvr9fGOnuKVTpR7SF34X60h0QDU7vq
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202309041042177773780@zte.com.cn>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Received: by 2002:a63:774b:0:b0:553:3ba2:f36 with SMTP id
+ s72-20020a63774b000000b005533ba20f36mr2601841pgc.9.1693890287840; Mon, 04 Sep
+ 2023 22:04:47 -0700 (PDT)
+Date:   Mon, 04 Sep 2023 22:04:47 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e534bb0604959011@google.com>
+Subject: [syzbot] [xfs?] INFO: task hung in clean_bdev_aliases
+From:   syzbot <syzbot+1fa947e7f09e136925b8@syzkaller.appspotmail.com>
+To:     djwong@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,116 +54,142 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 04, 2023 at 10:42:17AM +0800, cheng.lin130@zte.com.cn wrote:
-> > On Mon, Aug 28, 2023 at 11:29:51AM +0800, cheng.lin130@zte.com.cn wrote:
-> > > > On Sat, Aug 26, 2023 at 10:54:11PM +0800, cheng.lin130@zte.com.cn wrote:
-> > > > > > > In the old kernel version, this situation was
-> > > > > > > encountered, but I don't know how it happened. It was already a scene
-> > > > > > > with directory errors: "Too many links".
-> > > > How do you overflow the directory link count in XFS? You can't fit
-> > > > 2^31 unique names in the directory data segment - the directory will
-> > > > ENOSPC at 32GB of name data, and that typically occurs with at most
-> > > > 300-500 million dirents (depending on name lengths) in the
-> > > > directory.
-> > > > IOWs, normal operation shouldn't be able overflow the directory link
-> > > > count at all, and so underruns shouldn't occur, either.
-> > > Customer's explanation: in the nlink incorrect directory, not many directories
-> > > will be created, and normally there are only 2 regular files.
-> > > And only found this one directory with incorrect nlink when xfs_repair.
-> > > systemd-fsck[5635]: Phase 2 - using internal log
-> > > systemd-fsck[5635]: - zero log...
-> > > systemd-fsck[5635]: - scan filesystem freespace and inode maps...
-> > > systemd-fsck[5635]: agi unlinked bucket 9 is 73 in ag 22 (inode=23622320201)
-> > So the directory inode is on the unlinked list, as I suggested it
-> > would be.
-> Yes.
-> > > systemd-fsck[5635]: - 21:46:00: scanning filesystem freespace - 32 of 32 allocation groups done
-> > > systemd-fsck[5635]: - found root inode chunk
-> > > ...
-> > How many other inodes were repaired or trashed or moved to
-> > lost+found?
-> Just (inode=23622320201) repaired.
+Hello,
 
-So only one inode on the unlinked list, and it's the inode with
-the bad link count.
+syzbot found the following issue on:
 
-> > > systemd-fsck[5635]: Phase 7 - verify and correct link counts...
-> > > systemd-fsck[5635]: resetting inode 23622320201 nlinks from 4294967284 to 2
-> > The link count of the directory inode on the unlinked list was
-> > actually -12, so this isn't an "off by one" error. It's still just 2
-> > adjacent bits being cleared when they shouldn't have been, though.
-> > What is the xfs_info (or mkfs) output for the filesystem that this
-> > occurred on?
-> meta-data=/dev/mapper/vg_gbaseserver-lv_gbaseserver isize=512 agcount=32, agsize=78643168 blks
->          = sectsz=512 attr=2, projid32bit=1
->          = crc=1 finobt=0 spinodes=0
+HEAD commit:    92901222f83d Merge tag 'f2fs-for-6-6-rc1' of git://git.ker..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1485e78fa80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3bd57a1ac08277b0
+dashboard link: https://syzkaller.appspot.com/bug?extid=1fa947e7f09e136925b8
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13fcf738680000
 
-Ok, crcs are enabled, so it's likely not storage level corruption.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ee486d884228/disk-92901222.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b5187db0b1d1/vmlinux-92901222.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/82c4e42d693e/bzImage-92901222.xz
 
-> data     = bsize=4096 blocks=2516581376, imaxpct=5
->          = sunit=0 swidth=0 blks
-> naming   =version 2 bsize=4096 ascii-ci=0 ftype=1
-> log      =internal bsize=4096 blocks=521728, version=2
->          = sectsz=512 sunit=0 blks, lazy-count=1
-> realtime =none extsz=4096 blocks=0, rtextents=0
-> 
-> > ......
-> > > If it's just a incorrect count of one dicrectory, after ignore it, the fs
-> > > can work normally(with error). Is it worth stopping the entire fs
-> > > immediately for this condition?
-> > The inode is on the unlinked list with a non-zero link count. That
-> > means it cannot be removed from the unlinked list (because the inode
-> > will not be freed during inactivation) and so the unlinked list is
-> > effectively corrupt. Anything that removes an inode or creates a
-> > O_TMPFILE or uses RENAME_WHITEOUT can trip over this corrupt
-> > unlinked list and have things go from bad to worse. Hence the
-> If protect the nlink not to underflow(minimum value of nlink is 0),
-> does it means can avoid unlinked list to be corrupted？
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1fa947e7f09e136925b8@syzkaller.appspotmail.com
 
-The VFS already warns when an underflow occurs - stuff has already
-gone wrong at this point, and if we are going to do anything then
-we should be shutting the filesystem down at this point because
-something is corrupt either in memory or on disk, and continuing
-after underflow propagates the corruption and makes things worse...
+INFO: task syz-executor.5:10017 blocked for more than 143 seconds.
+      Not tainted 6.5.0-syzkaller-11075-g92901222f83d #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor.5  state:D stack:27624 pid:10017 ppid:5071   flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0xee1/0x59f0 kernel/sched/core.c:6695
+ schedule+0xe7/0x1b0 kernel/sched/core.c:6771
+ io_schedule+0xbe/0x130 kernel/sched/core.c:9026
+ folio_wait_bit_common+0x3d2/0x9b0 mm/filemap.c:1304
+ folio_lock include/linux/pagemap.h:1042 [inline]
+ clean_bdev_aliases+0x56b/0x610 fs/buffer.c:1725
+ clean_bdev_bh_alias include/linux/buffer_head.h:219 [inline]
+ __block_write_begin_int+0x8d6/0x1470 fs/buffer.c:2115
+ iomap_write_begin+0x5be/0x17b0 fs/iomap/buffered-io.c:772
+ iomap_write_iter fs/iomap/buffered-io.c:907 [inline]
+ iomap_file_buffered_write+0x3d6/0x9a0 fs/iomap/buffered-io.c:968
+ blkdev_buffered_write block/fops.c:634 [inline]
+ blkdev_write_iter+0x572/0xca0 block/fops.c:688
+ call_write_iter include/linux/fs.h:1985 [inline]
+ do_iter_readv_writev+0x21e/0x3c0 fs/read_write.c:735
+ do_iter_write+0x17f/0x830 fs/read_write.c:860
+ vfs_iter_write+0x7a/0xb0 fs/read_write.c:901
+ iter_file_splice_write+0x698/0xbf0 fs/splice.c:736
+ do_splice_from fs/splice.c:933 [inline]
+ direct_splice_actor+0x118/0x180 fs/splice.c:1142
+ splice_direct_to_actor+0x347/0xa30 fs/splice.c:1088
+ do_splice_direct+0x1af/0x280 fs/splice.c:1194
+ do_sendfile+0xb88/0x1390 fs/read_write.c:1254
+ __do_sys_sendfile64 fs/read_write.c:1322 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1308 [inline]
+ __x64_sys_sendfile64+0x1d6/0x220 fs/read_write.c:1308
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x38/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x63/0xcd
+RIP: 0033:0x7fdb8ca7cae9
+RSP: 002b:00007ffcd642da18 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007fdb8cb9bf80 RCX: 00007fdb8ca7cae9
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000003
+RBP: 00007fdb8cac847a R08: 0000000000000000 R09: 0000000000000000
+R10: 0100000000000042 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000be7 R14: 00007fdb8cb9bf80 R15: 00007fdb8cb9bf80
+ </TASK>
+INFO: lockdep is turned off.
+NMI backtrace for cpu 1
+CPU: 1 PID: 29 Comm: khungtaskd Not tainted 6.5.0-syzkaller-11075-g92901222f83d #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/26/2023
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ nmi_cpu_backtrace+0x277/0x380 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x299/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:160 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:222 [inline]
+ watchdog+0xfac/0x1230 kernel/hung_task.c:379
+ kthread+0x33a/0x430 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 17 Comm: rcu_preempt Not tainted 6.5.0-syzkaller-11075-g92901222f83d #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/26/2023
+RIP: 0010:load_balance+0x10a/0x3130 kernel/sched/fair.c:10983
+Code: 4a 8d 3c f5 40 aa 5c 8c 48 ba 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 80 3c 11 00 0f 85 2f 2e 00 00 31 c0 b9 0c 00 00 00 <4e> 8b 1c f5 40 aa 5c 8c 4c 89 94 24 f8 00 00 00 48 8d bc 24 00 01
+RSP: 0018:ffffc900001676c8 EFLAGS: 00000046
+RAX: 0000000000000000 RBX: ffff8880b983c700 RCX: 000000000000000c
+RDX: dffffc0000000000 RSI: ffffffff8ae90360 RDI: ffffffff8c5caa40
+RBP: ffffc90000167898 R08: ffffc90000167960 R09: 0000000000000000
+R10: ffff88801525ac00 R11: 0000000000000000 R12: 00000000000287d8
+R13: ffffc90000167960 R14: 0000000000000000 R15: 0000000100004d48
+FS:  0000000000000000(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000240 CR3: 000000000c976000 CR4: 0000000000350ef0
+Call Trace:
+ <NMI>
+ </NMI>
+ <TASK>
+ newidle_balance+0x710/0x1210 kernel/sched/fair.c:12059
+ pick_next_task_fair+0x87/0x1200 kernel/sched/fair.c:8234
+ __pick_next_task kernel/sched/core.c:6004 [inline]
+ pick_next_task kernel/sched/core.c:6079 [inline]
+ __schedule+0x493/0x59f0 kernel/sched/core.c:6659
+ schedule+0xe7/0x1b0 kernel/sched/core.c:6771
+ schedule_timeout+0x157/0x2c0 kernel/time/timer.c:2167
+ rcu_gp_fqs_loop+0x1ec/0xa50 kernel/rcu/tree.c:1613
+ rcu_gp_kthread+0x249/0x380 kernel/rcu/tree.c:1812
+ kthread+0x33a/0x430 kernel/kthread.c:388
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:304
+ </TASK>
 
-The fact that your customer's system didn't log warnings about the
-link count going from 0 to -1 when the link count was -12 on disk
-(like it should if this happens via xfs_droplink() -> drop_link())
-it really brings into question how this situation silently
-occurred....
 
-Until we actually understand the root cause of the bad value and why
-it occurred silently in a decade old kernel, trying to fix it in a
-current upstream kernel is premature.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> > corruption is not limited to the directory inode or operations
-> > involving that directory inode. We generally shut down the
-> > filesystem when this sort of corruption occurs - it needs to be
-> > repaired ASAP, otherwise other stuff will randomly fail and
-> > you'll still end up with a shut down filesystem. Better to fail
-> > fast in corruption cases than try to ignore it and vainly hope
-> > that everything will work out for the best....  Cheers, Dave.
-> > --
-> Directly shutdown filesystem is really a relatively safe approach.
-> But for customer, it's suddenly and unprepared. If keep fs
-> available as possible (If can be achieved) and allow delayed
-> repair, then customer can make more preparations before do that.
-> Do you preferred more to shutdown filesystem directly?
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Yes, if we've detected corruption in a modification situation (such
-as an unlink) we need to shut down the filesystem. Propagating a
-corruption from in-memory to on-disk is the worst thing we can do.
-As such, XFS has had a policy since the mid 1990s that we shut down
-the filesystem immediately rather than risk propagating a corruption
-into on-disk structures.
+If the bug is already fixed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-This will change in the future as we start to leverage online repair
-in response to corruption detections like this. But that's not a
-magic bullet, and that does not help the situation with problems on
-RHEL-7 era kernels....
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
--Dave.
+If you want to overwrite bug's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
--- 
-Dave Chinner
-david@fromorbit.com
+If the bug is a duplicate of another bug, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
