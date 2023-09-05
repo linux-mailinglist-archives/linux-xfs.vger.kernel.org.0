@@ -2,67 +2,144 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 354D4792921
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Sep 2023 18:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5324A792C5F
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Sep 2023 19:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350916AbjIEQZR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 5 Sep 2023 12:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46470 "EHLO
+        id S239864AbjIERTK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 5 Sep 2023 13:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354541AbjIEM1G (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Sep 2023 08:27:06 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158081A8;
-        Tue,  5 Sep 2023 05:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eVxmERvkhRQsWzv7hKcub8nBL8Ebk3iyCYi7oJyr1Qk=; b=y1nZcAesjx2xv+SqYWukES/nxx
-        qxVnUugSjtZ7Rv+bkJJ6GZIdmJGlCLcs8CZEB+opdncPZkN8ySSXTFFA9n3825sRirzrtgHedCb6Y
-        xVaJXXjwPg3j1NrmFUhs2YDq66bVYir9KESsctaZ/K7zI5iJ/7/Syy9Tjm4oJ53hAypHgRYapUnBI
-        Du1mmz4gZGYHfNXUaeRFE1/vD4OBuZO6WRSug9LrHMCZd+Fxeo+r5eEjX0DEnDHXqjQn/VtktT/OS
-        lT97QzO09PtP3N5ZNy00mxVHFBt85fKdar8/4wc/er2Bx8o3t5+AcoVG2flc6LAz8j2jfr7gmohWf
-        LJKCN9qg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qdV8x-0060Oq-0K;
-        Tue, 05 Sep 2023 12:26:55 +0000
-Date:   Tue, 5 Sep 2023 05:26:55 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     syzbot <syzbot+4a08ffdf3667b36650a1@syzkaller.appspotmail.com>
-Cc:     adilger.kernel@dilger.ca, djwong@kernel.org, hch@infradead.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        nogikh@google.com, song@kernel.org,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu, yukuai3@huawei.com,
-        zhang_shurong@foxmail.com
-Subject: Re: [syzbot] [block] kernel BUG in __block_write_begin_int
-Message-ID: <ZPcej+rJjg+6SgzK@infradead.org>
-References: <CANp29Y65sCETzq3CttPHww40W_tQ2S=0HockV-aSUi9dE8HGow@mail.gmail.com>
- <000000000000d9daf4060499c0c9@google.com>
+        with ESMTP id S1353488AbjIERNy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Sep 2023 13:13:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B0B30F3
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Sep 2023 09:43:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4360460A54
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Sep 2023 16:42:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A26CBC433C8;
+        Tue,  5 Sep 2023 16:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693932170;
+        bh=btj3Z3ijdJyE48oomLKulblGMPvbu4l9GJtQ08N0lbg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SGi0ZDwq8zIkgcJPJDrRfXlmOy7N2e7oiS3xCUINLZcwvC25jPIzHUoGtzmRCOlPF
+         3dpNBo0MNEP2a53fMBuZDmKAfWiBfHj1YqNmcjyvtCEyOsOKGSUmdngiGkI7pV8Eie
+         nRUOtN86KuGDnku78rje4uO/hQ+kl3lnL5taXTTN+rbhOywF4Zoy15yW/6M3IN1rFY
+         ngMj6rmugAzH9vfj4L8PHBGDkCchpxLi7AqZngWuSjgQuQJ7LBdDrAtGgoRh0KELsT
+         tcI4gHVCYi7yFSHcwlHYD1BT0sZE5JdLI644e9sh6VtBDzXlBnuiZdpE2+KXP6dK6o
+         5Sy4cMMCd7jVQ==
+Date:   Tue, 5 Sep 2023 09:42:50 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Anthony Iliopoulos <ailiop@suse.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] libxfs: fix atomic64_t detection on x86 32-bit
+ architectures
+Message-ID: <20230905164250.GV28186@frogsfrogsfrogs>
+References: <20230905084623.24865-1-ailiop@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000d9daf4060499c0c9@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SORTED_RECIPS,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230905084623.24865-1-ailiop@suse.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 05, 2023 at 03:04:32AM -0700, syzbot wrote:
-> Hello,
+On Tue, Sep 05, 2023 at 10:46:23AM +0200, Anthony Iliopoulos wrote:
+> xfsprogs during compilation tries to detect if liburcu supports atomic
+> 64-bit ops on the platform it is being compiled on, and if not it falls
+> back to using pthread mutex locks.
 > 
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> WARNING in __kthread_create_on_node
+> The detection logic for that fallback relies on _uatomic_link_error()
+> which is a link-time trick used by liburcu that will cause compilation
+> errors on archs that lack the required support. That only works for the
+> generic liburcu code though, and it is not implemented for the
+> x86-specific code.
+> 
+> In practice this means that when xfsprogs is compiled on 32-bit x86
+> archs will successfully link to liburcu for atomic ops, but liburcu does
+> not support atomic64_t on those archs. It indicates this during runtime
+> by generating an illegal instruction that aborts execution, and thus
+> causes various xfsprogs utils to be segfaulting.
+> 
+> Fix this by executing the liburcu atomic64_t detection code during
+> configure instead of only relying on the linker error, so that
+> compilation will properly fall back to pthread mutexes on those archs.
+> 
+> Fixes: 7448af588a2e ("libxfs: fix atomic64_t poorly for 32-bit architectures")
+> 
+> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+> ---
+>  m4/package_urcu.m4 | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/m4/package_urcu.m4 b/m4/package_urcu.m4
+> index ef116e0cda76..f26494a69718 100644
+> --- a/m4/package_urcu.m4
+> +++ b/m4/package_urcu.m4
+> @@ -26,11 +26,15 @@ rcu_init();
+>  #
+>  # Make sure that calling uatomic_inc on a 64-bit integer doesn't cause a link
+>  # error on _uatomic_link_error, which is how liburcu signals that it doesn't
+> -# support atomic operations on 64-bit data types.
+> +# support atomic operations on 64-bit data types for its generic
+> +# implementation (which relies on compiler builtins). For certain archs
+> +# where liburcu carries its own implementation (such as x86_32), it
+> +# signals lack of support during runtime by emitting an illegal
+> +# instruction, so we also need to execute here to detect that.
+>  #
+>  AC_DEFUN([AC_HAVE_LIBURCU_ATOMIC64],
+>    [ AC_MSG_CHECKING([for atomic64_t support in liburcu])
+> -    AC_LINK_IFELSE(
+> +    AC_RUN_IFELSE(
 
-Well, that is
+Unfortunately, this change breaks cross compiling:
 
+checking for umode_t... no
+checking for atomic64_t support in liburcu... configure: error: in
+	`.../xfsprogs/build-aarch64':
+configure: error: cannot run test program while cross compiling
+See `config.log' for more details
 
- a) a different issue in ext4
- b) just a warning
+(Note that this is an x64 host building aarch64)
 
+Seeing as we /do/ have a (slow) workaround for 32-bit machines, perhaps
+we should use it any time a long isn't 64-bits wide:
+
+diff --git a/m4/package_urcu.m4 b/m4/package_urcu.m4
+index ef116e0cda7..2ad4179aca2 100644
+--- a/m4/package_urcu.m4
++++ b/m4/package_urcu.m4
+@@ -34,8 +34,11 @@ AC_DEFUN([AC_HAVE_LIBURCU_ATOMIC64],
+     [  AC_LANG_PROGRAM([[
+ #define _GNU_SOURCE
+ #include <urcu.h>
++#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+        ]], [[
+ long long f = 3;
++
++BUILD_BUG_ON(CAA_BITS_PER_LONG < 64);
+ uatomic_inc(&f);
+        ]])
+     ], have_liburcu_atomic64=yes
+
+This will cause suboptimal performance on any 32-bit cpu that /does/
+support atomic operations on a u64, but oh well.
+
+--D
+
+>      [	AC_LANG_PROGRAM([[
+>  #define _GNU_SOURCE
+>  #include <urcu.h>
+> -- 
+> 2.42.0
+> 
