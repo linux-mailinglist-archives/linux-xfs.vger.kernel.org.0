@@ -2,72 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 137D27978AD
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 18:51:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D06A797B0A
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 20:00:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230474AbjIGQvn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Sep 2023 12:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33290 "EHLO
+        id S245665AbjIGSAi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Sep 2023 14:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235871AbjIGQvn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 12:51:43 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F1B1FCE
-        for <linux-xfs@vger.kernel.org>; Thu,  7 Sep 2023 09:51:16 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-49351972caeso403685e0c.1
-        for <linux-xfs@vger.kernel.org>; Thu, 07 Sep 2023 09:51:16 -0700 (PDT)
+        with ESMTP id S234083AbjIGSAe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 14:00:34 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFFB10F1;
+        Thu,  7 Sep 2023 11:00:10 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-64b98479a66so7150396d6.0;
+        Thu, 07 Sep 2023 11:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1694105402; x=1694710202; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A7DOp6AnKZY5h4Jv31ICUvptqkR06ZrBW+7zJhFDmIk=;
-        b=zljD/4AgrjlOnPrYHuohuhdY0+CZrwmv+UkBoNi2BnC0xxRiLf//MvKAlUMjzN6NML
-         4qqNQ+yeBqsUQaXcHgoAkfG/8sRJo0X6MX0k8WDV5cQarLOx55C3e8F2TuURc0enpR2P
-         0kh1XV9DiYtHoJSCP6fEYhDvpMbwASB4AlV6tl3g3D6Cm2X5DJeTiGjhSBpAep6FQ7UK
-         MoBQ3AtErSjlc7/YHRWPXxryhV4xngB+Ac6gEg1cfF41VUrWGMIMEaV5Qx1eN9y5fk/H
-         65PpSin9KPA8Zcu4lcyXrnEkrSE4wGgTtnIQUbJPFbPdo56MhwdLZzj+TCQLTYD5nLp+
-         VCnQ==
+        d=gmail.com; s=20221208; t=1694109603; x=1694714403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HhokXD5xSGkPUoSoPqy6guGBFdQXw48s6owM048uKs4=;
+        b=eaFmci6U9ItNe5GMkv7Cw6es6KYEHy+9AV2CWx8KiHPRrj8NhCtkvihzgtcD9jbivG
+         NGB07nJkh45BAT6GHj7Lwn0Soqn4UA8Q56eBFq4GH0fCPsb23w0RVyBnByBR0EAkGNf1
+         J+J0VewXW4dO7CETSqmWdjfxlZhMR0BE9Awx1fiGxK+gqeWfSvOODIioZoiBFxpcm4C8
+         Q/tPbqhH/OhXEY6zNPvD1TSXBbjYWk7U6K/xr1QTcc3v2ssugz2JVDVZSOPfks9niHlY
+         rj0o9Zra8t2qVr4dP7nSZ/EhmNpj+8FqYEfl36JUFYSSbuDSUHw6c/PhRPkCZ0jb7xu3
+         HB8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694105402; x=1694710202;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A7DOp6AnKZY5h4Jv31ICUvptqkR06ZrBW+7zJhFDmIk=;
-        b=tf8mMIqXQA0/tVNULICEkJVuAdpUCF+1uOJix/F36MzcdGR1qSt4NwUJhHdzfXaOJM
-         Dl8aZLfVErgg+vQ9bh0LMNUNIBYMkFh3rTovR8Rypi4ZX8z3uZymptx/Zyg50YXBY8Sw
-         JcY2L0s7C1a68f82N/wIxSNAZTjoR74V/kPr9Zm2lniYkgr5YwU54fFDeDsT3SnURbdg
-         n6t3i5VxHTHOFD5llS1cJSLITmSYyEnIVXHQzysuuMb6i0DnRBK1uoF+strIcb1uoCvI
-         v9GtbSPSuevpQDqi+aOo5lGBSVgeJTvlPlWLTqtefpKnev/uynX/1QHafgmD2Kxz73wm
-         m3aA==
-X-Gm-Message-State: AOJu0Ywb0Skz1NkEMMWap4ygDcVh5gkVl0YQKiYYgXmoyRlVxat9JM+B
-        ECgsZs0GoSLDOE0IXT6ozsC5rtV+0Zu++xjUeh0=
-X-Google-Smtp-Source: AGHT+IE7TSUeBksYc9nhW8Du+f+gfAbtlYNONDgFGCcIdMz5/au0PsskkU/e2WENW1MwQFc+gBiU6w==
-X-Received: by 2002:a92:c910:0:b0:34b:ae46:803d with SMTP id t16-20020a92c910000000b0034bae46803dmr17846970ilp.4.1694070716678;
-        Thu, 07 Sep 2023 00:11:56 -0700 (PDT)
-Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
-        by smtp.gmail.com with ESMTPSA id mz8-20020a17090b378800b0025bfda134ccsm877225pjb.16.2023.09.07.00.11.56
+        d=1e100.net; s=20230601; t=1694109603; x=1694714403;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HhokXD5xSGkPUoSoPqy6guGBFdQXw48s6owM048uKs4=;
+        b=lm1+d5i5JHRENKKgjqdotlj7hbWfCg8GN7OeNOCvvmSvKgYhOmgikKdRXixlj6ZPTn
+         4T/E9vwSPEUGMsS6PbcCQqhGa1frpA0CyXFSMQMwLGmsDdp/nw9cQPCSa3UKKw1tLhUG
+         MS+oul89HiwGv8pNyP7doo0eoTisGl9fFgjBJ1BFGFSXceK23yc8uSFl1d+2uMO4skUe
+         d19YSiURL19CPfPoYnWU8tFlXVctaXTNgoR2H+L7vApNpFwhD/Zz0amSPTiJwE8zKazT
+         yoCF3H/HeGStjo7cDjt6n6auEfMbWx70Zuf3prC+B3+Rozqa3DBPHFC07v4LcLlLCPUo
+         +vKw==
+X-Gm-Message-State: AOJu0YwKZvcC9nIlIMcD7q//7+pRvfif8RXbdxbPqX3yuWNG4rHTIF5T
+        bWGmqTdeh/Jr7rE9dwe5Qk8G1iZXbzt5Dg==
+X-Google-Smtp-Source: AGHT+IF90bgyK6VXVH1rZEE+qmBogirTmNuiRL37+ff7b4iib6e0mP9tf5ABM61+CctjiLbZhbIRWA==
+X-Received: by 2002:a17:902:c412:b0:1c3:4646:ca23 with SMTP id k18-20020a170902c41200b001c34646ca23mr12562013plk.29.1694089853688;
+        Thu, 07 Sep 2023 05:30:53 -0700 (PDT)
+Received: from localhost.localdomain ([43.132.141.9])
+        by smtp.gmail.com with ESMTPSA id w10-20020a170902e88a00b001bbd8cf6b57sm12734090plg.230.2023.09.07.05.30.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Sep 2023 00:11:56 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qe9BB-00Bvgs-0u;
-        Thu, 07 Sep 2023 17:11:53 +1000
-Date:   Thu, 7 Sep 2023 17:11:53 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     chandan.babu@gmail.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v1.1 3/3] xfs: make inode unlinked bucket recovery work
- with quotacheck
-Message-ID: <ZPl3ucKG33L7NI8B@dread.disaster.area>
-References: <169375774749.3323693.18063212270653101716.stgit@frogsfrogsfrogs>
- <169375776451.3323693.17265659636054853468.stgit@frogsfrogsfrogs>
- <20230905163303.GU28186@frogsfrogsfrogs>
+        Thu, 07 Sep 2023 05:30:53 -0700 (PDT)
+From:   alexjlzheng@gmail.com
+X-Google-Original-From: alexjlzheng@tencent.com
+To:     chandan.babu@oracle.com
+Cc:     djwong@kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: [PATCH] xfs: remove redundant batch variables for serialization
+Date:   Thu,  7 Sep 2023 20:30:18 +0800
+Message-Id: <20230907123017.1049345-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230905163303.GU28186@frogsfrogsfrogs>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,71 +70,73 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 05, 2023 at 09:33:03AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Teach quotacheck to reload the unlinked inode lists when walking the
-> inode table.  This requires extra state handling, since it's possible
-> that a reloaded inode will get inactivated before quotacheck tries to
-> scan it; in this case, we need to ensure that the reloaded inode does
-> not have dquots attached when it is freed.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
-> v1.1: s/CONFIG_QUOTA/CONFIG_XFS_QUOTA/ and fix tracepoint flags decoding
-> ---
->  fs/xfs/xfs_inode.c |   12 +++++++++---
->  fs/xfs/xfs_inode.h |    5 ++++-
->  fs/xfs/xfs_mount.h |   10 +++++++++-
->  fs/xfs/xfs_qm.c    |    7 +++++++
->  4 files changed, 29 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 56f6bde6001b..22af7268169b 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -1743,9 +1743,13 @@ xfs_inactive(
->  	     ip->i_df.if_nextents > 0 || ip->i_delayed_blks > 0))
->  		truncate = 1;
->  
-> -	error = xfs_qm_dqattach(ip);
-> -	if (error)
-> -		goto out;
-> +	if (xfs_iflags_test(ip, XFS_IQUOTAUNCHECKED)) {
-> +		xfs_qm_dqdetach(ip);
-> +	} else {
-> +		error = xfs_qm_dqattach(ip);
-> +		if (error)
-> +			goto out;
-> +	}
+From: Jinliang Zheng <alexjlzheng@tencent.com>
 
-That needs a comment - I'm not going to remember why sometimes we
-detatch dquots instead of attach them here....
+Historically, when generic percpu counters were introduced in xfs for
+free block counters by commit 0d485ada404b ("xfs: use generic percpu
+counters for free block counter"), the counters use a custom batch size.
+In xfs_mod_freecounter(), originally named xfs_mod_fdblocks(), this
+patch attempts to serialize the program using a smaller batch size as a
+parameter to the addition function as the counter approaches 0.
 
+Commit 8c1903d3081a ("xfs: inode and free block counters need to use
+__percpu_counter_compare") pointed out the error in commit 0d485ada404b
+("xfs: use generic percpu counters for free block counter") mentioned
+above and said that "Because the counters use a custom batch size, the
+comparison functions need to be aware of that batch size otherwise the
+comparison does not work correctly".
 
-....
-> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> index 6abcc34fafd8..7256090c3895 100644
-> --- a/fs/xfs/xfs_qm.c
-> +++ b/fs/xfs/xfs_qm.c
-> @@ -1160,6 +1160,10 @@ xfs_qm_dqusage_adjust(
->  	if (error)
->  		return error;
->  
-> +	error = xfs_inode_reload_unlinked(ip);
-> +	if (error)
-> +		goto error0;
+After commit 8c1903d3081a ("xfs: inode and free block counters need to
+use __percpu_counter_compare"), the existence of the batch variable is
+no longer necessary, so it was removed to simplify the code.
 
-Same comment here about doing millions of transaction create/cancel
-for inodes that have non-zero link counts....
+Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+---
+ fs/xfs/xfs_mount.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
 
-Also, same comment here about shutting down on reload error because
-the irele() call will inactivate the inode and try to remove it from
-the unlinked list....
-
-Cheers,
-
-Dave.
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 0a0fd19573d8..72dab39376b7 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1144,7 +1144,6 @@ xfs_mod_freecounter(
+ 	int64_t			lcounter;
+ 	long long		res_used;
+ 	uint64_t		set_aside = 0;
+-	s32			batch;
+ 	bool			has_resv_pool;
+ 
+ 	ASSERT(counter == &mp->m_fdblocks || counter == &mp->m_frextents);
+@@ -1177,20 +1176,6 @@ xfs_mod_freecounter(
+ 		return 0;
+ 	}
+ 
+-	/*
+-	 * Taking blocks away, need to be more accurate the closer we
+-	 * are to zero.
+-	 *
+-	 * If the counter has a value of less than 2 * max batch size,
+-	 * then make everything serialise as we are real close to
+-	 * ENOSPC.
+-	 */
+-	if (__percpu_counter_compare(counter, 2 * XFS_FDBLOCKS_BATCH,
+-				     XFS_FDBLOCKS_BATCH) < 0)
+-		batch = 1;
+-	else
+-		batch = XFS_FDBLOCKS_BATCH;
+-
+ 	/*
+ 	 * Set aside allocbt blocks because these blocks are tracked as free
+ 	 * space but not available for allocation. Technically this means that a
+@@ -1204,7 +1189,7 @@ xfs_mod_freecounter(
+ 	 */
+ 	if (has_resv_pool)
+ 		set_aside = xfs_fdblocks_unavailable(mp);
+-	percpu_counter_add_batch(counter, delta, batch);
++	percpu_counter_add_batch(counter, delta, XFS_FDBLOCKS_BATCH);
+ 	if (__percpu_counter_compare(counter, set_aside,
+ 				     XFS_FDBLOCKS_BATCH) >= 0) {
+ 		/* we had space! */
 -- 
-Dave Chinner
-david@fromorbit.com
+2.31.1
+
