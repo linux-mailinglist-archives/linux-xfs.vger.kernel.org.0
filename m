@@ -2,51 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 767C6797787
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 18:27:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 916CC7976E7
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 18:18:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236579AbjIGQ1C (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Sep 2023 12:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
+        id S236769AbjIGQSo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Sep 2023 12:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbjIGQ0C (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 12:26:02 -0400
+        with ESMTP id S242305AbjIGQSG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 12:18:06 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3EF3AAD;
-        Thu,  7 Sep 2023 09:21:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CE78C32775;
-        Thu,  7 Sep 2023 13:54:06 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991FDB189;
+        Thu,  7 Sep 2023 08:46:39 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86183C4AF69;
+        Thu,  7 Sep 2023 15:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694094849;
-        bh=EIpNSgNgC6LNjnAD//F7CyvaVZ/tPj26U/cNJ/JhfpQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tSr9CwoOVN61H0+dopAxtJ1Zg4QF//neTXKzZHc0IRNVVq5Lo9X+TNU7rEo3ABg+B
-         kW5xMjwYKAs01eBuhsi/0v+lz8qJwlr/1JzrwRQkKqi5lrvT8SifyeODtZ7VpE0Ib4
-         25qn28FDHXw6R2HkcngROF6gokwRLmnxicmbZCo4rjr0p2L/U/XVbCUtvt4iG3Tbke
-         XiUhGzAeJVSjJ6VfIJTo5T3f7Vl0qBxlDp/1Cmo4lI3ueO5Ferfa2DFBQkaHNbau5o
-         aIpqeIKGio8HsskAe/LbMe5oueC8iQhrI64agLHo5e85uxXnjdE5K5tZGfgPE79poi
-         LzwccPKAQyLow==
-Date:   Thu, 7 Sep 2023 15:54:04 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        ntfs3@lists.linux.dev, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 13/13] ntfs3: free the sbi in ->kill_sb
-Message-ID: <20230907-lektion-organismus-f223e15828d9@brauner>
-References: <20230809220545.1308228-1-hch@lst.de>
- <20230809220545.1308228-14-hch@lst.de>
- <56f72849-178a-4cb7-b2e1-b7fc6695a6ef@roeck-us.net>
+        s=k20201202; t=1694101432;
+        bh=KktTyNPU1YnBoEEJ9R4u/lyHf76cmL8N7OemSGxaDss=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KaYk0o3beak81s6CoJh0JCf41Y969HBJhHt5t9ENsHm6Ms5bKGvh7shRjUst5K9Tt
+         5trqH5sG24GrUHRO6vJQXRQ72yYR37E37ywpKKS69zb05OdkaiOdlmKe0eCuhaVLk3
+         6TvRDFzAFqZ19JDePFnmk71HnlO2Fy0vhUTFmXQdJQxvx6vWQZfWvgueSZsLVwzMdl
+         Ga+wKzUF8C/Wdw4cFblot0qQx0vMmveJTq0ajMqi4ck7RX5A/UYRoj0YTIqThay5lH
+         ey0dD7k2xLFAkqwgEGPrLzuWMAoGos7M3Qhwq24QNz/f5vDt+wbHCkn0HdFORkFBC9
+         kL+4JeW1YZCiQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.4 1/5] iomap: Fix possible overflow condition in iomap_write_delalloc_scan
+Date:   Thu,  7 Sep 2023 11:43:45 -0400
+Message-Id: <20230907154349.3421707-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="qhjgiapx27p2h6ha"
-Content-Disposition: inline
-In-Reply-To: <56f72849-178a-4cb7-b2e1-b7fc6695a6ef@roeck-us.net>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.4.15
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -57,96 +52,35 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+From: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
 
---qhjgiapx27p2h6ha
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+[ Upstream commit eee2d2e6ea5550118170dbd5bb1316ceb38455fb ]
 
-On Thu, Sep 07, 2023 at 06:05:40AM -0700, Guenter Roeck wrote:
-> On Wed, Aug 09, 2023 at 03:05:45PM -0700, Christoph Hellwig wrote:
-> > As a rule of thumb everything allocated to the fs_context and moved into
-> > the super_block should be freed by ->kill_sb so that the teardown
-> > handling doesn't need to be duplicated between the fill_super error
-> > path and put_super.  Implement an ntfs3-specific kill_sb method to do
-> > that.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Reviewed-by: Christian Brauner <brauner@kernel.org>
-> 
-> This patch results in:
+folio_next_index() returns an unsigned long value which left shifted
+by PAGE_SHIFT could possibly cause an overflow on 32-bit system. Instead
+use folio_pos(folio) + folio_size(folio), which does this correctly.
 
-The appended patch should fix this. Are you able to test it?
-I will as well.
-
---qhjgiapx27p2h6ha
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment;
-	filename="0001-ntfs3-put-inodes-in-ntfs3_put_super.patch"
-
-From 55d5075cd668eda6a08aaf6569cbc556db8a952b Mon Sep 17 00:00:00 2001
-From: Christian Brauner <brauner@kernel.org>
-Date: Thu, 7 Sep 2023 15:52:28 +0200
-Subject: [PATCH] ntfs3: put inodes in ntfs3_put_super()
-
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ntfs3/super.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ fs/iomap/buffered-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-index 5fffddea554f..4c73afd935e7 100644
---- a/fs/ntfs3/super.c
-+++ b/fs/ntfs3/super.c
-@@ -571,12 +571,8 @@ static void init_once(void *foo)
- /*
-  * Noinline to reduce binary size.
-  */
--static noinline void ntfs3_free_sbi(struct ntfs_sb_info *sbi)
-+static noinline void ntfs3_put_sbi(struct ntfs_sb_info *sbi)
- {
--	kfree(sbi->new_rec);
--	kvfree(ntfs_put_shared(sbi->upcase));
--	kfree(sbi->def_table);
--
- 	wnd_close(&sbi->mft.bitmap);
- 	wnd_close(&sbi->used.bitmap);
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 063133ec77f49..5e5bffa384976 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -929,7 +929,7 @@ static int iomap_write_delalloc_scan(struct inode *inode,
+ 			 * the end of this data range, not the end of the folio.
+ 			 */
+ 			*punch_start_byte = min_t(loff_t, end_byte,
+-					folio_next_index(folio) << PAGE_SHIFT);
++					folio_pos(folio) + folio_size(folio));
+ 		}
  
-@@ -601,6 +597,13 @@ static noinline void ntfs3_free_sbi(struct ntfs_sb_info *sbi)
- 	indx_clear(&sbi->security.index_sdh);
- 	indx_clear(&sbi->reparse.index_r);
- 	indx_clear(&sbi->objid.index_o);
-+}
-+
-+static noinline void ntfs3_free_sbi(struct ntfs_sb_info *sbi)
-+{
-+	kfree(sbi->new_rec);
-+	kvfree(ntfs_put_shared(sbi->upcase));
-+	kfree(sbi->def_table);
- 	kfree(sbi->compress.lznt);
- #ifdef CONFIG_NTFS3_LZX_XPRESS
- 	xpress_free_decompressor(sbi->compress.xpress);
-@@ -625,6 +628,7 @@ static void ntfs_put_super(struct super_block *sb)
- 
- 	/* Mark rw ntfs as clear, if possible. */
- 	ntfs_set_state(sbi, NTFS_DIRTY_CLEAR);
-+	ntfs3_put_sbi(sbi);
- }
- 
- static int ntfs_statfs(struct dentry *dentry, struct kstatfs *buf)
-@@ -1644,8 +1648,10 @@ static void ntfs_fs_free(struct fs_context *fc)
- 	struct ntfs_mount_options *opts = fc->fs_private;
- 	struct ntfs_sb_info *sbi = fc->s_fs_info;
- 
--	if (sbi)
-+	if (sbi) {
-+		ntfs3_put_sbi(sbi);
- 		ntfs3_free_sbi(sbi);
-+	}
- 
- 	if (opts)
- 		put_mount_options(opts);
+ 		/* move offset to start of next folio in range */
 -- 
-2.34.1
+2.40.1
 
-
---qhjgiapx27p2h6ha--
