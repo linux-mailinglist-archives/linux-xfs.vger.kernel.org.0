@@ -2,90 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5BAE79774E
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 18:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C3EE797AA9
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 19:48:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230466AbjIGQYN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Sep 2023 12:24:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52336 "EHLO
+        id S245422AbjIGRsH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Sep 2023 13:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244264AbjIGQX1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 12:23:27 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F777EF3;
-        Thu,  7 Sep 2023 09:13:25 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04F5C433C9;
-        Thu,  7 Sep 2023 15:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694101800;
-        bh=ogud9LayuNxA5epVuVZz59vt/VQoyZTG7PTl81uTp8g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nUgap7cWFuKCa4PzjEmfD7qA5bEg4ToR1RgTOSE+0anALQLA8rb0aoaa3HkXVFJ5O
-         LDB+OVa6mYfYspsYNajmp2hazKUJujr7/ujwdKBxCQO9xzQjcUhed3cKKf7or7kVJQ
-         zEaJHLUzIkrN4dVjplI5gvrGQy1JSFgJ289/eNpe3MI2GuE1ujn2jmG5HE5qt8gYVM
-         Lo423kUOLaO7NzTBlkgos06S3xuR9Rqn3KUzcBxuyDYaiA4kZFUISaBw5VbRdqqBmw
-         jFSohpUZokXHmNQaJ+RZ126vvjlbM85JLeatZeu1dTGenf0kuzVxOXIAPHhw4MpVME
-         uHd7r0J3NIWsw==
-Date:   Thu, 7 Sep 2023 17:49:54 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        ntfs3@lists.linux.dev, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 13/13] ntfs3: free the sbi in ->kill_sb
-Message-ID: <20230907-liebgeworden-leidwesen-331fc399f71e@brauner>
-References: <20230809220545.1308228-1-hch@lst.de>
- <20230809220545.1308228-14-hch@lst.de>
- <56f72849-178a-4cb7-b2e1-b7fc6695a6ef@roeck-us.net>
- <20230907-lektion-organismus-f223e15828d9@brauner>
- <dc4b7b2c-89c0-d16f-43e2-0aec5c9b8e1b@roeck-us.net>
+        with ESMTP id S245444AbjIGRrp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 13:47:45 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD861990;
+        Thu,  7 Sep 2023 10:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=ykzxARVy4uCl6EJxalPtEu7KNDbQwm8SXBvTZkNjJPY=; b=Njpcz/IyQT0fdTQWkzaJwynKDt
+        grfkwXy3awyPXJF2veO4UspVoBdf27UlM1dayYrxsB7RWqjm/4wW0bVokj3a0NfREiAqZuD+7JDod
+        ScEIUkk8Y85CrX4Xtl1GdJH+R3GfOe6dpsa+8PPxQGtMdeOuEex8hcbGDH0+6h1cll2+MwNfpPq8y
+        1Yn7d1t5yrWkwrY321FIn/1Voclkp/cF9kfNfa/OiVG2qmhQDxiJRn2ysBx8aT4CNYBGuA8bKO5b0
+        +aI1t/4evcLGsE4QMu6NkKrbXezfOVVkVjA4u5A3aq96G/1NCyspCs2LiZRAs6Efbh39ks4he24eK
+        TUww7iug==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qeJ5v-00CUFH-Ai; Thu, 07 Sep 2023 17:47:07 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH 0/5] Remove the XFS mrlock
+Date:   Thu,  7 Sep 2023 18:47:00 +0100
+Message-Id: <20230907174705.2976191-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dc4b7b2c-89c0-d16f-43e2-0aec5c9b8e1b@roeck-us.net>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 08:23:09AM -0700, Guenter Roeck wrote:
-> On 9/7/23 06:54, Christian Brauner wrote:
-> > On Thu, Sep 07, 2023 at 06:05:40AM -0700, Guenter Roeck wrote:
-> > > On Wed, Aug 09, 2023 at 03:05:45PM -0700, Christoph Hellwig wrote:
-> > > > As a rule of thumb everything allocated to the fs_context and moved into
-> > > > the super_block should be freed by ->kill_sb so that the teardown
-> > > > handling doesn't need to be duplicated between the fill_super error
-> > > > path and put_super.  Implement an ntfs3-specific kill_sb method to do
-> > > > that.
-> > > > 
-> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > Reviewed-by: Christian Brauner <brauner@kernel.org>
-> > > 
-> > > This patch results in:
-> > 
-> > The appended patch should fix this. Are you able to test it?
-> > I will as well.
-> 
-> Yes, this patch restores the previous behavior (no more backtrace or crash).
+XFS has an mrlock wrapper around the rwsem which adds only the
+functionality of knowing whether the rwsem is currently held in read
+or write mode.  Both regular rwsems and rt-rwsems know this, they just
+don't expose it as an API.  By adding that, we can remove the XFS mrlock
+as well as improving the debug assertions for the mmap_lock when lockdep
+is disabled.
 
-Great, I'll get this fixed in upstream.
+I'd like acks from the locking people, then it probably should go upstream
+through the XFS tree since that's where the patch series touches the
+most code.
 
-> 
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> I say "restore previous behavior" because my simple "recursive copy; partially
-> remove copied files" test still fails. That problem apparently existed since
-> ntfs3 has been introduced (I see it as far back as v5.15).
+Matthew Wilcox (Oracle) (5):
+  locking: Add rwsem_is_write_locked()
+  mm: Use rwsem_is_write_locked in mmap_assert_write_locked
+  xfs: Use rwsem_is_write_locked()
+  xfs: Remove mrlock wrapper
+  xfs: Stop using lockdep to assert that locks are held
 
-I don't think anyone finds that surprising.
+ fs/xfs/mrlock.h           | 78 ---------------------------------------
+ fs/xfs/xfs_inode.c        | 61 ++++++++++--------------------
+ fs/xfs/xfs_inode.h        |  2 +-
+ fs/xfs/xfs_iops.c         |  4 +-
+ fs/xfs/xfs_linux.h        |  2 +-
+ fs/xfs/xfs_super.c        |  4 +-
+ include/linux/mmap_lock.h |  2 +-
+ include/linux/rwbase_rt.h |  5 +++
+ include/linux/rwsem.h     | 10 +++++
+ 9 files changed, 40 insertions(+), 128 deletions(-)
+ delete mode 100644 fs/xfs/mrlock.h
+
+-- 
+2.40.1
+
