@@ -2,46 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 916CC7976E7
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 18:18:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5BAE79774E
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 18:24:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236769AbjIGQSo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Sep 2023 12:18:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52118 "EHLO
+        id S230466AbjIGQYN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Sep 2023 12:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242305AbjIGQSG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 12:18:06 -0400
+        with ESMTP id S244264AbjIGQX1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 12:23:27 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991FDB189;
-        Thu,  7 Sep 2023 08:46:39 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86183C4AF69;
-        Thu,  7 Sep 2023 15:43:51 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F777EF3;
+        Thu,  7 Sep 2023 09:13:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04F5C433C9;
+        Thu,  7 Sep 2023 15:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694101432;
-        bh=KktTyNPU1YnBoEEJ9R4u/lyHf76cmL8N7OemSGxaDss=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KaYk0o3beak81s6CoJh0JCf41Y969HBJhHt5t9ENsHm6Ms5bKGvh7shRjUst5K9Tt
-         5trqH5sG24GrUHRO6vJQXRQ72yYR37E37ywpKKS69zb05OdkaiOdlmKe0eCuhaVLk3
-         6TvRDFzAFqZ19JDePFnmk71HnlO2Fy0vhUTFmXQdJQxvx6vWQZfWvgueSZsLVwzMdl
-         Ga+wKzUF8C/Wdw4cFblot0qQx0vMmveJTq0ajMqi4ck7RX5A/UYRoj0YTIqThay5lH
-         ey0dD7k2xLFAkqwgEGPrLzuWMAoGos7M3Qhwq24QNz/f5vDt+wbHCkn0HdFORkFBC9
-         kL+4JeW1YZCiQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.4 1/5] iomap: Fix possible overflow condition in iomap_write_delalloc_scan
-Date:   Thu,  7 Sep 2023 11:43:45 -0400
-Message-Id: <20230907154349.3421707-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.40.1
+        s=k20201202; t=1694101800;
+        bh=ogud9LayuNxA5epVuVZz59vt/VQoyZTG7PTl81uTp8g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nUgap7cWFuKCa4PzjEmfD7qA5bEg4ToR1RgTOSE+0anALQLA8rb0aoaa3HkXVFJ5O
+         LDB+OVa6mYfYspsYNajmp2hazKUJujr7/ujwdKBxCQO9xzQjcUhed3cKKf7or7kVJQ
+         zEaJHLUzIkrN4dVjplI5gvrGQy1JSFgJ289/eNpe3MI2GuE1ujn2jmG5HE5qt8gYVM
+         Lo423kUOLaO7NzTBlkgos06S3xuR9Rqn3KUzcBxuyDYaiA4kZFUISaBw5VbRdqqBmw
+         jFSohpUZokXHmNQaJ+RZ126vvjlbM85JLeatZeu1dTGenf0kuzVxOXIAPHhw4MpVME
+         uHd7r0J3NIWsw==
+Date:   Thu, 7 Sep 2023 17:49:54 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        ntfs3@lists.linux.dev, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 13/13] ntfs3: free the sbi in ->kill_sb
+Message-ID: <20230907-liebgeworden-leidwesen-331fc399f71e@brauner>
+References: <20230809220545.1308228-1-hch@lst.de>
+ <20230809220545.1308228-14-hch@lst.de>
+ <56f72849-178a-4cb7-b2e1-b7fc6695a6ef@roeck-us.net>
+ <20230907-lektion-organismus-f223e15828d9@brauner>
+ <dc4b7b2c-89c0-d16f-43e2-0aec5c9b8e1b@roeck-us.net>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.4.15
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <dc4b7b2c-89c0-d16f-43e2-0aec5c9b8e1b@roeck-us.net>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -52,35 +59,33 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+On Thu, Sep 07, 2023 at 08:23:09AM -0700, Guenter Roeck wrote:
+> On 9/7/23 06:54, Christian Brauner wrote:
+> > On Thu, Sep 07, 2023 at 06:05:40AM -0700, Guenter Roeck wrote:
+> > > On Wed, Aug 09, 2023 at 03:05:45PM -0700, Christoph Hellwig wrote:
+> > > > As a rule of thumb everything allocated to the fs_context and moved into
+> > > > the super_block should be freed by ->kill_sb so that the teardown
+> > > > handling doesn't need to be duplicated between the fill_super error
+> > > > path and put_super.  Implement an ntfs3-specific kill_sb method to do
+> > > > that.
+> > > > 
+> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > Reviewed-by: Christian Brauner <brauner@kernel.org>
+> > > 
+> > > This patch results in:
+> > 
+> > The appended patch should fix this. Are you able to test it?
+> > I will as well.
+> 
+> Yes, this patch restores the previous behavior (no more backtrace or crash).
 
-[ Upstream commit eee2d2e6ea5550118170dbd5bb1316ceb38455fb ]
+Great, I'll get this fixed in upstream.
 
-folio_next_index() returns an unsigned long value which left shifted
-by PAGE_SHIFT could possibly cause an overflow on 32-bit system. Instead
-use folio_pos(folio) + folio_size(folio), which does this correctly.
+> 
+> Tested-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> I say "restore previous behavior" because my simple "recursive copy; partially
+> remove copied files" test still fails. That problem apparently existed since
+> ntfs3 has been introduced (I see it as far back as v5.15).
 
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/iomap/buffered-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 063133ec77f49..5e5bffa384976 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -929,7 +929,7 @@ static int iomap_write_delalloc_scan(struct inode *inode,
- 			 * the end of this data range, not the end of the folio.
- 			 */
- 			*punch_start_byte = min_t(loff_t, end_byte,
--					folio_next_index(folio) << PAGE_SHIFT);
-+					folio_pos(folio) + folio_size(folio));
- 		}
- 
- 		/* move offset to start of next folio in range */
--- 
-2.40.1
-
+I don't think anyone finds that surprising.
