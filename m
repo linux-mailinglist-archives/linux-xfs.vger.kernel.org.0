@@ -2,127 +2,118 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDE5D797A9D
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 19:47:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95F09797B32
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Sep 2023 20:08:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245342AbjIGRrj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Sep 2023 13:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50258 "EHLO
+        id S235802AbjIGSIe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Sep 2023 14:08:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245396AbjIGRrh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 13:47:37 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9466892;
-        Thu,  7 Sep 2023 10:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=9FU0HDBbS9848C77tpg24Iv2uyZEtVXyAgpiQsjv/fA=; b=NcXGBCh5BPyjAcESrPbWgrRsvW
-        PDdtlXUAW0k8lC/IdN0FAJeBK1laH7kwHd4DLz5VGxpxlbeGjY5LEWxmT2mnCzfiDg/9MxX1y9YIq
-        Aco2rxkVPG1Q5cC4t6HrgpCG7dzJ/n00GBBB5HYp+YIDycwMRJ2stN/4f6UCE/cu+yDvEPg/xymUe
-        gxLzC04nT4WV/5Np19ENi1c6ygMEpl7CoMfjbF6CfUeB2VJ80U//JUdE1S4mVgoEnKU3m4Us/q4ti
-        l2voBmp7JV5jVnAX2/7wySndJLGXrAMrdqgKY6dmc/C4GztfYiBEY6CBASMTB1vOnuCu23xjQCZ8Y
-        6X3U3qxQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qeJ5w-00CUFT-91; Thu, 07 Sep 2023 17:47:08 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        with ESMTP id S234997AbjIGSIe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Sep 2023 14:08:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA7419C
+        for <linux-xfs@vger.kernel.org>; Thu,  7 Sep 2023 11:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694109958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A17IvpynFGjRTpzvVbSGwFNvsNOOnGzpHwVnCuCCR08=;
+        b=JBDNUpYK2b1sfcRub0wmNjQ/14ngAwdjAt3YQLlYxtMZkUmamLisfyQfYk+NHBnpmlY8na
+        rQ7IYNo+Xnt/7++ktwEF++IEogR0/eGFW5nmLD90Uhryfx8ahKhulcD5XjxqI7k9fpHh+V
+        91FHD3XMyAzOFkWYZxGj4BknWwo2miM=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-421-ddqwgDxDN9-rV5Fnng-Qpw-1; Thu, 07 Sep 2023 14:05:56 -0400
+X-MC-Unique: ddqwgDxDN9-rV5Fnng-Qpw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 98FCA3C19385;
+        Thu,  7 Sep 2023 18:05:55 +0000 (UTC)
+Received: from [10.22.16.164] (unknown [10.22.16.164])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 34BA2493112;
+        Thu,  7 Sep 2023 18:05:55 +0000 (UTC)
+Message-ID: <2cd975ec-f868-f180-350f-b1b704118777@redhat.com>
+Date:   Thu, 7 Sep 2023 14:05:54 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH 1/5] locking: Add rwsem_is_write_locked()
+Content-Language: en-US
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Chandan Babu R <chandan.babu@oracle.com>,
         "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH 5/5] xfs: Stop using lockdep to assert that locks are held
-Date:   Thu,  7 Sep 2023 18:47:05 +0100
-Message-Id: <20230907174705.2976191-6-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230907174705.2976191-1-willy@infradead.org>
 References: <20230907174705.2976191-1-willy@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+ <20230907174705.2976191-2-willy@infradead.org>
+From:   Waiman Long <longman@redhat.com>
+In-Reply-To: <20230907174705.2976191-2-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Lockdep does not know that the worker thread has inherited the lock
-from its caller.  Rather than dance around moving the ownership from the
-caller to the thread and back again, just remove the lockdep assertions
-and rely on the rwsem itself to tell us whether _somebody_ is holding
-the lock at the moment.
+On 9/7/23 13:47, Matthew Wilcox (Oracle) wrote:
+> Several places want to know whether the lock is held by a writer, instead
+> of just whether it's held.  We can implement this for both normal and
+> rt rwsems.  RWSEM_WRITER_LOCKED is declared in rwsem.c and exposing
+> it outside that file might tempt other people to use it, so just use
+> a comment to note that's what the 1 means, and help anybody find it if
+> they're looking to change the implementation.
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>   include/linux/rwbase_rt.h |  5 +++++
+>   include/linux/rwsem.h     | 10 ++++++++++
+>   2 files changed, 15 insertions(+)
+>
+> diff --git a/include/linux/rwbase_rt.h b/include/linux/rwbase_rt.h
+> index 1d264dd08625..3c25b14edc05 100644
+> --- a/include/linux/rwbase_rt.h
+> +++ b/include/linux/rwbase_rt.h
+> @@ -31,6 +31,11 @@ static __always_inline bool rw_base_is_locked(struct rwbase_rt *rwb)
+>   	return atomic_read(&rwb->readers) != READER_BIAS;
+>   }
+>   
+> +static __always_inline bool rw_base_is_write_locked(struct rwbase_rt *rwb)
+> +{
+> +	return atomic_read(&rwb->readers) == WRITER_BIAS;
+> +}
+> +
+>   static __always_inline bool rw_base_is_contended(struct rwbase_rt *rwb)
+>   {
+>   	return atomic_read(&rwb->readers) > 0;
+> diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+> index 1dd530ce8b45..0f78b8d2e653 100644
+> --- a/include/linux/rwsem.h
+> +++ b/include/linux/rwsem.h
+> @@ -72,6 +72,11 @@ static inline int rwsem_is_locked(struct rw_semaphore *sem)
+>   	return atomic_long_read(&sem->count) != 0;
+>   }
+>   
+> +static inline int rwsem_is_write_locked(struct rw_semaphore *sem)
+> +{
+> +	return atomic_long_read(&sem->count) & 1 /* RWSEM_WRITER_LOCKED */;
+> +}
 
-__xfs_rwsem_islocked() simplifies into a trivial function, which is easy
-to inline into xfs_isilocked().
+I would prefer you move the various RWSEM_* count bit macros from 
+kernel/locking/rwsem.c to under the !PREEMPT_RT block and directly use 
+RWSEM_WRITER_LOCKED instead of hardcoding a value of 1.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/xfs/xfs_inode.c | 40 ++++++++--------------------------------
- 1 file changed, 8 insertions(+), 32 deletions(-)
-
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index c3cd73c29868..81ee6bf8c662 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -334,29 +334,6 @@ xfs_ilock_demote(
- }
- 
- #if defined(DEBUG) || defined(XFS_WARN)
--static inline bool
--__xfs_rwsem_islocked(
--	struct rw_semaphore	*rwsem,
--	bool			shared)
--{
--	if (!debug_locks) {
--		if (!shared)
--			return rwsem_is_write_locked(rwsem);
--		return rwsem_is_locked(rwsem);
--	}
--
--	if (!shared)
--		return lockdep_is_held_type(rwsem, 0);
--
--	/*
--	 * We are checking that the lock is held at least in shared
--	 * mode but don't care that it might be held exclusively
--	 * (i.e. shared | excl). Hence we check if the lock is held
--	 * in any mode rather than an explicit shared mode.
--	 */
--	return lockdep_is_held_type(rwsem, -1);
--}
--
- bool
- xfs_isilocked(
- 	struct xfs_inode	*ip,
-@@ -366,15 +343,14 @@ xfs_isilocked(
- 		return rwsem_is_locked(&ip->i_lock);
- 	if (lock_flags & XFS_ILOCK_EXCL)
- 		return rwsem_is_write_locked(&ip->i_lock);
--	if (lock_flags & (XFS_MMAPLOCK_EXCL|XFS_MMAPLOCK_SHARED)) {
--		return __xfs_rwsem_islocked(&VFS_I(ip)->i_mapping->invalidate_lock,
--				(lock_flags & XFS_MMAPLOCK_SHARED));
--	}
--
--	if (lock_flags & (XFS_IOLOCK_EXCL | XFS_IOLOCK_SHARED)) {
--		return __xfs_rwsem_islocked(&VFS_I(ip)->i_rwsem,
--				(lock_flags & XFS_IOLOCK_SHARED));
--	}
-+	if (lock_flags & XFS_MMAPLOCK_SHARED)
-+		return rwsem_is_locked(&VFS_I(ip)->i_mapping->invalidate_lock);
-+	if (lock_flags & XFS_MMAPLOCK_EXCL)
-+		return rwsem_is_write_locked(&VFS_I(ip)->i_mapping->invalidate_lock);
-+	if (lock_flags & XFS_IOLOCK_SHARED)
-+		return rwsem_is_locked(&VFS_I(ip)->i_rwsem);
-+	if (lock_flags & XFS_IOLOCK_EXCL)
-+		return rwsem_is_write_locked(&VFS_I(ip)->i_rwsem);
- 
- 	ASSERT(0);
- 	return false;
--- 
-2.40.1
+Cheers,
+Longman
 
