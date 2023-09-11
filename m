@@ -2,157 +2,185 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6D1D79B41D
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Sep 2023 02:01:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EF4879BFDF
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Sep 2023 02:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345535AbjIKVVL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Sep 2023 17:21:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59696 "EHLO
+        id S1345562AbjIKVVR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Sep 2023 17:21:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242464AbjIKPhj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Sep 2023 11:37:39 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF902E9
-        for <linux-xfs@vger.kernel.org>; Mon, 11 Sep 2023 08:37:33 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51D02C433C9;
-        Mon, 11 Sep 2023 15:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694446653;
-        bh=QW4pb4R6Ccpb8384BjgXZniEg+jxpzOwMWDVqj1BEFw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EAr9mFNZdQ4DFI4b0vdExjwb44nggD677WpCMr8p30gqPMGPWLQ3CZOYrcnG6g7gv
-         10igkOyWRD3TLtFLoWZO0IGEgRWBeNBZ6V8kxdTNorUb4dfaz2ZXl66tapZ3Vq/ISY
-         JfPc1Emb0tkdYFaZYFmd1ssegUf+SqyJUz9jkfHGeJfDzpFm460KETfPgfo+02Wgor
-         /wl1N6Oj2DfpZicnup2lqj3i3Twigix3WX1QoqXk76I2vd8Xby5YfFqrNOYeihcB+q
-         SLdEAwY3//juMgigowHLnQ72lnQxNpNO89nGZ2CYT0z7bn4/Ld32zzatPVDl4RpN9v
-         ujibFNqa87TJg==
-Date:   Mon, 11 Sep 2023 08:37:32 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Chandan Babu R <chandanrlinux@gmail.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        xfs <linux-xfs@vger.kernel.org>, harshit.m.mogalapalli@oracle.com
-Subject: [PATCH] xfs: only call xchk_stats_merge after validating scrub inputs
-Message-ID: <20230911153732.GZ28186@frogsfrogsfrogs>
+        with ESMTP id S236100AbjIKJux (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Sep 2023 05:50:53 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 068EAE50
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Sep 2023 02:50:30 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bf7b5e1f06so7713675ad.0
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Sep 2023 02:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1694425829; x=1695030629; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zo3gwSlnAgdCIAM8+Km1Wnkr2Sb5aG/GGOSO40v1R40=;
+        b=BQD5OtD6i2VCJsdXDF0rg+UlzHrNCkTD/EB7rlWBA80e2X1ZtPWe1dTUw2t8ORUE88
+         ZRrArDr+ja0YexFsRPrm+A0XWTivxqi+rxdAy0PBH/OzS0xOhgW1Zq16wQfntnbKHlJD
+         U8ksf4v8e6sOJpJ8djrnpjwyXbB8yOfB0F2i0MtiPOp63Arz8cNxNDsJ8E56782lcmRx
+         TFCCuJ2YDgZleLtrN9bzMhVnzMThdiDabnPuV4hXBc5VyCBIfdkd/lwOyLvbDFItWggH
+         RHxNiqgAgmbGEjnkIbvhivD/Tvk4MZoJ4EGXHV7BBQVTiIUPbuwDD7Gz4CjROViW/+s9
+         q7Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694425829; x=1695030629;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zo3gwSlnAgdCIAM8+Km1Wnkr2Sb5aG/GGOSO40v1R40=;
+        b=CkB6yPrF2G3HI61SIYrXQXm8uxZphYldQgs8vMfnuXv5sakl7z0QtF43DmFfXl2cnw
+         wbMZmjncXvJJ8PlkoFa1lR4r8wJlkApVwbQgfOUkot7cAmXuhUSogcKvnMXj/loWysaQ
+         IGEHtWtlMK9FvPqNFkuI5scu0Bu2avjfoN/fJJwZbrvixRKI3I/UnO+l8+yeT7VxXszm
+         ETGsYIcmcfPazeMP+3RNgIPZpmckE6Mc19iFNTDJwN/oKwoMjtsdo+xjgVF5tGKJDio8
+         C80ZygMznrGLwKjD9n0yKP2Sc2SYvVmBEfjXHEO1MrrP9eIbUJNAqqHqUxek+lzSpOMC
+         Vheg==
+X-Gm-Message-State: AOJu0YzjqtnLW4L6/Em0wnX07FbAIH+FJ5jo24Li4uhnWw30eiQDEtvp
+        ZUSIMeYMXDsO2BuVr7qah0yVdA==
+X-Google-Smtp-Source: AGHT+IFNoTrjJm+fp4U1vSlQVTleS+unGs/tsdGogu2eeyLNoBUX0+IqdGoKEJL6WqzJ7IldBIpdvg==
+X-Received: by 2002:a17:902:e849:b0:1bb:83ec:832 with SMTP id t9-20020a170902e84900b001bb83ec0832mr11264528plg.2.1694425829510;
+        Mon, 11 Sep 2023 02:50:29 -0700 (PDT)
+Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id az7-20020a170902a58700b001bdc2fdcf7esm5988188plb.129.2023.09.11.02.50.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Sep 2023 02:50:29 -0700 (PDT)
+From:   Qi Zheng <zhengqi.arch@bytedance.com>
+To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
+        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
+        steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
+        yujie.liu@intel.com, gregkh@linuxfoundation.org,
+        muchun.song@linux.dev
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v6 35/45] xfs: dynamically allocate the xfs-inodegc shrinker
+Date:   Mon, 11 Sep 2023 17:44:34 +0800
+Message-Id: <20230911094444.68966-36-zhengqi.arch@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+In-Reply-To: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
+References: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+In preparation for implementing lockless slab shrink, use new APIs to
+dynamically allocate the xfs-inodegc shrinker, so that it can be freed
+asynchronously via RCU. Then it doesn't need to wait for RCU read-side
+critical section when releasing the struct xfs_mount.
 
-Harshit Mogalapalli slogged through several reports from our internal
-syzbot instance and observed that they all had a common stack trace:
-
-BUG: KASAN: user-memory-access in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
-BUG: KASAN: user-memory-access in atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1294 [inline]
-BUG: KASAN: user-memory-access in queued_spin_lock include/asm-generic/qspinlock.h:111 [inline]
-BUG: KASAN: user-memory-access in do_raw_spin_lock include/linux/spinlock.h:187 [inline]
-BUG: KASAN: user-memory-access in __raw_spin_lock include/linux/spinlock_api_smp.h:134 [inline]
-BUG: KASAN: user-memory-access in _raw_spin_lock+0x76/0xe0 kernel/locking/spinlock.c:154
-Write of size 4 at addr 0000001dd87ee280 by task syz-executor365/1543
-
-CPU: 2 PID: 1543 Comm: syz-executor365 Not tainted 6.5.0-syzk #1
-Hardware name: Red Hat KVM, BIOS 1.13.0-2.module+el8.3.0+7860+a7792d29 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x83/0xb0 lib/dump_stack.c:106
- print_report+0x3f8/0x620 mm/kasan/report.c:478
- kasan_report+0xb0/0xe0 mm/kasan/report.c:588
- check_region_inline mm/kasan/generic.c:181 [inline]
- kasan_check_range+0x139/0x1e0 mm/kasan/generic.c:187
- instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
- atomic_try_cmpxchg_acquire include/linux/atomic/atomic-instrumented.h:1294 [inline]
- queued_spin_lock include/asm-generic/qspinlock.h:111 [inline]
- do_raw_spin_lock include/linux/spinlock.h:187 [inline]
- __raw_spin_lock include/linux/spinlock_api_smp.h:134 [inline]
- _raw_spin_lock+0x76/0xe0 kernel/locking/spinlock.c:154
- spin_lock include/linux/spinlock.h:351 [inline]
- xchk_stats_merge_one.isra.1+0x39/0x650 fs/xfs/scrub/stats.c:191
- xchk_stats_merge+0x5f/0xe0 fs/xfs/scrub/stats.c:225
- xfs_scrub_metadata+0x252/0x14e0 fs/xfs/scrub/scrub.c:599
- xfs_ioc_scrub_metadata+0xc8/0x160 fs/xfs/xfs_ioctl.c:1646
- xfs_file_ioctl+0x3fd/0x1870 fs/xfs/xfs_ioctl.c:1955
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:871 [inline]
- __se_sys_ioctl fs/ioctl.c:857 [inline]
- __x64_sys_ioctl+0x199/0x220 fs/ioctl.c:857
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x3e/0x90 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-RIP: 0033:0x7ff155af753d
-Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1b 79 2c 00 f7 d8 64 89 01 48
-RSP: 002b:00007ffc006e2568 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007ff155af753d
-RDX: 00000000200000c0 RSI: 00000000c040583c RDI: 0000000000000003
-RBP: 00000000ffffffff R08: 00000000004010c0 R09: 00000000004010c0
-R10: 00000000004010c0 R11: 0000000000000246 R12: 0000000000400cb0
-R13: 00007ffc006e2670 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-
-The root cause here is that xchk_stats_merge_one walks off the end of
-the xchk_scrub_stats.cs_stats array because it has been fed a garbage
-value in sm->sm_type.  That occurs because I put the xchk_stats_merge
-in the wrong place -- it should have been after the last xchk_teardown
-call on our way out of xfs_scrub_metadata because we only call the
-teardown function if we called the setup function, and we don't call the
-setup functions if the inputs are obviously garbage.
-
-Thanks to Harshit for triaging the bug reports and bringing this to my
-attention.  This is a helluva better way to handle syzbot reports than
-spraying sploits on the public list like Googlers do.
-
-Fixes: d7a74cad8f45 ("xfs: track usage statistics of online fsck")
-Reported-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+CC: Chandan Babu R <chandan.babu@oracle.com>
+CC: "Darrick J. Wong" <djwong@kernel.org>
+CC: linux-xfs@vger.kernel.org
 ---
- fs/xfs/scrub/scrub.c |    4 ++--
- fs/xfs/scrub/stats.c |    5 ++++-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_icache.c | 26 +++++++++++++++-----------
+ fs/xfs/xfs_mount.c  |  4 ++--
+ fs/xfs/xfs_mount.h  |  2 +-
+ 3 files changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
-index 7d3aa14d81b5..4849efcaa33a 100644
---- a/fs/xfs/scrub/scrub.c
-+++ b/fs/xfs/scrub/scrub.c
-@@ -588,6 +588,8 @@ xfs_scrub_metadata(
- out_teardown:
- 	error = xchk_teardown(sc, error);
- out_sc:
-+	if (error != -ENOENT)
-+		xchk_stats_merge(mp, sm, &run);
- 	kfree(sc);
- out:
- 	trace_xchk_done(XFS_I(file_inode(file)), sm, error);
-@@ -595,8 +597,6 @@ xfs_scrub_metadata(
- 		sm->sm_flags |= XFS_SCRUB_OFLAG_CORRUPT;
- 		error = 0;
- 	}
--	if (error != -ENOENT)
--		xchk_stats_merge(mp, sm, &run);
- 	return error;
- need_drain:
- 	error = xchk_teardown(sc, 0);
-diff --git a/fs/xfs/scrub/stats.c b/fs/xfs/scrub/stats.c
-index aeb92624176b..cd91db4a5548 100644
---- a/fs/xfs/scrub/stats.c
-+++ b/fs/xfs/scrub/stats.c
-@@ -185,7 +185,10 @@ xchk_stats_merge_one(
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index e541f5c0bc25..aacc7eec2497 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -2187,8 +2187,7 @@ xfs_inodegc_shrinker_count(
+ 	struct shrinker		*shrink,
+ 	struct shrink_control	*sc)
  {
- 	struct xchk_scrub_stats		*css;
+-	struct xfs_mount	*mp = container_of(shrink, struct xfs_mount,
+-						   m_inodegc_shrinker);
++	struct xfs_mount	*mp = shrink->private_data;
+ 	struct xfs_inodegc	*gc;
+ 	int			cpu;
  
--	ASSERT(sm->sm_type < XFS_SCRUB_TYPE_NR);
-+	if (sm->sm_type >= XFS_SCRUB_TYPE_NR) {
-+		ASSERT(sm->sm_type < XFS_SCRUB_TYPE_NR);
-+		return;
-+	}
+@@ -2209,8 +2208,7 @@ xfs_inodegc_shrinker_scan(
+ 	struct shrinker		*shrink,
+ 	struct shrink_control	*sc)
+ {
+-	struct xfs_mount	*mp = container_of(shrink, struct xfs_mount,
+-						   m_inodegc_shrinker);
++	struct xfs_mount	*mp = shrink->private_data;
+ 	struct xfs_inodegc	*gc;
+ 	int			cpu;
+ 	bool			no_items = true;
+@@ -2246,13 +2244,19 @@ int
+ xfs_inodegc_register_shrinker(
+ 	struct xfs_mount	*mp)
+ {
+-	struct shrinker		*shrink = &mp->m_inodegc_shrinker;
++	mp->m_inodegc_shrinker = shrinker_alloc(SHRINKER_NONSLAB,
++						"xfs-inodegc:%s",
++						mp->m_super->s_id);
++	if (!mp->m_inodegc_shrinker)
++		return -ENOMEM;
++
++	mp->m_inodegc_shrinker->count_objects = xfs_inodegc_shrinker_count;
++	mp->m_inodegc_shrinker->scan_objects = xfs_inodegc_shrinker_scan;
++	mp->m_inodegc_shrinker->seeks = 0;
++	mp->m_inodegc_shrinker->batch = XFS_INODEGC_SHRINKER_BATCH;
++	mp->m_inodegc_shrinker->private_data = mp;
  
- 	css = &cs->cs_stats[sm->sm_type];
- 	spin_lock(&css->css_lock);
+-	shrink->count_objects = xfs_inodegc_shrinker_count;
+-	shrink->scan_objects = xfs_inodegc_shrinker_scan;
+-	shrink->seeks = 0;
+-	shrink->flags = SHRINKER_NONSLAB;
+-	shrink->batch = XFS_INODEGC_SHRINKER_BATCH;
++	shrinker_register(mp->m_inodegc_shrinker);
+ 
+-	return register_shrinker(shrink, "xfs-inodegc:%s", mp->m_super->s_id);
++	return 0;
+ }
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 0a0fd19573d8..aed5be5508fe 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1021,7 +1021,7 @@ xfs_mountfs(
+  out_log_dealloc:
+ 	xfs_log_mount_cancel(mp);
+  out_inodegc_shrinker:
+-	unregister_shrinker(&mp->m_inodegc_shrinker);
++	shrinker_free(mp->m_inodegc_shrinker);
+  out_fail_wait:
+ 	if (mp->m_logdev_targp && mp->m_logdev_targp != mp->m_ddev_targp)
+ 		xfs_buftarg_drain(mp->m_logdev_targp);
+@@ -1104,7 +1104,7 @@ xfs_unmountfs(
+ #if defined(DEBUG)
+ 	xfs_errortag_clearall(mp);
+ #endif
+-	unregister_shrinker(&mp->m_inodegc_shrinker);
++	shrinker_free(mp->m_inodegc_shrinker);
+ 	xfs_free_perag(mp);
+ 
+ 	xfs_errortag_del(mp);
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index a25eece3be2b..b8796bfc9ba4 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -221,7 +221,7 @@ typedef struct xfs_mount {
+ 	atomic_t		m_agirotor;	/* last ag dir inode alloced */
+ 
+ 	/* Memory shrinker to throttle and reprioritize inodegc */
+-	struct shrinker		m_inodegc_shrinker;
++	struct shrinker		*m_inodegc_shrinker;
+ 	/*
+ 	 * Workqueue item so that we can coalesce multiple inode flush attempts
+ 	 * into a single flush.
+-- 
+2.30.2
+
