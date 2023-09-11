@@ -2,114 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9737E79A5BE
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Sep 2023 10:13:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 595EA79ACAC
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Sep 2023 01:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233714AbjIKINY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Sep 2023 04:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54890 "EHLO
+        id S1345545AbjIKVVO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Sep 2023 17:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231817AbjIKINX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Sep 2023 04:13:23 -0400
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A91CCD;
-        Mon, 11 Sep 2023 01:13:15 -0700 (PDT)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4Rkfbn6Pltz6G448;
-        Mon, 11 Sep 2023 16:13:09 +0800 (CST)
-Received: from szxlzmapp03.zte.com.cn ([10.5.231.207])
-        by mse-fl1.zte.com.cn with SMTP id 38B8Cs59016612;
-        Mon, 11 Sep 2023 16:12:54 +0800 (+08)
-        (envelope-from cheng.lin130@zte.com.cn)
-Received: from mapi (szxlzmapp05[null])
-        by mapi (Zmail) with MAPI id mid14;
-        Mon, 11 Sep 2023 16:12:56 +0800 (CST)
-Date:   Mon, 11 Sep 2023 16:12:56 +0800 (CST)
-X-Zmail-TransId: 2b0764fecc08516-35b35
-X-Mailer: Zmail v1.0
-Message-ID: <202309111612569712762@zte.com.cn>
-Mime-Version: 1.0
-From:   <cheng.lin130@zte.com.cn>
-To:     <david@fromorbit.com>, <djwong@kernel.org>
-Cc:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiang.yong5@zte.com.cn>, <wang.liang82@zte.com.cn>,
-        <liu.dong3@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHYyXSB4ZnM6IGludHJvZHVjZSBwcm90ZWN0aW9uIGZvciBkcm9wIG5saW5r?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 38B8Cs59016612
-X-Fangmail-Gw-Spam-Type: 0
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 64FECC15.001/4Rkfbn6Pltz6G448
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S235520AbjIKIu6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Sep 2023 04:50:58 -0400
+X-Greylist: delayed 2111 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Sep 2023 01:50:53 PDT
+Received: from mail.arnisdale.pl (mail.arnisdale.pl [151.80.133.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF5C1A1
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Sep 2023 01:50:53 -0700 (PDT)
+Received: by mail.arnisdale.pl (Postfix, from userid 1002)
+        id 279BD253EE; Mon, 11 Sep 2023 08:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=arnisdale.pl; s=mail;
+        t=1694420141; bh=6DhEsVYOGxxfetVY3oiVeew+7Cm34ArcvgDq2WQYIRw=;
+        h=Date:From:To:Subject:From;
+        b=F7ikgV+LABbaKgThlqppbNyQorMtyAT5JlIfQrGfThhhmUAXAGHNibr4vpIYALSUF
+         0pt231qjc600J0P7T6xF8aBZjF6CL8H10Dab/FllgnbxUkJZRqn+bu2BzGKiVhSLtA
+         oBHLXb2spuL4FBwVlFLMf6YzogbPnZx/V3/8mZNFoZDArAhnSbMSY03Q9z8d3MbFLi
+         ePbqymH87GYuZ6Wf6onVVnPc4h4H+ieZwCnMj+VgQcj5OlIFdjSmLz3Y6HfXpaMNc2
+         2La6+LG9iaLRjQnE+U1CUkeha/QRGKcHtyOfRQaRjnN8gFS26kLkhzUSdKH77r+kGv
+         UX81+xionLaVQ==
+Received: by mail.arnisdale.pl for <linux-xfs@vger.kernel.org>; Mon, 11 Sep 2023 08:15:18 GMT
+Message-ID: <20230911064501-0.1.6u.1y3rd.0.5ozerp7h2c@arnisdale.pl>
+Date:   Mon, 11 Sep 2023 08:15:18 GMT
+From:   "Maciej Telka" <maciej.telka@arnisdale.pl>
+To:     <linux-xfs@vger.kernel.org>
+Subject: =?UTF-8?Q?Prosz=C4=99_o_kontakt?=
+X-Mailer: mail.arnisdale.pl
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Cheng Lin <cheng.lin130@zte.com.cn>
+Dzie=C5=84 dobry,
 
-When abnormal drop_nlink are detected on the inode,
-shutdown filesystem, to avoid corruption propagation.
+Czy jest mo=C5=BCliwo=C5=9B=C4=87 nawi=C4=85zania wsp=C3=B3=C5=82pracy z =
+Pa=C5=84stwem?
 
-Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
----
- fs/xfs/xfs_fsops.c | 3 +++
- fs/xfs/xfs_inode.c | 9 +++++++++
- fs/xfs/xfs_mount.h | 1 +
- 3 files changed, 13 insertions(+)
+Z ch=C4=99ci=C4=85 porozmawiam z osob=C4=85 zajmuj=C4=85c=C4=85 si=C4=99 =
+dzia=C5=82aniami zwi=C4=85zanymi ze sprzeda=C5=BC=C4=85.
 
-diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
-index 7cb75cb6b..6fc1cfe83 100644
---- a/fs/xfs/xfs_fsops.c
-+++ b/fs/xfs/xfs_fsops.c
-@@ -543,6 +543,9 @@ xfs_do_force_shutdown(
- 	} else if (flags & SHUTDOWN_CORRUPT_ONDISK) {
- 		tag = XFS_PTAG_SHUTDOWN_CORRUPT;
- 		why = "Corruption of on-disk metadata";
-+	} else if (flags & SHUTDOWN_CORRRUPT_ABN) {
-+		tag = XFS_PTAG_SHUTDOWN_CORRUPT;
-+		why = "Corruption of Abnormal conditions";
- 	} else if (flags & SHUTDOWN_DEVICE_REMOVED) {
- 		tag = XFS_PTAG_SHUTDOWN_IOERROR;
- 		why = "Block device removal";
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 9e62cc500..2d41f2461 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -919,6 +919,15 @@ xfs_droplink(
- 	xfs_trans_t *tp,
- 	xfs_inode_t *ip)
- {
-+
-+	if (VFS_I(ip)->i_nlink == 0) {
-+		xfs_alert(ip->i_mount,
-+			  "%s: Deleting inode %llu with no links.",
-+			  __func__, ip->i_ino);
-+		xfs_force_shutdown(ip->i_mount, SHUTDOWN_CORRRUPT_ABN);
-+		return -EFSCORRUPTED;
-+	}
-+
- 	xfs_trans_ichgtime(tp, ip, XFS_ICHGTIME_CHG);
+Pomagamy skutecznie pozyskiwa=C4=87 nowych klient=C3=B3w.
 
- 	drop_nlink(VFS_I(ip));
-diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index e2866e7fa..dbf36b048 100644
---- a/fs/xfs/xfs_mount.h
-+++ b/fs/xfs/xfs_mount.h
-@@ -459,6 +459,7 @@ void xfs_do_force_shutdown(struct xfs_mount *mp, uint32_t flags, char *fname,
- #define SHUTDOWN_CORRUPT_INCORE	(1u << 3) /* corrupt in-memory structures */
- #define SHUTDOWN_CORRUPT_ONDISK	(1u << 4)  /* corrupt metadata on device */
- #define SHUTDOWN_DEVICE_REMOVED	(1u << 5) /* device removed underneath us */
-+#define SHUTDOWN_CORRRUPT_ABN	(1u << 6) /* shutdown from abnormal conditions */
+Zapraszam do kontaktu.
 
- #define XFS_SHUTDOWN_STRINGS \
- 	{ SHUTDOWN_META_IO_ERROR,	"metadata_io" }, \
--- 
-2.18.1
+
+Pozdrawiam serdecznie
+Maciej Telka
