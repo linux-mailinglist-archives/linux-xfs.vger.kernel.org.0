@@ -2,97 +2,196 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0B937A2778
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Sep 2023 21:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 021B67A296F
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Sep 2023 23:33:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235329AbjIOTyQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 15 Sep 2023 15:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51632 "EHLO
+        id S237774AbjIOVd2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 15 Sep 2023 17:33:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231969AbjIOTyP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Sep 2023 15:54:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63567C7;
-        Fri, 15 Sep 2023 12:54:10 -0700 (PDT)
+        with ESMTP id S237743AbjIOVdO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Sep 2023 17:33:14 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E54DF7;
+        Fri, 15 Sep 2023 14:33:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Yb0aXGGdlsQgU/B8FX1uy5m2GcMPKzwXuAhrykJSyg0=; b=T5Bw5jLf+rV8lN51oBY/eYf7vW
-        4tVlsQ1NaKbz7asS3ljwbDo3W5nrMMKRr8bNPLdR1/fWWAi0BWpXgJeEowhVaJmqlX4BMJB3w9nkm
-        6hP+2/dTfCEc5h87HFBqbPje020S4imv4jMOAs8vNP+UjzGGXlPeC1fbe1hh8p3pvxhAYVMf29HeC
-        ehtemRFVopME8CgLhmZFeWsRnfESAWaW9SZe3WlzTsQgdmaDOTU4GM7PeNFpKBlBMk2POlni1Z28I
-        8//nYNO8rWCG3R5JHP68kXv0kOnIQB42fxbSS1S3dDFkJkDJP1Fi+J5dipw95Xa4po122Jmk+Ybo9
-        sjlUu0iQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qhEtD-00Bip8-8T; Fri, 15 Sep 2023 19:54:07 +0000
-Date:   Fri, 15 Sep 2023 20:54:07 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Pankaj Raghav <kernel@pankajraghav.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        p.raghav@samsung.com, david@fromorbit.com, da.gomez@samsung.com,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        djwong@kernel.org, linux-mm@kvack.org, chandan.babu@oracle.com,
-        mcgrof@kernel.org, gost.dev@samsung.com
-Subject: Re: [RFC 09/23] filemap: use mapping_min_order while allocating
- folios
-Message-ID: <ZQS2X3Kn3wFSLCvu@casper.infradead.org>
-References: <20230915183848.1018717-1-kernel@pankajraghav.com>
- <20230915183848.1018717-10-kernel@pankajraghav.com>
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=yV0EfbURKJh4PDYaNYUDtuXfuSlOqQYcsl+NeN4c8pU=; b=LXYofCU61UT766npBrb7d4bqPz
+        I8maRneOkt/otlO6AmfY3gCmoxvXu+qP88lIcpICnNwKOVhF0uPVrLBxoRdTfghz+apCgLs3Em1Bi
+        EBDweNYcg6qZW98TkDkbtz4pz0Yee6Gec+a9mzOB480fC/vME2k7TqfvWSuLtmpm+IvrW9Ru1LcXM
+        DRlcbHbLchQM7mhA0g2ZWfn+46YQ3tK8mAfsYYLq6Q/Min/o1D6XsLBbY2YfsTB29+S4tR0Ojkor5
+        zJyWDdA367BmuJ1kAH3JTyp7nBwpF8Mnbax0PT+6B22hutkF7ShUPUfVOs3AaPpMIJSKXVk/G7rfk
+        dhYE93fw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qhGQq-00BQn6-0A;
+        Fri, 15 Sep 2023 21:32:56 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     hch@infradead.org, djwong@kernel.org, dchinner@redhat.com,
+        kbusch@kernel.org, sagi@grimberg.me, axboe@fb.com
+Cc:     willy@infradead.org, brauner@kernel.org, hare@suse.de,
+        ritesh.list@gmail.com, rgoldwyn@suse.com, jack@suse.cz,
+        ziy@nvidia.com, ryan.roberts@arm.com, patches@lists.linux.dev,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, p.raghav@samsung.com,
+        da.gomez@samsung.com, dan.helmick@samsung.com, mcgrof@kernel.org
+Subject: [RFC v2 00/10] bdev: LBS devices support to coexist with buffer-heads
+Date:   Fri, 15 Sep 2023 14:32:44 -0700
+Message-Id: <20230915213254.2724586-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230915183848.1018717-10-kernel@pankajraghav.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 08:38:34PM +0200, Pankaj Raghav wrote:
-> From: Pankaj Raghav <p.raghav@samsung.com>
-> 
-> Allocate al teast mapping_min_order when creating new folio for the
-> filemap in filemap_create_folio() and do_read_cache_folio().
+Christoph added CONFIG_BUFFER_HEAD on v6.1 enabling a world where we can
+live without buffer-heads. When we opt into that world we end up also
+using the address space operations of the block device cache using
+iomap. Since iomap supports higher order folios it means then that block
+devices which do use the iomap aops can end up having a logical block
+size or physical block size greater than PAGE_SIZE. We refer to these as
+LBS devices. This in turn allows filesystems which support bs > 4k to be
+enabled on a 4k PAGE_SIZE world on LBS block devices. This alows LBS
+device then to take advantage of the recenlty posted work today to enable
+LBS support for filesystems [0].
 
-This patch is where you should be doing:
+However, an issue is that disabling CONFIG_BUFFER_HEAD in practice is not viable
+for many Linux distributions since it also means disabling support for most
+filesystems other than btrfs and XFS. So we either support larger order folios
+on buffer-heads, or we draw up a solution to enable co-existence. Since at LSFMM
+2023 it was decided we would not support larger order folios on buffer-heads,
+this takes the approach to help support co-existence between using buffer-head
+based filesystems and using the iomap aops dynamically when needed on block
+devices. Folks who want to enhance buffer-heads to support larger order folios
+can do so in parallel to this effort. This just allows iomap based filesystems
+to support LBS block devices today while also allowing buffer-head based
+filesystems to be used on them as well the LBS device also supports a
+logical block of PAGE_SIZE.
 
-	index &= ~(folio_nr_pages(folio) - 1UL);
+LBS devices can come in a few flavors. Adopting larger LBA format enables a
+logical block sizes to be > 4k. Different block device mechanisms which can also
+increase a block device's physical block size to be larger than 4k while still
+retaining backward compatibility with a logical block size of 4k. An example is
+NVMe drives with an LBA format of 4k and an npwg and awupf | nawupf of 16k. With
+this you a logical block size of 4k and a physical block size of 16k. Drives
+which do this may be a reality as larger Indirection Units (IUs) on QLC adopt
+IUs larger than 4k so to better support larger capacity. At least OCP 2.0 does
+require you to expose the IU through npwg. Whether or not a device supports the
+same value for awupf | nawupf (large atomic) is device specific. Devices which
+*do* sport an LBA format of 4k and npwg & awupf | nawupf >= 16k essentially can
+benefit from LBS support such as with XFS [1].
 
-(or similar)
+While LBS devices come to market folks can also experiment with NVMe today
+what some of this might be like by ignoring power failure and faking the larger
+atomic up to the NVMe awun. When the NVMe awun is 0xffff it means awun is
+MDTS, so for those drives, in practice you can experiment today with LBS
+up to MDTS with real drives. This is documented on the kdevops documentation
+for LBS by using something like nvme_core.debug_large_atomics=16384 [2].
 
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> ---
->  mm/filemap.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 21e1341526ab..e4d46f79e95d 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -2502,7 +2502,8 @@ static int filemap_create_folio(struct file *file,
->  	struct folio *folio;
->  	int error;
->  
-> -	folio = filemap_alloc_folio(mapping_gfp_mask(mapping), 0);
-> +	folio = filemap_alloc_folio(mapping_gfp_mask(mapping),
-> +				    mapping_min_folio_order(mapping));
->  	if (!folio)
->  		return -ENOMEM;
->  
-> @@ -3696,7 +3697,8 @@ static struct folio *do_read_cache_folio(struct address_space *mapping,
->  repeat:
->  	folio = filemap_get_folio(mapping, index);
->  	if (IS_ERR(folio)) {
-> -		folio = filemap_alloc_folio(gfp, 0);
-> +		folio = filemap_alloc_folio(gfp,
-> +					    mapping_min_folio_order(mapping));
->  		if (!folio)
->  			return ERR_PTR(-ENOMEM);
->  		err = filemap_add_folio(mapping, folio, index, gfp);
-> -- 
-> 2.40.1
-> 
+To experiment with larger LBA formtas you can also use kdevops and enable
+CONFIG_QEMU_ENABLE_EXTRA_DRIVE_LARGEIO. That enables a ton of drives with
+logical and physical block sizes >= 4k up to a desriable max target for
+experimentation. Since filesystems today only support up to 32k sector sizes,
+in practice you may only want to experiment up to 32k physical / logical.
+
+Support for 64k sector sizes requires an XFS format change, which is something
+Daniel Gomez has experimental patches for, in case folks are interested in
+messing with.
+
+Patch 6 could probably be squashed with patch 5, but I wanted to be
+explicit about this, as this should be decided with the community.
+
+There might be a better way to do this than do deal with the switching
+of the aops dynamically, ideas welcomed!
+
+The NVMe debug patches are posted for pure experimentation purposes, but
+the AWUN patch might be welcomed upsteram. Unless folks really want it,
+the goal here is *not* to upstream the support for the debug module
+parameter nvme_core.debug_large_atomics=16384. On a v3 RFC I can drop those
+patches and just aim to simplify the logic to support LBA formats > ps.
+
+Changes since v1 RFC:
+
+  o Modified the approach to accept we can have different aops per super block
+    on the block device cache as suggested by Christoph
+  o Try to allow dynamically switching between iomap aops and buffer-head aops
+  o Use the iomap aops if the target block size order or min order > ps
+  o Loosten restrictions on set_blocksize() so to just check for the iomap
+    aops for now, making it easy to allow buffer-heads to later add support
+    for bs > ps as well
+  o Use buffer-head aops first always unless the min order is > ps so to always
+    support buffer-head based filesystems
+  o Adopt a flag for buffer-heads so to check for support, buffer-heads based
+    filesystems cannot be used while an LBS filesystem is being used, for
+    instance
+  o Allow iomap aops to be used when the physical block size is > ps as well
+  o NVMe changes to experiment with LBS devices without power failure
+  o NVMe changes to support LBS devices
+
+[0] https://lkml.kernel.org/r/20230608032404.1887046-1-mcgrof@kernel.org
+[1] https://lkml.kernel.org/r/20230915183848.1018717-1-kernel@pankajraghav.com
+[2] https://github.com/linux-kdevops/kdevops/blob/master/docs/lbs.md
+
+Luis Chamberlain (10):
+  bdev: rename iomap aops
+  bdev: dynamically set aops to enable LBS support
+  bdev: increase bdev max blocksize depending on the aops used
+  filesystems: add filesytem buffer-head flag
+  bdev: allow to switch between bdev aops
+  bdev: simplify coexistance
+  nvme: enhance max supported LBA format check
+  nvme: add awun / nawun sanity check
+  nvme: add nvme_core.debug_large_atomics to force high awun as phys_bs
+  nvme: enable LBS support
+
+ block/bdev.c             | 73 ++++++++++++++++++++++++++++++++++++++--
+ block/blk.h              |  1 +
+ block/fops.c             | 14 ++++----
+ drivers/nvme/host/core.c | 70 +++++++++++++++++++++++++++++++++++---
+ drivers/nvme/host/nvme.h |  1 +
+ fs/adfs/super.c          |  2 +-
+ fs/affs/super.c          |  2 +-
+ fs/befs/linuxvfs.c       |  2 +-
+ fs/bfs/inode.c           |  2 +-
+ fs/efs/super.c           |  2 +-
+ fs/exfat/super.c         |  2 +-
+ fs/ext2/super.c          |  2 +-
+ fs/ext4/super.c          |  7 ++--
+ fs/f2fs/super.c          |  2 +-
+ fs/fat/namei_msdos.c     |  2 +-
+ fs/fat/namei_vfat.c      |  2 +-
+ fs/freevxfs/vxfs_super.c |  2 +-
+ fs/gfs2/ops_fstype.c     |  4 +--
+ fs/hfs/super.c           |  2 +-
+ fs/hfsplus/super.c       |  2 +-
+ fs/isofs/inode.c         |  2 +-
+ fs/jfs/super.c           |  2 +-
+ fs/minix/inode.c         |  2 +-
+ fs/nilfs2/super.c        |  2 +-
+ fs/ntfs/super.c          |  2 +-
+ fs/ntfs3/super.c         |  2 +-
+ fs/ocfs2/super.c         |  2 +-
+ fs/omfs/inode.c          |  2 +-
+ fs/qnx4/inode.c          |  2 +-
+ fs/qnx6/inode.c          |  2 +-
+ fs/reiserfs/super.c      |  2 +-
+ fs/super.c               |  3 +-
+ fs/sysv/super.c          |  4 +--
+ fs/udf/super.c           |  2 +-
+ fs/ufs/super.c           |  2 +-
+ include/linux/blkdev.h   |  7 ++++
+ include/linux/fs.h       |  1 +
+ 37 files changed, 189 insertions(+), 48 deletions(-)
+
+-- 
+2.39.2
+
