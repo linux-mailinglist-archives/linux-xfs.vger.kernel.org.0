@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AA227A9951
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 20:13:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE447A9B76
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 21:01:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229664AbjIUSNL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Sep 2023 14:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47744 "EHLO
+        id S230349AbjIUTBn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Sep 2023 15:01:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbjIUSM3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 14:12:29 -0400
+        with ESMTP id S230370AbjIUTBR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 15:01:17 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152937B450
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9CC7B453
         for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 10:37:08 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 36B7EC433B6
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 06:58:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C6D1C433B8
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 06:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695279501;
-        bh=Pr0DMg7Lh61qe+3TuRotggdJdsEMRfza5qa5KJupZgo=;
+        s=k20201202; t=1695279545;
+        bh=RbaN/cQ6MtGLngLtS9O+hJ3Z5FGr4JKBMez0CgHR0Zs=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=dgsO2rshNgnYlf3SIwAAbdr9FSZavQxt6xRtpz7slZLHPpsrfOj5PtyKodAs2qMpS
-         zDoskNzNB+dph/4mNEfTLbHTGq7wxlkmqLyuGSHt+Mo3Mpq/aDMkFDlnxWY9P3xZqB
-         n2O57HlKjaFXUvJAdMLqs0gzLLyUfkQnnf1ZOhXCEg3eMkGQ0FQVByRiceyQjAxeBa
-         +Jg+kSrTX3XXeZoPKciWF1MaTK8/QCwLRKyRA5bOW/u91z60V1ysjaykHcLQpeV6Mq
-         E5LAhSBcBBIMaY9bO04+iY66+U1RpkjjhwiiEwmmtIvsqDMCL8CrE+ArQ18pHjW8Sc
-         mF6gaA086qiWQ==
+        b=b0/kMFtbQExtG+fnFzWD/KxpyJlyQrEJUooXgZDerSxveM3VVNAXxEctXF1r2rO5y
+         E//ZA9DQlQ5gpNeapr38bKcAK/CYuMqFtTWZJE5rQi+viFabrfQAsGZWKKZfiTmk2n
+         6GgO3JyGDo052Ot4++Qu+9wfGftU16TwxOf/8WhtlDfbJxdjby8MhoUOwsa+d8mbiA
+         xHR7WtKMEnNe4vZWHlJymNUIOdnjT9xy+kpuTeMhUO/7fcPwoqVVGx/OYui6r9aYBB
+         PQjscRssVDYaE1vWTJw2uIgZSfSlOl/hKJbe7M1RtEHTk5MxTnPnWLlKPIBvG9X62k
+         LOOIWXDezryyA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 2549DC4332E; Thu, 21 Sep 2023 06:58:21 +0000 (UTC)
+        id 8BDCBC53BD0; Thu, 21 Sep 2023 06:59:05 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     linux-xfs@vger.kernel.org
 Subject: [Bug 216343] XFS: no space left in xlog cause system hang
-Date:   Thu, 21 Sep 2023 06:58:20 +0000
+Date:   Thu, 21 Sep 2023 06:59:05 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
@@ -41,13 +41,13 @@ X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
 X-Bugzilla-Who: zhoukete@126.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: PATCH_ALREADY_AVAILABLE
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216343-201763-MJUjuOCBqw@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: bug_status resolution
+Message-ID: <bug-216343-201763-zmJNwe6esA@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-216343-201763@https.bugzilla.kernel.org/>
 References: <bug-216343-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -67,9 +67,12 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D216343
 
---- Comment #8 from zhoukete@126.com ---
-I have found the cause of the problem. By applying the patch
-d43aaf1685aa471f0593685c9f54d53e3af3cf3f , the problem can be solved.
+zhoukete@126.com changed:
+
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|NEW                         |RESOLVED
+         Resolution|---                         |PATCH_ALREADY_AVAILABLE
 
 --=20
 You may reply to this email to add a comment.
