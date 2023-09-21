@@ -2,177 +2,406 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C440C7A9A52
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 20:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE68A7A9919
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 20:11:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbjIUSiQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Sep 2023 14:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
+        id S230211AbjIUSLa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Sep 2023 14:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbjIUShl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 14:37:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181CDAE96F;
-        Thu, 21 Sep 2023 11:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5JQjYlFnwxrhcfHqWw60RsFGqSkwN1XUouvFVD0EJfc=; b=RScI/c/GkXbCF4dJBoZpg+Q8j9
-        vwH+a3Qh76zavs8//B94a3Mcg5/hAZK3d8b4bHRobDld6DAv+pb63hgWh1vRlKYXk8LA+uUx6A1R3
-        ZeZDqHLogNmIcYhfNzWCzZulQwArVy+xDLLA3w8v992UU1Qx9Ep1XGz947HiWGBKzhpAc6nRG0ICZ
-        3d/u2v5XeaHmscFTmkRxv8YxftoIW2bFoYkq38PLSR/s8QI2ceV58xuN4V+TTnfSmc/3sSbLm4Dut
-        FVkaYf8LUpTY5iGEnKr0Q656BX9olDKH3J4sH/lRvdpAv49O5YGL8FbzAFNu9+G8jwvrp4prBcdvB
-        t19YSvcA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qjDwz-005MFV-0W;
-        Thu, 21 Sep 2023 07:18:13 +0000
-Date:   Thu, 21 Sep 2023 00:18:13 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
+        with ESMTP id S229909AbjIUSLB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 14:11:01 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071178680B
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 10:38:00 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFFCFC4E774;
+        Thu, 21 Sep 2023 15:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695311563;
+        bh=xHCUyjhmv2yYOwtWEfYMrXRa3/dpIZBHJwYsq0vZJ3g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GSrr3Oj860qYnVhd1OqfSU+jPVw9gj1eea4AOj1TLHOyjqR4KM6MiKEwG8udXN4l9
+         RKG6FIdzVmgsazUlMnzk1DPDEEq7ZxLs82PmSYO5onpB6eouBEvP9VFaezG1ge22KK
+         w6E7X8cM01o9a9mXzWlbv8mXFgbs4Mv2L6Zctr+ZNposa0y6w23iF9D2OLjVqLiT0J
+         S7Gr3m0ujWX1uSXS3AlXN1yECeGY2XS7BLR7S2mGw7iZ4pXzwxGoRlHm1QzGXALbtA
+         OOy+uxL58Fn1eMcmLR31fxYvWZPI9T+9GR3ESqa2bYQRDjCn2ktCu5NMQnC3L0mTTT
+         AROjNlc2PdSwQ==
+Date:   Thu, 21 Sep 2023 08:52:43 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Dave Chinner <david@fromorbit.com>
-Cc:     Pankaj Raghav <p.raghav@samsung.com>,
-        Pankaj Raghav <kernel@pankajraghav.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        da.gomez@samsung.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        djwong@kernel.org, linux-mm@kvack.org, chandan.babu@oracle.com,
-        gost.dev@samsung.com, riteshh@linux.ibm.com
-Subject: Re: [RFC 00/23] Enable block size > page size in XFS
-Message-ID: <ZQvuNaYIukAnlEDM@bombadil.infradead.org>
-References: <20230915183848.1018717-1-kernel@pankajraghav.com>
- <ZQd4IPeVI+o6M38W@dread.disaster.area>
- <ZQewKIfRYcApEYXt@bombadil.infradead.org>
- <CGME20230918050749eucas1p13c219481b4b08c1d58e90ea70ff7b9c8@eucas1p1.samsung.com>
- <ZQfbHloBUpDh+zCg@dread.disaster.area>
- <806df723-78cf-c7eb-66a6-1442c02126b3@samsung.com>
- <ZQuxvAd2lxWppyqO@bombadil.infradead.org>
- <ZQvNVAfZMjE3hgmN@bombadil.infradead.org>
- <ZQvczBjY4vTLJFBp@dread.disaster.area>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] xfs: move log discard work to xfs_discard.c
+Message-ID: <20230921155243.GC11391@frogsfrogsfrogs>
+References: <20230921013945.559634-1-david@fromorbit.com>
+ <20230921013945.559634-2-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZQvczBjY4vTLJFBp@dread.disaster.area>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20230921013945.559634-2-david@fromorbit.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 04:03:56PM +1000, Dave Chinner wrote:
-> On Wed, Sep 20, 2023 at 09:57:56PM -0700, Luis Chamberlain wrote:
-> > On Wed, Sep 20, 2023 at 08:00:12PM -0700, Luis Chamberlain wrote:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/log/?h=large-block-linus
-> > > 
-> > > I haven't tested yet the second branch I pushed though but it applied without any changes
-> > > so it should be good (usual famous last words).
-> > 
-> > I have run some preliminary tests on that branch as well above using fsx
-> > with larger LBA formats running them all on the *same* system at the
-> > same time. Kernel is happy.
-
-<-- snip -->
-
-> So I just pulled this, built it and run generic/091 as the very
-> first test on this:
+On Thu, Sep 21, 2023 at 11:39:43AM +1000, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
 > 
-> # ./run_check.sh --mkfs-opts "-m rmapbt=1 -b size=64k" --run-opts "-s xfs_64k generic/091"
-
-The cover letter for this patch series acknowledged failures in fstests.
-
-For kdevops now, we borrow the same last linux-next baseline:
-
-git grep "generic/091" workflows/fstests/expunges/6.6.0-rc2-large-block-linus-nobdev
-workflows/fstests/expunges/6.6.0-rc2-large-block-linus-nobdev/xfs/unassigned/xfs_reflink_1024.txt:generic/091 # possible regression
-workflows/fstests/expunges/6.6.0-rc2-large-block-linus-nobdev/xfs/unassigned/xfs_reflink_16k.txt:generic/091
-workflows/fstests/expunges/6.6.0-rc2-large-block-linus-nobdev/xfs/unassigned/xfs_reflink_32k.txt:generic/091
-workflows/fstests/expunges/6.6.0-rc2-large-block-linus-nobdev/xfs/unassigned/xfs_reflink_64k_4ks.txt:generic/091
-
-So well, we already know this fails.
-
-> For all these assertions about how none of your testing is finding
-> bugs in this code, It's taken me *4 seconds* of test runtime to find
-> the first failure.
-
-Because you know what to look for and this is not yet perfect.
-
-> And, well, it's the same failure as I reported for the previous
-> version of this code:
-
-And we haven't done *any* new changes to the patch series so no surprise
-either.
-
-> Guess what? The fsx parameters being used means it is testing things you
-> aren't.
-
-I actualy found quite a bit of issues with -W. And it was useful.
-
-> Yes, the '-Z -R -W' mean it is using direct IO for reads and writes,
-> mmap() is disabled. Other parameters indicate that using 4k aligned reads and
-> 512 byte aligned writes and truncates.
-
-Thanks! This will help for sure!.
-
-> There is a reason there are multiple different fsx tests in fstests;
-
-You made it clear, and I documented the goal to ensure we get to the
-point we pass all those:
-
-https://kernelnewbies.org/KernelProjects/large-block-size#fsx
-
-> they all exercise different sets of IO behaviours and alignments,
-> and they exercise the IO paths differently.
+> Because we are going to use the same list-based discard submission
+> interface for fstrim-based discards, too.
 > 
-> So there's clearly something wrong here - it's likely that the
-> filesystem IO alignment parameters pulled from the underlying block
-> device (4k physical, 512 byte logical sector sizes) are improperly
-> interpreted.  i.e. for a filesystem with a sector size of 4kB,
-> direct IO with an alignment of 512 bytes should be rejected......
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_discard.c     | 77 ++++++++++++++++++++++++++++++++-
+>  fs/xfs/xfs_discard.h     |  6 ++-
+>  fs/xfs/xfs_extent_busy.h | 20 +++++++--
+>  fs/xfs/xfs_log_cil.c     | 93 ++++++----------------------------------
+>  fs/xfs/xfs_log_priv.h    |  5 ++-
+>  5 files changed, 113 insertions(+), 88 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_discard.c b/fs/xfs/xfs_discard.c
+> index afc4c78b9eed..3f45c7bb94f2 100644
+> --- a/fs/xfs/xfs_discard.c
+> +++ b/fs/xfs/xfs_discard.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright (C) 2010 Red Hat, Inc.
+> + * Copyright (C) 2010, 2023 Red Hat, Inc.
+>   * All Rights Reserved.
+>   */
+>  #include "xfs.h"
+> @@ -19,6 +19,81 @@
+>  #include "xfs_log.h"
+>  #include "xfs_ag.h"
+>  
+> +struct workqueue_struct *xfs_discard_wq;
+> +
+> +static void
+> +xfs_discard_endio_work(
+> +	struct work_struct	*work)
+> +{
+> +	struct xfs_busy_extents	*extents =
+> +		container_of(work, struct xfs_busy_extents, endio_work);
+> +
+> +	xfs_extent_busy_clear(extents->mount, &extents->extent_list, false);
+> +	kmem_free(extents->owner);
+> +}
+> +
+> +/*
+> + * Queue up the actual completion to a thread to avoid IRQ-safe locking for
+> + * pagb_lock.
+> + */
+> +static void
+> +xfs_discard_endio(
+> +	struct bio		*bio)
+> +{
+> +	struct xfs_busy_extents	*extents = bio->bi_private;
+> +
+> +	INIT_WORK(&extents->endio_work, xfs_discard_endio_work);
+> +	queue_work(xfs_discard_wq, &extents->endio_work);
+> +	bio_put(bio);
+> +}
+> +
+> +/*
+> + * Walk the discard list and issue discards on all the busy extents in the
+> + * list. We plug and chain the bios so that we only need a single completion
+> + * call to clear all the busy extents once the discards are complete.
+> + */
+> +int
+> +xfs_discard_extents(
+> +	struct xfs_mount	*mp,
+> +	struct xfs_busy_extents	*extents)
+> +{
+> +	struct xfs_extent_busy	*busyp;
+> +	struct bio		*bio = NULL;
+> +	struct blk_plug		plug;
+> +	int			error = 0;
+> +
+> +	blk_start_plug(&plug);
+> +	list_for_each_entry(busyp, &extents->extent_list, list) {
+> +		trace_xfs_discard_extent(mp, busyp->agno, busyp->bno,
+> +					 busyp->length);
+> +
+> +		error = __blkdev_issue_discard(mp->m_ddev_targp->bt_bdev,
+> +				XFS_AGB_TO_DADDR(mp, busyp->agno, busyp->bno),
+> +				XFS_FSB_TO_BB(mp, busyp->length),
+> +				GFP_NOFS, &bio);
+> +		if (error && error != -EOPNOTSUPP) {
+> +			xfs_info(mp,
+> +	 "discard failed for extent [0x%llx,%u], error %d",
+> +				 (unsigned long long)busyp->bno,
+> +				 busyp->length,
+> +				 error);
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (bio) {
+> +		bio->bi_private = extents;
+> +		bio->bi_end_io = xfs_discard_endio;
+> +		submit_bio(bio);
+> +	} else {
+> +		xfs_discard_endio_work(&extents->endio_work);
+> +	}
+> +	blk_finish_plug(&plug);
+> +
+> +	return error;
+> +}
+> +
+> +
+>  STATIC int
+>  xfs_trim_extents(
+>  	struct xfs_perag	*pag,
+> diff --git a/fs/xfs/xfs_discard.h b/fs/xfs/xfs_discard.h
+> index de92d9cc958f..2b1a85223a56 100644
+> --- a/fs/xfs/xfs_discard.h
+> +++ b/fs/xfs/xfs_discard.h
+> @@ -3,8 +3,10 @@
+>  #define XFS_DISCARD_H 1
+>  
+>  struct fstrim_range;
+> -struct list_head;
+> +struct xfs_mount;
+> +struct xfs_busy_extents;
+>  
+> -extern int	xfs_ioc_trim(struct xfs_mount *, struct fstrim_range __user *);
+> +int xfs_discard_extents(struct xfs_mount *mp, struct xfs_busy_extents *busy);
+> +int xfs_ioc_trim(struct xfs_mount *mp, struct fstrim_range __user *fstrim);
+>  
+>  #endif /* XFS_DISCARD_H */
+> diff --git a/fs/xfs/xfs_extent_busy.h b/fs/xfs/xfs_extent_busy.h
+> index c37bf87e6781..71c28d031e3b 100644
+> --- a/fs/xfs/xfs_extent_busy.h
+> +++ b/fs/xfs/xfs_extent_busy.h
+> @@ -16,9 +16,6 @@ struct xfs_alloc_arg;
+>  /*
+>   * Busy block/extent entry.  Indexed by a rbtree in perag to mark blocks that
+>   * have been freed but whose transactions aren't committed to disk yet.
+> - *
+> - * Note that we use the transaction ID to record the transaction, not the
+> - * transaction structure itself. See xfs_extent_busy_insert() for details.
+>   */
+>  struct xfs_extent_busy {
+>  	struct rb_node	rb_node;	/* ag by-bno indexed search tree */
+> @@ -31,6 +28,23 @@ struct xfs_extent_busy {
+>  #define XFS_EXTENT_BUSY_SKIP_DISCARD	0x02	/* do not discard */
+>  };
+>  
+> +/*
+> + * List used to track groups of related busy extents all the way through
+> + * to discard completion.
+> + */
+> +struct xfs_busy_extents {
+> +	struct xfs_mount	*mount;
+> +	struct list_head	extent_list;
+> +	struct work_struct	endio_work;
+> +
+> +	/*
+> +	 * Owner is the object containing the struct xfs_busy_extents to free
+> +	 * once the busy extents have been processed. If only the
+> +	 * xfs_busy_extents object needs freeing, then point this at itself.
+> +	 */
+> +	void			*owner;
+> +};
+> +
+>  void
+>  xfs_extent_busy_insert(struct xfs_trans *tp, struct xfs_perag *pag,
+>  	xfs_agblock_t bno, xfs_extlen_t len, unsigned int flags);
+> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> index 3aec5589d717..c340987880c8 100644
+> --- a/fs/xfs/xfs_log_cil.c
+> +++ b/fs/xfs/xfs_log_cil.c
+> @@ -16,8 +16,7 @@
+>  #include "xfs_log.h"
+>  #include "xfs_log_priv.h"
+>  #include "xfs_trace.h"
+> -
+> -struct workqueue_struct *xfs_discard_wq;
+> +#include "xfs_discard.h"
+>  
+>  /*
+>   * Allocate a new ticket. Failing to get a new ticket makes it really hard to
+> @@ -103,7 +102,7 @@ xlog_cil_ctx_alloc(void)
+>  
+>  	ctx = kmem_zalloc(sizeof(*ctx), KM_NOFS);
+>  	INIT_LIST_HEAD(&ctx->committing);
+> -	INIT_LIST_HEAD(&ctx->busy_extents);
+> +	INIT_LIST_HEAD(&ctx->busy_extents.extent_list);
 
-So yes, this is not yet complete.
+I wonder if xfs_busy_extents should have an initializer function to
+INIT_LIST_HEAD and set mount/owner?  This patch and the next one both
+have similar initialization sequences.
 
-But now let's step back and I want you to realize where we started
-and why we decided to post, in particular me, I was suggesting we
-post now, instead of waiting for us to resolve *it all*.
+(Not sure if you want to INIT_WORK at the same time?)
 
-When we first started this work we simply thought it was impossible.
-Unless of course you are Matthew and you believed hard in your work.
+>  	INIT_LIST_HEAD(&ctx->log_items);
+>  	INIT_LIST_HEAD(&ctx->lv_chain);
+>  	INIT_WORK(&ctx->push_work, xlog_cil_push_work);
+> @@ -132,7 +131,7 @@ xlog_cil_push_pcp_aggregate(
+>  
+>  		if (!list_empty(&cilpcp->busy_extents)) {
+>  			list_splice_init(&cilpcp->busy_extents,
+> -					&ctx->busy_extents);
+> +					&ctx->busy_extents.extent_list);
 
-The progress, which you don't see, is that steps towards fixing fsx
-issues have been logarithmic. Days, weeks, months before decent
-progress, but the progress was steady...
+Hmm.  Should xfs_trans.t_busy and xlog_cil_pcp.busy_extents also get
+converted into xfs_busy_extents objects and a helper written to splice
+two busy_extents lists together?
 
-And so to get to where we are today only just shows, well this is
-actually not impossible, and Matthew did the right thing with the
-right data structure, and the changes to the page cache with multi
-index array stuff, it seems to be able to also be used for LBS.
+(This might be architecture astronauting, feel free to ignore this...)
 
-At this point, from a logarithmic perspective, we have huge progress,
-and I don't think it will stop. It gives us confidence Matthew was
-right and LBS is possible indeed with the multi-index stuff.
+>  		}
+>  		if (!list_empty(&cilpcp->log_items))
+>  			list_splice_init(&cilpcp->log_items, &ctx->log_items);
+> @@ -882,76 +881,6 @@ xlog_cil_free_logvec(
+>  	}
+>  }
+>  
+> -static void
+> -xlog_discard_endio_work(
+> -	struct work_struct	*work)
+> -{
+> -	struct xfs_cil_ctx	*ctx =
+> -		container_of(work, struct xfs_cil_ctx, discard_endio_work);
+> -	struct xfs_mount	*mp = ctx->cil->xc_log->l_mp;
+> -
+> -	xfs_extent_busy_clear(mp, &ctx->busy_extents, false);
+> -	kmem_free(ctx);
+> -}
+> -
+> -/*
+> - * Queue up the actual completion to a thread to avoid IRQ-safe locking for
+> - * pagb_lock.  Note that we need a unbounded workqueue, otherwise we might
+> - * get the execution delayed up to 30 seconds for weird reasons.
+> - */
+> -static void
+> -xlog_discard_endio(
+> -	struct bio		*bio)
+> -{
+> -	struct xfs_cil_ctx	*ctx = bio->bi_private;
+> -
+> -	INIT_WORK(&ctx->discard_endio_work, xlog_discard_endio_work);
+> -	queue_work(xfs_discard_wq, &ctx->discard_endio_work);
+> -	bio_put(bio);
+> -}
+> -
+> -static void
+> -xlog_discard_busy_extents(
+> -	struct xfs_mount	*mp,
+> -	struct xfs_cil_ctx	*ctx)
+> -{
+> -	struct list_head	*list = &ctx->busy_extents;
+> -	struct xfs_extent_busy	*busyp;
+> -	struct bio		*bio = NULL;
+> -	struct blk_plug		plug;
+> -	int			error = 0;
+> -
+> -	ASSERT(xfs_has_discard(mp));
+> -
+> -	blk_start_plug(&plug);
+> -	list_for_each_entry(busyp, list, list) {
+> -		trace_xfs_discard_extent(mp, busyp->agno, busyp->bno,
+> -					 busyp->length);
+> -
+> -		error = __blkdev_issue_discard(mp->m_ddev_targp->bt_bdev,
+> -				XFS_AGB_TO_DADDR(mp, busyp->agno, busyp->bno),
+> -				XFS_FSB_TO_BB(mp, busyp->length),
+> -				GFP_NOFS, &bio);
+> -		if (error && error != -EOPNOTSUPP) {
+> -			xfs_info(mp,
+> -	 "discard failed for extent [0x%llx,%u], error %d",
+> -				 (unsigned long long)busyp->bno,
+> -				 busyp->length,
+> -				 error);
+> -			break;
+> -		}
+> -	}
+> -
+> -	if (bio) {
+> -		bio->bi_private = ctx;
+> -		bio->bi_end_io = xlog_discard_endio;
+> -		submit_bio(bio);
+> -	} else {
+> -		xlog_discard_endio_work(&ctx->discard_endio_work);
+> -	}
+> -	blk_finish_plug(&plug);
+> -}
+> -
+>  /*
+>   * Mark all items committed and clear busy extents. We free the log vector
+>   * chains in a separate pass so that we unpin the log items as quickly as
+> @@ -980,8 +909,8 @@ xlog_cil_committed(
+>  
+>  	xlog_cil_ail_insert(ctx, abort);
+>  
+> -	xfs_extent_busy_sort(&ctx->busy_extents);
+> -	xfs_extent_busy_clear(mp, &ctx->busy_extents,
+> +	xfs_extent_busy_sort(&ctx->busy_extents.extent_list);
+> +	xfs_extent_busy_clear(mp, &ctx->busy_extents.extent_list,
+>  			      xfs_has_discard(mp) && !abort);
 
-It's not about, can this crash. Yes, we know, it can crash. It's about
-how many different ways, and how many fixes left. Because clearly the
-multi-index stuff is working well. The code feedback so far on this
-patch series has mostly been "I don't think this patch is needed" or
-"perhaps this way is better", and that's the kind of feedback we're
-looking for. Because *each* new patch adds a huge a milestone. And
-it seems the progress has been logarithmic. It is exactly why this
-series went out with a few patches which ... we felt safer with them
-than without. For instance the batch delete.. I still am suspicious
-about us not needing as Hannes' patches also seem to rely on similer
-rounding on the wait stuff, and it seems to bring back memories
-on issues found on permissions. But anyway, the point is that, this
-is clearly not ready. But try to think of progress here as logarithmic,
-and any *dent* we make on the page cache to fix the last corner cases
-will be huge, not small.
+Should these two xfs_extent_busy objects take the xfs_busy_extent object
+as an arg instead of the mount and list_head?  It seems strange (both
+here and the next patch) to build up this struct and then pass around
+its individual parts.
 
-If you want to try, you can see for yourself, what's the next fix? :)
-And if found, was it logarithmic? How do we polish this? That's the
-goal of this patch series.
+The straight conversion aspect of this patch looks correct, so (aside
+from the question above) any larger API cleanups can be their own patch.
 
-  Luis
+--D
+
+>  	spin_lock(&ctx->cil->xc_push_lock);
+> @@ -990,10 +919,14 @@ xlog_cil_committed(
+>  
+>  	xlog_cil_free_logvec(&ctx->lv_chain);
+>  
+> -	if (!list_empty(&ctx->busy_extents))
+> -		xlog_discard_busy_extents(mp, ctx);
+> -	else
+> -		kmem_free(ctx);
+> +	if (!list_empty(&ctx->busy_extents.extent_list)) {
+> +		ctx->busy_extents.mount = mp;
+> +		ctx->busy_extents.owner = ctx;
+> +		xfs_discard_extents(mp, &ctx->busy_extents);
+> +		return;
+> +	}
+> +
+> +	kmem_free(ctx);
+>  }
+>  
+>  void
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index 9e276514cfb5..c3dfc0de87de 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -6,6 +6,8 @@
+>  #ifndef	__XFS_LOG_PRIV_H__
+>  #define __XFS_LOG_PRIV_H__
+>  
+> +#include "xfs_extent_busy.h"	/* for struct xfs_busy_extents */
+> +
+>  struct xfs_buf;
+>  struct xlog;
+>  struct xlog_ticket;
+> @@ -223,12 +225,11 @@ struct xfs_cil_ctx {
+>  	struct xlog_in_core	*commit_iclog;
+>  	struct xlog_ticket	*ticket;	/* chkpt ticket */
+>  	atomic_t		space_used;	/* aggregate size of regions */
+> -	struct list_head	busy_extents;	/* busy extents in chkpt */
+> +	struct xfs_busy_extents	busy_extents;
+>  	struct list_head	log_items;	/* log items in chkpt */
+>  	struct list_head	lv_chain;	/* logvecs being pushed */
+>  	struct list_head	iclog_entry;
+>  	struct list_head	committing;	/* ctx committing list */
+> -	struct work_struct	discard_endio_work;
+>  	struct work_struct	push_work;
+>  	atomic_t		order_id;
+>  
+> -- 
+> 2.40.1
+> 
