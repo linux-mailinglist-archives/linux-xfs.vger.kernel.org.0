@@ -2,442 +2,670 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43CD17AA14C
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 23:00:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDF347AA4DB
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Sep 2023 00:21:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229666AbjIUVAl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Sep 2023 17:00:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35826 "EHLO
+        id S231980AbjIUWV7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Sep 2023 18:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231938AbjIUU75 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 16:59:57 -0400
+        with ESMTP id S233260AbjIUWVi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 18:21:38 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8752D86808
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 10:38:00 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218C1C4E76E;
-        Thu, 21 Sep 2023 15:41:19 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D0CE7E
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 15:20:55 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39416C433C9;
+        Thu, 21 Sep 2023 22:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695310879;
-        bh=ixQpkLAah7lAsljer1nFF8xD0LJ49vHV6CDGzkAn+RA=;
+        s=k20201202; t=1695334855;
+        bh=EXWFPDTgEOyMaessu7szQmirqshQn17DqBmL1TMxpBU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VUb0NzUX+wiRU0S1XcmqpEHGYphtwBqEGDC0nJyTM4bQJSxfrO6SB24veXoz3nHw+
-         fWkGgUkf14i5jjku3NvbZTM7tIk+NBAYaYdKaOyQIv1tG5C8JS1yTcYpzYpt7vfyC2
-         h+aCePAFqh1xl4MBZr9qMCJhICqo/fB2yKYzihkzfRFJJkUV0F0w52mHQywPdBP39w
-         hqlCjvLKLlntQf/Xp08jvL+MgnUiDF29sUznjGfb3I/m3Won1jg2E9g/BQIvYC8llz
-         UqxbkW82OBp9KgPVDICv694grY5CDjaAszx8omaPHH13RCQtjRMJZDgWHG0Nz3vnXR
-         dFWGcoZW/KVog==
-Date:   Thu, 21 Sep 2023 08:41:18 -0700
+        b=OhOd5wrc4bW1p2mVglPHfK2+O17WyhSQdmyCrdMD2e6kgOJ+hCHQX1SXg9grm3Ght
+         5b4IYujEtY3KeaDqsfLV6Wy2hrjPvq7Hd6kHlF5HogRPa9vTEvXbxgBS3fLpZE1Wb+
+         hbdR/ZAEqTkktjZgQ6dI1sWAyPoQkml2N3o6yh+XcPptse/VzoIWapkzObyX5nCp6N
+         Zu00zYsPbK1H+b4nAj77niFt63obJmOOvwaiqbfZ8cpYawJ7CA8RyRnW9TKtSTratW
+         Eon+lgMZ7H50sScvn+uBkoiCbANrobxAnS2OUrwY/2HlPd+xoS45Dqg/2u2Dw7znmt
+         oRCwJJcytVTsQ==
+Date:   Thu, 21 Sep 2023 15:20:54 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] xfs: reduce AGF hold times during fstrim operations
-Message-ID: <20230921154118.GB11391@frogsfrogsfrogs>
-References: <20230921013945.559634-1-david@fromorbit.com>
- <20230921013945.559634-3-david@fromorbit.com>
+Subject: Re: [PATCH 2/9] xfs: AIL doesn't need manual pushing
+Message-ID: <20230921222054.GD11391@frogsfrogsfrogs>
+References: <20230921014844.582667-1-david@fromorbit.com>
+ <20230921014844.582667-3-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230921013945.559634-3-david@fromorbit.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230921014844.582667-3-david@fromorbit.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 11:39:44AM +1000, Dave Chinner wrote:
+On Thu, Sep 21, 2023 at 11:48:37AM +1000, Dave Chinner wrote:
 > From: Dave Chinner <dchinner@redhat.com>
 > 
-> fstrim will hold the AGF lock for as long as it takes to walk and
-> discard all the free space in the AG that meets the userspace trim
-> criteria. For AGs with lots of free space extents (e.g. millions)
-> or the underlying device is really slow at processing discard
-> requests (e.g. Ceph RBD), this means the AGF hold time is often
-> measured in minutes to hours, not a few milliseconds as we normal
-> see with non-discard based operations.
+> We have a mechanism that checks the amount of log space remaining
+> available every time we make a transaction reservation. If the
+> amount of space is below a threshold (25% free) we push on the AIL
+> to tell it to do more work. To do this, we end up calculating the
+> LSN that the AIL needs to push to on every reservation and updating
+> the push target for the AIL with that new target LSN.
 > 
-> This can result in the entire filesystem hanging whilst the
-> long-running fstrim is in progress. We can have transactions get
-> stuck waiting for the AGF lock (data or metadata extent allocation
-> and freeing), and then more transactions get stuck waiting on the
-> locks those transactions hold. We can get to the point where fstrim
-> blocks an extent allocation or free operation long enough that it
-> ends up pinning the tail of the log and the log then runs out of
-> space. At this point, every modification in the filesystem gets
-> blocked. This includes read operations, if atime updates need to be
-> made.
+> This is silly and expensive. The AIL is perfectly capable of
+> calculating the push target itself, and it will always be running
+> when the AIL contains objects.
 > 
-> To fix this problem, we need to be able to discard free space
-> extents safely without holding the AGF lock. Fortunately, we already
-> do this with online discard via busy extents. We can mark free space
-> extents as "busy being discarded" under the AGF lock and then unlock
-> the AGF, knowing that nobody will be able to allocate that free
-> space extent until we remove it from the busy tree.
+> Modify the AIL to calculate it's 25% push target before it starts a
+> push using the same reserve grant head based calculation as is
+> currently used, and remove all the places where we ask the AIL to
+> push to a new 25% free target.
 > 
-> Modify xfs_trim_extents to use the same asynchronous discard
-> mechanism backed by busy extents as is used with online discard.
-> This results in the AGF only needing to be held for short periods of
-> time and it is never held while we issue discards. Hence if discard
-> submission gets throttled because it is slow and/or there are lots
-> of them, we aren't preventing other operations from being performed
-> on AGF while we wait for discards to complete...
-> 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_discard.c     | 174 +++++++++++++++++++++++++++++++++++----
->  fs/xfs/xfs_extent_busy.c |  34 ++++++--
->  fs/xfs/xfs_extent_busy.h |   4 +
->  3 files changed, 188 insertions(+), 24 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_discard.c b/fs/xfs/xfs_discard.c
-> index 3f45c7bb94f2..f16b254b5eaa 100644
-> --- a/fs/xfs/xfs_discard.c
-> +++ b/fs/xfs/xfs_discard.c
-> @@ -19,6 +19,56 @@
->  #include "xfs_log.h"
->  #include "xfs_ag.h"
->  
-> +/*
-> + * Notes on an efficient, low latency fstrim algorithm
-> + *
-> + * We need to walk the filesystem free space and issue discards on the free
-> + * space that meet the search criteria (size and location). We cannot issue
-> + * discards on extents that might be in use, or are so recently in use they are
-> + * still marked as busy. To serialise against extent state changes whilst we are
-> + * gathering extents to trim, we must hold the AGF lock to lock out other
-> + * allocations and extent free operations that might change extent state.
-> + *
-> + * However, we cannot just hold the AGF for the entire AG free space walk whilst
-> + * we issue discards on each free space that is found. Storage devices can have
-> + * extremely slow discard implementations (e.g. ceph RBD) and so walking a
-> + * couple of million free extents and issuing synchronous discards on each
-> + * extent can take a *long* time. Whilst we are doing this walk, nothing else
-> + * can access the AGF, and we can stall transactions and hence the log whilst
-> + * modifications wait for the AGF lock to be released. This can lead hung tasks
-> + * kicking the hung task timer and rebooting the system. This is bad.
-> + *
-> + * Hence we need to take a leaf from the bulkstat playbook. It takes the AGI
-> + * lock, gathers a range of inode cluster buffers that are allocated, drops the
-> + * AGI lock and then reads all the inode cluster buffers and processes them. It
-> + * loops doing this, using a cursor to keep track of where it is up to in the AG
-> + * for each iteration to restart the INOBT lookup from.
-> + *
-> + * We can't do this exactly with free space - once we drop the AGF lock, the
-> + * state of the free extent is out of our control and we cannot run a discard
-> + * safely on it in this situation. Unless, of course, we've marked the free
-> + * extent as busy and undergoing a discard operation whilst we held the AGF
-> + * locked.
-> + *
-> + * This is exactly how online discard works - free extents are marked busy when
-> + * they are freed, and once the extent free has been committed to the journal,
-> + * the busy extent record is marked as "undergoing discard" and the discard is
-> + * then issued on the free extent. Once the discard completes, the busy extent
-> + * record is removed and the extent is able to be allocated again.
-> + *
-> + * In the context of fstrim, if we find a free extent we need to discard, we
-> + * don't have to discard it immediately. All we need to do it record that free
-> + * extent as being busy and under discard, and all the allocation routines will
-> + * now avoid trying to allocate it. Hence if we mark the extent as busy under
-> + * the AGF lock, we can safely discard it without holding the AGF lock because
-> + * nothing will attempt to allocate that free space until the discard completes.
-> + *
-> + * This also allows us to issue discards asynchronously like we do with online
-> + * discard, and so for fast devices fstrim will run much faster as we can have
-> + * multiple discard operations in flight at once, as well as pipeline the free
-> + * extent search so that it overlaps in flight discard IO.
-> + */
-> +
->  struct workqueue_struct *xfs_discard_wq;
->  
->  static void
-> @@ -94,21 +144,22 @@ xfs_discard_extents(
->  }
->  
->  
-> -STATIC int
-> -xfs_trim_extents(
-> +static int
-> +xfs_trim_gather_extents(
->  	struct xfs_perag	*pag,
->  	xfs_daddr_t		start,
->  	xfs_daddr_t		end,
->  	xfs_daddr_t		minlen,
-> +	struct xfs_alloc_rec_incore *tcur,
-> +	struct xfs_busy_extents	*extents,
->  	uint64_t		*blocks_trimmed)
->  {
->  	struct xfs_mount	*mp = pag->pag_mount;
-> -	struct block_device	*bdev = mp->m_ddev_targp->bt_bdev;
->  	struct xfs_btree_cur	*cur;
->  	struct xfs_buf		*agbp;
-> -	struct xfs_agf		*agf;
->  	int			error;
->  	int			i;
-> +	int			batch = 100;
->  
->  	/*
->  	 * Force out the log.  This means any transactions that might have freed
-> @@ -120,20 +171,28 @@ xfs_trim_extents(
->  	error = xfs_alloc_read_agf(pag, NULL, 0, &agbp);
->  	if (error)
->  		return error;
-> -	agf = agbp->b_addr;
->  
->  	cur = xfs_allocbt_init_cursor(mp, NULL, agbp, pag, XFS_BTNUM_CNT);
->  
->  	/*
-> -	 * Look up the longest btree in the AGF and start with it.
-> +	 * Look up the extent length requested in the AGF and start with it.
->  	 */
-> -	error = xfs_alloc_lookup_ge(cur, 0, be32_to_cpu(agf->agf_longest), &i);
-> +	if (tcur->ar_startblock == NULLAGBLOCK)
-> +		error = xfs_alloc_lookup_ge(cur, 0, tcur->ar_blockcount, &i);
-> +	else
-> +		error = xfs_alloc_lookup_le(cur, tcur->ar_startblock,
-> +				tcur->ar_blockcount, &i);
->  	if (error)
->  		goto out_del_cursor;
-> +	if (i == 0) {
-> +		/* nothing of that length left in the AG, we are done */
-> +		tcur->ar_blockcount = 0;
-> +		goto out_del_cursor;
-> +	}
->  
->  	/*
->  	 * Loop until we are done with all extents that are large
-> -	 * enough to be worth discarding.
-> +	 * enough to be worth discarding or we hit batch limits.
->  	 */
->  	while (i) {
->  		xfs_agblock_t	fbno;
-> @@ -148,7 +207,16 @@ xfs_trim_extents(
->  			error = -EFSCORRUPTED;
->  			break;
->  		}
-> -		ASSERT(flen <= be32_to_cpu(agf->agf_longest));
-> +
-> +		if (--batch <= 0) {
-> +			/*
-> +			 * Update the cursor to point at this extent so we
-> +			 * restart the next batch from this extent.
-> +			 */
-> +			tcur->ar_startblock = fbno;
-> +			tcur->ar_blockcount = flen;
-> +			break;
-> +		}
->  
->  		/*
->  		 * use daddr format for all range/len calculations as that is
-> @@ -163,6 +231,7 @@ xfs_trim_extents(
->  		 */
->  		if (dlen < minlen) {
->  			trace_xfs_discard_toosmall(mp, pag->pag_agno, fbno, flen);
-> +			tcur->ar_blockcount = 0;
->  			break;
->  		}
->  
-> @@ -185,29 +254,98 @@ xfs_trim_extents(
->  			goto next_extent;
->  		}
->  
-> -		trace_xfs_discard_extent(mp, pag->pag_agno, fbno, flen);
-> -		error = blkdev_issue_discard(bdev, dbno, dlen, GFP_NOFS);
-> -		if (error)
-> -			break;
-> +		xfs_extent_busy_insert_discard(pag, fbno, flen,
-> +				&extents->extent_list);
->  		*blocks_trimmed += flen;
-> -
->  next_extent:
->  		error = xfs_btree_decrement(cur, 0, &i);
->  		if (error)
->  			break;
->  
-> -		if (fatal_signal_pending(current)) {
-> -			error = -ERESTARTSYS;
-> -			break;
-> -		}
-> +		/*
-> +		 * If there's no more records in the tree, we are done. Set the
-> +		 * cursor block count to 0 to indicate to the caller that there
-> +		 * is no more extents to search.
-> +		 */
-> +		if (i == 0)
-> +			tcur->ar_blockcount = 0;
->  	}
->  
-> +	/*
-> +	 * If there was an error, release all the gathered busy extents because
-> +	 * we aren't going to issue a discard on them any more.
-> +	 */
-> +	if (error)
-> +		xfs_extent_busy_clear(mp, &extents->extent_list, false);
->  out_del_cursor:
->  	xfs_btree_del_cursor(cur, error);
->  	xfs_buf_relse(agbp);
->  	return error;
->  }
->  
-> +/*
-> + * Iterate the free list gathering extents and discarding them. We need a cursor
-> + * for the repeated iteration of gather/discard loop, so use the longest extent
-> + * we found in the last batch as the key to start the next.
-> + */
-> +static int
-> +xfs_trim_extents(
-> +	struct xfs_perag	*pag,
-> +	xfs_daddr_t		start,
-> +	xfs_daddr_t		end,
-> +	xfs_daddr_t		minlen,
-> +	uint64_t		*blocks_trimmed)
-> +{
-> +	struct xfs_alloc_rec_incore tcur = {
-> +		.ar_blockcount = pag->pagf_longest,
-> +		.ar_startblock = NULLAGBLOCK,
-> +	};
-> +	int			error = 0;
-> +
-> +	do {
-> +		struct xfs_busy_extents	*extents;
-> +
-> +		extents = kzalloc(sizeof(*extents), GFP_KERNEL);
-> +		if (!extents) {
-> +			error = -ENOMEM;
-> +			break;
-> +		}
-> +
-> +		extents->mount = pag->pag_mount;
-> +		extents->owner = extents;
-> +		INIT_LIST_HEAD(&extents->extent_list);
-> +
-> +		error = xfs_trim_gather_extents(pag, start, end, minlen,
-> +				&tcur, extents, blocks_trimmed);
-> +		if (error) {
-> +			kfree(extents);
-> +			break;
-> +		}
-> +
-> +		/*
-> +		 * We hand the extent list to the discard function here so the
-> +		 * discarded extents can be removed from the busy extent list.
-> +		 * This allows the discards to run asynchronously with gathering
-> +		 * the next round of extents to discard.
-> +		 *
-> +		 * However, we must ensure that we do not reference the extent
-> +		 * list  after this function call, as it may have been freed by
-> +		 * the time control returns to us.
-> +		 */
-> +		error = xfs_discard_extents(pag->pag_mount, extents);
-> +		if (error)
-> +			break;
-> +
-> +		if (fatal_signal_pending(current)) {
-> +			error = -ERESTARTSYS;
-> +			break;
-> +		}
-> +	} while (tcur.ar_blockcount != 0);
-> +
-> +	return error;
-> +
-> +}
-> +
->  /*
->   * trim a range of the filesystem.
->   *
-> diff --git a/fs/xfs/xfs_extent_busy.c b/fs/xfs/xfs_extent_busy.c
-> index 7c2fdc71e42d..746814815b1d 100644
-> --- a/fs/xfs/xfs_extent_busy.c
-> +++ b/fs/xfs/xfs_extent_busy.c
-> @@ -19,13 +19,13 @@
->  #include "xfs_log.h"
->  #include "xfs_ag.h"
->  
-> -void
-> -xfs_extent_busy_insert(
-> -	struct xfs_trans	*tp,
-> +static void
-> +xfs_extent_busy_insert_list(
->  	struct xfs_perag	*pag,
->  	xfs_agblock_t		bno,
->  	xfs_extlen_t		len,
-> -	unsigned int		flags)
-> +	unsigned int		flags,
-> +	struct list_head	*busy_list)
->  {
->  	struct xfs_extent_busy	*new;
->  	struct xfs_extent_busy	*busyp;
-> @@ -40,7 +40,7 @@ xfs_extent_busy_insert(
->  	new->flags = flags;
->  
->  	/* trace before insert to be able to see failed inserts */
-> -	trace_xfs_extent_busy(tp->t_mountp, pag->pag_agno, bno, len);
-> +	trace_xfs_extent_busy(pag->pag_mount, pag->pag_agno, bno, len);
->  
->  	spin_lock(&pag->pagb_lock);
->  	rbp = &pag->pagb_tree.rb_node;
-> @@ -62,10 +62,32 @@ xfs_extent_busy_insert(
->  	rb_link_node(&new->rb_node, parent, rbp);
->  	rb_insert_color(&new->rb_node, &pag->pagb_tree);
->  
-> -	list_add(&new->list, &tp->t_busy);
-> +	list_add(&new->list, busy_list);
->  	spin_unlock(&pag->pagb_lock);
->  }
->  
-> +void
-> +xfs_extent_busy_insert(
-> +	struct xfs_trans	*tp,
-> +	struct xfs_perag	*pag,
-> +	xfs_agblock_t		bno,
-> +	xfs_extlen_t		len,
-> +	unsigned int		flags)
-> +{
-> +	xfs_extent_busy_insert_list(pag, bno, len, flags, &tp->t_busy);
-> +}
-> +
-> +void
-> +xfs_extent_busy_insert_discard(
-> +	struct xfs_perag	*pag,
-> +	xfs_agblock_t		bno,
-> +	xfs_extlen_t		len,
-> +	struct list_head	*busy_list)
+> This does still require a manual push in certain circumstances.
+> These circumstances arise when the AIL is not full, but the
+> reservation grants consume the entire of the free space in the log.
+> In this case, we still need to push on the AIL to free up space, so
+> when we hit this condition (i.e. reservation going to sleep to wait
+> on log space) we do a single push to tell the AIL it should empty
+> itself. This will keep the AIL moving as new reservations come in
+> and want more space, rather than keep queuing them and having to
+> push the AIL repeatedly.
 
-I'm a little surprised that isn't a pointer to a struct xfs_busy_extents
-object... but I guess I'll ramble about /that/ API in the reply to patch
-1.
+As hch mentioned, it'd be helpful to paste the explanations from the
+last time I read this:
 
-Logic here looks solid enough,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+https://lore.kernel.org/linux-xfs/20220823015156.GM3600936@dread.disaster.area/ 
+
+into the commit message somewhere, since I had to refer back to it to
+re-remember whats going on in this patch. :)
+
+(Don't waste tons of time reformatting; presenting it as a Q&A is fine.)
+
+Also, "XFS_AIL_OPSTATE_PUSH_ALL" should probably have '_BIT' at the end
+of the name like most of the other #defines we feed to the bitmap
+functions.
+
+Other than those two issues, the logic here looks correct to me.
 
 --D
 
-
-> +{
-> +	xfs_extent_busy_insert_list(pag, bno, len, XFS_EXTENT_BUSY_DISCARDED,
-> +			busy_list);
-> +}
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/libxfs/xfs_defer.c |   4 +-
+>  fs/xfs/xfs_log.c          | 135 ++-----------------------------
+>  fs/xfs/xfs_log.h          |   1 -
+>  fs/xfs/xfs_log_priv.h     |   2 +
+>  fs/xfs/xfs_trans_ail.c    | 162 +++++++++++++++++---------------------
+>  fs/xfs/xfs_trans_priv.h   |  33 ++++++--
+>  6 files changed, 108 insertions(+), 229 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
+> index bcfb6a4203cd..05ee0b66772d 100644
+> --- a/fs/xfs/libxfs/xfs_defer.c
+> +++ b/fs/xfs/libxfs/xfs_defer.c
+> @@ -12,12 +12,14 @@
+>  #include "xfs_mount.h"
+>  #include "xfs_defer.h"
+>  #include "xfs_trans.h"
+> +#include "xfs_trans_priv.h"
+>  #include "xfs_buf_item.h"
+>  #include "xfs_inode.h"
+>  #include "xfs_inode_item.h"
+>  #include "xfs_trace.h"
+>  #include "xfs_icache.h"
+>  #include "xfs_log.h"
+> +#include "xfs_log_priv.h"
+>  #include "xfs_rmap.h"
+>  #include "xfs_refcount.h"
+>  #include "xfs_bmap.h"
+> @@ -440,7 +442,7 @@ xfs_defer_relog(
+>  		 * the log threshold once per call.
+>  		 */
+>  		if (threshold_lsn == NULLCOMMITLSN) {
+> -			threshold_lsn = xlog_grant_push_threshold(log, 0);
+> +			threshold_lsn = xfs_ail_push_target(log->l_ailp);
+>  			if (threshold_lsn == NULLCOMMITLSN)
+>  				break;
+>  		}
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index 51c100c86177..bd08d1af59cb 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+> @@ -30,10 +30,6 @@ xlog_alloc_log(
+>  	struct xfs_buftarg	*log_target,
+>  	xfs_daddr_t		blk_offset,
+>  	int			num_bblks);
+> -STATIC int
+> -xlog_space_left(
+> -	struct xlog		*log,
+> -	atomic64_t		*head);
+>  STATIC void
+>  xlog_dealloc_log(
+>  	struct xlog		*log);
+> @@ -51,10 +47,6 @@ xlog_state_get_iclog_space(
+>  	struct xlog_ticket	*ticket,
+>  	int			*logoffsetp);
+>  STATIC void
+> -xlog_grant_push_ail(
+> -	struct xlog		*log,
+> -	int			need_bytes);
+> -STATIC void
+>  xlog_sync(
+>  	struct xlog		*log,
+>  	struct xlog_in_core	*iclog,
+> @@ -242,42 +234,15 @@ xlog_grant_head_wake(
+>  {
+>  	struct xlog_ticket	*tic;
+>  	int			need_bytes;
+> -	bool			woken_task = false;
+>  
+>  	list_for_each_entry(tic, &head->waiters, t_queue) {
+> -
+> -		/*
+> -		 * There is a chance that the size of the CIL checkpoints in
+> -		 * progress at the last AIL push target calculation resulted in
+> -		 * limiting the target to the log head (l_last_sync_lsn) at the
+> -		 * time. This may not reflect where the log head is now as the
+> -		 * CIL checkpoints may have completed.
+> -		 *
+> -		 * Hence when we are woken here, it may be that the head of the
+> -		 * log that has moved rather than the tail. As the tail didn't
+> -		 * move, there still won't be space available for the
+> -		 * reservation we require.  However, if the AIL has already
+> -		 * pushed to the target defined by the old log head location, we
+> -		 * will hang here waiting for something else to update the AIL
+> -		 * push target.
+> -		 *
+> -		 * Therefore, if there isn't space to wake the first waiter on
+> -		 * the grant head, we need to push the AIL again to ensure the
+> -		 * target reflects both the current log tail and log head
+> -		 * position before we wait for the tail to move again.
+> -		 */
+> -
+>  		need_bytes = xlog_ticket_reservation(log, head, tic);
+> -		if (*free_bytes < need_bytes) {
+> -			if (!woken_task)
+> -				xlog_grant_push_ail(log, need_bytes);
+> +		if (*free_bytes < need_bytes)
+>  			return false;
+> -		}
+>  
+>  		*free_bytes -= need_bytes;
+>  		trace_xfs_log_grant_wake_up(log, tic);
+>  		wake_up_process(tic->t_task);
+> -		woken_task = true;
+>  	}
+>  
+>  	return true;
+> @@ -296,13 +261,15 @@ xlog_grant_head_wait(
+>  	do {
+>  		if (xlog_is_shutdown(log))
+>  			goto shutdown;
+> -		xlog_grant_push_ail(log, need_bytes);
+>  
+>  		__set_current_state(TASK_UNINTERRUPTIBLE);
+>  		spin_unlock(&head->lock);
+>  
+>  		XFS_STATS_INC(log->l_mp, xs_sleep_logspace);
+>  
+> +		/* Push on the AIL to free up all the log space. */
+> +		xfs_ail_push_all(log->l_ailp);
+> +
+>  		trace_xfs_log_grant_sleep(log, tic);
+>  		schedule();
+>  		trace_xfs_log_grant_wake(log, tic);
+> @@ -418,9 +385,6 @@ xfs_log_regrant(
+>  	 * of rolling transactions in the log easily.
+>  	 */
+>  	tic->t_tid++;
+> -
+> -	xlog_grant_push_ail(log, tic->t_unit_res);
+> -
+>  	tic->t_curr_res = tic->t_unit_res;
+>  	if (tic->t_cnt > 0)
+>  		return 0;
+> @@ -477,12 +441,7 @@ xfs_log_reserve(
+>  	ASSERT(*ticp == NULL);
+>  	tic = xlog_ticket_alloc(log, unit_bytes, cnt, permanent);
+>  	*ticp = tic;
+> -
+> -	xlog_grant_push_ail(log, tic->t_cnt ? tic->t_unit_res * tic->t_cnt
+> -					    : tic->t_unit_res);
+> -
+>  	trace_xfs_log_reserve(log, tic);
+> -
+>  	error = xlog_grant_head_check(log, &log->l_reserve_head, tic,
+>  				      &need_bytes);
+>  	if (error)
+> @@ -1330,7 +1289,7 @@ xlog_assign_tail_lsn(
+>   * shortcut invalidity asserts in this case so that we don't trigger them
+>   * falsely.
+>   */
+> -STATIC int
+> +int
+>  xlog_space_left(
+>  	struct xlog	*log,
+>  	atomic64_t	*head)
+> @@ -1671,89 +1630,6 @@ xlog_alloc_log(
+>  	return ERR_PTR(error);
+>  }	/* xlog_alloc_log */
+>  
+> -/*
+> - * Compute the LSN that we'd need to push the log tail towards in order to have
+> - * (a) enough on-disk log space to log the number of bytes specified, (b) at
+> - * least 25% of the log space free, and (c) at least 256 blocks free.  If the
+> - * log free space already meets all three thresholds, this function returns
+> - * NULLCOMMITLSN.
+> - */
+> -xfs_lsn_t
+> -xlog_grant_push_threshold(
+> -	struct xlog	*log,
+> -	int		need_bytes)
+> -{
+> -	xfs_lsn_t	threshold_lsn = 0;
+> -	xfs_lsn_t	last_sync_lsn;
+> -	int		free_blocks;
+> -	int		free_bytes;
+> -	int		threshold_block;
+> -	int		threshold_cycle;
+> -	int		free_threshold;
+> -
+> -	ASSERT(BTOBB(need_bytes) < log->l_logBBsize);
+> -
+> -	free_bytes = xlog_space_left(log, &log->l_reserve_head.grant);
+> -	free_blocks = BTOBBT(free_bytes);
+> -
+> -	/*
+> -	 * Set the threshold for the minimum number of free blocks in the
+> -	 * log to the maximum of what the caller needs, one quarter of the
+> -	 * log, and 256 blocks.
+> -	 */
+> -	free_threshold = BTOBB(need_bytes);
+> -	free_threshold = max(free_threshold, (log->l_logBBsize >> 2));
+> -	free_threshold = max(free_threshold, 256);
+> -	if (free_blocks >= free_threshold)
+> -		return NULLCOMMITLSN;
+> -
+> -	xlog_crack_atomic_lsn(&log->l_tail_lsn, &threshold_cycle,
+> -						&threshold_block);
+> -	threshold_block += free_threshold;
+> -	if (threshold_block >= log->l_logBBsize) {
+> -		threshold_block -= log->l_logBBsize;
+> -		threshold_cycle += 1;
+> -	}
+> -	threshold_lsn = xlog_assign_lsn(threshold_cycle,
+> -					threshold_block);
+> -	/*
+> -	 * Don't pass in an lsn greater than the lsn of the last
+> -	 * log record known to be on disk. Use a snapshot of the last sync lsn
+> -	 * so that it doesn't change between the compare and the set.
+> -	 */
+> -	last_sync_lsn = atomic64_read(&log->l_last_sync_lsn);
+> -	if (XFS_LSN_CMP(threshold_lsn, last_sync_lsn) > 0)
+> -		threshold_lsn = last_sync_lsn;
+> -
+> -	return threshold_lsn;
+> -}
+> -
+> -/*
+> - * Push the tail of the log if we need to do so to maintain the free log space
+> - * thresholds set out by xlog_grant_push_threshold.  We may need to adopt a
+> - * policy which pushes on an lsn which is further along in the log once we
+> - * reach the high water mark.  In this manner, we would be creating a low water
+> - * mark.
+> - */
+> -STATIC void
+> -xlog_grant_push_ail(
+> -	struct xlog	*log,
+> -	int		need_bytes)
+> -{
+> -	xfs_lsn_t	threshold_lsn;
+> -
+> -	threshold_lsn = xlog_grant_push_threshold(log, need_bytes);
+> -	if (threshold_lsn == NULLCOMMITLSN || xlog_is_shutdown(log))
+> -		return;
+> -
+> -	/*
+> -	 * Get the transaction layer to kick the dirty buffers out to
+> -	 * disk asynchronously. No point in trying to do this if
+> -	 * the filesystem is shutting down.
+> -	 */
+> -	xfs_ail_push(log->l_ailp, threshold_lsn);
+> -}
+> -
+>  /*
+>   * Stamp cycle number in every block
+>   */
+> @@ -2715,7 +2591,6 @@ xlog_state_set_callback(
+>  		return;
+>  
+>  	atomic64_set(&log->l_last_sync_lsn, header_lsn);
+> -	xlog_grant_push_ail(log, 0);
+>  }
+>  
+>  /*
+> diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+> index 2728886c2963..6b6ee35b3885 100644
+> --- a/fs/xfs/xfs_log.h
+> +++ b/fs/xfs/xfs_log.h
+> @@ -156,7 +156,6 @@ int	xfs_log_quiesce(struct xfs_mount *mp);
+>  void	xfs_log_clean(struct xfs_mount *mp);
+>  bool	xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
+>  
+> -xfs_lsn_t xlog_grant_push_threshold(struct xlog *log, int need_bytes);
+>  bool	  xlog_force_shutdown(struct xlog *log, uint32_t shutdown_flags);
+>  
+>  void xlog_use_incompat_feat(struct xlog *log);
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index af87648331d5..d4124ef9d97f 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -576,6 +576,8 @@ xlog_assign_grant_head(atomic64_t *head, int cycle, int space)
+>  	atomic64_set(head, xlog_assign_grant_head_val(cycle, space));
+>  }
+>  
+> +int xlog_space_left(struct xlog *log, atomic64_t *head);
 > +
 >  /*
->   * Search for a busy extent within the range of the extent we are about to
->   * allocate.  You need to be holding the busy extent tree lock when calling
-> diff --git a/fs/xfs/xfs_extent_busy.h b/fs/xfs/xfs_extent_busy.h
-> index 71c28d031e3b..0639aab336f3 100644
-> --- a/fs/xfs/xfs_extent_busy.h
-> +++ b/fs/xfs/xfs_extent_busy.h
-> @@ -49,6 +49,10 @@ void
->  xfs_extent_busy_insert(struct xfs_trans *tp, struct xfs_perag *pag,
->  	xfs_agblock_t bno, xfs_extlen_t len, unsigned int flags);
+>   * Committed Item List interfaces
+>   */
+> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> index 1098452e7f95..31a4e5e5d899 100644
+> --- a/fs/xfs/xfs_trans_ail.c
+> +++ b/fs/xfs/xfs_trans_ail.c
+> @@ -134,25 +134,6 @@ xfs_ail_min_lsn(
+>  	return lsn;
+>  }
 >  
-> +void
-> +xfs_extent_busy_insert_discard(struct xfs_perag *pag, xfs_agblock_t bno,
-> +	xfs_extlen_t len, struct list_head *busy_list);
+> -/*
+> - * Return the maximum lsn held in the AIL, or zero if the AIL is empty.
+> - */
+> -static xfs_lsn_t
+> -xfs_ail_max_lsn(
+> -	struct xfs_ail		*ailp)
+> -{
+> -	xfs_lsn_t       	lsn = 0;
+> -	struct xfs_log_item	*lip;
+> -
+> -	spin_lock(&ailp->ail_lock);
+> -	lip = xfs_ail_max(ailp);
+> -	if (lip)
+> -		lsn = lip->li_lsn;
+> -	spin_unlock(&ailp->ail_lock);
+> -
+> -	return lsn;
+> -}
+> -
+>  /*
+>   * The cursor keeps track of where our current traversal is up to by tracking
+>   * the next item in the list for us. However, for this to be safe, removing an
+> @@ -414,6 +395,56 @@ xfsaild_push_item(
+>  	return lip->li_ops->iop_push(lip, &ailp->ail_buf_list);
+>  }
+>  
+> +/*
+> + * Compute the LSN that we'd need to push the log tail towards in order to have
+> + * at least 25% of the log space free.  If the log free space already meets this
+> + * threshold, this function returns NULLCOMMITLSN.
+> + */
+> +xfs_lsn_t
+> +__xfs_ail_push_target(
+> +	struct xfs_ail		*ailp)
+> +{
+> +	struct xlog	*log = ailp->ail_log;
+> +	xfs_lsn_t	threshold_lsn = 0;
+> +	xfs_lsn_t	last_sync_lsn;
+> +	int		free_blocks;
+> +	int		free_bytes;
+> +	int		threshold_block;
+> +	int		threshold_cycle;
+> +	int		free_threshold;
 > +
->  void
->  xfs_extent_busy_clear(struct xfs_mount *mp, struct list_head *list,
->  	bool do_discard);
+> +	free_bytes = xlog_space_left(log, &log->l_reserve_head.grant);
+> +	free_blocks = BTOBBT(free_bytes);
+> +
+> +	/*
+> +	 * The threshold for the minimum number of free blocks is one quarter of
+> +	 * the entire log space.
+> +	 */
+> +	free_threshold = log->l_logBBsize >> 2;
+> +	if (free_blocks >= free_threshold)
+> +		return NULLCOMMITLSN;
+> +
+> +	xlog_crack_atomic_lsn(&log->l_tail_lsn, &threshold_cycle,
+> +						&threshold_block);
+> +	threshold_block += free_threshold;
+> +	if (threshold_block >= log->l_logBBsize) {
+> +		threshold_block -= log->l_logBBsize;
+> +		threshold_cycle += 1;
+> +	}
+> +	threshold_lsn = xlog_assign_lsn(threshold_cycle,
+> +					threshold_block);
+> +	/*
+> +	 * Don't pass in an lsn greater than the lsn of the last
+> +	 * log record known to be on disk. Use a snapshot of the last sync lsn
+> +	 * so that it doesn't change between the compare and the set.
+> +	 */
+> +	last_sync_lsn = atomic64_read(&log->l_last_sync_lsn);
+> +	if (XFS_LSN_CMP(threshold_lsn, last_sync_lsn) > 0)
+> +		threshold_lsn = last_sync_lsn;
+> +
+> +	return threshold_lsn;
+> +}
+> +
+>  static long
+>  xfsaild_push(
+>  	struct xfs_ail		*ailp)
+> @@ -454,21 +485,24 @@ xfsaild_push(
+>  	 * capture updates that occur after the sync push waiter has gone to
+>  	 * sleep.
+>  	 */
+> -	if (waitqueue_active(&ailp->ail_empty)) {
+> +	if (test_bit(XFS_AIL_OPSTATE_PUSH_ALL, &ailp->ail_opstate) ||
+> +	    waitqueue_active(&ailp->ail_empty)) {
+>  		lip = xfs_ail_max(ailp);
+>  		if (lip)
+>  			target = lip->li_lsn;
+> +		else
+> +			clear_bit(XFS_AIL_OPSTATE_PUSH_ALL, &ailp->ail_opstate);
+>  	} else {
+> -		/* barrier matches the ail_target update in xfs_ail_push() */
+> -		smp_rmb();
+> -		target = ailp->ail_target;
+> -		ailp->ail_target_prev = target;
+> +		target = __xfs_ail_push_target(ailp);
+>  	}
+>  
+> +	if (target == NULLCOMMITLSN)
+> +		goto out_done;
+> +
+>  	/* we're done if the AIL is empty or our push has reached the end */
+>  	lip = xfs_trans_ail_cursor_first(ailp, &cur, ailp->ail_last_pushed_lsn);
+>  	if (!lip)
+> -		goto out_done;
+> +		goto out_done_cursor;
+>  
+>  	XFS_STATS_INC(mp, xs_push_ail);
+>  
+> @@ -553,8 +587,9 @@ xfsaild_push(
+>  		lsn = lip->li_lsn;
+>  	}
+>  
+> -out_done:
+> +out_done_cursor:
+>  	xfs_trans_ail_cursor_done(&cur);
+> +out_done:
+>  	spin_unlock(&ailp->ail_lock);
+>  
+>  	if (xfs_buf_delwri_submit_nowait(&ailp->ail_buf_list))
+> @@ -603,7 +638,7 @@ xfsaild(
+>  	set_freezable();
+>  
+>  	while (1) {
+> -		if (tout && tout <= 20)
+> +		if (tout)
+>  			set_current_state(TASK_KILLABLE|TASK_FREEZABLE);
+>  		else
+>  			set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
+> @@ -639,21 +674,9 @@ xfsaild(
+>  			break;
+>  		}
+>  
+> +		/* Idle if the AIL is empty. */
+>  		spin_lock(&ailp->ail_lock);
+> -
+> -		/*
+> -		 * Idle if the AIL is empty and we are not racing with a target
+> -		 * update. We check the AIL after we set the task to a sleep
+> -		 * state to guarantee that we either catch an ail_target update
+> -		 * or that a wake_up resets the state to TASK_RUNNING.
+> -		 * Otherwise, we run the risk of sleeping indefinitely.
+> -		 *
+> -		 * The barrier matches the ail_target update in xfs_ail_push().
+> -		 */
+> -		smp_rmb();
+> -		if (!xfs_ail_min(ailp) &&
+> -		    ailp->ail_target == ailp->ail_target_prev &&
+> -		    list_empty(&ailp->ail_buf_list)) {
+> +		if (!xfs_ail_min(ailp) && list_empty(&ailp->ail_buf_list)) {
+>  			spin_unlock(&ailp->ail_lock);
+>  			schedule();
+>  			tout = 0;
+> @@ -675,56 +698,6 @@ xfsaild(
+>  	return 0;
+>  }
+>  
+> -/*
+> - * This routine is called to move the tail of the AIL forward.  It does this by
+> - * trying to flush items in the AIL whose lsns are below the given
+> - * threshold_lsn.
+> - *
+> - * The push is run asynchronously in a workqueue, which means the caller needs
+> - * to handle waiting on the async flush for space to become available.
+> - * We don't want to interrupt any push that is in progress, hence we only queue
+> - * work if we set the pushing bit appropriately.
+> - *
+> - * We do this unlocked - we only need to know whether there is anything in the
+> - * AIL at the time we are called. We don't need to access the contents of
+> - * any of the objects, so the lock is not needed.
+> - */
+> -void
+> -xfs_ail_push(
+> -	struct xfs_ail		*ailp,
+> -	xfs_lsn_t		threshold_lsn)
+> -{
+> -	struct xfs_log_item	*lip;
+> -
+> -	lip = xfs_ail_min(ailp);
+> -	if (!lip || xlog_is_shutdown(ailp->ail_log) ||
+> -	    XFS_LSN_CMP(threshold_lsn, ailp->ail_target) <= 0)
+> -		return;
+> -
+> -	/*
+> -	 * Ensure that the new target is noticed in push code before it clears
+> -	 * the XFS_AIL_PUSHING_BIT.
+> -	 */
+> -	smp_wmb();
+> -	xfs_trans_ail_copy_lsn(ailp, &ailp->ail_target, &threshold_lsn);
+> -	smp_wmb();
+> -
+> -	wake_up_process(ailp->ail_task);
+> -}
+> -
+> -/*
+> - * Push out all items in the AIL immediately
+> - */
+> -void
+> -xfs_ail_push_all(
+> -	struct xfs_ail  *ailp)
+> -{
+> -	xfs_lsn_t       threshold_lsn = xfs_ail_max_lsn(ailp);
+> -
+> -	if (threshold_lsn)
+> -		xfs_ail_push(ailp, threshold_lsn);
+> -}
+> -
+>  /*
+>   * Push out all items in the AIL immediately and wait until the AIL is empty.
+>   */
+> @@ -829,6 +802,13 @@ xfs_trans_ail_update_bulk(
+>  	if (!list_empty(&tmp))
+>  		xfs_ail_splice(ailp, cur, &tmp, lsn);
+>  
+> +	/*
+> +	 * If this is the first insert, wake up the push daemon so it can
+> +	 * actively scan for items to push.
+> +	 */
+> +	if (!mlip)
+> +		wake_up_process(ailp->ail_task);
+> +
+>  	xfs_ail_update_finish(ailp, tail_lsn);
+>  }
+>  
+> diff --git a/fs/xfs/xfs_trans_priv.h b/fs/xfs/xfs_trans_priv.h
+> index 52a45f0a5ef1..9a131e7fae94 100644
+> --- a/fs/xfs/xfs_trans_priv.h
+> +++ b/fs/xfs/xfs_trans_priv.h
+> @@ -52,16 +52,18 @@ struct xfs_ail {
+>  	struct xlog		*ail_log;
+>  	struct task_struct	*ail_task;
+>  	struct list_head	ail_head;
+> -	xfs_lsn_t		ail_target;
+> -	xfs_lsn_t		ail_target_prev;
+>  	struct list_head	ail_cursors;
+>  	spinlock_t		ail_lock;
+>  	xfs_lsn_t		ail_last_pushed_lsn;
+>  	int			ail_log_flush;
+> +	unsigned long		ail_opstate;
+>  	struct list_head	ail_buf_list;
+>  	wait_queue_head_t	ail_empty;
+>  };
+>  
+> +/* Push all items out of the AIL immediately. */
+> +#define XFS_AIL_OPSTATE_PUSH_ALL	0u
+> +
+>  /*
+>   * From xfs_trans_ail.c
+>   */
+> @@ -98,10 +100,29 @@ void xfs_ail_update_finish(struct xfs_ail *ailp, xfs_lsn_t old_lsn)
+>  			__releases(ailp->ail_lock);
+>  void xfs_trans_ail_delete(struct xfs_log_item *lip, int shutdown_type);
+>  
+> -void			xfs_ail_push(struct xfs_ail *, xfs_lsn_t);
+> -void			xfs_ail_push_all(struct xfs_ail *);
+> -void			xfs_ail_push_all_sync(struct xfs_ail *);
+> -struct xfs_log_item	*xfs_ail_min(struct xfs_ail  *ailp);
+> +static inline void xfs_ail_push(struct xfs_ail *ailp)
+> +{
+> +	wake_up_process(ailp->ail_task);
+> +}
+> +
+> +static inline void xfs_ail_push_all(struct xfs_ail *ailp)
+> +{
+> +	if (!test_and_set_bit(XFS_AIL_OPSTATE_PUSH_ALL, &ailp->ail_opstate))
+> +		xfs_ail_push(ailp);
+> +}
+> +
+> +xfs_lsn_t		__xfs_ail_push_target(struct xfs_ail *ailp);
+> +static inline xfs_lsn_t xfs_ail_push_target(struct xfs_ail *ailp)
+> +{
+> +	xfs_lsn_t	lsn;
+> +
+> +	spin_lock(&ailp->ail_lock);
+> +	lsn = __xfs_ail_push_target(ailp);
+> +	spin_unlock(&ailp->ail_lock);
+> +	return lsn;
+> +}
+> +
+> +void			xfs_ail_push_all_sync(struct xfs_ail *ailp);
+>  xfs_lsn_t		xfs_ail_min_lsn(struct xfs_ail *ailp);
+>  
+>  struct xfs_log_item *	xfs_trans_ail_cursor_first(struct xfs_ail *ailp,
 > -- 
 > 2.40.1
 > 
