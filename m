@@ -2,70 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB43E7A9F61
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 22:21:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D77EC7AA14A
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 23:00:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231495AbjIUUVl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Sep 2023 16:21:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55750 "EHLO
+        id S230386AbjIUVAU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Sep 2023 17:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231571AbjIUUVT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 16:21:19 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5125AABE;
-        Thu, 21 Sep 2023 10:29:30 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-4122436627eso7353941cf.3;
-        Thu, 21 Sep 2023 10:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695317360; x=1695922160; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x+mmJBeIQyh9AKpgzVKPX/9HHjXQslKOl8+/2xlNOGo=;
-        b=jrYYoNVtgvBsMD2gblosKO5BMvgvNkU7dfxuiPH+f6nUB3vtyGS9bEkvW78wFp1Wg7
-         hKbWrSSpP7mw8O/8j69Np+hd3I42LObX8s5w3WFG2e37SO39IMjbdXoxg2Y59bYp5Mnm
-         zeUnZ13FVUGAri27/Iyj/tw+nssh6Uow6+dqs623L/64vxx1QVvkQyQXErXIotZFHbEp
-         dOHJu3HjbrfNJfzxcD5IAWQSRuBIoTdxChjB/9sblwQbfKkwz4ByInEiDAiFzw2pp8My
-         cWEapkpDoe5QfxyRngJ2L1jvsaM7Qoc2TaOvaC4DykiW6Azzd5eAtoXtoMuhGZ8t9zO3
-         uFWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695317360; x=1695922160;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x+mmJBeIQyh9AKpgzVKPX/9HHjXQslKOl8+/2xlNOGo=;
-        b=Lr95pIYZRawn5kbnaAyOwteJnxwcuq5w4foD8JVh8YZyhqdYP193WMlHQI/5pHktFT
-         /pK2b7VKUXxNM4DBanafp6B0XlO+ohhBlkqZUjNQypbE9Ih8gvuHmyX8xJ8jrDwMY/lL
-         xF+vgvFjv3xF4RwDyBje50KOE1oWTiwSDU/4vCjRYZ1EjbEqeUJFIgqqFG6GnKnt1XsB
-         UKinnCK2LhZsDfpKxZ683c7sJ/QAV8wsdfGbX/U/aw1lFWIg7QJQleg7dUar0yBfQvhN
-         CHeZde/VMQ6doM4X3MPHTfZE712N0Npq+EJiNJZxj3Kna1dRV2/kLJq783pcvs6DKydZ
-         m1Cg==
-X-Gm-Message-State: AOJu0YzcSERR0WYY8pVKxLxtjFrHE4dqdgjzTzN6CagtSgc5zxuHxBqh
-        bapYEoNcqRcTpSujtNhJ1ru1QmmXvuveVGxM/kHRTP0o
-X-Google-Smtp-Source: AGHT+IFtABX3Om1wb9WP85gdR2M47/OyoEW5EDdezUm63jPLi8WfleL4sUaVZ/UA5IaHjqjagOHzZ4FlRI3ofkLd18s=
-X-Received: by 2002:a05:6102:9c1:b0:44d:4f8f:d8e5 with SMTP id
- g1-20020a05610209c100b0044d4f8fd8e5mr6217017vsi.20.1695306563230; Thu, 21 Sep
- 2023 07:29:23 -0700 (PDT)
+        with ESMTP id S232480AbjIUU7r (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 16:59:47 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEFD86806
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 10:38:00 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FF5CC4E76C;
+        Thu, 21 Sep 2023 15:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695310427;
+        bh=o+zN5p3RhVm3JQnukGguHzdMSg1q17JcKSCrffvv/5k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mFagRDDv9HM7pw+y4RS73Zf3iNERYz01Fv8NFSpB7wBDB6vbF3Mw1Lx1wbQmxAV6n
+         loG6Ywu3A/cMYzlupTjz1lx2U+3OX3UfyGq3jRvmfj9vSlr5mwjEpv6LNar35AyB2o
+         fVq0sxCEE4APdjtEph8nPfTlhLlzOoRLWzov/x4JRVz9KzkcFg2NTn5Q/AzIy7zv/I
+         25o1ckKsRjjm7xZUXp4prX5rgMt0Fz8/ScsKVouFZawnbEmd01OpXdCNNAAJhSqVSu
+         fbgvbMdaSuqBykP15ou0M/0E+xwZ2bvlBCecwyquejq4VqURU8mana4jomE2P+jQk1
+         Wn8H8bUbXNJ5g==
+Date:   Thu, 21 Sep 2023 08:33:46 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 3/3] xfs: abort fstrim if kernel is suspending
+Message-ID: <20230921153346.GA11391@frogsfrogsfrogs>
+References: <20230921013945.559634-1-david@fromorbit.com>
+ <20230921013945.559634-4-david@fromorbit.com>
 MIME-Version: 1.0
-References: <20230920130355.62763-1-amir73il@gmail.com> <20230920151403.gsh5gphvlilhp6sv@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <CAOQ4uxhxsg2AwttYPfhSLQQNbFxo2pmyNUMTC8QpxNw6L_afpw@mail.gmail.com>
- <20230921062645.lhryfrod7ggdxfuh@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <CAOQ4uxjNy6tD87dsGKAOwu6VpkoH3+kgzOEw=KQOzDF1WhhN=A@mail.gmail.com> <20230921142426.p5g7yqf2gunemnd6@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
-In-Reply-To: <20230921142426.p5g7yqf2gunemnd6@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 21 Sep 2023 17:29:12 +0300
-Message-ID: <CAOQ4uxiEvwqCkgaCuSZnziePwWU1E3X1xLa7RX4GfkzgN9LWAQ@mail.gmail.com>
-Subject: Re: [PATCH] overlay: add test for rename of lower symlink with
- NOATIME attr
-To:     Zorro Lang <zlang@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Ruiwen Zhao <ruiwen@google.com>, linux-unionfs@vger.kernel.org,
-        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230921013945.559634-4-david@fromorbit.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,58 +48,85 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 5:24=E2=80=AFPM Zorro Lang <zlang@redhat.com> wrote=
-:
->
-> On Thu, Sep 21, 2023 at 11:00:37AM +0300, Amir Goldstein wrote:
-> > On Thu, Sep 21, 2023 at 9:26=E2=80=AFAM Zorro Lang <zlang@redhat.com> w=
-rote:
-> > >
-> > > On Wed, Sep 20, 2023 at 06:34:21PM +0300, Amir Goldstein wrote:
-> > > > On Wed, Sep 20, 2023 at 6:14=E2=80=AFPM Zorro Lang <zlang@redhat.co=
-m> wrote:
-> > > > >
-> > > > > On Wed, Sep 20, 2023 at 04:03:55PM +0300, Amir Goldstein wrote:
-> > > > > > A test for a regression from v5.15 reported by Ruiwen Zhao:
-> > > > > > https://lore.kernel.org/linux-unionfs/CAKd=3Dy5Hpg7J2gxrFT02F94=
-o=3DFM9QvGp=3DkcH1Grctx8HzFYvpiA@mail.gmail.com/
-> > >
-> > > Could you give one more sentence to tell what kind of regression
-> > > does this case test for? Not only a link address.
-> > >
-> > > > > >
-> > > > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > > > > > ---
-> > > > > >
-> > > > > > Zorro,
-> > > > > >
-> > > > > > This is a test for a regression in kernel v5.15.
-> > > > > > The fix was merged for 6.6-rc2 and has been picked for
-> > > > > > the upcoming LTS releases 5.15, 6.1, 6.5.
-> > > > > >
-> > > > > > The reproducer only manifests the bug in fs that inherit noatim=
-e flag,
-> > > > > > namely ext4, btrfs, ... but not xfs.
-> >
-> > FYI, I made a mistake in the statement above.
-> > xfs does support inherit of noatime flag, but
-> > it does not inherit noatime for *symlinks*.
-> >
-> > I added the _require_chattr_inherit helper that you suggested
-> > in v2, but it only checks for inherit of noatime flag (the 2nd _notrun)=
-.
-> > I did not add a helper for _require_chattr_inherit_symlink
-> > because it was too specific and so I left the 3rd _notrun
-> > open coded in the test in v2.
->
-> OK, if xfs thinks it's an expected behavior which won't be changed :)
->
+On Thu, Sep 21, 2023 at 11:39:45AM +1000, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> A recent ext4 patch posting from Jan Kara reminded me of a
+> discussion a year ago about fstrim in progress preventing kernels
+> from suspending. The fix is simple, we should do the same for XFS.
+> 
+> This removes the -ERESTARTSYS error return from this code, replacing
+> it with either the last error seen or the number of blocks
+> successfully trimmed up to the point where we detected the stop
+> condition.
 
-I find it quite strange that symlink and special inodes inherit those
-attributes, but then the attributes cannot be queried and not changed
-on those inodes.
-It seems to me like all the fs expect xfs have it wrong, but I don't think
-that is likely to change.
+Kinda weird, actually, that FITRIM can do some discard work, hit an
+error, and return the error without updating userspace about the work
+that it /did/ get done.  Short writes work like that, so why not this?
 
-Thanks,
-Amir.
+Oh.  This is one of those syscalls that has no manpage, nor a
+description in Documentation/, so the behavior of this is entirely
+defined by calling code interpretation.  Yeah, not doing that today.
+
+> References: https://bugzilla.kernel.org/show_bug.cgi?id=216322
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+> ---
+>  fs/xfs/xfs_discard.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_discard.c b/fs/xfs/xfs_discard.c
+> index f16b254b5eaa..d5787991bb5b 100644
+> --- a/fs/xfs/xfs_discard.c
+> +++ b/fs/xfs/xfs_discard.c
+> @@ -283,6 +283,12 @@ xfs_trim_gather_extents(
+>  	return error;
+>  }
+>  
+> +static bool
+> +xfs_trim_should_stop(void)
+> +{
+> +	return fatal_signal_pending(current) || freezing(current);
+> +}
+> +
+>  /*
+>   * Iterate the free list gathering extents and discarding them. We need a cursor
+>   * for the repeated iteration of gather/discard loop, so use the longest extent
+> @@ -336,10 +342,9 @@ xfs_trim_extents(
+>  		if (error)
+>  			break;
+>  
+> -		if (fatal_signal_pending(current)) {
+> -			error = -ERESTARTSYS;
+> +		if (xfs_trim_should_stop())
+>  			break;
+> -		}
+> +
+>  	} while (tcur.ar_blockcount != 0);
+>  
+>  	return error;
+> @@ -408,12 +413,12 @@ xfs_ioc_trim(
+>  	for_each_perag_range(mp, agno, xfs_daddr_to_agno(mp, end), pag) {
+>  		error = xfs_trim_extents(pag, start, end, minlen,
+>  					  &blocks_trimmed);
+> -		if (error) {
+> +		if (error)
+>  			last_error = error;
+> -			if (error == -ERESTARTSYS) {
+> -				xfs_perag_rele(pag);
+> -				break;
+> -			}
+> +
+> +		if (xfs_trim_should_stop()) {
+> +			xfs_perag_rele(pag);
+> +			break;
+>  		}
+>  	}
+>  
+> -- 
+> 2.40.1
+> 
