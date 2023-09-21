@@ -2,71 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09A767AA258
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 23:16:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41AA77A9FBE
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Sep 2023 22:27:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbjIUVPp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Sep 2023 17:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54236 "EHLO
+        id S231743AbjIUU1b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Sep 2023 16:27:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232924AbjIUVPD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 17:15:03 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D65AD196;
-        Thu, 21 Sep 2023 11:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IJC++WD0SC98QqOfTgTMoqC7V5g4Fi6TJ28HDArhxHI=; b=g1wOKXuddKHSozH+mqGV7jLWcQ
-        v6y6qb70UgITOIa9uHUC+ALF/c/Ie5E02Jdg2PM+/KPhifEZaox2ZU+qvOo7C82fC7ZOoem2OlTF+
-        a2gTB7oGGBzcKZg1dJrxMHKX4sKcV9XhJ+tTGx4fiBnrC9k6sErNt94pluDhrwkpfi7fMLznf789G
-        RgX9hV0Nr+mNnn5ezqDzpX1SrQI2pa0BoSMTyZvBidgSxtSXfI6bQYi4/3rFWbOax+1Hk0rD39Ccu
-        geqYCvZM6j36HoZXuJC2RUYm2PES0f7LqUPfm28KJ9HufAdlm/Ujrp5bA4N2NL7rYtH04zO785+91
-        h3cD8TNw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qjDz0-005MVd-1M;
-        Thu, 21 Sep 2023 07:20:18 +0000
-Date:   Thu, 21 Sep 2023 00:20:18 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Pankaj Raghav <p.raghav@samsung.com>,
-        Pankaj Raghav <kernel@pankajraghav.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        da.gomez@samsung.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        djwong@kernel.org, linux-mm@kvack.org, chandan.babu@oracle.com,
-        gost.dev@samsung.com, riteshh@linux.ibm.com
-Subject: Re: [RFC 00/23] Enable block size > page size in XFS
-Message-ID: <ZQvussaZsqZNSc3d@bombadil.infradead.org>
-References: <20230915183848.1018717-1-kernel@pankajraghav.com>
- <ZQd4IPeVI+o6M38W@dread.disaster.area>
- <ZQewKIfRYcApEYXt@bombadil.infradead.org>
- <CGME20230918050749eucas1p13c219481b4b08c1d58e90ea70ff7b9c8@eucas1p1.samsung.com>
- <ZQfbHloBUpDh+zCg@dread.disaster.area>
- <806df723-78cf-c7eb-66a6-1442c02126b3@samsung.com>
- <ZQuxvAd2lxWppyqO@bombadil.infradead.org>
- <ZQvNVAfZMjE3hgmN@bombadil.infradead.org>
- <ZQvczBjY4vTLJFBp@dread.disaster.area>
- <ZQvuNaYIukAnlEDM@bombadil.infradead.org>
+        with ESMTP id S231810AbjIUU1M (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 16:27:12 -0400
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE17186
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 10:48:52 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="112433584"
+X-IronPort-AV: E=Sophos;i="6.03,164,1694703600"; 
+   d="scan'208";a="112433584"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 17:33:08 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+        by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 0DCC9CA1E6
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 17:33:07 +0900 (JST)
+Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
+        by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 42BA3D88B5
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 17:33:06 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+        by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id D11DA20076851
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Sep 2023 17:33:05 +0900 (JST)
+Received: from [192.168.50.5] (unknown [10.167.234.230])
+        by edo.cn.fujitsu.com (Postfix) with ESMTP id 32D3F1A0085;
+        Thu, 21 Sep 2023 16:33:05 +0800 (CST)
+Message-ID: <86167409-aa7f-4db4-8335-3f290d507f14@fujitsu.com>
+Date:   Thu, 21 Sep 2023 16:33:04 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQvuNaYIukAnlEDM@bombadil.infradead.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xfs: drop experimental warning for FSDAX
+From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
+To:     linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
+Cc:     djwong@kernel.org, chandan.babu@oracle.com,
+        dan.j.williams@intel.com
+References: <20230915063854.1784918-1-ruansy.fnst@fujitsu.com>
+In-Reply-To: <20230915063854.1784918-1-ruansy.fnst@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27888.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27888.006
+X-TMASE-Result: 10-0.031700-10.000000
+X-TMASE-MatchedRID: hwtUKlde9zGPvrMjLFD6eDjNGpWCIvfT1KDIlODIu+X6t7zbE1rC9wYE
+        LASKZobWBNyCmIook0cJKoJfwgWhzbVQ6XPWwtdyEXjPIvKd74BMkOX0UoduuRz8TwDJiHPoNiL
+        P5F13qP7nzlXMYw4XMCAtDqHg/4Qmv79FIUygvZzZs3HUcS/scCq2rl3dzGQ1kFmoecv+RE241u
+        Vp06SlZKbkJdESNECViXnp3Tl79ABmzTBoPxkj6zqLTpHlB2+SPoq0wVsiK7kDcHQCp5ROP+AlX
+        X4WyiQqZr2cb5iz368JCuHHcDs8RyWtwY45TPtNPQO/EEw5sBQadJO6FnuPXQ==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 12:18:13AM -0700, Luis Chamberlain wrote:
-> When we first started this work we simply thought it was impossible.
+Hi,
 
-*not possible*
+Any comments?
 
-  Luis
+
+--
+Thanks,
+Ruan.
+
+
+在 2023/9/15 14:38, Shiyang Ruan 写道:
+> FSDAX and reflink can work together now, let's drop this warning.
+> 
+> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+> ---
+>   fs/xfs/xfs_super.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 1f77014c6e1a..faee773fa026 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -371,7 +371,6 @@ xfs_setup_dax_always(
+>   		return -EINVAL;
+>   	}
+>   
+> -	xfs_warn(mp, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+>   	return 0;
+>   
+>   disable_dax:
