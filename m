@@ -2,53 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4B277AA64C
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Sep 2023 03:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2B357AA64F
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Sep 2023 03:02:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229975AbjIVBCM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229982AbjIVBCM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Thu, 21 Sep 2023 21:02:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52306 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229936AbjIVBCK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 21:02:10 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989BB191;
-        Thu, 21 Sep 2023 18:02:04 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so1154617a12.1;
-        Thu, 21 Sep 2023 18:02:04 -0700 (PDT)
+        with ESMTP id S229931AbjIVBCL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Sep 2023 21:02:11 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B491B192;
+        Thu, 21 Sep 2023 18:02:05 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-578a91ac815so1236360a12.1;
+        Thu, 21 Sep 2023 18:02:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695344524; x=1695949324; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1695344525; x=1695949325; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j4RpEijZkHhrZhok0AVAG9y8sjWcEhatG6TrQcYg+Rk=;
-        b=VE8DJYTchENIckpeTkz0DjpTLxInLx8u7B4g1Kow99Epn36D+uUT2cfe3gesYWIUgS
-         4IeCivuUnGql+Q3bIbXmJFxdsHLPj5Vo4TiRL7+C1uGEb/dOkeCJ0vcOc9dYjSqAgc0W
-         V0flqUilDn+dEhFKDdyZjlSkhXUVEBRLGM6cDLovizDA0IfR3+S0Q0zwXPykSXiyCwXn
-         9dJELxJFh9i/qey7aaM+WonR3bIMiMzD1Yzx+qt2+Xkgf2TujIxJOJAsq0FB4rYgJZc+
-         sY1o8xq1qE2w7OPHHGWnsnhuqXJ/CB0X6KWky83ay1pc2hWsjujbhqYN4VqjfK6MZjwU
-         yqgQ==
+        bh=5KzxESXZkFDTp3cAkXdAn0yBd85C7ZZTAhXTSFq606w=;
+        b=FqBkDtaX/Ea5bGzIwYj9BtMovBy16QgvEs0h/x2CxJaR1WNhNMX3JZO6vR41mcORGA
+         Xp5fXwJ+IwrzzJgAmDrbRNQNe0pjGXAQ+0VmhYSJdiEo10vwAqOWgnOsN1wdmw/DOZw+
+         CwiT4Mq+bzDZClXqMe0gTTw2M6wCgNXcms+fcgQHR6TXcEpRdjZDCv6Pwg9sueXFn6YJ
+         rypN0XTWF9pZXFWXmFFdWRJkS+bdSSpoKGUTTkL0BzVoyf7vHetCUvw00wSzCFOq7R99
+         CtzPXJ2nqJukW2EE1t4ZC6cpjGf3ifgKW/g5KP0IR2FgAYxi0vDhujJi+B5rmm3DXHgK
+         DjCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695344524; x=1695949324;
+        d=1e100.net; s=20230601; t=1695344525; x=1695949325;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=j4RpEijZkHhrZhok0AVAG9y8sjWcEhatG6TrQcYg+Rk=;
-        b=L3qmB2Lkr/yMHfrjAHJkDYJaElKO5NwqNWCkDMPeCNF3IKvB+1gEEr0+SpHSCGcZnO
-         /+jwtqr0FsGvbIvzaClr3NVrMdiYRbBX/JQPamrTqQxMeuWLNHiumAgU2tXXx02UkbxO
-         JCvbn8m5w5LHFSaFChhblDPEPwD1rX5MDb0Vxty/2JKIDAbugwwFkqBiMLy5+mbEmmop
-         Wf54vtghlD34KmsWcV8xNCAMZwe9DmU3EzU3AugxA9Ftsp4f0CkO93XOg2+F9XD/YywG
-         W/zjn5aNcN6/Ec4H0ZGkGBGygd3eYoYTnah3yoc5CWIG0v4uE2AfGTVSglcIVIyMfKJt
-         beaA==
-X-Gm-Message-State: AOJu0YxHl05l58CishRnUDmScMlwuiaqm1oAAVyV4zw7AT18K15TGeyd
-        e+YLCOZcNdTePC2UPOfVdTLOPwevw6Uxtg==
-X-Google-Smtp-Source: AGHT+IEPdUDx33rJnEJYgcT1KfTEkHAsW96L9CiCvIMYSUMYhtq99kFMe1fRhDkmm4Q9Z/tOUCigtg==
-X-Received: by 2002:a05:6a21:a5a3:b0:153:40c3:aa71 with SMTP id gd35-20020a056a21a5a300b0015340c3aa71mr9188349pzc.43.1695344523834;
-        Thu, 21 Sep 2023 18:02:03 -0700 (PDT)
+        bh=5KzxESXZkFDTp3cAkXdAn0yBd85C7ZZTAhXTSFq606w=;
+        b=kmgXSRweO2f+vrF/YM+q0/v8vGOyg6M/TgXOjtyqnvh8aGa6jZMlkepQadRw6J/VEc
+         9Y59vW12OnIy6Q5anXrdVzwkOhURMKntllqwIuzm35W8yWnFiSAFwG+jeQJUYW6VIlmj
+         J5FP+4+M9nY2bymIRgPWw3BWwxAAA76r5ITdGeIWDoACvutJUhapzDxAzix88eyyxqhE
+         aiSUGU8qi6M3yJ+4C06zfV+GhM7PXUmMKb64t2ZsPf5W+1EKJnFQ0xo+VqrhRpqNWnGh
+         iwQvQ9VmvW97euF47t7psSmYyuKWjFkpuJdNJD77gp1Git6a2atr0s/FC7aD41VQxTcn
+         7XTA==
+X-Gm-Message-State: AOJu0YxeE7GR0v/Iscsz6K33jfIEZ6gEaY6MbzLL9ysur9RPKiF1lzSz
+        XyjKiPWcq2sEr9eKlo/CvFiuF1DLsSRnGg==
+X-Google-Smtp-Source: AGHT+IHz+rmFhGYxkc2yBrjyXvYlXVvmndGszepY/GJRL6ByHqffYXuw57OLi2XBPqaiYzqbYLWxxg==
+X-Received: by 2002:a17:90b:314c:b0:26d:b12:8383 with SMTP id ip12-20020a17090b314c00b0026d0b128383mr7151444pjb.8.1695344524952;
+        Thu, 21 Sep 2023 18:02:04 -0700 (PDT)
 Received: from lrumancik.svl.corp.google.com ([2620:15c:2a3:200:d5ff:b7b0:7028:8af6])
-        by smtp.gmail.com with ESMTPSA id u2-20020a17090282c200b001bc445e2497sm2178815plz.79.2023.09.21.18.02.03
+        by smtp.gmail.com with ESMTPSA id u2-20020a17090282c200b001bc445e2497sm2178815plz.79.2023.09.21.18.02.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Sep 2023 18:02:03 -0700 (PDT)
+        Thu, 21 Sep 2023 18:02:04 -0700 (PDT)
 From:   Leah Rumancik <leah.rumancik@gmail.com>
 To:     stable@vger.kernel.org
 Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com,
@@ -56,9 +56,9 @@ Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com,
         Dave Chinner <dchinner@redhat.com>,
         Dave Chinner <david@fromorbit.com>,
         Leah Rumancik <leah.rumancik@gmail.com>
-Subject: [PATCH 5.15 3/6] xfs: explicitly specify cpu when forcing inodegc delayed work to run immediately
-Date:   Thu, 21 Sep 2023 18:01:53 -0700
-Message-ID: <20230922010156.1718782-3-leah.rumancik@gmail.com>
+Subject: [PATCH 5.15 4/6] xfs: check that per-cpu inodegc workers actually run on that cpu
+Date:   Thu, 21 Sep 2023 18:01:54 -0700
+Message-ID: <20230922010156.1718782-4-leah.rumancik@gmail.com>
 X-Mailer: git-send-email 2.42.0.515.g380fc7ccd1-goog
 In-Reply-To: <20230922010156.1718782-1-leah.rumancik@gmail.com>
 References: <20230922010156.1718782-1-leah.rumancik@gmail.com>
@@ -76,69 +76,64 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: "Darrick J. Wong" <djwong@kernel.org>
 
-[ Upstream commit 03e0add80f4cf3f7393edb574eeb3a89a1db7758 ]
+[ Upstream commit b37c4c8339cd394ea6b8b415026603320a185651 ]
 
-I've been noticing odd racing behavior in the inodegc code that could
-only be explained by one cpu adding an inode to its inactivation llist
-at the same time that another cpu is processing that cpu's llist.
-Preemption is disabled between get/put_cpu_ptr, so the only explanation
-is scheduler mayhem.  I inserted the following debug code into
-xfs_inodegc_worker (see the next patch):
+Now that we've allegedly worked out the problem of the per-cpu inodegc
+workers being scheduled on the wrong cpu, let's put in a debugging knob
+to let us know if a worker ever gets mis-scheduled again.
 
-	ASSERT(gc->cpu == smp_processor_id());
-
-This assertion tripped during overnight tests on the arm64 machines, but
-curiously not on x86_64.  I think we haven't observed any resource leaks
-here because the lockfree list code can handle simultaneous llist_add
-and llist_del_all functions operating on the same list.  However, the
-whole point of having percpu inodegc lists is to take advantage of warm
-memory caches by inactivating inodes on the last processor to touch the
-inode.
-
-The incorrect scheduling seems to occur after an inodegc worker is
-subjected to mod_delayed_work().  This wraps mod_delayed_work_on with
-WORK_CPU_UNBOUND specified as the cpu number.  Unbound allows for
-scheduling on any cpu, not necessarily the same one that scheduled the
-work.
-
-Because preemption is disabled for as long as we have the gc pointer, I
-think it's safe to use current_cpu() (aka smp_processor_id) to queue the
-delayed work item on the correct cpu.
-
-Fixes: 7cf2b0f9611b ("xfs: bound maximum wait time for inodegc work")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Leah Rumancik <leah.rumancik@gmail.com>
 Acked-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_icache.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_icache.c | 2 ++
+ fs/xfs/xfs_mount.h  | 3 +++
+ fs/xfs/xfs_super.c  | 3 +++
+ 3 files changed, 8 insertions(+)
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index e9ebfe6f8015..ab8181f8d08a 100644
+index ab8181f8d08a..02022164772d 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -2057,7 +2057,8 @@ xfs_inodegc_queue(
- 		queue_delay = 0;
+@@ -1856,6 +1856,8 @@ xfs_inodegc_worker(
+ 	struct llist_node	*node = llist_del_all(&gc->list);
+ 	struct xfs_inode	*ip, *n;
  
- 	trace_xfs_inodegc_queue(mp, __return_address);
--	mod_delayed_work(mp->m_inodegc_wq, &gc->work, queue_delay);
-+	mod_delayed_work_on(current_cpu(), mp->m_inodegc_wq, &gc->work,
-+			queue_delay);
- 	put_cpu_ptr(gc);
++	ASSERT(gc->cpu == smp_processor_id());
++
+ 	WRITE_ONCE(gc->items, 0);
  
- 	if (xfs_inodegc_want_flush_work(ip, items, shrinker_hits)) {
-@@ -2101,7 +2102,8 @@ xfs_inodegc_cpu_dead(
+ 	if (!node)
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 3d58938a6f75..29f35169bf9c 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -66,6 +66,9 @@ struct xfs_inodegc {
+ 	/* approximate count of inodes in the list */
+ 	unsigned int		items;
+ 	unsigned int		shrinker_hits;
++#if defined(DEBUG) || defined(XFS_WARN)
++	unsigned int		cpu;
++#endif
+ };
  
- 	if (xfs_is_inodegc_enabled(mp)) {
- 		trace_xfs_inodegc_queue(mp, __return_address);
--		mod_delayed_work(mp->m_inodegc_wq, &gc->work, 0);
-+		mod_delayed_work_on(current_cpu(), mp->m_inodegc_wq, &gc->work,
-+				0);
- 	}
- 	put_cpu_ptr(gc);
- }
+ /*
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 9b3af7611eaa..569960e4ea3a 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1062,6 +1062,9 @@ xfs_inodegc_init_percpu(
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		gc = per_cpu_ptr(mp->m_inodegc, cpu);
++#if defined(DEBUG) || defined(XFS_WARN)
++		gc->cpu = cpu;
++#endif
+ 		init_llist_head(&gc->list);
+ 		gc->items = 0;
+ 		INIT_DELAYED_WORK(&gc->work, xfs_inodegc_worker);
 -- 
 2.42.0.515.g380fc7ccd1-goog
 
