@@ -2,39 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C95CE7AF7D0
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 03:52:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D6FC7AF72F
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:15:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232008AbjI0Bwp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 21:52:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
+        id S232159AbjI0APD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 20:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234770AbjI0Buo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 21:50:44 -0400
+        with ESMTP id S229704AbjI0ANC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:13:02 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73AE31F9CD
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:30:52 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5B0C433C7;
-        Tue, 26 Sep 2023 23:30:52 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E736273B
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:31:08 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8EDC433C7;
+        Tue, 26 Sep 2023 23:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695771052;
-        bh=8KZJuwZAjQcxyxT1mVnFjZKmWDZk76/GlINXjXjfors=;
+        s=k20201202; t=1695771067;
+        bh=Ifvy7CnFx/Kus2WTlwoqt3iG8FK7ZcK1gL3ksOrjUhY=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=RfPX7hcut9YeTz2RIrPX/vf096+KVoJwhLPifULp6L/ik3GpxkB1ufi51j4eoYd7E
-         NexlgQp6zc5o5TX/aRXDsoSv7ME9Ce6gvrn5Rus71IR7HsGlelhoqoqeieCYxHGfo9
-         HVTYHm/b7T0Qm52cLH9JYVid9MufktpmvL5uHM3hQZJDrswvHb/E2nwxU1eqYPcLxz
-         cEpzGs0fWbkYQIrQindu0Gtp1K6e3wpw2ktuLUyXwUkVeACOaMBU7E0ZspOIJDL7n6
-         MORqHjzEUfHTfq7OZSZnbVBSBVidWfAlBZYZzT3iPTymu0LVVIySp9ijhGdTLk/6yA
-         9EYNdnwcRvefA==
-Date:   Tue, 26 Sep 2023 16:30:51 -0700
-Subject: [PATCHSET v27.0 0/5] xfs: online repair of quota and rt metadata
- files
+        b=c4mcL5Qtrh44UyfHev2SaSTs9HeeyQlyCr6Ry8qZHZc8Y2AYXrQ7eElQgcw5c82tg
+         0BRWIh5OzFvbftDTUF3+XDuIfff5lj+kgMWXTD9KrqgwSOLlkzOq/cbRd/Hu/Yphj5
+         wtjoT23x5/5Y2pRwW3FnQc845GcqwtmE2BphzuQTRLmQD2jU1Dz3fsny9yLiwW48x4
+         gHsp1QmnqVz0Z/ct/3eoNowudfYMjUSao2CtUZZNqbgeDncJlCOfij/awLM+w1SVxP
+         b6195xnY3RT7lGHY28ZA19sdNVJwg/we0EbY1r///P0T2y910CvhwDn0wnthfUruri
+         pUNqj4myBxz+A==
+Date:   Tue, 26 Sep 2023 16:31:07 -0700
+Subject: [PATCH 1/1] xfs: make xchk_iget safer in the presence of corrupt
+ inode btrees
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Message-ID: <169577061571.3315644.2567541587400012629.stgit@frogsfrogsfrogs>
-In-Reply-To: <20230926231410.GF11439@frogsfrogsfrogs>
-References: <20230926231410.GF11439@frogsfrogsfrogs>
+Message-ID: <169577058815.3312834.1762190757505617356.stgit@frogsfrogsfrogs>
+In-Reply-To: <169577058799.3312834.4066903607681044261.stgit@frogsfrogsfrogs>
+References: <169577058799.3312834.4066903607681044261.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -49,51 +49,87 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-XFS stores quota records and free space bitmap information in files.
-Add the necessary infrastructure to enable repairing metadata inodes and
-their forks, and then make it so that we can repair the file metadata
-for the rtbitmap.  Repairing the bitmap contents (and the summary file)
-is left for subsequent patchsets.
+When scrub is trying to iget na inode, ensure that it won't end up
+deadlocked on a cycle in the inode btree by using an empty transaction
+to store all the buffers.
 
-We also add the ability to repair file metadata the quota files.  As
-part of these repairs, we also reinitialize the ondisk dquot records as
-necessary to get the incore dquots working.  We can also correct
-obviously bad dquot record attributes, but we leave checking the
-resource usage counts for the next patchsets.
-
-If you're going to start using this code, I strongly recommend pulling
-from my git trees, which are linked below.
-
-This has been running on the djcloud for months with no problems.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-quota
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-quota
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-quota
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/Makefile             |    9 +
- fs/xfs/libxfs/xfs_format.h  |    3 
- fs/xfs/scrub/dqiterate.c    |  211 ++++++++++++++++
- fs/xfs/scrub/quota.c        |  107 +++++++-
- fs/xfs/scrub/quota.h        |   36 +++
- fs/xfs/scrub/quota_repair.c |  572 +++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/repair.h       |    7 +
- fs/xfs/scrub/scrub.c        |    6 
- fs/xfs/scrub/trace.c        |    3 
- fs/xfs/scrub/trace.h        |   78 ++++++
- fs/xfs/xfs_dquot.c          |   37 ---
- fs/xfs/xfs_dquot.h          |    8 -
- 12 files changed, 1023 insertions(+), 54 deletions(-)
- create mode 100644 fs/xfs/scrub/dqiterate.c
- create mode 100644 fs/xfs/scrub/quota.h
- create mode 100644 fs/xfs/scrub/quota_repair.c
+ fs/xfs/scrub/common.c |    6 ++++--
+ fs/xfs/scrub/common.h |   19 +++++++++++++++++++
+ fs/xfs/scrub/inode.c  |    4 ++--
+ 3 files changed, 25 insertions(+), 4 deletions(-)
+
+
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index de24532fe0830..23944fcc1a6ca 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -733,6 +733,8 @@ xchk_iget(
+ 	xfs_ino_t		inum,
+ 	struct xfs_inode	**ipp)
+ {
++	ASSERT(sc->tp != NULL);
++
+ 	return xfs_iget(sc->mp, sc->tp, inum, XFS_IGET_UNTRUSTED, 0, ipp);
+ }
+ 
+@@ -882,8 +884,8 @@ xchk_iget_for_scrubbing(
+ 	if (!xfs_verify_ino(sc->mp, sc->sm->sm_ino))
+ 		return -ENOENT;
+ 
+-	/* Try a regular untrusted iget. */
+-	error = xchk_iget(sc, sc->sm->sm_ino, &ip);
++	/* Try a safe untrusted iget. */
++	error = xchk_iget_safe(sc, sc->sm->sm_ino, &ip);
+ 	if (!error)
+ 		return xchk_install_handle_inode(sc, ip);
+ 	if (error == -ENOENT)
+diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
+index cabdc0e16838c..a39dbe6be1e59 100644
+--- a/fs/xfs/scrub/common.h
++++ b/fs/xfs/scrub/common.h
+@@ -157,6 +157,25 @@ int xchk_iget_agi(struct xfs_scrub *sc, xfs_ino_t inum,
+ void xchk_irele(struct xfs_scrub *sc, struct xfs_inode *ip);
+ int xchk_install_handle_inode(struct xfs_scrub *sc, struct xfs_inode *ip);
+ 
++/*
++ * Safe version of (untrusted) xchk_iget that uses an empty transaction to
++ * avoid deadlocking on loops in the inobt.
++ */
++static inline int
++xchk_iget_safe(struct xfs_scrub *sc, xfs_ino_t inum, struct xfs_inode **ipp)
++{
++	int	error;
++
++	ASSERT(sc->tp == NULL);
++
++	error = xchk_trans_alloc(sc, 0);
++	if (error)
++		return error;
++	error = xchk_iget(sc, inum, ipp);
++	xchk_trans_cancel(sc);
++	return error;
++}
++
+ /*
+  * Don't bother cross-referencing if we already found corruption or cross
+  * referencing discrepancies.
+diff --git a/fs/xfs/scrub/inode.c b/fs/xfs/scrub/inode.c
+index 59d7912fb75f1..74b1ebb40a4c0 100644
+--- a/fs/xfs/scrub/inode.c
++++ b/fs/xfs/scrub/inode.c
+@@ -94,8 +94,8 @@ xchk_setup_inode(
+ 	if (!xfs_verify_ino(sc->mp, sc->sm->sm_ino))
+ 		return -ENOENT;
+ 
+-	/* Try a regular untrusted iget. */
+-	error = xchk_iget(sc, sc->sm->sm_ino, &ip);
++	/* Try a safe untrusted iget. */
++	error = xchk_iget_safe(sc, sc->sm->sm_ino, &ip);
+ 	if (!error)
+ 		return xchk_install_handle_iscrub(sc, ip);
+ 	if (error == -ENOENT)
 
