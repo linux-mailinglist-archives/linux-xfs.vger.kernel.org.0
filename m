@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 068FD7AF7BE
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 03:46:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29CC97AF721
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:14:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234825AbjI0BqK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 21:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46456 "EHLO
+        id S232525AbjI0AN5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 20:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235438AbjI0BoJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 21:44:09 -0400
+        with ESMTP id S229825AbjI0ALz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:11:55 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187C1273A
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:29:34 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AECF2C433C7;
-        Tue, 26 Sep 2023 23:29:33 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1D83AAC
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:29:49 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716A9C433C8;
+        Tue, 26 Sep 2023 23:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695770973;
-        bh=Qg5GmLJZRijMf7hOs+fd9D6OiRNWXlqSWN8daSw0+bs=;
+        s=k20201202; t=1695770989;
+        bh=qc7WV+RKPlrkm+Z0d7peZxSd9LZNpp138OAavxxTeWU=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=PbIZmRsEFY0BrVBJZuJtw9dB5AKwnZ5GpYns8ClCy/mrt1Im1mNGAjdA6hdYyD8xP
-         UVNYFzKC/46Cv2pCk40wfmk1Q7K8CSKmVb+26DISiWXQuco4Nz1mmI8Wr8YFAWClY4
-         Wrma5VvXQ51OjuAJJSnllFYuNIToVYuYHQ/y8RPON5HGW0MfOhyt7QukuhuDclu8z+
-         NTjyH3X2Hr2f1qxOKr9HcwBmvyTiwogNc92nakClpbfMOkVsHyAzsTd5ICV0xU3dVI
-         95rumur5HBncpxn9r/lIGpdovG1P/NKUlVNJ4S/5W+UvwNgI7Ccga3oIOvXoks9wBB
-         8hxiUepdmB9xQ==
-Date:   Tue, 26 Sep 2023 16:29:33 -0700
-Subject: [PATCHSET v27.0 0/4] xfs: prepare repair for bulk loading
+        b=cAHldwxX0Z50dcP42yAvds1zyoRxG08KcvsOz+ymnpH3Nxw1/BzKArpoUHQTtscRu
+         VBDBCqi6jUa4jMHy3aA5fNc6lLmmPp8nVKsAcF3+Hnka6FGQcDvHBpzFUND/euT7YW
+         3THZSI4vZNyLG4zi7sO8rzsnopYTxfYL1lW8Xj8C8d+MkLMmNQ/31HWb5t+HfbfPpm
+         3tdKwVS3SXEHEI7hgNFPdS79wlsY9GL2qhTZWhm3BY5fldWm4OOLBr0SH3K9pMauhR
+         CGYPP5UMW5+ri74s+IZExGqedBy9TnphLThgU+9Sk9Vv2Me4PmcCEIsoFHuEn/rYYb
+         n9gUvGqMH0Lag==
+Date:   Tue, 26 Sep 2023 16:29:48 -0700
+Subject: [PATCHSET v27.0 0/4] xfs: online repair of AG btrees
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Message-ID: <169577059572.3313134.3407643746555317156.stgit@frogsfrogsfrogs>
+Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
+Message-ID: <169577059962.3313285.5801727504839472715.stgit@frogsfrogsfrogs>
 In-Reply-To: <20230926231410.GF11439@frogsfrogsfrogs>
 References: <20230926231410.GF11439@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -50,21 +50,12 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-Before we start merging the online repair functions, let's improve the
-bulk loading code a bit.  First, we need to fix a misinteraction between
-the AIL and the btree bulkloader wherein the delwri at the end of the
-bulk load fails to queue a buffer for writeback if it happens to be on
-the AIL list.
-
-Second, we introduce a defer ops barrier object so that the process of
-reaping blocks after a repair cannot queue more than two extents per EFI
-log item.  This increases our exposure to leaking blocks if the system
-goes down during a reap, but also should prevent transaction overflows,
-which result in the system going down.
-
-Third, we change the bulkloader itself to copy multiple records into a
-block if possible, and add some debugging knobs so that developers can
-control the slack factors, just like they can do for xfs_repair.
+Now that we've spent a lot of time reworking common code in online fsck,
+we're ready to start rebuilding the AG space btrees.  This series
+implements repair functions for the free space, inode, and refcount
+btrees.  Rebuilding the reverse mapping btree is much more intense and
+is left for a subsequent patchset.  The fstests counterpart of this
+patchset implements stress testing of repair.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -75,20 +66,47 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-prep-for-bulk-loading
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-ag-btrees
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-prep-for-bulk-loading
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-ag-btrees
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-ag-btrees
 ---
- fs/xfs/libxfs/xfs_btree.c         |    2 +
- fs/xfs/libxfs/xfs_btree.h         |    3 ++
- fs/xfs/libxfs/xfs_btree_staging.c |   67 +++++++++++++++++++++++++------------
- fs/xfs/libxfs/xfs_btree_staging.h |   25 +++++++++++---
- fs/xfs/scrub/newbt.c              |   11 ++++--
- fs/xfs/xfs_buf.c                  |   47 ++++++++++++++++++++++++--
- fs/xfs/xfs_buf.h                  |    1 +
- fs/xfs/xfs_globals.c              |   12 +++++++
- fs/xfs/xfs_sysctl.h               |    2 +
- fs/xfs/xfs_sysfs.c                |   54 ++++++++++++++++++++++++++++++
- 10 files changed, 189 insertions(+), 35 deletions(-)
+ fs/xfs/Makefile                    |    3 
+ fs/xfs/libxfs/xfs_ag.h             |   10 
+ fs/xfs/libxfs/xfs_ag_resv.c        |    2 
+ fs/xfs/libxfs/xfs_alloc.c          |   18 -
+ fs/xfs/libxfs/xfs_alloc.h          |    2 
+ fs/xfs/libxfs/xfs_alloc_btree.c    |   13 -
+ fs/xfs/libxfs/xfs_btree.c          |   26 +
+ fs/xfs/libxfs/xfs_btree.h          |    2 
+ fs/xfs/libxfs/xfs_ialloc.c         |   41 +-
+ fs/xfs/libxfs/xfs_ialloc.h         |    3 
+ fs/xfs/libxfs/xfs_refcount.c       |   18 -
+ fs/xfs/libxfs/xfs_refcount.h       |    2 
+ fs/xfs/libxfs/xfs_refcount_btree.c |   13 -
+ fs/xfs/libxfs/xfs_types.h          |    7 
+ fs/xfs/scrub/agheader_repair.c     |    9 
+ fs/xfs/scrub/alloc.c               |   16 +
+ fs/xfs/scrub/alloc_repair.c        |  914 ++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/common.c              |    1 
+ fs/xfs/scrub/common.h              |   19 +
+ fs/xfs/scrub/ialloc_repair.c       |  874 ++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/newbt.c               |   48 ++
+ fs/xfs/scrub/newbt.h               |    6 
+ fs/xfs/scrub/refcount_repair.c     |  793 +++++++++++++++++++++++++++++++
+ fs/xfs/scrub/repair.c              |  128 +++++
+ fs/xfs/scrub/repair.h              |   43 ++
+ fs/xfs/scrub/scrub.c               |   22 +
+ fs/xfs/scrub/scrub.h               |    9 
+ fs/xfs/scrub/trace.h               |  112 +++-
+ fs/xfs/scrub/xfarray.h             |   22 +
+ fs/xfs/xfs_extent_busy.c           |   13 +
+ fs/xfs/xfs_extent_busy.h           |    2 
+ 31 files changed, 3103 insertions(+), 88 deletions(-)
+ create mode 100644 fs/xfs/scrub/alloc_repair.c
+ create mode 100644 fs/xfs/scrub/ialloc_repair.c
+ create mode 100644 fs/xfs/scrub/refcount_repair.c
 
