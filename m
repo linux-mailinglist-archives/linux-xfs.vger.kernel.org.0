@@ -2,39 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D6FC7AF72F
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:15:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94ABF7AF72C
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:15:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232159AbjI0APD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 20:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50010 "EHLO
+        id S232733AbjI0APE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 20:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjI0ANC (ORCPT
+        with ESMTP id S232101AbjI0ANC (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:13:02 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E736273B
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:31:08 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8EDC433C7;
-        Tue, 26 Sep 2023 23:31:07 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBEC1F9D4
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:31:23 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D82CC433C8;
+        Tue, 26 Sep 2023 23:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695771067;
-        bh=Ifvy7CnFx/Kus2WTlwoqt3iG8FK7ZcK1gL3ksOrjUhY=;
+        s=k20201202; t=1695771083;
+        bh=TBoQb4giXJsf6fBCEmEO+yy34bin2T8ADAhxEpmxJMs=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=c4mcL5Qtrh44UyfHev2SaSTs9HeeyQlyCr6Ry8qZHZc8Y2AYXrQ7eElQgcw5c82tg
-         0BRWIh5OzFvbftDTUF3+XDuIfff5lj+kgMWXTD9KrqgwSOLlkzOq/cbRd/Hu/Yphj5
-         wtjoT23x5/5Y2pRwW3FnQc845GcqwtmE2BphzuQTRLmQD2jU1Dz3fsny9yLiwW48x4
-         gHsp1QmnqVz0Z/ct/3eoNowudfYMjUSao2CtUZZNqbgeDncJlCOfij/awLM+w1SVxP
-         b6195xnY3RT7lGHY28ZA19sdNVJwg/we0EbY1r///P0T2y910CvhwDn0wnthfUruri
-         pUNqj4myBxz+A==
-Date:   Tue, 26 Sep 2023 16:31:07 -0700
-Subject: [PATCH 1/1] xfs: make xchk_iget safer in the presence of corrupt
- inode btrees
+        b=XxgQe6V1gBbWhTOYEkEdxyyMmcoRmsDX3z+SydB5mXlxPX/KDlY6HmvXWgtzkCOiS
+         Q7STETB4TNEcCQL26Mhb+TEmqNfX/6A9NOWB3lNmVtQmWhTdMPmRIwpDovxpYlsGbT
+         k2CzUj7bxgAipDvMlOjgfqf7B0oCKXQHUoBgI8OaY+ZPtPzU6lSrSLhB/A2P1lpraq
+         9qZ6hPWMAmQRPHmqmLxz6l7/5J+ME64DEeKO2Rnt6t04DbhsEJDjDlrnC6YQsE7/iN
+         w7rJOlun2zHn74nQLhmmpNkrWKpiWdrSSxfahCsedyJ7SsuuBZPIRmwgUIylidQIjw
+         nvVsvFbwZMaGg==
+Date:   Tue, 26 Sep 2023 16:31:22 -0700
+Subject: [PATCH 1/7] xfs: don't append work items to logged xfs_defer_pending
+ objects
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Message-ID: <169577058815.3312834.1762190757505617356.stgit@frogsfrogsfrogs>
-In-Reply-To: <169577058799.3312834.4066903607681044261.stgit@frogsfrogsfrogs>
-References: <169577058799.3312834.4066903607681044261.stgit@frogsfrogsfrogs>
+Message-ID: <169577059164.3312911.8148982456892861553.stgit@frogsfrogsfrogs>
+In-Reply-To: <169577059140.3312911.17578000557997208473.stgit@frogsfrogsfrogs>
+References: <169577059140.3312911.17578000557997208473.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -51,85 +51,98 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When scrub is trying to iget na inode, ensure that it won't end up
-deadlocked on a cycle in the inode btree by using an empty transaction
-to store all the buffers.
+When someone tries to add a deferred work item to xfs_defer_add, it will
+try to attach the work item to the most recently added xfs_defer_pending
+object attached to the transaction.  However, it doesn't check if the
+pending object has a log intent item attached to it.  This is incorrect
+behavior because we cannot add more work to an object that has already
+been committed to the ondisk log.
+
+Therefore, change the behavior not to append to pending items with a non
+null dfp_intent.  In practice this has not been an issue because the
+only way xfs_defer_add gets called after log intent items have been
+committed is from the defer ops ->finish_item functions themselves, and
+the @dop_pending isolation in xfs_defer_finish_noroll protects the
+pending items that have already been logged.
+
+However, the next patch will add the ability to pause a deferred extent
+free object during online btree rebuilding, and any new extfree work
+items need to have their own pending event.
+
+While we're at it, hoist the predicate to its own static inline function
+for readability.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/common.c |    6 ++++--
- fs/xfs/scrub/common.h |   19 +++++++++++++++++++
- fs/xfs/scrub/inode.c  |    4 ++--
- 3 files changed, 25 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_defer.c |   48 ++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 36 insertions(+), 12 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-index de24532fe0830..23944fcc1a6ca 100644
---- a/fs/xfs/scrub/common.c
-+++ b/fs/xfs/scrub/common.c
-@@ -733,6 +733,8 @@ xchk_iget(
- 	xfs_ino_t		inum,
- 	struct xfs_inode	**ipp)
- {
-+	ASSERT(sc->tp != NULL);
-+
- 	return xfs_iget(sc->mp, sc->tp, inum, XFS_IGET_UNTRUSTED, 0, ipp);
+diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
+index bcfb6a4203cdd..ad41c6d0113ce 100644
+--- a/fs/xfs/libxfs/xfs_defer.c
++++ b/fs/xfs/libxfs/xfs_defer.c
+@@ -617,6 +617,40 @@ xfs_defer_cancel(
+ 	xfs_defer_cancel_list(mp, &tp->t_dfops);
  }
  
-@@ -882,8 +884,8 @@ xchk_iget_for_scrubbing(
- 	if (!xfs_verify_ino(sc->mp, sc->sm->sm_ino))
- 		return -ENOENT;
- 
--	/* Try a regular untrusted iget. */
--	error = xchk_iget(sc, sc->sm->sm_ino, &ip);
-+	/* Try a safe untrusted iget. */
-+	error = xchk_iget_safe(sc, sc->sm->sm_ino, &ip);
- 	if (!error)
- 		return xchk_install_handle_inode(sc, ip);
- 	if (error == -ENOENT)
-diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
-index cabdc0e16838c..a39dbe6be1e59 100644
---- a/fs/xfs/scrub/common.h
-+++ b/fs/xfs/scrub/common.h
-@@ -157,6 +157,25 @@ int xchk_iget_agi(struct xfs_scrub *sc, xfs_ino_t inum,
- void xchk_irele(struct xfs_scrub *sc, struct xfs_inode *ip);
- int xchk_install_handle_inode(struct xfs_scrub *sc, struct xfs_inode *ip);
- 
 +/*
-+ * Safe version of (untrusted) xchk_iget that uses an empty transaction to
-+ * avoid deadlocking on loops in the inobt.
++ * Decide if we can add a deferred work item to the last dfops item attached
++ * to the transaction.
 + */
-+static inline int
-+xchk_iget_safe(struct xfs_scrub *sc, xfs_ino_t inum, struct xfs_inode **ipp)
++static inline struct xfs_defer_pending *
++xfs_defer_try_append(
++	struct xfs_trans		*tp,
++	enum xfs_defer_ops_type		type,
++	const struct xfs_defer_op_type	*ops)
 +{
-+	int	error;
++	struct xfs_defer_pending	*dfp = NULL;
 +
-+	ASSERT(sc->tp == NULL);
++	/* No dfops at all? */
++	if (list_empty(&tp->t_dfops))
++		return NULL;
 +
-+	error = xchk_trans_alloc(sc, 0);
-+	if (error)
-+		return error;
-+	error = xchk_iget(sc, inum, ipp);
-+	xchk_trans_cancel(sc);
-+	return error;
++	dfp = list_last_entry(&tp->t_dfops, struct xfs_defer_pending,
++			dfp_list);
++
++	/* Wrong type? */
++	if (dfp->dfp_type != type)
++		return NULL;
++
++	/* Already logged? */
++	if (dfp->dfp_intent)
++		return NULL;
++
++	/* Already full? */
++	if (ops->max_items && dfp->dfp_count >= ops->max_items)
++		return NULL;
++
++	return dfp;
 +}
 +
- /*
-  * Don't bother cross-referencing if we already found corruption or cross
-  * referencing discrepancies.
-diff --git a/fs/xfs/scrub/inode.c b/fs/xfs/scrub/inode.c
-index 59d7912fb75f1..74b1ebb40a4c0 100644
---- a/fs/xfs/scrub/inode.c
-+++ b/fs/xfs/scrub/inode.c
-@@ -94,8 +94,8 @@ xchk_setup_inode(
- 	if (!xfs_verify_ino(sc->mp, sc->sm->sm_ino))
- 		return -ENOENT;
+ /* Add an item for later deferred processing. */
+ void
+ xfs_defer_add(
+@@ -630,19 +664,9 @@ xfs_defer_add(
+ 	ASSERT(tp->t_flags & XFS_TRANS_PERM_LOG_RES);
+ 	BUILD_BUG_ON(ARRAY_SIZE(defer_op_types) != XFS_DEFER_OPS_TYPE_MAX);
  
--	/* Try a regular untrusted iget. */
--	error = xchk_iget(sc, sc->sm->sm_ino, &ip);
-+	/* Try a safe untrusted iget. */
-+	error = xchk_iget_safe(sc, sc->sm->sm_ino, &ip);
- 	if (!error)
- 		return xchk_install_handle_iscrub(sc, ip);
- 	if (error == -ENOENT)
+-	/*
+-	 * Add the item to a pending item at the end of the intake list.
+-	 * If the last pending item has the same type, reuse it.  Else,
+-	 * create a new pending item at the end of the intake list.
+-	 */
+-	if (!list_empty(&tp->t_dfops)) {
+-		dfp = list_last_entry(&tp->t_dfops,
+-				struct xfs_defer_pending, dfp_list);
+-		if (dfp->dfp_type != type ||
+-		    (ops->max_items && dfp->dfp_count >= ops->max_items))
+-			dfp = NULL;
+-	}
++	dfp = xfs_defer_try_append(tp, type, ops);
+ 	if (!dfp) {
++		/* Create a new pending item at the end of the intake list. */
+ 		dfp = kmem_cache_zalloc(xfs_defer_pending_cache,
+ 				GFP_NOFS | __GFP_NOFAIL);
+ 		dfp->dfp_type = type;
 
