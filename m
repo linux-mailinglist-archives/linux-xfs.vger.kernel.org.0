@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 554107AF752
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:20:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5898E7AF754
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbjI0AUD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 20:20:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59506 "EHLO
+        id S229493AbjI0AUG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 20:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232778AbjI0ASC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:18:02 -0400
+        with ESMTP id S230415AbjI0ASF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:18:05 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E650D5243
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:39:29 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B2CC433C7;
-        Tue, 26 Sep 2023 23:39:29 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FE15260
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:39:45 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47011C433C8;
+        Tue, 26 Sep 2023 23:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695771569;
-        bh=Vj74v1rdOPZWX6SytJ61ukQyZ18q0V5YO/YqyFl/1+4=;
+        s=k20201202; t=1695771585;
+        bh=NRifYg+hJnogh2vy8+ZZc6Rvp3MUcvJT/6GXWziJefw=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=qmdnKqP1BBFvqyCmZ4blopdMm/7MwJAsq8rvOjegXIL7wzEkLiX1vI6r6wM44qfuc
-         o+UNuRV/WCyPr7ZbJqWwdaC59bfp/efOgxJ+sO9IaKYsB9GCDwXs4T4OCRg7WzmimM
-         M+LPaVzoweqKUq7HfxX9bH7ylecKOXwjHLH3KtqPO/wMqdZdEFkDU4PQy3THa2rHIM
-         rybkRH1oGiAXTCLJrjlRj3S17QRjgNUtQP/FOmhq4zJck8cL/IMX9qTX6uEFNkQ3Ps
-         Qkz6zx8ZEycawG019UVWpRrNXTBVeqbqVFgQekBdVRyRs5+/pYwQN9iukQ1FptyfRQ
-         v3mEiV0nETybw==
-Date:   Tue, 26 Sep 2023 16:39:29 -0700
-Subject: [PATCH 1/5] xfs: check the ondisk space mapping behind a dquot
+        b=Kuru+vkqlsqHCltqOJ5e52IL15yRZVhe3BDkgRNS8wzoqP1gNrsbQW2sxwHlGscir
+         9mTKy9PA5FAYs0FVBWbWtu5e9CH6EnN0Jxy0RcRe+gIRFSh59oVKTz/zZXxQAmI4C9
+         weZOKHLfe4gLrqL6uMOnd9UZz0WFdvoUuz/n2N5F1qNx5U+jSZ2nr44LxRSYmMwOcr
+         XzYV+Ii0BSQLmxYWnwC6kJbPMCnFHftwa4g4yG25gWpVoacg1B30TlDN3D0Cw2Opqi
+         c/L8P6KGKYJSMwmXFbVsTHNXgaqCkeTYahsyO3vW+3U9Az5N9eBaSxjtJz4/uahJfU
+         yzH2O5ePKSLTQ==
+Date:   Tue, 26 Sep 2023 16:39:44 -0700
+Subject: [PATCH 2/5] xfs: check dquot resource timers
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Message-ID: <169577061592.3315644.4664727550665513734.stgit@frogsfrogsfrogs>
+Message-ID: <169577061605.3315644.17495425004699029452.stgit@frogsfrogsfrogs>
 In-Reply-To: <169577061571.3315644.2567541587400012629.stgit@frogsfrogsfrogs>
 References: <169577061571.3315644.2567541587400012629.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -50,104 +50,57 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Each xfs_dquot object caches the file offset and daddr of the ondisk
-block that backs the dquot.  Make sure these cached values are the same
-as the bmapi data, and that the block state is written.
+For each dquot resource, ensure either (a) the resource usage is over
+the soft limit and there is a nonzero timer; or (b) usage is at or under
+the soft limit and the timer is unset.  (a) is redundant with the dquot
+buffer verifier, but (b) isn't checked anywhere.
+
+Found by fuzzing xfs/426 and noticing that diskdq.btimer = add didn't
+trip any kind of warning for having a timer set even with no limits.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/quota.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ fs/xfs/scrub/quota.c |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 
 diff --git a/fs/xfs/scrub/quota.c b/fs/xfs/scrub/quota.c
-index 5671c81534335..59350cd7a325b 100644
+index 59350cd7a325b..49835d2840b4a 100644
 --- a/fs/xfs/scrub/quota.c
 +++ b/fs/xfs/scrub/quota.c
-@@ -6,6 +6,7 @@
- #include "xfs.h"
- #include "xfs_fs.h"
- #include "xfs_shared.h"
-+#include "xfs_bit.h"
- #include "xfs_format.h"
- #include "xfs_trans_resv.h"
- #include "xfs_mount.h"
-@@ -75,6 +76,47 @@ struct xchk_quota_info {
- 	xfs_dqid_t		last_id;
- };
+@@ -117,6 +117,23 @@ xchk_quota_item_bmap(
+ 	return 0;
+ }
  
-+/* There's a written block backing this dquot, right? */
-+STATIC int
-+xchk_quota_item_bmap(
-+	struct xfs_scrub	*sc,
-+	struct xfs_dquot	*dq,
-+	xfs_fileoff_t		offset)
++/* Complain if a quota timer is incorrectly set. */
++static inline void
++xchk_quota_item_timer(
++	struct xfs_scrub		*sc,
++	xfs_fileoff_t			offset,
++	const struct xfs_dquot_res	*res)
 +{
-+	struct xfs_bmbt_irec	irec;
-+	struct xfs_mount	*mp = sc->mp;
-+	int			nmaps = 1;
-+	int			error;
-+
-+	if (!xfs_verify_fileoff(mp, offset)) {
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+		return 0;
++	if ((res->softlimit && res->count > res->softlimit) ||
++	    (res->hardlimit && res->count > res->hardlimit)) {
++		if (!res->timer)
++			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
++	} else {
++		if (res->timer)
++			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
 +	}
-+
-+	if (dq->q_fileoffset != offset) {
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+		return 0;
-+	}
-+
-+	error = xfs_bmapi_read(sc->ip, offset, 1, &irec, &nmaps, 0);
-+	if (error)
-+		return error;
-+
-+	if (nmaps != 1) {
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+		return 0;
-+	}
-+
-+	if (!xfs_verify_fsbno(mp, irec.br_startblock))
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+	if (XFS_FSB_TO_DADDR(mp, irec.br_startblock) != dq->q_blkno)
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+	if (!xfs_bmap_is_written_extent(&irec))
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+
-+	return 0;
 +}
 +
  /* Scrub the fields in an individual quota item. */
  STATIC int
  xchk_quota_item(
-@@ -93,6 +135,17 @@ xchk_quota_item(
- 	if (xchk_should_terminate(sc, &error))
- 		return error;
+@@ -224,6 +241,10 @@ xchk_quota_item(
+ 	    dq->q_rtb.count > dq->q_rtb.hardlimit)
+ 		xchk_fblock_set_warning(sc, XFS_DATA_FORK, offset);
  
-+	/*
-+	 * We want to validate the bmap record for the storage backing this
-+	 * dquot, so we need to lock the dquot and the quota file.  For quota
-+	 * operations, the locking order is first the ILOCK and then the dquot.
-+	 * However, dqiterate gave us a locked dquot, so drop the dquot lock to
-+	 * get the ILOCK.
-+	 */
-+	xfs_dqunlock(dq);
-+	xchk_ilock(sc, XFS_ILOCK_SHARED);
-+	xfs_dqlock(dq);
++	xchk_quota_item_timer(sc, offset, &dq->q_blk);
++	xchk_quota_item_timer(sc, offset, &dq->q_ino);
++	xchk_quota_item_timer(sc, offset, &dq->q_rtb);
 +
- 	/*
- 	 * Except for the root dquot, the actual dquot we got must either have
- 	 * the same or higher id as we saw before.
-@@ -103,6 +156,11 @@ xchk_quota_item(
- 
- 	sqi->last_id = dq->q_id;
- 
-+	error = xchk_quota_item_bmap(sc, dq, offset);
-+	xchk_iunlock(sc, XFS_ILOCK_SHARED);
-+	if (!xchk_fblock_process_error(sc, XFS_DATA_FORK, offset, &error))
-+		return error;
-+
- 	/*
- 	 * Warn if the hard limits are larger than the fs.
- 	 * Administrators can do this, though in production this seems
+ out:
+ 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		return -ECANCELED;
 
