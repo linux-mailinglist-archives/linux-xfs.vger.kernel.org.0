@@ -2,36 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E26A57AF7D6
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 03:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C95CE7AF7D0
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 03:52:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235283AbjI0ByD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 21:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42840 "EHLO
+        id S232008AbjI0Bwp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 21:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234279AbjI0BwD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 21:52:03 -0400
+        with ESMTP id S234770AbjI0Buo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 21:50:44 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD591F2B0
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:30:36 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BDC7C433C8;
-        Tue, 26 Sep 2023 23:30:36 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73AE31F9CD
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:30:52 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5B0C433C7;
+        Tue, 26 Sep 2023 23:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695771036;
-        bh=BJE396fiXuVVYkeuIXzJlpdUYssh4svkQinIEH5wyG0=;
+        s=k20201202; t=1695771052;
+        bh=8KZJuwZAjQcxyxT1mVnFjZKmWDZk76/GlINXjXjfors=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=Gs48dpr0xguSM0Q7DCjbZd9MpMBDgCK0oSIQ6u8+7o3b6pamm44mVQY823bDDyLdd
-         EPNu9Ob6SPvxSUbF9X+uOYuriyIKXc3o3PWAFnkHN5o19HBUZhOtcH/8TDFw7pQMfP
-         unvmSBxjzQgLm4hD4lD4+ujT8A6tDIIWjRgD38SSXknbap7/zWlsf0Gu7wcXYmCcxO
-         cV9rtkTy6VODIGBb8HVojyN3kiMewNts8Bhszs8dg9bsY2gFEp6EkFQ3qmo/5cV0US
-         bpTAUeqRNhy4Yv6njsnudutUCIRkIXeSEMyTsC9um4GjSpOnXD5hoKCE1w34gFl7/N
-         eNyXxqNn46jBg==
-Date:   Tue, 26 Sep 2023 16:30:36 -0700
-Subject: [PATCHSET v27.0 0/4] xfs: online repair of rt bitmap file
+        b=RfPX7hcut9YeTz2RIrPX/vf096+KVoJwhLPifULp6L/ik3GpxkB1ufi51j4eoYd7E
+         NexlgQp6zc5o5TX/aRXDsoSv7ME9Ce6gvrn5Rus71IR7HsGlelhoqoqeieCYxHGfo9
+         HVTYHm/b7T0Qm52cLH9JYVid9MufktpmvL5uHM3hQZJDrswvHb/E2nwxU1eqYPcLxz
+         cEpzGs0fWbkYQIrQindu0Gtp1K6e3wpw2ktuLUyXwUkVeACOaMBU7E0ZspOIJDL7n6
+         MORqHjzEUfHTfq7OZSZnbVBSBVidWfAlBZYZzT3iPTymu0LVVIySp9ijhGdTLk/6yA
+         9EYNdnwcRvefA==
+Date:   Tue, 26 Sep 2023 16:30:51 -0700
+Subject: [PATCHSET v27.0 0/5] xfs: online repair of quota and rt metadata
+ files
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Message-ID: <169577061183.3315493.6171012860982301231.stgit@frogsfrogsfrogs>
+Message-ID: <169577061571.3315644.2567541587400012629.stgit@frogsfrogsfrogs>
 In-Reply-To: <20230926231410.GF11439@frogsfrogsfrogs>
 References: <20230926231410.GF11439@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -50,10 +51,17 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-Add in the necessary infrastructure to check the inode and data forks of
-metadata files, then apply that to the realtime bitmap file.  We won't
-be able to reconstruct the contents of the rtbitmap file until rmapbt is
-added for realtime volumes, but we can at least get the basics started.
+XFS stores quota records and free space bitmap information in files.
+Add the necessary infrastructure to enable repairing metadata inodes and
+their forks, and then make it so that we can repair the file metadata
+for the rtbitmap.  Repairing the bitmap contents (and the summary file)
+is left for subsequent patchsets.
+
+We also add the ability to repair file metadata the quota files.  As
+part of these repairs, we also reinitialize the ondisk dquot records as
+necessary to get the incore dquots working.  We can also correct
+obviously bad dquot record attributes, but we leave checking the
+resource usage counts for the next patchsets.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -64,21 +72,28 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-rtbitmap
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-quota
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-rtbitmap
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-quota
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-quota
 ---
- fs/xfs/Makefile                |    4 +
- fs/xfs/libxfs/xfs_bmap.c       |   39 ++++++++++
- fs/xfs/libxfs/xfs_bmap.h       |    2 +
- fs/xfs/scrub/bmap_repair.c     |   17 +++--
- fs/xfs/scrub/repair.c          |  151 ++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/repair.h          |   15 ++++
- fs/xfs/scrub/rtbitmap.c        |   10 ++-
- fs/xfs/scrub/rtbitmap_repair.c |   56 +++++++++++++++
- fs/xfs/scrub/scrub.c           |    4 -
- fs/xfs/xfs_inode.c             |   24 +-----
- 10 files changed, 294 insertions(+), 28 deletions(-)
- create mode 100644 fs/xfs/scrub/rtbitmap_repair.c
+ fs/xfs/Makefile             |    9 +
+ fs/xfs/libxfs/xfs_format.h  |    3 
+ fs/xfs/scrub/dqiterate.c    |  211 ++++++++++++++++
+ fs/xfs/scrub/quota.c        |  107 +++++++-
+ fs/xfs/scrub/quota.h        |   36 +++
+ fs/xfs/scrub/quota_repair.c |  572 +++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/repair.h       |    7 +
+ fs/xfs/scrub/scrub.c        |    6 
+ fs/xfs/scrub/trace.c        |    3 
+ fs/xfs/scrub/trace.h        |   78 ++++++
+ fs/xfs/xfs_dquot.c          |   37 ---
+ fs/xfs/xfs_dquot.h          |    8 -
+ 12 files changed, 1023 insertions(+), 54 deletions(-)
+ create mode 100644 fs/xfs/scrub/dqiterate.c
+ create mode 100644 fs/xfs/scrub/quota.h
+ create mode 100644 fs/xfs/scrub/quota_repair.c
 
