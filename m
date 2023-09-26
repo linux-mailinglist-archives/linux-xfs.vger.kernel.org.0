@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5827AF745
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:17:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5EF87AF7D4
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 03:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233331AbjI0AR4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 20:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41402 "EHLO
+        id S234770AbjI0BxJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 21:53:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbjI0APz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:15:55 -0400
+        with ESMTP id S234803AbjI0BvI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 21:51:08 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83E17D96
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:36:21 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3F5C433C8;
-        Tue, 26 Sep 2023 23:36:21 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B589A5F3
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:36:37 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D86C433C8;
+        Tue, 26 Sep 2023 23:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695771381;
-        bh=tp9zLje03hLdFAEtIO0o5d9N65AlQC8ufIgHwN0P17c=;
+        s=k20201202; t=1695771396;
+        bh=1n5+88c2nV3LdU5ORkCT5OiIJAIgmPmdSV0ZTiG3YgQ=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=mCac/3KwOt25em8SKIrn/cHvHxSuK8i7KmS/NW123ixE/pt561UP7IZFHEWFY47pJ
-         YRuQ8b5hLNH+3QAA9QHqM94FZ/YK6NapUBc54+nuSXvIp0CBoi+hKzvZU1UMV6G/Hu
-         a97XS09it5DqwTxN3YjuIQiuaSWuXyZvTpJfcqrXAleljHX3jRpjQWerzKoeEFdx9G
-         DNzPJ+q1sXDLVqhkYHk/aW4xMyh+r/O7SXs/uDSbCAmcNeKs/YNUUv+zdPxRn6ngsu
-         Wad/3vJjHA96DcMf6fARL5gCOcjkfNAAfKARo26iOmyLY1k4RWFLaJYQM1aT4hggKl
-         0jKNy9BN5R2Og==
-Date:   Tue, 26 Sep 2023 16:36:20 -0700
-Subject: [PATCH 5/7] xfs: abort directory parent scrub scans if we encounter a
- zapped directory
+        b=SI4vUEW8V8kStUyudRGnog8oRXrQmQwEc9cIKw6rJbJq1I9JU07UFxf4RkYLOv/Zy
+         CtWflLeKRYFxqYT+WDQz+XA7051qwFUnY89vYmLsH4lYIYGVoiw4cjTXU8DbFWz90j
+         kzVz97gJMJP5+04TVdpRvGGmnqbW5AgynZCuZsbnKH/07T/F/P4CgmpXh6+x+CgEPn
+         Tu8KWHPE4cm510BSXwyXA9IIqsxPlcIm+1W6drS95weaRHZu+zhZSO3MMwwMPcRY7r
+         45j3L5jPApfGPdENVSRij5X0hOzGLqZCx+uz6u6hbfBMb1LVGcSh572xfq1l8rh3xV
+         +EitHzzboB/Wg==
+Date:   Tue, 26 Sep 2023 16:36:36 -0700
+Subject: [PATCH 6/7] xfs: skip the rmapbt search on an empty attr fork unless
+ we know it was zapped
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Message-ID: <169577060436.3315095.696278759109119743.stgit@frogsfrogsfrogs>
+Message-ID: <169577060450.3315095.13451800619956869403.stgit@frogsfrogsfrogs>
 In-Reply-To: <169577060353.3315095.13977747715399477216.stgit@frogsfrogsfrogs>
 References: <169577060353.3315095.13977747715399477216.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -51,116 +51,92 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In the previous patch, we added some code to perform sufficient repairs
-to an ondisk inode record such that the inode cache would be willing to
-load the inode.  If the broken inode was a shortform directory, it will
-reset the directory to something plausible, which is to say an empty
-subdirectory of the root.  The telltale signs that something is
-seriously wrong is the broken link count.
+The attribute fork scrubber can optionally scan the reverse mapping
+records of the filesystem to determine if the fork is missing mappings
+that it should have.  However, this is a very expensive operation, so we
+only want to do this if we suspect that the fork is missing records.
+For attribute forks the criteria for suspicion is that the attr fork is
+in EXTENTS format and has zero extents.
 
-Such directories look clean, but they shouldn't participate in a
-filesystem scan to find or confirm a directory parent pointer.  Create a
-predicate that identifies such directories and abort the scrub.
+However, there are several ways that a file can end up in this state
+through regular filesystem usage.  For example, an LSM can set a
+s_security hook but then decide not to set an ACL; or an attr set can
+create the attr fork but then the actual set operation fails with
+ENOSPC; or we can delete all the attrs on a file whose data fork is in
+btree format, in which case we do not delete the attr fork.  We don't
+want to run the expensive check for any case that can be arrived at
+through regular operations.
 
-Found by fuzzing xfs/1554 with multithreaded xfs_scrub enabled and
-u3.bmx[0].startblock = zeroes.
+However.
+
+When online inode repair decides to zap an attribute fork, it cannot
+determine if it is zapping ACL information.  As a precaution it removes
+all the discretionary access control permissions and sets the user and
+group ids to zero.  Check these three additional conditions to decide if
+we want to scan the rmap records.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/common.c |    1 +
- fs/xfs/scrub/common.h |    2 ++
- fs/xfs/scrub/dir.c    |   21 +++++++++++++++++++++
- fs/xfs/scrub/parent.c |   17 +++++++++++++++++
- 4 files changed, 41 insertions(+)
+ fs/xfs/scrub/bmap.c |   44 +++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 37 insertions(+), 7 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-index 9b7d7010495b9..67ed4c55a27e3 100644
---- a/fs/xfs/scrub/common.c
-+++ b/fs/xfs/scrub/common.c
-@@ -26,6 +26,7 @@
- #include "xfs_trans_priv.h"
- #include "xfs_da_format.h"
- #include "xfs_da_btree.h"
-+#include "xfs_dir2_priv.h"
- #include "xfs_attr.h"
- #include "xfs_reflink.h"
- #include "xfs_ag.h"
-diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
-index 895918565df26..506b808b9fbb3 100644
---- a/fs/xfs/scrub/common.h
-+++ b/fs/xfs/scrub/common.h
-@@ -192,6 +192,8 @@ static inline bool xchk_skip_xref(struct xfs_scrub_metadata *sm)
- 			       XFS_SCRUB_OFLAG_XCORRUPT);
- }
- 
-+bool xchk_dir_looks_zapped(struct xfs_inode *dp);
-+
- #ifdef CONFIG_XFS_ONLINE_REPAIR
- /* Decide if a repair is required. */
- static inline bool xchk_needs_repair(const struct xfs_scrub_metadata *sm)
-diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
-index 0b491784b7594..acae43d20f387 100644
---- a/fs/xfs/scrub/dir.c
-+++ b/fs/xfs/scrub/dir.c
-@@ -788,3 +788,24 @@ xchk_directory(
- 		error = 0;
- 	return error;
- }
-+
-+/*
-+ * Decide if this directory has been zapped to satisfy the inode and ifork
-+ * verifiers.  Checking and repairing should be postponed until the directory
-+ * is fixed.
-+ */
-+bool
-+xchk_dir_looks_zapped(
-+	struct xfs_inode	*dp)
-+{
-+	/*
-+	 * If the dinode repair found a bad data fork, it will reset the fork
-+	 * to extents format with zero records and wait for the bmapbtd
-+	 * scrubber to reconstruct the block mappings.  Directories always
-+	 * contain some content, so this is a clear sign of a zapped directory.
-+	 */
-+	if (dp->i_df.if_format == XFS_DINODE_FMT_EXTENTS)
-+		return dp->i_df.if_nextents == 0;
-+
-+	return false;
-+}
-diff --git a/fs/xfs/scrub/parent.c b/fs/xfs/scrub/parent.c
-index e6155d86f7916..7db8736721461 100644
---- a/fs/xfs/scrub/parent.c
-+++ b/fs/xfs/scrub/parent.c
-@@ -156,6 +156,16 @@ xchk_parent_validate(
- 		goto out_rele;
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index 76aa40fef84ad..c9c343b10196c 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -662,16 +662,46 @@ xchk_bmap_want_check_rmaps(
+ 	 * The inode repair code zaps broken inode forks by resetting them back
+ 	 * to EXTENTS format and zero extent records.  If we encounter a fork
+ 	 * in this state along with evidence that the fork isn't supposed to be
+-	 * empty, we need to scan the reverse mappings to decide if we're going
+-	 * to rebuild the fork.  Data forks with nonzero file size are scanned.
+-	 * xattr forks are never empty of content, so they are always scanned.
++	 * empty, we might want scan the reverse mappings to decide if we're
++	 * going to rebuild the fork.
+ 	 */
+ 	ifp = xfs_ifork_ptr(sc->ip, info->whichfork);
+ 	if (ifp->if_format == XFS_DINODE_FMT_EXTENTS && ifp->if_nextents == 0) {
+-		if (info->whichfork == XFS_DATA_FORK &&
+-		    i_size_read(VFS_I(sc->ip)) == 0)
+-			return false;
+-
++		switch (info->whichfork) {
++		case XFS_DATA_FORK:
++			/*
++			 * Data forks with zero file size are presumed not to
++			 * have any written data blocks.  Skip the scan.
++			 */
++			if (i_size_read(VFS_I(sc->ip)) == 0)
++				return false;
++			break;
++		case XFS_ATTR_FORK:
++			/*
++			 * Files can have an attr fork in EXTENTS format with
++			 * zero records for several reasons:
++			 *
++			 * a) an attr set created a fork but ran out of space
++			 * b) attr replace deleted an old attr but failed
++			 *    during the set step
++			 * c) the data fork was in btree format when all attrs
++			 *    were deleted, so the fork was left in place
++			 * d) the inode repair code zapped the fork
++			 *
++			 * Only in case (d) do we want to scan the rmapbt to
++			 * see if we need to rebuild the attr fork.  The fork
++			 * zap code clears all DAC permission bits and zeroes
++			 * the uid and gid, so avoid the scan if any of those
++			 * three conditions are not met.
++			 */
++			if ((VFS_I(sc->ip)->i_mode & 0777) != 0)
++				return false;
++			if (!uid_eq(VFS_I(sc->ip)->i_uid, GLOBAL_ROOT_UID))
++				return false;
++			if (!gid_eq(VFS_I(sc->ip)->i_gid, GLOBAL_ROOT_GID))
++				return false;
++			break;
++		}
+ 		return true;
  	}
  
-+	/*
-+	 * We cannot yet validate this parent pointer if the directory looks as
-+	 * though it has been zapped by the inode record repair code.
-+	 */
-+	if (xchk_dir_looks_zapped(dp)) {
-+		error = -EBUSY;
-+		xchk_set_incomplete(sc);
-+		goto out_unlock;
-+	}
-+
- 	/* Look for a directory entry in the parent pointing to the child. */
- 	error = xchk_dir_walk(sc, dp, xchk_parent_actor, &spc);
- 	if (!xchk_fblock_xref_process_error(sc, XFS_DATA_FORK, 0, &error))
-@@ -217,6 +227,13 @@ xchk_parent(
- 		 */
- 		error = xchk_parent_validate(sc, parent_ino);
- 	} while (error == -EAGAIN);
-+	if (error == -EBUSY) {
-+		/*
-+		 * We could not scan a directory, so we marked the check
-+		 * incomplete.  No further error return is necessary.
-+		 */
-+		return 0;
-+	}
- 
- 	return error;
- }
 
