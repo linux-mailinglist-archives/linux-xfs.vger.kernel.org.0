@@ -2,63 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72D247AE4FC
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Sep 2023 07:21:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 874927AE682
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Sep 2023 09:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230346AbjIZFVy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 01:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39794 "EHLO
+        id S231908AbjIZHOv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 03:14:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231683AbjIZFVb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 01:21:31 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD07116;
-        Mon, 25 Sep 2023 22:21:25 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-27758c8f62aso2492261a91.0;
-        Mon, 25 Sep 2023 22:21:25 -0700 (PDT)
+        with ESMTP id S232117AbjIZHOr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 03:14:47 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09D8DE
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 00:14:40 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-3215f19a13aso7927770f8f.3
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 00:14:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695705684; x=1696310484; darn=vger.kernel.org;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JQbtwDxMKM6WQxUu1SJX2YslaptoJGmmHz+KiHujnv8=;
-        b=C03U8u08az6TKkBBAAiNEOpIo5RozdsbTbIQnqA12ztYi25E8XU2lPLsaCmAZVR7Ir
-         SAj2H02Cj0rD5hQXSvozisMR1QdsAnj4WlW2SoV4RKNZNH29BxF39XyrAJvdYymgQmhu
-         8Uwy6NQEVtw1LPzLIbb/k3NtP8tGeic1kJT3rJtd/05GZ445IdE9NSE3CVKcrxABg6yQ
-         /jXi3Ldoywtn8wT7QKofI08A7cNT692bLH/lD5I2M9gq/KIbOAeYVZ3/FLpx9IE52HsN
-         aAa6bnso5T7WMODHIXe/xyX1ptPOGTORuWH1dTANsb0lk/JKBaKZiARwKWQSq5SpQDUt
-         PLIw==
+        d=gmail.com; s=20230601; t=1695712479; x=1696317279; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FcvvehAS/f631aYRS24SIzDnar4GvFNRE/vcZDypjLg=;
+        b=EyvKsA2ycd4P5I2WFBX6Q07rAsQ/QP2HCWlsyzx92lZT+6XqU1jxeJJUEfLvtXJGYO
+         ws1dki9pMJod55kAumE4rc27+c6NlPm5HgB0uTBBmHzHOIZDYU9IxPZfvjFeH7CbgV6R
+         zjmjwZRwziPQfHTjPPOg4tnqlubmAjARnEZ+PRZDjcuT1u4v4/3VBbf60tB5VX3xd+pA
+         PDJiIhMiaYVp6H7WEfDGOzAAv/jXNNfQ/m1s3Dqe5IVoW8eEL0NX1Di1fCsxJVNHHV8f
+         a8pNuhH+hb7QmYUxS0sWKIe8k4jOzWNMwLCe1NAa9XioJIW4mlshePqs4PSfxNBGRWLO
+         4JTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695705684; x=1696310484;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JQbtwDxMKM6WQxUu1SJX2YslaptoJGmmHz+KiHujnv8=;
-        b=fe/uCtGFbXlwt+vQeFv/Ku6k25TW5Kg2c5UpuSYPnAYdzurhIp+ISYDb7fGuYyRzmT
-         HJWIb3xbcHp7p+lcyGQNaaczrbym5yGa+9GCyQlUHwGpTGhbsB4uyglKe/O+VyNUwevv
-         vA4DNHf8sFe0hRHRN2+Dv4nZj9fLZqk+sWPlr+7In1EOzivMuiHuKD3LplnN4Xq86kC4
-         S5ivXLoNbJuU2ygrMRD3QNTvhJ08kq89Rs2+t1zIpRKI+x+d5MmztuJm9cnYd6Jtb6DC
-         hngEb82bLfJfa+lh7Vdoh2MAPFFNxmE+ncZA/A5lBA77FHqNpmOZofveyOYNbPzbqS00
-         8smQ==
-X-Gm-Message-State: AOJu0Yz+pNK+fM0libCyqMxZMxSvNDt+3mQL0LhfFS4s4K7hNXXTREu3
-        Uy+l2DTQ9RUj00YGaPy4UX/c1luSxFQ=
-X-Google-Smtp-Source: AGHT+IHoSpPbhOM7CGS6c35kuLJhIjYgEQwJ/qBeHwDSvvSUcoHfJDz+chhWn6xa6INYUkBT7te7Jg==
-X-Received: by 2002:a17:90b:3ec5:b0:269:5adb:993 with SMTP id rm5-20020a17090b3ec500b002695adb0993mr5563931pjb.22.1695705684382;
-        Mon, 25 Sep 2023 22:21:24 -0700 (PDT)
-Received: from dw-tp ([49.207.223.191])
-        by smtp.gmail.com with ESMTPSA id 11-20020a17090a0ccb00b002635db431a0sm9863771pjt.45.2023.09.25.22.21.21
+        d=1e100.net; s=20230601; t=1695712479; x=1696317279;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FcvvehAS/f631aYRS24SIzDnar4GvFNRE/vcZDypjLg=;
+        b=X3VkE9pHHOi7frynA6tEfp3a+Vk0zW9csgpJsCiOPP7XPB5sgVB3cYxOE6Nj2vgqgI
+         K8WNzLGhmbWJNN/lBpD/Dnc6yXvrZE4I7va9iJGFSgZOqiHxLdh/JQFV6VJG6ZnLjsDr
+         0RRWiMzygPi31K6lP/nZAZxzLM2lJ2CDv6I/XzROEZKqD6gfjo0+dphRAz7X46ROmjzB
+         I8GIql0cRzeVvqTaWZBwx3XjNStiCSeCHgfDMPEpyNfMbVf9QrNJ/YUO05SC2+O61nS8
+         VKhIBVn7QT4tG3vSvALvxcihONg2knUydlbFnJW7+6D2TpD4O019HkZXFOjWcgEEyDrN
+         F/4A==
+X-Gm-Message-State: AOJu0Yx4/Alrr4PSTnAqlPj8T+9rifMipvGsdbpHe5Rb4/dKx12mSqXW
+        NvHE4ERq/1QYh8UBY44os+iQcjCDUJM=
+X-Google-Smtp-Source: AGHT+IHPy2YlWhLl8E310WMcSkW6Nxx/dwNRTza5a1tBf7zm0yAtn4gv9l6wtklCavZ6lyz18eIrPQ==
+X-Received: by 2002:adf:a456:0:b0:323:1d6e:bd02 with SMTP id e22-20020adfa456000000b003231d6ebd02mr5710588wra.57.1695712479176;
+        Tue, 26 Sep 2023 00:14:39 -0700 (PDT)
+Received: from krnowak-ms-ubuntu.fritz.box ([45.135.60.1])
+        by smtp.gmail.com with ESMTPSA id r5-20020a05600c320500b003fc0505be19sm9046210wmp.37.2023.09.26.00.14.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 22:21:23 -0700 (PDT)
-Date:   Tue, 26 Sep 2023 10:51:19 +0530
-Message-Id: <87h6nh5x2o.fsf@doe.com>
-From:   Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>, djwong@kernel.org,
-        zlang@redhat.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me,
-        willy@infradead.org
-Subject: Re: [PATCH 1/1] generic: test FALLOC_FL_UNSHARE when pagecache is not loaded
-In-Reply-To: <169567819441.2270025.10851897053852323695.stgit@frogsfrogsfrogs>
+        Tue, 26 Sep 2023 00:14:38 -0700 (PDT)
+From:   Krzesimir Nowak <qdlacz@gmail.com>
+X-Google-Original-From: Krzesimir Nowak <knowak@microsoft.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Krzesimir Nowak <knowak@microsoft.com>
+Subject: [PATCH 0/1] Fix cross-compilation issue with randbytes
+Date:   Tue, 26 Sep 2023 09:14:31 +0200
+Message-Id: <20230926071432.51866-1-knowak@microsoft.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,70 +68,24 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-"Darrick J. Wong" <djwong@kernel.org> writes:
+Hi,
 
-> From: Darrick J. Wong <djwong@kernel.org>
->
-> Add a regression test for funsharing uncached files to ensure that we
-> actually manage the pagecache state correctly.
->
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  tests/xfs/1936     |   88 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/1936.out |    4 ++
->  2 files changed, 92 insertions(+)
->  create mode 100755 tests/xfs/1936
->  create mode 100644 tests/xfs/1936.out
->
->
-> diff --git a/tests/xfs/1936 b/tests/xfs/1936
-> new file mode 100755
-> index 0000000000..e07b8f4796
-> --- /dev/null
-> +++ b/tests/xfs/1936
-> @@ -0,0 +1,88 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2023 Oracle.  All Rights Reserved.
-> +#
-> +# FS QA Test 1936
-> +#
-> +# This is a regression test for the kernel commit noted below.  The stale
-> +# memory exposure can be exploited by creating a file with shared blocks,
-> +# evicting the page cache for that file, and then funshareing at least one
-> +# memory page's worth of data.  iomap will mark the page uptodate and dirty
-> +# without ever reading the ondisk contents.
-> +#
-> +. ./common/preamble
-> +_begin_fstest auto quick unshare clone
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +	rm -r -f $tmp.* $testdir
-> +}
-> +
-> +# real QA test starts here
-> +
-> +# Import common functions.
-> +. ./common/filter
-> +. ./common/attr
+I hope this is the right place to send the xfsprogs patches - the
+documentation about contributing is rather scarce.
 
-We might as well remove above imports if we are not using those in this test.
+This is a patch that we carry in Flatcar in order to make xfsprogs
+buildable.
 
-> +. ./common/reflink
-> +
-> +_fixed_by_git_commit kernel XXXXXXXXXXXXX \
-> +	"iomap: don't skip reading in !uptodate folios when unsharing a range"
+I think that the issue with cross-compilation is here since
+d8a19f2986c0f65c5ed02110192f3fd5f86e2b32.
 
-Once I guess it is merged, we will have the commit-id. Ohh wait, we have
-it already right? 
+Krzesimir Nowak (1):
+  libfrog: Fix cross-compilation issue with randbytes
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=35d30c9cf12730a1e37053dfde4007c7cc452d1a
+ libfrog/randbytes.c | 1 -
+ libfrog/randbytes.h | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-With that the testcode looks good to me. Thanks for finding an easy
-reproducer. Please feel free to add - 
+-- 
+2.25.1
 
-Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-
--ritesh
