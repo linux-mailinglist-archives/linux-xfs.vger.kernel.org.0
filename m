@@ -2,43 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B6397AF6FB
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 01:56:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F99B7AF713
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:13:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbjIZX4H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 19:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49516 "EHLO
+        id S232338AbjI0ANG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 20:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232568AbjIZXyE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 19:54:04 -0400
+        with ESMTP id S232559AbjI0ALF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:11:05 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A887868B;
-        Tue, 26 Sep 2023 16:14:12 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B4D5C433CB;
-        Tue, 26 Sep 2023 23:14:11 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B211A1F24
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:29:02 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473D3C433C7;
+        Tue, 26 Sep 2023 23:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695770051;
-        bh=JA7dODnNnvpGsFsGHoncrEhUbP6FKju74UyWTimKiY8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XsBHY2R/I8RXUW9gBbC9SK8ThTVru8ESw0FKG8hUfczgVIMyAdVHgroKHWoSPFdMW
-         2iayz2dN6Gb/UBAcRCTkfzb/rSfogSR42VrS1FaTtQVzwWRgglcuzvCpYwCKPiBsoK
-         W56Vn6esNqEKggpSH3r3tiBiF6XyvQ1+0jTmQmP/GzljfeQeaD+n1sXy+0LokdH6z1
-         SfVWQoNaAAFYCQwDMnpxnILGDf5InK+lQfadLM/9/+qr2rJ/iOIp7Be8ZF2Y5nr6Zi
-         Dz2AmTxJTUJl07RecoVOyEYpfSLCv5hoOgXBMWakEyJUaSszw/U0zAI7xPGzi8y+V0
-         pbhl6VB0RgxDQ==
-Date:   Tue, 26 Sep 2023 16:14:10 -0700
+        s=k20201202; t=1695770942;
+        bh=XXRy0e300CAKX1SOyETG8VaZs5z6X5p75n8LgsJ97Ns=;
+        h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+        b=ke1NZEnVDfm/PBMsGRhvLkWEzUv1ZS9bU2AwUWSOTIvmnC/yNQ2g3G2EJo6FHTvUy
+         CSzAiRiSK5iQP5evM1Mcq+iEvbmJ7OgaI3HIdBp4OtiCF8X/rtfiXKi6GHqqRkgvFN
+         b0dxKnX6CCbMn1bmOF0HGBcetKtgieKap93ZZah1HVKMna6iOB6dXEHvRF3QtkYMWd
+         vI2FNinZoR/GfjkWKQqK+WIA/p8BjuyVhUVqC9np9Bz7Y9yZg1jhbiUpPlQspY/9sG
+         4ZcSAa5/IPeHL6JZeFFW5Sk1oTdzwTldFkHKbDGjEMuhu1aiJ3PNYgvwZmdHVaok+T
+         fq49OXU6ferOA==
+Date:   Tue, 26 Sep 2023 16:29:01 -0700
+Subject: [PATCHSET v27.0 0/1] xfs: prevent livelocks in xchk_iget
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>,
-        Chandan Babu R <chandanbabu@kernel.org>
-Cc:     xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Catherine Hoang <catherine.hoang@oracle.com>
-Subject: [MEGAPATCHSET v27] xfs: online repair, second part of part 1
-Message-ID: <20230926231410.GF11439@frogsfrogsfrogs>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Message-ID: <169577058799.3312834.4066903607681044261.stgit@frogsfrogsfrogs>
+In-Reply-To: <20230926231410.GF11439@frogsfrogsfrogs>
+References: <20230926231410.GF11439@frogsfrogsfrogs>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -49,32 +48,24 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi everyone,
+Hi all,
 
-I've rebased the online fsck development branches atop 6.6, applied the
-changes requested during the review of v26, and reworked the automatic
-space reaping code to avoid open-coding EFI log item handling.
+Prevent scrub from live locking in xchk_iget if there's a cycle in the
+inobt by allocating an empty transaction.
 
-In other words, I'm formally submitting part 1 for inclusion in 6.7.
+If you're going to start using this code, I strongly recommend pulling
+from my git trees, which are linked below.
 
-Just like the last review, I would like people to focus the following:
-
-- Are the major subsystems sufficiently documented that you could figure
-  out what the code does?
-
-- Do you see any problems that are severe enough to cause long term
-  support hassles? (e.g. bad API design, writing weird metadata to disk)
-
-- Can you spot mis-interactions between the subsystems?
-
-- What were my blind spots in devising this feature?
-
-- Are there missing pieces that you'd like to help build?
-
-- Can I just merge all of this?
-
-The one thing that is /not/ in scope for this review are requests for
-more refactoring of existing subsystems.  I'm still running QA round the
-clock.  To spare vger, I'm only sending ~38 patches in this batch.
+This has been running on the djcloud for months with no problems.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-livelock-prevention
+---
+ fs/xfs/scrub/common.c |    6 ++++--
+ fs/xfs/scrub/common.h |   19 +++++++++++++++++++
+ fs/xfs/scrub/inode.c  |    4 ++--
+ 3 files changed, 25 insertions(+), 4 deletions(-)
+
