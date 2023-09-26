@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 795547AF71F
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 02:14:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E26A57AF7D6
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Sep 2023 03:54:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjI0AOD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Sep 2023 20:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
+        id S235283AbjI0ByD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Sep 2023 21:54:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232650AbjI0AMC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 20:12:02 -0400
+        with ESMTP id S234279AbjI0BwD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Sep 2023 21:52:03 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45250A273
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:30:21 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4CA4C433C7;
-        Tue, 26 Sep 2023 23:30:20 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD591F2B0
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Sep 2023 16:30:36 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BDC7C433C8;
+        Tue, 26 Sep 2023 23:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695771020;
-        bh=MW2YBeEuzu3FecG/42WtFpOJCOQgi89ngarfNpyzlSw=;
+        s=k20201202; t=1695771036;
+        bh=BJE396fiXuVVYkeuIXzJlpdUYssh4svkQinIEH5wyG0=;
         h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-        b=e3pb2vrVsujEez9K8llPCQKq7fO2kdINpRkigps6064suu2O5Qux1lVhtWxPAb0Uf
-         Kpzd/WU1B/bqRynarFx2TocpqbyD4tSFDrzfvqFMi+Cf8IviWLwL3kRVMxTt1Ym2K/
-         OQFGacwTcZLZpMwU+5fqrk4MeA7t6V9YI7VklpPelL5cs8ndML/lMMqcRA+Sz/uCN6
-         0TzMFsD4vK5B0Jemhqa3ff29KFbekIgQjENXhetxZXCxyglwSpdTWtRVqtldIgHAaZ
-         hHmCUr9atxo0o/V8m9pVZcCEjCHeWOoPwirlaxr/bl2CUxJ7ubRrQblVLS3uO9leFU
-         9XwT8uAX3iYYA==
-Date:   Tue, 26 Sep 2023 16:30:20 -0700
-Subject: [PATCHSET v27.0 0/5] xfs: online repair of file fork mappings
+        b=Gs48dpr0xguSM0Q7DCjbZd9MpMBDgCK0oSIQ6u8+7o3b6pamm44mVQY823bDDyLdd
+         EPNu9Ob6SPvxSUbF9X+uOYuriyIKXc3o3PWAFnkHN5o19HBUZhOtcH/8TDFw7pQMfP
+         unvmSBxjzQgLm4hD4lD4+ujT8A6tDIIWjRgD38SSXknbap7/zWlsf0Gu7wcXYmCcxO
+         cV9rtkTy6VODIGBb8HVojyN3kiMewNts8Bhszs8dg9bsY2gFEp6EkFQ3qmo/5cV0US
+         bpTAUeqRNhy4Yv6njsnudutUCIRkIXeSEMyTsC9um4GjSpOnXD5hoKCE1w34gFl7/N
+         eNyXxqNn46jBg==
+Date:   Tue, 26 Sep 2023 16:30:36 -0700
+Subject: [PATCHSET v27.0 0/4] xfs: online repair of rt bitmap file
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Message-ID: <169577060786.3315318.10585901732742544483.stgit@frogsfrogsfrogs>
+Message-ID: <169577061183.3315493.6171012860982301231.stgit@frogsfrogsfrogs>
 In-Reply-To: <20230926231410.GF11439@frogsfrogsfrogs>
 References: <20230926231410.GF11439@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -50,15 +50,10 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-In this series, online repair gains the ability to rebuild data and attr
-fork mappings from the reverse mapping information.  It is at this point
-where we reintroduce the ability to reap file extents.
-
-Repair of CoW forks is a little different -- on disk, CoW staging
-extents are owned by the refcount btree and cannot be mapped back to
-individual files.  Hence we can only detect staging extents that don't
-quite look right (missing reverse mappings, shared staging extents) and
-replace them with fresh allocations.
+Add in the necessary infrastructure to check the inode and data forks of
+metadata files, then apply that to the realtime bitmap file.  We won't
+be able to reconstruct the contents of the rtbitmap file until rmapbt is
+added for realtime volumes, but we can at least get the basics started.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -69,38 +64,21 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-file-mappings
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-rtbitmap
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-file-mappings
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-file-mappings
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-rtbitmap
 ---
- fs/xfs/Makefile                   |    2 
- fs/xfs/libxfs/xfs_bmap_btree.c    |  112 ++++-
- fs/xfs/libxfs/xfs_bmap_btree.h    |    5 
- fs/xfs/libxfs/xfs_btree_staging.c |   11 
- fs/xfs/libxfs/xfs_btree_staging.h |    2 
- fs/xfs/libxfs/xfs_iext_tree.c     |   23 +
- fs/xfs/libxfs/xfs_inode_fork.c    |    1 
- fs/xfs/libxfs/xfs_inode_fork.h    |    3 
- fs/xfs/libxfs/xfs_refcount.c      |   41 ++
- fs/xfs/libxfs/xfs_refcount.h      |   10 
- fs/xfs/scrub/bitmap.h             |   56 ++
- fs/xfs/scrub/bmap.c               |   18 +
- fs/xfs/scrub/bmap_repair.c        |  846 +++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/common.h             |    6 
- fs/xfs/scrub/cow_repair.c         |  609 +++++++++++++++++++++++++++
- fs/xfs/scrub/reap.c               |  152 ++++++-
- fs/xfs/scrub/reap.h               |    2 
- fs/xfs/scrub/repair.c             |   50 ++
- fs/xfs/scrub/repair.h             |   11 
- fs/xfs/scrub/scrub.c              |   20 -
- fs/xfs/scrub/trace.h              |  118 +++++
- fs/xfs/xfs_trans.c                |   95 ++++
- fs/xfs/xfs_trans.h                |    4 
- 23 files changed, 2151 insertions(+), 46 deletions(-)
- create mode 100644 fs/xfs/scrub/bmap_repair.c
- create mode 100644 fs/xfs/scrub/cow_repair.c
+ fs/xfs/Makefile                |    4 +
+ fs/xfs/libxfs/xfs_bmap.c       |   39 ++++++++++
+ fs/xfs/libxfs/xfs_bmap.h       |    2 +
+ fs/xfs/scrub/bmap_repair.c     |   17 +++--
+ fs/xfs/scrub/repair.c          |  151 ++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/repair.h          |   15 ++++
+ fs/xfs/scrub/rtbitmap.c        |   10 ++-
+ fs/xfs/scrub/rtbitmap_repair.c |   56 +++++++++++++++
+ fs/xfs/scrub/scrub.c           |    4 -
+ fs/xfs/xfs_inode.c             |   24 +-----
+ 10 files changed, 294 insertions(+), 28 deletions(-)
+ create mode 100644 fs/xfs/scrub/rtbitmap_repair.c
 
