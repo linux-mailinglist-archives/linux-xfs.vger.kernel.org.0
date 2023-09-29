@@ -2,53 +2,169 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E59D17B3A7D
-	for <lists+linux-xfs@lfdr.de>; Fri, 29 Sep 2023 21:17:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B86877B3B2C
+	for <lists+linux-xfs@lfdr.de>; Fri, 29 Sep 2023 22:19:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233689AbjI2TRx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 29 Sep 2023 15:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        id S232748AbjI2UTb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 29 Sep 2023 16:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233735AbjI2TRw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Sep 2023 15:17:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A610A1BC;
-        Fri, 29 Sep 2023 12:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UJHh1MokukKsMKOL30xNsOsKm1oKfI2Na01qdT16cI8=; b=PABtRaTQGZQt++i0S27/L0DWPh
-        JD7sporaNV8xq4ZsSQMxl9uvXgCoMzwxmAb4cVEw0RYqZh2VNZxAyK+HplN0kAfuCyCFAAeE57Nbo
-        7qjSxc3P3TJzy1FPO5VamukhkpO0rEbKgZx55SRK6J8TyRDUvnAgvNijvWwDrY843aCZjqUiHVXl4
-        e37ri7aDPANkrzQMvizkprE5N2Zd+8XWBP+lUxVF4LtESr1IM6F5UtGTIp/KCQnRKoNv6td+w3PIE
-        GzVFlSf2btzAAM/o8x8unNHLa2uo1KTs67izHGrrnreoelqM6/4bBR5pEVtpjlJsf4qQo8s1IksqK
-        KuET2jpA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qmIzc-00AUVU-2t; Fri, 29 Sep 2023 19:17:40 +0000
-Date:   Fri, 29 Sep 2023 20:17:40 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     Zhenyu Zhang <zhenyzha@redhat.com>,
-        Linux XFS <linux-xfs@vger.kernel.org>,
-        Linux Filesystems Development <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guowen Shan <gshan@redhat.com>,
-        Shaoqin Huang <shahuang@redhat.com>,
-        Chandan Babu R <chandan.babu@oracle.com>,
+        with ESMTP id S231429AbjI2UTa (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Sep 2023 16:19:30 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545B2136
+        for <linux-xfs@vger.kernel.org>; Fri, 29 Sep 2023 13:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696018769; x=1727554769;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=xUukmYPyxyfHTHllrHrppvXgRluzAs7D3ed3c1LacdY=;
+  b=n4t0d7OMzo+a74upTwOmfa1HzKCzbDJh08V0/ShbE+r5oxhFXneS9JB5
+   sqYdNsX4aYRqPXRp6hUIms/e1D3GlowEqShANpah78oWY5eQT7Nlsvl6W
+   JZLAAcA9yXRpSiB6VRkTKWHRQw5K6gZWX/PIxmDLoqT7Hks8KUKdMTojP
+   CKMOhbvPLD2C8GQqaNJ61/D5jVbZ1RKKPyE4ZUdbyozKAtf0jrHhUylp9
+   xJXoznM3k3WTQt7GoACs8UPsX4/9fpbvSvl9Ae599r2ZZxwLaMA1ve0LW
+   aaKmlUPg9of4kJbY5Anh2kIXwvtCe8pFXyWleBKTCW/8hyoq9eGmhFmPX
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="372711815"
+X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
+   d="scan'208";a="372711815"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 11:28:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="1081013454"
+X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
+   d="scan'208";a="1081013454"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Sep 2023 11:28:10 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 29 Sep 2023 11:28:10 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 29 Sep 2023 11:28:09 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Fri, 29 Sep 2023 11:28:09 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Fri, 29 Sep 2023 11:28:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PL/HjI1Y+ojkjv7AruRUaLor892sSNUDVOrRWpkYAdN21hkbk2SHiOsK5wkYDzFEf4tUQAC65NK46JEyn0ve9NFpnecHM3pbJnurgXCPtin5pZvpygp5x581ZaWyAr0o9tC3UJ/z8i2A28jRQoA7sOiZbnpiaFnNMMVrpelRuyjE6F/i03frs4NCu+DQ9/7W3x0CTdhQKheuFdbLgztwm2cFRk+McPqg8wv4VGM77HDc6KMSBg27o8ohLqBrTsOxNvTsevXFGbKdVTAaA9/9OIb/73cgO0qBEHvpsA5qwkM/1el9SpuVJWHCa263abfC8o0tTXLWDfCeba9MkUmZzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ViExdXOnJdhHs89/m8LQu+1NVEBggmikRAwvrRW7B90=;
+ b=AQnB1lkGPSSusBwCuMnRvR2T9/CpjBvjrEX17ac/8fT+9p7ZU1rA289RQYJIFlVP43HPjAzOqN6UPXQ6SzGnLn6Bn08CdkaxBlKDNP+Jf9P3pgnl/13IV9eUgBKt+SBG47kV+VwAH5OkMhAmOnf7rtEvbHeNUyyleWwruto1wPgc9cIsAIlD05j6JpM+lQXkqGZ/CbkLnuMfZH3NzyhQ+n6zVNOPO8QIk/EtAUj6LmphFLib8ATNF7f6gYb8gwniTa/gaYfFFn3MOJ1MmKqA3WSJZBMkXHVk1hpAyywPf5dwSDKlu9KO0my3ONJZMCJydG69wkwg8qOCyso7ROasvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH8PR11MB6928.namprd11.prod.outlook.com (2603:10b6:510:224::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.28; Fri, 29 Sep
+ 2023 18:28:06 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6838.024; Fri, 29 Sep 2023
+ 18:28:06 +0000
+Date:   Fri, 29 Sep 2023 11:28:02 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Eric Sandeen <sandeen@sandeen.net>,
+        Chandan Babu R <chandanbabu@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Shiyang Ruan <ruansy.fnst@fujitsu.com>,
         "Darrick J. Wong" <djwong@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: Endless calls to xas_split_alloc() due to corrupted xarray entry
-Message-ID: <ZRci1L6qneuZA4mo@casper.infradead.org>
-References: <CAJFLiB+J4mKGDOppp=1moMe2aNqeJhM9F2cD4KPTXoM6nzb5RA@mail.gmail.com>
- <ZRFbIJH47RkQuDid@debian.me>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Dave Chinner <david@fromorbit.com>,
+        <linux-xfs@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <dan.j.williams@intel.com>
+Subject: Re: [PATCH] xfs: drop experimental warning for FSDAX
+Message-ID: <65171732329c4_c558e2946a@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230927014632.GE11456@frogsfrogsfrogs>
+ <87fs306zs1.fsf@debian-BULLSEYE-live-builder-AMD64>
+ <5c064cbd-13a3-4d55-9881-0a079476d865@fujitsu.com>
+ <bc29af15-ae63-407d-8ca0-186c976acce7@fujitsu.com>
+ <87y1gs83yq.fsf@debian-BULLSEYE-live-builder-AMD64>
+ <20230927083034.90bd6336229dd00af601e0ef@linux-foundation.org>
+ <9c3cbc0c-7135-4006-ad4a-2abce0a556b0@fujitsu.com>
+ <20230928092052.9775e59262c102dc382513ef@linux-foundation.org>
+ <87msx5f4a8.fsf@debian-BULLSEYE-live-builder-AMD64>
+ <4c985608-39f6-1a6e-ec95-42d7c3581d8d@sandeen.net>
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <ZRFbIJH47RkQuDid@debian.me>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4c985608-39f6-1a6e-ec95-42d7c3581d8d@sandeen.net>
+X-ClientProxiedBy: MW3PR05CA0006.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::11) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB6928:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54890e2b-1a4e-4fa8-832c-08dbc119d26c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +/5Dejv5VyVoTDM1nqg7WyaZyE0tCoEZ/F7647gN3WQoNE1NWJzpMMvvat0XQ3P3GSo76N0H0HgQGx+TtIAxHY2hnrKkQjrV9SjTZxRygd94hab2fpRpCuegSXzPRpj2+HZUxV2VYsjDHshIxyadY4DSiTRERf9TQNIjIbSvb2ozfjAKdx/7hdUEYrwUw/ZSKSR8BnAp7AzRyKGSI7BboqsfFbn0bRwZhqsc1BNAdqPRw/8wP+FTYrzOWNOFflqrDfGUFdF083J5hXW8qvVaRT3ldFTJATJEf5j+90+Vzr+OnuYty/l8oLXPUDXzTng68eu5UO0Zoy5sUAcVY1o+UP1zy0bQL+EY6r26FQyYvF1r8vYWtNe6TQYUOjTmT5ZxnuK6bL+MtKPUMCR2f+CyshsO5pYkbaS9SamsmsoZnzL/4hJMA276rJBo4kFAVKCsragh3TwV498jseJgqjj0ZAi1Txwv/Kurn1zunFbF5HZ/cvNRV8dO3SQ0D9h04JbuTqwB/0+0PlbGseJm/MH9cR1Dl3ZhMnPVOwNGiy+1wd6FDgAiLI1f5Es4V6pXR1ms8IOxNWFnuIX77Cbv2HbKSQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(39860400002)(366004)(376002)(230922051799003)(451199024)(64100799003)(186009)(1800799009)(41300700001)(66476007)(66556008)(316002)(110136005)(66946007)(54906003)(5660300002)(107886003)(82960400001)(86362001)(38100700002)(83380400001)(8936002)(4326008)(2906002)(8676002)(478600001)(26005)(6512007)(966005)(6486002)(6666004)(6506007)(9686003)(53546011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SEZKT2V1MC8xSGJmOXZ2ZlZFOVI3WGcvNm5PejU0QVlqV2d0dzBEYWFOR2xN?=
+ =?utf-8?B?RXp0aWtLUzd2OFBjYkNTZjNoYkV2UzVKQ3FYV3lCZXZFcUhFeUN0VjNkRkFy?=
+ =?utf-8?B?RHNXTU01RWRJdEo2R2dybkRlNXI4MjJubFBlM254MURNZkh4NEErV2xrclFL?=
+ =?utf-8?B?L0NWQlpxZW1OeWpncWpRRldZZ3V0SmpuVUNrQS9GUHk4bFY2bWdFS1pzYit5?=
+ =?utf-8?B?WGdNN2c5eUgrNzNlOUxINnBnK3hycDI4UE5NbmxZUnI1MVVRQjArTllVYVdv?=
+ =?utf-8?B?TE1UZFpONkhPWkluOXIrMHNRcHpDYXpleHRCUVp4cWtNR3Y5Z2lhNXlSL3hj?=
+ =?utf-8?B?SHJuaEdGTTZka0ZkUkcvcFRrWlQzdGhUSzQwMW1aUHpPMWFMa0dHV3V1LzhT?=
+ =?utf-8?B?VDlvM2hqYkEwUFk3L3AwTlBGWEhFOEtzdVJrSXF6ajVMK29UbHduN2tvNXNT?=
+ =?utf-8?B?bUxKQ1daMWRuUDFWQStCTDhMVmw3cmtvTmFHUm5Ob2dTZDM4WUk3bkpZa25x?=
+ =?utf-8?B?L1RyOVU3cHFtcWZ4SGpTWmRydTNyZ2xGcE44Ry8vSU1iTFVrT2JmTUNsdGRZ?=
+ =?utf-8?B?R3ZrQVNTQTN0QlB3TU90ZGYxRmh6NEVqc1BnWWdTaTRWbzBjNklKYmw0UEZm?=
+ =?utf-8?B?c2FWQ3V5SWZUazQzRkRpWmhUUkVOQmdHeHU2bFFRZjRTWC9ZTTJqaFhqSUZl?=
+ =?utf-8?B?OFhsN0Z2ejVoNFNnNWNOVmpSd3NkTWVsdnhtbWx5K0VHN1ZiZ3ZFcWZ4Z1Vw?=
+ =?utf-8?B?WjZBc0ZqNXhqWVMzbFEwR3VLRGRyNTBKNjFVRmRtOUhHb3lZSUpIbjVKY1FS?=
+ =?utf-8?B?TFFLRyszczNJQnpQU1NEMXB2Smw3OXlXbU5pOUVhU1YybU1tS2VxUitlMkJr?=
+ =?utf-8?B?ZEwzdWd6ZEQyUFdSMUlveVB6SlNqbm5zVGR1TTdlOThWeTFSVHZqeUQ4YlZm?=
+ =?utf-8?B?VEwwdVg0YndaZjhQZWtEUnJjN1hiUmgwT2RDYUhSUzd1V29USXcyWFdxa3hh?=
+ =?utf-8?B?Q05TdStWUnIybHBMU3VmRmZ3aUFwQzhGQmEvUEdmUkFCTzRCWkZDamRZUEU1?=
+ =?utf-8?B?Y05oUm5HcUpxVGRSWS9NNDNwa01YaWZSL1k5ZHljQXA0SlRzamlRaW12Qkpn?=
+ =?utf-8?B?QWJxZ0ZNVzRJWktBa0VKbkJwUXJObFF1MGtNMFFJbEk0a2NTcFhhN2lYbkQ5?=
+ =?utf-8?B?aEFHMlM3VFVsaURJazlHYWdjTjlKbUNxNzF6d0lBRnZubWVaZzVGSWd2OXl6?=
+ =?utf-8?B?WURpMTNPNm41ekZML093TVVwcG81OEowekgxcFd5L3VycEo3elhXajJsWjdM?=
+ =?utf-8?B?T1BBOFJ1dG94YTdJcmJrc0pHTFh5aUdHTTJjd0RzRm1CWXVVUEwyVFhoSW1y?=
+ =?utf-8?B?SWExYnZoRUZQa2JDU3Fia3JjeWhLajNLV0ZqenRpUDdTRlRQWXVQRWYrNHg0?=
+ =?utf-8?B?YnBkOTVvRUJ6Z2lUVC9nQ3JMWXlySWs4Y0M2RHJKUGpza29FTCtPMVN6YzFT?=
+ =?utf-8?B?S0F5MnJsRm5DVHNoRktybThZOS9ZbENsckY5RHQ5OTl4aHBseWZiUEFrRnZL?=
+ =?utf-8?B?TDd5eVEydTYvYmJsN3p4Z3EzSkRmbmcwMWVEKytqb0dSQUhOUVpraHVTWmgy?=
+ =?utf-8?B?ZFJ3azhJSWtONmcwcHJzazlmcXd3ZnZqZFdXY0lBVFR1V1dFakgzRmZacjd0?=
+ =?utf-8?B?dGdnbzBXVG9tL3kyaUtWM25RbmxocmhhRng3L1NuaEpFN1pDbmFQbTVRZUsw?=
+ =?utf-8?B?d3hWb2tRNlVnbkFteFRyKyt0VnYrMUZiQk96aWQwaXZSQlRSV0NvZHlQdGFX?=
+ =?utf-8?B?LzRKR0UyUU5YbjVNTXBYanJoRVgxV1AvQjRBbmt0djlwMGUrMDlNcHZyd25x?=
+ =?utf-8?B?SUxvOXFjSkwwZXlDWitoL2g4YzRSR0dZRGNncDBVNnlaRDJ4SG81d0gySDEx?=
+ =?utf-8?B?QlQ3QzArSmtrbXFlUCt1L2g1Z3FJTGNZenNXZUk4OXpzK1hITHdyRlV2THdt?=
+ =?utf-8?B?MWdNbTZtcVdLZDJYT3ZDL0NaOGJZVXNmNVFueVFhSXVXQUM5SDUwUHRuK0hz?=
+ =?utf-8?B?SEE2L3ZSNzVlQm1xaVVmaGZsNGZaWlNJY2laWE5lYnNRQzhScytKd3RDSndz?=
+ =?utf-8?B?cmV1WmphMmZZa1ZYL1NYL0V4Umw3ZTg1cmlFS3F3dFhUaU5XVTFQSUxsSHA2?=
+ =?utf-8?B?ZlE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54890e2b-1a4e-4fa8-832c-08dbc119d26c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2023 18:28:05.9093
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gpGqsaKQuv6+pjasY/K+zj/Fm4TFVwbfRCI8GsKoZYj5YfDeb5moKQAhgKkceO+MC3BPUYMf7koYgFxjJ9SEb535VSupAc4HqVj6JrXAXSg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6928
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,231 +172,59 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 25, 2023 at 05:04:16PM +0700, Bagas Sanjaya wrote:
-> On Fri, Sep 22, 2023 at 11:56:43AM +0800, Zhenyu Zhang wrote:
-> > Hi all,
+Eric Sandeen wrote:
+> On 9/29/23 9:17 AM, Chandan Babu R wrote:
+> > On Thu, Sep 28, 2023 at 09:20:52 AM -0700, Andrew Morton wrote:
+> >> On Thu, 28 Sep 2023 16:44:00 +0800 Shiyang Ruan <ruansy.fnst@fujitsu.com> wrote:
+> >>
+> >>> But please pick the following patch[1] as well, which fixes failures of 
+> >>> xfs55[0-2] cases.
+> >>>
+> >>> [1] 
+> >>> https://lore.kernel.org/linux-xfs/20230913102942.601271-1-ruansy.fnst@fujitsu.com
+> >>
+> >> I guess I can take that xfs patch, as it fixes a DAX patch.  I hope the xfs team
+> >> are watching.
+> >>
+> >> But
+> >>
+> >> a) I'm not subscribed to linux-xfs and
+> >>
+> >> b) the changelog fails to describe the userspace-visible effects of
+> >>    the bug, so I (and others) are unable to determine which kernel
+> >>    versions should be patched.
+> >>
+> >> Please update that changelog and resend?
 > > 
-> > we don't know how the xarray entry was corrupted. Maybe it's a known
-> > issue to community.
-> > Lets see.
+> > I will apply "xfs: correct calculation for agend and blockcount" patch to
+> > xfs-linux Git tree and include it for the next v6.6 pull request to Linus.
 > > 
-> > Contents
-> > --------
-> > 1. Problem Statement
-> > 2. The call trace
-> > 3. The captured data by bpftrace
+> > At the outset, It looks like I can pick "mm, pmem, xfs: Introduce
+> > MF_MEM_PRE_REMOVE for unbind"
+> > (i.e. https://lore.kernel.org/linux-xfs/20230928103227.250550-1-ruansy.fnst@fujitsu.com/T/#u)
+> > patch for v6.7 as well. But that will require your Ack. Please let me know
+> > your opinion.
 > > 
-> > 
-> > 1. Problem Statement
-> > --------------------
-> > With 4k guest and 64k host, on aarch64(Ampere's Altra Max CPU) hit Call trace:
-> >     Steps:
-> >     1) System setup hugepages on host.
-> >        # echo 60 > /proc/sys/vm/nr_hugepages
-> >     2) Mount this hugepage to /mnt/kvm_hugepage.
-> >        # mount -t hugetlbfs -o pagesize=524288K none /mnt/kvm_hugepage
+> > Also, I will pick "xfs: drop experimental warning for FSDAX" patch for v6.7.
 > 
-> What block device/disk image you use to format the filesystem?
+> While I hate to drag it out even longer, it seems slightly optimistic to
+> drop experimental at the same time as the "last" fix, in case it's not
+> really the last fix.
+> 
+> But I don't have super strong feelings about it, and I would be happy to
+> finally see experimental go away. So if those who are more tuned into
+> the details are comfortable with that 6.7 plan, I'll defer to them on
+> the question.
 
-It's hugetlbfs, Bagas.
+The main blockage of "experimental" was the inability to specify
+dax+reflink, and the concern that resolving that conflict would end up
+breaking MAP_SYNC semantics or some other regression.
 
-> >     3) HugePages didn't leak when using non-existent mem-path.
-> >        # mkdir -p /mnt/tmp
-> >     4) Boot guest.
-> >        # /usr/libexec/qemu-kvm \
-> > ...
-> >          -m 30720 \
-> > -object '{"size": 32212254720, "mem-path": "/mnt/tmp", "qom-type":
-> > "memory-backend-file"}'  \
-> > -smp 4,maxcpus=4,cores=2,threads=1,clusters=1,sockets=2  \
-> >          -blockdev '{"node-name": "file_image1", "driver": "file",
-> > "auto-read-only": true, "discard": "unmap", "aio": "threads",
-> > "filename": "/home/kvm_autotest_root/images/back_up_4k.qcow2",
-> > "cache": {"direct": true, "no-flush": false}}' \
-> > -blockdev '{"node-name": "drive_image1", "driver": "qcow2",
-> > "read-only": false, "cache": {"direct": true, "no-flush": false},
-> > "file": "file_image1"}' \
-> > -device '{"driver": "scsi-hd", "id": "image1", "drive":
-> > "drive_image1", "write-cache": "on"}' \
-> > 
-> >     5) Wait about 1 minute ------> hit Call trace
-> > 
-> > 2. The call trace
-> > --------------------
-> > [   14.982751] block dm-0: the capability attribute has been deprecated.
-> > [   15.690043] PEFILE: Unsigned PE binary
-> > 
-> > 
-> > [   90.135676] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> > [   90.136629] rcu: 3-...0: (3 ticks this GP)
-> > idle=e6ec/1/0x4000000000000000 softirq=6847/6849 fqs=232
-> > [   90.137293] rcu: (detected by 2, t=6012 jiffies, g=2085, q=2539 ncpus=4)
-> > [   90.137796] Task dump for CPU 3:
-> > [   90.138037] task:PK-Backend      state:R  running task     stack:0
-> >    pid:2287  ppid:1      flags:0x00000202
-> > [   90.138757] Call trace:
-> > [   90.138940]  __switch_to+0xc8/0x110
-> > [   90.139203]  0xb54a54f8c5fb0700
-> > 
-> > [  270.190849] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> > [  270.191722] rcu: 3-...0: (3 ticks this GP)
-> > idle=e6ec/1/0x4000000000000000 softirq=6847/6849 fqs=1020
-> > [  270.192405] rcu: (detected by 1, t=24018 jiffies, g=2085, q=3104 ncpus=4)
-> > [  270.192876] Task dump for CPU 3:
-> > [  270.193099] task:PK-Backend      state:R  running task     stack:0
-> >    pid:2287  ppid:1      flags:0x00000202
-> > [  270.193774] Call trace:
-> > [  270.193946]  __switch_to+0xc8/0x110
-> > [  270.194336]  0xb54a54f8c5fb0700
-> > 
-> > [ 1228.068406] ------------[ cut here ]------------
-> > [ 1228.073011] WARNING: CPU: 2 PID: 4496 at lib/xarray.c:1010
-> > xas_split_alloc+0xf8/0x128
-> > [ 1228.080828] Modules linked in: binfmt_misc vhost_net vhost
-> > vhost_iotlb tap xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT
-> > nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack
-> > nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink tun bridge stp llc
-> > qrtr rfkill sunrpc vfat fat acpi_ipmi ipmi_ssif arm_spe_pmu
-> > ipmi_devintf arm_cmn arm_dmc620_pmu ipmi_msghandler cppc_cpufreq
-> > arm_dsu_pmu xfs libcrc32c ast drm_shmem_helper drm_kms_helper drm
-> > crct10dif_ce ghash_ce igb nvme sha2_ce nvme_core sha256_arm64 sha1_ce
-> > i2c_designware_platform sbsa_gwdt nvme_common i2c_algo_bit
-> > i2c_designware_core xgene_hwmon dm_mirror dm_region_hash dm_log dm_mod
-> > fuse
-> > [ 1228.137630] CPU: 2 PID: 4496 Comm: qemu-kvm Kdump: loaded Tainted:
-> > G        W          6.6.0-rc2-zhenyzha+ #5
-> > [ 1228.147529] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS
-> > F31h (SCP: 2.10.20220810) 07/27/2022
-> > [ 1228.156820] pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > [ 1228.163767] pc : xas_split_alloc+0xf8/0x128
-> > [ 1228.167938] lr : __filemap_add_folio+0x33c/0x4e0
-> > [ 1228.172543] sp : ffff80008dd4f1c0
-> > [ 1228.175844] x29: ffff80008dd4f1c0 x28: ffffd15825388c40 x27: 0000000000000001
-> > [ 1228.182967] x26: 0000000000000001 x25: ffffffffffffc005 x24: 0000000000000000
-> > [ 1228.190089] x23: ffff80008dd4f270 x22: ffffffc202b00000 x21: 0000000000000000
-> > [ 1228.197211] x20: ffffffc2007f9600 x19: 000000000000000d x18: 0000000000000014
-> > [ 1228.204334] x17: 00000000b21b8a3f x16: 0000000013a8aa94 x15: ffffd15824625944
-> > [ 1228.211456] x14: ffffffffffffffff x13: 0000000000000030 x12: 0101010101010101
-> > [ 1228.218578] x11: 7f7f7f7f7f7f7f7f x10: 000000000000000a x9 : ffffd158252dd3fc
-> > [ 1228.225701] x8 : ffff80008dd4f1c0 x7 : ffff07ffa0945468 x6 : ffff80008dd4f1c0
-> > [ 1228.232823] x5 : 0000000000000018 x4 : 0000000000000000 x3 : 0000000000012c40
-> > [ 1228.239945] x2 : 000000000000000d x1 : 000000000000000c x0 : 0000000000000000
-> > [ 1228.247067] Call trace:
-> > [ 1228.249500]  xas_split_alloc+0xf8/0x128
-> > [ 1228.253324]  __filemap_add_folio+0x33c/0x4e0
-> > [ 1228.257582]  filemap_add_folio+0x48/0xd0
-> > [ 1228.261493]  page_cache_ra_order+0x214/0x310
-> > [ 1228.265750]  ondemand_readahead+0x1a8/0x320
-> > [ 1228.269921]  page_cache_async_ra+0x64/0xa8
-> > [ 1228.274005]  filemap_fault+0x238/0xaa8
-> > [ 1228.277742]  __xfs_filemap_fault+0x60/0x3c0 [xfs]
-> > [ 1228.282491]  xfs_filemap_fault+0x54/0x68 [xfs]
+The dax_notify_failure() work has resolved that conflict without
+regressing semantics.
 
-This is interesting.  This path has nothing to do with the hugetlbfs
-filesystem you've created up above.  And, just to be clear, this is
-on the host, not in the guest, right?
-
-> > [ 1228.377124] ------------[ cut here ]------------
-> > [ 1228.381728] WARNING: CPU: 2 PID: 4496 at lib/xarray.c:1010
-> > xas_split_alloc+0xf8/0x128
-> > [ 1228.389546] Modules linked in: binfmt_misc vhost_net vhost
-> > vhost_iotlb tap xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT
-> > nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack
-> > nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink tun bridge stp llc
-> > qrtr rfkill sunrpc vfat fat acpi_ipmi ipmi_ssif arm_spe_pmu
-> > ipmi_devintf arm_cmn arm_dmc620_pmu ipmi_msghandler cppc_cpufreq
-> > arm_dsu_pmu xfs libcrc32c ast drm_shmem_helper drm_kms_helper drm
-> > crct10dif_ce ghash_ce igb nvme sha2_ce nvme_core sha256_arm64 sha1_ce
-> > i2c_designware_platform sbsa_gwdt nvme_common i2c_algo_bit
-> > i2c_designware_core xgene_hwmon dm_mirror dm_region_hash dm_log dm_mod
-> > fuse
-> > [ 1228.446348] CPU: 2 PID: 4496 Comm: qemu-kvm Kdump: loaded Tainted:
-> > G        W          6.6.0-rc2-zhenyzha+ #5
-> > [ 1228.456248] Hardware name: GIGABYTE R152-P31-00/MP32-AR1-00, BIOS
-> > F31h (SCP: 2.10.20220810) 07/27/2022
-> > [ 1228.465538] pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > [ 1228.472486] pc : xas_split_alloc+0xf8/0x128
-> > [ 1228.476656] lr : __filemap_add_folio+0x33c/0x4e0
-> > [ 1228.481261] sp : ffff80008dd4f1c0
-> > [ 1228.484563] x29: ffff80008dd4f1c0 x28: ffffd15825388c40 x27: 0000000000000001
-> > [ 1228.491685] x26: 0000000000000001 x25: ffffffffffffc005 x24: 0000000000000000
-> > [ 1228.498807] x23: ffff80008dd4f270 x22: ffffffc202b00000 x21: 0000000000000000
-> > [ 1228.505930] x20: ffffffc2007f9600 x19: 000000000000000d x18: 0000000000000014
-> > [ 1228.513052] x17: 00000000b21b8a3f x16: 0000000013a8aa94 x15: ffffd15824625944
-> > [ 1228.520174] x14: ffffffffffffffff x13: 0000000000000030 x12: 0101010101010101
-> > [ 1228.527297] x11: 7f7f7f7f7f7f7f7f x10: 000000000000000a x9 : ffffd158252dd3fc
-> > [ 1228.534419] x8 : ffff80008dd4f1c0 x7 : ffff07ffa0945468 x6 : ffff80008dd4f1c0
-> > [ 1228.541542] x5 : 0000000000000018 x4 : 0000000000000000 x3 : 0000000000012c40
-> > [ 1228.548664] x2 : 000000000000000d x1 : 000000000000000c x0 : 0000000000000000
-> > [ 1228.555786] Call trace:
-> > [ 1228.558220]  xas_split_alloc+0xf8/0x128
-> > [ 1228.562043]  __filemap_add_folio+0x33c/0x4e0
-> > [ 1228.566300]  filemap_add_folio+0x48/0xd0
-> > [ 1228.570211]  page_cache_ra_order+0x214/0x310
-> > [ 1228.574469]  ondemand_readahead+0x1a8/0x320
-> > [ 1228.578639]  page_cache_async_ra+0x64/0xa8
-> > [ 1228.582724]  filemap_fault+0x238/0xaa8
-> > [ 1228.586460]  __xfs_filemap_fault+0x60/0x3c0 [xfs]
-> > [ 1228.591210]  xfs_filemap_fault+0x54/0x68 [xfs]
-> > 
-> > 
-> > 
-> > 3. The captured data by bpftrace
-> > (The following part is the crawl analysis of gshan@redhat.com )
-> > --------------------
-> > pid:  4475    task: qemu-kvm
-> > file: /mnt/tmp/qemu_back_mem.mem-machine_mem.OdGYet (deleted)
-> > 
-> > -------------------- inode --------------------
-> > i_flags:               0x0
-> > i_ino:                 67333199
-> > i_size:                32212254720
-> > 
-> > ----------------- address_space ----------------
-> > flags:                 040
-> > invalidate_lock
-> >   count:               256
-> >   owner:               0xffff07fff6e759c1
-> >     pid: 4496  task: qemu-kvm
-> >   wait_list.next:      0xffff07ffa20422e0
-> >   wait_list.prev:      0xffff07ffa20422e0
-> > 
-> > -------------------- xarray --------------------
-> > entry[0]:       0xffff080f7eda0002
-> > shift:          18
-> > offset:         0
-> > count:          2
-> > nr_values:      0
-> > parent:         0x0
-> > slots[00]:      0xffff07ffa094546a
-> > slots[01]:      0xffff07ffa1b09b22
-> > 
-> > entry[1]:       0xffff07ffa094546a
-> > shift:          12
-> > offset:         0
-> > count:          20
-> > nr_values:      0
-> > parent:         0xffff080f7eda0000
-> > slots[00]:      0xffffffc202880000
-> > slots[01]:      0x2
-> > 
-> > entry[2]:       0xffffffc202880000
-> > shift:          104
-> > offset:         128
-> > count:          0
-> > nr_values:      0
-> > parent:         0xffffffc20304c888
-> > slots[00]:      0xffff08009a960000
-> > slots[01]:      0x2001ffffffff
-> > 
-> > It seems the last xarray entry ("entry[2]") has been corrupted. "shift"
-> > becomes 104 and "offset" becomes 128, which isn't reasonable.
-
-Um, no.  Whatever tool you're using doesn't understand how XArrays work.
-Fortunately, I wrote xa_dump() which does.  entry[2] does not have bit
-1 set, so it is an entry, not a node.  You're dereferencing a pointer to
-a folio as if it's a pointer to a node, so no wonder it looks corrupted
-to you.  From this, we know that the folio is at least order-6, and it's
-probably order-9 (because I bet this VMA has the VM_HUGEPAGE flag set,
-and we're doing PMD-sized faults).
-
+Ultimately this is an XFS filesystem maintainer decision, but my
+perspective is that v6.7-rc1 starts the clock on experimental going away
+and if the bug reports stay quiet that state can persist into
+v6.7-final.  If new reports crop up, revert the experimental removal and
+try again for v6.8.
