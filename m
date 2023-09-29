@@ -2,101 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 874F87B38F7
-	for <lists+linux-xfs@lfdr.de>; Fri, 29 Sep 2023 19:28:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91F4B7B392D
+	for <lists+linux-xfs@lfdr.de>; Fri, 29 Sep 2023 19:51:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233857AbjI2R2u (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 29 Sep 2023 13:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
+        id S233450AbjI2Rvu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 29 Sep 2023 13:51:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233896AbjI2R2l (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Sep 2023 13:28:41 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 230CA171B;
-        Fri, 29 Sep 2023 10:28:04 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B703C433C7;
-        Fri, 29 Sep 2023 17:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696008482;
-        bh=4+WoVUi61VK+DDhiND6JYjJPH6CQgIN2AdMUJCs+5WY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DlmbJK9eNw7Ry1GbBzL8r7PC/Jcj5QPNiqTLTWbN8YEHS7+JF4vOhWF/qymEq2z5v
-         h/B5/12TyqQ24rNwma29nL0KGlV1wP4Q2H/1s7YXxgVhHeO1W1011ve5F5i0m2/KlR
-         2l8FQcz7uPWw4pmPdH1JT2qyQrbDy82Dmc0XocyTC6RKY4c4XrCbHx6ZKbW15whwe3
-         E2RADCzNi61SqZtd9Yc+GMkr1725QAosN5GQ/8JZqghBDzKbGQ0gzp4pKWcf0BkIk4
-         3PrORRJjiczA3XrW6WiP64BE5WxVAKx3TfC+uZpetX7IvpiU13+ktobBEpgcGmITa3
-         8JVCYJVmjjEHw==
-Date:   Fri, 29 Sep 2023 10:28:01 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me,
-        david@fromorbit.com, sandeen@sandeen.net
-Subject: [PATCH v2.1 1/1] xfs/{270,557,600}: update commit id for _fixed_by
- tag.
-Message-ID: <20230929172801.GB21283@frogsfrogsfrogs>
-References: <169567817047.2269889.16262169848413312221.stgit@frogsfrogsfrogs>
- <169567817607.2269889.5897696336492740125.stgit@frogsfrogsfrogs>
+        with ESMTP id S233313AbjI2Rvt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Sep 2023 13:51:49 -0400
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E69C1B0;
+        Fri, 29 Sep 2023 10:51:47 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-68bed2c786eso11747107b3a.0;
+        Fri, 29 Sep 2023 10:51:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696009907; x=1696614707;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J2/eTj4ZTeW96Njy5Yu8y4iGoVQL5PWTi4ftqXgho1g=;
+        b=QUxaK+xX2mybE4Jo8Y7ulUTnBoN+v47Fj5sH1LWxj2kR+QzDeDkI+zjQF9rXoswxkY
+         baZNOkWT3ewYzpsgmb7fHRwauT5kvXZW3d/BoL2KOLS5zuDIayAKzte200Xvd9YVfeAv
+         CAVc+QNk62vfB/YLvC8cpOEy9L7kakOLWHe/S+ZpzubB1aWRm58Zo9KiO9QzauLginp6
+         Xwr9ae3f6CZlqM1akmuzu6P69bYVy55HCMW1z/7SB8mds9YhqJYNzMBfI91RKQG3WXI4
+         lGSSJogUSt4LZ0PbQVwENFhMuNroibNA86fH8uWhrA0NfrZTV9OTpM/gHhL7iUaqL9nb
+         O4IQ==
+X-Gm-Message-State: AOJu0YwpMMzy4Vp6z4LplMGggDEWsFGhosNfgh69qCLf19FIV0BFtdlQ
+        GB2Dqfp13dvfnDoE6udRLWM=
+X-Google-Smtp-Source: AGHT+IGOOjLnU6w2a9/rCpNU/gUfKj+HX8K9T3Khoyfb1oo9lzEzxrnEv7Kr7MNDQD94unm8RFU33Q==
+X-Received: by 2002:a05:6a20:548f:b0:161:28e0:9abd with SMTP id i15-20020a056a20548f00b0016128e09abdmr5716860pzk.16.1696009906659;
+        Fri, 29 Sep 2023 10:51:46 -0700 (PDT)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net. [73.231.117.72])
+        by smtp.gmail.com with ESMTPSA id h4-20020a170902eec400b001c73d829fb0sm2953239plb.32.2023.09.29.10.51.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Sep 2023 10:51:46 -0700 (PDT)
+Message-ID: <17ee1669-5830-4ead-888d-a6a4624b638a@acm.org>
+Date:   Fri, 29 Sep 2023 10:51:43 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169567817607.2269889.5897696336492740125.stgit@frogsfrogsfrogs>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/21] block: Add fops atomic write support
+Content-Language: en-US
+To:     John Garry <john.g.garry@oracle.com>, axboe@kernel.dk,
+        kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
+        jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
+        viro@zeniv.linux.org.uk, brauner@kernel.org,
+        chandan.babu@oracle.com, dchinner@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+        linux-api@vger.kernel.org
+References: <20230929102726.2985188-1-john.g.garry@oracle.com>
+ <20230929102726.2985188-11-john.g.garry@oracle.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20230929102726.2985188-11-john.g.garry@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+On 9/29/23 03:27, John Garry wrote:
+> +	if (pos % atomic_write_unit_min_bytes)
+> +		return false;
+> +	if (iov_iter_count(iter) % atomic_write_unit_min_bytes)
+> +		return false;
+> +	if (!is_power_of_2(iov_iter_count(iter)))
+> +		return false;
+[ ... ]
+> +	if (pos % iov_iter_count(iter))
+> +		return false;
 
-Update the commit id in the _fixed_by tag now that we've merged the
-kernel fixes.
+Where do these rules come from? Is there any standard that requires
+any of the above?
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- tests/xfs/270 |    2 +-
- tests/xfs/557 |    2 +-
- tests/xfs/600 |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Thanks,
 
-diff --git a/tests/xfs/270 b/tests/xfs/270
-index 7d4e1f6a87..4e4f767dc1 100755
---- a/tests/xfs/270
-+++ b/tests/xfs/270
-@@ -17,7 +17,7 @@ _begin_fstest auto quick mount
- 
- # real QA test starts here
- _supported_fs xfs
--_fixed_by_kernel_commit xxxxxxxxxxxx \
-+_fixed_by_kernel_commit 74ad4693b647 \
- 	"xfs: fix log recovery when unknown rocompat bits are set"
- # skip fs check because superblock contains unknown ro-compat features
- _require_scratch_nocheck
-diff --git a/tests/xfs/557 b/tests/xfs/557
-index 522c4f0643..01205377b7 100644
---- a/tests/xfs/557
-+++ b/tests/xfs/557
-@@ -18,7 +18,7 @@ _require_xfs_io_command "falloc"
- _require_xfs_io_command "bulkstat_single"
- _require_scratch
- 
--_fixed_by_kernel_commit XXXXXXXXXXXX \
-+_fixed_by_kernel_commit 817644fa4525 \
- 	"xfs: get root inode correctly at bulkstat"
- 
- # Create a filesystem which contains a fake root inode
-diff --git a/tests/xfs/600 b/tests/xfs/600
-index 56af634a7c..e6997c53d1 100755
---- a/tests/xfs/600
-+++ b/tests/xfs/600
-@@ -20,7 +20,7 @@ _begin_fstest auto quick fsmap
- 
- . ./common/filter
- 
--_fixed_by_git_commit kernel XXXXXXXXXXXXX \
-+_fixed_by_git_commit kernel cfa2df68b7ce \
- 	"xfs: fix an agbno overflow in __xfs_getfsmap_datadev"
- 
- # Modify as appropriate.
+Bart.
+
