@@ -2,218 +2,155 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 378857B3B22
-	for <lists+linux-xfs@lfdr.de>; Fri, 29 Sep 2023 22:16:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8BFF7B3C8C
+	for <lists+linux-xfs@lfdr.de>; Sat, 30 Sep 2023 00:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233592AbjI2UQV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 29 Sep 2023 16:16:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49732 "EHLO
+        id S233044AbjI2WS0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 29 Sep 2023 18:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233243AbjI2UQS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Sep 2023 16:16:18 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E411B2
-        for <linux-xfs@vger.kernel.org>; Fri, 29 Sep 2023 13:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696018576; x=1727554576;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=iWgZnWohW/iO8E3ZY4kZSIoDBfXjTSldDzudb0WXYy4=;
-  b=GXBtBDS4y99c5kT8pQXAbgrdErt1RfSrgVbB3UHO4t6B2zaWOqtIRb4t
-   /oMK5UKnmI9rZpgxKUQUilMsVD3oDW1W1vBWFWA3xQzKMDnYfOiHYvtiH
-   c4sMWybebn0cKkXfSh/Umh0JJt/GAIQyvk5Vuy1KjyH9O6Yw/cRHq5L+r
-   SsA91/T/G/yVGZPhVQxFnJFieQ1sYKCTVb3mU7uDvWKC33FmXGxncHWy0
-   jWXTTK4TAGi/ME7jsVad57D72qMTRFykuTrTm3EEyH8PJjDRxj+0gideH
-   MvLWqcu1IMVA67thoQFsBtven3oalX/6qji4mff3Pc7rufPSEKd8mP2+X
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="446513124"
-X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
-   d="scan'208";a="446513124"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 11:34:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="865780595"
-X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
-   d="scan'208";a="865780595"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Sep 2023 11:34:20 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 29 Sep 2023 11:34:20 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 29 Sep 2023 11:34:20 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Fri, 29 Sep 2023 11:34:20 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Fri, 29 Sep 2023 11:34:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OlnFzhEeRzPW1ZvzsjqlxbtmbGLFEkrTgbp/iZfp9JGL1AMSrd9gkW2Ew99yIKQUo59IcuipRLSXvEHXGYWfII++jYuSZvMXkoJBI1Q4g750iBIJy5tDDGlQxyrQWTfqreGdft4ql7DE0mFi+ERBuyz3RGQAmgvjelXTWggic3oVzT9Kpfw5GFY+nNikEXSQFNqq5Q8+s4TjlXAUcll7/flJ/19qkL9QstklAMFXZJBQ3jg5P7DTm2AYfWkJHqDGBtlaJrA0xPpdEAEnD7i2iB+pVJs3dKrWSKjJoZ1IasNrGyT0w4RZ57dnY+XLQLG/TuGPGnkwtoqffiBlTZDE9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BoR+pHIfv2axIrqoc1JT9E9ONi4C1zC30GLzvoE5mvc=;
- b=KAKI8LFKKBb/1+/OKdIfWz6u6ww45kuz/dzIuAei59L9qQSLnliZDC73Fmon7dPVQTvNGywO9QUS4oV6oEwJUibBz3H+i9YSQvZ62UKj6UzRN+p1ks6cZfeSMrGqcV2mD73sZIVqLfK1hkZD4ayaSoyghfTMeJttgVxeZknnksxaFmhL5upumFwXl3+SAdqbsX71sEkGHHZalQAkzpCmQBAXq/NrV0LFh+vs9NJBY6bIwysX4aPjjjvlxEHdJLSGNbQQG2VBGP8HKr5BvePGlHgqAiwFwM24cWbqydxRCA28+A2r2itW6XVREJfdDpTgQ9N3Lf93SO4eONzVeELJcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY5PR11MB6089.namprd11.prod.outlook.com (2603:10b6:930:2f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.20; Fri, 29 Sep
- 2023 18:34:17 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6838.024; Fri, 29 Sep 2023
- 18:34:17 +0000
-Date:   Fri, 29 Sep 2023 11:34:14 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Shiyang Ruan <ruansy.fnst@fujitsu.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Chandan Babu R <chandanbabu@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        <linux-xfs@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <dan.j.williams@intel.com>
-Subject: Re: [PATCH] xfs: drop experimental warning for FSDAX
-Message-ID: <651718a6a6e2c_c558e2943e@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230927014632.GE11456@frogsfrogsfrogs>
- <87fs306zs1.fsf@debian-BULLSEYE-live-builder-AMD64>
- <5c064cbd-13a3-4d55-9881-0a079476d865@fujitsu.com>
- <bc29af15-ae63-407d-8ca0-186c976acce7@fujitsu.com>
- <87y1gs83yq.fsf@debian-BULLSEYE-live-builder-AMD64>
- <20230927083034.90bd6336229dd00af601e0ef@linux-foundation.org>
- <9c3cbc0c-7135-4006-ad4a-2abce0a556b0@fujitsu.com>
- <20230928092052.9775e59262c102dc382513ef@linux-foundation.org>
- <20230928171339.GJ11439@frogsfrogsfrogs>
- <99279735-2d17-405f-bade-9501a296d817@fujitsu.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <99279735-2d17-405f-bade-9501a296d817@fujitsu.com>
-X-ClientProxiedBy: MW4P221CA0014.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::19) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        with ESMTP id S232748AbjI2WSZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Sep 2023 18:18:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DEFF1;
+        Fri, 29 Sep 2023 15:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=5h2xE6T+5GfK6exvWu3eqMMYxFUREOKXwg7T5rQ9HiQ=; b=Gz3gxPiPJ52wFmuUPkadh/NzID
+        A4pj5GEvQccYqBfRwmPbIxu+Xl229pFA7dFr7pQx9HOboY8Uoob8eKzzt225RgfweW6lUkqzr6/Qx
+        Fi8/J8EFth36278AM61hn2L4+mkYKeI5h1zNJaw9bl0UKouARQvQKlS9cLB7D4ndp9oq3ItMcTW8i
+        lzWRoo9rFGwD34wtiWOVVTQ50KLstCwtn0vAngeGxYCHkKoWtgqFb49eQIgxFnDFfGfcPJHgI6bZb
+        vxp2xKVLem7fj1Kf0A5CKjhOk+02lKhN9F6GTDrWC1swKFVl5IIUi92TVcfw1dAGckpFy93yzhdDr
+        V/CIvr9w==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qmLoS-00BGB4-0T; Fri, 29 Sep 2023 22:18:20 +0000
+Date:   Fri, 29 Sep 2023 23:18:19 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Removal of KM_NOFS
+Message-ID: <ZRdNK39vc4TuR7g8@casper.infradead.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6089:EE_
-X-MS-Office365-Filtering-Correlation-Id: 086ebb25-de0b-4e2f-f179-08dbc11ab00f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7U9q74oY/MH4lqy3EtPUymglaCu6NBFGzh/Ycjy2zKVd5cj00ZgQx8kvoQUePLTNOBaUDoxQA9uEvEQoe49mRp9UP3NyuCQYw+bk4hy954FazPnVhKdgsbHAAcDf7jMoJRof6AJXB/EWmnJrFgkzQHv2/Evfr7ViL5x65eFWQqeLnVbx2bTTxqxNyHGGNMgQ9DkV6nS/x2EM1sosKBxGIYREF8ALqOUcA9ByFpEowBgut18GPgVnFvx6arEZmu0aGmTMjaEGJHCZZr4+5P9CFPp4sMFTHKKXVWTXVl9RnWDCVjC7Z1DQ/YUp+RNOQqJKFp38q0u8/Qlqyvrso685wvXOFva1oxmbEfH9wfodDm2WB8tL11t0gltO5XY92iUl0UDbkT9nQe2ibhpYksMmOiRqAfDxi5Nlw/ddyNDfC4WDmoBtIhtlIn0WYBkPXCNtU9V95xbH2isImIgqNCwufi0gKTi1/GKltmEt6hVBjBcoIsdTAm3g4ZDiLyL3wzduAPNs/Q372760XyfNTx3V3YpQFF+zJkbfCFWiYLmm+40=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(396003)(136003)(39860400002)(230922051799003)(1800799009)(186009)(451199024)(64100799003)(4326008)(9686003)(6666004)(6512007)(478600001)(86362001)(66946007)(26005)(82960400001)(83380400001)(66476007)(38100700002)(316002)(8676002)(6506007)(110136005)(966005)(66556008)(2906002)(6486002)(8936002)(41300700001)(5660300002)(54906003)(107886003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z2RrUGtXSElpWWs4MlYya0loNVM3S01mWkFxOGd5NzZpYk50cStxT0M4ejll?=
- =?utf-8?B?TS9TMjBQT3JLTG9JUHJ0V0x6ZmUvd0s2TUwxYVV5SytHd2ZCaFpVODNWQzFh?=
- =?utf-8?B?aXRYa0JyNmFyZ3R0ZnNsQjZhUjQ0OFNTWStlL3pCYlQxTjBrOUN3N2d5RlpR?=
- =?utf-8?B?b015RWt5Si9sRU9NbS9pSWx2V2tJRW9nSXFOMjZhdFIxK3VMMTNNNGRiZExQ?=
- =?utf-8?B?aTBOcjBBaTAreHpmclQ4b0F1WDlGaVdMcnJvQWVyNEFzOG9UUzlQWll4NFo3?=
- =?utf-8?B?QlZUSkd6TlZ2dzJHYjBHQnlxOVp6aG1INXAxQVdtVFYwTTdzVDZnbVR1RUFi?=
- =?utf-8?B?d0c0ek5iZUFJbG5VajVwZUM1ZE41V29qeTNiTEE4OTAzQVlpQk5Ibjl6Y2dT?=
- =?utf-8?B?VEhCNVB5WnRtK0t3dFhtQlBhb1hKRXVHZGY0eWVRWFJJYndSYTg1RFltcHlR?=
- =?utf-8?B?V296NDBaWWRHckpwWjFjYUQwa05mMVpEWFA1Y2U5b2VxWjFkNiswYmVlWU5C?=
- =?utf-8?B?SFJPQldzRFRDVEQ0U1NiUzlUL2dZMlhJd1JBY2RFYTg1Y3BRSVkwOWRucnJr?=
- =?utf-8?B?c1BUMnJoSmVOay9LL215M2Q5WXVYVUlwZTQvOVd2WmpiZDNRQ0p0TVhRSjU2?=
- =?utf-8?B?Zyt5NnZDYlpQeVFXOVIzWlUxUkdCYlo4ejRFK1QyR05qYlZlYkhVSkdGd0xQ?=
- =?utf-8?B?czBzWVRjUEtxd0JDUUo2dThFbTl0SlhBRnB0UXpBWHhpVmpBWGVvZGh5NlIw?=
- =?utf-8?B?cVhOVHozbTBZN1FFREFHS1RVSTUzR0UwMXV0TFEyWDRKY2p0T3JIem1nV1Ny?=
- =?utf-8?B?bEk4eXdDRDh2b3NaTEV4V1ZXOVR3SHdKRkhZTUtaamJkUjBNZHBBZXBFWUxN?=
- =?utf-8?B?eUc1UHRNTVBYU1hZNTR6NTVCK3kySEI0QlY0NTBKa0hmZC9LTnErNHJYemNS?=
- =?utf-8?B?RFd0elE0b2NqSnlhaHNMaXpTV0tlQytNVktpRllEVmVzY0hzbmFDSnlNMjh1?=
- =?utf-8?B?ci9nNnozSVlsYXFVK2c5Mk9QSWlkWXJmbzI3VjVKbXJMMVhPNGgxYll5ckJQ?=
- =?utf-8?B?dnZqUnpxblA2UWZKWXl0SjJoOFFkSytyYy9HUktRQitPUllPbHNNaTd0UDRq?=
- =?utf-8?B?ZEg4bmVneE5DRURCNlJ6MXF6TWVkY2hobjMxdFVTdGlyWG41ZGRmaHpKN2F1?=
- =?utf-8?B?QU9DbjZDMVhJNWl1NnJYL080MStsYUVhUHl1MURBeTFjUDZRQWV1QU0vdXMx?=
- =?utf-8?B?V3BFWTRLNjEvOHhWd1QyOFRQVVk0TDFqRzN0YUpnd21mNG85c1kzbTM4aENE?=
- =?utf-8?B?dzYycHc3M3BLNWNQS2RMWWxHYkxudG91ZEpGZjM4cVJCVERYTlNyRjUwSXBh?=
- =?utf-8?B?dnF3REFSVURZdUtvWXY4T3lTbHh5ZVV5aVZWb3RCc1NmMVdtT081bXA1RlUz?=
- =?utf-8?B?RnNZOWQ4K09RZkUvVFViZENXWWI3N3lRdW5xVmh4anpJWnE3ZnVvTXBtdzFU?=
- =?utf-8?B?SldEVDFqOEVrQ1UrcWxBSEhmWGdkWHBzSGMwRGFwczdnS0Nvcm9OY1dUWXN6?=
- =?utf-8?B?WkhYOXIvUkdSazQyNVZMaFp1eXJQem1sWHlnOEMzNXNCN0JpRnBjS2FRclFE?=
- =?utf-8?B?bDRtSTMrQnpjQ3BvSkFXU05UN0lkQ0lCREk0cmJlSUFhSnRoL29FLzhhclU5?=
- =?utf-8?B?TUlHL0FVOUZCOEJ0L2t5ckk3Y284TzNPcERqNWxZWFEzaWRIcEc5ZkZQY3hx?=
- =?utf-8?B?SVdYeGlIakFETHVtWisxUWdHV3ZYQzhRVklwQXJFcWpuQUxCVHhiejFqK3gv?=
- =?utf-8?B?VS9UdGIvTTFabi9UMzI0VTBGbkpqV0J0eUVtMlBkQmdhQmprb1N6d294dE82?=
- =?utf-8?B?dmNkRmxNOW4xbzV4aEw4TThrZXpRZFZSaTRGbTZYNHBmZzI1Y0Zwc3JyOThh?=
- =?utf-8?B?czVxQ0pHTDk3VGxmcnFScU1vWVdvWk9ocGxYVytZWHczdlBrNU1TeHU5c3R1?=
- =?utf-8?B?anJnc05iaW9kVDN2cGVwQk9sMzl1VC9tOGFjVFZzbzQ1VDI5dWlKd29vQVYr?=
- =?utf-8?B?TGhLNDZqTnJJZ2Npelpvbm9Qd2RKMEpXenBkcnA5L2h3R0xseWdLczluS3Jm?=
- =?utf-8?B?U0NTbll4MGJiWWpJb2hLWDRHM2VIclUva0xHeXJ6T1VmbjMwWWFZT2VyeWVz?=
- =?utf-8?B?d3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 086ebb25-de0b-4e2f-f179-08dbc11ab00f
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2023 18:34:17.1435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YVjue3B5jewAJjTtU4xniFYXJCY5cE93vBwnYC9YKYyodHp7xYmGUiLJV0SFc/D5AQjgd1ChotG3m6///B2+1MlA7oAF5fKZLRHAfoIXDAA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6089
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Shiyang Ruan wrote:
-> 
-> 
-> 在 2023/9/29 1:13, Darrick J. Wong 写道:
-> > On Thu, Sep 28, 2023 at 09:20:52AM -0700, Andrew Morton wrote:
-> >> On Thu, 28 Sep 2023 16:44:00 +0800 Shiyang Ruan <ruansy.fnst@fujitsu.com> wrote:
-> >>
-> >>> But please pick the following patch[1] as well, which fixes failures of
-> >>> xfs55[0-2] cases.
-> >>>
-> >>> [1]
-> >>> https://lore.kernel.org/linux-xfs/20230913102942.601271-1-ruansy.fnst@fujitsu.com
-> >>
-> >> I guess I can take that xfs patch, as it fixes a DAX patch.  I hope the xfs team
-> >> are watching.
-> >>
-> >> But
-> >>
-> >> a) I'm not subscribed to linux-xfs and
-> >>
-> >> b) the changelog fails to describe the userspace-visible effects of
-> >>     the bug, so I (and others) are unable to determine which kernel
-> >>     versions should be patched.
-> >>
-> >> Please update that changelog and resend?
-> > 
-> > That's a purely xfs patch anyways.  The correct maintainer is Chandan,
-> > not Andrew.
-> > 
-> > /me notes that post-reorg, patch authors need to ask the release manager
-> > (Chandan) directly to merge their patches after they've gone through
-> > review.  Pull requests of signed tags are encouraged strongly.
-> > 
-> > Shiyang, could you please send Chandan pull requests with /all/ the
-> > relevant pmem patches incorporated?  I think that's one PR for the
-> > "xfs: correct calculation for agend and blockcount" for 6.6; and a
-> > second PR with all the non-bugfix stuff (PRE_REMOVE and whatnot) for
-> > 6.7.
-> 
-> OK.  Though I don't know how to send the PR by email, I have sent a list 
-> of the patches and added description for each one.
+I had a long plane ride yesterday, and I started on "Removing GFP_NOFS".
+TLDR: I don't know enough about XFS to do this first step.  There are
+various options and none of them are "obviously" the right thing to do.
 
-If you want I can create a signed pull request from a git.kernel.org
-tree.
+The overall intent is to get rid of the __GFP_FS flag entirely; make
+GFP_NOFS the same as GFP_KERNEL (and a later patch could rename all
+the uses of GFP_NOFS to GFP_KERNEL).  That is, the only way to prevent
+the memory allocator from entering fs reclaim would be by calling
+memalloc_nofs_save().
 
-Where is that list of patches? I see v15 of preremove.
+XFS already calls memalloc_nofs_save() when starting a transaction.
+This is almost certainly the right thing to do; many things which
+could be freed through fs reclaim would need to start a transaction,
+and we don't want to do a nested transaction.  But it turns out there
+are several places that can't enter fs reclaim for other reasons.
+
+Having boldly just removed __GFP_FS, I encountered problems (ie
+lockdep got chatty) in XFS and now I don't think I know enough to
+take on the prerequisite project of removing KM_NOFS.  While this is
+obviously _possible_ (simply add calls to memalloc_nofs_save() and
+memalloc_nofs_restore() around calls currently marked as KM_NOFS),
+that's not really how the scoped API is supposed to be used.  Instead,
+one is supposed to improve the understandability of the code by marking
+the sections where, say, a lock is taken as now being unsafe to enter
+fs reclaim because that lock is held.
+
+The first one I got a bug report from was generic/270.  We take
+dqp->q_qlock in fs reclaim, and there are code paths which take
+dqp->q_qlock, then allocate memory.  There's a rather nasty extra
+step where we take the dqp->q_qlock, then wait on a workqueue which is
+going to call xlog_cil_push_work() which does the memory allocation.
+Lockdep spots this transitive dependency, but we don't know to transfer
+the nofs setting from the caller to the workqueue.
+
+OK, fine, just add the memalloc_nofs_save() at the beginning of
+xlog_cil_push_work() and restore it at the three exits; problem solved
+in a moderately hacky way; but it's better than before since the KM_NOFS
+calls are now safe to remove from the CIL machinery.  There are two ways
+to solve this properly; one is to transfer the nofs setting from caller
+to work queue, and also set the nofs setting whenever we take the dqlock.
+The other would be to trylock (and back out properly if held) if we're
+called in the reclaim path.  I don't know how hard that would be.
+
+Skipping the second and third ones, the fourth one I've encountered
+looks like this: xfs_buf_get_map() is allocating memory.  call path:
+
+kmem_alloc+0x6f/0x170
+xfs_buf_get_map+0x761/0x1140
+xfs_buf_read_map+0x38/0x250
+xfs_trans_read_buf_map+0x19c/0x520
+xfs_btree_read_buf_block.constprop.0+0x7a/0xb0
+xfs_btree_lookup_get_block+0x82/0x140
+xfs_btree_lookup+0xaf/0x490
+xfs_refcount_lookup_le+0x6a/0xd0
+xfs_refcount_find_shared+0x6c/0x420
+xfs_reflink_find_shared+0x67/0xa0
+xfs_reflink_trim_around_shared+0xd7/0x1a0
+xfs_bmap_trim_cow+0x3a/0x40
+xfs_buffered_write_iomap_begin+0x2ce/0xbf0
+
+That potentially deadlocks against
+
+-> #0 (&xfs_nondir_ilock_class#3){++++}-{3:3}:
+       __lock_acquire+0x148e/0x26d0
+       lock_acquire+0xb8/0x280
+       down_write_nested+0x3f/0xe0
+       xfs_ilock+0xe3/0x260
+       xfs_icwalk_ag+0x68c/0xa50
+       xfs_icwalk+0x3e/0xa0
+       xfs_reclaim_inodes_nr+0x7c/0xa0
+       xfs_fs_free_cached_objects+0x14/0x20
+       super_cache_scan+0x17d/0x1c0
+       do_shrink_slab+0x16a/0x680
+       shrink_slab+0x52a/0x8a0
+       shrink_node+0x308/0x7a0
+       balance_pgdat+0x28d/0x710
+
+Annoyingly, lockdep doesn't tell me which acquisition of
+fs_nondir_ilock_class#3 the first backtrace did.
+
+We could pop the nofs setting anywhere in this call chain, but _really_
+what we should be doing is calling memalloc_nofs_save() when we take
+the xfs_nondir_ilock_class#3.  But ... there are a lot of places we
+take the ilock, and it's kind of a big deal to add memalloc_nofs_save()
+calls to all of them.  And then I looked at _why_ we take the lock, and
+it's kind of stupid; we're just waiting for other callers to free it.
+ie xfs_reclaim_inode() does:
+
+       if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL))
+                goto out;
+...
+        xfs_iunlock(ip, XFS_ILOCK_EXCL);
+...
+        if (!radix_tree_delete(&pag->pag_ici_root,
+                                XFS_INO_TO_AGINO(ip->i_mount, ino)))
+...
+        xfs_ilock(ip, XFS_ILOCK_EXCL);
+
+ie we did the trylock, and it succeeded.  We know we don't have the
+lock in process context.  It feels like we could legitimately use
+xfs_lock_inumorder() to use a different locking class to do this wait.
+
+
+But all of this has shown me how complex this project is.  I have
+no desire to send patches for review that are "obviously wrong" (to
+someone with more extensive knowledge of XFS) and just suck up reviewer
+bandwidth for a cleanup that is, perhaps, of limited value.  If someone
+more junior wants to take this on as a project to learn more about XFS,
+I'll happily help where I can, but I think my time is perhaps better
+spent on other projects for now.
