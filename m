@@ -2,64 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 183737B7491
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Oct 2023 01:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7CCB7B75B5
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Oct 2023 02:19:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231504AbjJCXQD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 3 Oct 2023 19:16:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49100 "EHLO
+        id S232607AbjJDATz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 3 Oct 2023 20:19:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232568AbjJCXQB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 3 Oct 2023 19:16:01 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABCC4A6
-        for <linux-xfs@vger.kernel.org>; Tue,  3 Oct 2023 16:15:57 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c5bf7871dcso11930475ad.1
-        for <linux-xfs@vger.kernel.org>; Tue, 03 Oct 2023 16:15:57 -0700 (PDT)
+        with ESMTP id S232331AbjJDATy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 3 Oct 2023 20:19:54 -0400
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9B8A9
+        for <linux-xfs@vger.kernel.org>; Tue,  3 Oct 2023 17:19:51 -0700 (PDT)
+Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6c4bf619b57so994917a34.1
+        for <linux-xfs@vger.kernel.org>; Tue, 03 Oct 2023 17:19:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1696374957; x=1696979757; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5rokGTjJfgEdROuwYwV4PfiTYbXXrRCNCYQgZjymxJY=;
-        b=m2syeaI6ZuggPTVY1YSlQEMxTPOKDsq9LmnK0QRHWMybSv2D0adx7xuf8wY2TaV3LX
-         Gyo95vWUjAyDm7o5GFqXNr2zeleS6X6GNJeLhBDNEc0bz4CMHlUqrsExcrwf4RJis+Mm
-         4ZQE4qde++Qyz39g/+MA/l5jvq8O5anwT0zs3vOpQ6o17BWTyLyXg4UyNnwVwPNduYUm
-         f2huEE4uqowc6D9XNPYkk5P1/6ENLK241tUNLCAG2eKpKnItRoIi2c8pxsj3spRN+US7
-         v+H0RX1DIGf1LIbb+MSKrwCSj4WC0y6aFGvQiSUdyxvpKDrBrxRIo7XmcyuGuTiFW9Z2
-         4ztg==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1696378790; x=1696983590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oGonYtXNPVpEvKDrbEZN+W1IuiCzmh9Shoh0FnKPPso=;
+        b=Wv/dzTC6YT0sEYVsLbISMjjxzz0XXTutyuoC/6iUISJy9NI9jNVywBnV8uhBdg/QkR
+         gg6h5ebVkY5+4RNAtQ6BcSx4PfsyaxDaNs12u5mkXoH5CJ59PODd/h5U1PQWC2uOJI7V
+         AX55+OtRQRlWroBIBg4horpFIyO+p5aV0FAiKU2zkQEatTR1z0LwFPy2xBgohRsE/Ksk
+         +6bmIYt9FgM56P+adqrytZ5k90LIbzMH6EWVWynDNQFNyoQcB2FY3RgC2s03arIcrIUy
+         qmMrlOSxSNvEoLGAeF143mHHofShhKs88qAZE4f94MY0V1g8fNyoU4vnxiSc9j+AMA/H
+         srwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696374957; x=1696979757;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rokGTjJfgEdROuwYwV4PfiTYbXXrRCNCYQgZjymxJY=;
-        b=OemJbJMqAkNaWIsY2f/5Gcw1Z4ic/aNRapQWTsZpo4AbP8I8ZPlW8mLDZRbzVGKAU+
-         iNtJFqjX7CUiQ1KIZ4XktZiyZpcvLH/EJX34QY3iR2dpHfIft15XEKkWSEQmWom0xLeR
-         CnfxHs79mnepE4Bw6+dSpZa3Iop75ONTRkeMPV470c+W6xuDIpAizrITXrLauZtT+h2f
-         ZMzfCVOybxJ3fkuMC6WhQ8fKg/1Gwewj9N/kLbwz5z21lNCDGiCutxKWpF1t3ijLFQTG
-         Aei+XupxUSnhkASjsJtoTGZZu+/QjM5BBvkW/h538zZohWvdAYoBXSrfZAHf2XKDY2zV
-         a4Qw==
-X-Gm-Message-State: AOJu0YyqEaFM4Jdj2mOo8YL3kTHvG5HbBkiU3CBRVoq4c3E27/44siN4
-        Xwi3jcUxAYtIV9b68VdGZc3ExWO+WoW781HbRns=
-X-Google-Smtp-Source: AGHT+IHYLfNxyX4NczKutNgvbFWzl6+1cNeIPittYrBA/TMiB8lPUAluIDMlSd1xvM+HSE2HEbSEfg==
-X-Received: by 2002:a17:903:22cd:b0:1bf:3c10:1d70 with SMTP id y13-20020a17090322cd00b001bf3c101d70mr1195685plg.6.1696374957064;
-        Tue, 03 Oct 2023 16:15:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696378790; x=1696983590;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oGonYtXNPVpEvKDrbEZN+W1IuiCzmh9Shoh0FnKPPso=;
+        b=czNQ35j+9vt4LcIB7m9W8uXGXdt7jQmHzwgBqfwZes274sgm0BtAv2phBK1nvcwF/6
+         P6OKAWgIZs22HnzOb6ef8hBVbhcgKQxOBBqPqHqHdMmNhuuxGjuKW8QbVj5sJM0uJUc3
+         DRNXrV4s2VJ6/aKmc0tbpyhgiEf0rsgMbijclwECLcJkYCi2FrEFrakvniQdMUkm5wVL
+         luE6vB+g/FJ7h4hkeJVxVmHGrX3F9smG+vW7dEvAuedFflgVObYjEAfuUvi8PL+1XNFd
+         YJ4QqwCFjbBmaNiBa6jcuaJJcr3mA1wHQObne1dAwJdegiDCGLcDl00uhU/Du2JQ3PiK
+         PcPw==
+X-Gm-Message-State: AOJu0YyZjj/io2IWG13aHegIpqV8AIxWvP0HK04huUcOZ7N5FmnvcoSk
+        tNCX4lsPqY5ilEJz735D3tJ01Z8rofvxRwXuF40=
+X-Google-Smtp-Source: AGHT+IE3OTR0mXlefIhj1rzUVvkfsAePlhvxrdnV3Y5AiD2eDEaxKbimLXcAU5X5ztOJ2qmdx/ANAg==
+X-Received: by 2002:a05:6830:1252:b0:6c4:d06f:89bd with SMTP id s18-20020a056830125200b006c4d06f89bdmr831694otp.21.1696378790618;
+        Tue, 03 Oct 2023 17:19:50 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
-        by smtp.gmail.com with ESMTPSA id jj9-20020a170903048900b001c44dbc92a2sm2165623plb.184.2023.10.03.16.15.56
+        by smtp.gmail.com with ESMTPSA id x29-20020a63b21d000000b00563ea47c948sm1964911pge.53.2023.10.03.17.19.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 16:15:56 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qnocM-0096Cd-0c;
-        Wed, 04 Oct 2023 10:15:54 +1100
-Date:   Wed, 4 Oct 2023 10:15:54 +1100
+        Tue, 03 Oct 2023 17:19:49 -0700 (PDT)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+        by dread.disaster.area with esmtp (Exim 4.96)
+        (envelope-from <dave@fromorbit.com>)
+        id 1qnpc9-0097My-2o;
+        Wed, 04 Oct 2023 11:19:45 +1100
+Received: from dave by devoid.disaster.area with local (Exim 4.97-RC0)
+        (envelope-from <dave@devoid.disaster.area>)
+        id 1qnpc9-00000001Tqy-2O8i;
+        Wed, 04 Oct 2023 11:19:45 +1100
 From:   Dave Chinner <david@fromorbit.com>
-To:     Chandan Babu R <chandanbabu@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: [GIT PULL] xfs: use busy extents for fstrim
-Message-ID: <ZRygqkCkbH32I+x9@dread.disaster.area>
+To:     linux-xfs@vger.kernel.org
+Cc:     john.g.garry@oracle.com
+Subject: [RFC PATCH 0/9] xfs: push perags further into allocation routines
+Date:   Wed,  4 Oct 2023 11:19:34 +1100
+Message-Id: <20231004001943.349265-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -69,84 +75,97 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Chandan,
+This series continues the work towards making shrinking a filesystem
+possible.  We need to be able to stop operations from taking place
+on AGs that need to be removed by a shrink, so before shrink can be
+implemented we need to have the infrastructure in place to prevent
+incursion into AGs that are going to be, or are in the process, of
+being removed from active duty.
 
-Can you please pull the changes to fstrim behaviour from the signed
-tag below? This has been rebased on 6.6-rc4 so should merge cleanly
-into a current tree.
+The focus of this is making operations that depend on access to AGs
+use the perag to access and pin the AG in active use, thereby
+creating a barrier we can use to delay shrink until all active uses
+of an AG have been drained and new uses are prevented.
 
-Thanks,
+The previous round of allocator changes pushed per-ags mostly into
+the core of the allocator, but it left some rough edges where
+allocation routine may or may not be called with perags already
+held. This series continues the work on driving the perag further
+outwards into the bmap and individual allocation layers to clean up
+these warts.
 
-Dave.
+The bmap allocators have some interesting complexities. For example,
+they might attempt exact block allocation before attempting aligned
+allocation, and then in some cases want to attempt aligned
+allocation anywhere in the filesytsem instead of in the same AG as
+tehy do in other cases. Hence the code is somewhat complex as it
+tries to handle all these different cases.
 
-----------------------------------------------------------------
-The following changes since commit 8a749fd1a8720d4619c91c8b6e7528c0a355c0aa:
+The first step in untangling it all is splitting the exact block EOF
+case away from aligned allocation. If that fails, then we can
+attempt a near block aligned allocation. The filestreams allocator
+already does this with an attempt to allocate only in the same AG as
+the EOF block, but the normal allocator does an "all AG near block"
+scan. This latter cases starts with a "near block in the same AG"
+pass, then tries any other AG, but it requires dropping the perag
+before we start, hence doesn't provide any guarantee that we can
+actually get the same start AG again....
 
-  Linux 6.6-rc4 (2023-10-01 14:15:13 -0700)
+This separation then exposes the cases where we should be doing
+aligned allocation but we don't or we attempt aligned allocation
+when we know it can't succeed. There are several small changes to
+take this sort of thing into account when selecting the initial AG
+to allocate from.
 
-are available in the Git repository at:
+With that, we then push the perag management out into the intial AG
+selection code, thereby guaranteeing that we hold the selected AG
+until we've failed all the AG sepcific allocation attempts the
+policy defines.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs tags/xfs-fstrim-busy-tag
+Given that we now largely guarantee we select an AG with enough
+space for the initial aligned allocation, there is no longer a need
+to do an "all AGs" aligne allocation attempt. We know it can be done
+in the selected AG, so failure should be very rare and this allows
+us to use the same initial single AG EOF/aligned allocation logic
+for both allocation policies.
 
-for you to fetch changes up to e78a40b851712b422d7d4ae345f25511d47a9a38:
+This then allows us to move to {agno,agbno} based allocation
+targets, rather than fsblock based targets. It also means that we
+always call xfs_alloc_vextent_exact_bno() with a perag held, so we
+can get rid of the conditional perag code in that function. This
+makes _near_bno() and _exact_bno() essentially identical except for
+the allocation function they call, so they can be collapsed into a
+common helper.
 
-  xfs: abort fstrim if kernel is suspending (2023-10-04 09:25:04 +1100)
+And with all this, we now have the APIs simplified to the point
+where we can change how allocation failure is signalled. Rather than
+having the intenral AG allocators returning success with
+arags->agbno == NULLAGBLOCK to indication ENOSPC, and then having to
+convert that to returning success with args->fsblock == NULLFSBLOCK
+to indicate allocation failure to the higher layers, we can convert
+all the code to return -ENOSPC when allocation failure occurs.
 
-----------------------------------------------------------------
-xfs: reduce AGF hold times during fstrim operations
+This is intended to avoid the problems inherent in detecting
+"successful allocation that failed" situation that lead to the data
+corruption problem in the 6.3 cycle - if we fail to catch ENOSPC
+explicitly now, the allocation will still return an error and fail.
+Such a failure will likely result in a filesystem shutdown, which is
+a *much* better failure behaviour than writing data to a random
+location on the block device....
 
-A recent log space overflow and recovery failure was root caused to
-a long running truncate blocking on the AGF and ending up pinning
-the tail of the log. The filesystem then hung, the machine was
-rebooted, and log recoery then refused to run because there wasn't
-enough space in the log for EFI transaction reservation.
+The end result is a slightly more efficient allocation path that
+selects AGs at the highest level possible for initial allocation
+attempts, uses ENOSPC errors to detect allocation failures, and only
+uses AG iteration based allocation algorithms in the cases where the
+initial targetted allocations fail. It also makes it much clearer
+where we are doing stripe aligned allocations versus non-aligned
+allocations.
 
-The reason the long running truncate got blocked on the AGF for so
-long was that an fstrim was being run. THe underlying block device
-was large and very slow (10TB ceph rbd volume) and so discarding all
-the free space in the AG took a really long time.
+This passes fstests and various data tests (e.g fio), but hasn't
+been strenuously tested yet. I'm posting it because of the
+forced-align functionality that has been talked about, and this
+series makes it quite clear what "aligned allocation" currently
+means and how that is quite different to what "force-align" is
+intended to mean.
 
-The current fstrim implementation holds the AGF across the entire
-operations - both the freee space scan and the issuing of all the
-discards. The discards are synchronous and single depth, so if there
-are millions of free spaces, we hold the AGF lock across millions of
-discard operations.
 
-It doesn't really need to be said that this is a Bad Thing.
-
-This series reworks the fstrim discard path to use the same
-mechanisms as online discard. This allows discards to be issued
-asynchronously without holding the AGF locked, enabling higher
-discard queue depths (much faster on fast devices) and only
-requiring the AGF lock to be held whilst we are scanning free space.
-
-To do this, we make use of busy extents - we lock the AGF, mark all
-the extents we want to discard as "busy under discard" so that
-nothing will be allowed to allocate them, and then drop the AGF
-lock. We then issue discards on the gathered busy extents and on
-discard completion remove them from the busy list.
-
-This results in AGF lock holds times for fstrim dropping to a few
-milliseconds each batch of free extents we scan, and so the hours
-long hold times that can currently occur on large, slow, badly
-fragmented device no longer occur.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-
-----------------------------------------------------------------
-Dave Chinner (3):
-      xfs: move log discard work to xfs_discard.c
-      xfs: reduce AGF hold times during fstrim operations
-      xfs: abort fstrim if kernel is suspending
-
- fs/xfs/xfs_discard.c     | 266 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
- fs/xfs/xfs_discard.h     |   6 +-
- fs/xfs/xfs_extent_busy.c |  34 ++++++++--
- fs/xfs/xfs_extent_busy.h |  24 ++++++-
- fs/xfs/xfs_log_cil.c     |  93 ++++-----------------------
- fs/xfs/xfs_log_priv.h    |   5 +-
- 6 files changed, 311 insertions(+), 117 deletions(-)
-
--- 
-Dave Chinner
-david@fromorbit.com
