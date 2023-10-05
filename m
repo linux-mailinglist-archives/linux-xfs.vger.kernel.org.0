@@ -2,71 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAF3B7B9F11
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 16:18:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 230927B9E8D
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 16:09:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231459AbjJEORy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Oct 2023 10:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57442 "EHLO
+        id S232538AbjJEOJD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Oct 2023 10:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232918AbjJEOQE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 10:16:04 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C42CB10C
-        for <linux-xfs@vger.kernel.org>; Wed,  4 Oct 2023 19:55:52 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-690bd8f89baso384686b3a.2
-        for <linux-xfs@vger.kernel.org>; Wed, 04 Oct 2023 19:55:52 -0700 (PDT)
+        with ESMTP id S231990AbjJEOGx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 10:06:53 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8B01A4
+        for <linux-xfs@vger.kernel.org>; Wed,  4 Oct 2023 20:00:24 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bf55a81eeaso3697445ad.0
+        for <linux-xfs@vger.kernel.org>; Wed, 04 Oct 2023 20:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1696474552; x=1697079352; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1696474824; x=1697079624; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fbRnfHICVwHrDg628wHflzUySS+QzkRafnuB/gdtgwk=;
-        b=I/x0ZwZP6IoiHk3i3mUmUJCwX/NSnPplJpBiRFs5FbYgtFCNstxvw3uh+aAp/V2QpP
-         g/JgxFfJ3o7YdsN29EiXWU1FNENCk6fcTe5YzqSUWG7K5ujxEw5E2R2Vlt8O3j7x39HQ
-         01up4barDQtVfLO9zPR4IpTynI+31eju6LZFgE4rwKGEMgfRDU2GL7FZYeSzPJdEKOGG
-         vAYYMn+XbMQCKjkArtMdvALfhm8zSLKNjXWtfvyjASJ2zwUKwOHRpEfROvXwoNBEi8zb
-         KXccNcEIKGyjwiSoPopOqn5CXr1fRLjQLhnMQexKL+HP/ptVhta8PjaQK2ETaw9EzSOx
-         ktVQ==
+        bh=uWrvFPQaX1n1TWDkUcftSAygg7bG+8974v7JVxyDd/M=;
+        b=bMNi7Ctw//q2+BSsuUnZ/O3J97CU6JMmO/Bldo//NYxOwXIvkCPfFnSISBXrIBNyym
+         QGof5PVgHelKJ/tRWZnjoM689GGxBjfegQ7MWRDNFhKGi+/tXfsbM0knmNs6b6IztS0Y
+         4/4D05/FWIk2HlkiJ7idbxuM7Z4byo/Qfc7vGQZjiZJ1jrdUKEw1UuVx4QAha6e1Vo62
+         gCLP1msvDqt/11mJIhap+AsAYPZQXpmvP0OGbxZ9cC4csYrswW+fMVNv8Za+KTdB/glL
+         wAv9pzwMG/To8/HCGD4E6FHm2C9JBL7/49p2zeKIgfkb2lJtg6xYPVr47vwW2hH2nKMs
+         x5IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696474552; x=1697079352;
+        d=1e100.net; s=20230601; t=1696474824; x=1697079624;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fbRnfHICVwHrDg628wHflzUySS+QzkRafnuB/gdtgwk=;
-        b=hgYUlAz+XqvPehrwjkHz5k70C3ltcyZElwHTUmtCYOMYJdHs6dlOOn+9rbyuKuvSNc
-         cGKrtz9kyaCwQ6JD+t8T1dX9nOeF1/1tmtTxB5o4mt4WmA95sxjd3xotJXZiqZ5oACxY
-         zMUQWm/8A9pDaM9JbUov95qNF9uXokyxQhGPklZmo1Z+ZcAbmYtHvlyKtqxLzdJ+Smxs
-         XV1bOvVF8BwUeGgsZsjULG2xZD6RYQV5PCrLkLOJNAiUJsJOG6aeb/5OqFw9E7ksSktP
-         mhkA89VMK7TnIBMcepOv29fnRBsW9MMbesWECQNluXejn0anPprNy63OAw06oSFeL8Ng
-         HSvA==
-X-Gm-Message-State: AOJu0YyqIEHXLR8GVmXr88jE9p3RE8JoJonmVIzF4cnXHrg/e7kgols1
-        VnytodmGgcELM1YpBeOS9G/h6nPy6Qr9cl8C7Ps=
-X-Google-Smtp-Source: AGHT+IHNblWMByQuXi08yy8IUT/JmFoDKBHoGiXcMYY6krJ6BKucFletPce81AiindYxxqskbuI1+w==
-X-Received: by 2002:a05:6a21:1f16:b0:152:1ce8:ce3a with SMTP id ry22-20020a056a211f1600b001521ce8ce3amr3516699pzb.18.1696474552213;
-        Wed, 04 Oct 2023 19:55:52 -0700 (PDT)
+        bh=uWrvFPQaX1n1TWDkUcftSAygg7bG+8974v7JVxyDd/M=;
+        b=Y5/1aLUIbIz3VLq2zwOen8cfQI4WXe9hW0M9DmyPgGi1YjHldA2i1jU9r4HgP3kuPq
+         3bUyBrEIlwwBz0p18C99ZoegSguzQmSSQcxIvbrHBtJJ4IojUVaBu2amzk/pI6iMw9Id
+         S6FEU7wdsPNf917zzr3zqjbDKLfnOdN55fjmiEX2exIVDmZS5t78bPIiMRZ6EJ64p3ex
+         77gpQly9/G2XO4gp20Q7KO77SeDspnRpACVPmsOfl4tzkUfUpqgFLZFJ31VHm4gFrMs/
+         TPOKMIPjQjiQvLsLk3q5K8FnYj8p1zsNA4YlbNGDGMNO5lXgv9QNgIvuqSiekUvWeYau
+         8nyw==
+X-Gm-Message-State: AOJu0YyX4Y5EViW510s5uDV4i+r5EMkXyQxMbI0GtszxB8Am/6yiTrAP
+        KsA57/iuJBSqr7y2VbeCBMtS3N8QVOqKmsW28UA=
+X-Google-Smtp-Source: AGHT+IEv2ys0w9fb3nZMQ+S8eUFPlgnW/lpCEg0AKY733gIX8DdeeTLmHpLo6n5DLIwi2rV1roIIJA==
+X-Received: by 2002:a17:902:f7d3:b0:1c4:32da:2037 with SMTP id h19-20020a170902f7d300b001c432da2037mr3566560plw.64.1696474824017;
+        Wed, 04 Oct 2023 20:00:24 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
-        by smtp.gmail.com with ESMTPSA id t12-20020aa7938c000000b0064d74808738sm236425pfe.214.2023.10.04.19.55.51
+        by smtp.gmail.com with ESMTPSA id b10-20020a170903228a00b001b03a1a3151sm324662plh.70.2023.10.04.20.00.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 19:55:51 -0700 (PDT)
+        Wed, 04 Oct 2023 20:00:23 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
         (envelope-from <david@fromorbit.com>)
-        id 1qoEWi-009bdV-2f;
-        Thu, 05 Oct 2023 13:55:48 +1100
-Date:   Thu, 5 Oct 2023 13:55:48 +1100
+        id 1qoEb6-009bk9-2g;
+        Thu, 05 Oct 2023 14:00:20 +1100
+Date:   Thu, 5 Oct 2023 14:00:20 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/7] xfs: don't append work items to logged
- xfs_defer_pending objects
-Message-ID: <ZR4ltN86f0JFw6MD@dread.disaster.area>
+Subject: Re: [PATCH 2/7] xfs: allow pausing of pending deferred work items
+Message-ID: <ZR4mxG5x2rOWGnMU@dread.disaster.area>
 References: <169577059140.3312911.17578000557997208473.stgit@frogsfrogsfrogs>
- <169577059164.3312911.8148982456892861553.stgit@frogsfrogsfrogs>
+ <169577059178.3312911.7770487562460001097.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <169577059164.3312911.8148982456892861553.stgit@frogsfrogsfrogs>
+In-Reply-To: <169577059178.3312911.7770487562460001097.stgit@frogsfrogsfrogs>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,38 +73,42 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 04:31:22PM -0700, Darrick J. Wong wrote:
+On Tue, Sep 26, 2023 at 04:31:38PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> When someone tries to add a deferred work item to xfs_defer_add, it will
-> try to attach the work item to the most recently added xfs_defer_pending
-> object attached to the transaction.  However, it doesn't check if the
-> pending object has a log intent item attached to it.  This is incorrect
-> behavior because we cannot add more work to an object that has already
-> been committed to the ondisk log.
+> Traditionally, all pending deferred work attached to a transaction is
+> finished when one of the xfs_defer_finish* functions is called.
+> However, online repair wants to be able to allocate space for a new data
+> structure, format a new metadata structure into the allocated space, and
+> commit that into the filesystem.
 > 
-> Therefore, change the behavior not to append to pending items with a non
-> null dfp_intent.  In practice this has not been an issue because the
-> only way xfs_defer_add gets called after log intent items have been
-> committed is from the defer ops ->finish_item functions themselves, and
-> the @dop_pending isolation in xfs_defer_finish_noroll protects the
-> pending items that have already been logged.
+> As a hedge against system crashes during repairs, we also want to log
+> some EFI items for the allocated space speculatively, and cancel them if
+> we elect to commit the new data structure.
 > 
-> However, the next patch will add the ability to pause a deferred extent
-> free object during online btree rebuilding, and any new extfree work
-> items need to have their own pending event.
+> Therefore, introduce the idea of pausing a pending deferred work item.
+> Log intent items are still created for paused items and relogged as
+> necessary.  However, paused items are pushed onto a side list before we
+> start calling ->finish_item, and the whole list is reattach to the
+> transaction afterwards.  New work items are never attached to paused
+> pending items.
 > 
-> While we're at it, hoist the predicate to its own static inline function
-> for readability.
+> Modify xfs_defer_cancel to clean up pending deferred work items holding
+> a log intent item but not a log intent done item, since that is now
+> possible.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > ---
->  fs/xfs/libxfs/xfs_defer.c |   48 ++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 36 insertions(+), 12 deletions(-)
+>  fs/xfs/libxfs/xfs_defer.c |   98 +++++++++++++++++++++++++++++++++++++++------
+>  fs/xfs/libxfs/xfs_defer.h |   17 +++++++-
+>  fs/xfs/xfs_trace.h        |   13 +++++-
+>  3 files changed, 112 insertions(+), 16 deletions(-)
 
-Looks fine.
+Not 100% certain how this will be used, but the mechanism itself
+looks fine.
 
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
 -- 
 Dave Chinner
 david@fromorbit.com
