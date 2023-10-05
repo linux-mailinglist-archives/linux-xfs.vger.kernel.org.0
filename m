@@ -2,98 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADEE27B9F1A
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 16:18:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29B507BA14E
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 16:53:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbjJEORx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Oct 2023 10:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
+        id S238884AbjJEOnz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Oct 2023 10:43:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232818AbjJEOP4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 10:15:56 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDBD249EE
-        for <linux-xfs@vger.kernel.org>; Wed,  4 Oct 2023 22:13:44 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-692ada71d79so469375b3a.1
-        for <linux-xfs@vger.kernel.org>; Wed, 04 Oct 2023 22:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1696482824; x=1697087624; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OT9nHL0DpDkpGa0i18PjBthOlwW1bR+IziAmXuFOdvg=;
-        b=LoPuptLr1soWOMVl1g8ZlE7gUwn7jHN05chRGaZqEypFeCAnHffMzeeB9zIsfv6TjC
-         FCOYhgy5W5aiu2ALhWFdGlv1eROBuHQ7ng3hHdnySBqWtYBQhebvgavqoK5ByB+O8kU6
-         bQUtclEvF+J8BnHSRNWt4GGOCI8iE+7ORQCmpWIYGt5et6j9DGGUp/UaHvf5ny/uTwMY
-         6mwJkrUY9baOj2tflEWv//+3JMacfWvMabBqJXpEOO/GjBLXbrPmTAXNnyotUHZ+4jCb
-         4vW0qv35TR6NfC0PZUcwI6b0t8SEizJFAUc0Sftb5HWfAUYq5ckvnUYAH4kmtiqf0yGY
-         N41g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696482824; x=1697087624;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OT9nHL0DpDkpGa0i18PjBthOlwW1bR+IziAmXuFOdvg=;
-        b=TBb6zV0N7HBSLwuOREPLTPxo5lVyAkeixWdy6lha0BudHGY4Ccvo1MVpmQ97Klw8Qr
-         0maPG/S9NIX9Po5UphYA7DKHNjNhHmhChB4gFqgN2p0rQUWLgbXRz59XQwDDWOe0m6i8
-         9JRhAc3U+l50Q5YoKCsYtknZh1Mqxn9AsTaJdTKBAiCt8/mej7bWn8S+yKTcZnm3EKoE
-         dWe6SB7l17/yLucp7ZO12NmQv/wQJFeE2mnsWOkgmxX3wMxzJB7YpM84ubq5r6HLd259
-         HXuE9ldRQljRHWb1m0ocYYMgYUGJtzilw29a671ndZh4/SUxj6CsGHjot7AONpGWQk83
-         O/ew==
-X-Gm-Message-State: AOJu0YzaA7+CtoDWofDFY+YSDEvF5FR5hKPCVEZ4E6+LHTMZw3ktj869
-        asSHDH1poTx3H37iFqYMEroLdGdtzxNWjxRvH64=
-X-Google-Smtp-Source: AGHT+IG+ZEngSbLliNRDOW+HzUpoSWRdamf34n0F5Tc3tNTdHXwdL3kW6Wore9CA7EW4+OPdmBTNtw==
-X-Received: by 2002:a05:6a21:7782:b0:160:6a95:386a with SMTP id bd2-20020a056a21778200b001606a95386amr3868551pzc.25.1696482824290;
-        Wed, 04 Oct 2023 22:13:44 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
-        by smtp.gmail.com with ESMTPSA id s2-20020a170902ea0200b001bbd1562e75sm542646plg.55.2023.10.04.22.13.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 22:13:43 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qoGg9-009e86-26;
-        Thu, 05 Oct 2023 16:13:41 +1100
-Date:   Thu, 5 Oct 2023 16:13:41 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 7/7] xfs: force small EFIs for reaping btree extents
-Message-ID: <ZR5GBU4pF6VNtFC0@dread.disaster.area>
-References: <169577059140.3312911.17578000557997208473.stgit@frogsfrogsfrogs>
- <169577059253.3312911.14232325060465598331.stgit@frogsfrogsfrogs>
+        with ESMTP id S239146AbjJEOlv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 10:41:51 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA31587236;
+        Thu,  5 Oct 2023 07:17:36 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6763CC43395;
+        Thu,  5 Oct 2023 05:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696485568;
+        bh=cCSCNZZslM+gfgDhLOiPNVMp1LbblmbMJUQl9x8MlBc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=k97I2ThurWMNxl9tkFgNSEFVWw/8wjVdJOAUHDEFD+aqJCrtqKzzqniW2vCn6jYrP
+         THg1m/QDlNN46G+FI0EYV1PbWPr+NdgyP5LtRyolbE3WvGfwubSjKVEIaO76wQkKVh
+         dOzQTTXEyHezP7ndyccnw+QDOdDn4SOlvGkeZeCIsG8BizEJaRwRIJfA7mfGAiTqw6
+         b1zstobsa+XZz/i76RXfOV7zcXMDrT1e5BAC+UCKZyoGu1czf3lOi6fomKmhf2Wxot
+         W8m+mkNC9yef8FEa6YwBNp/r5vrqLMNq6LoNmYWdhyAnY1LgKs5KtMsBblevpIDrdU
+         bid6C4c44bR6w==
+User-agent: mu4e 1.8.10; emacs 27.1
+From:   Chandan Babu R <chandanbabu@kernel.org>
+To:     chandanbabu@kernel.org
+Cc:     dchinner@redhat.com, djwong@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 4e69f490d211
+Date:   Thu, 05 Oct 2023 11:27:35 +0530
+Message-ID: <87h6n5624j.fsf@debian-BULLSEYE-live-builder-AMD64>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <169577059253.3312911.14232325060465598331.stgit@frogsfrogsfrogs>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 04:32:56PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Introduce the concept of a defer ops barrier to separate consecutively
-> queued pending work items of the same type.  With a barrier in place,
-> the two work items will be tracked separately, and receive separate log
-> intent items.  The goal here is to prevent reaping of old metadata
-> blocks from creating unnecessarily huge EFIs that could then run the
-> risk of overflowing the scrub transaction.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  fs/xfs/libxfs/xfs_defer.c |   83 +++++++++++++++++++++++++++++++++++++++++++++
->  fs/xfs/libxfs/xfs_defer.h |    3 ++
->  fs/xfs/scrub/reap.c       |    5 +++
->  3 files changed, 91 insertions(+)
+Hi folks,
 
-Looks good.
+The for-next branch of the xfs-linux repository at:
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+	https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
--- 
-Dave Chinner
-david@fromorbit.com
+has just been updated.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
+
+The new head of the for-next branch is commit:
+
+4e69f490d211 Merge tag 'xfs-fstrim-busy-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs into xfs-6.6-fixesC
+
+4 new commits:
+
+Chandan Babu R (1):
+      [4e69f490d211] Merge tag 'xfs-fstrim-busy-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs into xfs-6.6-fixesC
+
+Dave Chinner (3):
+      [428c4435b063] xfs: move log discard work to xfs_discard.c
+      [89cfa899608f] xfs: reduce AGF hold times during fstrim operations
+      [e78a40b85171] xfs: abort fstrim if kernel is suspending
+
+Code Diffstat:
+
+ fs/xfs/xfs_discard.c     | 266 ++++++++++++++++++++++++++++++++++++++++++-----
+ fs/xfs/xfs_discard.h     |   6 +-
+ fs/xfs/xfs_extent_busy.c |  34 ++++--
+ fs/xfs/xfs_extent_busy.h |  24 ++++-
+ fs/xfs/xfs_log_cil.c     |  93 +++--------------
+ fs/xfs/xfs_log_priv.h    |   5 +-
+ 6 files changed, 311 insertions(+), 117 deletions(-)
