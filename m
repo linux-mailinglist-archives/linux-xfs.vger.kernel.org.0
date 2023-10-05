@@ -2,45 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E035E7BA120
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 16:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F2337BA2B1
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 17:45:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237727AbjJEOnU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Oct 2023 10:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38950 "EHLO
+        id S234097AbjJEPpd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Oct 2023 11:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234797AbjJEOhw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 10:37:52 -0400
+        with ESMTP id S233553AbjJEPo7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 11:44:59 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA1047883
-        for <linux-xfs@vger.kernel.org>; Thu,  5 Oct 2023 07:02:59 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33FA6C3279C;
-        Thu,  5 Oct 2023 12:45:14 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50FF66187
+        for <linux-xfs@vger.kernel.org>; Thu,  5 Oct 2023 07:31:50 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E6D85C116A4
+        for <linux-xfs@vger.kernel.org>; Thu,  5 Oct 2023 14:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696509916;
-        bh=D2DTYMgh0RO67Xy0HPAXJ9Ru/RHiX/XQ4FolxCT4N4I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e4IjdZ+JH6RXGozFQN6HeKgYEaF63eVjMFFUngpJgSnf9dyQRcqim/C8BqRxgQNah
-         OOhFxe5CKBtOB54IjCkVkz8z/WzMyISNPzs5OLfl7Pl5x2fuz2Pt4G7RmvofBqUNLZ
-         Bb163CWxRknvbEsZcrTDjr5Wx30RcxPNrOyMLgx9HVqxniE3kVQejYjfD3Be58mBsN
-         ABZeDjJHdmgCl5Y9nEz+33p0q1ZigcayUnehI1S98c6VUiq2LhWnE3GdjWH3hKfmFp
-         vaO893nanUqTaMsG0Ht9jrPIuCJW1l/1x/4rY1Sc9kIIQGbPLChh487vOlgxXPTh9P
-         1QPbZxZCVz+sQ==
-Date:   Thu, 5 Oct 2023 14:45:12 +0200
-From:   Carlos Maiolino <cem@kernel.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Anthony Iliopoulos <ailiop@suse.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v1.1 6/6] libxfs: fix atomic64_t detection on x86 32-bit
- architectures
-Message-ID: <20231005124512.lwnvra7nwcsnuw5t@andromeda>
-References: <169454757570.3539425.3597048437340386509.stgit@frogsfrogsfrogs>
- <169454761010.3539425.13599600178844641233.stgit@frogsfrogsfrogs>
- <ub8kRv81g-HpbM3_wrwF0n1yJgSTxGCDW2TMp03cXXpwUZJKxqNkjYscvho3WpTodI-grFYtPtvGS05-moG1PQ==@protonmail.internalid>
- <20230912194751.GB3415652@frogsfrogsfrogs>
+        s=k20201202; t=1696516309;
+        bh=lk1688ueisq7BdC7Dmgxhx2LcpqiO0wKN3b0iV4rplY=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=kJb6bOXdhvp9vumItuNNDRuyrW12JUP4krKMAWNECRZkPTs4iOaNtNxPkZy4yp1B/
+         vHlhwyGe13JEEcTNHukgi2+Q4ViLB9nmtvKbP7GInXDDE6lF9i+krf0Eb19JaXACCU
+         +hU51iYsbfpiQYPLeS3TNXEtEuJpZ+5KasR8nIuLVtWsB4BNSIT7cz1d7cCwR2fQAw
+         dqwyxZ1xRAyXUXmR4xm0fUwJdnHJED56S14CPpOhs7arVeh7b/p59tcy39jbAc9e22
+         iKaS2l/Qk7rMai1Unqa6OtfQVSkcBrBfYLLA8mDfiPIxDbhskYiPmJuq4OxtoCTCim
+         f9maXrB4SaZxw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id D019BC4332E; Thu,  5 Oct 2023 14:31:49 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 217572] Initial blocked tasks causing deterioration over hours
+ until (nearly) complete system lockup and data loss with PostgreSQL 13
+Date:   Thu, 05 Oct 2023 14:31:49 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: thomas.walker@twosigma.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-217572-201763-ojTEXcBrEU@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-217572-201763@https.bugzilla.kernel.org/>
+References: <bug-217572-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230912194751.GB3415652@frogsfrogsfrogs>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -50,70 +65,27 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 12:47:51PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> xfsprogs during compilation tries to detect if liburcu supports atomic
-> 64-bit ops on the platform it is being compiled on, and if not it falls
-> back to using pthread mutex locks.
-> 
-> The detection logic for that fallback relies on _uatomic_link_error()
-> which is a link-time trick used by liburcu that will cause compilation
-> errors on archs that lack the required support. That only works for the
-> generic liburcu code though, and it is not implemented for the
-> x86-specific code.
-> 
-> In practice this means that when xfsprogs is compiled on 32-bit x86
-> archs will successfully link to liburcu for atomic ops, but liburcu does
-> not support atomic64_t on those archs. It indicates this during runtime
-> by generating an illegal instruction that aborts execution, and thus
-> causes various xfsprogs utils to be segfaulting.
-> 
-> Fix this by requiring that unsigned longs are at least 64 bits in size,
-> which /usually/ means that 64-bit atomic counters are supported.  We
-> can't simply execute the liburcu atomic64_t detection code during
-> configure instead of only relying on the linker error because that
-> doesn't work for cross-compiled packages.
-> 
-> Fixes: 7448af588a2e ("libxfs: fix atomic64_t poorly for 32-bit architectures")
-> Reported-by: Anthony Iliopoulos <ailiop@suse.com>
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
-> v1.1: This time with correct commit message.
-> ---
+https://bugzilla.kernel.org/show_bug.cgi?id=3D217572
 
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-Carlos
+Thomas Walker (thomas.walker@twosigma.com) changed:
 
->  m4/package_urcu.m4 |    9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/m4/package_urcu.m4 b/m4/package_urcu.m4
-> index ef116e0cda7..4bb2b886f06 100644
-> --- a/m4/package_urcu.m4
-> +++ b/m4/package_urcu.m4
-> @@ -26,7 +26,11 @@ rcu_init();
->  #
->  # Make sure that calling uatomic_inc on a 64-bit integer doesn't cause a link
->  # error on _uatomic_link_error, which is how liburcu signals that it doesn't
-> -# support atomic operations on 64-bit data types.
-> +# support atomic operations on 64-bit data types for its generic
-> +# implementation (which relies on compiler builtins). For certain archs
-> +# where liburcu carries its own implementation (such as x86_32), it
-> +# signals lack of support during runtime by emitting an illegal
-> +# instruction, so we also need to check CAA_BITS_PER_LONG to detect that.
->  #
->  AC_DEFUN([AC_HAVE_LIBURCU_ATOMIC64],
->    [ AC_MSG_CHECKING([for atomic64_t support in liburcu])
-> @@ -34,8 +38,11 @@ AC_DEFUN([AC_HAVE_LIBURCU_ATOMIC64],
->      [	AC_LANG_PROGRAM([[
->  #define _GNU_SOURCE
->  #include <urcu.h>
-> +#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
->  	]], [[
->  long long f = 3;
-> +
-> +BUILD_BUG_ON(CAA_BITS_PER_LONG < 64);
->  uatomic_inc(&f);
->  	]])
->      ], have_liburcu_atomic64=yes
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |thomas.walker@twosigma.com
+
+--- Comment #15 from Thomas Walker (thomas.walker@twosigma.com) ---
+We seem to be hitting this with quite some regularity, also on 6.1(.44).=20
+Including after applying the proposed patch (cbc02854331e ("XArray: Do not
+return sibling entries from xa_load()")
+
+Curious whether this has actually solved the problem for anyone else?
+(This issue should also probably be changed from XFS, which we know now is =
+just
+a victim, to something in the memory management subsystem to get proper
+visibility).
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
