@@ -2,90 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F2337BA2B1
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 17:45:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C4F17BA4FA
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Oct 2023 18:13:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234097AbjJEPpd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Oct 2023 11:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        id S235616AbjJEQN3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Oct 2023 12:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233553AbjJEPo7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 11:44:59 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50FF66187
-        for <linux-xfs@vger.kernel.org>; Thu,  5 Oct 2023 07:31:50 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E6D85C116A4
-        for <linux-xfs@vger.kernel.org>; Thu,  5 Oct 2023 14:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696516309;
-        bh=lk1688ueisq7BdC7Dmgxhx2LcpqiO0wKN3b0iV4rplY=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=kJb6bOXdhvp9vumItuNNDRuyrW12JUP4krKMAWNECRZkPTs4iOaNtNxPkZy4yp1B/
-         vHlhwyGe13JEEcTNHukgi2+Q4ViLB9nmtvKbP7GInXDDE6lF9i+krf0Eb19JaXACCU
-         +hU51iYsbfpiQYPLeS3TNXEtEuJpZ+5KasR8nIuLVtWsB4BNSIT7cz1d7cCwR2fQAw
-         dqwyxZ1xRAyXUXmR4xm0fUwJdnHJED56S14CPpOhs7arVeh7b/p59tcy39jbAc9e22
-         iKaS2l/Qk7rMai1Unqa6OtfQVSkcBrBfYLLA8mDfiPIxDbhskYiPmJuq4OxtoCTCim
-         f9maXrB4SaZxw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id D019BC4332E; Thu,  5 Oct 2023 14:31:49 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 217572] Initial blocked tasks causing deterioration over hours
- until (nearly) complete system lockup and data loss with PostgreSQL 13
-Date:   Thu, 05 Oct 2023 14:31:49 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: thomas.walker@twosigma.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-217572-201763-ojTEXcBrEU@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-217572-201763@https.bugzilla.kernel.org/>
-References: <bug-217572-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        with ESMTP id S240941AbjJEQMS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Oct 2023 12:12:18 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F082573A
+        for <linux-xfs@vger.kernel.org>; Thu,  5 Oct 2023 04:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pSPr3pXcSxKJuX7/RPo0otlLSAy10+fB0mEx0Y++h64=; b=dYToxfBATWzM6CvzkKxzTS/3Nf
+        2UD0D1P2St720vvzIKoMmHWwQ9QcdPh/1/VOwfUhRonO4jl8SSjY+F547bwe+ZYh3LDhAMJAlHa5Z
+        0Pm0WFTpG0cQabvsk3wluMMcnW8lKK9NnqIL566HKQxSXOryLQpAfSPSqCh5RF6z1sz7Wu39VOVuE
+        3pGtk1Npdy1muEpeDJ2EeRk9EfO2aLPcnGbSfwn2VkAx2nWuoU8O3XzcY0LZ0VETF3evKyhUZQmiX
+        j+z62p2SbimP20ilOUnRrfitUzmYf3qi4sb33p3UGPqBl2KLTiN7NgRGinQ3WPmQF10J/vw44rqfH
+        fZBb6b4A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qoN1G-002XLs-02;
+        Thu, 05 Oct 2023 11:59:54 +0000
+Date:   Thu, 5 Oct 2023 04:59:53 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, john.g.garry@oracle.com
+Subject: Re: [PATCH 5/9] xfs: aligned EOF allocations don't need to scan AGs
+ anymore
+Message-ID: <ZR6lOVXZ5j0LW1CM@infradead.org>
+References: <20231004001943.349265-1-david@fromorbit.com>
+ <20231004001943.349265-6-david@fromorbit.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231004001943.349265-6-david@fromorbit.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D217572
+> -	if (ap->aeof && ap->offset) {
+> +	if (ap->aeof && ap->offset)
+>  		error = xfs_bmap_btalloc_at_eof(ap, args, blen, stripe_align);
+> -	}
+> +
+> +	if (error || args->fsbno != NULLFSBLOCK)
+> +		goto out_perag_rele;
 
-Thomas Walker (thomas.walker@twosigma.com) changed:
+Maybe just personal preference, but I find it much easier to read
+if the error handling is indented and sits in a block with the
+condition that can cause it, i.e.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |thomas.walker@twosigma.com
+	if (ap->aeof && ap->offset) {
+ 		error = xfs_bmap_btalloc_at_eof(ap, args, blen, stripe_align);
+		if (error || args->fsbno != NULLFSBLOCK)
+			goto out_perag_rele;
+	}
 
---- Comment #15 from Thomas Walker (thomas.walker@twosigma.com) ---
-We seem to be hitting this with quite some regularity, also on 6.1(.44).=20
-Including after applying the proposed patch (cbc02854331e ("XArray: Do not
-return sibling entries from xa_load()")
+but except for that nipicks this looks good:
 
-Curious whether this has actually solved the problem for anyone else?
-(This issue should also probably be changed from XFS, which we know now is =
-just
-a victim, to something in the memory management subsystem to get proper
-visibility).
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Reviewed-by: Christoph Hellwig <hch@lst.de>
