@@ -2,111 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 818337BBF5F
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5F437BBF66
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:57:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233545AbjJFS4F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 Oct 2023 14:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
+        id S233167AbjJFS5j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 Oct 2023 14:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233366AbjJFSz2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:55:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E53123
-        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696618377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5rlF0oL9W0zNtBhbjMTbk37IJ/kLdlHiXudCvThRqlI=;
-        b=funA6IMxyY3mnefPGXJhUsKdKC+bluMkANKD+EkcsX9CPppUhHyAgOMXpCAn6q2w/OnVpv
-        VWMiq8x1PNJ29xSwdXNf1bHFK5zddls18J3rXMSkYIbly4Nnl2ziNvcOq0ld/OrjReGMTr
-        wY2yfn2EnJrIRNKvHmFRXehoO27Pggc=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-454-ZsFXvv4kOWKj4cURcg9tdQ-1; Fri, 06 Oct 2023 14:52:46 -0400
-X-MC-Unique: ZsFXvv4kOWKj4cURcg9tdQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9b9ecd8c351so183825566b.1
-        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696618364; x=1697223164;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5rlF0oL9W0zNtBhbjMTbk37IJ/kLdlHiXudCvThRqlI=;
-        b=WwYqZkFby9ez7AhuPzKuX5HwwYyCpJ8vboxH+qgv+F1OYJ3zvyyOJjc4z9nr7xIXJT
-         SkzqvP8kc373xHnt/ISNl1zjoAM5WOsxmpMR51lpmGJSx9ZE4rh0mdktKHqlQpouvXVA
-         R7vYPlrvMG+PpgbTrpCejueSAQQmbqw+RN6pDb942tIZhQiL7hmoWLKxmT7rQUyvJpMP
-         Ich0bR8Y6QPHucrwwUya+IEIxt/0DOHh3ReVgW/99BLawg90mCy67eNtBYYAXDr9xu6+
-         l45kIxlimrS8oP5rOkdLdHHh6Us3v+MDb2R7oJkTCcybpVHOfjxh8YWNKB1c+H08dwxW
-         dyuw==
-X-Gm-Message-State: AOJu0YyufdN/Uuc84K3jfNO42nIw+I8d7eKJdIXG6yoO34hm06EcNCSi
-        RpMc8sMaudJrLlC1utgj5QH3bIbHK6u4De6TbJ1Uz0ZXXhCiua8O0NgtGWWrTprMQV7M5MwMYPv
-        AEJiMm57A7KcR0VIypUcK/2pFLt0z0GKbgOt1/iYVcZoB36IYkuer3OC7JHAZKtKaZ9evbfWIJT
-        02Py4=
-X-Received: by 2002:a17:906:3116:b0:9a9:e4ba:2da7 with SMTP id 22-20020a170906311600b009a9e4ba2da7mr8028685ejx.49.1696618364722;
-        Fri, 06 Oct 2023 11:52:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHb5yDWscYNSrW67kJ5zHPToh4J20qlMVNuAtELJzCJW/KwyTT1ZP+ogCVKItFg1sfFvDb1pA==
-X-Received: by 2002:a17:906:3116:b0:9a9:e4ba:2da7 with SMTP id 22-20020a170906311600b009a9e4ba2da7mr8028667ejx.49.1696618364456;
-        Fri, 06 Oct 2023 11:52:44 -0700 (PDT)
-Received: from localhost.localdomain ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 11:52:44 -0700 (PDT)
-From:   Andrey Albershteyn <aalbersh@redhat.com>
-To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        fsverity@lists.linux.dev
-Cc:     djwong@kernel.org, ebiggers@kernel.org, david@fromorbit.com,
-        dchinner@redhat.com, Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH v3 28/28] xfs: enable ro-compat fs-verity flag
-Date:   Fri,  6 Oct 2023 20:49:22 +0200
-Message-Id: <20231006184922.252188-29-aalbersh@redhat.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231006184922.252188-1-aalbersh@redhat.com>
-References: <20231006184922.252188-1-aalbersh@redhat.com>
+        with ESMTP id S232789AbjJFS5a (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:57:30 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C16B106
+        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:57:29 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA8EC433C8;
+        Fri,  6 Oct 2023 18:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696618648;
+        bh=TEDLq7uIiACxyizhFuPHOPe6jqi6hPKJmQil+g7/liQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lt2R7GeMeD5LGPz0Zf5YXCuU6WH8i9tWIO0PgE6v7a2isbBOFalFKz+Gdl9g2gwb9
+         9Qum73AsxSQh4m5lDKHTbrD+G7P7E+vBNvT7HPhl5sHv+ylWQUp1eRVGRVvnLpo4Cp
+         aq+8i5m+/gqj5l2lsKYbP/Bsyl9Nyah5djYIlSi4/Gi7IOPFcVnhxxFyY1oh+NitFR
+         CPeK0aDRub8hOeT3bMiCRXv0159I6ptsP6IElL8r1s3d6j+xpgxlPe1l7nwZBl1MYb
+         /L0FnzLkrUvHekRqCoPZBko2mAq962YevCQ5Ib2HOFe6NdByD/9Fhjo/IAi60G9EtW
+         mhOslbLH0+JGg==
+Date:   Fri, 6 Oct 2023 11:57:28 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Daan De Meyer <daan.j.demeyer@gmail.com>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: mkfs.xfs with --protofile does not copy extended attributes into
+ the generated filesystem
+Message-ID: <20231006185728.GY21298@frogsfrogsfrogs>
+References: <CAO8sHc=UYg7SFh8DWYq6wRet2CW2P8tNr-pWRNJ2wN=+_qW17g@mail.gmail.com>
+ <ZR8qWqksNx1kNhvi@dread.disaster.area>
+ <20231006042250.GP21298@frogsfrogsfrogs>
+ <ZR+OtcVIsVrJeqMO@dread.disaster.area>
+ <20231006050451.GQ21298@frogsfrogsfrogs>
+ <CAO8sHcmEXj4tVnLADGxX_k3nWGGVRiQueAkMVLMkAKBpPSMSGg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO8sHcmEXj4tVnLADGxX_k3nWGGVRiQueAkMVLMkAKBpPSMSGg@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Finalize fs-verity integration in XFS by making kernel fs-verity
-aware with ro-compat flag.
+On Fri, Oct 06, 2023 at 09:24:50AM +0200, Daan De Meyer wrote:
+> On Fri, Oct 06, 2023 at 03:36:05PM +1100, Dave Chinner wrote:
+> > On Thu, Oct 05, 2023 at 09:22:50PM -0700, Darrick J. Wong wrote:
+> > > On Fri, Oct 06, 2023 at 08:27:54AM +1100, Dave Chinner wrote:
+> > > > On Thu, Oct 05, 2023 at 10:37:34AM +0200, Daan De Meyer wrote:
+> > > > > Hi,
+> > > > >
+> > > > > It seems using --protofile ignores any extended attributes set on
+> > > > > source files. I would like to generate an XFS filesystem using
+> > > > > --protofile where extended attributes are copied from the source files
+> > > > > into the generated filesystem. Any way to make this happen with
+> > > > > --protofile?
+> > > >
+> > > > mkfs.xfs doesn't have a '--protofile' option. It has a '-p <file>'
+> > > > option for specifying a protofile - is that what you mean?
+> > >
+> > > While we're on the topic, would it also be useful to have a -p switch
+> > > that would copy the fsxattr options as well?
+> >
+> > If protofile support is going to be extended then supporting
+> > everything that can be read/set through generic kernel interfaces
+> > would be appropriate...
+> >
+> > But I'm not convinced that we should extend protofile support
+> > because mounting the filesytsem and running rsync, xfs_restore, etc
+> > can already do all this stuffi with no development work necessary...
+> 
+> > rsync doesn't support copying the fsxattr data (though it does support
+> > extended attributes), and iirc xfsdump can only do entire filesystems,
+> > right?
+> 
+> Additionally, when populating the filesystem in a regular file, to mount it
+> we need loop devices and we need to be root. Both of which we want to
+> avoid. So having an option to do this without mounting the filesystem like
+> ext4 and btrfs have would be very useful. It doesn't have to be via '-p', I'm
+> fine with a -d or --rootdir option like the ones that ext4 and btrfs
+> have as well.
 
-Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
----
- fs/xfs/libxfs/xfs_format.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+<shrug> How about libguestfs then?
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index ccb2ae5c2c93..a21612319765 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -355,10 +355,11 @@ xfs_sb_has_compat_feature(
- #define XFS_SB_FEAT_RO_COMPAT_INOBTCNT (1 << 3)		/* inobt block counts */
- #define XFS_SB_FEAT_RO_COMPAT_VERITY   (1 << 4)		/* fs-verity */
- #define XFS_SB_FEAT_RO_COMPAT_ALL \
--		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
--		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
--		 XFS_SB_FEAT_RO_COMPAT_REFLINK| \
--		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT)
-+		(XFS_SB_FEAT_RO_COMPAT_FINOBT  | \
-+		 XFS_SB_FEAT_RO_COMPAT_RMAPBT  | \
-+		 XFS_SB_FEAT_RO_COMPAT_REFLINK | \
-+		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT| \
-+		 XFS_SB_FEAT_RO_COMPAT_VERITY)
- #define XFS_SB_FEAT_RO_COMPAT_UNKNOWN	~XFS_SB_FEAT_RO_COMPAT_ALL
- static inline bool
- xfs_sb_has_ro_compat_feature(
--- 
-2.40.1
+--D
 
+> Cheers,
+> 
+> Daan
+> 
+> On Fri, 6 Oct 2023 at 07:04, Darrick J. Wong <djwong@kernel.org> wrote:
+> >
+> > On Fri, Oct 06, 2023 at 03:36:05PM +1100, Dave Chinner wrote:
+> > > On Thu, Oct 05, 2023 at 09:22:50PM -0700, Darrick J. Wong wrote:
+> > > > On Fri, Oct 06, 2023 at 08:27:54AM +1100, Dave Chinner wrote:
+> > > > > On Thu, Oct 05, 2023 at 10:37:34AM +0200, Daan De Meyer wrote:
+> > > > > > Hi,
+> > > > > >
+> > > > > > It seems using --protofile ignores any extended attributes set on
+> > > > > > source files. I would like to generate an XFS filesystem using
+> > > > > > --protofile where extended attributes are copied from the source files
+> > > > > > into the generated filesystem. Any way to make this happen with
+> > > > > > --protofile?
+> > > > >
+> > > > > mkfs.xfs doesn't have a '--protofile' option. It has a '-p <file>'
+> > > > > option for specifying a protofile - is that what you mean?
+> > > >
+> > > > While we're on the topic, would it also be useful to have a -p switch
+> > > > that would copy the fsxattr options as well?
+> > >
+> > > If protofile support is going to be extended then supporting
+> > > everything that can be read/set through generic kernel interfaces
+> > > would be appropriate...
+> > >
+> > > But I'm not convinced that we should extend protofile support
+> > > because mounting the filesytsem and running rsync, xfs_restore, etc
+> > > can already do all this stuffi with no development work necessary...
+> >
+> > rsync doesn't support copying the fsxattr data (though it does support
+> > extended attributes), and iirc xfsdump can only do entire filesystems,
+> > right?
+> >
+> > --D
+> >
+> > > Cheers,
+> > >
+> > > Dave.
+> > > --
+> > > Dave Chinner
+> > > david@fromorbit.com
