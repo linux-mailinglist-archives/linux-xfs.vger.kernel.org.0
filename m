@@ -2,150 +2,257 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D9C7BBE82
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:15:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47B3D7BBF11
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:53:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233226AbjJFSP0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 Oct 2023 14:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48010 "EHLO
+        id S233126AbjJFSxN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 Oct 2023 14:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233192AbjJFSPZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:15:25 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CACB8C2
-        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:15:23 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-d8673a90f56so2634213276.0
-        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696616122; x=1697220922; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AYLhV8RKvbCInhnzqZ/HGBAbLzuMZXeZ10wGn+QIDt0=;
-        b=agZMnV/HJlJNR+eXnUqkrCNrnhdt8cTuH8KPxM8I0UlHzDgSB7yZOnfEzjuFFKmcys
-         px5mNgUlWMDvOhhIQ0tlHY+8PJ6lEWdjJPSApcLl/imzQggHqLnKYP1xPJpvbKX7Pxv/
-         8kR/kNwBWBPMQjEU7AXu3y2seqJXmjp4CTdY4oB1MHnwBAD2awuAUZPZnHR4vh0brRey
-         GhZvL/kPa8oQLPzBPzQ1kfkPRDz7LJIeNOKK/15bFxj9KCs7KIWsjDEqTIHOSh+IwdEf
-         ag4eZsxXhkYwVL5qydQ7mcnxfV/I44GhPcxTxAOWs1vxEnC+e8YwG+HGK+zixX8m9djt
-         T7vA==
+        with ESMTP id S233273AbjJFSxL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:53:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA23EBE
+        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1696618341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=U77XNGLnwWULayVswMfWLL1i4TVIjIjk+JqAucVdUWw=;
+        b=BFz8I6+iJzC93vAz0NyK1ELpVeLiP0Oj5onBVf/zcx4J9Itw3xOayihP0CmhN6ytNJXr+W
+        lFu6ykapXb1gLPMvMSx+F7ou7LwybOaFk3oef/cg0byeivYy0LJ+K1vjcyfX55Wd5GzOcn
+        6QaKojHoAIvq4TAwyW/YhOVtPfQDVmI=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-459-w9_oHocSMgy8R8vJfjH82g-1; Fri, 06 Oct 2023 14:52:20 -0400
+X-MC-Unique: w9_oHocSMgy8R8vJfjH82g-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-997c891a88dso209099866b.3
+        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696616122; x=1697220922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AYLhV8RKvbCInhnzqZ/HGBAbLzuMZXeZ10wGn+QIDt0=;
-        b=t+g/MkM2stk1s8gS0JQn2sj+1j6tBB+WVUgbgtXxRcj+Q1e1Vaw0b9EJzbK2hx/P3J
-         VjFpXxXEsHqxFhIYXKYCGJCz/YcLOvn0iRwTYtyPTD8J6foCnHwL0ZPjaqoX+uj4lNBC
-         mUZXCZsyZejGspd9g4Pi4MJeoaONFMBw2FBmWSDLV9Jv/47CdIh7s0VZxzpa+OtSiP3o
-         Y0pahEu0+oTplgkZLJamZmsTQjuJZnrnfc1A9nLbXFDR601OdWvmPjh4nChp9BL4H3QH
-         RvV5+V+71duBqS17Po0iQktvwi/7lmu+Wg69j7AW71OvcgqNwDmMlvXEgxKWSzxnMiCU
-         Ax+g==
-X-Gm-Message-State: AOJu0YwF9a5QOhl8o6WORZjlR3vRKqpZpN0SuO1QC6k/9nxnvFigr71p
-        kZZIgR6rsY9TFuizeXfmPg96X3s8e5wIR9BLSyBj4w==
-X-Google-Smtp-Source: AGHT+IHzqypY4NdUT7zu05+MFHgfnxNiLO+3lSgUozk3D6Rhta9XqDneUgYhohjCWFkKwZkcLQmr90WO9qHqGTSh0Io=
-X-Received: by 2002:a25:509:0:b0:d7f:cdc8:e184 with SMTP id
- 9-20020a250509000000b00d7fcdc8e184mr8607707ybf.49.1696616122514; Fri, 06 Oct
- 2023 11:15:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696618339; x=1697223139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U77XNGLnwWULayVswMfWLL1i4TVIjIjk+JqAucVdUWw=;
+        b=tFp5W/wcPFFvzTrtsRnomFyxLGS76k7KdQVsx+Ou8AOX+6YyCLnE+7YHkrfehC91yc
+         gpikAGd1X3V9xoOmiIS+gXXQ0tHqZQTkswpynZW8SiycZBdS06w8mVpWZzhMtm8gTLlt
+         Nxl/1CcjNAZxZJmu81zRm8ir3hvwSaf+/DqK9HKHr6BmU8NU3Rd/WciczUOgrCB+9aoy
+         tf8BP6gTXh6+bBax/+iRNk4hlEUPkfzeSKb2QuUnB17ifT0bYxbbdwfOuEoRBbIepa05
+         XQt5KXoobnKuHNo0EtRIwKHA8qC4L//cAYCPGQR2x9ZWMP+pVbTBJx0+EA+S+KAynlC7
+         hBCg==
+X-Gm-Message-State: AOJu0YwjKvYRPjqFTEKL1bhcRo2pZ5vxCNtFyOPTRtiKXImzm7x9lSY8
+        dkub5fx0r4zeTnasSpol8eViMB8MF0pJTuxVrTXCbyZrHiJkJv3hAr0loqZbqtSjbC6fmSUlCOA
+        OOHMr2BsjWBurDFzth3efQ3NLEOIHBML9m4Wou7+BqWoOciPDiJJeudzMYz7DQMD6hatPG7Elq5
+        qvKz4=
+X-Received: by 2002:a17:906:5390:b0:9a1:bd53:b23 with SMTP id g16-20020a170906539000b009a1bd530b23mr7607751ejo.14.1696618338876;
+        Fri, 06 Oct 2023 11:52:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFr+lyJbmFO9Qb1EBTA3K24arha6c82QRaS65GtE8tQEUkgnBiujkf/7vxyNkWZTLCPeJW9iQ==
+X-Received: by 2002:a17:906:5390:b0:9a1:bd53:b23 with SMTP id g16-20020a170906539000b009a1bd530b23mr7607729ejo.14.1696618338427;
+        Fri, 06 Oct 2023 11:52:18 -0700 (PDT)
+Received: from localhost.localdomain ([109.183.6.197])
+        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 11:52:18 -0700 (PDT)
+From:   Andrey Albershteyn <aalbersh@redhat.com>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        fsverity@lists.linux.dev
+Cc:     djwong@kernel.org, ebiggers@kernel.org, david@fromorbit.com,
+        dchinner@redhat.com, Andrey Albershteyn <aalbersh@redhat.com>
+Subject: [PATCH v3 00/28] fs-verity support for XFS
+Date:   Fri,  6 Oct 2023 20:48:54 +0200
+Message-Id: <20231006184922.252188-1-aalbersh@redhat.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <20230929102726.2985188-1-john.g.garry@oracle.com> <20230929102726.2985188-5-john.g.garry@oracle.com>
-In-Reply-To: <20230929102726.2985188-5-john.g.garry@oracle.com>
-From:   Jeremy Bongio <jbongio@google.com>
-Date:   Fri, 6 Oct 2023 11:15:11 -0700
-Message-ID: <CAOvQCn6zeHGiyfC_PH_Edop-JsMh1gUD8WL84R9oPanxOaxrsA@mail.gmail.com>
-Subject: Re: [PATCH 04/21] fs: Add RWF_ATOMIC and IOCB_ATOMIC flags for atomic
- write support
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
-        viro@zeniv.linux.org.uk, brauner@kernel.org,
-        chandan.babu@oracle.com, dchinner@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tytso@mit.edu,
-        linux-api@vger.kernel.org,
-        Prasad Singamsetty <prasad.singamsetty@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-What is the advantage of using write flags instead of using an atomic
-open flag (O_ATOMIC)? With an open flag, write, writev, pwritev would
-all be supported for atomic writes. And this would potentially require
-less application changes to take advantage of atomic writes.
+Hi all,
 
-On Fri, Sep 29, 2023 at 3:28=E2=80=AFAM John Garry <john.g.garry@oracle.com=
-> wrote:
->
-> From: Prasad Singamsetty <prasad.singamsetty@oracle.com>
->
-> Userspace may add flag RWF_ATOMIC to pwritev2() to indicate that the
-> write is to be issued with torn write prevention, according to special
-> alignment and length rules.
->
-> Torn write prevention means that for a power or any other HW failure, all
-> or none of the data will be committed to storage, but never a mix of old
-> and new.
->
-> For any syscall interface utilizing struct iocb, add IOCB_ATOMIC for
-> iocb->ki_flags field to indicate the same.
->
-> A call to statx will give the relevant atomic write info:
-> - atomic_write_unit_min
-> - atomic_write_unit_max
->
-> Both values are a power-of-2.
->
-> Applications can avail of atomic write feature by ensuring that the total
-> length of a write is a power-of-2 in size and also sized between
-> atomic_write_unit_min and atomic_write_unit_max, inclusive. Applications
-> must ensure that the write is at a naturally-aligned offset in the file
-> wrt the total write length.
->
-> Signed-off-by: Prasad Singamsetty <prasad.singamsetty@oracle.com>
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  include/linux/fs.h      | 1 +
->  include/uapi/linux/fs.h | 5 ++++-
->  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index b528f063e8ff..898952dee8eb 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -328,6 +328,7 @@ enum rw_hint {
->  #define IOCB_SYNC              (__force int) RWF_SYNC
->  #define IOCB_NOWAIT            (__force int) RWF_NOWAIT
->  #define IOCB_APPEND            (__force int) RWF_APPEND
-> +#define IOCB_ATOMIC            (__force int) RWF_ATOMIC
->
->  /* non-RWF related bits - start at 16 */
->  #define IOCB_EVENTFD           (1 << 16)
-> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-> index b7b56871029c..e3b4f5bc6860 100644
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -301,8 +301,11 @@ typedef int __bitwise __kernel_rwf_t;
->  /* per-IO O_APPEND */
->  #define RWF_APPEND     ((__force __kernel_rwf_t)0x00000010)
->
-> +/* Atomic Write */
-> +#define RWF_ATOMIC     ((__force __kernel_rwf_t)0x00000020)
-> +
->  /* mask of flags supported by the kernel */
->  #define RWF_SUPPORTED  (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
-> -                        RWF_APPEND)
-> +                        RWF_APPEND | RWF_ATOMIC)
->
->  #endif /* _UAPI_LINUX_FS_H */
-> --
-> 2.31.1
->
+Quite a long time passed by from v2 but this is v3 of fs-verity
+support in XFS.
+
+This patchset introduces fs-verity [6] support in XFS. This
+implementation uses extended attributes to store fs-verity
+metadata. The Merkle tree blocks are stored in the remote extended
+attributes. The names are offsets into the tree.
+
+A few key points of this patchset:
+- fs-verity works with Merkle tree blocks instead of PAGE references
+  from filesystem
+- Filesystem can supply bio_set and submit_io() to iomap for read
+  path
+- In XFS, fs-verity metadata is stored in extended attributes
+- Verification happens in iomap's read IO path (offloaded to
+  workqueue)
+- New global XFS workqueue for verification processing
+- Direct path and DAX are disabled for inodes with fs-verity
+- Inodes with fs-verity have new on-disk diflag
+- xfs_attr_get() can return a buffer with an extended attribute
+- Each extended attribute has exactly one Merkle tree block
+- xfs_buf with Merkle tree block allocates double memory and has
+  duplicate of the extended attribute data with leaf headers and
+  without
+- xfs_buf tracks verified status of merkle tree block
+
+The patchset consist of five parts:
+- [1..4]: Patches from Parent Pointer patchset which add binary
+          xattr names with a few deps
+- [5]: Patch which adds FS_XFLAG_VERITY to make verity exposed as
+  extended attribute flag
+- [9..10]: Improvements to core fs-verity - mainly switch to blocks
+  management instead of pages
+- [11..12]: Allow filesystem to provide submit_io() and bio_set in
+  read path
+- [12..28]: Integration of fs-verity to xfs
+
+Testing:
+The patchset is tested with xfstests -g all (with exceptions) on
+xfs_1k, xfs_4k, xfs_1k_quota, xfs_4k_quota, ext4_4k, and
+ext4_4k_quota. With KMEMLEAK and KASAN enabled. Also, xfs_1k and
+xfs_4k on a 64k pages.
+
+Changes from V2:
+- FS_XFLAG_VERITY extended attribute flag
+- Change fs-verity to use Merkle tree blocks instead of expecting
+  PAGE references from filesystem
+- Change approach in iomap to filesystem provided bio_set and
+  submit_io instead of just callouts to filesystem
+- Add possibility for xfs_buf allocate more space for fs-verity
+  extended attributes
+- Make xfs_attr module to copy fs-verity blocks inside the xfs_buf,
+  so XFS can get data without leaf headers
+- Add Merkle tree removal for error path
+- Makae scrub aware of new dinode flag
+Changes from V1:
+- Added parent pointer patches for easier testing
+- Many issues and refactoring points fixed from the V1 review
+- Adjusted for recent changes in fs-verity core (folios, non-4k)
+- Dropped disabling of large folios
+- Completely new fsverity patches (fix, callout, log_blocksize)
+- Change approach to verification in iomap to the same one as in
+  write path. Callouts to fs instead of direct fs-verity use.
+- New XFS workqueue for post read folio verification
+- xfs_attr_get() can return underlying xfs_buf
+- xfs_bufs are marked with XBF_VERITY_CHECKED to track verified
+  blocks
+
+kernel:
+[1]: https://github.com/alberand/linux/tree/fsverity-v3
+
+xfsprogs:
+[2]: https://github.com/alberand/xfsprogs/tree/fsverity-v3
+
+xfstests:
+[3]: https://github.com/alberand/xfstests/tree/fsverity-v3
+
+v1:
+[4]: https://lore.kernel.org/linux-xfs/20221213172935.680971-1-aalbersh@redhat.com/
+
+v2:
+[5]: https://lore.kernel.org/linux-xfs/20230404145319.2057051-1-aalbersh@redhat.com/
+
+fs-verity:
+[6]: https://www.kernel.org/doc/html/latest/filesystems/fsverity.html
+
+Thanks,
+Andrey
+
+Allison Henderson (4):
+  xfs: Add new name to attri/d
+  xfs: add parent pointer support to attribute code
+  xfs: define parent pointer xattr format
+  xfs: Add xfs_verify_pptr
+
+Andrey Albershteyn (24):
+  fs: add FS_XFLAG_VERITY for fs-verity sealed inodes
+  fsverity: add drop_page() callout
+  fsverity: always use bitmap to track verified status
+  fsverity: pass Merkle tree block size to ->read_merkle_tree_page()
+  fsverity: pass log_blocksize to end_enable_verity()
+  fsverity: operate with Merkle tree blocks instead of pages
+  iomap: pass readpage operation to read path
+  iomap: allow filesystem to implement read path verification
+  xfs: add XBF_VERITY_CHECKED xfs_buf flag
+  xfs: add XFS_DA_OP_BUFFER to make xfs_attr_get() return buffer
+  xfs: introduce workqueue for post read IO work
+  xfs: add bio_set and submit_io for ioend post-processing
+  xfs: add attribute type for fs-verity
+  xfs: make xfs_buf_get() to take XBF_* flags
+  xfs: add XBF_DOUBLE_ALLOC to increase size of the buffer
+  xfs: add fs-verity ro-compat flag
+  xfs: add inode on-disk VERITY flag
+  xfs: initialize fs-verity on file open and cleanup on inode
+    destruction
+  xfs: don't allow to enable DAX on fs-verity sealsed inode
+  xfs: disable direct read path for fs-verity sealed files
+  xfs: add fs-verity support
+  xfs: make scrub aware of verity dinode flag
+  xfs: add fs-verity ioctls
+  xfs: enable ro-compat fs-verity flag
+
+ Documentation/filesystems/fsverity.rst |   9 +
+ fs/btrfs/verity.c                      |   7 +-
+ fs/erofs/data.c                        |   4 +-
+ fs/ext4/verity.c                       |   6 +-
+ fs/f2fs/verity.c                       |   6 +-
+ fs/gfs2/aops.c                         |   4 +-
+ fs/ioctl.c                             |   4 +
+ fs/iomap/buffered-io.c                 |  53 ++++-
+ fs/verity/enable.c                     |   6 +-
+ fs/verity/fsverity_private.h           |   1 -
+ fs/verity/open.c                       |  64 +++---
+ fs/verity/read_metadata.c              |  40 ++--
+ fs/verity/verify.c                     | 126 +++---------
+ fs/xfs/Makefile                        |   1 +
+ fs/xfs/libxfs/xfs_attr.c               |  81 +++++++-
+ fs/xfs/libxfs/xfs_attr.h               |   7 +-
+ fs/xfs/libxfs/xfs_attr_leaf.c          |  24 ++-
+ fs/xfs/libxfs/xfs_attr_remote.c        |  40 +++-
+ fs/xfs/libxfs/xfs_da_btree.h           |   7 +-
+ fs/xfs/libxfs/xfs_da_format.h          |  62 +++++-
+ fs/xfs/libxfs/xfs_format.h             |  14 +-
+ fs/xfs/libxfs/xfs_log_format.h         |   8 +-
+ fs/xfs/libxfs/xfs_sb.c                 |   4 +-
+ fs/xfs/scrub/attr.c                    |   4 +-
+ fs/xfs/xfs_aops.c                      |  84 +++++++-
+ fs/xfs/xfs_aops.h                      |   2 +
+ fs/xfs/xfs_attr_item.c                 | 142 +++++++++++---
+ fs/xfs/xfs_attr_item.h                 |   1 +
+ fs/xfs/xfs_attr_list.c                 |  17 +-
+ fs/xfs/xfs_buf.c                       |   7 +-
+ fs/xfs/xfs_buf.h                       |  21 +-
+ fs/xfs/xfs_file.c                      |  22 ++-
+ fs/xfs/xfs_inode.c                     |   2 +
+ fs/xfs/xfs_inode.h                     |   3 +-
+ fs/xfs/xfs_ioctl.c                     |  22 +++
+ fs/xfs/xfs_iomap.c                     |   3 +
+ fs/xfs/xfs_iops.c                      |   4 +
+ fs/xfs/xfs_linux.h                     |   1 +
+ fs/xfs/xfs_mount.h                     |   3 +
+ fs/xfs/xfs_ondisk.h                    |   4 +
+ fs/xfs/xfs_super.c                     |  28 ++-
+ fs/xfs/xfs_trace.h                     |   1 +
+ fs/xfs/xfs_verity.c                    | 257 +++++++++++++++++++++++++
+ fs/xfs/xfs_verity.h                    |  37 ++++
+ fs/xfs/xfs_xattr.c                     |   9 +
+ fs/zonefs/file.c                       |   4 +-
+ include/linux/fsverity.h               | 129 ++++++++++++-
+ include/linux/iomap.h                  |  36 +++-
+ include/uapi/linux/fs.h                |   1 +
+ 49 files changed, 1170 insertions(+), 252 deletions(-)
+ create mode 100644 fs/xfs/xfs_verity.c
+ create mode 100644 fs/xfs/xfs_verity.h
+
+-- 
+2.40.1
+
