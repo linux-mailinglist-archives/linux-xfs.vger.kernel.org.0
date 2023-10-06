@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9CA47BBF20
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56C647BBF54
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:56:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233289AbjJFSyD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 Oct 2023 14:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        id S233508AbjJFSzQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 Oct 2023 14:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233273AbjJFSx6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:53:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3637FF1
-        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:32 -0700 (PDT)
+        with ESMTP id S233309AbjJFSyw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:54:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4957910F
+        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696618351;
+        s=mimecast20190719; t=1696618362;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VJUiSpfPMzcl28TFVJjzzuncoLSne12d470beZMPYcY=;
-        b=L2xD6Llp1BgCE7yCAwxa982v2i4U3HVlUC/VslEZDf90wSKtD9k4ZfmfYIIsxqv2k6YYod
-        j7cyvt1daXbEzyD8oqciTkp+mv36cnFR3/OoNe+vUr2Wj7o2q9Qo4Slllh6LIWGGRY7x9b
-        mey4+A0HEVjWLla6MvpXyF+TN66bQes=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=8fJjOgJTOBqTNpGZsppEB438CqzELHcDr88tlE5TL2U=;
+        b=U8vFXha50cJePBiu0XXQMO3B1cGVrcSDnmQUoa06fX8zpIK9I8u/3uV91I0Kx3Z96XsBOf
+        QEYdDez5jIV9j89R12qdsFcEgSD/lz41WI4jqKQSh9Ks+8QHzWV08mSKx6TyhC0UVoXPVy
+        CLdJKo8rILWxYsi5XYJ3fzF9cw4SAoE=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-528-6KNDfar_Oj-UIRg8Kx2U8A-1; Fri, 06 Oct 2023 14:52:30 -0400
-X-MC-Unique: 6KNDfar_Oj-UIRg8Kx2U8A-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-99c8bbc902eso207722166b.1
-        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:29 -0700 (PDT)
+ us-mta-529-LuGc4fjrMF-Uqu2agnFB1Q-1; Fri, 06 Oct 2023 14:52:31 -0400
+X-MC-Unique: LuGc4fjrMF-Uqu2agnFB1Q-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9ae70250ef5so395946766b.0
+        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696618349; x=1697223149;
+        d=1e100.net; s=20230601; t=1696618350; x=1697223150;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VJUiSpfPMzcl28TFVJjzzuncoLSne12d470beZMPYcY=;
-        b=wh+e51Q8QiI+D7SqEuzx7xocTl8qv1KU+aVgZFb82Lo7A5au6DfYhWSPPYALV4iXZH
-         xkeCiXG5OAe3lFreJPKvIIEGV5Z79HfOZBZ0aqQQ/PlJJiV8IQ3/MG90PrXIiiq3sdGV
-         KO0oBUYLccVqJk713R0CODE06c21fwN040wV1pqW+O6euuKOIcAvPbYOlYmIFTyxRlbu
-         UyR/HX4ADnYVI9tTBeEV8RZ7W11JmsXNuDFIBYfGSAMVg9c1QfBm9Gyo0XUzgzlm2o57
-         W57GBbNHV8wwN1MAt7xIQ8rjK3hvEyYYROhEiMyz65CrrXrM+HNQoDhLLI9R+x4nVTMi
-         AN1Q==
-X-Gm-Message-State: AOJu0Yy+PXnwY7F+yaFeTkXAk27Fc7pz4HZtWUbwX/FHQ568u1nkQL8a
-        LC/OHDiD1U17uUzUD254vedBH02NAdnj9jAxfEwpaXojzOL1Oh8EDsgl1gZ8DNgwzXsgNgGEbZx
-        d3bJfz6rAw0kxlVf83nzlYqUNm5YabsU07t3Sykj7uiWDbvBQI54E1V+R7cyNApFSG7P+bxLDKq
-        TAJlo=
-X-Received: by 2002:a17:907:7891:b0:9b9:325f:9be9 with SMTP id ku17-20020a170907789100b009b9325f9be9mr6905146ejc.73.1696618348840;
-        Fri, 06 Oct 2023 11:52:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG6693S4s/pd1mNyLR7i5gSJ+yywVELtJcWxdgdXWVai6POFCFoxzt5ozN8gK51meBnXnTb8A==
-X-Received: by 2002:a17:907:7891:b0:9b9:325f:9be9 with SMTP id ku17-20020a170907789100b009b9325f9be9mr6905129ejc.73.1696618348563;
-        Fri, 06 Oct 2023 11:52:28 -0700 (PDT)
+        bh=8fJjOgJTOBqTNpGZsppEB438CqzELHcDr88tlE5TL2U=;
+        b=ViQShq1zjOy1ONTiJ0KaSXZVeBJMWKkps34ql5xtAxgfclepbtpOztyBwPiknG7A04
+         r5Kt8ipMPxTO6vcTuJvix49BXIvRBB1AfJMDV+7N+4+uy96RMpes2+mEuFEdPtCuUS9l
+         83yQSCJ3RCGy/WaJI+1jUPh7tfGpD9KfynQ36JXdxi3kB3qRgfNAEPm8Xs012L7Sxm7o
+         qtCXd1KONUTp7Eh1hHzE4NaoExTUAxCEL/mJa3uRfdlbW75iBEtdr9NUHgBtKm2RcN/i
+         HNSujhYW0eghpxG4Y3tLi3Xc5HU2ykofMpzuGZOMAJJCeJ+8hD4jYjsfjjgNUTbb90cw
+         1QjQ==
+X-Gm-Message-State: AOJu0YxE7IQP1ZBIjEwsnVDYNKORpysTpjDLRo9vqyW0BGwYqgKgGnWR
+        u8ol4g/AoL2mumm9whrI3zv2EpUJsLoAPUIunoOiZj/Nf2oiqOhI6EQvUQVrEgEXkQcKThkOrHt
+        8wHcvV6L+wulOEFHTf5vatcQGUQbCo8s9oOTkyRXoSYTvxM5DnWg2ZxXBcgipnYwFv0qtCwFhf5
+        9z5R4=
+X-Received: by 2002:a17:906:31c1:b0:9b6:d20d:8a46 with SMTP id f1-20020a17090631c100b009b6d20d8a46mr5748164ejf.6.1696618349887;
+        Fri, 06 Oct 2023 11:52:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJtYnAO2IwdX1h2RvfFSiMYTMaukCGR5jLN6oib6DxFhtgJB+r7zCfde55VfmX4YT5UsZzWg==
+X-Received: by 2002:a17:906:31c1:b0:9b6:d20d:8a46 with SMTP id f1-20020a17090631c100b009b6d20d8a46mr5748148ejf.6.1696618349521;
+        Fri, 06 Oct 2023 11:52:29 -0700 (PDT)
 Received: from localhost.localdomain ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.27
+        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 06 Oct 2023 11:52:28 -0700 (PDT)
 From:   Andrey Albershteyn <aalbersh@redhat.com>
@@ -61,9 +61,9 @@ To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         fsverity@lists.linux.dev
 Cc:     djwong@kernel.org, ebiggers@kernel.org, david@fromorbit.com,
         dchinner@redhat.com, Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH v3 11/28] iomap: pass readpage operation to read path
-Date:   Fri,  6 Oct 2023 20:49:05 +0200
-Message-Id: <20231006184922.252188-12-aalbersh@redhat.com>
+Subject: [PATCH v3 12/28] iomap: allow filesystem to implement read path verification
+Date:   Fri,  6 Oct 2023 20:49:06 +0200
+Message-Id: <20231006184922.252188-13-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231006184922.252188-1-aalbersh@redhat.com>
 References: <20231006184922.252188-1-aalbersh@redhat.com>
@@ -71,7 +71,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,208 +79,149 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Preparation for allowing filesystems to provide bio_set and
-->submit_io() for read path. This will allow fs to do an additional
-processing of ioend on ioend completion.
+Currently, there is no interface to let filesystem do
+post-processing of completed BIO (ioend) in read path. This can be
+very handy for fs-verity verification. This patch add a callout to
+filesystem provided ->submit_bio to configure BIO completion callout.
 
-Make iomap_read_end_io() exportable, so, it can be called back from
-filesystem callout after verification is done.
+The read path ioend iomap_read_ioend are stored side by side with
+BIOs allocated from filesystem provided bio_set.
+
+Add IOMAP_F_READ_VERITY which indicates that iomap need to
+verify BIO (e.g. fs-verity) after I/O is completed.
+
+Any verification itself happens on filesystem side. The verification
+is done when the BIO is processed by calling out ->bi_end_io().
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- fs/erofs/data.c        |  4 ++--
- fs/gfs2/aops.c         |  4 ++--
- fs/iomap/buffered-io.c | 13 ++++++++++---
- fs/xfs/xfs_aops.c      |  4 ++--
- fs/zonefs/file.c       |  4 ++--
- include/linux/iomap.h  | 21 +++++++++++++++++++--
- 6 files changed, 37 insertions(+), 13 deletions(-)
+ fs/iomap/buffered-io.c | 40 +++++++++++++++++++++++++++++++++-------
+ include/linux/iomap.h  | 15 +++++++++++++++
+ 2 files changed, 48 insertions(+), 7 deletions(-)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 0c2c99c58b5e..3f5482d6cedb 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -357,12 +357,12 @@ int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-  */
- static int erofs_read_folio(struct file *file, struct folio *folio)
- {
--	return iomap_read_folio(folio, &erofs_iomap_ops);
-+	return iomap_read_folio(folio, &erofs_iomap_ops, NULL);
- }
- 
- static void erofs_readahead(struct readahead_control *rac)
- {
--	return iomap_readahead(rac, &erofs_iomap_ops);
-+	return iomap_readahead(rac, &erofs_iomap_ops, NULL);
- }
- 
- static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-index c26d48355cc2..9c09ff75e586 100644
---- a/fs/gfs2/aops.c
-+++ b/fs/gfs2/aops.c
-@@ -456,7 +456,7 @@ static int gfs2_read_folio(struct file *file, struct folio *folio)
- 
- 	if (!gfs2_is_jdata(ip) ||
- 	    (i_blocksize(inode) == PAGE_SIZE && !folio_buffers(folio))) {
--		error = iomap_read_folio(folio, &gfs2_iomap_ops);
-+		error = iomap_read_folio(folio, &gfs2_iomap_ops, NULL);
- 	} else if (gfs2_is_stuffed(ip)) {
- 		error = stuffed_readpage(ip, &folio->page);
- 		folio_unlock(folio);
-@@ -534,7 +534,7 @@ static void gfs2_readahead(struct readahead_control *rac)
- 	else if (gfs2_is_jdata(ip))
- 		mpage_readahead(rac, gfs2_block_map);
- 	else
--		iomap_readahead(rac, &gfs2_iomap_ops);
-+		iomap_readahead(rac, &gfs2_iomap_ops, NULL);
- }
- 
- /**
 diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 644479ccefbd..ca78c7f62527 100644
+index ca78c7f62527..0a1bec91fdf6 100644
 --- a/fs/iomap/buffered-io.c
 +++ b/fs/iomap/buffered-io.c
-@@ -264,7 +264,7 @@ static void iomap_finish_folio_read(struct folio *folio, size_t offset,
- 		folio_unlock(folio);
+@@ -332,6 +332,19 @@ static inline bool iomap_block_needs_zeroing(const struct iomap_iter *iter,
+ 		pos >= i_size_read(iter->inode);
  }
  
--static void iomap_read_end_io(struct bio *bio)
-+void iomap_read_end_io(struct bio *bio)
++static void
++iomap_submit_read_io(const struct iomap_iter *iter,
++		struct iomap_readpage_ctx *ctx)
++{
++	if (!ctx->bio)
++		return;
++
++	if (ctx->ops && ctx->ops->submit_io)
++		ctx->ops->submit_io(iter, ctx->bio, iter->pos);
++	else
++		submit_bio(ctx->bio);
++}
++
+ static loff_t iomap_readpage_iter(const struct iomap_iter *iter,
+ 		struct iomap_readpage_ctx *ctx, loff_t offset)
  {
- 	int error = blk_status_to_errno(bio->bi_status);
- 	struct folio_iter fi;
-@@ -273,12 +273,14 @@ static void iomap_read_end_io(struct bio *bio)
- 		iomap_finish_folio_read(fi.folio, fi.offset, fi.length, error);
- 	bio_put(bio);
- }
-+EXPORT_SYMBOL_GPL(iomap_read_end_io);
+@@ -355,6 +368,13 @@ static loff_t iomap_readpage_iter(const struct iomap_iter *iter,
  
- struct iomap_readpage_ctx {
- 	struct folio		*cur_folio;
- 	bool			cur_folio_in_bio;
- 	struct bio		*bio;
- 	struct readahead_control *rac;
-+	const struct iomap_readpage_ops *ops;
- };
+ 	if (iomap_block_needs_zeroing(iter, pos)) {
+ 		folio_zero_range(folio, poff, plen);
++		if (iomap->flags & IOMAP_F_READ_VERITY) {
++			if (ctx->ops->verify_folio(folio, poff, plen)) {
++				folio_set_error(folio);
++				goto done;
++			}
++		}
++
+ 		iomap_set_range_uptodate(folio, poff, plen);
+ 		goto done;
+ 	}
+@@ -371,13 +391,20 @@ static loff_t iomap_readpage_iter(const struct iomap_iter *iter,
+ 		gfp_t orig_gfp = gfp;
+ 		unsigned int nr_vecs = DIV_ROUND_UP(length, PAGE_SIZE);
  
- /**
-@@ -402,7 +404,8 @@ static loff_t iomap_readpage_iter(const struct iomap_iter *iter,
- 	return pos - orig_pos + plen;
- }
+-		if (ctx->bio)
+-			submit_bio(ctx->bio);
++		iomap_submit_read_io(iter, ctx);
  
--int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops)
-+int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops,
-+		const struct iomap_readpage_ops *readpage_ops)
- {
- 	struct iomap_iter iter = {
- 		.inode		= folio->mapping->host,
-@@ -411,6 +414,7 @@ int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops)
- 	};
- 	struct iomap_readpage_ctx ctx = {
- 		.cur_folio	= folio,
-+		.ops		= readpage_ops,
- 	};
- 	int ret;
+ 		if (ctx->rac) /* same as readahead_gfp_mask */
+ 			gfp |= __GFP_NORETRY | __GFP_NOWARN;
+-		ctx->bio = bio_alloc(iomap->bdev, bio_max_segs(nr_vecs),
+-				     REQ_OP_READ, gfp);
++
++		if (ctx->ops && ctx->ops->bio_set)
++			ctx->bio = bio_alloc_bioset(iomap->bdev,
++						    bio_max_segs(nr_vecs),
++						    REQ_OP_READ, GFP_NOFS,
++						    ctx->ops->bio_set);
++		else
++			ctx->bio = bio_alloc(iomap->bdev, bio_max_segs(nr_vecs),
++				REQ_OP_READ, gfp);
++
+ 		/*
+ 		 * If the bio_alloc fails, try it again for a single page to
+ 		 * avoid having to deal with partial page reads.  This emulates
+@@ -427,7 +454,7 @@ int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops,
+ 		folio_set_error(folio);
  
-@@ -468,6 +472,7 @@ static loff_t iomap_readahead_iter(const struct iomap_iter *iter,
-  * iomap_readahead - Attempt to read pages from a file.
-  * @rac: Describes the pages to be read.
-  * @ops: The operations vector for the filesystem.
-+ * @readpage_ops: Filesystem supplied folio processiong operation
-  *
-  * This function is for filesystems to call to implement their readahead
-  * address_space operation.
-@@ -479,7 +484,8 @@ static loff_t iomap_readahead_iter(const struct iomap_iter *iter,
-  * function is called with memalloc_nofs set, so allocations will not cause
-  * the filesystem to be reentered.
-  */
--void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops)
-+void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops,
-+		const struct iomap_readpage_ops *readpage_ops)
- {
- 	struct iomap_iter iter = {
- 		.inode	= rac->mapping->host,
-@@ -488,6 +494,7 @@ void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops)
- 	};
- 	struct iomap_readpage_ctx ctx = {
- 		.rac	= rac,
-+		.ops	= readpage_ops,
- 	};
+ 	if (ctx.bio) {
+-		submit_bio(ctx.bio);
++		iomap_submit_read_io(&iter, &ctx);
+ 		WARN_ON_ONCE(!ctx.cur_folio_in_bio);
+ 	} else {
+ 		WARN_ON_ONCE(ctx.cur_folio_in_bio);
+@@ -502,8 +529,7 @@ void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops,
+ 	while (iomap_iter(&iter, ops) > 0)
+ 		iter.processed = iomap_readahead_iter(&iter, &ctx);
  
- 	trace_iomap_readahead(rac->mapping->host, readahead_count(rac));
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 465d7630bb21..b413a2dbcc18 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -553,14 +553,14 @@ xfs_vm_read_folio(
- 	struct file		*unused,
- 	struct folio		*folio)
- {
--	return iomap_read_folio(folio, &xfs_read_iomap_ops);
-+	return iomap_read_folio(folio, &xfs_read_iomap_ops, NULL);
- }
- 
- STATIC void
- xfs_vm_readahead(
- 	struct readahead_control	*rac)
- {
--	iomap_readahead(rac, &xfs_read_iomap_ops);
-+	iomap_readahead(rac, &xfs_read_iomap_ops, NULL);
- }
- 
- static int
-diff --git a/fs/zonefs/file.c b/fs/zonefs/file.c
-index b2c9b35df8f7..29428c012150 100644
---- a/fs/zonefs/file.c
-+++ b/fs/zonefs/file.c
-@@ -112,12 +112,12 @@ static const struct iomap_ops zonefs_write_iomap_ops = {
- 
- static int zonefs_read_folio(struct file *unused, struct folio *folio)
- {
--	return iomap_read_folio(folio, &zonefs_read_iomap_ops);
-+	return iomap_read_folio(folio, &zonefs_read_iomap_ops, NULL);
- }
- 
- static void zonefs_readahead(struct readahead_control *rac)
- {
--	iomap_readahead(rac, &zonefs_read_iomap_ops);
-+	iomap_readahead(rac, &zonefs_read_iomap_ops, NULL);
- }
- 
- /*
+-	if (ctx.bio)
+-		submit_bio(ctx.bio);
++	iomap_submit_read_io(&iter, &ctx);
+ 	if (ctx.cur_folio) {
+ 		if (!ctx.cur_folio_in_bio)
+ 			folio_unlock(ctx.cur_folio);
 diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index 96dd0acbba44..3565c449f3c9 100644
+index 3565c449f3c9..8d7206cd2f0f 100644
 --- a/include/linux/iomap.h
 +++ b/include/linux/iomap.h
-@@ -262,8 +262,25 @@ int iomap_file_buffered_write_punch_delalloc(struct inode *inode,
+@@ -53,6 +53,9 @@ struct vm_fault;
+  *
+  * IOMAP_F_XATTR indicates that the iomap is for an extended attribute extent
+  * rather than a file data extent.
++ *
++ * IOMAP_F_READ_VERITY indicates that the iomap needs verification of read
++ * folios
+  */
+ #define IOMAP_F_NEW		(1U << 0)
+ #define IOMAP_F_DIRTY		(1U << 1)
+@@ -64,6 +67,7 @@ struct vm_fault;
+ #define IOMAP_F_BUFFER_HEAD	0
+ #endif /* CONFIG_BUFFER_HEAD */
+ #define IOMAP_F_XATTR		(1U << 5)
++#define IOMAP_F_READ_VERITY	(1U << 6)
+ 
+ /*
+  * Flags set by the core iomap code during operations:
+@@ -262,7 +266,18 @@ int iomap_file_buffered_write_punch_delalloc(struct inode *inode,
  		struct iomap *iomap, loff_t pos, loff_t length, ssize_t written,
  		int (*punch)(struct inode *inode, loff_t pos, loff_t length));
  
--int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops);
--void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops);
-+struct iomap_readpage_ops {
-+	/*
-+	 * Filesystems wishing to attach private information to a direct io bio
-+	 * must provide a ->submit_io method that attaches the additional
-+	 * information to the bio and changes the ->bi_end_io callback to a
-+	 * custom function.  This function should, at a minimum, perform any
-+	 * relevant post-processing of the bio and end with a call to
-+	 * iomap_read_end_io.
-+	 */
-+	void (*submit_io)(const struct iomap_iter *iter, struct bio *bio,
-+			loff_t file_offset);
-+	struct bio_set *bio_set;
++struct iomap_read_ioend {
++	struct inode		*io_inode;	/* file being read from */
++	struct work_struct	work;		/* post read work (e.g. fs-verity) */
++	struct bio		read_inline_bio;/* MUST BE LAST! */
 +};
 +
-+void iomap_read_end_io(struct bio *bio);
-+int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops,
-+		const struct iomap_readpage_ops *readpage_ops);
-+void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops,
-+		const struct iomap_readpage_ops *readpage_ops);
- bool iomap_is_partially_uptodate(struct folio *, size_t from, size_t count);
- struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos, size_t len);
- bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags);
+ struct iomap_readpage_ops {
++	/*
++	 * Optional, verify folio when successfully read
++	 */
++	int (*verify_folio)(struct folio *folio, loff_t pos, unsigned int len);
++
+ 	/*
+ 	 * Filesystems wishing to attach private information to a direct io bio
+ 	 * must provide a ->submit_io method that attaches the additional
 -- 
 2.40.1
 
