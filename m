@@ -2,68 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67E927BBF3F
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:55:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF3F97BBF5A
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:56:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233421AbjJFSzM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 Oct 2023 14:55:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59086 "EHLO
+        id S233467AbjJFS4D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 Oct 2023 14:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233311AbjJFSyu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:54:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27F40111
-        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:44 -0700 (PDT)
+        with ESMTP id S233407AbjJFSzW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:55:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C28011B
+        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696618363;
+        s=mimecast20190719; t=1696618368;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xavYdX/wZ0RnKLfU/MnqAKGW0flPB1iaCT9iprzm3zc=;
-        b=Ujz+NlbGEN9Q1P/qTduhm5DSQzJw45W7JGaX8A3XXLl1fpvTdbzNgoJsQIYlw4taJoWqMq
-        0HuQHRW8fk/t/B0dCE/klIy2JF05S8nMhC2GEgUJA3aoMnFZFVLIh/UOjbVbe0XrAyVPo1
-        g1F8xXbrvoRz87l/Bd+cmm82i+DJuuw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=y62cirHyxw1nxIK5GngI9l6eX0UynAIUbjFVCcsuark=;
+        b=gEgd4Y8eAXVuUTVx0z9mba4ziKvurDO3mdWmsmZJKXbjKMTeSFIzevBMiSKQyr9cfWrV3l
+        Iy4+9JJjEjoxlex2kdAyHMHvDQK0CQ4e9O5d6gV+5msNofjlOzJ03xh5pwhnUiUqnRJ7vV
+        H+o3m+76PGZ3usP9AoKRdDmMIAVEE6g=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-146-rKQ9aIx5MjCRWGHiNWHx2A-1; Fri, 06 Oct 2023 14:52:41 -0400
-X-MC-Unique: rKQ9aIx5MjCRWGHiNWHx2A-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a62adedadbso211235066b.1
-        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:41 -0700 (PDT)
+ us-mta-157-UFtwsHujNRusNdn-u6GsMA-1; Fri, 06 Oct 2023 14:52:42 -0400
+X-MC-Unique: UFtwsHujNRusNdn-u6GsMA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9b95fa56bd5so210982666b.0
+        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696618360; x=1697223160;
+        d=1e100.net; s=20230601; t=1696618361; x=1697223161;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xavYdX/wZ0RnKLfU/MnqAKGW0flPB1iaCT9iprzm3zc=;
-        b=VI/Th81wc0jNgcyxkOaveabR/y2lOYPAss4W2wBqqqEMuQlHduAOB2pp85AnYnZ47T
-         +Rvgj1Ii+s+2N6Yr3R5uMjUhP6NqwqoucNYvIM5AvG6QFLRnL8gQ1oaizYypa9IeWKuQ
-         gpWfWGxmXoKNPN6LvvWhuE3FWzSeBXcgnFrrAkdq5sMwNJ6K+nkEivPGhw5ZcOyDW0/X
-         rkkmNcei3JV2W8++OenOA2RYyxRW04Sd7ezzB8nGOkfbm9fyBgxOWWPkwowa1P43WurD
-         PD3aeuKBjkm0YPf8p52NEgsn2DhB4erkbb4HE2atO2U5wRTeGVx/PT6dDjQC4G+hnWQ7
-         cLBA==
-X-Gm-Message-State: AOJu0YyUWtAJF/J9ZPnJBX312xfq4+mDBTIRLPB1Tz0Y8An/G/Kfa8uF
-        6AILnco2VK0SFYLaNcE4CEPdCea7qjkSKFQmJ6df6EpdHDXuW1xi0VUC8FRyUXKqyJBa4WWPuax
-        lP+HBkjChQWSiH2ISCyaATXyOr+lKMsiKJgMlXfceES70aBi1R4kshZ2+UAppb81jNzSgG680ys
-        UMrTI=
-X-Received: by 2002:a17:907:75f7:b0:9ae:658f:a80a with SMTP id jz23-20020a17090775f700b009ae658fa80amr7985143ejc.48.1696618360183;
+        bh=y62cirHyxw1nxIK5GngI9l6eX0UynAIUbjFVCcsuark=;
+        b=h6MzdqVq4W+yqsFcye3NxJRbrf3QNLcWx4CzL4j/1HP5gmu9aL44PUObo4Q9+PGJa3
+         cFU6ZFE+yUKEN6nyU1SNwJE5iJTfJeyP0mMrqukh+5X2eP1pMP6MygNHZWC8wnhw+vcq
+         970GVjKBd+tP69jpief1SWDO36TmYHAuhIpIRO2tFat3VuBM8igNUYCAwUg2CuA8oKh5
+         XTzgvTO9Zx/zRfrCTPiGWadBfGkAfOt5V+C6ZyyaXj+2Sj9yTBaspJDnkyZ2UtQSVdFh
+         5q5bY6rhZjchsSg9aadoB7BF9ls+n7UD7mgLMmuD+cU9bbUpu4YL1tuEKzCQvPwj/w16
+         sniA==
+X-Gm-Message-State: AOJu0Yy3AshCRokWJQaHWdar6T0fneAnCNVydp258MCSdZ9ZKdEUBp3D
+        /hikiYmjlFlWv6QGAnw2wTJ7FSZt87XLB6qI+2o9szHTp3Tbf8q++5ncUb6ReoIZUJusdZfhCp9
+        tRhKvkB7KP081yQ0y88G9o4rkDeq5ywGt7JaM8XpPjTUajqln4v5N1XjQ+qZhrFWiM+0VZTk6I0
+        0Uk0c=
+X-Received: by 2002:a17:906:3ca9:b0:9ba:7f5:3602 with SMTP id b9-20020a1709063ca900b009ba07f53602mr583734ejh.60.1696618361094;
+        Fri, 06 Oct 2023 11:52:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFVZ+8RYyWx/WXsHj7JKes+e1LLF/dLUz0XxHhOXmY4bfEBU5dLyL1gt2j4iCnrrEatFiiqNw==
+X-Received: by 2002:a17:906:3ca9:b0:9ba:7f5:3602 with SMTP id b9-20020a1709063ca900b009ba07f53602mr583721ejh.60.1696618360843;
         Fri, 06 Oct 2023 11:52:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG7SK73SUKTlwsNFT0YwN9JhYvDJYdu/UT4rHQhvxh32fN6Ie3lbiMgVmY+qoDZrohiyXJoFw==
-X-Received: by 2002:a17:907:75f7:b0:9ae:658f:a80a with SMTP id jz23-20020a17090775f700b009ae658fa80amr7985129ejc.48.1696618359925;
-        Fri, 06 Oct 2023 11:52:39 -0700 (PDT)
 Received: from localhost.localdomain ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.39
+        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 11:52:39 -0700 (PDT)
+        Fri, 06 Oct 2023 11:52:40 -0700 (PDT)
 From:   Andrey Albershteyn <aalbersh@redhat.com>
 To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         fsverity@lists.linux.dev
 Cc:     djwong@kernel.org, ebiggers@kernel.org, david@fromorbit.com,
         dchinner@redhat.com, Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH v3 23/28] xfs: don't allow to enable DAX on fs-verity sealsed inode
-Date:   Fri,  6 Oct 2023 20:49:17 +0200
-Message-Id: <20231006184922.252188-24-aalbersh@redhat.com>
+Subject: [PATCH v3 24/28] xfs: disable direct read path for fs-verity sealed files
+Date:   Fri,  6 Oct 2023 20:49:18 +0200
+Message-Id: <20231006184922.252188-25-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231006184922.252188-1-aalbersh@redhat.com>
 References: <20231006184922.252188-1-aalbersh@redhat.com>
@@ -71,7 +71,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,28 +79,48 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-fs-verity doesn't support DAX. Forbid filesystem to enable DAX on
-inodes which already have fs-verity enabled. The opposite is checked
-when fs-verity is enabled, it won't be enabled if DAX is.
+The direct path is not supported on verity files. Attempts to use direct
+I/O path on such files should fall back to buffered I/O path.
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- fs/xfs/xfs_iops.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/xfs_file.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 9f2d5c2505ae..3153767f0d6f 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1209,6 +1209,8 @@ xfs_inode_should_enable_dax(
- 		return false;
- 	if (!xfs_inode_supports_dax(ip))
- 		return false;
-+	if (ip->i_diflags2 & XFS_DIFLAG2_VERITY)
-+		return false;
- 	if (xfs_has_dax_always(ip->i_mount))
- 		return true;
- 	if (ip->i_diflags2 & XFS_DIFLAG2_DAX)
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index a92c8197c26a..7363cbdff803 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -244,7 +244,8 @@ xfs_file_dax_read(
+ 	struct kiocb		*iocb,
+ 	struct iov_iter		*to)
+ {
+-	struct xfs_inode	*ip = XFS_I(iocb->ki_filp->f_mapping->host);
++	struct inode		*inode = iocb->ki_filp->f_mapping->host;
++	struct xfs_inode	*ip = XFS_I(inode);
+ 	ssize_t			ret = 0;
+ 
+ 	trace_xfs_file_dax_read(iocb, to);
+@@ -297,10 +298,17 @@ xfs_file_read_iter(
+ 
+ 	if (IS_DAX(inode))
+ 		ret = xfs_file_dax_read(iocb, to);
+-	else if (iocb->ki_flags & IOCB_DIRECT)
++	else if (iocb->ki_flags & IOCB_DIRECT && !fsverity_active(inode))
+ 		ret = xfs_file_dio_read(iocb, to);
+-	else
++	else {
++		/*
++		 * In case fs-verity is enabled, we also fallback to the
++		 * buffered read from the direct read path. Therefore,
++		 * IOCB_DIRECT is set and need to be cleared
++		 */
++		iocb->ki_flags &= ~IOCB_DIRECT;
+ 		ret = xfs_file_buffered_read(iocb, to);
++	}
+ 
+ 	if (ret > 0)
+ 		XFS_STATS_ADD(mp, xs_read_bytes, ret);
 -- 
 2.40.1
 
