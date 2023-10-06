@@ -2,68 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37C247BBF2F
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:54:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C6D47BBF5E
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Oct 2023 20:56:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233423AbjJFSyt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 Oct 2023 14:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59100 "EHLO
+        id S233407AbjJFS4E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 Oct 2023 14:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233365AbjJFSyn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:54:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D06FD
-        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:40 -0700 (PDT)
+        with ESMTP id S233381AbjJFSz1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 Oct 2023 14:55:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E254121
+        for <linux-xfs@vger.kernel.org>; Fri,  6 Oct 2023 11:52:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1696618359;
+        s=mimecast20190719; t=1696618375;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wcRVHX8JFurBwxht+2exa+IxBRQV9tLkRgSIzCgziEo=;
-        b=Av5eJCpT//MkGXVSTNRa69G3jvlWlU1QMSosM4MpNoPWhN/g5WtyMhsWeHuhZZsgSk2xz6
-        RkX1W5akzF2/LbBOOJ4LgmR4yS/uZpHJTMSu9Lu/RRKDGzSNY9CJP6SyQr1XnxFbiIEgXB
-        9l3e/e5KY6n8qdp3qxvItT3ZN4P/9lM=
+        bh=qlegwzOxx57sBL8Xx+R890G6fTt4C0TsMKqp0ENYz8k=;
+        b=Ksv2D6ijTF0kQlL/1IllbmNG8JfLxd7MiBx+tRgVNp+iFBlb3qgW5xld7w3b+TuWhCGBTl
+        4O8t3s344e/IXtls6iUkVmM0m7c/5puCxepVoPMAtPgTqwtOFqo5KuJWJr9FYHH7C2n+wf
+        RK4NrPhTTGffZxG4hKkEnhinG+Dv6BI=
 Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
  [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-275-H_Xv9gOSN7Oxjqi5EBtD1A-1; Fri, 06 Oct 2023 14:52:38 -0400
-X-MC-Unique: H_Xv9gOSN7Oxjqi5EBtD1A-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-993eeb3a950so189273766b.2
-        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:37 -0700 (PDT)
+ us-mta-690-D5Vui-r1NWCJOhCtwfisPQ-1; Fri, 06 Oct 2023 14:52:38 -0400
+X-MC-Unique: D5Vui-r1NWCJOhCtwfisPQ-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9b97f1b493dso213871366b.3
+        for <linux-xfs@vger.kernel.org>; Fri, 06 Oct 2023 11:52:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696618356; x=1697223156;
+        d=1e100.net; s=20230601; t=1696618357; x=1697223157;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wcRVHX8JFurBwxht+2exa+IxBRQV9tLkRgSIzCgziEo=;
-        b=v1eCi1cef9nRV9N6BrjH830lIw55i2PDdeegwQCJXGhFYqrvgBp1prGeAxB3kH8HQv
-         u8d6jb0LRpFTdjsYUmD0P262DP1YJjD1GSYHAZBxhjuBN+Bk64k7qJmzyMdZK4R5PDFS
-         GfDOI+rKHx7R63FYP9Zdz0bZd+JqjhCHEY8ru7tNDWa6gvb4G1OiSkrvy4yq/dMtPgHJ
-         CGmL+MJKb4XAbyTkHyIiHJKK5wyTfS6EDKhm69cbs3NtunUU7mUN4W8hpuFxcXqtYgHG
-         jvV7FDWPAjiPuAHpJu2PMNvHUmEcUWIW9Ty7Z37H3W3sLfamBLLCBCJRm5kSNfWl41Zk
-         yaKA==
-X-Gm-Message-State: AOJu0YxjIRVCJwEP1WmlGRxLWwgOMPrUVkmdVeDnU9Y1tinzDljJV41e
-        li6tEYckmiHRMSvSXTYb7ITpiYETE3eY5DbYXtGIBzhhtQcFPvQ41HDjEYKnkP8HFUhWtkHduRX
-        6owLPouoXrS5fJ3Gduy29EmYatIKHYdvm1a4RIySiRJczazY6Ito6Tc8i3BhOJhQHHS4hSmikzt
-        +By6g=
-X-Received: by 2002:a17:907:77c9:b0:9b2:6d09:847c with SMTP id kz9-20020a17090777c900b009b26d09847cmr7386281ejc.10.1696618356688;
-        Fri, 06 Oct 2023 11:52:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGrIQk7NnCDbZwY+PjQ3U9MlJNLuObcZuXDq08LQZ7kco8xmXaUKZy2GLL1ssPfQnC1xSPWLQ==
-X-Received: by 2002:a17:907:77c9:b0:9b2:6d09:847c with SMTP id kz9-20020a17090777c900b009b26d09847cmr7386255ejc.10.1696618356021;
-        Fri, 06 Oct 2023 11:52:36 -0700 (PDT)
+        bh=qlegwzOxx57sBL8Xx+R890G6fTt4C0TsMKqp0ENYz8k=;
+        b=CBo1jVynqHzXpB6two9n9B7vQ2LKfpAxNokHxxbiCx8h6lcVx/shDLPBDNF+IdYUoB
+         JG1xFL7A3TdCckJs1E7h5mpCZsraBoPCAy0Z99RUEe1COP+KbU0mFV915h/2m5uQ39nw
+         BAv37Eqolr2my51LeXH7sElWcqeIaAKfF2BGlPRQhUnFBI6Q+5K50zY72dK9wG6O+I23
+         DCH1BfI6pi/I6wU/RHuhSmjqCQmjbit/rcRXti1beXua/vjx0p/8EyC6CrVsJBtsnZui
+         Xs5qaA5rtJ3539bojKHJA+Nd4zEuij4+452/LU+/EpZoXTbWRaHc8Ffq//U8pZob9A64
+         Uz2Q==
+X-Gm-Message-State: AOJu0YwpJ5Qa5UFVwYVzgK2QlDr48/5zk+Gea+F68Az5EjMOHadf8coS
+        4Ufu9Lze2mzbQlRm/C35Dyop9BcGwxA6hMCyZCMM2E0SmKud4LuYIWlXaPpsOsLaVg/I1M1xvSj
+        htRyFQWXZtz7DcPkcjc/A8gw+TwrrLk3bRtP0St5iDQb4HNxI5wXeQLva3Afle9MdhiDAby/XWL
+        793Bw=
+X-Received: by 2002:a17:907:6c14:b0:9b6:f0e2:3c00 with SMTP id rl20-20020a1709076c1400b009b6f0e23c00mr6945552ejc.71.1696618357557;
+        Fri, 06 Oct 2023 11:52:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFo5vp/wd7qpBKfMbuZSMXz/ISlutAnm5zYJOvUQd8UYNLU/1/w0Jimk88atuRtU9Ktn/yTFQ==
+X-Received: by 2002:a17:907:6c14:b0:9b6:f0e2:3c00 with SMTP id rl20-20020a1709076c1400b009b6f0e23c00mr6945540ejc.71.1696618357335;
+        Fri, 06 Oct 2023 11:52:37 -0700 (PDT)
 Received: from localhost.localdomain ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.35
+        by smtp.gmail.com with ESMTPSA id os5-20020a170906af6500b009b947f81c4asm3304741ejb.155.2023.10.06.11.52.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 11:52:35 -0700 (PDT)
+        Fri, 06 Oct 2023 11:52:36 -0700 (PDT)
 From:   Andrey Albershteyn <aalbersh@redhat.com>
 To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         fsverity@lists.linux.dev
 Cc:     djwong@kernel.org, ebiggers@kernel.org, david@fromorbit.com,
         dchinner@redhat.com, Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH v3 19/28] xfs: add XBF_DOUBLE_ALLOC to increase size of the buffer
-Date:   Fri,  6 Oct 2023 20:49:13 +0200
-Message-Id: <20231006184922.252188-20-aalbersh@redhat.com>
+Subject: [PATCH v3 20/28] xfs: add fs-verity ro-compat flag
+Date:   Fri,  6 Oct 2023 20:49:14 +0200
+Message-Id: <20231006184922.252188-21-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231006184922.252188-1-aalbersh@redhat.com>
 References: <20231006184922.252188-1-aalbersh@redhat.com>
@@ -71,147 +71,70 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-For fs-verity integration, XFS needs to supply kaddr'es of Merkle
-tree blocks to fs-verity core and track which blocks are already
-verified. One way to track verified status is to set xfs_buf flag
-(previously added XBF_VERITY_CHECKED). When xfs_buf is evicted from
-memory we loose verified status. Otherwise, fs-verity hits the
-xfs_buf which is still in cache and contains already verified blocks.
-
-However, the leaf blocks which are read to the xfs_buf contains leaf
-headers. xfs_attr_get() allocates new pages and copies out the data
-without header. Those newly allocated pages with extended attribute
-data are not attached to the buffer anymore.
-
-Add new XBF_DOUBLE_ALLOC which makes xfs_buf allocates x2 memory for
-the buffer. Additional memory will be used for a copy of the
-attribute data but without any headers. Also, make
-xfs_attr_rmtval_get() to copy data to the buffer itself if XFS asked
-for fs-verity block.
+To mark inodes sealed with fs-verity the new XFS_DIFLAG2_VERITY flag
+will be added in further patch. This requires ro-compat flag to let
+older kernels know that fs with fs-verity can not be modified.
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- fs/xfs/libxfs/xfs_attr_remote.c | 27 +++++++++++++++++++++++++--
- fs/xfs/xfs_buf.c                |  7 ++++++-
- fs/xfs/xfs_buf.h                |  1 +
- 3 files changed, 32 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_format.h | 1 +
+ fs/xfs/libxfs/xfs_sb.c     | 2 ++
+ fs/xfs/xfs_mount.h         | 2 ++
+ 3 files changed, 5 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-index 5762135dc2a6..7657daf7cff3 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.c
-+++ b/fs/xfs/libxfs/xfs_attr_remote.c
-@@ -392,12 +392,22 @@ xfs_attr_rmtval_get(
- 	int			blkcnt = args->rmtblkcnt;
- 	int			i;
- 	int			offset = 0;
-+	int			flags = 0;
-+	void			*addr;
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 371dc07233e0..ef617be2839c 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -353,6 +353,7 @@ xfs_sb_has_compat_feature(
+ #define XFS_SB_FEAT_RO_COMPAT_RMAPBT   (1 << 1)		/* reverse map btree */
+ #define XFS_SB_FEAT_RO_COMPAT_REFLINK  (1 << 2)		/* reflinked files */
+ #define XFS_SB_FEAT_RO_COMPAT_INOBTCNT (1 << 3)		/* inobt block counts */
++#define XFS_SB_FEAT_RO_COMPAT_VERITY   (1 << 4)		/* fs-verity */
+ #define XFS_SB_FEAT_RO_COMPAT_ALL \
+ 		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
+ 		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 4191da4fb669..236f3b833fa4 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -162,6 +162,8 @@ xfs_sb_version_to_features(
+ 		features |= XFS_FEAT_REFLINK;
+ 	if (sbp->sb_features_ro_compat & XFS_SB_FEAT_RO_COMPAT_INOBTCNT)
+ 		features |= XFS_FEAT_INOBTCNT;
++	if (sbp->sb_features_ro_compat & XFS_SB_FEAT_RO_COMPAT_VERITY)
++		features |= XFS_FEAT_VERITY;
+ 	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_FTYPE)
+ 		features |= XFS_FEAT_FTYPE;
+ 	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_SPINODES)
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 3d77844b255e..95fba704f60e 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -288,6 +288,7 @@ typedef struct xfs_mount {
+ #define XFS_FEAT_BIGTIME	(1ULL << 24)	/* large timestamps */
+ #define XFS_FEAT_NEEDSREPAIR	(1ULL << 25)	/* needs xfs_repair */
+ #define XFS_FEAT_NREXT64	(1ULL << 26)	/* large extent counters */
++#define XFS_FEAT_VERITY		(1ULL << 27)	/* fs-verity */
  
- 	trace_xfs_attr_rmtval_get(args);
+ /* Mount features */
+ #define XFS_FEAT_NOATTR2	(1ULL << 48)	/* disable attr2 creation */
+@@ -351,6 +352,7 @@ __XFS_HAS_FEAT(inobtcounts, INOBTCNT)
+ __XFS_HAS_FEAT(bigtime, BIGTIME)
+ __XFS_HAS_FEAT(needsrepair, NEEDSREPAIR)
+ __XFS_HAS_FEAT(large_extent_counts, NREXT64)
++__XFS_HAS_FEAT(verity, VERITY)
  
- 	ASSERT(args->valuelen != 0);
- 	ASSERT(args->rmtvaluelen == args->valuelen);
- 
-+	/*
-+	 * We also check for _OP_BUFFER as we want to trigger on
-+	 * verity blocks only, not on verity_descriptor
-+	 */
-+	if (args->attr_filter & XFS_ATTR_VERITY &&
-+			args->op_flags & XFS_DA_OP_BUFFER)
-+		flags = XBF_DOUBLE_ALLOC;
-+
- 	valuelen = args->rmtvaluelen;
- 	while (valuelen > 0) {
- 		nmap = ATTR_RMTVALUE_MAPSIZE;
-@@ -417,13 +427,25 @@ xfs_attr_rmtval_get(
- 			dblkno = XFS_FSB_TO_DADDR(mp, map[i].br_startblock);
- 			dblkcnt = XFS_FSB_TO_BB(mp, map[i].br_blockcount);
- 			error = xfs_buf_read(mp->m_ddev_targp, dblkno, dblkcnt,
--					0, &bp, &xfs_attr3_rmt_buf_ops);
-+					flags, &bp, &xfs_attr3_rmt_buf_ops);
- 			if (error)
- 				return error;
- 
-+			/*
-+			 * For fs-verity we allocated more space. That space is
-+			 * filled with the same xattr data but without leaf
-+			 * headers. Point args->value to that data
-+			 */
-+			if (flags & XBF_DOUBLE_ALLOC) {
-+				addr = xfs_buf_offset(bp, BBTOB(bp->b_length));
-+				args->value = addr;
-+				dst = addr;
-+			}
-+
- 			error = xfs_attr_rmtval_copyout(mp, bp, args->dp->i_ino,
- 							&offset, &valuelen,
- 							&dst);
-+
- 			xfs_buf_unlock(bp);
- 			/* must be released by the caller */
- 			if (args->op_flags & XFS_DA_OP_BUFFER)
-@@ -521,7 +543,8 @@ xfs_attr_rmtval_set_value(
- 		dblkno = XFS_FSB_TO_DADDR(mp, map.br_startblock),
- 		dblkcnt = XFS_FSB_TO_BB(mp, map.br_blockcount);
- 
--		error = xfs_buf_get(mp->m_ddev_targp, dblkno, dblkcnt, 0, &bp);
-+		error = xfs_buf_get(mp->m_ddev_targp, dblkno, dblkcnt,
-+				XBF_DOUBLE_ALLOC, &bp);
- 		if (error)
- 			return error;
- 		bp->b_ops = &xfs_attr3_rmt_buf_ops;
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index c1ece4a08ff4..c5071a970596 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -328,6 +328,9 @@ xfs_buf_alloc_kmem(
- 	xfs_km_flags_t	kmflag_mask = KM_NOFS;
- 	size_t		size = BBTOB(bp->b_length);
- 
-+	if (flags & XBF_DOUBLE_ALLOC)
-+		size *= 2;
-+
- 	/* Assure zeroed buffer for non-read cases. */
- 	if (!(flags & XBF_READ))
- 		kmflag_mask |= KM_ZERO;
-@@ -358,6 +361,7 @@ xfs_buf_alloc_pages(
- {
- 	gfp_t		gfp_mask = __GFP_NOWARN;
- 	long		filled = 0;
-+	int		mul = (flags & XBF_DOUBLE_ALLOC) ? 2 : 1;
- 
- 	if (flags & XBF_READ_AHEAD)
- 		gfp_mask |= __GFP_NORETRY;
-@@ -365,7 +369,8 @@ xfs_buf_alloc_pages(
- 		gfp_mask |= GFP_NOFS;
- 
- 	/* Make sure that we have a page list */
--	bp->b_page_count = DIV_ROUND_UP(BBTOB(bp->b_length), PAGE_SIZE);
-+	bp->b_page_count = DIV_ROUND_UP(BBTOB(bp->b_length*mul), PAGE_SIZE);
-+
- 	if (bp->b_page_count <= XB_PAGES) {
- 		bp->b_pages = bp->b_page_array;
- 	} else {
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index e79bfe548952..8e3272fb6e65 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -33,6 +33,7 @@ struct xfs_buf;
- #define XBF_STALE		(1u << 6) /* buffer has been staled, do not find it */
- #define XBF_WRITE_FAIL		(1u << 7) /* async writes have failed on this buffer */
- #define XBF_VERITY_CHECKED	(1u << 8) /* buffer was verified by fs-verity*/
-+#define XBF_DOUBLE_ALLOC	(1u << 9) /* double allocated space */
- 
- /* buffer type flags for write callbacks */
- #define _XBF_INODES	 (1u << 16)/* inode buffer */
+ /*
+  * Mount features
 -- 
 2.40.1
 
