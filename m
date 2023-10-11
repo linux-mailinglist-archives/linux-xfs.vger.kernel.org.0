@@ -2,131 +2,386 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D4FE7C5AF4
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Oct 2023 20:08:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D09977C5AF2
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Oct 2023 20:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233074AbjJKSIL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 Oct 2023 14:08:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59264 "EHLO
+        id S230234AbjJKSHv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Oct 2023 14:07:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232554AbjJKSIK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Oct 2023 14:08:10 -0400
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70FD993
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Oct 2023 11:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1697047683; x=1697306883;
-        bh=IegZtfIvw8lwLyhEQoF1mtQeHGiYFpGwKG9lt2Lgftg=;
-        h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-         Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-        b=KZkbN9TPgsOTbvU2YfQvc/Nz25zVDStt1gMkFIKwcKoPKwQcwVxfLy4HdhLH45y4t
-         KN9eXZPpLZ6GbnzzS8XLBJ7o/WX+rkDTdMKke8RPeJMe2QspY4cGw6xjPQvFqchbgy
-         cykbwLOYtT4Ie03m5xPcApoXQ+NESeWpEgwucZpqlJ4z4txIasWlYbrJLMx1CYhTYj
-         TJnuso0fHHT7CnUUaIykLBYV6UcQW6+jLh0lIamWOUT8X8QesUwYxa3KmbJYGc+F2Z
-         6Zb4Yvb6yF1i9dgrJi10nozrko8R7aR+C/90aOVZCNbLB+5/vjFlfd1r+T20NLKqJz
-         aiS86f97Mh9Mg==
-Date:   Wed, 11 Oct 2023 18:07:46 +0000
-To:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-From:   Nagisa BIOS <nagisa_bios@protonmail.com>
-Subject: xfsprogs: bug feedback
-Message-ID: <UhgwTYrnwqvjARAbTicViFlwB7jumckp2WZwXoXAiKefRHO9XU46pADFybp14c1BTMWt8s4Ht0FY7aQq6QShFS7GUiScn1lwqo5Ytw0lUDo=@protonmail.com>
-Feedback-ID: 82509359:user:proton
+        with ESMTP id S232891AbjJKSHu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Oct 2023 14:07:50 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BC79D
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Oct 2023 11:07:48 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CA9BC433C8;
+        Wed, 11 Oct 2023 18:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697047668;
+        bh=qLTdLXQPpVDUI7gHgXCEkqPq9Uf6jMkrQmLwSq7cpfk=;
+        h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+        b=Kx257vGwgq6ubwE7N5eND+hoJlWiJmdzjhR3y47trVccibYWnnsGNzEwJia/yYh2X
+         olsyrgS2cJ2knv7tuNOid8iij/fgzYbknWZiarxwiJHbphWhr2fTM3uAkIFvsPiKvt
+         RAAyMbpyQ5pGuQd/ZZnK9Tpg3AdNcxn6e2tIXzV4rTBuzVuMbwXvFfI3kezKnKl6Ut
+         QuGWQO7zWuna94D0WrdwGQEUmcszwvP8p5xyOJ4mWB8PBhqobQpvZDAtkE05qlhFv3
+         AIUeBc1OVqMLPZjwnC4UAZ535tTibXqwfUcF7vAVu7d3MD23iypoOY5+YCYlT0Q7+S
+         kHO+t8aW+Y8Qg==
+Date:   Wed, 11 Oct 2023 11:07:48 -0700
+Subject: [PATCH 6/8] xfs: use accessor functions for bitmap words
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, osandov@osandov.com, hch@lst.de
+Message-ID: <169704721721.1773834.17403646854103787383.stgit@frogsfrogsfrogs>
+In-Reply-To: <169704721623.1773834.8031427054893583456.stgit@frogsfrogsfrogs>
+References: <169704721623.1773834.8031427054893583456.stgit@frogsfrogsfrogs>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        GB_FREEMAIL_DISPTO,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
+From: Darrick J. Wong <djwong@kernel.org>
 
-I found that if the xfs_fsr program defrag the large files, it may cause er=
-rors.
+Create get and set functions for rtbitmap words so that we can redefine
+the ondisk format with a specific endianness.  Note that this requires
+the definition of a distinct type for ondisk rtbitmap words so that the
+compiler can perform proper typechecking as we go back and forth.
 
-My recommend is, do not defrag the large files if the available disk space =
-is not enough.
+In the upcoming rtgroups feature, we're going to fix the problem that
+rtwords are written in host endian order, which means we'll need the
+distinct rtword/rtword_raw types.
 
-Computer Setup (My Mini PC):
-1135G7 CPU Mini PC
-8GB DDR4 DRAM
-500GB NVMe SSD
- 200GB NTFS Partition: Windows 11
- 200GB NTFS Partition
- 75GB  XFS Partition: Ubuntu (GNOME) 22.04
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+---
+ fs/xfs/libxfs/xfs_format.h   |    8 ++++
+ fs/xfs/libxfs/xfs_rtbitmap.c |   78 +++++++++++++++++++++++++++++++-----------
+ fs/xfs/libxfs/xfs_rtbitmap.h |   10 ++++-
+ fs/xfs/xfs_ondisk.h          |    3 ++
+ 4 files changed, 75 insertions(+), 24 deletions(-)
 
-Pastebin:
 
-ubuntu@minipc:~$ xfs_fsr -V
-xfs_fsr version 5.13.0
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 1254834ab5c9e..8e880ec217396 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -728,6 +728,14 @@ struct xfs_agfl {
+ 	    ASSERT(xfs_daddr_to_agno(mp, d) == \
+ 		   xfs_daddr_to_agno(mp, (d) + (len) - 1)))
+ 
++/*
++ * Realtime bitmap information is accessed by the word, which is currently
++ * stored in host-endian format.
++ */
++union xfs_rtword_ondisk {
++	__u32		raw;
++};
++
+ /*
+  * XFS Timestamps
+  * ==============
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index 2a453f0215ee0..b2b1a1aec3422 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -94,6 +94,25 @@ xfs_rtbuf_get(
+ 	return 0;
+ }
+ 
++/* Convert an ondisk bitmap word to its incore representation. */
++inline xfs_rtword_t
++xfs_rtbitmap_getword(
++	struct xfs_mount	*mp,
++	union xfs_rtword_ondisk	*wordptr)
++{
++	return wordptr->raw;
++}
++
++/* Set an ondisk bitmap word from an incore representation. */
++inline void
++xfs_rtbitmap_setword(
++	struct xfs_mount	*mp,
++	union xfs_rtword_ondisk	*wordptr,
++	xfs_rtword_t		incore)
++{
++	wordptr->raw = incore;
++}
++
+ /*
+  * Searching backward from start to limit, find the first block whose
+  * allocated/free state is different from start's.
+@@ -106,7 +125,7 @@ xfs_rtfind_back(
+ 	xfs_rtxnum_t	limit,		/* last rtext to look at */
+ 	xfs_rtxnum_t	*rtx)		/* out: start rtext found */
+ {
+-	xfs_rtword_t	*b;		/* current word in buffer */
++	union xfs_rtword_ondisk *b;		/* current word in buffer */
+ 	int		bit;		/* bit number in the word */
+ 	xfs_fileoff_t	block;		/* bitmap block number */
+ 	struct xfs_buf	*bp;		/* buf for the block */
+@@ -117,6 +136,7 @@ xfs_rtfind_back(
+ 	xfs_rtword_t	mask;		/* mask of relevant bits for value */
+ 	xfs_rtword_t	want;		/* mask for "good" values */
+ 	xfs_rtword_t	wdiff;		/* difference from wanted value */
++	xfs_rtword_t	incore;
+ 	int		word;		/* word number in the buffer */
+ 
+ 	/*
+@@ -139,7 +159,8 @@ xfs_rtfind_back(
+ 	 * Compute match value, based on the bit at start: if 1 (free)
+ 	 * then all-ones, else all-zeroes.
+ 	 */
+-	want = (*b & ((xfs_rtword_t)1 << bit)) ? -1 : 0;
++	incore = xfs_rtbitmap_getword(mp, b);
++	want = (incore & ((xfs_rtword_t)1 << bit)) ? -1 : 0;
+ 	/*
+ 	 * If the starting position is not word-aligned, deal with the
+ 	 * partial word.
+@@ -156,7 +177,7 @@ xfs_rtfind_back(
+ 		 * Calculate the difference between the value there
+ 		 * and what we're looking for.
+ 		 */
+-		if ((wdiff = (*b ^ want) & mask)) {
++		if ((wdiff = (incore ^ want) & mask)) {
+ 			/*
+ 			 * Different.  Mark where we are and return.
+ 			 */
+@@ -202,7 +223,8 @@ xfs_rtfind_back(
+ 		/*
+ 		 * Compute difference between actual and desired value.
+ 		 */
+-		if ((wdiff = *b ^ want)) {
++		incore = xfs_rtbitmap_getword(mp, b);
++		if ((wdiff = incore ^ want)) {
+ 			/*
+ 			 * Different, mark where we are and return.
+ 			 */
+@@ -249,7 +271,8 @@ xfs_rtfind_back(
+ 		/*
+ 		 * Compute difference between actual and desired value.
+ 		 */
+-		if ((wdiff = (*b ^ want) & mask)) {
++		incore = xfs_rtbitmap_getword(mp, b);
++		if ((wdiff = (incore ^ want) & mask)) {
+ 			/*
+ 			 * Different, mark where we are and return.
+ 			 */
+@@ -280,7 +303,7 @@ xfs_rtfind_forw(
+ 	xfs_rtxnum_t	limit,		/* last rtext to look at */
+ 	xfs_rtxnum_t	*rtx)		/* out: start rtext found */
+ {
+-	xfs_rtword_t	*b;		/* current word in buffer */
++	union xfs_rtword_ondisk *b;		/* current word in buffer */
+ 	int		bit;		/* bit number in the word */
+ 	xfs_fileoff_t	block;		/* bitmap block number */
+ 	struct xfs_buf	*bp;		/* buf for the block */
+@@ -291,6 +314,7 @@ xfs_rtfind_forw(
+ 	xfs_rtword_t	mask;		/* mask of relevant bits for value */
+ 	xfs_rtword_t	want;		/* mask for "good" values */
+ 	xfs_rtword_t	wdiff;		/* difference from wanted value */
++	xfs_rtword_t	incore;
+ 	int		word;		/* word number in the buffer */
+ 
+ 	/*
+@@ -313,7 +337,8 @@ xfs_rtfind_forw(
+ 	 * Compute match value, based on the bit at start: if 1 (free)
+ 	 * then all-ones, else all-zeroes.
+ 	 */
+-	want = (*b & ((xfs_rtword_t)1 << bit)) ? -1 : 0;
++	incore = xfs_rtbitmap_getword(mp, b);
++	want = (incore & ((xfs_rtword_t)1 << bit)) ? -1 : 0;
+ 	/*
+ 	 * If the starting position is not word-aligned, deal with the
+ 	 * partial word.
+@@ -329,7 +354,7 @@ xfs_rtfind_forw(
+ 		 * Calculate the difference between the value there
+ 		 * and what we're looking for.
+ 		 */
+-		if ((wdiff = (*b ^ want) & mask)) {
++		if ((wdiff = (incore ^ want) & mask)) {
+ 			/*
+ 			 * Different.  Mark where we are and return.
+ 			 */
+@@ -375,7 +400,8 @@ xfs_rtfind_forw(
+ 		/*
+ 		 * Compute difference between actual and desired value.
+ 		 */
+-		if ((wdiff = *b ^ want)) {
++		incore = xfs_rtbitmap_getword(mp, b);
++		if ((wdiff = incore ^ want)) {
+ 			/*
+ 			 * Different, mark where we are and return.
+ 			 */
+@@ -420,7 +446,8 @@ xfs_rtfind_forw(
+ 		/*
+ 		 * Compute difference between actual and desired value.
+ 		 */
+-		if ((wdiff = (*b ^ want) & mask)) {
++		incore = xfs_rtbitmap_getword(mp, b);
++		if ((wdiff = (incore ^ want) & mask)) {
+ 			/*
+ 			 * Different, mark where we are and return.
+ 			 */
+@@ -546,15 +573,16 @@ xfs_rtmodify_range(
+ 	xfs_rtxlen_t	len,		/* length of extent to modify */
+ 	int		val)		/* 1 for free, 0 for allocated */
+ {
+-	xfs_rtword_t	*b;		/* current word in buffer */
++	union xfs_rtword_ondisk *b;		/* current word in buffer */
+ 	int		bit;		/* bit number in the word */
+ 	xfs_fileoff_t	block;		/* bitmap block number */
+ 	struct xfs_buf	*bp;		/* buf for the block */
+ 	int		error;		/* error value */
+-	xfs_rtword_t	*first;		/* first used word in the buffer */
++	union xfs_rtword_ondisk *first;		/* first used word in the buffer */
+ 	int		i;		/* current bit number rel. to start */
+ 	int		lastbit;	/* last useful bit in word */
+ 	xfs_rtword_t	mask;		/* mask o frelevant bits for value */
++	xfs_rtword_t	incore;
+ 	int		word;		/* word number in the buffer */
+ 
+ 	/*
+@@ -592,10 +620,12 @@ xfs_rtmodify_range(
+ 		/*
+ 		 * Set/clear the active bits.
+ 		 */
++		incore = xfs_rtbitmap_getword(mp, b);
+ 		if (val)
+-			*b |= mask;
++			incore |= mask;
+ 		else
+-			*b &= ~mask;
++			incore &= ~mask;
++		xfs_rtbitmap_setword(mp, b, incore);
+ 		i = lastbit - bit;
+ 		/*
+ 		 * Go on to the next block if that's where the next word is
+@@ -636,7 +666,7 @@ xfs_rtmodify_range(
+ 		/*
+ 		 * Set the word value correctly.
+ 		 */
+-		*b = val;
++		xfs_rtbitmap_setword(mp, b, val);
+ 		i += XFS_NBWORD;
+ 		/*
+ 		 * Go on to the next block if that's where the next word is
+@@ -676,10 +706,12 @@ xfs_rtmodify_range(
+ 		/*
+ 		 * Set/clear the active bits.
+ 		 */
++		incore = xfs_rtbitmap_getword(mp, b);
+ 		if (val)
+-			*b |= mask;
++			incore |= mask;
+ 		else
+-			*b &= ~mask;
++			incore &= ~mask;
++		xfs_rtbitmap_setword(mp, b, incore);
+ 		b++;
+ 	}
+ 	/*
+@@ -782,7 +814,7 @@ xfs_rtcheck_range(
+ 	xfs_rtxnum_t	*new,		/* out: first rtext not matching */
+ 	int		*stat)		/* out: 1 for matches, 0 for not */
+ {
+-	xfs_rtword_t	*b;		/* current word in buffer */
++	union xfs_rtword_ondisk *b;		/* current word in buffer */
+ 	int		bit;		/* bit number in the word */
+ 	xfs_fileoff_t	block;		/* bitmap block number */
+ 	struct xfs_buf	*bp;		/* buf for the block */
+@@ -791,6 +823,7 @@ xfs_rtcheck_range(
+ 	xfs_rtxnum_t	lastbit;	/* last useful bit in word */
+ 	xfs_rtword_t	mask;		/* mask of relevant bits for value */
+ 	xfs_rtword_t	wdiff;		/* difference from wanted value */
++	xfs_rtword_t	incore;
+ 	int		word;		/* word number in the buffer */
+ 
+ 	/*
+@@ -831,7 +864,8 @@ xfs_rtcheck_range(
+ 		/*
+ 		 * Compute difference between actual and desired value.
+ 		 */
+-		if ((wdiff = (*b ^ val) & mask)) {
++		incore = xfs_rtbitmap_getword(mp, b);
++		if ((wdiff = (incore ^ val) & mask)) {
+ 			/*
+ 			 * Different, compute first wrong bit and return.
+ 			 */
+@@ -878,7 +912,8 @@ xfs_rtcheck_range(
+ 		/*
+ 		 * Compute difference between actual and desired value.
+ 		 */
+-		if ((wdiff = *b ^ val)) {
++		incore = xfs_rtbitmap_getword(mp, b);
++		if ((wdiff = incore ^ val)) {
+ 			/*
+ 			 * Different, compute first wrong bit and return.
+ 			 */
+@@ -924,7 +959,8 @@ xfs_rtcheck_range(
+ 		/*
+ 		 * Compute difference between actual and desired value.
+ 		 */
+-		if ((wdiff = (*b ^ val) & mask)) {
++		incore = xfs_rtbitmap_getword(mp, b);
++		if ((wdiff = (incore ^ val) & mask)) {
+ 			/*
+ 			 * Different, compute first wrong bit and return.
+ 			 */
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
+index 308ce814a908a..0a3c6299af8e2 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.h
++++ b/fs/xfs/libxfs/xfs_rtbitmap.h
+@@ -122,18 +122,18 @@ xfs_rbmblock_to_rtx(
+ }
+ 
+ /* Return a pointer to a bitmap word within a rt bitmap block buffer. */
+-static inline xfs_rtword_t *
++static inline union xfs_rtword_ondisk *
+ xfs_rbmbuf_wordptr(
+ 	void			*buf,
+ 	unsigned int		rbmword)
+ {
+-	xfs_rtword_t		*wordp = buf;
++	union xfs_rtword_ondisk	*wordp = buf;
+ 
+ 	return &wordp[rbmword];
+ }
+ 
+ /* Return a pointer to a bitmap word within a rt bitmap block. */
+-static inline xfs_rtword_t *
++static inline union xfs_rtword_ondisk *
+ xfs_rbmblock_wordptr(
+ 	struct xfs_buf		*bp,
+ 	unsigned int		rbmword)
+@@ -266,6 +266,10 @@ xfs_filblks_t xfs_rtbitmap_blockcount(struct xfs_mount *mp, xfs_rtbxlen_t
+ 		rtextents);
+ unsigned long long xfs_rtbitmap_wordcount(struct xfs_mount *mp,
+ 		xfs_rtbxlen_t rtextents);
++xfs_rtword_t xfs_rtbitmap_getword(struct xfs_mount *mp,
++		union xfs_rtword_ondisk *wordptr);
++void xfs_rtbitmap_setword(struct xfs_mount *mp,
++		union xfs_rtword_ondisk *wordptr, xfs_rtword_t incore);
+ #else /* CONFIG_XFS_RT */
+ # define xfs_rtfree_extent(t,b,l)			(-ENOSYS)
+ # define xfs_rtfree_blocks(t,rb,rl)			(-ENOSYS)
+diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
+index 2bbad8bfc6293..efdba05f90aed 100644
+--- a/fs/xfs/xfs_ondisk.h
++++ b/fs/xfs/xfs_ondisk.h
+@@ -72,6 +72,9 @@ xfs_check_ondisk_structs(void)
+ 	XFS_CHECK_STRUCT_SIZE(xfs_attr_leaf_map_t,		4);
+ 	XFS_CHECK_STRUCT_SIZE(xfs_attr_leaf_name_local_t,	4);
+ 
++	/* realtime structures */
++	XFS_CHECK_STRUCT_SIZE(union xfs_rtword_ondisk,		4);
++
+ 	/*
+ 	 * m68k has problems with xfs_attr_leaf_name_remote_t, but we pad it to
+ 	 * 4 bytes anyway so it's not obviously a problem.  Hence for the moment
 
-# nvme0n1p6 is XFS filesystem
-ubuntu@minipc:~$ sudo df -h
-Filesystem      Size   Used   Avail   Use%    Mounted
-tmpfs           772M   2.3M    770M     1%    /run
-/dev/nvme0n1p6   74G    55G    19G     75%    /
-tmpfs           3.8G      0    3.8G     0%    /dev/shm
-tmpfs           5.0M   4.0K    5.0M     1%    /run/lock
-tmpfs           3.8G      0    3.8G     0%    /run/qemu
-/dev/nvme0n1p1  256M    90M    167M    35%    /boot/efi
-tmpfs           772M   120K    772M     1%    /run/user/1000
-
-# win10.qcow2 file size is 21GB
-ubuntu@minipc:~$ sudo ls -hs /var/lib/libvirt/images
-total 26G
-2.5G debian12-1.qcow2   1.7G debian12-2.qcow2   34M win10-1.qcow2   34M win=
-10-2.qcow2
-21G win10.qcow2   595M win2003-1.qcow2   502M win2003.qcow2
-
-# Loop and stuck
-ubuntu@minipc:~$ sudo xfs_fsr
-xfs_fsr -m /proc/mountfs -t 7200 -f /var/tmp/.fsrlast_xfs ...
-/ start inode=3D151308975
-/ start inode=3D0
-XFS_IOC_SWAPEXT failed: ino=3D117672225: Invalid argument
-insufficient freespace for: ino=3D117681809: size=3D21608017920: ignoring
-/ start inode=3D0
-XFS_IOC_SWAPEXT failed: ino=3D117672225: Invalid argument
-insufficient freespace for: ino=3D117681809: size=3D21608017920: ignoring
-/ start inode=3D0
-XFS_IOC_SWAPEXT failed: ino=3D117672225: Invalid argument
-insufficient freespace for: ino=3D117681809: size=3D21608017920: ignoring
-/ start inode=3D0
-XFS_IOC_SWAPEXT failed: ino=3D117672225: Invalid argument
-insufficient freespace for: ino=3D117681809: size=3D21608017920: ignoring
-/ start inode=3D0
-XFS_IOC_SWAPEXT failed: ino=3D117672225: Invalid argument
-insufficient freespace for: ino=3D117681809: size=3D21608017920: ignoring
-
-Pastebin (another Debian KVM):
-
-# vda1 is XFS filesystem
-debian@kvm:~$ sudo df -h
-Filesystem      Size   Used   Avail   Use%    Mounted
-udev            440M      0    448M     0%    /dev
-tmpfs            94M   656K     94M     1%    /run
-/dev/vda1       9.3G   1.4G    7.9G    15%    /
-tmpfs           470M      0    470M     0%    /dev/shm
-tmpfs           5.0M      0    5.0M     0%    /run/lock
-/dev/vda2       121M   5.9M    115M     5%    /boot/efi
-tmpfs            94M      0     94M     0%    /run/user/1000
-
-# Normal case
-debian@kvm:~$ sudo xfs_fsr
-xfs_fsr -m /proc/mountfs -t 7200 -f /var/tmp/.fsrlast_xfs ...
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-/ start inode=3D0
-Completed all 10 passes
