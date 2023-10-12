@@ -2,33 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EAB87C6485
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Oct 2023 07:18:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB9A07C6494
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Oct 2023 07:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235229AbjJLFSG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 12 Oct 2023 01:18:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
+        id S235278AbjJLFWX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 12 Oct 2023 01:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235420AbjJLFR4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Oct 2023 01:17:56 -0400
+        with ESMTP id S233879AbjJLFWX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Oct 2023 01:22:23 -0400
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057021BE8
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Oct 2023 22:17:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5419B7
+        for <linux-xfs@vger.kernel.org>; Wed, 11 Oct 2023 22:22:21 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 774116732D; Thu, 12 Oct 2023 07:17:13 +0200 (CEST)
-Date:   Thu, 12 Oct 2023 07:17:13 +0200
+        id A63F36732D; Thu, 12 Oct 2023 07:22:18 +0200 (CEST)
+Date:   Thu, 12 Oct 2023 07:22:18 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org, osandov@osandov.com, hch@lst.de
-Subject: Re: [PATCH 4/7] xfs: create helpers to convert rt block numbers to
- rt extent numbers
-Message-ID: <20231012051713.GC2184@lst.de>
-References: <169704721170.1773611.12311239321983752854.stgit@frogsfrogsfrogs> <169704721239.1773611.10087575278257926892.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 5/7] xfs: convert do_div calls to xfs_rtb_to_rtx helper
+ calls
+Message-ID: <20231012052218.GD2184@lst.de>
+References: <169704721170.1773611.12311239321983752854.stgit@frogsfrogsfrogs> <169704721255.1773611.7719978115841778913.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <169704721239.1773611.10087575278257926892.stgit@frogsfrogsfrogs>
+In-Reply-To: <169704721255.1773611.7719978115841778913.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -39,24 +38,18 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Oct 11, 2023 at 11:05:27AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Create helpers to do unit conversions of rt block numbers to rt extent
-> numbers.  There are two variations -- the suffix "t" denotes the one
-> that returns only the truncated extent number; the other one also
-> returns the misalignment.  Convert all the div_u64_rem users; we'll do
-> the do_div users in the next patch.
+On Wed, Oct 11, 2023 at 11:05:42AM -0700, Darrick J. Wong wrote:
+> -	if (isrt) {
+> -		uint64_t rtexts = XFS_FSB_TO_B(mp, del->br_blockcount);
+> -
+> -		do_div(rtexts, mp->m_sb.sb_rextsize);
+> -		xfs_mod_frextents(mp, rtexts);
+> -	}
+> +	if (isrt)
+> +		xfs_mod_frextents(mp, xfs_rtb_to_rtxt(mp, del->br_blockcount));
 
-When trying to work with thee helpers I found the t prefix here a bit
-weird, as it works different than the T in say XFS_B_TO_FSB
-vs XFS_B_TO_FSBT which give you different results for the two versions.
-Here we get the same returned result, just with the additional
-return for the remainder.
-
-Maybe have xfs_rtb_to_rtx and xfs_rtb_to_rtx_rem for the version with
-the modulo?
-
-We also have quite a few places that only care about the mod,
-so an additƣonal xfs_rtb_rem/mod might be useful as well.
-
+This is losing the XFS_FSB_TO_B conversion.  Now that conversion is
+bogus and doesn't match the rest of the code, and only the fact that
+we don't currently support delalloc on the RT device has saved our
+ass since fa5c836ca8e.  Maybe split this into a little prep patch with
+the a fixes tag?
