@@ -2,84 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0C5D7C74D3
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Oct 2023 19:33:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 402077C74EB
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Oct 2023 19:38:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347347AbjJLRdp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 12 Oct 2023 13:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55270 "EHLO
+        id S1344076AbjJLRiD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 12 Oct 2023 13:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344198AbjJLRdo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Oct 2023 13:33:44 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE7618B
-        for <linux-xfs@vger.kernel.org>; Thu, 12 Oct 2023 10:33:41 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id 4fb4d7f45d1cf-533d31a8523so2200118a12.1
-        for <linux-xfs@vger.kernel.org>; Thu, 12 Oct 2023 10:33:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddatasolution-com.20230601.gappssmtp.com; s=20230601; t=1697132020; x=1697736820; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ogr/5eM7qfn+zrypn6phy/AwkbVCedzchxlSjrzZePI=;
-        b=dPisb7E62/BABIJcDUsfxtI6TQWmXI5TNcBzT/lIEAFJ+LBH2UlptIfk+SG2qX2BLd
-         EjyRModH/BumvVKTqGToryF18GpnuK0giAEiGb9g5DCzfTHQoB21os9kks87bNtBC2rl
-         yTNZtBJLtZAhdXERGfoyI2UTmNipTGtdLDj4F77VJj8oNEg/OHQy+X90O/kOKoh56+vn
-         5xGS7W8WU3NLSuxKFssuiz5+kHD00uHC3RnTmaTZIvlAvAeyD7tVjwEI66igtoJ7hDAu
-         1t+VOSkoRbWQK2iA7tvymCryqSwCbAElQoqrnnMkZkpF9A5Hd3bT221ng17HlrKzcYJc
-         9x5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697132020; x=1697736820;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ogr/5eM7qfn+zrypn6phy/AwkbVCedzchxlSjrzZePI=;
-        b=H1++7Jhq9DupTtZsbu/JujjBAlR34WbTFIk2Ga1CQS5KZaicP7d4XjmYZBHlU3/3CH
-         0Y6frgVqyd26n2TXRc+X/6BM6grFHlSjO8DwSNF1C0W4IcU2iZkLnh7b0UzoSRzPYz8+
-         uZbGkG0vTGBo/m/TYHEuQtKm8waCDnyp6W0IVywTj5WKVfPEYO4ozCx9fV59oUFfB+eP
-         jDEoEU+YtxsGsPV8WByBY7SJAsHpmeDK2M/422042ixXceZG/lmcldjy4HjiWMaCAc/d
-         qvwqkBmOOVdFmH0EGZki9g5KdxMv7cAmeLzy6lQiKrw5nEqjqlM7JKf/WnLiSX357mn3
-         i4UA==
-X-Gm-Message-State: AOJu0YzB5uCcyLt+pTszEZL+tRPISiZBqnz+/L8U7/dLtTwHjKwCBDg3
-        Y/tiXT+VVHGEv54fcGY37W/Rlssju7zG/jZXXy1z0w==
-X-Google-Smtp-Source: AGHT+IGOuQUla7LaNnj9O7gQyZDv512jLD9tm3a0tRDFFOzzCnzxmlyJuShSGJW/42MfmjVmtD/NsuE01WBpYzl2urI=
-X-Received: by 2002:a05:6402:60e:b0:523:33eb:1103 with SMTP id
- n14-20020a056402060e00b0052333eb1103mr22554957edv.14.1697132020381; Thu, 12
- Oct 2023 10:33:40 -0700 (PDT)
+        with ESMTP id S1347377AbjJLRhm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Oct 2023 13:37:42 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BC1186
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Oct 2023 10:35:00 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F018C433C8;
+        Thu, 12 Oct 2023 17:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697132099;
+        bh=+pnaZEfFjRmLDJfUeuDmUddfq6kf5WbhLedkCQ+HpHw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f87VQq8pLjfDXko16AqekJ7tl/wtJuACcGYbcKk+UnxjJXzjBGr03OGRUDJxhk8KM
+         eulJf7N5MPexqk5OKK86xtD9BO29Rv5xjymrQ4S9DAz/IC9tM7Mxogeag4nUJZiMaX
+         7hdhE0q/wiEXFq58uR/1cn4mQeWJcdTehAOMPQfr+ddiwwbGoiEnhom0MY0YrdrkQI
+         ngSNnmjQwlEDHzSrgnAPMSqO5IAOsAphxAbEcxBLvQ24A/ACgVz4L/TZc8lB3fNJ4v
+         cL7DRAc2XAp/PShqdocNZYEOzVVwTGVDGUFPF9IcXTpCOgKMrzLzE0UEFBCppADWB1
+         YWOWNpTVIYkyw==
+Date:   Thu, 12 Oct 2023 10:34:59 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, osandov@osandov.com
+Subject: Re: [PATCH 1/3] xfs: bump max fsgeom struct version
+Message-ID: <20231012173459.GG21298@frogsfrogsfrogs>
+References: <169704720334.1773263.7733376994081793895.stgit@frogsfrogsfrogs>
+ <169704720351.1773263.12324560217170051519.stgit@frogsfrogsfrogs>
+ <20231012045130.GA1637@lst.de>
 MIME-Version: 1.0
-From:   Anna Maria <anna@gooddatasolution.com>
-Date:   Thu, 12 Oct 2023 12:33:28 -0500
-Message-ID: <CAMfJWr52d_YtimuSa3+A3S-+mq9eNbimneyWg=gAC4wHix4hEg@mail.gmail.com>
-Subject: RE: MJBizCon Attendees Email List- 2023
-To:     Anna Maria <anna@gooddatasolution.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_FILL_THIS_FORM_SHORT autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231012045130.GA1637@lst.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
+On Thu, Oct 12, 2023 at 06:51:30AM +0200, Christoph Hellwig wrote:
+> On Wed, Oct 11, 2023 at 11:02:03AM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > The latest version of the fs geometry structure is v5.
+> 
+> The commit log and change left me a little confused, having it in
+> a RT series even more.  So I went out and tried to understand it:
+> 
+>  - the fsgeom struct version is used by xfs_fs_geometry
+>  - XFS_FS_GEOM_MAX_STRUCT_VER is not used in the kernel at all,
+>    but libxfs uses it to always query all information in db and
+>    mkfs
+>  - commit 1b6d968de22bffd added the v5 structure, which mostly
+>    contains extra padding, but otherwise just reports the struct
+>    version for now
+> 
+> So this commit is a no-op for the kernel, and mostly a no-op for
+> userspace as nothing looks at the new field, but probably useful
+> for later changes.
+> 
+> Maybe capture this in the commit log.
 
-I hope you and your family are safe!
+I've changed the commit message to:
 
-Would you be interested in acquiring MJBizCon Conference Attendees
-Data List-2023?
+xfs: bump max fsgeom struct version
 
-Each Contact Includes: - Org Name, First Name. Contact Job Title,
-Verified Email Address, Website URL, Mailing Address, Phone Number,
-Fax Number, Industry and many more=E2=80=A6
+The latest version of the fs geometry structure is v5.  Bump this
+constant so that xfs_db and mkfs calls to libxfs_fs_geometry will fill
+out all the fields.
 
-Number of Contacts: - 10,653
-Cost: - $1,479
+IOWs, this commit is a no-op for the kernel, but will be useful for
+userspace reporting in later changes.
 
-Appreciate your time and I look forward to hearing from you.
+> With that:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Kind Regards,
-Anna
+Thank you!
 
-Marketing Coordinator
+--D
