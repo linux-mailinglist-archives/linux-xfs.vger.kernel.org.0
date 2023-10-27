@@ -2,195 +2,168 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6CF97D9D2C
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Oct 2023 17:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 497B47D9D9F
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Oct 2023 17:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231429AbjJ0PlV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 27 Oct 2023 11:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47758 "EHLO
+        id S1345780AbjJ0P5O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 27 Oct 2023 11:57:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbjJ0PlU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Oct 2023 11:41:20 -0400
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A66192
-        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 08:41:16 -0700 (PDT)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231027154115euoutp0184958e87733ae43e510912e2f5ae27f6~SASa6r0ep1606916069euoutp01E
-        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 15:41:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231027154115euoutp0184958e87733ae43e510912e2f5ae27f6~SASa6r0ep1606916069euoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1698421275;
-        bh=duCLnfNr42oeVPpKAU731beQ+ZxjGP/ivVYrPM0iY6U=;
-        h=Date:Subject:To:CC:From:In-Reply-To:References:From;
-        b=NleKykxSD4iZt3R8mAVygmsChVpoSHN4rvRxrT+phM/w8gZ+PRTd3uHooyZ6WVpiC
-         ts1xz7Xqgy2lGvYtBaFSYM+Z7N5q/+d5HAQHgxk4YVxUxGtodFmUykIm6SlnBVES0c
-         PN+STW+z3ko0B4eOgBhOUr+z9vDKjCxyfMy3rC/A=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20231027154115eucas1p1aab8b2eeb91c50c8f3583cf60355c8d2~SASardpxl2982129821eucas1p15;
-        Fri, 27 Oct 2023 15:41:15 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 54.B4.11320.A1ADB356; Fri, 27
-        Oct 2023 16:41:14 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20231027154114eucas1p1900577736cc1f28699e16ac5df6dd5ca~SASaRPnF_2982129821eucas1p12;
-        Fri, 27 Oct 2023 15:41:14 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20231027154114eusmtrp1a73ff046a912413db646b6a6bb96cb87~SASaQmgXk1229612296eusmtrp1w;
-        Fri, 27 Oct 2023 15:41:14 +0000 (GMT)
-X-AuditID: cbfec7f4-993ff70000022c38-01-653bda1af9e6
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id F4.77.10549.A1ADB356; Fri, 27
-        Oct 2023 16:41:14 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20231027154114eusmtip23b4d590e1938ac6a6ca1a432384a101f~SASaB_kbr2532925329eusmtip2G;
-        Fri, 27 Oct 2023 15:41:14 +0000 (GMT)
-Received: from [10.10.2.119] (106.210.248.118) by CAMSVWEXC02.scsc.local
-        (2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-        Fri, 27 Oct 2023 16:41:12 +0100
-Message-ID: <3d65652f-04c7-4240-9969-ba2d3869dbbf@samsung.com>
-Date:   Fri, 27 Oct 2023 17:41:10 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iomap: fix iomap_dio_zero() for fs bs > system page
- size
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Pankaj Raghav <kernel@pankajraghav.com>,
-        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <djwong@kernel.org>, <mcgrof@kernel.org>, <da.gomez@samsung.com>,
-        <gost.dev@samsung.com>, <david@fromorbit.com>
-Content-Language: en-US
-From:   Pankaj Raghav <p.raghav@samsung.com>
-In-Reply-To: <ZTuVVSD1FnQ7qPG5@casper.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [106.210.248.118]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-        CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEKsWRmVeSWpSXmKPExsWy7djP87pSt6xTDVZ/t7bYcuweo8XlJ3wW
-        K1cfZbI48/Izi8WevSdZLHb92cFucWPCU0aL3z/msDlweJxaJOGxeYWWx6ZVnWweu282sHmc
-        Xeno8XmTXABbFJdNSmpOZllqkb5dAlfG22sT2Qvui1Ts3LOBsYFxPl8XIweHhICJxK0tyl2M
-        XBxCAisYJa5efcDaxcgJ5HxhlJjwIgci8ZlRYs7G1WAJkIaVE3oZIRLLGSVONdxjhqu69Pwk
-        O0T7TkaJzcv0QWxeATuJj0e3MILYLAKqEhv/nGKBiAtKnJz5BMwWFZCXuH9rBlivsIC/xJG5
-        J5hAzhMR0JB4s8UIZD6zQAOTxMOOW8wgNcwC4hK3nswHq2ET0JJo7ARr5QQ6ruX1ayaIEk2J
-        1u2/2SFseYntb+cwQzygLHHqyQOoZ2olTm25xQRhd3NKfL2nC2G7SDTMWcQGYQtLvDq+hR3C
-        lpE4PbmHBcKulnh64zfY7xICLYwS/TvXs0GC1Fqi70wORI2jRFv/ShaIMJ/EjbeCEOfwSUza
-        Np15AqPqLKSAmIXksVlIPpiF5IMFjCyrGMVTS4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxApPR
-        6X/Hv+xgXP7qo94hRiYOxkOMEhzMSiK8kT4WqUK8KYmVValF+fFFpTmpxYcYpTlYlMR5VVPk
-        U4UE0hNLUrNTUwtSi2CyTBycUg1MW/NP29qHd+c1VoSn5cWKsXCGyqzP9XcQb3ZzkOVcuFl6
-        n0T4olL905y3FKSkrrz2djzZmfRo+xbHJFX1eM3M9pPHKpheLd95wX7tofXZE/eVMa5m/nre
-        X7ygciq3x8WVxdZPOSL5+XK9/67V290YdqztS9LSGdpZC/ZdOqJ0qSnJZI91N+OZFW7yohnO
-        pzJ4D1keO5IgfCjiUdID546wZfVJHc/ZNpWf/Mz17M2R9UuOiqdxzpI7KbTUy9vCN87mV398
-        0JtAdv6/SXU8apM/63pI6jMvLWVuzDIIf7wjnUer7eXx9Qd2fee6J3AkqXPCUrPaydrR57aF
-        6Uj7fZp50XKa4o6PqV8kLm5iUFRiKc5INNRiLipOBACRJTMFtQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFIsWRmVeSWpSXmKPExsVy+t/xe7pSt6xTDQ52ylpsOXaP0eLyEz6L
-        lauPMlmcefmZxWLP3pMsFrv+7GC3uDHhKaPF7x9z2Bw4PE4tkvDYvELLY9OqTjaP3Tcb2DzO
-        rnT0+LxJLoAtSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1
-        SN8uQS/j7bWJ7AX3RSp27tnA2MA4n6+LkZNDQsBEYuWEXsYuRi4OIYGljBI9F6+yQSRkJDZ+
-        ucoKYQtL/LnWxQZR9JFRonfCArAiIYGdjBLvl4mC2LwCdhIfj25hBLFZBFQlNv45xQIRF5Q4
-        OfMJmC0qIC9x/9YMdhBbWMBXYs/EO0A2B4eIgIbEmy1GIPOZBRqYJB523GKGWDYJyLm3GayZ
-        WUBc4taT+UwgDWwCWhKNnWBzOIE+aHn9mgmiRFOidftvdghbXmL72znMEA8oS5x68gDqmVqJ
-        z3+fMU5gFJ2F5LxZSDbMQjJqFpJRCxhZVjGKpJYW56bnFhvqFSfmFpfmpesl5+duYgRG8rZj
-        PzfvYJz36qPeIUYmDsZDjBIczEoivJE+FqlCvCmJlVWpRfnxRaU5qcWHGE2BYTSRWUo0OR+Y
-        SvJK4g3NDEwNTcwsDUwtzYyVxHk9CzoShQTSE0tSs1NTC1KLYPqYODilGpiqWvZvFzdNP7fN
-        vOh/5/zJphv+nTh96tO3V3Umav+W7brP1ii5NWS7lJ3aic0ap5eFH3fRaX/nZJTvuX2K5+YL
-        mW8mCaz+xbP9Uu/+GRXm7VpJ/CUPVzFqe+dv/KT1743Uya360+dEJHHtKrwzJ2X2PZ307PWf
-        mPbyfC5WFJj/yHDv8R9/Y+r03DbKeB/tWjZj3Zydlj5zrhvdagxSVZ2l/vj/uqnC1XtX/7a9
-        +rmbyfTT7/sLUkVuMBu16Rc4fFt8fBFPa+adR1YT+OU4sje9mHbus7vaJL9nDveYMoN74vuy
-        mcTinndpz9JXDs/7V71NbJto2P5fwSZCRyNmpPl97pTQs7zprJFxNdtq/5NVSizFGYmGWsxF
-        xYkAiENqsG0DAAA=
-X-CMS-MailID: 20231027154114eucas1p1900577736cc1f28699e16ac5df6dd5ca
-X-Msg-Generator: CA
-X-RootMTR: 20231027051855eucas1p2e465ca6afc8d45dc0529f0798b8dd669
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20231027051855eucas1p2e465ca6afc8d45dc0529f0798b8dd669
-References: <20231026140832.1089824-1-kernel@pankajraghav.com>
-        <CGME20231027051855eucas1p2e465ca6afc8d45dc0529f0798b8dd669@eucas1p2.samsung.com>
-        <20231027051847.GA7885@lst.de>
-        <1e7e9810-9b06-48c4-aec8-d4817cca9d17@samsung.com>
-        <ZTuVVSD1FnQ7qPG5@casper.infradead.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1346224AbjJ0P5O (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Oct 2023 11:57:14 -0400
+Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5557C2
+        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 08:57:11 -0700 (PDT)
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.94.2)
+        (envelope-from <debbugs@buxtehude.debian.org>)
+        id 1qwPCp-003NAg-0l; Fri, 27 Oct 2023 15:57:03 +0000
+X-Loop: owner@bugs.debian.org
+Subject: Bug#1054644: xfsprogs-udeb: causes D-I to fail, reporting errors about missing partition devices
+Reply-To: "Darrick J. Wong" <djwong@kernel.org>, 1054644@bugs.debian.org
+X-Loop: owner@bugs.debian.org
+X-Debian-PR-Message: followup 1054644
+X-Debian-PR-Package: xfsprogs-udeb
+X-Debian-PR-Keywords: 
+References: <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com> <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com> <871qdgccs5.fsf@nimble.hk.hands.com> <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com>
+X-Debian-PR-Source: xfsprogs
+Received: via spool by 1054644-submit@bugs.debian.org id=B1054644.1698422089803390
+          (code B ref 1054644); Fri, 27 Oct 2023 15:57:02 +0000
+Received: (at 1054644) by bugs.debian.org; 27 Oct 2023 15:54:49 +0000
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
+X-Spam-Bayes: score:0.0000 Tokens: new, 21; hammy, 150; neutral, 201; spammy,
+        0. spammytokens: hammytokens:0.000-+--42pm, 0.000-+--42PM,
+        0.000-+--grubinstall, 0.000-+--grub-install, 0.000-+--grubprobe
+Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1]:58656)
+        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <djwong@kernel.org>)
+        id 1qwPAc-003Mzc-5u
+        for 1054644@bugs.debian.org; Fri, 27 Oct 2023 15:54:49 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+        by sin.source.kernel.org (Postfix) with ESMTP id 1051CCE0AD6;
+        Fri, 27 Oct 2023 15:45:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DA4FC433C7;
+        Fri, 27 Oct 2023 15:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698421506;
+        bh=dBkOSPZu3i5dFTVS6sf9cHlY3bEU30IwNCIbfsC9Ogw=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=D1+c6nbTpChDZJzJuDUQW1xa95Y2Bgti2ljJrhWuxG5Zkv0Hx6vlwzXEotJvuMOU4
+         Y79+UUBX7F1gNWc+rfb2A8m+fPKSx6zWmq1DkhaKzeo+QNPR6ikpDb3GNexvDQXxN0
+         1OqgdWbc4/9F3Qyc89/1EjHrzYV0RRoCArGG47x40oLMji86OAD7YsoUOxzWSkVvy7
+         iQCyzpc4DNZDOZ8qMnrkfulT5D/jqC2QgMib/T6ThxvsnsC0JIyW7r1xvQM+t6uu6A
+         PNxnwBPkF6IMF84FyOrxi1IdxsDVKUE8UcJXHSCR/FzdwDYMsEi8jb4VHUmplPsaYO
+         1bJiri/+T8AfA==
+Date:   Fri, 27 Oct 2023 08:45:05 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Philip Hands <phil@hands.com>, 1054644@bugs.debian.org
+Message-ID: <20231027154505.GL3195650@frogsfrogsfrogs>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871qdgccs5.fsf@nimble.hk.hands.com>
+X-Greylist: delayed 573 seconds by postgrey-1.36 at buxtehude; Fri, 27 Oct 2023 15:54:45 UTC
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 27/10/2023 12:47, Matthew Wilcox wrote:
-> On Fri, Oct 27, 2023 at 10:03:15AM +0200, Pankaj Raghav wrote:
->> I also noticed this pattern in fscrypt_zeroout_range_inline_crypt().
->> Probably there are more places which could use a ZERO_FOLIO directly
->> instead of iterating with ZERO_PAGE.
->>
->> Chinner also had a similar comment. It would be nice if we can reserve
->> a zero huge page that is the size of MAX_PAGECACHE_ORDER and add it as
->> one folio to the bio.
+On Fri, Oct 27, 2023 at 05:20:42PM +0200, Philip Hands wrote:
+> Philip Hands <phil@hands.com> writes:
+> ...
+> > Could this be related to #1051543?
+> >
+> > I'll try testing D-I while using the patch from that bug, to see if that helps.
 > 
-> i'm on holiday atm.  start looking at mm_get_huge_zero_page()
+> It seems (to me at least) that the patch there does not apply usefully
+> to the version we're talking about, so I'll leave it to people that know
+> more about grub & XFS to look further.
 
-Thanks for the pointer. I made a rough version of how it might
-look like if I use that API:
+From https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1054644#5:
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index bcd3f8cf5ea4..6ae21bd16dbe 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -236,17 +236,43 @@ static void iomap_dio_zero(const struct iomap_iter *iter, struct iomap_dio *dio,
-                loff_t pos, unsigned len)
- {
-        struct inode *inode = file_inode(dio->iocb->ki_filp);
--       struct page *page = ZERO_PAGE(0);
-+       struct page *page = NULL;
-+       bool huge_page = false;
-+       bool fallback = false;
-        struct bio *bio;
+> > I note that if one runs e.g.:  grub-probe -d /dev/vda1
+> > at the moment of failure, the XFS filesystem is not recognised
+> > (despite being mounted as XFS at that moment).
+> > 
+> > Could this be related to #1051543?
+> > 
+> > I'll try testing D-I while using the patch from that bug, to see if that
+> > helps.
 
--       bio = iomap_dio_alloc_bio(iter, dio, 1, REQ_OP_WRITE | REQ_SYNC | REQ_IDLE);
-+       if (len > PAGE_SIZE) {
-+               page = mm_get_huge_zero_page(current->mm);
-+               if (likely(page))
-+                       huge_page = true;
-+       }
-+
-+       if (!huge_page)
-+               page = ZERO_PAGE(0);
-+
-+       fallback = ((len > PAGE_SIZE) && !huge_page);
-+
-+       bio = iomap_dio_alloc_bio(iter, dio, BIO_MAX_VECS,
-+                                 REQ_OP_WRITE | REQ_SYNC | REQ_IDLE);
-        fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
-                                  GFP_KERNEL);
-+
-        bio->bi_iter.bi_sector = iomap_sector(&iter->iomap, pos);
-        bio->bi_private = dio;
-        bio->bi_end_io = iomap_dio_bio_end_io;
+I noticed this too while migrating to Debian 12 -- if you mkfs.xfs a
+/boot with feature flags that grub doesn't know about, grub-install
+unhelpfully refuses to recognize that there's a filesystem there at all.
 
--       __bio_add_page(bio, page, len, 0);
-+       if (!fallback) {
-+               bio_add_folio_nofail(bio, page_folio(page), len, 0);
-+       } else {
-+               while (len) {
-+                       unsigned int io_len =
-+                               min_t(unsigned int, len, PAGE_SIZE);
-+
-+                       __bio_add_page(bio, page, io_len, 0);
-+                       len -= io_len;
-+               }
-+       }
-+
-        iomap_dio_submit_bio(iter, dio, bio, pos);
- }
+mkfs.xfs in xfsprogs 6.5 turned on both the large extent counts and
+reverse mapping btree features by default.  My guess is that grub hasn't
+caught up with those changes to the ondisk format yet.
 
-The only issue with mm_get_huge_zero_page() is that it can fail, and we need
-to fallback to iteration if it cannot allocate a huge folio.
+Ah, yeah, upstream grub hasn't picked up large extent counts (internally
+called nrext64) yet.
+https://git.savannah.gnu.org/cgit/grub.git/tree/grub-core/fs/xfs.c#n83
 
-PS: Enjoy your holidays :)
+If you can manually reformat the filesystem from within the installer
+with
+
+mkfs.xfs -c /usr/share/xfsprogs/mkfs/lts_6.1.conf
+
+Does grub start to recognize the filesystem again?
+
+> 
+> =-=-=
+> 
+> BTW the jobs where this failure first occured are:
+> 
+> (BIOS)  https://openqa.debian.net/tests/198911
+> (UEFI)  https://openqa.debian.net/tests/198912
+> 
+> and the immediately previous working jobs are these:
+> 
+> (BIOS)  https://openqa.debian.net/tests/198840
+> (UEFI)  https://openqa.debian.net/tests/198841
+> 
+> In the jobs you can see a 'Logs & Assets' tab, where you can find e.g.
+> the syslog from the D-I run.
+> 
+> Here's the one from the first BIOS failure:
+> 
+>   https://openqa.debian.net/tests/198911/logfile?filename=DI_syslog.txt
+
+Curiously, this log says:
+
+Oct 24 05:35:32 in-target: Setting up xfsprogs (6.4.0-1) ...^M
+
+So ... is it running 6.4 and not 6.5?
+
+--D
+
+> 
+> One thing I notice when comparing that to the matching successful log:
+> 
+>   https://openqa.debian.net/tests/198840/logfile?filename=complete_install-DI_syslog.txt
+> 
+> is that they both include a block of lines like:
+> 
+>    grub-installer: Unknown device "/dev/vda1": No such device
+> 
+> so that's just noise by the looks of it, since it was also saying that
+> when it was working.
+> 
+> I've since slightly reorganised the openQA jobs, to have a job that only
+> differs from the normal minimal install by the selection of XFS, so if
+> you want to see currently failing jobs, they will be the ones called
+> nonGUI_XFS@64bit & nonGUI_XFS (for BIOS & UEFI installs, respectively)
+> in this overview:
+> 
+>   https://openqa.debian.net/tests/overview?distri=debian&groupid=10
+> 
+> HTH
+> 
+> Cheers, Phil.
+> -- 
+> Philip Hands -- https://hands.com/~phil
