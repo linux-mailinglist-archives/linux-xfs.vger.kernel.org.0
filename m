@@ -2,106 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 771017DA327
-	for <lists+linux-xfs@lfdr.de>; Sat, 28 Oct 2023 00:10:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD627DA35E
+	for <lists+linux-xfs@lfdr.de>; Sat, 28 Oct 2023 00:30:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232642AbjJ0WKr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 27 Oct 2023 18:10:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35108 "EHLO
+        id S232520AbjJ0WaI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 27 Oct 2023 18:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjJ0WKq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Oct 2023 18:10:46 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D3A1A6
-        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 15:10:44 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6b3c2607d9bso2487981b3a.1
-        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 15:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698444643; x=1699049443; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2gGWI9hiI8wgQuogxLeAYpmHgRP3GLhdkxT/rH7PRNE=;
-        b=FwBsr3vp78eoyv3K0ksbwYy3169VuRqIoEyGBCYlkcBgfc4TEfDIzd4iqLub1srObf
-         8DdJECk8QEHifDTHuWhazmS9CAVHuGxWm/v0CET5bWNz2J9J7LSNeDCU6zFk+/kytZvI
-         xCHyg578sj09wQGKuCoQWf30syE3/hFTOlChjAKdFhiAlZHSeBPEQsFTFcD6TWjOwELX
-         6FaJRXwMOywFJGECf8Dwy6510PrvDJ87BBHWk1jhhKWEtTNuPkY/Tvabo3NITXmRDKXO
-         V6HCmtk2cUtWUfyWk88lgjiE7AlDRIR9KVOE4Tcw8Yg91vHlApGEdk5wrXorZusIbXyO
-         QVng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698444643; x=1699049443;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2gGWI9hiI8wgQuogxLeAYpmHgRP3GLhdkxT/rH7PRNE=;
-        b=kvBLKa75Y9swQLd4F3balRcc0zmSCUuCD8uNg+MgwQqKLWS755qK/barHUwij0BCnk
-         LSi6JoEEiKFRBmltK2We9f3kDJ2QeJBOdwqa7PoKaouyP5nPWcmt2LDQxSUNMcvYmEwa
-         D8plV/fMFNkImbvKNPZwgKLnshat4vcinrsSNy0cMhUH31WsPGDo1ClTGYFPS7NQ5/9i
-         kUwJDL0h+VDh8kscJ6WNO6o5/j+fec6wKLmlIDH8T11iUCoQ6kbdJq/45EfDmWeRVPO/
-         DnHaf1d6vqfs2My2CvYuhbmh8uP8BF0Mpy980GqQG84w516R6z7sAMxo+fnRVkxQP/de
-         SFeA==
-X-Gm-Message-State: AOJu0YzlB0gwMdFrNkv+OXpnym1yQTBJ2k0pgf1iCN4v0Jh8YtV9rjmX
-        nvwAUc8ybdyT92NtaFT4l70X0w==
-X-Google-Smtp-Source: AGHT+IG1IoxGOdlvIsbi6PiESNZk4zXqAR70hoxoWNSTSt//UbCeW8udyzVcIuBpsVlTsNxAKlZ/XA==
-X-Received: by 2002:a05:6a00:244b:b0:693:3851:bd98 with SMTP id d11-20020a056a00244b00b006933851bd98mr4264853pfj.2.1698444643600;
-        Fri, 27 Oct 2023 15:10:43 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
-        by smtp.gmail.com with ESMTPSA id j8-20020aa783c8000000b00690b8961bf4sm1912884pfn.146.2023.10.27.15.10.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 15:10:42 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qwV2N-004n9d-1L;
-        Sat, 28 Oct 2023 09:10:39 +1100
-Date:   Sat, 28 Oct 2023 09:10:39 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Pankaj Raghav <kernel@pankajraghav.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        willy@infradead.org, djwong@kernel.org, mcgrof@kernel.org,
-        hch@lst.de, da.gomez@samsung.com, gost.dev@samsung.com,
-        Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH] iomap: fix iomap_dio_zero() for fs bs > system page size
-Message-ID: <ZTw1X3YdOmBmM+hQ@dread.disaster.area>
-References: <20231026140832.1089824-1-kernel@pankajraghav.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231026140832.1089824-1-kernel@pankajraghav.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229712AbjJ0WaI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Oct 2023 18:30:08 -0400
+Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D5C9C
+        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 15:30:05 -0700 (PDT)
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.94.2)
+        (envelope-from <debbugs@buxtehude.debian.org>)
+        id 1qwVL9-0049Fh-0l; Fri, 27 Oct 2023 22:30:03 +0000
+X-Loop: owner@bugs.debian.org
+Subject: Bug#1054644: xfsprogs-udeb: causes D-I to fail, reporting errors about missing partition devices
+Reply-To: Philip Hands <phil@hands.com>, 1054644@bugs.debian.org
+X-Loop: owner@bugs.debian.org
+X-Debian-PR-Message: followup 1054644
+X-Debian-PR-Package: xfsprogs-udeb
+X-Debian-PR-Keywords: 
+References: <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com> <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com> <871qdgccs5.fsf@nimble.hk.hands.com> <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com> <20231027154505.GL3195650@frogsfrogsfrogs> <ZTvjFZPn7KH6euyT@technoir> <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com>
+X-Debian-PR-Source: xfsprogs
+Received: via spool by 1054644-submit@bugs.debian.org id=B1054644.1698445660987278
+          (code B ref 1054644); Fri, 27 Oct 2023 22:30:01 +0000
+Received: (at 1054644) by bugs.debian.org; 27 Oct 2023 22:27:40 +0000
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Bayes: score:0.0000 Tokens: new, 11; hammy, 142; neutral, 34; spammy,
+        0. spammytokens: hammytokens:0.000-+--UD:kernel.org,
+        0.000-+--H*r:DragonFly, 0.000-+--cc'ed, 0.000-+--grubprobe,
+        0.000-+--grub-probe
+Received: from free.hands.com ([78.129.164.123]:51400)
+        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <phil@hands.com>)
+        id 1qwVIq-0048pC-2A
+        for 1054644@bugs.debian.org; Fri, 27 Oct 2023 22:27:40 +0000
+Received: from nimble.hk.hands.com (p5b08cc82.dip0.t-ipconnect.de [91.8.204.130])
+        by free.hands.com (Postfix) with ESMTPSA id C74B02A75F
+        for <1054644@bugs.debian.org>; Fri, 27 Oct 2023 23:27:31 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hands.com;
+        s=202202.hands; t=1698445651;
+        bh=S+G2YouMyJ7txLLHlwGrrdStyAHHQzNLOQiwN1/5FUs=;
+        h=From:To:Subject:In-Reply-To:References:Date:From;
+        b=Fb8E7Ne5kjuWSnqdpMaKQFaMNs2sY6sf7iQEvsjidqzerZffglTcgzUlKR4Fhs17Q
+         R3eCAJ/aksulp/W3ICgkE8R3DIoCrG4hrb998Ql2KUewLJIgDCjAhPSmThrGxXnCAS
+         4xfbLdvZ5UdUKOlT35tdPNqgP+yXGWB3mKpPuPBw13P9hWNdKcQk8jgONSmI9WAfwo
+         RQ2lHT9ZrPR6EmNehyUpeQrxlpn5Feog5yAusd0wr4JkaqKYfkjfciblKl1OPvAFH6
+         +412WXGaN94Zwxtw3nJSQBBvw6XUhTUGVdCndKHH9TK8+3el/7nn+lU1Wyp0aPgDSK
+         M3q7vPHebgvPg==
+Received: from phil (uid 1000)
+        (envelope-from phil@hands.com)
+        id 10e829
+        by nimble.hk.hands.com (DragonFly Mail Agent v0.13 on nimble);
+        Sat, 28 Oct 2023 00:27:31 +0200
+From:   Philip Hands <phil@hands.com>
+To:     Anthony Iliopoulos <ailiop@suse.com>,
+        "Darrick J. Wong" <djwong@kernel.org>, 1054644@bugs.debian.org
+In-Reply-To: <ZTvjFZPn7KH6euyT@technoir>
+Date:   Sat, 28 Oct 2023 00:27:31 +0200
+Message-ID: <87v8arbt0s.fsf@nimble.hk.hands.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Oct 26, 2023 at 04:08:32PM +0200, Pankaj Raghav wrote:
-> From: Pankaj Raghav <p.raghav@samsung.com>
-> 
-> iomap_dio_zero() will pad a fs block with zeroes if the direct IO size
-> < fs block size. iomap_dio_zero() has an implicit assumption that fs block
-> size < page_size. This is true for most filesystems at the moment.
-> 
-> If the block size > page size (Large block sizes)[1], this will send the
-> contents of the page next to zero page(as len > PAGE_SIZE) to the
-> underlying block device, causing FS corruption.
-> 
-> iomap is a generic infrastructure and it should not make any assumptions
-> about the fs block size and the page size of the system.
-> 
-> Fixes: db074436f421 ("iomap: move the direct IO code into a separate file")
+Anthony Iliopoulos <ailiop@suse.com> writes:
+...
+> Yeap it is due to nrext64, I've submitted a patch to grub (should have
+> cc'ed linux-xfs..)
+>
+> https://lore.kernel.org/grub-devel/20231026095339.31802-1-ailiop@suse.com/
 
-I forgot to mention - this fixes tag is completely bogus. That's
-just a commit that moves the code from one file to another and
-there's no actual functional change at all.
+That certainly seems to fix this bug.
 
-Further, this isn't a change that "fixes" a bug or regression - it
-is a change to support new functionality that doesnt' yet exist
-upstream, and so there is no bug in the existing kernels for it to
-fix....
+I tested it by applying that patch to grub, and then getting that
+version of grub installed into the target just after the initial attempt
+to run grub had failed, which then allows a retry of the grub install
+step to succeed.
 
--Dave.
+Also, with the patched version: `grub-probe -d /dev/vda1` produces 'xfs'
 
+Cheers, Phil.
 -- 
-Dave Chinner
-david@fromorbit.com
+Philip Hands -- https://hands.com/~phil
