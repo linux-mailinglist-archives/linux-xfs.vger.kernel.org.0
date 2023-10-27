@@ -2,108 +2,127 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE87B7DA13F
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Oct 2023 21:23:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 469A97DA324
+	for <lists+linux-xfs@lfdr.de>; Sat, 28 Oct 2023 00:07:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231360AbjJ0TXN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 27 Oct 2023 15:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44016 "EHLO
+        id S232520AbjJ0WHl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 27 Oct 2023 18:07:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230451AbjJ0TXM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Oct 2023 15:23:12 -0400
-Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC136192
-        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 12:23:09 -0700 (PDT)
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.94.2)
-        (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1qwSQ5-003lDx-5B; Fri, 27 Oct 2023 19:22:57 +0000
-X-Loop: owner@bugs.debian.org
-Subject: Bug#1054644: xfsprogs-udeb: causes D-I to fail, reporting errors about missing partition devices
-Reply-To: Philip Hands <phil@hands.com>, 1054644@bugs.debian.org
-X-Loop: owner@bugs.debian.org
-X-Debian-PR-Message: followup 1054644
-X-Debian-PR-Package: xfsprogs-udeb
-X-Debian-PR-Keywords: 
-References: <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com> <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com> <871qdgccs5.fsf@nimble.hk.hands.com> <20231027154505.GL3195650@frogsfrogsfrogs> <169839498168.1174073.11485737048739628391.reportbug@nimble.hk.hands.com>
-X-Debian-PR-Source: xfsprogs
-Received: via spool by 1054644-submit@bugs.debian.org id=B1054644.1698434335894591
-          (code B ref 1054644); Fri, 27 Oct 2023 19:22:56 +0000
-Received: (at 1054644) by bugs.debian.org; 27 Oct 2023 19:18:55 +0000
+        with ESMTP id S232134AbjJ0WHj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Oct 2023 18:07:39 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420151BE
+        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 15:07:37 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c9d407bb15so23311705ad.0
+        for <linux-xfs@vger.kernel.org>; Fri, 27 Oct 2023 15:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698444457; x=1699049257; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QSkhrI7nWDk/cd0VRIx08JbYbMRlcEfhCG/4HMHEAVE=;
+        b=0vGQNZSfx3SLQNe3af/Sw4CKFZNYocReUuRjJorWbgMaaMqckwaEYaA4YwskUZePu8
+         r2cYGBwgz4WR3aDN8z/Ah14j1xU3EzU41AvPQzWE7PKAy4R2MXErH3H+bb95qxVF1EOk
+         jy0CchZDonOmq6bwkr82NuObQEeTcs6qgnjOSil6L5qdU+oz8aMqZmRGQ++oFmgAUwwN
+         x7OHSA/jpyiyx/zz2nLRVAR9xeyAR20sxX3N1QRaSNPG8Q7jkCZTp/tA8yyrjGUPAkdX
+         uflsA+RPjXQ9Md3SJU/KVBxiovq/pEdsdXjXeGImX4tc3eLpZBUzGbo371Ag1ExB3hat
+         ILCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698444457; x=1699049257;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QSkhrI7nWDk/cd0VRIx08JbYbMRlcEfhCG/4HMHEAVE=;
+        b=A9aepA30okXWB1urbZWFxr6HcwMDklKjzIrO7eVnlOSjBtwYD6ionaRQBT3QUVx0lR
+         bqlhnK8dpslSAFK7RQWm9QGRQ7edwg0/QiZs6PRqZ1BfBVPGE8lk2AWQReayG7faDaF0
+         yUBnPaaNCJTPNE2FI5c5BdK8KG0Syb8b9WR+xtPiHUjwJ13HFpNIiRosFTxJgPks0Kpg
+         CowT9A+M2x1HMpWBNeoL6ucl76Ht1fyRfzOBhV7KhXgInAUfb3CcR/NW8H5bZv6phP/9
+         XYOcmTp1B8YeNUYI9S8nC390xBfO3+vv3bxwpAAQOlqBZXhh1tEuC5/z9lkSUbPj0l1N
+         v08w==
+X-Gm-Message-State: AOJu0Yy1sCxb8R63NtJfXCon7izfiS265v33aRsJGHla6OvVqXHkOOCm
+        tLItDbMcOgou9/lRReibu/Qoyg==
+X-Google-Smtp-Source: AGHT+IEIp/M/QisxI0STJIMWbEY6wYIGSWm6KUjg8x+a/LvX7GZIFq4xR4ecaDu0a7xWONNWBYAJrw==
+X-Received: by 2002:a17:902:6b07:b0:1ca:8b74:17ff with SMTP id o7-20020a1709026b0700b001ca8b7417ffmr3757646plk.26.1698444456437;
+        Fri, 27 Oct 2023 15:07:36 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
+        by smtp.gmail.com with ESMTPSA id c12-20020a170902724c00b001b8b2b95068sm2020996pll.204.2023.10.27.15.07.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Oct 2023 15:07:35 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qwUzM-004n7S-2s;
+        Sat, 28 Oct 2023 09:07:32 +1100
+Date:   Sat, 28 Oct 2023 09:07:32 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Pankaj Raghav <p.raghav@samsung.com>
+Cc:     Pankaj Raghav <kernel@pankajraghav.com>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, willy@infradead.org,
+        djwong@kernel.org, mcgrof@kernel.org, hch@lst.de,
+        da.gomez@samsung.com, gost.dev@samsung.com
+Subject: Re: [PATCH] iomap: fix iomap_dio_zero() for fs bs > system page size
+Message-ID: <ZTw0pBFKaIJs2zFl@dread.disaster.area>
+References: <20231026140832.1089824-1-kernel@pankajraghav.com>
+ <CGME20231026221014eucas1p1b3513d4b9e978232491c3350bc868974@eucas1p1.samsung.com>
+ <ZTrjv11yeQPaC6hO@dread.disaster.area>
+ <7ad225ac-721f-4c99-8d99-c90992609267@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ad225ac-721f-4c99-8d99-c90992609267@samsung.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Bayes: score:0.0000 Tokens: new, 18; hammy, 149; neutral, 51; spammy,
-        1. spammytokens:0.880-+--daily hammytokens:0.000-+--H*r:DragonFly,
-        0.000-+--udebs, 0.000-+--H*r:v0.13, 0.000-+--udeb,
-        0.000-+--H*F:D*hands.com
-Received: from free.hands.com ([78.129.164.123]:54734)
-        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <phil@hands.com>)
-        id 1qwSM8-003kbL-QK
-        for 1054644@bugs.debian.org; Fri, 27 Oct 2023 19:18:54 +0000
-Received: from nimble.hk.hands.com (p5b08cc82.dip0.t-ipconnect.de [91.8.204.130])
-        by free.hands.com (Postfix) with ESMTPSA id 0CF3A2A720
-        for <1054644@bugs.debian.org>; Fri, 27 Oct 2023 20:18:48 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hands.com;
-        s=202202.hands; t=1698434328;
-        bh=4zE2LR3H2kk/m75PQ41trOWWUGSDp6plMqfikdGHVDg=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=kHH8JDeRFQC8KpnUWcuB9ODL/0KwuPDy1TOkIlHS7q0poVotvUlcpbO243bcZbmjP
-         FR5tBX3GaL5AOZrPkdiMPB6VbjfGjztMr2+9Tq7nZiqvV1m2/xIlhzUodZDkwzkggl
-         UK/Yo2ThHJGNbRa9Fqp95h7RFfhxjt8THbj1pTaOmqIY7brE8T7ZEsgdxrmdtrrirM
-         OS1wpa4lsBuwO4yu0OzCw2SszNEisFDm4I4ZVcb2s356D2ocJnA/wjYBOQ7cmbObvP
-         1KXRKOLI7XagewfipThVnat6vjGMC9wBA92XPnytm/ai/2Ct9bflVRobFykHghf8EY
-         Bm4d3FtbzrwhQ==
-Received: from phil (uid 1000)
-        (envelope-from phil@hands.com)
-        id 10c9a5
-        by nimble.hk.hands.com (DragonFly Mail Agent v0.13 on nimble);
-        Fri, 27 Oct 2023 21:18:47 +0200
-From:   Philip Hands <phil@hands.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>, 1054644@bugs.debian.org
-In-Reply-To: <20231027154505.GL3195650@frogsfrogsfrogs>
-Date:   Fri, 27 Oct 2023 21:18:47 +0200
-Message-ID: <87y1fnc1rc.fsf@nimble.hk.hands.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Greylist: delayed 14284 seconds by postgrey-1.36 at buxtehude; Fri, 27 Oct 2023 19:18:52 UTC
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-"Darrick J. Wong" <djwong@kernel.org> writes:
-...
-> Curiously, this log says:
->
-> Oct 24 05:35:32 in-target: Setting up xfsprogs (6.4.0-1) ...^M
->
-> So ... is it running 6.4 and not 6.5?
+On Fri, Oct 27, 2023 at 09:53:19AM +0200, Pankaj Raghav wrote:
+> >> -	bio = iomap_dio_alloc_bio(iter, dio, 1, REQ_OP_WRITE | REQ_SYNC | REQ_IDLE);
+> >> +	WARN_ON_ONCE(len > (BIO_MAX_VECS * PAGE_SIZE));
+> > 
+> > How can that happen here? Max fsb size will be 64kB for the
+> > foreseeable future, the bio can hold 256 pages so it will have a
+> > minimum size capability of 1MB.
+> > 
+> 
+> I just added it as a pathological check. This will not trigger
+> anytime in the near future.
 
-The daily test versions of Debian-Installer draw components from
-"unstable", which is where the 6.5 version is at present, which then
-creates the file system with problematic flags.
+Yeah, exactly my point - it should never happen, it's a fundamental
+developer stuff-up bug, not a runtime bug, and so shouldn't be
+checked at runtime on every bio....
 
-However, the test images normally install "testing" onto the target, to
-avoid pointless breakage caused by the potential for "unstable" to be,
-well ... unstable, hence the 6.4 version that gets put in-target.
+> > FWIW, as a general observation, I think this is the wrong place to
+> > be checking that a filesystem block is larger than can be fit in a
+> > single bio. There's going to be problems all over the place if we
+> > can't do fsb sized IO in a single bio. i.e. I think this sort of
+> > validation should be performed during filesystem mount, not
+> > sporadically checked with WARN_ON() checks in random places in the
+> > IO path...
+> > 
+> 
+> I agree that it should be a check at a higher level.
+> 
+> As iomap can be used by any filesystem, the check on FSB limitation
+> should be a part iomap right? I don't see any explicit document/comment
+> that states the iomap limitations on FSB, etc.
 
-Having 6.4 in the target system doesn't help in this case, because the
-damage has already been done while creating the file system, by the 6.5
-version of the udeb.
+No, it should be part of the filesystem that *uses the bio
+infrastrucure*.
 
-One can confirm that this is the case by looking for xfsprogs in here:
+We already do that with the page cache - filesystems check at mount
+time that the FSB is <= PAGE_SIZE and reject the mount if this check
+fails because the page cache simply cannot handle this situation.
 
-  https://openqa.debian.net/tests/198911/logfile?filename=complete_install-DI-installed-pkgs.txt
+This is no different: if we are going to allow FSB > PAGE_SIZE, then
+we need to ensure somewhere, even as a BUILD_BUG_ON(), that the max
+support FSB the filesystem has is smaller than what we can pack in a
+bio.
 
-which lists the installed components (udebs) of the installer that's running:
+-Dave.
 
-  xfsprogs-udeb                            6.5.0-1
-
-Cheers, Phil.
 -- 
-Philip Hands -- https://hands.com/~phil
+Dave Chinner
+david@fromorbit.com
