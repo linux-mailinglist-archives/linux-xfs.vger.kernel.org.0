@@ -2,443 +2,431 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 249FF7DA98F
-	for <lists+linux-xfs@lfdr.de>; Sat, 28 Oct 2023 23:16:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99CC57DAAA2
+	for <lists+linux-xfs@lfdr.de>; Sun, 29 Oct 2023 05:12:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbjJ1VQc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 28 Oct 2023 17:16:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
+        id S229450AbjJ2EM0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 29 Oct 2023 00:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbjJ1VQ3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 28 Oct 2023 17:16:29 -0400
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67343D4A
-        for <linux-xfs@vger.kernel.org>; Sat, 28 Oct 2023 14:15:57 -0700 (PDT)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20231028211555euoutp02019bf1f496fbb96bbbce1063fa0534da~SYf6bKiGu0890208902euoutp02L
-        for <linux-xfs@vger.kernel.org>; Sat, 28 Oct 2023 21:15:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20231028211555euoutp02019bf1f496fbb96bbbce1063fa0534da~SYf6bKiGu0890208902euoutp02L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1698527755;
-        bh=vhkx9nEW1P7cUV8Zzx9SlNlxAL82sC2JgyqBVsGy9MY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=Hmi+lFYmkHisLsZG4VbgvaPvoiedms0z5nZdt23VzeCaQ4zTch+cDcnZoKOkjZexm
-         /vTxBQ0PS0S7S/vCmV+ontWsu8i0kpVGRzZBNKgTjMHBvhGggt2MHcoh0c1JqnGkqq
-         ARbkmZY90/TNfseuHtaw6TXdEUBbIaXDncT5gR60=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20231028211555eucas1p2394b404cd93491ee5bf44a270047b733~SYf6NFJBV1224812248eucas1p2I;
-        Sat, 28 Oct 2023 21:15:55 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 9F.57.37758.B0A7D356; Sat, 28
-        Oct 2023 22:15:55 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20231028211553eucas1p1a93637df6c46692531894e26023920d5~SYf441zj70616106161eucas1p1Z;
-        Sat, 28 Oct 2023 21:15:53 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20231028211553eusmtrp28117a3ed7ca27591a873d3f9be3ed510~SYf44SkDt1141411414eusmtrp2i;
-        Sat, 28 Oct 2023 21:15:53 +0000 (GMT)
-X-AuditID: cbfec7f5-815ff7000002937e-10-653d7a0b230b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A1.01.25043.90A7D356; Sat, 28
-        Oct 2023 22:15:53 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20231028211553eusmtip2ab1bab33fda116438d8bc7115d2b0f8e~SYf4oIwLJ1182011820eusmtip2q;
-        Sat, 28 Oct 2023 21:15:53 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) by
-        CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) with Microsoft SMTP
-        Server (TLS) id 15.0.1497.2; Sat, 28 Oct 2023 22:15:53 +0100
-Received: from CAMSVWEXC02.scsc.local ([::1]) by CAMSVWEXC02.scsc.local
-        ([fe80::3c08:6c51:fa0a:6384%13]) with mapi id 15.00.1497.012; Sat, 28 Oct
-        2023 22:15:53 +0100
-From:   Daniel Gomez <da.gomez@samsung.com>
-To:     "minchan@kernel.org" <minchan@kernel.org>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "hughd@google.com" <hughd@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-CC:     "gost.dev@samsung.com" <gost.dev@samsung.com>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Daniel Gomez <da.gomez@samsung.com>
-Subject: [RFC PATCH 11/11] shmem: add per-block uptodate tracking
-Thread-Topic: [RFC PATCH 11/11] shmem: add per-block uptodate tracking
-Thread-Index: AQHaCePuWb31sxRneEm07VKavHLDZg==
-Date:   Sat, 28 Oct 2023 21:15:52 +0000
-Message-ID: <20231028211518.3424020-12-da.gomez@samsung.com>
-In-Reply-To: <20231028211518.3424020-1-da.gomez@samsung.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [106.110.32.103]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229446AbjJ2EMY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 29 Oct 2023 00:12:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74949CA
+        for <linux-xfs@vger.kernel.org>; Sat, 28 Oct 2023 21:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1698552692;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=fsQ76kSpxpgkXQwD2Of978hkohjeDbuaKTUVPxc3kFk=;
+        b=SVkbTP9MM8ariXzBKmVVHwCImm8CZ9jcNzqCYzXc6x3OwaMiY48v6zXIDLJUh4qwFbjyAG
+        FbJ/sc17tdTDc/RtiadLqADwJ85Qx2ji/2bpk7kv6tPlT3izLRIZBVpRRjBUBtZc6m1URp
+        dhxG8mX27VF15qlWIHDB3BVfpB2ALn4=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-692-wI_U02i_OoGIcJsYsbLxjg-1; Sun, 29 Oct 2023 00:11:30 -0400
+X-MC-Unique: wI_U02i_OoGIcJsYsbLxjg-1
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6b2018a11e2so3409097b3a.2
+        for <linux-xfs@vger.kernel.org>; Sat, 28 Oct 2023 21:11:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698552689; x=1699157489;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fsQ76kSpxpgkXQwD2Of978hkohjeDbuaKTUVPxc3kFk=;
+        b=JmAd61/egJW0LSXVIxmTRUbTDBWybRXGgD4bace9uTFz49ZDd0eCsCpReQnkd0foPD
+         rEYIausMsAtKnqKNMdmd1hVqISlDPIM/otP6m8HAq0BAsSy4oYcnR/pbJASl2fDtwpkG
+         lwLLU8a4qlYhb3RqUeAXKMI7DyJXQ7hskeTxGf5seY3kOpB3zlDlj/mBBCHJPGop0CeW
+         zGloMOuHsK2nY/2kDjuGBXy+qwQiYJsGcN+WfNHOVtENsTs5o7YCSO2MhmuaSlXzLztK
+         q298dlerHoC44EE/ljO3xmK969sr1S1MNGtdMgXaxURHNxNPckPiG3opRWS0DB4ZAxbl
+         mHGQ==
+X-Gm-Message-State: AOJu0YwHLpU2CntoBdXoJiOESQaaj44AJKCBUJQBA0NP8ilF4+QiFxXD
+        ScKnZfKTroDd0taC5r4QgrN3eE0cYcAMwQoLuvQ985f6rh7yM1RGq7wwnO3E7EhG1ITJc/Ts3KH
+        fS9s1tbOb0TIjjz/HgnI04a2PN9NUNFILhzj0jRJIwMhG9WCO/MP+QReSFriW5//2iyz0UXvegx
+        6Mg0sY8w==
+X-Received: by 2002:a05:6a20:cea4:b0:17d:d70f:a2c3 with SMTP id if36-20020a056a20cea400b0017dd70fa2c3mr7701846pzb.20.1698552688683;
+        Sat, 28 Oct 2023 21:11:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEbl+6pHo9yMUOhoSA4wABmsyCeh/JcrHEFaT/o+/7/TnBbEo8tz1RdKTODIEhUq2LbdyuJzQ==
+X-Received: by 2002:a05:6a20:cea4:b0:17d:d70f:a2c3 with SMTP id if36-20020a056a20cea400b0017dd70fa2c3mr7701824pzb.20.1698552688015;
+        Sat, 28 Oct 2023 21:11:28 -0700 (PDT)
+Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id a3-20020a17090a740300b00263cca08d95sm1665340pjg.55.2023.10.28.21.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Oct 2023 21:11:27 -0700 (PDT)
+Date:   Sun, 29 Oct 2023 12:11:22 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     fstests@vger.kernel.org
+Subject: [Bug report][fstests generic/047] Internal error !(flags &
+ XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.
+  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+Message-ID: <20231029041122.bx2k7wwm7otebjd5@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNKsWRmVeSWpSXmKPExsWy7djP87rcVbapBmfWC1nMWb+GzWL13X42
-        i8tP+Cyefupjsdh7S9tiz96TLBaXd81hs7i35j+rxa4/O9gtbkx4ymix7Ot7dovdGxexWfz+
-        MYfNgddjdsNFFo8Fm0o9Nq/Q8rh8ttRj06pONo9Nnyaxe5yY8ZvF4/MmuQCOKC6blNSczLLU
-        In27BK6Mw3f6mAtOelQ86drA0sB4zLqLkZNDQsBE4ury1exdjFwcQgIrGCUerZrOBOF8YZTY
-        sH8NG4TzmVGibfUpZpiWZ7vfMEMkljNKbG9qYYKrOnXzEdSwM4wST/ddZgdpERJYySjRsVoR
-        xGYT0JTYd3ITWJGIwGxWicOLOxhBEswCdRJrns1iAbGFBRwljj95BRYXEXCTmN3Sxgph60lc
-        XrkdbCiLgKrEyw872UBsXgEbiW1/D4PFOYHs+9+2g8UZBWQlHq38xQ4xX1zi1pP5TBA/CEos
-        mr0H6h8xiX+7HrJB2DoSZ68/YYSwDSS2Lt3HAmErSfzpWAh1p57EjalT2CBsbYllC18zQ9wg
-        KHFy5hMWkMckBP5xSrz4cBNqgYvEqs87oAYJS7w6voUdwpaR+L9zPtMERu1ZSO6bhWTHLCQ7
-        ZiHZsYCRZRWjeGppcW56arFxXmq5XnFibnFpXrpecn7uJkZgejv97/jXHYwrXn3UO8TIxMF4
-        iFGCg1lJhJfZ0SZViDclsbIqtSg/vqg0J7X4EKM0B4uSOK9qinyqkEB6YklqdmpqQWoRTJaJ
-        g1OqgUng8j/lnYXZ1UWJa+zn628q6ZS49+Y+y9T5ySabLx7Q2Zm2n39u0uuHi7Yf+m25qy3w
-        6l1D1Xvtj3Scef2zBTUkduoJ21zbXfP5D/903RUNvu/fhjEbus8QlfU+f+J/gqiJ7ZaA5j1P
-        PaIi3HcZSxwpujP18NwVPVfqPZY+3bHk9DTn3mJZUbsduSeKXx1w88lZJ/zCyVScv+Cm4Lkb
-        k45JGXGs265cM6GRWUTxv1198o4arnNq6rJLg/W22DWEiNz8YsF1kld26iSG/xfULRYm3Ppd
-        WOt7aK8qn7o5x5X8rSHdHyUyNgpVftCNtfp7PYrjpPS7rE3ZbWHbumVYi96vNJ7HvcOYd+/T
-        noY0UyWW4oxEQy3mouJEACbzI/neAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCKsWRmVeSWpSXmKPExsVy+t/xe7qcVbapBvN/G1jMWb+GzWL13X42
-        i8tP+Cyefupjsdh7S9tiz96TLBaXd81hs7i35j+rxa4/O9gtbkx4ymix7Ot7dovdGxexWfz+
-        MYfNgddjdsNFFo8Fm0o9Nq/Q8rh8ttRj06pONo9Nnyaxe5yY8ZvF4/MmuQCOKD2bovzSklSF
-        jPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2Mw3f6mAtOelQ86drA
-        0sB4zLqLkZNDQsBE4tnuN8wgtpDAUkaJ7++EIOIyEhu/XGWFsIUl/lzrYoOo+cgocfoHZxcj
-        F5B9hlHi4scH7BDOSkaJq7tXMoJUsQloSuw7uQksISIwm1Xi8OIOsASzQJ3EmmezWEBsYQFH
-        ieNPXoHFRQTcJGa3tLFC2HoSl1duZwexWQRUJV5+2Am2mlfARmLb38NAcQ6gbbkS/W2ZIGFO
-        oPD9b9vBShgFZCUerfzFDrFKXOLWk/lMEB8ISCzZc54ZwhaVePn4H9RnOhJnrz9hhLANJLYu
-        3ccCYStJ/OlYCHWynsSNqVPYIGxtiWULXzNDnCMocXLmE5YJjNKzkKybhaRlFpKWWUhaFjCy
-        rGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAhMTtuO/dyyg3Hlq496hxiZOBgPMUpwMCuJ8DI7
-        2qQK8aYkVlalFuXHF5XmpBYfYjQFBtFEZinR5HxgeswriTc0MzA1NDGzNDC1NDNWEuf1LOhI
-        FBJITyxJzU5NLUgtgulj4uCUamAK8Su9t4A1dfL8zhPeLTrCNgEbXsyONbGd+tjGQCXox5HS
-        3rLggsakCS0Lb5R/8/w6v9qoWV59ZpHhI5PKzex/s4N2LgzfKCTwtXmeu++O+NKS+rTs/xNe
-        fCx2vZt1/MbtC/dVzD/KHvzYxihx+XiuvkDISXWGvHjGd8fP++3pealQ5nbry3GpXIHmBQVb
-        +e28FPN3Trm8YXJg2PpLr+aKvHbbLndBrS7/WkzNr0O3q1d1XrFQPPBX4vJEEYlrSQ8XyXk6
-        S7/ftyamem7b6TStFa02djtyb7rxKfxm8HzxRVFVPkG7be/Odbq3ZjPveaGa/uKs8j3FkxP3
-        mN+alyPDVFdftLSha/eDRJOLy8uUWIozEg21mIuKEwGITef91wMAAA==
-X-CMS-MailID: 20231028211553eucas1p1a93637df6c46692531894e26023920d5
-X-Msg-Generator: CA
-X-RootMTR: 20231028211553eucas1p1a93637df6c46692531894e26023920d5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20231028211553eucas1p1a93637df6c46692531894e26023920d5
-References: <20230919135536.2165715-1-da.gomez@samsung.com>
-        <20231028211518.3424020-1-da.gomez@samsung.com>
-        <CGME20231028211553eucas1p1a93637df6c46692531894e26023920d5@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Current work in progress due to fsx regression (check below).
+Hi xfs list,
 
-Based on iomap per-block dirty and uptodate state track, add support
-for shmem_folio_state struct to track uptodate per-block when a folio is
-larger than a block. In shmem, this is when large folios is used, as one
-block is equal to one page in this context.
+Recently I always hit xfs corruption by running fstests generic/047 [1], and
+it show more failures in dmesg[2], e.g:
 
-Add support for invalidate_folio, release_folio and is_partially_uptodate
-address space operations. The first two are needed to be able to free
-the new shmem_folio_state struct. The last callback is required for
-large folios when enabling per-block tracking.
+  XFS (loop1): Internal error !(flags & XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
 
-This was spotted when running fstests for tmpfs and regress on
-generic/285 and generic/436 tests [1] with large folios support in the
-fallocate path without having per-block uptodate tracking.
+The .full output lots of curruption messages [3].
 
-[1] tests:
-generic/285: src/seek_sanity_test/test09()
-generic/436: src/seek_sanity_test/test13()
+Currently I only hit this issue on s390x, haven't hit it on x86_64 or ppc64le
+or aarch64. The mkfs option isn't related, even on overlayfs (base on xfs)
+still hit this issue.
 
-How to reproduce:
+I tested on mainline linux 6.6.0-rc7+, the HEAD commit is:
 
-```sh
-mkdir -p /mnt/test-tmpfs
-./src/seek_sanity_test -s 9 -e 9 /mnt/test-tmpfs/file
-./src/seek_sanity_test -s 13 -e 13 /mnt/test-tmpfs/file
-umount /mnt/test-tmpfs
-```
+commit 750b95887e567848ac2c851dae47922cac6db946
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Oct 26 20:42:02 2023 -1000
 
-After per-block uptodate support is added, fsx regresion is found when
-running the following:
+    Merge tag 'drm-fixes-2023-10-27' of git://anongit.freedesktop.org/drm/drm
 
-```sh
-mkdir -p /mnt/test-tmpfs
-mount -t tmpfs -o size=3D1G -o noswap tmpfs /mnt/test-tmpfs
-/root/xfstests-dev/ltp/fsx /mnt/test-tmpfs/file -d -N 1200 -X
-umount /mnt/test-tmpfs
-```
+Thanks,
+Zorro
 
-Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
----
- mm/shmem.c | 169 +++++++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 159 insertions(+), 10 deletions(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index eb314927be78..fa67594495d5 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -132,6 +132,94 @@ struct shmem_options {
- #define SHMEM_SEEN_QUOTA 32
- };
+[1]
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/s390x s390x-kvm-091 6.6.0-rc7+ #1 SMP Fri Oct 27 08:58:03 EDT 2023
+MKFS_OPTIONS  -- -f -m crc=1,finobt=1,rmapbt=0,reflink=1,bigtime=1,inobtcount=1 /dev/loop1
+MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/loop1 /mnt/fstests/SCRATCH_DIR
 
-+/*
-+ * Structure allocated for each folio to track per-block uptodate state.
-+ *
-+ * Like buffered-io shmem_folio_state struct but only for uptodate.
-+ */
-+struct shmem_folio_state {
-+	spinlock_t state_lock;
-+	unsigned long state[];
-+};
-+
-+static inline bool sfs_is_fully_uptodate(struct folio *folio,
-+					 struct shmem_folio_state *sfs)
-+{
-+	struct inode *inode =3D folio->mapping->host;
-+
-+	return bitmap_full(sfs->state, i_blocks_per_folio(inode, folio));
-+}
-+
-+static inline bool sfs_block_is_uptodate(struct shmem_folio_state *sfs,
-+					 unsigned int block)
-+{
-+	return test_bit(block, sfs->state);
-+}
-+
-+static void sfs_set_range_uptodate(struct folio *folio,
-+				   struct shmem_folio_state *sfs, size_t off,
-+				   size_t len)
-+{
-+	struct inode *inode =3D folio->mapping->host;
-+	unsigned int first_blk =3D off >> inode->i_blkbits;
-+	unsigned int last_blk =3D (off + len - 1) >> inode->i_blkbits;
-+	unsigned int nr_blks =3D last_blk - first_blk + 1;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&sfs->state_lock, flags);
-+	bitmap_set(sfs->state, first_blk, nr_blks);
-+	if (sfs_is_fully_uptodate(folio, sfs))
-+		folio_mark_uptodate(folio);
-+	spin_unlock_irqrestore(&sfs->state_lock, flags);
-+}
-+
-+static void shmem_set_range_uptodate(struct folio *folio, size_t off,
-+				     size_t len)
-+{
-+	struct shmem_folio_state *sfs =3D folio->private;
-+
-+	if (sfs)
-+		sfs_set_range_uptodate(folio, sfs, off, len);
-+	else
-+		folio_mark_uptodate(folio);
-+}
-+
-+static struct shmem_folio_state *sfs_alloc(struct inode *inode,
-+					   struct folio *folio, gfp_t gfp)
-+{
-+	struct shmem_folio_state *sfs =3D folio->private;
-+	unsigned int nr_blocks =3D i_blocks_per_folio(inode, folio);
-+
-+	if (sfs || nr_blocks <=3D 1)
-+		return sfs;
-+
-+	/*
-+	 * sfs->state tracks uptodate flag when the block size is smaller
-+	 * than the folio size.
-+	 */
-+	sfs =3D kzalloc(struct_size(sfs, state, BITS_TO_LONGS(nr_blocks)), gfp);
-+	if (!sfs)
-+		return sfs;
-+
-+	spin_lock_init(&sfs->state_lock);
-+	if (folio_test_uptodate(folio))
-+		bitmap_set(sfs->state, 0, nr_blocks);
-+	folio_attach_private(folio, sfs);
-+
-+	return sfs;
-+}
-+
-+static void sfs_free(struct folio *folio)
-+{
-+	struct shmem_folio_state *sfs =3D folio_detach_private(folio);
-+
-+	if (!sfs)
-+		return;
-+	WARN_ON_ONCE(sfs_is_fully_uptodate(folio, sfs) !=3D
-+		     folio_test_uptodate(folio));
-+	kfree(sfs);
-+}
-+
- #ifdef CONFIG_TMPFS
- static unsigned long shmem_default_max_blocks(void)
- {
-@@ -1495,7 +1583,7 @@ static int shmem_writepage(struct page *page, struct =
-writeback_control *wbc)
- 		}
- 		folio_zero_range(folio, 0, folio_size(folio));
- 		flush_dcache_folio(folio);
--		folio_mark_uptodate(folio);
-+		shmem_set_range_uptodate(folio, 0, folio_size(folio));
- 	}
+generic/047       _check_xfs_filesystem: filesystem on /dev/loop1 failed scrub
+(see /var/lib/xfstests/results//generic/047.full for details)
+_check_xfs_filesystem: filesystem on /dev/loop1 is inconsistent (r)
+(see /var/lib/xfstests/results//generic/047.full for details)
+_check_dmesg: something found in dmesg (see /var/lib/xfstests/results//generic/047.dmesg)
+- output mismatch (see /var/lib/xfstests/results//generic/047.out.bad)
+    --- tests/generic/047.out	2023-10-27 09:04:38.145351816 -0400
+    +++ /var/lib/xfstests/results//generic/047.out.bad	2023-10-27 09:08:12.475381462 -0400
+    @@ -1 +1,1000 @@
+     QA output created by 047
+    +file /mnt/fstests/SCRATCH_DIR/1 missing - fsync failed
+    +file /mnt/fstests/SCRATCH_DIR/2 missing - fsync failed
+    +file /mnt/fstests/SCRATCH_DIR/3 missing - fsync failed
+    +file /mnt/fstests/SCRATCH_DIR/4 missing - fsync failed
+    +file /mnt/fstests/SCRATCH_DIR/5 missing - fsync failed
+    +file /mnt/fstests/SCRATCH_DIR/6 missing - fsync failed
+    ...
+    (Run 'diff -u /var/lib/xfstests/tests/generic/047.out /var/lib/xfstests/results//generic/047.out.bad'  to see the entire diff)
+Ran: generic/047
+Failures: generic/047
+Failed 1 of 1 tests
 
- 	swap =3D folio_alloc_swap(folio);
-@@ -1676,6 +1764,7 @@ static struct folio *shmem_alloc_and_add_folio(gfp_t =
-gfp,
- 	struct shmem_inode_info *info =3D SHMEM_I(inode);
- 	unsigned int order =3D shmem_mapping_size_order(mapping, index, len,
- 						      SHMEM_SB(inode->i_sb));
-+	struct shmem_folio_state *sfs;
- 	struct folio *folio;
- 	long pages;
- 	int error;
-@@ -1755,6 +1844,10 @@ static struct folio *shmem_alloc_and_add_folio(gfp_t=
- gfp,
- 		}
- 	}
 
-+	sfs =3D sfs_alloc(inode, folio, gfp);
-+	if (!sfs && i_blocks_per_folio(inode, folio) > 1)
-+		goto unlock;
-+
- 	trace_mm_shmem_add_to_page_cache(folio);
- 	shmem_recalc_inode(inode, pages, 0);
- 	folio_add_lru(folio);
-@@ -1818,7 +1911,7 @@ static int shmem_replace_folio(struct folio **foliop,=
- gfp_t gfp,
 
- 	__folio_set_locked(new);
- 	__folio_set_swapbacked(new);
--	folio_mark_uptodate(new);
-+	shmem_set_range_uptodate(new, 0, folio_size(new));
- 	new->swap =3D entry;
- 	folio_set_swapcache(new);
+[2]
+[  376.468885] run fstests generic/047 at 2023-10-27 09:08:07
+ [  376.675751] XFS (loop1): Mounting V5 Filesystem 716c9687-ee74-4c12-b6ad-a0b513194f2b
+ [  376.677088] XFS (loop1): Ending clean mount
+ [  376.678189] XFS (loop1): User initiated shutdown received.
+ [  376.678194] XFS (loop1): Metadata I/O Error (0x4) detected at xfs_fs_goingdown+0x5a/0xf8 [xfs] (fs/xfs/xfs_fsops.c:492).  Shutting down filesystem.
+ [  376.678409] XFS (loop1): Please unmount the filesystem and rectify the problem(s)
+ [  376.679423] XFS (loop1): Unmounting Filesystem 716c9687-ee74-4c12-b6ad-a0b513194f2b
+ [  376.714910] XFS (loop1): Mounting V5 Filesystem 40196bb2-39f4-4c32-83ef-567f42216699
+ [  376.716353] XFS (loop1): Ending clean mount
+ [  380.375878] XFS (loop1): User initiated shutdown received.
+ [  380.375888] XFS (loop1): Log I/O Error (0x6) detected at xfs_fs_goingdown+0xb4/0xf8 [xfs] (fs/xfs/xfs_fsops.c:495).  Shutting down filesystem.
+ [  380.376101] XFS (loop1): Please unmount the filesystem and rectify the problem(s)
+ [  380.380373] XFS (loop1): Unmounting Filesystem 40196bb2-39f4-4c32-83ef-567f42216699
+ [  380.383835] XFS (loop1): Mounting V5 Filesystem 40196bb2-39f4-4c32-83ef-567f42216699
+ [  380.397086] XFS (loop1): Starting recovery (logdev: internal)
+ [  380.465934] XFS (loop1): Ending recovery (logdev: internal)
+ [  380.467409] XFS (loop1): Unmounting Filesystem 40196bb2-39f4-4c32-83ef-567f42216699
+ [  380.475431] XFS (loop1): Mounting V5 Filesystem 40196bb2-39f4-4c32-83ef-567f42216699
+ [  380.477235] XFS (loop1): Ending clean mount
+ [  380.477500] XFS (loop1): Internal error !(flags & XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+ [  380.477636] CPU: 0 PID: 337362 Comm: 047 Kdump: loaded Tainted: G        W          6.6.0-rc7+ #1
+ [  380.477639] Hardware name: IBM 3931 LA1 400 (KVM/Linux)
+ [  380.477641] Call Trace:
+ [  380.477642]  [<0000000032d71372>] dump_stack_lvl+0x62/0x80 
+ [  380.477648]  [<000003ff7ff96c00>] xfs_corruption_error+0x70/0xa0 [xfs] 
+ [  380.477762]  [<000003ff7ff551ce>] xfs_dabuf_map.constprop.0+0x2a6/0x368 [xfs] 
+ [  380.477871]  [<000003ff7ff5773e>] xfs_da_read_buf+0x6e/0x128 [xfs] 
+ [  380.477977]  [<000003ff7ff57838>] xfs_da3_node_read+0x40/0x78 [xfs] 
+ [  380.478085]  [<000003ff7ff58c7a>] xfs_da3_node_lookup_int+0x82/0x558 [xfs] 
+ [  380.478193]  [<000003ff7ff68d6e>] xfs_dir2_node_lookup+0x3e/0x140 [xfs] 
+ [  380.478302]  [<000003ff7ff5cfd2>] xfs_dir_lookup+0x1ea/0x218 [xfs] 
+ [  380.478410]  [<000003ff7fface40>] xfs_lookup+0x60/0x108 [xfs] 
+ [  380.478525]  [<000003ff7ffa9d42>] xfs_vn_lookup+0x62/0x98 [xfs] 
+ [  380.478641]  [<0000000032738cfa>] __lookup_slow+0x9a/0x148 
+ [  380.478647]  [<000000003273dc86>] walk_component+0x126/0x1b8 
+ [  380.478650]  [<000000003273e948>] path_lookupat+0x88/0x1e8 
+ [  380.478653]  [<000000003273f66a>] filename_lookup+0xaa/0x198 
+ [  380.478656]  [<00000000327306d0>] vfs_statx+0x90/0x160 
+ [  380.478659]  [<0000000032730a1e>] vfs_fstatat+0x86/0xe8 
+ [  380.478661]  [<0000000032730c98>] __do_sys_newfstatat+0x28/0x48 
+ [  380.478663]  [<0000000032d97060>] __do_syscall+0x1d0/0x1f8 
+ [  380.478668]  [<0000000032da7040>] system_call+0x70/0x98 
+ [  380.478672] XFS (loop1): Corruption detected. Unmount and run xfs_repair
+ [  380.478674] XFS (loop1): xfs_dabuf_map: bno 8388608 inode 128
+ [  380.478676] XFS (loop1): [00] br_startoff 8388608 br_startblock -2 br_blockcount 1 br_state 0
+ [  380.478711] XFS (loop1): Internal error !(flags & XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+ [  380.478818] CPU: 0 PID: 337362 Comm: 047 Kdump: loaded Tainted: G        W          6.6.0-rc7+ #1
+ [  380.478820] Hardware name: IBM 3931 LA1 400 (KVM/Linux)
+ [  380.478821] Call Trace:
+ [  380.478822]  [<0000000032d71372>] dump_stack_lvl+0x62/0x80 
+ [  380.478825]  [<000003ff7ff96c00>] xfs_corruption_error+0x70/0xa0 [xfs] 
+ [  380.478939]  [<000003ff7ff551ce>] xfs_dabuf_map.constprop.0+0x2a6/0x368 [xfs] 
+ [  380.479047]  [<000003ff7ff5773e>] xfs_da_read_buf+0x6e/0x128 [xfs] 
+ [  380.479155]  [<000003ff7ff57838>] xfs_da3_node_read+0x40/0x78 [xfs] 
+ [  380.479263]  [<000003ff7ff58c7a>] xfs_da3_node_lookup_int+0x82/0x558 [xfs] 
+ [  380.479370]  [<000003ff7ff68d6e>] xfs_dir2_node_lookup+0x3e/0x140 [xfs] 
+ [  380.479480]  [<000003ff7ff5cfd2>] xfs_dir_lookup+0x1ea/0x218 [xfs] 
+ [  380.479594]  [<000003ff7fface40>] xfs_lookup+0x60/0x108 [xfs] 
+ [  380.479710]  [<000003ff7ffa9d42>] xfs_vn_lookup+0x62/0x98 [xfs] 
+ [  380.479826]  [<0000000032738cfa>] __lookup_slow+0x9a/0x148 
+ [  380.479829]  [<000000003273dc86>] walk_component+0x126/0x1b8 
+ [  380.479832]  [<000000003273e948>] path_lookupat+0x88/0x1e8 
+ [  380.479835]  [<000000003273f66a>] filename_lookup+0xaa/0x198 
+ [  380.479837]  [<00000000327306d0>] vfs_statx+0x90/0x160 
+ [  380.479840]  [<0000000032730a1e>] vfs_fstatat+0x86/0xe8 
+ [  380.479842]  [<0000000032730c98>] __do_sys_newfstatat+0x28/0x48 
+ [  380.479844]  [<0000000032d97060>] __do_syscall+0x1d0/0x1f8 
+ [  380.479847]  [<0000000032da7040>] system_call+0x70/0x98 
+ [  380.479850] XFS (loop1): Corruption detected. Unmount and run xfs_repair
+ [  380.479852] XFS (loop1): xfs_dabuf_map: bno 8388608 inode 128
+ [  380.479887] XFS (loop1): [00] br_startoff 8388608 br_startblock -2 br_blockcount 1 br_state 0
+ [  380.479912] XFS (loop1): Internal error !(flags & XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+ [  380.480022] CPU: 0 PID: 337362 Comm: 047 Kdump: loaded Tainted: G        W          6.6.0-rc7+ #1
+ [  380.480024] Hardware name: IBM 3931 LA1 400 (KVM/Linux)
+ [  380.480026] Call Trace:
+ [  380.480026]  [<0000000032d71372>] dump_stack_lvl+0x62/0x80 
+ [  380.480029]  [<000003ff7ff96c00>] xfs_corruption_error+0x70/0xa0 [xfs] 
+ [  380.480143]  [<000003ff7ff551ce>] xfs_dabuf_map.constprop.0+0x2a6/0x368 [xfs] 
+ [  380.480253]  [<000003ff7ff5773e>] xfs_da_read_buf+0x6e/0x128 [xfs] 
+ [  380.480360]  [<000003ff7ff57838>] xfs_da3_node_read+0x40/0x78 [xfs] 
+ [  380.480467]  [<000003ff7ff58c7a>] xfs_da3_node_lookup_int+0x82/0x558 [xfs] 
+ [  380.480576]  [<000003ff7ff68d6e>] xfs_dir2_node_lookup+0x3e/0x140 [xfs] 
+ [  380.480683]  [<000003ff7ff5cfd2>] xfs_dir_lookup+0x1ea/0x218 [xfs] 
+ [  380.480791]  [<000003ff7fface40>] xfs_lookup+0x60/0x108 [xfs] 
+ [  380.480907]  [<000003ff7ffa9d42>] xfs_vn_lookup+0x62/0x98 [xfs] 
+ [  380.481021]  [<0000000032738cfa>] __lookup_slow+0x9a/0x148 
+ [  380.481024]  [<000000003273dc86>] walk_component+0x126/0x1b8 
+ [  380.481027]  [<000000003273e948>] path_lookupat+0x88/0x1e8 
+ [  380.481030]  [<000000003273f66a>] filename_lookup+0xaa/0x198 
+ [  380.481033]  [<00000000327306d0>] vfs_statx+0x90/0x160 
+ [  380.481036]  [<0000000032730a1e>] vfs_fstatat+0x86/0xe8 
+ [  380.481038]  [<0000000032730c98>] __do_sys_newfstatat+0x28/0x48 
+ [  380.481040]  [<0000000032d97060>] __do_syscall+0x1d0/0x1f8 
+ [  380.481043]  [<0000000032da7040>] system_call+0x70/0x98 
+ [  380.481051] XFS (loop1): Corruption detected. Unmount and run xfs_repair
+ [  380.481053] XFS (loop1): xfs_dabuf_map: bno 8388608 inode 128
+ [  380.481054] XFS (loop1): [00] br_startoff 8388608 br_startblock -2 br_blockcount 1 br_state 0
+ [  380.481080] XFS (loop1): Internal error !(flags & XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+ [  380.481189] CPU: 0 PID: 337362 Comm: 047 Kdump: loaded Tainted: G        W          6.6.0-rc7+ #1
+ [  380.481191] Hardware name: IBM 3931 LA1 400 (KVM/Linux)
+ [  380.481192] Call Trace:
+ [  380.481193]  [<0000000032d71372>] dump_stack_lvl+0x62/0x80 
+ [  380.481195]  [<000003ff7ff96c00>] xfs_corruption_error+0x70/0xa0 [xfs] 
+ [  380.481310]  [<000003ff7ff551ce>] xfs_dabuf_map.constprop.0+0x2a6/0x368 [xfs] 
+ [  380.481418]  [<000003ff7ff5773e>] xfs_da_read_buf+0x6e/0x128 [xfs] 
+ [  380.481526]  [<000003ff7ff57838>] xfs_da3_node_read+0x40/0x78 [xfs] 
+ [  380.481635]  [<000003ff7ff58c7a>] xfs_da3_node_lookup_int+0x82/0x558 [xfs] 
+ [  380.481743]  [<000003ff7ff68d6e>] xfs_dir2_node_lookup+0x3e/0x140 [xfs] 
+ [  380.481854]  [<000003ff7ff5cfd2>] xfs_dir_lookup+0x1ea/0x218 [xfs] 
+ [  380.481961]  [<000003ff7fface40>] xfs_lookup+0x60/0x108 [xfs] 
+ [  380.482076]  [<000003ff7ffa9d42>] xfs_vn_lookup+0x62/0x98 [xfs] 
+ [  380.482191]  [<0000000032738cfa>] __lookup_slow+0x9a/0x148 
+ [  380.482194]  [<000000003273dc86>] walk_component+0x126/0x1b8 
+ [  380.482197]  [<000000003273e948>] path_lookupat+0x88/0x1e8 
+ [  380.482200]  [<000000003273f66a>] filename_lookup+0xaa/0x198 
+ [  380.482203]  [<00000000327306d0>] vfs_statx+0x90/0x160 
+ [  380.482205]  [<0000000032730a1e>] vfs_fstatat+0x86/0xe8 
+ [  380.482207]  [<0000000032730c98>] __do_sys_newfstatat+0x28/0x48 
+ [  380.482209]  [<0000000032d97060>] __do_syscall+0x1d0/0x1f8 
+ [  380.482212]  [<0000000032da7040>] system_call+0x70/0x98 
+ [  380.482215] XFS (loop1): Corruption detected. Unmount and run xfs_repair
+ [  380.482216] XFS (loop1): xfs_dabuf_map: bno 8388608 inode 128
+ [  380.482218] XFS (loop1): [00] br_startoff 8388608 br_startblock -2 br_blockcount 1 br_state 0
+ [  380.482242] XFS (loop1): Internal error !(flags & XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+ [  380.482362] CPU: 0 PID: 337362 Comm: 047 Kdump: loaded Tainted: G        W          6.6.0-rc7+ #1
+ [  380.482364] Hardware name: IBM 3931 LA1 400 (KVM/Linux)
+ [  380.482365] Call Trace:
+ [  380.482366]  [<0000000032d71372>] dump_stack_lvl+0x62/0x80 
+ [  380.482368]  [<000003ff7ff96c00>] xfs_corruption_error+0x70/0xa0 [xfs] 
+ [  380.482483]  [<000003ff7ff551ce>] xfs_dabuf_map.constprop.0+0x2a6/0x368 [xfs] 
+ [  380.482591]  [<000003ff7ff5773e>] xfs_da_read_buf+0x6e/0x128 [xfs] 
+ [  380.482696]  [<000003ff7ff57838>] xfs_da3_node_read+0x40/0x78 [xfs] 
+ [  380.482804]  [<000003ff7ff58c7a>] xfs_da3_node_lookup_int+0x82/0x558 [xfs] 
+ [  380.482910]  [<000003ff7ff68d6e>] xfs_dir2_node_lookup+0x3e/0x140 [xfs] 
+ [  380.483020]  [<000003ff7ff5cfd2>] xfs_dir_lookup+0x1ea/0x218 [xfs] 
+ [  380.483128]  [<000003ff7fface40>] xfs_lookup+0x60/0x108 [xfs] 
+ [  380.483241]  [<000003ff7ffa9d42>] xfs_vn_lookup+0x62/0x98 [xfs] 
+ [  380.483356]  [<0000000032738cfa>] __lookup_slow+0x9a/0x148 
+ [  380.483359]  [<000000003273dc86>] walk_component+0x126/0x1b8 
+ [  380.483362]  [<000000003273e948>] path_lookupat+0x88/0x1e8 
+ [  380.483365]  [<000000003273f66a>] filename_lookup+0xaa/0x198 
+ [  380.483368]  [<00000000327306d0>] vfs_statx+0x90/0x160 
+ [  380.483370]  [<0000000032730a1e>] vfs_fstatat+0x86/0xe8 
+ [  380.483372]  [<0000000032730c98>] __do_sys_newfstatat+0x28/0x48 
+ [  380.483374]  [<0000000032d97060>] __do_syscall+0x1d0/0x1f8 
+ [  380.483377]  [<0000000032da7040>] system_call+0x70/0x98 
+ [  380.483380] XFS (loop1): Corruption detected. Unmount and run xfs_repair
+ [  380.483382] XFS (loop1): xfs_dabuf_map: bno 8388608 inode 128
+ [  380.483383] XFS (loop1): [00] br_startoff 8388608 br_startblock -2 br_blockcount 1 br_state 0
+ ...
+ ...
+ [  381.349174] XFS (loop1): Corruption detected. Unmount and run xfs_repair
+[  381.349175] XFS (loop1): xfs_dabuf_map: bno 8388608 inode 128
+[  381.349177] XFS (loop1): [00] br_startoff 8388608 br_startblock -2 br_blockcount 1 br_state 0
+[  381.350972] XFS (loop1): Internal error !(flags & XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.  Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+[  381.351085] CPU: 1 PID: 339644 Comm: xfs_scrub Kdump: loaded Tainted: G        W          6.6.0-rc7+ #1
+[  381.351088] Hardware name: IBM 3931 LA1 400 (KVM/Linux)
+[  381.351090] Call Trace:
+[  381.351091]  [<0000000032d71372>] dump_stack_lvl+0x62/0x80 
+[  381.351093]  [<000003ff7ff96c00>] xfs_corruption_error+0x70/0xa0 [xfs] 
+[  381.351191]  [<000003ff7ff551ce>] xfs_dabuf_map.constprop.0+0x2a6/0x368 [xfs] 
+[  381.351283]  [<000003ff7ff5773e>] xfs_da_read_buf+0x6e/0x128 [xfs] 
+[  381.351375]  [<000003ff7ff57838>] xfs_da3_node_read+0x40/0x78 [xfs] 
+[  381.351467]  [<000003ff7ff58c7a>] xfs_da3_node_lookup_int+0x82/0x558 [xfs] 
+[  381.351558]  [<000003ff7ff68d6e>] xfs_dir2_node_lookup+0x3e/0x140 [xfs] 
+[  381.351651]  [<000003ff80008436>] xchk_dir_lookup+0x13e/0x1e0 [xfs] 
+[  381.351745]  [<000003ff800078c2>] xchk_parent+0x82/0x168 [xfs] 
+[  381.351840]  [<000003ff8000aa1a>] xfs_scrub_metadata+0x1c2/0x420 [xfs] 
+[  381.351938]  [<000003ff7ffa3876>] xfs_ioc_scrub_metadata+0x5e/0xb0 [xfs] 
+[  381.352035]  [<000003ff7ffa5d92>] xfs_file_ioctl+0x672/0x9f8 [xfs] 
+[  381.352133]  [<0000000032744c9e>] __s390x_sys_ioctl+0xbe/0x100 
+[  381.352135]  [<0000000032d97060>] __do_syscall+0x1d0/0x1f8 
+[  381.352138]  [<0000000032da7040>] system_call+0x70/0x98 
+[  381.352141] XFS (loop1): Corruption detected. Unmount and run xfs_repair
+[  381.352143] XFS (loop1): xfs_dabuf_map: bno 8388608 inode 128
+[  381.352174] XFS (loop1): [00] br_startoff 8388608 br_startblock -2 br_blockcount 1 br_state 0
+[  381.418153] XFS (loop1): Unmounting Filesystem 40196bb2-39f4-4c32-83ef-567f42216699
 
-@@ -2146,7 +2239,7 @@ static int shmem_get_folio_gfp(struct inode *inode, p=
-goff_t index,
- 		for (i =3D 0; i < n; i++)
- 			clear_highpage(folio_page(folio, i));
- 		flush_dcache_folio(folio);
--		folio_mark_uptodate(folio);
-+		shmem_set_range_uptodate(folio, 0, folio_size(folio));
- 	}
+[3]
+_check_xfs_filesystem: filesystem on /dev/loop1 failed scrub
+*** xfs_scrub -v -d -n output ***
+EXPERIMENTAL xfs_scrub program in use! Use at your own risk!
+Phase 1: Find filesystem geometry.
+/mnt/fstests/SCRATCH_DIR: using 2 threads to scrub.
+Phase 2: Check internal metadata.
+Info: AG 1 superblock: Optimization is possible. (scrub.c line 212)
+Info: AG 2 superblock: Optimization is possible. (scrub.c line 212)
+Info: AG 3 superblock: Optimization is possible. (scrub.c line 212)
+Phase 3: Scan all inodes.
+Corruption: inode 128 (0/128) inode record: Repairs are required. (scrub.c line 196)
+Corruption: inode 128 (0/128) parent pointer: Repairs are required. (scrub.c line 196)
+Corruption: inode 131 (0/131) inode record: Repairs are required. (scrub.c line 196)
+...
+Corruption: inode 58300 (0/58300) inode record: Repairs are required. (scrub.c line 196)
+Corruption: inode 58301 (0/58301) inode record: Repairs are required. (scrub.c line 196)
+Corruption: inode 58302 (0/58302) inode record: Repairs are required. (scrub.c line 196)
+Corruption: inode 58303 (0/58303) inode record: Repairs are required. (scrub.c line 196)
+Phase 5: Check directory tree.
+Info: /mnt/fstests/SCRATCH_DIR: Filesystem has errors, skipping connectivity checks. (phase5.c line 393)
+Phase 7: Check summary counters.
+198.9MiB data used;  1.0K inodes used.
+95.9MiB data found; 1.0K inodes found.
+1.0K inodes counted; 1.0K inodes checked.
+/mnt/fstests/SCRATCH_DIR: corruptions found: 1001
+/mnt/fstests/SCRATCH_DIR: Re-run xfs_scrub without -n.
+*** end xfs_scrub output
+_check_xfs_filesystem: filesystem on /dev/loop1 is inconsistent (r)
+*** xfs_repair -n output ***
+Phase 1 - find and verify superblock...
+Phase 2 - using internal log
+        - zero log...
+        - scan filesystem freespace and inode maps...
+        - found root inode chunk
+Phase 3 - for each AG...
+        - scan (but don't clear) agi unlinked lists...
+        - process known inodes and perform inode discovery...
+        - agno = 0
+bad nblocks 9 for inode 128, would reset to 0
+no . entry for directory 128
+no .. entry for root directory 128
+problem with directory contents in inode 128
+would clear root inode 128
+bad nblocks 8 for inode 131, would reset to 0
+bad nblocks 8 for inode 132, would reset to 0
+bad nblocks 8 for inode 133, would reset to 0
+...
+bad nblocks 8 for inode 62438, would reset to 0
+bad nblocks 8 for inode 62439, would reset to 0
+bad nblocks 8 for inode 62440, would reset to 0
+bad nblocks 8 for inode 62441, would reset to 0
+        - agno = 1
+        - agno = 2
+        - agno = 3
+        - process newly discovered inodes...
+Phase 4 - check for duplicate blocks...
+        - setting up duplicate extent list...
+root inode would be lost
+        - check for inodes claiming duplicate blocks...
+        - agno = 0
+        - agno = 1
+bad nblocks 9 for inode 128, would reset to 0
+        - agno = 2
+        - agno = 3
+no . entry for directory 128
+no .. entry for root directory 128
+problem with directory contents in inode 128
+would clear root inode 128
+bad nblocks 8 for inode 131, would reset to 0
+bad nblocks 8 for inode 132, would reset to 0
+bad nblocks 8 for inode 133, would reset to 0
+...
+bad nblocks 8 for inode 62439, would reset to 0
+bad nblocks 8 for inode 62440, would reset to 0
+bad nblocks 8 for inode 62441, would reset to 0
+No modify flag set, skipping phase 5
+Phase 6 - check inode connectivity...
+would reinitialize root directory
+        - traversing filesystem ...
+        - traversal finished ...
+        - moving disconnected inodes to lost+found ...
+disconnected inode 131, would move to lost+found
+disconnected inode 132, would move to lost+found
+disconnected inode 133, would move to lost+found
+...
+disconnected inode 62439, would move to lost+found
+disconnected inode 62440, would move to lost+found
+disconnected inode 62441, would move to lost+found
+Phase 7 - verify link counts...
+No modify flag set, skipping filesystem flush and exiting.
+*** end xfs_repair output
+*** mount output ***
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime,seclabel)
+devtmpfs on /dev type devtmpfs (rw,nosuid,seclabel,size=4096k,nr_inodes=986186,mode=755,inode64)
+securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)
+tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev,seclabel,inode64)
+devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,seclabel,gid=5,mode=620,ptmxmode=000)
+tmpfs on /run type tmpfs (rw,nosuid,nodev,seclabel,size=1592372k,nr_inodes=819200,mode=755,inode64)
+cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,noexec,relatime,seclabel,nsdelegate,memory_recursiveprot)
+pstore on /sys/fs/pstore type pstore (rw,nosuid,nodev,noexec,relatime,seclabel)
+bpf on /sys/fs/bpf type bpf (rw,nosuid,nodev,noexec,relatime,mode=700)
+/dev/mapper/rhel_s390x--kvm--091-root on / type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+selinuxfs on /sys/fs/selinux type selinuxfs (rw,nosuid,noexec,relatime)
+systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=29,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=3937)
+mqueue on /dev/mqueue type mqueue (rw,nosuid,nodev,noexec,relatime,seclabel)
+debugfs on /sys/kernel/debug type debugfs (rw,nosuid,nodev,noexec,relatime,seclabel)
+tracefs on /sys/kernel/tracing type tracefs (rw,nosuid,nodev,noexec,relatime,seclabel)
+hugetlbfs on /dev/hugepages type hugetlbfs (rw,relatime,seclabel,pagesize=1M)
+configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
+fusectl on /sys/fs/fuse/connections type fusectl (rw,nosuid,nodev,noexec,relatime)
+ramfs on /run/credentials/systemd-sysctl.service type ramfs (ro,nosuid,nodev,noexec,relatime,seclabel,mode=700)
+ramfs on /run/credentials/systemd-tmpfiles-setup-dev.service type ramfs (ro,nosuid,nodev,noexec,relatime,seclabel,mode=700)
+/dev/vda1 on /boot type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+/dev/mapper/rhel_s390x--kvm--091-home on /home type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+ramfs on /run/credentials/systemd-tmpfiles-setup.service type ramfs (ro,nosuid,nodev,noexec,relatime,seclabel,mode=700)
+sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw,relatime)
+tmpfs on /run/user/0 type tmpfs (rw,nosuid,nodev,relatime,seclabel,size=796184k,nr_inodes=199046,mode=700,inode64)
+*** end mount output
 
- 	/* Perhaps the file has been truncated since we checked */
-@@ -2788,13 +2881,18 @@ shmem_write_end(struct file *file, struct address_s=
-pace *mapping,
- 	if (pos + copied > inode->i_size)
- 		i_size_write(inode, pos + copied);
-
-+	if (unlikely(copied < len && !folio_test_uptodate(folio)))
-+		return 0;
-+
- 	if (!folio_test_uptodate(folio)) {
--		if (copied < folio_size(folio)) {
--			size_t from =3D offset_in_folio(folio, pos);
--			folio_zero_segments(folio, 0, from,
--					from + copied, folio_size(folio));
--		}
--		folio_mark_uptodate(folio);
-+		size_t from =3D offset_in_folio(folio, pos);
-+		if (!folio_test_large(folio) && copied < folio_size(folio))
-+			folio_zero_segments(folio, 0, from, from + copied,
-+					    folio_size(folio));
-+		if (folio_test_large(folio) && copied < PAGE_SIZE)
-+			folio_zero_segments(folio, from, from, from + copied,
-+					    folio_size(folio));
-+		shmem_set_range_uptodate(folio, from, len);
- 	}
- 	folio_mark_dirty(folio);
- 	folio_unlock(folio);
-@@ -2803,6 +2901,54 @@ shmem_write_end(struct file *file, struct address_sp=
-ace *mapping,
- 	return copied;
- }
-
-+void shmem_invalidate_folio(struct folio *folio, size_t offset, size_t len=
-)
-+{
-+	/*
-+	 * If we're invalidating the entire folio, clear the dirty state
-+	 * from it and release it to avoid unnecessary buildup of the LRU.
-+	 */
-+	if (offset =3D=3D 0 && len =3D=3D folio_size(folio)) {
-+		WARN_ON_ONCE(folio_test_writeback(folio));
-+		folio_cancel_dirty(folio);
-+		sfs_free(folio);
-+	}
-+}
-+
-+bool shmem_release_folio(struct folio *folio, gfp_t gfp_flags)
-+{
-+	sfs_free(folio);
-+	return true;
-+}
-+
-+/*
-+ * shmem_is_partially_uptodate checks whether blocks within a folio are
-+ * uptodate or not.
-+ *
-+ * Returns true if all blocks which correspond to the specified part
-+ * of the folio are uptodate.
-+ */
-+bool shmem_is_partially_uptodate(struct folio *folio, size_t from, size_t =
-count)
-+{
-+	struct shmem_folio_state *sfs =3D folio->private;
-+	struct inode *inode =3D folio->mapping->host;
-+	unsigned first, last, i;
-+
-+	if (!sfs)
-+		return false;
-+
-+	/* Caller's range may extend past the end of this folio */
-+	count =3D min(folio_size(folio) - from, count);
-+
-+	/* First and last blocks in range within folio */
-+	first =3D from >> inode->i_blkbits;
-+	last =3D (from + count - 1) >> inode->i_blkbits;
-+
-+	for (i =3D first; i <=3D last; i++)
-+		if (!sfs_block_is_uptodate(sfs, i))
-+			return false;
-+	return true;
-+}
-+
- static ssize_t shmem_file_read_iter(struct kiocb *iocb, struct iov_iter *t=
-o)
- {
- 	struct file *file =3D iocb->ki_filp;
-@@ -3554,7 +3700,7 @@ static int shmem_symlink(struct mnt_idmap *idmap, str=
-uct inode *dir,
- 		inode->i_mapping->a_ops =3D &shmem_aops;
- 		inode->i_op =3D &shmem_symlink_inode_operations;
- 		memcpy(folio_address(folio), symname, len);
--		folio_mark_uptodate(folio);
-+		shmem_set_range_uptodate(folio, 0, folio_size(folio));
- 		folio_mark_dirty(folio);
- 		folio_unlock(folio);
- 		folio_put(folio);
-@@ -4524,6 +4670,9 @@ const struct address_space_operations shmem_aops =3D =
-{
- #ifdef CONFIG_MIGRATION
- 	.migrate_folio	=3D migrate_folio,
- #endif
-+	.invalidate_folio =3D shmem_invalidate_folio,
-+	.release_folio	=3D shmem_release_folio,
-+	.is_partially_uptodate =3D shmem_is_partially_uptodate,
- 	.error_remove_page =3D shmem_error_remove_page,
- };
- EXPORT_SYMBOL(shmem_aops);
---
-2.39.2
