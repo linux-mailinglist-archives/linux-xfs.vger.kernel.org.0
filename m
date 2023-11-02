@@ -2,33 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 589527DE9E8
-	for <lists+linux-xfs@lfdr.de>; Thu,  2 Nov 2023 02:16:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60BD47DEF4B
+	for <lists+linux-xfs@lfdr.de>; Thu,  2 Nov 2023 10:57:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348174AbjKBBQn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Nov 2023 21:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
+        id S1345941AbjKBJz7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 2 Nov 2023 05:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348177AbjKBBQm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Nov 2023 21:16:42 -0400
-X-Greylist: delayed 401 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Nov 2023 18:16:36 PDT
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 681EE101
-        for <linux-xfs@vger.kernel.org>; Wed,  1 Nov 2023 18:16:36 -0700 (PDT)
-Date:   Wed, 1 Nov 2023 21:09:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1698887393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        with ESMTP id S1345937AbjKBJz6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 2 Nov 2023 05:55:58 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F47813E;
+        Thu,  2 Nov 2023 02:55:52 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id D752F21878;
+        Thu,  2 Nov 2023 09:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1698918950; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=hvc87rLyNSuk6U47xv+ZrAEvJPwfJlWofcSTDHhl/cc=;
-        b=uhT0YA0oJvl2v+shgvGl5NJKYfiqpHKRvoNoTvXm45MDRu2GouriFBC3ltFiriatDH7mOZ
-        NpDOUF00eA4q0YmeE7qF+dCLnxmn1GhC2/OfuxOP06K8OZ8CmTRTZR0p6D+wBYpaJEcxl3
-        0ZFHVLBAWihfsdWyIb2bneqz4H/krcg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Christian Brauner <brauner@kernel.org>,
+        bh=T5pRlUTGfYRuroKFEMEmJ57hIq3rhMsknidCix2gKl0=;
+        b=qutiQvaGsOQab0v2di7F+0A+4UnE3dlg1s6Dc8JWqH82ej9F/Hscve/EuDIIa9YGfCeh5D
+        g0zoi/ItgT+6HSryTvGRO4kSMrPZnTGeu6CX4/NAzyUULW0QjxoyATW2kYdWghdm546x0q
+        E8dx9htPDLSjzAXbZjaWb6ICvTui8BI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1698918950;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=T5pRlUTGfYRuroKFEMEmJ57hIq3rhMsknidCix2gKl0=;
+        b=UQreemB+E0uLx6UT+sZKc/0hHY0LMusZa0aq/V9EuW9VGPv+CBxgXLrad9ABB5R6QZEBhv
+        l5G+GZ++ekve+qBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BE12E138EC;
+        Thu,  2 Nov 2023 09:55:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id A59fLiZyQ2UoeAAAMHmgww
+        (envelope-from <jack@suse.cz>); Thu, 02 Nov 2023 09:55:50 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 36F76A06E3; Thu,  2 Nov 2023 10:55:50 +0100 (CET)
+Date:   Thu, 2 Nov 2023 10:55:50 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>,
         linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
         Jens Axboe <axboe@kernel.dk>,
         Christoph Hellwig <hch@infradead.org>,
@@ -36,33 +59,91 @@ Cc:     Christian Brauner <brauner@kernel.org>,
         syzkaller <syzkaller@googlegroups.com>,
         Alexander Popov <alex.popov@linux.com>,
         linux-xfs@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Brian Foster <bfoster@redhat.com>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
         linux-bcachefs@vger.kernel.org
 Subject: Re: [PATCH 1/7] bcachefs: Convert to bdev_open_by_path()
-Message-ID: <20231102010950.no2byim4ttu6csmy@moria.home.lan>
+Message-ID: <20231102095550.5hofpgzwbzx4ewqx@quack3>
 References: <20231101173542.23597-1-jack@suse.cz>
  <20231101174325.10596-1-jack@suse.cz>
+ <ZUKggpzckTAKkyMl@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231101174325.10596-1-jack@suse.cz>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+In-Reply-To: <ZUKggpzckTAKkyMl@bfoster>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Nov 01, 2023 at 06:43:06PM +0100, Jan Kara wrote:
-> Convert bcachefs to use bdev_open_by_path() and pass the handle around.
-> 
-> CC: Kent Overstreet <kent.overstreet@linux.dev>
-> CC: Brian Foster <bfoster@redhat.com>
-> CC: linux-bcachefs@vger.kernel.org
-> Signed-off-by: Jan Kara <jack@suse.cz>
+Hi Brian,
 
-Acked-by: Kent Overstreet <kent.overstreet@linux.dev>
+On Wed 01-11-23 15:01:22, Brian Foster wrote:
+> On Wed, Nov 01, 2023 at 06:43:06PM +0100, Jan Kara wrote:
+> > Convert bcachefs to use bdev_open_by_path() and pass the handle around.
+> > 
+> > CC: Kent Overstreet <kent.overstreet@linux.dev>
+> > CC: Brian Foster <bfoster@redhat.com>
+> > CC: linux-bcachefs@vger.kernel.org
+> > Signed-off-by: Jan Kara <jack@suse.cz>
+> > ---
+> >  fs/bcachefs/super-io.c    | 19 ++++++++++---------
+> >  fs/bcachefs/super_types.h |  1 +
+> >  2 files changed, 11 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/fs/bcachefs/super-io.c b/fs/bcachefs/super-io.c
+> > index 332d41e1c0a3..01a32c41a540 100644
+> > --- a/fs/bcachefs/super-io.c
+> > +++ b/fs/bcachefs/super-io.c
+> ...
+> > @@ -685,21 +685,22 @@ int bch2_read_super(const char *path, struct bch_opts *opts,
+> >  	if (!opt_get(*opts, nochanges))
+> >  		sb->mode |= BLK_OPEN_WRITE;
+> >  
+> > -	sb->bdev = blkdev_get_by_path(path, sb->mode, sb->holder, &bch2_sb_handle_bdev_ops);
+> > -	if (IS_ERR(sb->bdev) &&
+> > -	    PTR_ERR(sb->bdev) == -EACCES &&
+> > +	sb->bdev_handle = bdev_open_by_path(path, sb->mode, sb->holder, &bch2_sb_handle_bdev_ops);
+> > +	if (IS_ERR(sb->bdev_handle) &&
+> > +	    PTR_ERR(sb->bdev_handle) == -EACCES &&
+> >  	    opt_get(*opts, read_only)) {
+> >  		sb->mode &= ~BLK_OPEN_WRITE;
+> >  
+> > -		sb->bdev = blkdev_get_by_path(path, sb->mode, sb->holder, &bch2_sb_handle_bdev_ops);
+> > -		if (!IS_ERR(sb->bdev))
+> > +		sb->bdev_handle = bdev_open_by_path(path, sb->mode, sb->holder, &bch2_sb_handle_bdev_ops);
+> > +		if (!IS_ERR(sb->bdev_handle))
+> >  			opt_set(*opts, nochanges, true);
+> >  	}
+> >  
+> > -	if (IS_ERR(sb->bdev)) {
+> > -		ret = PTR_ERR(sb->bdev);
+> > +	if (IS_ERR(sb->bdev_handle)) {
+> > +		ret = PTR_ERR(sb->bdev_handle);
+> >  		goto out;
+> >  	}
+> > +	sb->bdev = sb->bdev_handle->bdev;
+> >  
+> >  	ret = bch2_sb_realloc(sb, 0);
+> >  	if (ret) {
+> 
+> This all seems reasonable to me, but should bcachefs use sb_open_mode()
+> somewhere in here to involve use of the restrict writes flag in the
+> first place? It looks like bcachefs sort of open codes bits of
+> mount_bdev() so it isn't clear the flag would be used anywhere...
+
+Yes, so AFAICS bcachefs will not get the write restriction from the changes
+in the generic code. Using sb_open_mode() in bcachefs would fix that but
+given the 'noexcl' and 'nochanges' mount options it will not be completely
+seamless anyway. I guess once the generic changes are in, bcachefs can
+decide how exactly it wants to set the BLK_OPEN_RESTRICT_WRITES flag. Or if
+you already have an opinion, we can just add the patch to this series.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
