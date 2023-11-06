@@ -2,139 +2,140 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB94B7E23B7
-	for <lists+linux-xfs@lfdr.de>; Mon,  6 Nov 2023 14:13:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1CFE7E2399
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Nov 2023 14:13:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232201AbjKFNNz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 6 Nov 2023 08:13:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
+        id S231926AbjKFNNI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 Nov 2023 08:13:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232215AbjKFNNx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Nov 2023 08:13:53 -0500
+        with ESMTP id S232119AbjKFNNC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Nov 2023 08:13:02 -0500
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CF3D6A
-        for <linux-xfs@vger.kernel.org>; Mon,  6 Nov 2023 05:13:48 -0800 (PST)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6Cx4JA005779;
-        Mon, 6 Nov 2023 13:13:45 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4AF100
+        for <linux-xfs@vger.kernel.org>; Mon,  6 Nov 2023 05:12:59 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6D1uw3024922;
+        Mon, 6 Nov 2023 13:12:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version;
- s=corp-2023-03-30; bh=EEm7+mmfslog3GKIhxsY3ArZni03JxPlBAnllghLzng=;
- b=poPWiHG2IUcxwkBD6ktnQVa7WYLkmSGjc42VAhzZ/LS5cW5nv2DkngTWb1Y0u3ToNMRw
- 16N9sNKIoYyrwRKNT/WeiKc2xVoe+7pXT1psbR+WTUhOV6JSitS1c7Kp68DUe8EYdqGe
- j8iNEJLKYqLvX72iXI/z3ztXfq15k7WkcU1CyKoXmqSBX7/yDnHIj4mcNDTS2mzV8fzT
- CGHuUB7EuqDe4wxKb8X0lkcETzmF0iih4xMRv2UxngAURr6jfSw+D5Hw75ph+5xi+yNv
- cFtERI7LEFJeyQxUnIAQ0qhR/SIh2wNNhHnAwsJJu/atZrdz3Y6T8z+6eNBzBgu2d5ol hA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3u5e0dtwey-1
+ s=corp-2023-03-30; bh=JszUE3hDIwu+ktwFgTaUEwNT/MEZ3xigHTSeM3YS8Mc=;
+ b=RBr7v5TlgHoc3yqFHJjrO0eG0cAU0WPNPajt0H/9Aub/Ckq5G1izLCrgXL5XFWxeijzE
+ atCzILitbK/XlLNM/6hPrX5Od0/L0zMl6PESKC8eFvwdCbsGxPCsewMINifrjQzdzomG
+ QEEFxE8eN+6gm73nXYhXgbwn4I7vuRiS2YeRIBhSW5nHqjXHrorX+tnS+yX8Kg6iPQVB
+ z9ZdOX9ZSa7Mz75w94/M3x+Wh2XOK8of540IVSuHlChIVUW1PnpTt9PMJqE2Jnsi6NtG
+ c2GfE3th+6VNyQy4VoDig7tnDo45TJ5w6nHYr2gh+W+KNv1u6mTR7wpS3N9wcyCGQqWq dw== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3u5ccdty71-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Nov 2023 13:13:45 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6D8Rkg023535;
-        Mon, 6 Nov 2023 13:13:42 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3u5cd4tcfa-5
+        Mon, 06 Nov 2023 13:12:56 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6CH7Dn030442;
+        Mon, 6 Nov 2023 13:12:55 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3u5cd4tcks-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Nov 2023 13:13:41 +0000
+        Mon, 06 Nov 2023 13:12:55 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b91HODliWt5ifkZOYjgatQj/I4sqLPLThXR1QqY3+tQNYzkldwg2pEHo8pxLPMNrXNyuTvq4Vzcp3uOPgvhpohYtoLBg5/nJ4ZZfIYrgCHBskdXTjxhiDdiliN+PVBcAWtY25L6TGvi1l1idlYHH2vtLhG7qpyN+nckuiMERRpBy23nUU3lT4Q3bOIJcqKgcttk9KKDh6gpmT4HL+km4kb3rjJwtTwADv6Vqq2eVU193kfEPmq5rWEjuaKB4KQg3VAd1Uva6U9McmGzW4Jc0J4vzkLNyzsQWa7HA1C68D0E+OO49Epd7lZAFizkE+FkupCaIHsluIW7y5tm+WrPYIg==
+ b=jFSz0T5w5LtfPn1SAKmE0wEtnJu9+vhIYNqUaQfxp5tpq1oTkRLBep4fnFzVxFZlJlyu4pnruvMjHr+fKX9UnGpA6SfBLvxzGk7U2neyx6GPAP7NqV+shAMxHj6SAOss11/c0HE0pKdcwIsNIUHbA+HGLzTXq7Sm5+NxZtUrWR5FFzRP+ceujOh5h8ZGu8AhF/uoRkSUXVPuGigFGAaAcYX191iwd1jd0iVHPesesmSE6vIMol0mE0yQrnGs6qeYXpH0h+RVSKDlz/JF6UEbqC8bbOZ0sno96jiXz0iJiBe5IyA3aM3KFkpjbddL3vA0AT8R4f0DKf45wLC/HVw7Kg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EEm7+mmfslog3GKIhxsY3ArZni03JxPlBAnllghLzng=;
- b=Uv+W294Q8ZFo4Og6VYEvDl8DLRxuMkVVzoHA3u1J5GQnF5EP1JJe2sm9T4DMuj4wEu8haesz4Tta0SWBgAjEA39cMKspDe6cZqeewME3vo0EEsR/S2/2tLIHpjQS4NRti7Xc27TO9kkBUzAQ+qYBgYMMNwHHgP79QSk4bXJEU4sF5fhIeMDwQF4Hwm5cWlNm8mlHf7k+y25WQML0Vem2fAm4z3pRSGRfo6Opd1ty7A2yFU43Cg8Fg2zFXL0pe1Ev8tRgF4NlnM/Lq+O3aNKSFUbDL1jwFjqNfbdFdfk6Q8D5ek3Ev0mfAMtD0pQF4uoCXw/bstscPE0mFJsEBUkUaw==
+ bh=JszUE3hDIwu+ktwFgTaUEwNT/MEZ3xigHTSeM3YS8Mc=;
+ b=NtTkMxYfpNrfnRRY+1eaFMm54j5yf2LAvnEdkLl2ekwuqXtRvNmxgk78nv91Y9cPwjoiRSnI/4W/6P6dXOcDbbNxwswwrFPM51ODIrY+ads05omK/PfdpfgZGiAC445CAtb+h3Ccg5SxAHMWdCJWTLkHtRk0lRGnJSIKurwAxZgcyqP6OK80JsPXEkhzx0HEhrbXx/1AiJWYD1ndDsE94PkrPdopmGeFrAVG6fGD+gAuF4p6jYUAU1EEY9bh7dkVFeTpboGPRUB94+qjoGIuE561/TobtjzwFLHpyOY7/2MSIh+U26ru7SwnQumY4jEKOE5yEFUnVE+aWMLiwhvs/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EEm7+mmfslog3GKIhxsY3ArZni03JxPlBAnllghLzng=;
- b=moGHhyIwsuVK5UZYI5S4WideMdgNH51PedsM7n5Sc5SS8+44zqD9auhCpQ/a2AA/Lng60Y0jixmWVmsSssPh+gxl/AAGPmt/7YGvzGRaBO9YBR1BhLP6+wNE0yWMvdyTSvx8+F1/vxkUYaPVYUxnGCbIbIX4z4YjlNgOC7xXhLM=
+ bh=JszUE3hDIwu+ktwFgTaUEwNT/MEZ3xigHTSeM3YS8Mc=;
+ b=bX6Z5f3MexMwkLn1/UdPExfHo/RXk9RJGpuMaJqGpz+ZfqWGGAYCoi65sLSa7yaDB1vZ9BnpbffE5gBgxtTaAeKvahCcuhzSNS+GHXBGcJHq7mpX5j2hF2FLKX+Xnnjcbjj6/DtVpoIAWgRK55w6GvV2eHpXXjvXAO8BtSTUnzo=
 Received: from SA1PR10MB5867.namprd10.prod.outlook.com (2603:10b6:806:233::19)
- by CO1PR10MB4513.namprd10.prod.outlook.com (2603:10b6:303:93::23) with
+ by BN0PR10MB5127.namprd10.prod.outlook.com (2603:10b6:408:124::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.28; Mon, 6 Nov
- 2023 13:12:46 +0000
+ 2023 13:12:52 +0000
 Received: from SA1PR10MB5867.namprd10.prod.outlook.com
  ([fe80::9bf4:a5ad:d9cd:f62d]) by SA1PR10MB5867.namprd10.prod.outlook.com
  ([fe80::9bf4:a5ad:d9cd:f62d%3]) with mapi id 15.20.6954.028; Mon, 6 Nov 2023
- 13:12:46 +0000
+ 13:12:52 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanbabu@kernel.org>, chandan.babu@oracle.com,
         djwong@kernel.org, cem@kernel.org
-Subject: [PATCH V4 17/21] mdrestore: Replace metadump header pointer argument with a union pointer
-Date:   Mon,  6 Nov 2023 18:40:50 +0530
-Message-Id: <20231106131054.143419-18-chandan.babu@oracle.com>
+Subject: [PATCH V4 18/21] mdrestore: Introduce mdrestore v1 operations
+Date:   Mon,  6 Nov 2023 18:40:51 +0530
+Message-Id: <20231106131054.143419-19-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20231106131054.143419-1-chandan.babu@oracle.com>
 References: <20231106131054.143419-1-chandan.babu@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SG3P274CA0004.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::16)
- To SA1PR10MB5867.namprd10.prod.outlook.com (2603:10b6:806:233::19)
+X-ClientProxiedBy: SI2PR02CA0048.apcprd02.prod.outlook.com
+ (2603:1096:4:196::23) To SA1PR10MB5867.namprd10.prod.outlook.com
+ (2603:10b6:806:233::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR10MB5867:EE_|CO1PR10MB4513:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a680747-f3b7-4084-3cd3-08dbdeca118f
+X-MS-TrafficTypeDiagnostic: SA1PR10MB5867:EE_|BN0PR10MB5127:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7eaccec-7689-4600-89cc-08dbdeca1527
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TihIrhhwts+X2+wAglKw8kwBqDd4pIyT3RR37x+tdXKXwKkpiX+6s7dabyO9Dbej7NY/rp6BMSLfQ3vidW3HdjT6yqj4WgMZ5V5pq4BIRFkrK3hlannKoX8FsHkqQUgJEw4JFh1FhPP2JTAsPNARtekHqe39R8JXW6TYB5BcIqE3euHG/2aZhmBEzu4AIgzPDBUiSwg+qAqX0RwkTaWXsJD7a+kKCJcvRY9BAXx8g0ihhiB43nUFbOCCOyvSucG7pHMnKpP8lEnfWkpcnKjUPhoZpvq5+1hXvCzsR7au6ldr4ekbh11nzpy5fS7Z3DE3dL+cVplbKln5ol3RlLfeZz79lZnefmUk9QMn7zqLWjzeUzC0U2vqGlP7yq/aqg9ZioEuqAVK77xuiGZaR4jUYxOlnt8JuaRVMPKP0fRrcs2eqUvlLDZgPVkR+v8oCi9C1ek2pguRlqZud79tSdYh5DqaO/XzMGdYmOGSpiNl7nNngDMSzw45LdYV4XDO0LvCbu3M6DcRSMVStgBudrv86LYPI34O7eBgsrcGDK5VglK5VezIHhX+KrSpkmK/RfcCL3ddHhiRNSyBhpbrRoPp9bYSjRUwfecVlNsDrEFToLFzYyyeUWiaokzOMSvBJOYO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5867.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(39860400002)(366004)(396003)(230273577357003)(230922051799003)(230173577357003)(186009)(1800799009)(64100799003)(451199024)(6512007)(41300700001)(6486002)(66476007)(66946007)(66556008)(6666004)(478600001)(5660300002)(6506007)(1076003)(4326008)(8676002)(6916009)(8936002)(316002)(2616005)(26005)(2906002)(83380400001)(38100700002)(36756003)(86362001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: cOFGDojM5TMGCtuQjpCILf6zKn/pRCdP3vUPEWDTGvAtIU6LgVfv0xlWwCvJdZVbdu1ssyYSymYIvYpjic4AYSQtJJwZ0VpZOPkCsqyqbBujsdZ8urZMLZX+RG51PtnELt4TJ9S7kdFV6s7nenr/PxkokiFn3TfoldHuIAzz/5PpKwbMi/d/C6hZDHp6NcGGMSrh8laSPU8no2Hnu8JHNFCyuxOK3AWIW+oSa3bhyou+lI3lBdzXctyDXUQn7OSBsbgauPqU1qMTf1IIgzyLY+ks+EyTZ2Bi9zzOxNUcqXwugcBDekCcsBeAiU6IgHwaPzJjqhClosmRG8E0mHZtZFZLVXX1hHbN9TWrIBR5z9lBu8yNY+iZ9MCA3i2PpFdjWIQ4KOUvhcmC/+Hdkipgc67SK+mxUpqqSLg7XuFzdgXRKIZUivf8ChHlQZxsPEnN+XjUaRC6UW8sSvtFvHScnh1htURdNnsjAm0oeBAYNRC5GAkzNUI8U76WkwK3fOopwGwsBOCeXOa2dgyoJMzc8ORVy4WAFhvUYdl8vuQ5mpH0+QWKmLsCUXLdHqs1SlSG1PZnAPOaPlgx5NS4noq9b0PoKduW+3KNoBmffZ1OWJ7xMC4jqAEq4wH3hsQIY003
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5867.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(136003)(346002)(376002)(230173577357003)(230922051799003)(230273577357003)(64100799003)(1800799009)(186009)(451199024)(478600001)(41300700001)(6512007)(6506007)(2616005)(6486002)(83380400001)(8676002)(8936002)(2906002)(1076003)(5660300002)(66946007)(26005)(316002)(6916009)(66476007)(66556008)(38100700002)(4326008)(86362001)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UeDH5hlKCOpRDxelwkZb/dcoJpMf6cadgYtcGWf08WhCEeIsMz/3gXieu03D?=
- =?us-ascii?Q?COqMwMQ40ppVyDtjQ8xb8wvWlKnoBAfJ2SuYbunMwcui1iGPi57WUsMuOtW3?=
- =?us-ascii?Q?YPoC31DVISlL1wm8/N+v/8Y6DWCTJ6gff+xqEsW+l/L/16HQC+iVjqarCgtQ?=
- =?us-ascii?Q?T929St8YoMc3pUyeRS9P4MCwN26+NyqVoBfrj8LRd1XzseA1g+nVt0ET2emP?=
- =?us-ascii?Q?NOQQe4LFGm/UXsPz98ehn2MSgUthu/yl77WhPKRK9AbFjoumwqYLUoJ4XP0X?=
- =?us-ascii?Q?CAgqSfxfusNqPhYEZ1uVpk+qjeQm0EnAwag7JZ/jAyikfRz4r4kWbv9qkwEw?=
- =?us-ascii?Q?/218qBMw2kYX9guqkzb61J15oYsFfC7lMa4AcvufGWu9deQbUjeyzedZq6Q9?=
- =?us-ascii?Q?LR2cyDmEHgn8yXbB9szy1KwbaFeMPeURJVcPd3iIonvhqooovvmkNX4fvM5Z?=
- =?us-ascii?Q?iZM5S2I/Ad1IElmeNrY3cWD7SkAo383dwrwb/He7je5+stfJr0RxVXqx7FPH?=
- =?us-ascii?Q?mXQQfsebKGiUHxssToj0du9Sp1WFUUYCTR7z8X5HokaOvgmoYk4WwC1sTlOe?=
- =?us-ascii?Q?gp3QbkRruAFuTx6+UbruzH6vgJVQ9eXQwezaUFFjB83NEJ6uwhYAqVWP0fPs?=
- =?us-ascii?Q?F2OWait3h5nQWmQ9dAub1iStnyoi7Ph+rVpsnoFxO6oCbR9AndfOJF/WWpgC?=
- =?us-ascii?Q?5Ma0A6MojqxWYVEnVTMosNXCiB6VJ6OVhZb6++LLPS9W32AU4EPZI9w1BHWF?=
- =?us-ascii?Q?cEFzNKL1Wy1ZKmXSZqMIOjtm+K4PH2feywPfKRpvXvqt1PwMxWzk5V3xTh2q?=
- =?us-ascii?Q?ljS0SDXQHVbaFw/nA+z5Tz85NLSVR5go0lkuxrX8wz0tAqpPYE8GqXJxKYcL?=
- =?us-ascii?Q?4KApZf4fYUqCECoIKT7RHHWVYcoQOeIr1F2qDMtWi7wPcpK2FOo+uk+aTUIL?=
- =?us-ascii?Q?bFTGhOWhPn0dnAtuCfGrbd8Nj+BbtvBPUXAE0IcrDW40gDXh4diWp+qdqWjV?=
- =?us-ascii?Q?uEhstQD95lgDRCvGBW9KqDoJm/fMA6neTkWEFRisZvV6OofxG9/snvLVFNAX?=
- =?us-ascii?Q?KDiPANPTAGpZZa1oO+eFClW8vE3qAiuOO2JmvrKeF2DbHd5+abDEAsOQksaO?=
- =?us-ascii?Q?zlYv1SSPcn73tt5M8YW8Ra4Rc/TQid1hUqCxx4mVku0Wr2uXqxQcFtIcTF4f?=
- =?us-ascii?Q?fo284bq0zj6g8r90iquZXtOZBpyCJ5Ky49e6tEkxYiva+qIZ8KFrTwwfxvmm?=
- =?us-ascii?Q?mjuTsQ91IKy8lj9vcBDxRMyW5ovHA7lvxwOyhfaaD6/w4ALJP12rT6gJa3z8?=
- =?us-ascii?Q?g17nNcgCInt8dDk9vK2e8i7QloCMBDTOhZT3PGgVc9TdiQm0dEh5YLTscvj6?=
- =?us-ascii?Q?4O5foEsJCpaemELiBzyRMuVHnMagkUEILAMQkStlX7BM6WNjIb+dzglDKc0o?=
- =?us-ascii?Q?6nrsEQyNt1F3MLETOAKDap7owyzXTL3ueL3eptdRd+sz606Crq+u1CejXKhb?=
- =?us-ascii?Q?IZDWlOesr5MzFw93r0LI2mEum65gEFfoXVp+0oEYPijewKhRnj77l65heH5C?=
- =?us-ascii?Q?a6RtjAjKahS1ADhCjFS5hqJKDMsW2em+kBmEirGTcQd2BV7p3uF2CEXQUUjt?=
- =?us-ascii?Q?pA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YC9sPEmsr8qZIyR2sgSibFGazORkhKVvgEzxP6/08EfLLAnmBdOBzdwFE8vs?=
+ =?us-ascii?Q?SK/yeCH7/I1hG1cEGX25s3p6MQLsX9w0wY9ghkBrZ0p0fPr/GGq3J5srQTsI?=
+ =?us-ascii?Q?knosew0y/5PAuW/C8lvh2Z+ljAAJ2H19/ubaRCxeC118UdIKKGgPEroV6ssE?=
+ =?us-ascii?Q?PTnE/dzscNSJXWa1924hngST1KjUPnf3DdCNgTmgDtpMrdrRF0zIg7WwzXTK?=
+ =?us-ascii?Q?KhrykTWEqR68pmDIKsWk2I0Zyn38wIdPLcI20XmFtMn+PcA4f9f4ENHdoQtd?=
+ =?us-ascii?Q?PZirjrQZhVGe1bq+8HhTbqe14LExz91hwmMRriRLD1+YJ6A9l9GoDeddmkE/?=
+ =?us-ascii?Q?hdjvDp/1DR0n2YddydRrxg8uxbozjuhI8dOU/AK+BJL3ZR4N43QO/hnjtwJV?=
+ =?us-ascii?Q?lIlG1vz3aNuFuqAbKSIAeULIAAbXAMsX8r6z2jD4oqH2cjzEJAF+MeG3TFhW?=
+ =?us-ascii?Q?T0+xplycRx4jECBwWmOT20Uk6h1t57Sql+3ti6ZkJ8w0thbeDcHMcTYBYKpj?=
+ =?us-ascii?Q?XBCr65gJeNYfcRV1P0eDiOw2DOrVrusZRmVJ7OI0ZujZhD//GwfpEq+aruBl?=
+ =?us-ascii?Q?aCLhvl7r7/gOQz4p6l/SefrKH++0HIRJ+O85i+X9IVwODEEzLBRP0HUjF5FR?=
+ =?us-ascii?Q?OcoFRoWO7qS76MTFNbAXYByVsvIrb1tnLsc/sMvvQhA2WwKYadWoAjdoJS4O?=
+ =?us-ascii?Q?kYs3anrJl0yd8Pf4MD1xmPgdxPPQIppFd6SagncB4fP6eR+WVtMCk9PnaNeL?=
+ =?us-ascii?Q?TxVwqffIfX3kDILAsdggFCddvyZcSyTsr25pGccB+wYqWP+SRDyIHieHaGVj?=
+ =?us-ascii?Q?OwfDOtAISxS9A/reoYg+REzVc/Yc55BBz6rudj9cXDlsa1zqx7Riy9kOtJ5z?=
+ =?us-ascii?Q?jPyp3NdiDcToi0tClvswMd+T+hCmTjzHxSanoxAG+zjyh/EMUzO0q3z9tdsX?=
+ =?us-ascii?Q?WZdOqPOVujmDclfuFf99kkpv01LH6mpT9horufigXb9djzEuzRNpOjVz0krq?=
+ =?us-ascii?Q?/xLTrZsMH7c92lllp0Zy5YXm6r7t5NJD6eiZTxDhcc0qFPmrASTVMHzgO4hp?=
+ =?us-ascii?Q?2rlFmrr0FpSEeiM28NDFRSSzKfMVZ6xrp6UlBcNppDKeG6NVzLzMJPm6SRZb?=
+ =?us-ascii?Q?shOpg/lfueT/O9KQxLPRIDmB/HqRLSyAVeFcto6R8QcHyvHnOTGMhLBEdhnN?=
+ =?us-ascii?Q?2/kVUIsB7jWbvFAW7biU6NIl2euOA6oRfj2jwNhJZU0kdBo/A8a1DHVd+EU4?=
+ =?us-ascii?Q?5GEABn1d+kET+9W8VLR/Fqewn1Ma0P8AmDBFFfbzOl/RmTz29cqrFT6W7hpB?=
+ =?us-ascii?Q?UtfxABbAK8UMiULCQORgvhhRBKANma5oPSyQCPL6Qg9Rki55xD3bFtUfObB3?=
+ =?us-ascii?Q?BdE1/Y+/gPFgl1vhdbNSpkbVDs7hMWFw5vXc0f61eG3FsDqaXtzTuq8a5WX5?=
+ =?us-ascii?Q?ygBb4dIjLNZzXWSy8RyKZPBbEVR9M8QJPZ4Fwr6PaYmeWV96nvgkH2MGr6jG?=
+ =?us-ascii?Q?CQgun4wGUkj7yuVgcPwiy7v3xJGnrWPiQLUqz5AbdnyofJSRYpiB7nuHDS6+?=
+ =?us-ascii?Q?YWlDQpwj3HYLGwB/B+xjlPSmAEFsaLlUqMy258KRe/T5Eb5i3WrbAGN2g3+s?=
+ =?us-ascii?Q?4Q=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: iyFEh5CENd2M6L/4p/Xyc4vY9asazL/NyB4c/CIO22FpTbgKT8zSVO3sOdZKq3xVXLvkNfxMbtmNMst0UtAAlopZLfJCrm7SRBVI6yQqY3xTTqy7qPNVGyHBx8W7wt7BJv9eUBBcHak1MUy7Tf36MNoOrVX4EjMiJr19+Zwb4oaM9ybN+cRKMHAhmm2hC0yQqfI2zKLjcSlofFl5PgfX7GamYLMEedJCPi+qkXcGVHa1kwPO7kWMMIfA43Ju8mijHkDL4iRzIxz7QC2aZVKRyn1skh4w7i1W1hirgpkMVL3UQedg6CTGrLGrOB/GbfmelxnJ2tWBFf8AI7Jv5gpALe5N7xXp8wZ8CDbRyxKq6xsg88eiP1pujEyeSPmWd3bXyucV4GCyubldGxwFUXPLxlXPjzO/8etSYnuEqB8yakL1vA8nXQKFEiIV7Fpft8H/3/gp9tgvvZdlw4+9JOUOsvRh22tp0i8zPgotTqJFWntLk8HX7yjjTGTFBHMs/UF13oRN/3cN1KWTwPxLgEi4QZM+grtNJWDQOgOefgTwCRsBgTNt6r/UghmO3fg+V0cuylghxmKwgdvttb3Xsg8P71p7tHXVAvhwlPyXZOkJ0ehs2VqNxUulUKi/UjyntG48qPcjVdh/qs7Zu0vHCPE6GFh0tm15ar4Y2INbSwq0MrBrtXcw3z7kRqf29BztbsS9ywwTmar3oaLDHl9OPgPOseL52xsB4Qhz10IMiuBa6Xm7H984nwsQAs3uE9xHAvkEfRJVQ5yJYZPZ3bGp9UaRz+rJ2H0w7AEvQDgvK7v43v4=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 5iBHkbkhfWTgj3mGn2fjURbo6s2W14fbCyepra1krNVJynWwClW7Th0iJlPHgjMJtfNKySpOX3eYsalKpcdXonUSRTEgmMz1RccwQ6phi7Qnb6hvTEEcrg8Djfk3n2aY5DvRipZzuVfCEpJ4ArEkWu/O1xCVheO/DQaGc4QWTFLaz5kDV/j+UWjfyqOwY8qPoZ2/1MrBC1OT/lnivF2/VO7xYLxdpalu62impIiqAKgEdrCXyO8krt9h6IEnYHvGiE1ruxyKLUjayBr5mtu/T3W3asTGcmEHneAgi5kScsIa19EF9nv71szN3cVVvkCwtmfjEG80b96OOs92e58LKbM8ncm+ZiuP4E/ONLb5MmYikuFTOm/2blKIPAWZWIZo9SDply5WOaHiZ0srfP+r5BPBhMStZ5dYdp+FtAq9FIg9haXBbGQKUmIeFeqNy3KE9aZAGg1YRJqQ8qVt8QWRJptgCp5GSShyjiKiIJNHNGSWCQQlwXNy72fhLGH3spYVB3FofgMdCK8qQ+UXtWMHw+CQlJijBUALIP9Y4WhaHwNlv9Bj4PIxQQeNhzacry0YsXAhB3pMpWgkRZ0oxV4tmlDxKEIiJGxObeB7UGnsUh+7NUD36eACgMkI/DTGWxdjxpjc1Il2RCZxM6cqnwAe06wQvoqE2fsMbtOu5Asiq2uzJCE7CxsZPyHsLqYsp66iZKYqnqSmw0uFHJPPgND5aHItjjvX5OqwnRDDpMjWe1KA8pTNay7r0EKm4XR4fPujpIWsszkPJ14BYJWg+GA24Kb0vjSgEy//FK5CBvN+e0A=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a680747-f3b7-4084-3cd3-08dbdeca118f
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7eaccec-7689-4600-89cc-08dbdeca1527
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB5867.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2023 13:12:46.3615
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2023 13:12:52.3758
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1vXBu/ZqX/zzzHmEuwE46bVU99bXgbk86OgV0yeNCkmS4al5514a9BUVAS+GnST5VIMsU5HMH79Zpa372fAf9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4513
+X-MS-Exchange-CrossTenant-UserPrincipalName: IUicWUG+VeiVJr4ByDUg3Bxx/dKCYo0lpObZvKY/8yK3bA7I8ZFUI3pHZLmkQskIRYInH1wt2OwC0A6PDo4mwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5127
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-06_12,2023-11-02_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
- suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310240000
- definitions=main-2311060107
-X-Proofpoint-GUID: X36CD7ImpRoPT9TP3frUqMHHwxtXWBRT
-X-Proofpoint-ORIG-GUID: X36CD7ImpRoPT9TP3frUqMHHwxtXWBRT
+ definitions=main-2311060106
+X-Proofpoint-ORIG-GUID: l0c9bzUAYAYKKOv3GlRIy3b1F4cmJExM
+X-Proofpoint-GUID: l0c9bzUAYAYKKOv3GlRIy3b1F4cmJExM
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -147,189 +148,137 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Chandan Babu R <chandanbabu@kernel.org>
 
-We will need two variants of read_header(), show_info() and restore() helper
-functions to support two versions of metadump formats. To this end, A future
-commit will introduce a vector of function pointers to work with the two
-metadump formats. To have a common function signature for the function
-pointers, this commit replaces the first argument of the previously listed
-function pointers from "struct xfs_metablock *" with "union
-mdrestore_headers *".
+In order to indicate the version of metadump files that they can work with,
+this commit renames read_header(), show_info() and restore() functions to
+read_header_v1(), show_info_v1() and restore_v1() respectively.
 
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- mdrestore/xfs_mdrestore.c | 66 ++++++++++++++++++++-------------------
- 1 file changed, 34 insertions(+), 32 deletions(-)
+ mdrestore/xfs_mdrestore.c | 51 +++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
 
 diff --git a/mdrestore/xfs_mdrestore.c b/mdrestore/xfs_mdrestore.c
-index d67a0629..40de0d1e 100644
+index 40de0d1e..b247a4bf 100644
 --- a/mdrestore/xfs_mdrestore.c
 +++ b/mdrestore/xfs_mdrestore.c
-@@ -8,6 +8,11 @@
- #include "xfs_metadump.h"
- #include <libfrog/platform.h>
+@@ -13,10 +13,18 @@ union mdrestore_headers {
+ 	struct xfs_metablock	v1;
+ };
  
-+union mdrestore_headers {
-+	__be32			magic;
-+	struct xfs_metablock	v1;
++struct mdrestore_ops {
++	void (*read_header)(union mdrestore_headers *header, FILE *md_fp);
++	void (*show_info)(union mdrestore_headers *header, const char *md_file);
++	void (*restore)(union mdrestore_headers *header, FILE *md_fp,
++			int ddev_fd, bool is_target_file);
 +};
 +
  static struct mdrestore {
- 	bool	show_progress;
- 	bool	show_info;
-@@ -78,27 +83,25 @@ open_device(
+-	bool	show_progress;
+-	bool	show_info;
+-	bool	progress_since_warning;
++	struct mdrestore_ops	*mdrops;
++	bool			show_progress;
++	bool			show_info;
++	bool			progress_since_warning;
+ } mdrestore;
  
  static void
- read_header(
--	struct xfs_metablock	*mb,
-+	union mdrestore_headers	*h,
- 	FILE			*md_fp)
- {
--	mb->mb_magic = cpu_to_be32(XFS_MD_MAGIC_V1);
--
--	if (fread((uint8_t *)mb + sizeof(mb->mb_magic),
--			sizeof(*mb) - sizeof(mb->mb_magic), 1, md_fp) != 1)
-+	if (fread((uint8_t *)&(h->v1.mb_count),
-+			sizeof(h->v1) - sizeof(h->magic), 1, md_fp) != 1)
- 		fatal("error reading from metadump file\n");
+@@ -82,7 +90,7 @@ open_device(
  }
  
  static void
- show_info(
--	struct xfs_metablock	*mb,
-+	union mdrestore_headers	*h,
+-read_header(
++read_header_v1(
+ 	union mdrestore_headers	*h,
+ 	FILE			*md_fp)
+ {
+@@ -92,7 +100,7 @@ read_header(
+ }
+ 
+ static void
+-show_info(
++show_info_v1(
+ 	union mdrestore_headers	*h,
  	const char		*md_file)
  {
--	if (mb->mb_info & XFS_METADUMP_INFO_FLAGS) {
-+	if (h->v1.mb_info & XFS_METADUMP_INFO_FLAGS) {
- 		printf("%s: %sobfuscated, %s log, %s metadata blocks\n",
- 			md_file,
--			mb->mb_info & XFS_METADUMP_OBFUSCATED ? "":"not ",
--			mb->mb_info & XFS_METADUMP_DIRTYLOG ? "dirty":"clean",
--			mb->mb_info & XFS_METADUMP_FULLBLOCKS ? "full":"zeroed");
-+			h->v1.mb_info & XFS_METADUMP_OBFUSCATED ? "":"not ",
-+			h->v1.mb_info & XFS_METADUMP_DIRTYLOG ? "dirty":"clean",
-+			h->v1.mb_info & XFS_METADUMP_FULLBLOCKS ? "full":"zeroed");
- 	} else {
- 		printf("%s: no informational flags present\n", md_file);
+@@ -107,22 +115,12 @@ show_info(
  	}
-@@ -116,10 +119,10 @@ show_info(
-  */
+ }
+ 
+-/*
+- * restore() -- do the actual work to restore the metadump
+- *
+- * @src_f: A FILE pointer to the source metadump
+- * @dst_fd: the file descriptor for the target file
+- * @is_target_file: designates whether the target is a regular file
+- * @mbp: pointer to metadump's first xfs_metablock, read and verified by the caller
+- *
+- * src_f should be positioned just past a read the previously validated metablock
+- */
  static void
- restore(
-+	union mdrestore_headers *h,
+-restore(
++restore_v1(
+ 	union mdrestore_headers *h,
  	FILE			*md_fp,
  	int			ddev_fd,
--	int			is_target_file,
--	const struct xfs_metablock	*mbp)
-+	int			is_target_file)
+-	int			is_target_file)
++	bool			is_target_file)
  {
  	struct xfs_metablock	*metablock;	/* header + index + blocks */
  	__be64			*block_index;
-@@ -131,14 +134,14 @@ restore(
- 	xfs_sb_t		sb;
- 	int64_t			bytes_read;
+@@ -245,6 +243,12 @@ restore(
+ 	free(metablock);
+ }
  
--	block_size = 1 << mbp->mb_blocklog;
-+	block_size = 1 << h->v1.mb_blocklog;
- 	max_indices = (block_size - sizeof(xfs_metablock_t)) / sizeof(__be64);
- 
- 	metablock = (xfs_metablock_t *)calloc(max_indices + 1, block_size);
- 	if (metablock == NULL)
- 		fatal("memory allocation failure\n");
- 
--	mb_count = be16_to_cpu(mbp->mb_count);
-+	mb_count = be16_to_cpu(h->v1.mb_count);
- 	if (mb_count == 0 || mb_count > max_indices)
- 		fatal("bad block count: %u\n", mb_count);
- 
-@@ -152,8 +155,7 @@ restore(
- 	if (block_index[0] != 0)
- 		fatal("first block is not the primary superblock\n");
- 
--
--	if (fread(block_buffer, mb_count << mbp->mb_blocklog, 1, md_fp) != 1)
-+	if (fread(block_buffer, mb_count << h->v1.mb_blocklog, 1, md_fp) != 1)
- 		fatal("error reading from metadump file\n");
- 
- 	libxfs_sb_from_disk(&sb, (struct xfs_dsb *)block_buffer);
-@@ -200,7 +202,7 @@ restore(
- 
- 		for (cur_index = 0; cur_index < mb_count; cur_index++) {
- 			if (pwrite(ddev_fd, &block_buffer[cur_index <<
--					mbp->mb_blocklog], block_size,
-+					h->v1.mb_blocklog], block_size,
- 					be64_to_cpu(block_index[cur_index]) <<
- 						BBSHIFT) < 0)
- 				fatal("error writing block %llu: %s\n",
-@@ -219,11 +221,11 @@ restore(
- 		if (mb_count > max_indices)
- 			fatal("bad block count: %u\n", mb_count);
- 
--		if (fread(block_buffer, mb_count << mbp->mb_blocklog,
-+		if (fread(block_buffer, mb_count << h->v1.mb_blocklog,
- 				1, md_fp) != 1)
- 			fatal("error reading from metadump file\n");
- 
--		bytes_read += block_size + (mb_count << mbp->mb_blocklog);
-+		bytes_read += block_size + (mb_count << h->v1.mb_blocklog);
- 	}
- 
- 	if (mdrestore.progress_since_warning)
-@@ -252,15 +254,14 @@ usage(void)
- 
- int
- main(
--	int 		argc,
--	char 		**argv)
-+	int			argc,
-+	char			**argv)
++static struct mdrestore_ops mdrestore_ops_v1 = {
++	.read_header	= read_header_v1,
++	.show_info	= show_info_v1,
++	.restore	= restore_v1,
++};
++
+ static void
+ usage(void)
  {
--	FILE		*src_f;
--	int		dst_fd;
--	int		c;
--	bool		is_target_file;
--	uint32_t	magic;
--	struct xfs_metablock	mb;
-+	union mdrestore_headers headers;
-+	FILE			*src_f;
-+	int			dst_fd;
-+	int			c;
-+	bool			is_target_file;
+@@ -294,9 +298,9 @@ main(
  
- 	mdrestore.show_progress = false;
- 	mdrestore.show_info = false;
-@@ -307,20 +308,21 @@ main(
- 			fatal("cannot open source dump file\n");
- 	}
+ 	/*
+ 	 * open source and test if this really is a dump. The first metadump
+-	 * block will be passed to restore() which will continue to read the
+-	 * file from this point. This avoids rewind the stream, which causes
+-	 * restore to fail when source was being read from stdin.
++	 * block will be passed to mdrestore_ops->restore() which will continue
++	 * to read the file from this point. This avoids rewind the stream,
++	 * which causes restore to fail when source was being read from stdin.
+  	 */
+ 	if (strcmp(argv[optind], "-") == 0) {
+ 		src_f = stdin;
+@@ -313,16 +317,17 @@ main(
  
--	if (fread(&magic, sizeof(magic), 1, src_f) != 1)
-+	if (fread(&headers.magic, sizeof(headers.magic), 1, src_f) != 1)
- 		fatal("Unable to read metadump magic from metadump file\n");
- 
--	switch (be32_to_cpu(magic)) {
-+	switch (be32_to_cpu(headers.magic)) {
+ 	switch (be32_to_cpu(headers.magic)) {
  	case XFS_MD_MAGIC_V1:
--		read_header(&mb, src_f);
++		mdrestore.mdrops = &mdrestore_ops_v1;
  		break;
  	default:
  		fatal("specified file is not a metadata dump\n");
  		break;
  	}
  
-+	read_header(&headers, src_f);
-+
+-	read_header(&headers, src_f);
++	mdrestore.mdrops->read_header(&headers, src_f);
+ 
  	if (mdrestore.show_info) {
--		show_info(&mb, argv[optind]);
-+		show_info(&headers, argv[optind]);
+-		show_info(&headers, argv[optind]);
++		mdrestore.mdrops->show_info(&headers, argv[optind]);
  
  		if (argc - optind == 1)
  			exit(0);
-@@ -331,7 +333,7 @@ main(
+@@ -333,7 +338,7 @@ main(
  	/* check and open target */
  	dst_fd = open_device(argv[optind], &is_target_file);
  
--	restore(src_f, dst_fd, is_target_file, &mb);
-+	restore(&headers, src_f, dst_fd, is_target_file);
+-	restore(&headers, src_f, dst_fd, is_target_file);
++	mdrestore.mdrops->restore(&headers, src_f, dst_fd, is_target_file);
  
  	close(dst_fd);
  	if (src_f != stdin)
