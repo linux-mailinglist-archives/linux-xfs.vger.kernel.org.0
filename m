@@ -2,93 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B265B7E49FD
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 Nov 2023 21:44:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D76B47E4A9D
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 Nov 2023 22:27:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232479AbjKGUoJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Nov 2023 15:44:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43078 "EHLO
+        id S234348AbjKGV07 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Nov 2023 16:26:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233554AbjKGUoI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Nov 2023 15:44:08 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA4310DA;
-        Tue,  7 Nov 2023 12:44:06 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B834C433C8;
-        Tue,  7 Nov 2023 20:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699389846;
-        bh=OASy8gi5xgHMzsfgaPoo3ATcjRCXUAl+nIxHvRWkQuM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tFFn0sfLg22L3cB6qaXqcuECNlfdUvekm7LLfiycxw4tR3TaDaD5ShO+GgpJ7Z9bx
-         aTWq8iVKstQopL9NO8qoQMdMLmToZZm/kwWuLEJ79ciha226/JsOs4LuXXVOQLwj6Y
-         s5CpA4ukQGjZgpBQgRvQby4UaP0ogo6GedPjn3nDtb+vRe8SLmvIVe2+OfbQMrWvN0
-         1R40awq0pUSdhSUMDl6gjselEPEPjPzcG1GcqqF9PYVOTDy1uMIDwXHmYw/cm+M93G
-         /jKF/zYPK2zSkjnAX7JN6MCUcVyt92nJAT6wdqylTfoU61iHfSP1B2e18XgGZdBtF6
-         PTHHlXVKfgKkQ==
-Date:   Tue, 7 Nov 2023 12:44:05 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc:     Bill O'Donnell <bodonnel@redhat.com>, chandan.babu@oracle.com,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH] xfs: Remove unused function
-Message-ID: <20231107204405.GP1205143@frogsfrogsfrogs>
-References: <20231103073040.649-1-jiapeng.chong@linux.alibaba.com>
- <ZUqPdhc4RQxL8TVB@redhat.com>
+        with ESMTP id S234720AbjKGV06 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Nov 2023 16:26:58 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B2212F;
+        Tue,  7 Nov 2023 13:26:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=EP7joTD4KdhEN+JYaunSKscvkg3WE9Mu9wWDQxtZwaU=; b=qRN0vkvEs+DqYPQ9wvyojFvPip
+        llXW+LTsloyNInz83z14hPryJOAdfhILlpUV6VzGgCw7Py3gAFsAYrTV2V8Cx6aRWv9/z9RLtg8pq
+        4Xc4WmxdT1sFNUBm8eEzfT52hBD0tLRoXQ/Bc7HMhzcPZMt9+WtXXvpdxIiIyoeajAGopCwzgzL4c
+        9Un/dahv36o5lb9YAyPUAOe+4RzbEP8GqJAOLqx2P9uKJLP97Al/aJE6i4kxw/9tXS/5AKx4PkT3E
+        7XphcldjtukAjc+8u/+wuGjhPrK67Js9wXXrP3LdlRp/TCeIh+J/YsIg1zOICXJQDTFRJvbngr0gd
+        fR40IhDA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1r0Tav-00Ee0T-0I; Tue, 07 Nov 2023 21:26:45 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-ext4@vger.kernel.org, gfs2@lists.linux.dev,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        linux-erofs@lists.ozlabs.org, "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 0/3] Add folio_zero_tail() and folio_fill_tail()
+Date:   Tue,  7 Nov 2023 21:26:39 +0000
+Message-Id: <20231107212643.3490372-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZUqPdhc4RQxL8TVB@redhat.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Nov 07, 2023 at 01:26:46PM -0600, Bill O'Donnell wrote:
-> On Fri, Nov 03, 2023 at 03:30:40PM +0800, Jiapeng Chong wrote:
-> > The function are defined in the bitmap.c file, but not called
-> > elsewhere, so delete the unused function.
-> > 
-> > fs/xfs/scrub/bitmap.c:55:1: warning: unused function 'xbitmap_tree_iter_next'.
-> > 
-> > Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> > Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=7137
-> > Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> 
-> Makes sense.
-> Reviewed-by: Bill O'Donnell <bodonnel@redhat.com>
+I'm trying to make it easier for filesystems with tailpacking /
+stuffing / inline data to use folios.  The primary function here is
+folio_fill_tail().  You give it a pointer to memory where the data
+currently is, and it takes care of copying it into the folio at that
+offset.  That works for gfs2 & iomap.  Then There's Ext4.  Rather than
+gin up some kind of specialist "Here's a two pointers to two blocks
+of memory" routine, just let it do its current thing, and let it call
+folio_zero_tail(), which is also called by folio_fill_tail().
 
-I disagree -- I added redundant forward declarations here so I wouldn't
-have to go digging through the 150LOC definition of INTERVAL_TREE_DEFINE
-to figure out what helper functions were actually being defined by the
-macro.  They'll trigger compiler errors if the definition of
-INTERVAL_TREE_DEFINE ever drifts away from my understanding of it at the
-time I wrote the code.
+Other filesystems can be converted later; these ones seemed like good
+examples as they're already partly or completely converted to folios.
 
---D
+Matthew Wilcox (Oracle) (3):
+  mm: Add folio_zero_tail() and use it in ext4
+  mm: Add folio_fill_tail() and use it in iomap
+  gfs2: Convert stuffed_readpage() to stuffed_read_folio()
 
-> 
-> 
-> > ---
-> >  fs/xfs/scrub/bitmap.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> > 
-> > diff --git a/fs/xfs/scrub/bitmap.c b/fs/xfs/scrub/bitmap.c
-> > index e0c89a9a0ca0..ba4b18e40faa 100644
-> > --- a/fs/xfs/scrub/bitmap.c
-> > +++ b/fs/xfs/scrub/bitmap.c
-> > @@ -48,10 +48,6 @@ static inline struct xbitmap_node *
-> >  xbitmap_tree_iter_first(struct rb_root_cached *root, uint64_t start,
-> >  			uint64_t last);
-> >  
-> > -static inline struct xbitmap_node *
-> > -xbitmap_tree_iter_next(struct xbitmap_node *node, uint64_t start,
-> > -		       uint64_t last);
-> > -
-> >  INTERVAL_TREE_DEFINE(struct xbitmap_node, bn_rbnode, uint64_t,
-> >  		__bn_subtree_last, START, LAST, static inline, xbitmap_tree)
-> >  
-> > -- 
-> > 2.20.1.7.g153144c
-> > 
-> 
+ fs/ext4/inline.c        |  3 +-
+ fs/gfs2/aops.c          | 37 +++++++++-----------
+ fs/iomap/buffered-io.c  | 14 ++------
+ include/linux/highmem.h | 76 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 96 insertions(+), 34 deletions(-)
+
+-- 
+2.42.0
+
