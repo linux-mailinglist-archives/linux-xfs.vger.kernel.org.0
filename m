@@ -2,243 +2,338 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 886337E5207
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Nov 2023 09:33:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7179E7E5335
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Nov 2023 11:19:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232723AbjKHIdP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Nov 2023 03:33:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
+        id S235492AbjKHKTP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Nov 2023 05:19:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbjKHIdO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Nov 2023 03:33:14 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D284F10F9
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Nov 2023 00:33:09 -0800 (PST)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A8860Jg020343;
-        Wed, 8 Nov 2023 08:33:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2023-03-30; bh=ozQE5Cjvj3bpjf1TZyTerGHJxSpTGznuDGTULaYTD5U=;
- b=Ae/YJAeSYGdRp5mkZNKCChBBuIf/HdX6W6I8AWMvyi5MwBTHDINX/hYfN3GIYGW/gmQh
- YoyDv/7PidPZNtLOh4j7c4XmnI2qewzG6UsKr3C2AVIRxWMK2S/GYEd27rt+s+pphiGT
- +tJMq38/xukOhwdIakC3mtghFaI+73etwON1JyVItndMYbP2Dw5PBIBqK1lVql5xkMe2
- FbtMhz6cVGhLvZmlJ6IlujFEtqGKHmPD8xJKR0Q4XPo6kqZl0wX65b5g9fUyhj4+t/Ve
- RU5knLt+yYMskTFpUug4VW+LeHO0I8DnUmxgEbmuq4XcTrfvgYyGrL3KZnlVl9Nv1KsQ yA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3u7w220y75-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Nov 2023 08:33:05 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3A888bT9003884;
-        Wed, 8 Nov 2023 08:33:04 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w1wd0hj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Nov 2023 08:33:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=evEcb8ad/AfUqPQ3/UaHuePqX7nesbEjCpFXpZqxOxQNAeNOodd5ANOlGibAlgbiK87XeIvrQR95aJTgqQ8FCEsa35cNt+8d9NglQW6ZmOIvLlY610x7cXGo8j9XSoHMOFSvyAS8XDGDIKrkua2iu4Yya+kth8K4xiuwcvSBmpoqxMGKCEGikDrJO6WiOZPOuA7GqFkvMEKfT4CdZe6mGSR7adOrtpZg4IAH0mniDhXsdhdaVx07BTMhbUm3NCXthYoPqlA4rM0Vn3clGs5o9GByPK8g3pTqAXkZHxhYltQfgGVhAvUUaQQ0t4eX59F7O+B2684i12WoYJDCeDFEbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ozQE5Cjvj3bpjf1TZyTerGHJxSpTGznuDGTULaYTD5U=;
- b=Erau7qNE8Iyp6+qnUhzghHCryXcsEZQG8xEKCybQnsn64l1ifvJGONyRddzO+A6FRyYzYtwPAhRdxpRv6bCLAwQ1B0UTYIrGMMw7HgUMf3VUOknsc6whNkqmqs5r2Y9y8rKqOA1idwBecTTMZtfZSPWninTPEswBx7uRYITbV6NohBb2Y7JthGVT6U+PRpT/lzTT1Cy9230M3Fa+lp7U5CVf084AWbEfDcTv6dad1mSCbgwDYr1klYA34UYSvea/rvEQo55VeyMeNLEcMAkE1lRfcj2XwE+pVmfV8tuyQfPeShxflrhmMbeKX/HgFvNA2vv4grMBSx95V/Pyuh6PFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ozQE5Cjvj3bpjf1TZyTerGHJxSpTGznuDGTULaYTD5U=;
- b=i+T4jaEa5/dBndAuXp6f7HseDSKWOqwqYlIjwSolsb6O3OWO8Jwr5OxBR1Ttu8AB1tmWPkoCMbyxtQhXNZe7uV9lkF+gQ9XcGhxRPgLw97T8y6q7mthgvfuOEyUWDdOUJo/SKEo0Yc4ErusWe2tQi6beMUI0TRVQwqA2WT8n2Hc=
-Received: from SA1PR10MB5867.namprd10.prod.outlook.com (2603:10b6:806:233::19)
- by DM4PR10MB6088.namprd10.prod.outlook.com (2603:10b6:8:8a::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6907.33; Wed, 8 Nov 2023 08:33:02 +0000
-Received: from SA1PR10MB5867.namprd10.prod.outlook.com
- ([fe80::9bf4:a5ad:d9cd:f62d]) by SA1PR10MB5867.namprd10.prod.outlook.com
- ([fe80::9bf4:a5ad:d9cd:f62d%3]) with mapi id 15.20.6954.028; Wed, 8 Nov 2023
- 08:33:02 +0000
-From:   Chandan Babu R <chandan.babu@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Chandan Babu R <chandan.babu@oracle.com>, djwong@kernel.org,
-        cem@kernel.org
-Subject: [PATCH V2 2/2] metadump.asciidoc: Add description for metadump v2 ondisk format
-Date:   Wed,  8 Nov 2023 14:02:28 +0530
-Message-Id: <20231108083228.1278837-3-chandan.babu@oracle.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20231108083228.1278837-1-chandan.babu@oracle.com>
-References: <20231108083228.1278837-1-chandan.babu@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TY2PR0101CA0008.apcprd01.prod.exchangelabs.com
- (2603:1096:404:92::20) To SA1PR10MB5867.namprd10.prod.outlook.com
- (2603:10b6:806:233::19)
+        with ESMTP id S231674AbjKHKTO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Nov 2023 05:19:14 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F28631BB
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Nov 2023 02:19:12 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A247CC433C8;
+        Wed,  8 Nov 2023 10:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699438752;
+        bh=Y/KrJVMORd6UY9eo+/z3E2ahVEEgtWXA4S1w71HjX6A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V/25LQDfmgS1/R+6++vnawPZLiksIVMWJ6rsp0MjwJxNcbnIeKBJUFEFrzGN22NGZ
+         3xOiJ80ydxz2tmxssj9YdRgmnzZeOHXACBhbui3ah9/CKAtOI0dd++GP31iHBas3t3
+         YccU2Jn/3JhKwIc3hGNMtB8yjBu7bY0LGoQGNWxRlc2Fpmuag9jiMu38s9qIkWsZpc
+         izVHhV/RBsIp9mgbm9kZuiDG4wVsvj1O6cC6XCpB9qvOuQIgn8FQzofyNNPHW29ETh
+         lA8Jsq+AK+EAKpdKDEKPj7VH0RT9KEp1sMBNtxLzkx48nglwr7gLNy6U5mLUH7Te5K
+         6CpMAuzq0Jlyw==
+User-agent: mu4e 1.8.10; emacs 27.1
+From:   Chandan Babu R <chandanbabu@kernel.org>
+To:     torvalds@linux-foundation.org, chandanbabu@kernel.org
+Cc:     catherine.hoang@oracle.com, cheng.lin130@zte.com.cn,
+        dchinner@redhat.com, djwong@kernel.org, hch@lst.de,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        osandov@fb.com
+Subject: [GIT PULL] xfs: new code for 6.7
+Date:   Wed, 08 Nov 2023 15:26:29 +0530
+Message-ID: <87fs1g1rac.fsf@debian-BULLSEYE-live-builder-AMD64>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR10MB5867:EE_|DM4PR10MB6088:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ba6bb39-13d1-4946-9873-08dbe0355258
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rcJQ2LIkiF2xE26xv+Y6Zbvvsb5fZQdOg2ByBZMbI6j0WIeIM4bO6EroxMeh2B2QBsDpLf7Mt5YzR9lhwG6ZWAE6SQJ9HXaLpcZdTRoUEJFJJRpFdg4o7oKx/6f//SIChGJ/L0NtkW+Ni+GwREgWQ7yhWJeU2jydQOQOc0/ibPcMpjnjix8USN3d1eGzivnApEaIZ7Ra35io4oMftscpYqLKlMIhG2KHvjqUEsPY/mEAg0dQ4NV1cJ3mqB18DEAQWZNrF1BKUhlnqiLIwI6yBF1AGCtrkQSdQXxfIsPLqN5VdgZi9zXMh/CFke1cqrjPI0GBKYz3sOWJz9NOr4eMQpEhfJpbCHLimyR/lj6camqadssNuT1gk0SwxYMgMl6LmpCSenlb+ax5Zf/5mkODxfdrPSPGwrDJzpqn8XqKIUTVbr1GyE5pAu8DdepFCZdYk5EAxxBiqUn5WUQjpc1tMvOnYmeVE9JHM1c1/8aKuABHsbpSyn1UiqrBKkO5ojgFGJ/arjbM774PBc3Aejrm75rGcGA8lR8JfFDoBJj16vJlpbi0J3glJWR6sj+iRnH3GStqOCgZQE8cKXeinhRnm1S1R192eyrzBhBqUZsCSex3hE7P7Jb3VKKm68+CpQOb
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5867.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(376002)(346002)(136003)(39860400002)(230273577357003)(230922051799003)(230173577357003)(186009)(451199024)(64100799003)(1800799009)(5660300002)(6512007)(41300700001)(6666004)(8676002)(4326008)(8936002)(2906002)(83380400001)(38100700002)(6916009)(6506007)(26005)(478600001)(316002)(6486002)(66556008)(66476007)(66946007)(66899024)(2616005)(1076003)(36756003)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PJbqOsJhdj+lV+xrjn/h5bWJOHb1YLuqqzux4C/Uzk4kMmDHS+KdkO1+h0vf?=
- =?us-ascii?Q?uOVc3uhENXWRc2J7epk5ByzTyUsEqslm3aLZHNXyCHdtD9LTZ7qcSYEaA1g+?=
- =?us-ascii?Q?8cs2ki9QdO22F2MWpsiJn8/y5HnZ8IyiDG2QY5y9un5uzoz0rJJZXyx/C+FF?=
- =?us-ascii?Q?ZV1GUv4MMHNwQXdXMtzjFQLsiWN7vkOmZSRA0+HhmoXYwRZ1Q3yw3sv4Ef2d?=
- =?us-ascii?Q?hKM+jy0giFesh+qAfahT0uUNA3UtAxZ0aEFLAmqlKw9wOjvrrCBaJwzWhQYW?=
- =?us-ascii?Q?gYZ9nTUoZCBMzO6iT35c2o5EOEJUjKDZXuFXwfC/sjfooh2Bsi88mrMzJLxv?=
- =?us-ascii?Q?6AHCvEoBNhUwPoUrKXwKd1C+RznaL7h7o/d/qJh4K0fg2bRJpOAtLrPUykYw?=
- =?us-ascii?Q?1CWrzmqSGr790Gl8rUo8omslfDnTfO04f1S2SwnkPT5HEfnc+TdjaENNEHm6?=
- =?us-ascii?Q?QqnIydalqk3l8zb4QkQkvdKkshMPj+bB1oPNvEmpydPY5fFB3a0ojtmTElkC?=
- =?us-ascii?Q?mjCTLLS0jfYMeHKJHvYdmXyZePSabtiIx7rnvP6BLlZnDObOZIxhUJOSrjs6?=
- =?us-ascii?Q?kiZ+guYVqhGlNnod7aW5LJUTr+ytLXjt0fXnWAUGFPPj1aaXCfYK0YN64qRS?=
- =?us-ascii?Q?7m74QO05CBCm9tWyjbdgPSWcgJ18Pv7hYEiPS8/C9v6FFYk+eRfWyTsSbyMF?=
- =?us-ascii?Q?xvLVS8yJByFBZbGbWOCZnIekaxM0sd3EcHf3HnYwgq9RDJMqZJEPz3ihnYC7?=
- =?us-ascii?Q?YnLsLWLJSIaFJ4xX7e0o4pMccsh3Uwy10I7GT7kOL1jaY04/9LcPJlqRawlr?=
- =?us-ascii?Q?iMkkbJ1TKOS0UqflQ+Z8UXAqPlRcRLNPFijksjKhyuK7+A+ln6VsIg+NaOia?=
- =?us-ascii?Q?saPsDfZ3zoQ6Rea09THIRmg2yy1KWZonfkFSWUkRxHB1H8lK5Os52Oh1Dpox?=
- =?us-ascii?Q?1/v/YG5hJWbjdTxI2e1sPjKJba/VuZP950J+7MjbvB6NIlML+n+1rDqdMD0A?=
- =?us-ascii?Q?dSrHE4tKFRLLDs8AbIb2E0/4pLcdOip+PJSA5Rw/bniNUs2uhmWOq3z352eV?=
- =?us-ascii?Q?Ym1//gxiyrPtQJ60O/kdrFiOmIWjCu1YIQuWnNatPV5NP/rY7olg2Lt3Mcvt?=
- =?us-ascii?Q?Ey1ttx4KE1B9sCkv/rdtm1SqFzwT0zMKkXjP5Ti7EdTtULFcVKvIDXsjFpOa?=
- =?us-ascii?Q?N6wd65+GFE3VKty89zNuQV47/3xO6lvAIeHtBQnqzmkLksZd7hgLdY63AGcA?=
- =?us-ascii?Q?8MsybKMCN/hsKNGDb6Nn4bKruhSgTBsy93/QKw+idryxzUj8SnECQAgb0YHv?=
- =?us-ascii?Q?fW4U3wK1kYvZLy1nr4tHvIr3PonjzZH3ed5ExbHvQcOlf5o1YYNv1FRtY4D4?=
- =?us-ascii?Q?63SDHA2QPF+4s7EoCLUWHIcG/tNMduT+Fg5ZI4S1m3jQ19bCljUSCv0NegDg?=
- =?us-ascii?Q?pRrCXzcc06fNlpqxk36RmqfOJnmkhjsLRifX+MKrtyMxzhYxEy2T2R3SHf5R?=
- =?us-ascii?Q?C1F5h488LeQCSwC9eA6Uoy6/haCVEIN7Js1MQp2ueheftzju+GHGbUVEZaBa?=
- =?us-ascii?Q?Df4cRPXDjImOXZOtnR7KnoX9TpMn5KnW6rT8YSzL?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: eHqC9BhW9sQvTQdWk26ubiiR7gAEnp280sGoaof8hRbN+wYvYIpWsaqcH3GwXGNU1/PYmz8SxnFrkw+fS5Mmy9yZfRJZdEnqs07vTOieYL/tcbr2D6jgW2JRlBSv6dQuIT3+NXxUic9zEf03HJe8/YprU+KOt3DPSVVaO/JFX7YyCNKtm2z94M4urwZvKF1MI2wsiWpxMUdzSVBgefwelPxkcXya+qNtDqBVsXt1Xifjo13fMBXcztCykKM47zXvGVmghtJ/0xikEvKZPR8GOgejxQHeYdSRR/26U7tmn+KXORZmexCiU3EBoups3LUWWndA+JMpMyt2D1rloCgIj3rpR6CtAGg9b14aSie783fHDq/HzM/rUY4HK0HjAQWRiq0DWLq1P33eoC1N0BPSR78IjUrpofLFtdR6/UTAXp+MWtdcPJENPIuA+Sh1AKz9HWlfecwvHFJBvaUivllrY4bTDRLbBalv1oRTLGkW0CyzPPK86OHJOwpI1TOgcYylEK/TCER5euynNA3ahDNCmIdd8/B4KAwci/PXv/2CrmGIbCkHisKZEDDJYAuRC9P1WZBaYqkWR9E12NqifrSJBxFO3he3e5Z0UlnAYxD0icOQpmOe6tVeedk4uQK/b4Z/Izk4auq2gnHh1S6sf4W3FbtXzm/RZgwlkzy6qeDziE3QQwkatkK6BZfZrmsg9UT9AFnr80d5PoPoA8I3tA6ajr3qiLW7D9jMxB7mAcmr9FMD68JbJKYmV5+0uNba02d64qqO2h3MlnX8ulKJQA/68mXnNsvnhI6r6UgbIZwaBSo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ba6bb39-13d1-4946-9873-08dbe0355258
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB5867.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2023 08:33:02.4468
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9AYkrwnL8T3b7j0FSRErsjZcMpBmKJ34irgbmXVGMc/QFq7YOSUFVZp0CNMEz1JAqk+XR2EOZR4I6EdUTGktHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6088
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-08_01,2023-11-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 phishscore=0 suspectscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311080070
-X-Proofpoint-GUID: tbip8KCWBYAoj8Vp_r9zAAxUezrHCTpL
-X-Proofpoint-ORIG-GUID: tbip8KCWBYAoj8Vp_r9zAAxUezrHCTpL
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Metadump v2 is the new metadata dump format introduced in upstream
-xfsprogs. This commit describes V2 format's ondisk structure.
+Hi Linus,
 
-Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
----
- .../metadump.asciidoc                         | 75 ++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
+Please pull this branch with changes for xfs for 6.7-rc1.
 
-diff --git a/design/XFS_Filesystem_Structure/metadump.asciidoc b/design/XFS_Filesystem_Structure/metadump.asciidoc
-index 2f35b7e..7ce993c 100644
---- a/design/XFS_Filesystem_Structure/metadump.asciidoc
-+++ b/design/XFS_Filesystem_Structure/metadump.asciidoc
-@@ -13,7 +13,11 @@ must be the superblock from AG 0.  If the metadump has more blocks than
- can be pointed to by the +xfs_metablock.mb_daddr+ area, the sequence
- of +xfs_metablock+ followed by metadata blocks is repeated.
- 
--.Metadata Dump Format
-+Two metadump file formats are supported: +V1+ and +V2+. In addition to
-+the features supported by the +V1+ format, the +V2+ format supports
-+capturing data from an external log device.
-+
-+== Metadata Dump v1 Format
- 
- [source, c]
- ----
-@@ -62,6 +66,75 @@ An array of disk addresses.  Each of the +mb_count+ blocks (of size +(1
- << mb_blocklog+) following the +xfs_metablock+ should be written back to
- the address pointed to by the corresponding +mb_daddr+ entry.
- 
-+== Metadata Dump v2 Format
-+
-+A Metadump Dump in the V2 format begins with a header represented by
-++struct xfs_metadump_header+.
-+[source, c]
-+----
-+struct xfs_metadump_header {
-+        __be32          xmh_magic;
-+        __be32          xmh_version;
-+        __be32          xmh_compat_flags;
-+        __be32          xmh_incompat_flags;
-+        __be64          xmh_reserved;
-+} __packed;
-+----
-+*xmh_magic*::
-+The magic number, ``XMD2'' (0x584D4432)
-+
-+*xmh_version*::
-+The version number, i.e. 2.
-+
-+*xmh_compat flags*::
-+Compat flags describing a metadata dump.
-+
-+[options="header"]
-+|=====
-+| Flag				| Description
-+| +XFS_MD2_COMPAT_OBFUSCATED+ |
-+Directory entry and extended attribute names have been obscured and
-+extended attribute values are zeroed to protect privacy.
-+
-+| +XFS_MD2_COMPAT_FULLBLOCKS+ |
-+Full metadata blocks have been dumped.  Without this flag, unused areas
-+of metadata blocks are zeroed.
-+
-+| +XFS_MD2_COMPAT_DIRTYLOG+ |
-+Log was dirty.
-+
-+| +XFS_MD2_COMPAT_EXTERNALLOG+ |
-+Metadata dump contains contents from an external log.
-+|=====
-+
-+*xmh_incompat_flags*::
-+Incompat flags describing a metadata dump. At present, this field must
-+be set to zero.
-+
-+*xmh_reserved*::
-+Reserved. Should be zero.
-+
-+The header is followed by an alternating sequence of +struct
-+xfs_meta_extent+ and the contents from the corresponding variable
-+length extent.
-+
-+[source, c]
-+----
-+struct xfs_meta_extent {
-+        __be64 xme_addr;
-+        __be32 xme_len;
-+} __packed;
-+----
-+*xme_addr*::
-+
-+The lower 54 bits are used to store the disk address of a metadata dump
-+extent.  The next 2 bits are used for indicating the device.
-+. 00 - Data device
-+. 01 - External log
-+
-+*xme_len*::
-+Length of the metadata dump extent in units of 512 byte blocks.
-+
- == Dump Obfuscation
- 
- Unless explicitly disabled, the +xfs_metadump+ tool obfuscates empty block
--- 
-2.39.1
+The important changes include,
+1. CPU usage optimizations for realtime allocator.
+2. Allowing read operations to continue while a FICLONE ioctl is being
+   serviced.
 
+The remaining changes are limited to bug fixes and code cleanups.
+
+There was a delay in me pushing the changes to XFS' for-next branch and hence
+a delay in the code changes reaching the linux-next tree. The XFS changes
+reached linux-next on 31st of October. The delay was due to me having to drop
+a patch from the XFS tree and having to initiate execution of the test suite
+once again on October 26th. The complete test run requires around 4 days to
+complete.
+
+During a discussion, Darrick told me that in such scenarios he would limit
+testing to non-fuzz tests which take around 12 hours to complete.  Hence, in
+hindsight, I could have limited the time taken to execute tests after dropping
+the patch. I will make sure to update XFS' for-next branch well before the
+merge window period begins from next release onwards.
+
+The changes that are part of the current pull request are contained within XFS
+i.e. there are no patches which straddle across other subsystems. I have been
+executing fstests on linux-next for more than a week now. There were no new
+regressions found in XFS during the test run.
+
+I had performed a test merge with latest contents of torvalds/linux.git. i.e.
+
+305230142ae0637213bf6e04f6d9f10bbcb74af8
+Author:     Linus Torvalds <torvalds@linux-foundation.org>
+AuthorDate: Tue Nov 7 17:16:23 2023 -0800
+Commit:     Linus Torvalds <torvalds@linux-foundation.org>
+CommitDate: Tue Nov 7 17:16:23 2023 -0800
+Merge tag 'pm-6.7-rc1-2' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+This resulted in merge conflicts. The following diff should resolve the merge
+conflicts.
+
+diff --cc fs/xfs/libxfs/xfs_rtbitmap.c
+index 396648acb5be,b332ab490a48..84e27b9987f8
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@@ -960,19 -931,18 +931,19 @@@ xfs_rtcheck_alloc_range
+   * Free an extent in the realtime subvolume.  Length is expressed in
+   * realtime extents, as is the block number.
+   */
+- int					/* error */
++ int
+  xfs_rtfree_extent(
+- 	xfs_trans_t	*tp,		/* transaction pointer */
+- 	xfs_rtblock_t	bno,		/* starting block number to free */
+- 	xfs_extlen_t	len)		/* length of extent freed */
++ 	struct xfs_trans	*tp,	/* transaction pointer */
++ 	xfs_rtxnum_t		start,	/* starting rtext number to free */
++ 	xfs_rtxlen_t		len)	/* length of extent freed */
+  {
+- 	int		error;		/* error value */
+- 	xfs_mount_t	*mp;		/* file system mount structure */
+- 	xfs_fsblock_t	sb;		/* summary file block number */
+- 	struct xfs_buf	*sumbp = NULL;	/* summary file block buffer */
+- 	struct timespec64 atime;
+- 
+- 	mp = tp->t_mountp;
++ 	struct xfs_mount	*mp = tp->t_mountp;
++ 	struct xfs_rtalloc_args	args = {
++ 		.mp		= mp,
++ 		.tp		= tp,
++ 	};
++ 	int			error;
+++	struct timespec64	atime;
+  
+  	ASSERT(mp->m_rbmip->i_itemp != NULL);
+  	ASSERT(xfs_isilocked(mp->m_rbmip, XFS_ILOCK_EXCL));
+@@@ -1000,13 -970,46 +971,49 @@@
+  	    mp->m_sb.sb_rextents) {
+  		if (!(mp->m_rbmip->i_diflags & XFS_DIFLAG_NEWRTBM))
+  			mp->m_rbmip->i_diflags |= XFS_DIFLAG_NEWRTBM;
+ -		*(uint64_t *)&VFS_I(mp->m_rbmip)->i_atime = 0;
+ +
+ +		atime = inode_get_atime(VFS_I(mp->m_rbmip));
+ +		*((uint64_t *)&atime) = 0;
+ +		inode_set_atime_to_ts(VFS_I(mp->m_rbmip), atime);
+  		xfs_trans_log_inode(tp, mp->m_rbmip, XFS_ILOG_CORE);
+  	}
+- 	return 0;
++ 	error = 0;
++ out:
++ 	xfs_rtbuf_cache_relse(&args);
++ 	return error;
++ }
++ 
++ /*
++  * Free some blocks in the realtime subvolume.  rtbno and rtlen are in units of
++  * rt blocks, not rt extents; must be aligned to the rt extent size; and rtlen
++  * cannot exceed XFS_MAX_BMBT_EXTLEN.
++  */
++ int
++ xfs_rtfree_blocks(
++ 	struct xfs_trans	*tp,
++ 	xfs_fsblock_t		rtbno,
++ 	xfs_filblks_t		rtlen)
++ {
++ 	struct xfs_mount	*mp = tp->t_mountp;
++ 	xfs_rtxnum_t		start;
++ 	xfs_filblks_t		len;
++ 	xfs_extlen_t		mod;
++ 
++ 	ASSERT(rtlen <= XFS_MAX_BMBT_EXTLEN);
++ 
++ 	len = xfs_rtb_to_rtxrem(mp, rtlen, &mod);
++ 	if (mod) {
++ 		ASSERT(mod == 0);
++ 		return -EIO;
++ 	}
++ 
++ 	start = xfs_rtb_to_rtxrem(mp, rtbno, &mod);
++ 	if (mod) {
++ 		ASSERT(mod == 0);
++ 		return -EIO;
++ 	}
++ 
++ 	return xfs_rtfree_extent(tp, start, len);
+  }
+  
+  /* Find all the free records within a given range. */
+diff --cc fs/xfs/xfs_rtalloc.c
+index 2e1a4e5cd03d,ba66442910b1..0254c573086a
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@@ -1420,16 -1414,16 +1414,16 @@@ xfs_rtunmount_inodes
+   */
+  int					/* error */
+  xfs_rtpick_extent(
+- 	xfs_mount_t		*mp,		/* file system mount point */
+- 	xfs_trans_t		*tp,		/* transaction pointer */
+- 	xfs_extlen_t		len,		/* allocation length (rtextents) */
+- 	xfs_rtblock_t		*pick)		/* result rt extent */
+- 	{
+- 	xfs_rtblock_t		b;		/* result block */
+- 	int			log2;		/* log of sequence number */
+- 	uint64_t		resid;		/* residual after log removed */
+- 	uint64_t		seq;		/* sequence number of file creation */
+- 	struct timespec64	ts;		/* temporary timespec64 storage */
+ -	xfs_mount_t	*mp,		/* file system mount point */
+ -	xfs_trans_t	*tp,		/* transaction pointer */
+ -	xfs_rtxlen_t	len,		/* allocation length (rtextents) */
+ -	xfs_rtxnum_t	*pick)		/* result rt extent */
+++	xfs_mount_t		*mp,	/* file system mount point */
+++	xfs_trans_t		*tp,	/* transaction pointer */
+++	xfs_rtxlen_t		len,	/* allocation length (rtextents) */
+++	xfs_rtxnum_t		*pick)	/* result rt extent */
++ {
+ -	xfs_rtxnum_t	b;		/* result rtext */
+ -	int		log2;		/* log of sequence number */
+ -	uint64_t	resid;		/* residual after log removed */
+ -	uint64_t	seq;		/* sequence number of file creation */
+ -	uint64_t	*seqp;		/* pointer to seqno in inode */
+++	xfs_rtxnum_t		b;	/* result rtext */
+++	int			log2;	/* log of sequence number */
+++	uint64_t		resid;	/* residual after log removed */
+++	uint64_t		seq;	/* sequence number of file creation */
+++	struct timespec64	ts;	/* temporary timespec64 storage */
+  
+  	ASSERT(xfs_isilocked(mp->m_rbmip, XFS_ILOCK_EXCL));
+
+Please let me know if you encounter any problems.
+
+The following changes since commit 05d3ef8bba77c1b5f98d941d8b2d4aeab8118ef1:
+
+  Linux 6.6-rc7 (2023-10-22 12:11:21 -1000)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-6.7-merge-2
+
+for you to fetch changes up to 14a537983b228cb050ceca3a5b743d01315dc4aa:
+
+  xfs: allow read IO and FICLONE to run concurrently (2023-10-23 12:02:26 +0530)
+
+----------------------------------------------------------------
+New code for 6.7:
+
+  * Realtime device subsystem
+    - Cleanup usage of xfs_rtblock_t and xfs_fsblock_t data types.
+    - Replace open coded conversions between rt blocks and rt extents with
+      calls to static inline helpers.
+    - Replace open coded realtime geometry compuation and macros with helper
+      functions.
+    - CPU usage optimizations for realtime allocator.
+    - Misc. Bug fixes associated with Realtime device.
+  * Allow read operations to execute while an FICLONE ioctl is being serviced.
+  * Misc. bug fixes
+    - Alert user when xfs_droplink() encounters an inode with a link count of zero.
+    - Handle the case where the allocator could return zero extents when
+      servicing an fallocate request.
+
+Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
+
+----------------------------------------------------------------
+Catherine Hoang (1):
+      xfs: allow read IO and FICLONE to run concurrently
+
+Chandan Babu R (6):
+      Merge tag 'realtime-fixes-6.7_2023-10-19' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.7-mergeA
+      Merge tag 'clean-up-realtime-units-6.7_2023-10-19' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.7-mergeA
+      Merge tag 'refactor-rt-unit-conversions-6.7_2023-10-19' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.7-mergeA
+      Merge tag 'refactor-rtbitmap-macros-6.7_2023-10-19' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.7-mergeA
+      Merge tag 'refactor-rtbitmap-accessors-6.7_2023-10-19' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.7-mergeA
+      Merge tag 'rtalloc-speedups-6.7_2023-10-19' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.7-mergeA
+
+Cheng Lin (1):
+      xfs: introduce protection for drop nlink
+
+Christoph Hellwig (1):
+      xfs: handle nimaps=0 from xfs_bmapi_write in xfs_alloc_file_space
+
+Darrick J. Wong (30):
+      xfs: bump max fsgeom struct version
+      xfs: hoist freeing of rt data fork extent mappings
+      xfs: prevent rt growfs when quota is enabled
+      xfs: rt stubs should return negative errnos when rt disabled
+      xfs: fix units conversion error in xfs_bmap_del_extent_delay
+      xfs: make sure maxlen is still congruent with prod when rounding down
+      xfs: move the xfs_rtbitmap.c declarations to xfs_rtbitmap.h
+      xfs: convert xfs_extlen_t to xfs_rtxlen_t in the rt allocator
+      xfs: create a helper to convert rtextents to rtblocks
+      xfs: convert rt bitmap/summary block numbers to xfs_fileoff_t
+      xfs: create a helper to compute leftovers of realtime extents
+      xfs: convert rt bitmap extent lengths to xfs_rtbxlen_t
+      xfs: create a helper to convert extlen to rtextlen
+      xfs: rename xfs_verify_rtext to xfs_verify_rtbext
+      xfs: create helpers to convert rt block numbers to rt extent numbers
+      xfs: convert rt extent numbers to xfs_rtxnum_t
+      xfs: convert do_div calls to xfs_rtb_to_rtx helper calls
+      xfs: create rt extent rounding helpers for realtime extent blocks
+      xfs: convert the rtbitmap block and bit macros to static inline functions
+      xfs: use shifting and masking when converting rt extents, if possible
+      xfs: remove XFS_BLOCKWSIZE and XFS_BLOCKWMASK macros
+      xfs: convert open-coded xfs_rtword_t pointer accesses to helper
+      xfs: convert rt summary macros to helpers
+      xfs: create a helper to handle logging parts of rt bitmap/summary blocks
+      xfs: create helpers for rtbitmap block/wordcount computations
+      xfs: use accessor functions for bitmap words
+      xfs: create helpers for rtsummary block/wordcount computations
+      xfs: use accessor functions for summary info words
+      xfs: simplify xfs_rtbuf_get calling conventions
+      xfs: simplify rt bitmap/summary block accessor functions
+
+Dave Chinner (1):
+      xfs: consolidate realtime allocation arguments
+
+Omar Sandoval (6):
+      xfs: cache last bitmap block in realtime allocator
+      xfs: invert the realtime summary cache
+      xfs: return maximum free size from xfs_rtany_summary()
+      xfs: limit maxlen based on available space in xfs_rtallocate_extent_near()
+      xfs: don't try redundant allocations in xfs_rtallocate_extent_near()
+      xfs: don't look for end of extent further than necessary in xfs_rtallocate_extent_near()
+
+ fs/xfs/libxfs/xfs_bmap.c       |  45 +--
+ fs/xfs/libxfs/xfs_format.h     |  34 +-
+ fs/xfs/libxfs/xfs_rtbitmap.c   | 803 ++++++++++++++++++++++-------------------
+ fs/xfs/libxfs/xfs_rtbitmap.h   | 383 ++++++++++++++++++++
+ fs/xfs/libxfs/xfs_sb.c         |   2 +
+ fs/xfs/libxfs/xfs_sb.h         |   2 +-
+ fs/xfs/libxfs/xfs_trans_resv.c |  10 +-
+ fs/xfs/libxfs/xfs_types.c      |   4 +-
+ fs/xfs/libxfs/xfs_types.h      |  10 +-
+ fs/xfs/scrub/bmap.c            |   2 +-
+ fs/xfs/scrub/fscounters.c      |   2 +-
+ fs/xfs/scrub/inode.c           |   3 +-
+ fs/xfs/scrub/rtbitmap.c        |  28 +-
+ fs/xfs/scrub/rtsummary.c       |  72 ++--
+ fs/xfs/scrub/trace.c           |   1 +
+ fs/xfs/scrub/trace.h           |  15 +-
+ fs/xfs/xfs_bmap_util.c         |  74 ++--
+ fs/xfs/xfs_file.c              |  63 +++-
+ fs/xfs/xfs_fsmap.c             |  15 +-
+ fs/xfs/xfs_inode.c             |  24 ++
+ fs/xfs/xfs_inode.h             |   9 +
+ fs/xfs/xfs_inode_item.c        |   3 +-
+ fs/xfs/xfs_ioctl.c             |   5 +-
+ fs/xfs/xfs_linux.h             |  12 +
+ fs/xfs/xfs_mount.h             |   8 +-
+ fs/xfs/xfs_ondisk.h            |   4 +
+ fs/xfs/xfs_reflink.c           |   4 +
+ fs/xfs/xfs_rtalloc.c           | 626 ++++++++++++++++----------------
+ fs/xfs/xfs_rtalloc.h           |  94 +----
+ fs/xfs/xfs_super.c             |   3 +-
+ fs/xfs/xfs_trans.c             |   7 +-
+ 31 files changed, 1425 insertions(+), 942 deletions(-)
+ create mode 100644 fs/xfs/libxfs/xfs_rtbitmap.h
