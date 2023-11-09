@@ -2,34 +2,25 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9E37E6DF1
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 Nov 2023 16:45:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14FC67E6E26
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 Nov 2023 17:03:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235023AbjKIPpt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 9 Nov 2023 10:45:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57962 "EHLO
+        id S234513AbjKIQDz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 9 Nov 2023 11:03:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234761AbjKIPp1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 9 Nov 2023 10:45:27 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0954C07;
-        Thu,  9 Nov 2023 07:43:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YAvU/H8ewWgtj8+lNR19xNcK269Z+0oH3wD0bk8ZHoo=; b=Rc31F659WDeW93mMNfNBwa+tdF
-        uKwVofNS0q2HXkMP46RrMFTXTHha4qswZX/hwdgITzDg3dYgi7sLu7amPuG2nBv0Kf6i3urQ5MnQq
-        hJHw22feJPvCysjpzWN9+ZaXes9oAio1bTIDx3bt9xmcKIz5w+UUsXbiM7/6b1JKDDCQfGDogqqg9
-        NPb3sreQQcZAF+G2Yc/g1705bZgjnMLJidH45aFxrQMxRAZF20Yd96rPyMngzwmKy0LiGoAQBvlDT
-        zK/Vo03uJK1tOnG7QSLRhq0FPmH5tkp/XnKZlIbXSH8owdhmWnwBGsCMqdXlPPCjdcizCHa6+eO4o
-        k1pR69pg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1r17B2-00838t-P7; Thu, 09 Nov 2023 15:42:40 +0000
-Date:   Thu, 9 Nov 2023 15:42:40 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     John Garry <john.g.garry@oracle.com>, axboe@kernel.dk,
+        with ESMTP id S234728AbjKIPsq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 9 Nov 2023 10:48:46 -0500
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 957EF4EF2;
+        Thu,  9 Nov 2023 07:46:26 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id EB3BF68AA6; Thu,  9 Nov 2023 16:46:19 +0100 (CET)
+Date:   Thu, 9 Nov 2023 16:46:19 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        John Garry <john.g.garry@oracle.com>, axboe@kernel.dk,
         kbusch@kernel.org, sagi@grimberg.me, jejb@linux.ibm.com,
         martin.petersen@oracle.com, djwong@kernel.org,
         viro@zeniv.linux.org.uk, brauner@kernel.org,
@@ -39,30 +30,26 @@ Cc:     John Garry <john.g.garry@oracle.com>, axboe@kernel.dk,
         linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
         linux-api@vger.kernel.org, Alan Adamson <alan.adamson@oracle.com>
 Subject: Re: [PATCH 21/21] nvme: Support atomic writes
-Message-ID: <ZUz98KriiLsM8oQd@casper.infradead.org>
-References: <20230929102726.2985188-1-john.g.garry@oracle.com>
- <20230929102726.2985188-22-john.g.garry@oracle.com>
- <20231109153603.GA2188@lst.de>
+Message-ID: <20231109154619.GA3491@lst.de>
+References: <20230929102726.2985188-1-john.g.garry@oracle.com> <20230929102726.2985188-22-john.g.garry@oracle.com> <20231109153603.GA2188@lst.de> <ZUz98KriiLsM8oQd@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231109153603.GA2188@lst.de>
+In-Reply-To: <ZUz98KriiLsM8oQd@casper.infradead.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Nov 09, 2023 at 04:36:03PM +0100, Christoph Hellwig wrote:
-> Also I really want a check in the NVMe I/O path that any request
-> with the atomic flag set actually adhers to the limits to at least
-> partially paper over the annoying lack of a separate write atomic
-> command in nvme.
+On Thu, Nov 09, 2023 at 03:42:40PM +0000, Matthew Wilcox wrote:
+> That wasn't the model we had in mind.  In our thinking, it was fine to
+> send a write that crossed the atomic write limit, but the drive wouldn't
+> guarantee that it was atomic except at the atomic write boundary.
+> Eg with an AWUN of 16kB, you could send five 16kB writes, combine them
+> into a single 80kB write, and if the power failed midway through, the
+> drive would guarantee that it had written 0, 16kB, 32kB, 48kB, 64kB or
+> all 80kB.  Not necessarily in order; it might have written bytes 16-32kB,
+> 64-80kB and not the other three.
 
-That wasn't the model we had in mind.  In our thinking, it was fine to
-send a write that crossed the atomic write limit, but the drive wouldn't
-guarantee that it was atomic except at the atomic write boundary.
-Eg with an AWUN of 16kB, you could send five 16kB writes, combine them
-into a single 80kB write, and if the power failed midway through, the
-drive would guarantee that it had written 0, 16kB, 32kB, 48kB, 64kB or
-all 80kB.  Not necessarily in order; it might have written bytes 16-32kB,
-64-80kB and not the other three.
-
+I can see some use for that, but I'm really worried that debugging
+problems in the I/O merging and splitting will be absolute hell.
