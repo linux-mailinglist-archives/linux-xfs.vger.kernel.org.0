@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 462D67E802B
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:07:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72C967E7FF3
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:02:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235260AbjKJSHZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 13:07:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33070 "EHLO
+        id S230349AbjKJSC6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 13:02:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345816AbjKJSG4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:06:56 -0500
+        with ESMTP id S235039AbjKJSBt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:01:49 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2D68263
-        for <linux-xfs@vger.kernel.org>; Thu,  9 Nov 2023 23:12:17 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89307C433CB;
-        Fri, 10 Nov 2023 04:46:47 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491AB83E3
+        for <linux-xfs@vger.kernel.org>; Thu,  9 Nov 2023 23:17:18 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9273EC433CC;
+        Fri, 10 Nov 2023 04:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699591607;
-        bh=fzEvcDCi184fWZaY5x5VLkkRZ1aAYGSc82ksbTAfnQg=;
+        s=k20201202; t=1699591734;
+        bh=l6vYhHxtTopAmg7TzRG+pm8oCaPwz+RGGXZ+7KxSYVQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s1LgXS+FMKnAlk+lJtac8ywK/+e5SgxtAHthRYe6uoUngwImNs+DpZ1NtWpE86IFr
-         eGDMYfN8JV+g71tAUK+DD6Thpn+ap7E1tD8FNQyXnv1xva0O0//OocGI5ME2hyh+YR
-         oSmBcYKQOGOzzabZOQIFWbBrjbVkvpwICnec0lzCsZeaWt6J3VTY9Coe4QJjFw7CMk
-         LAqQGRDChndMKdEKYhNMSY99dqmlUIeufjgaBRwtsgXjl7eJ4FU4kqqGLjAT5wDUCU
-         8sYov1lh1HpY14SuAfTw+VoiQ4j1AwZiKFy8wB8Rmi7qBnJIVOcohVRf4NEtZBgnzD
-         Iz0oBkB3bvBkw==
-Date:   Thu, 9 Nov 2023 20:46:46 -0800
+        b=qpcTPmtALoiyUJikEEzVNdskb2igng0l3HbaSW4+lX/J7Fy3HNchDInJPg3H3G/9m
+         0stU4hjigqk0EahrUkg7rMX49jFes8IQiwddNa9tkRU5ilPeaTN6wAhpYbeUEgSq79
+         BXLwlix25XwAE2PwzDAWaVSGIxewdmaqb0ZdDGuVq5KkDHKglVc1my1yB1jMkETUtN
+         or8q5d/MvU60ZkyMrmMFYq97axsiih3DwQKaznpdQmTKQQRGToKaVAGfvc342uBNDI
+         mIBVLfkkLp9SVl+hDW07N/6TJa3YsBs3aY5qu12LNN1euLxRqGvVtSVmIp2IVLsWdL
+         XpJ6C7u2yfj9A==
+Date:   Thu, 9 Nov 2023 20:48:54 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     zlang@redhat.com, guan@eryu.me, david@fromorbit.com,
-        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: test unlinked inode list repair on demand
-Message-ID: <20231110044646.GE1203404@frogsfrogsfrogs>
-References: <169947894813.203694.3337426306300447087.stgit@frogsfrogsfrogs>
- <169947895967.203694.8763078075817732328.stgit@frogsfrogsfrogs>
- <ZUxwoLoy2D/CIUbE@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     zlang@redhat.com, fstests@vger.kernel.org,
+        linux-xfs@vger.kernel.org, guan@eryu.me
+Subject: Re: [PATCHSET v27.0 0/2] fstests: FIEXCHANGE is now an XFS ioctl
+Message-ID: <20231110044854.GF1203404@frogsfrogsfrogs>
+References: <169947992096.220003.8427995158013553083.stgit@frogsfrogsfrogs>
+ <20231109052106.GA29241@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZUxwoLoy2D/CIUbE@infradead.org>
+In-Reply-To: <20231109052106.GA29241@lst.de>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -50,38 +49,29 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Nov 08, 2023 at 09:39:44PM -0800, Christoph Hellwig wrote:
-> > +# Modify as appropriate.
+On Thu, Nov 09, 2023 at 06:21:06AM +0100, Christoph Hellwig wrote:
+> On Wed, Nov 08, 2023 at 01:45:20PM -0800, Darrick J. Wong wrote:
+> > This has been running on the djcloud for months with no problems.  Enjoy!
+> > Comments and questions are, as always, welcome.
 > 
-> Btw, why do we keep adding this pointless boilerplate everywhere?
-
-Oops.  It comes from the ./new output, but I guess I am a bit lazy about
-removing it. :(
-
-> > +_supported_fs generic
+> Isn't the branch all new?
 > 
-> I think this should be xfs only.
-
-Changed.
-
-> > +source ./common/filter
-> > +source ./common/fuzzy
-> > +source ./common/quota
+> Anyway, this fixes skipping the tests when not supported, and runs them
+> fine when supported:
 > 
-> When did we switch from using . to source other shell files
-> to "source"?  Just curious.
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Christoph Hellwig <hch@lst.de>
 
-Habit of mine.  vim colors and bolds "source" nicely, which it doesn't
-do for dot.
+Thanks!
 
-> > +
-> > +# real QA test starts here
-> > +
-> > +# Modify as appropriate.
-> > +_supported_fs generic
-> 
-> xfs again.
+> although I wonder a bit if keeping functionality not actually supported
+> upstream in upstream xfstests is such a good idea.  Keeping it in
+> a development branch for the feature seems more flexible to me.  I guess
+> there is no point doing a forth and back for this one now, but maybe
+> should be more careful in the future.
 
-Changed again.
+At the time Zorro proposed merging all the remaining online fsck tests I
+didn't think review of the kernel patches was going to continue on for
+years.
 
 --D
