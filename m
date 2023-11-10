@@ -2,154 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E5057E81C2
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:33:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 462D67E802B
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:07:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345123AbjKJSdv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 13:33:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51268 "EHLO
+        id S235260AbjKJSHZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 13:07:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345935AbjKJSc4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:32:56 -0500
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA33E769A
-        for <linux-xfs@vger.kernel.org>; Thu,  9 Nov 2023 22:35:56 -0800 (PST)
-Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-495eb6e2b80so699147e0c.1
-        for <linux-xfs@vger.kernel.org>; Thu, 09 Nov 2023 22:35:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1699598156; x=1700202956; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qAgzcH6FFhfbjo0YkD02u992ODaRxIrDZcHhICDx4Xc=;
-        b=FSmtP+syP8OG6q4yfrB9fp+f0zliJxBbg65DOE1955nNwVkAyjYUmP1U8IffG6S68w
-         jy4lIoaLXBK6YfhEAlRUHhJPrbwAU96igN8B2775LHl0XSIdWx2EyptqumqPLercw39V
-         2wM37ssjy1Ehc5FQ9M3tBNGZoy2XGBWXyQUZe+Ls0Mnn+/sh4o+dbHHo+n+e1yQ6QJSI
-         G6Cp2TyCnIkt020fVobR3Q/bZvCrGe+E0x/yPqlUW/oAR17j0ViZyBa0SalLSzWrS/i8
-         pzIj0Q07dRreaezrk9da1asts0xRK8YKUvFBTJo8rJgl/Z2rSQVJpyxp/oWPqvwZd4wn
-         kgIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699598156; x=1700202956;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qAgzcH6FFhfbjo0YkD02u992ODaRxIrDZcHhICDx4Xc=;
-        b=a7vJuZWBM5/smAyeOdmGUzLLblOdG8oy4v2iT40nb9hRByZSL/RTsqFTBgV2Ry5OU6
-         vkTzECas3bRIFuUu7PcMntt1FKssTMunup4aPmjN+/uE3qHF3faGSMUUtI54Kfhi6Umx
-         +Gd5gr423z5yxzAhPSsQp/Squae4ObplAgxSy2LoCzu3tVeTtlTarH4vt8KZLKc4I39d
-         qOn3PUlN+SJQk6GVCDrXe0lhA9JtDgaFY1W/TJXB0rZUx4Ec+qCVtyNsIdmLz5bJfiT3
-         DssOxWOPfVMT6A0NqZbkCeyCU9tGPgBAqJiXDO5W6DoWcwbC6ZkYvftiIGAPZ2qEL2n/
-         NgBQ==
-X-Gm-Message-State: AOJu0YzrwbEALIrH3DXD9PQ4pqvf0/6KeMfD2F4lvAy8lNuvQnMBFLkx
-        Cxbd0JmJAmMx50vznlqlNbdrSDZcZHxAPye6SCg=
-X-Google-Smtp-Source: AGHT+IGeGB0nvjJ9ovXVOONcVOWKrKTYTcxW4uwrb0x7AObsTnKz7JFJpdIz1TdPp1R0GMvRIth4qA==
-X-Received: by 2002:a05:620a:2682:b0:775:7be2:8c8 with SMTP id c2-20020a05620a268200b007757be208c8mr7006165qkp.61.1699591505744;
-        Thu, 09 Nov 2023 20:45:05 -0800 (PST)
-Received: from dread.disaster.area (pa49-180-125-5.pa.nsw.optusnet.com.au. [49.180.125.5])
-        by smtp.gmail.com with ESMTPSA id g1-20020aa78181000000b0065a1b05193asm11529825pfi.185.2023.11.09.20.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Nov 2023 20:45:05 -0800 (PST)
-Received: from [192.168.253.23] (helo=devoid.disaster.area)
-        by dread.disaster.area with esmtp (Exim 4.96)
-        (envelope-from <dave@fromorbit.com>)
-        id 1r1JOB-00AbtL-1M;
-        Fri, 10 Nov 2023 15:45:03 +1100
-Received: from dave by devoid.disaster.area with local (Exim 4.97-RC0)
-        (envelope-from <dave@devoid.disaster.area>)
-        id 1r1JOB-000000039Jf-01tP;
-        Fri, 10 Nov 2023 15:45:03 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     zlang@redhat.com
-Subject: [PATCH 2/2] xfs: recovery should not clear di_flushiter unconditionally
-Date:   Fri, 10 Nov 2023 15:33:14 +1100
-Message-ID: <20231110044500.718022-3-david@fromorbit.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231110044500.718022-1-david@fromorbit.com>
-References: <20231110044500.718022-1-david@fromorbit.com>
+        with ESMTP id S1345816AbjKJSG4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:06:56 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2D68263
+        for <linux-xfs@vger.kernel.org>; Thu,  9 Nov 2023 23:12:17 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89307C433CB;
+        Fri, 10 Nov 2023 04:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699591607;
+        bh=fzEvcDCi184fWZaY5x5VLkkRZ1aAYGSc82ksbTAfnQg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s1LgXS+FMKnAlk+lJtac8ywK/+e5SgxtAHthRYe6uoUngwImNs+DpZ1NtWpE86IFr
+         eGDMYfN8JV+g71tAUK+DD6Thpn+ap7E1tD8FNQyXnv1xva0O0//OocGI5ME2hyh+YR
+         oSmBcYKQOGOzzabZOQIFWbBrjbVkvpwICnec0lzCsZeaWt6J3VTY9Coe4QJjFw7CMk
+         LAqQGRDChndMKdEKYhNMSY99dqmlUIeufjgaBRwtsgXjl7eJ4FU4kqqGLjAT5wDUCU
+         8sYov1lh1HpY14SuAfTw+VoiQ4j1AwZiKFy8wB8Rmi7qBnJIVOcohVRf4NEtZBgnzD
+         Iz0oBkB3bvBkw==
+Date:   Thu, 9 Nov 2023 20:46:46 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     zlang@redhat.com, guan@eryu.me, david@fromorbit.com,
+        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] xfs: test unlinked inode list repair on demand
+Message-ID: <20231110044646.GE1203404@frogsfrogsfrogs>
+References: <169947894813.203694.3337426306300447087.stgit@frogsfrogsfrogs>
+ <169947895967.203694.8763078075817732328.stgit@frogsfrogsfrogs>
+ <ZUxwoLoy2D/CIUbE@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZUxwoLoy2D/CIUbE@infradead.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Wed, Nov 08, 2023 at 09:39:44PM -0800, Christoph Hellwig wrote:
+> > +# Modify as appropriate.
+> 
+> Btw, why do we keep adding this pointless boilerplate everywhere?
 
-Because on v3 inodes, di_flushiter doesn't exist. It overlaps with
-zero padding in the inode, except when NREXT64=1 configurations are
-in use and the zero padding is no longer padding but holds the 64
-bit extent counter.
+Oops.  It comes from the ./new output, but I guess I am a bit lazy about
+removing it. :(
 
-This manifests obviously on big endian platforms (e.g. s390) because
-the log dinode is in host order and the overlap is the LSBs of the
-extent count field. It is not noticed on little endian machines
-because the overlap is at the MSB end of the extent count field and
-we need to get more than 2^^48 extents in the inode before it
-manifests. i.e. the heat death of the universe will occur before we
-see the problem in little endian machines.
+> > +_supported_fs generic
+> 
+> I think this should be xfs only.
 
-This is a zero-day issue for NREXT64=1 configuraitons on big endian
-machines. Fix it by only clearing di_flushiter on v2 inodes during
-recovery.
+Changed.
 
-Fixes: 9b7d16e34bbe ("xfs: Introduce XFS_DIFLAG2_NREXT64 and associated helpers")
-cc: stable@kernel.org # 5.19+
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_inode_item_recover.c | 32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+> > +source ./common/filter
+> > +source ./common/fuzzy
+> > +source ./common/quota
+> 
+> When did we switch from using . to source other shell files
+> to "source"?  Just curious.
 
-diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
-index f4c31c2b60d5..dbdab4ce7c44 100644
---- a/fs/xfs/xfs_inode_item_recover.c
-+++ b/fs/xfs/xfs_inode_item_recover.c
-@@ -371,24 +371,26 @@ xlog_recover_inode_commit_pass2(
- 	 * superblock flag to determine whether we need to look at di_flushiter
- 	 * to skip replay when the on disk inode is newer than the log one
- 	 */
--	if (!xfs_has_v3inodes(mp) &&
--	    ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
--		/*
--		 * Deal with the wrap case, DI_MAX_FLUSH is less
--		 * than smaller numbers
--		 */
--		if (be16_to_cpu(dip->di_flushiter) == DI_MAX_FLUSH &&
--		    ldip->di_flushiter < (DI_MAX_FLUSH >> 1)) {
--			/* do nothing */
--		} else {
--			trace_xfs_log_recover_inode_skip(log, in_f);
--			error = 0;
--			goto out_release;
-+	if (!xfs_has_v3inodes(mp)) {
-+		if (ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
-+			/*
-+			 * Deal with the wrap case, DI_MAX_FLUSH is less
-+			 * than smaller numbers
-+			 */
-+			if (be16_to_cpu(dip->di_flushiter) == DI_MAX_FLUSH &&
-+			    ldip->di_flushiter < (DI_MAX_FLUSH >> 1)) {
-+				/* do nothing */
-+			} else {
-+				trace_xfs_log_recover_inode_skip(log, in_f);
-+				error = 0;
-+				goto out_release;
-+			}
- 		}
-+
-+		/* Take the opportunity to reset the flush iteration count */
-+		ldip->di_flushiter = 0;
- 	}
- 
--	/* Take the opportunity to reset the flush iteration count */
--	ldip->di_flushiter = 0;
- 
- 	if (unlikely(S_ISREG(ldip->di_mode))) {
- 		if ((ldip->di_format != XFS_DINODE_FMT_EXTENTS) &&
--- 
-2.42.0
+Habit of mine.  vim colors and bolds "source" nicely, which it doesn't
+do for dot.
 
+> > +
+> > +# real QA test starts here
+> > +
+> > +# Modify as appropriate.
+> > +_supported_fs generic
+> 
+> xfs again.
+
+Changed again.
+
+--D
