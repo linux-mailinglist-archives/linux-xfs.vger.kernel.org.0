@@ -2,31 +2,40 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F3BD7E7FDA
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:00:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88E467E7E92
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 18:46:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235323AbjKJSAY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 13:00:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
+        id S232516AbjKJRqb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 12:46:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235341AbjKJR7c (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 12:59:32 -0500
+        with ESMTP id S234766AbjKJRpe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 12:45:34 -0500
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3589A7280
-        for <linux-xfs@vger.kernel.org>; Thu,  9 Nov 2023 22:27:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1618F6F81;
+        Thu,  9 Nov 2023 22:23:31 -0800 (PST)
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id DBFB267373; Fri, 10 Nov 2023 06:08:46 +0100 (CET)
-Date:   Fri, 10 Nov 2023 06:08:46 +0100
+        id F1E8068AA6; Fri, 10 Nov 2023 07:23:25 +0100 (CET)
+Date:   Fri, 10 Nov 2023 07:23:25 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH, RFC] libxfs: check the size of on-disk data structures
-Message-ID: <20231110050846.GA24953@lst.de>
-References: <20231108163316.493089-1-hch@lst.de> <20231109195233.GH1205143@frogsfrogsfrogs>
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk, kbusch@kernel.org,
+        sagi@grimberg.me, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        djwong@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
+        chandan.babu@oracle.com, dchinner@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+        linux-api@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>
+Subject: Re: [PATCH 01/21] block: Add atomic write operations to
+ request_queue limits
+Message-ID: <20231110062325.GB26516@lst.de>
+References: <20230929102726.2985188-1-john.g.garry@oracle.com> <20230929102726.2985188-2-john.g.garry@oracle.com> <20231109151013.GA32432@lst.de> <b7f1b93a-08ea-07c8-d1da-5c2a31d1be80@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231109195233.GH1205143@frogsfrogsfrogs>
+In-Reply-To: <b7f1b93a-08ea-07c8-d1da-5c2a31d1be80@oracle.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -37,30 +46,24 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Nov 09, 2023 at 11:52:33AM -0800, Darrick J. Wong wrote:
-> > +#ifndef BUILD_BUG_ON_MSG
-> > +#define BUILD_BUG_ON_MSG(a, b)	BUILD_BUG_ON(a)
-> 
-> How difficult would it be to port the complex kernel macros that
-> actually result in the message being emitted in the gcc error output?
-> 
-> It's helpful that when the kernel build breaks, the robots will report
-> exactly which field/struct/whatever tripped, which makes it easier to
-> start figuring out where things went wrong on some weird architecture.
+On Thu, Nov 09, 2023 at 05:01:10PM +0000, John Garry wrote:
+> Generally they come from the same device property. Then since 
+> atomic_write_unit_max_bytes must be a power-of-2 (and 
+> atomic_write_max_bytes may not be), they may be different.
 
-I did try to pull the entire compile time assert machinery from
-the kernels compiler_types.h in, especially as atomic.h already uses
-a differnet part of it.  After it pulled in two more depdendencies
-I gave up, but in principle it should be entirely doable.
+How much do we care about supporting the additional slack over the
+power of two version?  
 
-> Otherwise I'm all for porting xfs_ondisk.h to xfsprogs.  IIRC I tried
-> that a long time ago and Dave or someone said xfs/122 was the answer.
+> In addition, 
+> atomic_write_unit_max_bytes is required to be limited by whatever is 
+> guaranteed to be able to fit in a bio.
 
-I'd much prefer to do it in C code and inside the libxfs we build.
-If we can agree on that and on killing off xfs/122 I'll look into
-porting the more complex compile time assert.
+The limit what fits into a bio is UINT_MAX, not sure that matters :)
 
-The other option would be to switch to using static_assert from C11,
-which doesn't allow a custom message, but at least the default message
-isn't confusing as hell.
+> atomic_write_max_bytes is really only relevant for merging writes. Maybe we 
+> should not even expose via sysfs.
+
+Or we need to have a good separate discussion on even supporting any
+merges.  Willy chimed in that supporting merges was intentional,
+but I'd really like to see numbers justifying it.
 
