@@ -2,97 +2,224 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDA777E7E5D
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 18:44:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2D7B7E8065
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:10:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235050AbjKJRoP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 12:44:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45986 "EHLO
+        id S235744AbjKJSKT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 13:10:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229581AbjKJRnv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 12:43:51 -0500
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2AF2B784
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 03:03:35 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SRbXd6s7Wz4f44T5
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 19:03:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-        by mail.maildlp.com (Postfix) with ESMTP id 5BAFD1A016F
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 19:03:32 +0800 (CST)
-Received: from localhost (unknown [10.175.127.227])
-        by APP1 (Coremail) with SMTP id cCh0CgBXWhD_DU5lyTorAg--.57750S3;
-        Fri, 10 Nov 2023 19:03:28 +0800 (CST)
-Date:   Fri, 10 Nov 2023 19:07:46 +0800
-From:   Long Li <leo.lilong@huaweicloud.com>
-To:     Chandan Babu R <chandanbabu@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, yi.zhang@huawei.com, houtao1@huawei.com,
-        yangerkun@huawei.com, djwong@kernel.org, david@fromorbit.com
-Subject: Re: [PATCH v3 0/3] xfs: fix two problem when recovery intents fails
-Message-ID: <20231110110746.GA1592279@ceph-admin>
-References: <20230731124619.3925403-1-leo.lilong@huawei.com>
- <20231107133607.GA560725@ceph-admin>
- <87jzqr9jm8.fsf@debian-BULLSEYE-live-builder-AMD64>
- <87jzqquefl.fsf@debian-BULLSEYE-live-builder-AMD64>
+        with ESMTP id S1344411AbjKJSIS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:08:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6703638227
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 05:57:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699624622;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FkBe2/uLSA+w6T92ie2OnmQtjDN0moqsVzizFE4ajKg=;
+        b=VVvtQ6mQhFLBOqDtiMcnQ4cSC6pVk8PKUvG7kzQ1eTkxP3psQoqoaFHJFE1SW6gXTS6HiH
+        +b63cStFy2oa26kO1UoGZU082mjsaDs4KMdBJCFCpm85edt3QZxhVXx8S06USWnmOqYcdC
+        8vqtEo9dIO1nZPlToXJy1m4S4L40DAQ=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-541-ANxkVnWeP5m1YhoHGpnANw-1; Fri, 10 Nov 2023 08:57:01 -0500
+X-MC-Unique: ANxkVnWeP5m1YhoHGpnANw-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1cc1ddb34ccso22069005ad.1
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 05:57:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699624620; x=1700229420;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FkBe2/uLSA+w6T92ie2OnmQtjDN0moqsVzizFE4ajKg=;
+        b=GZhy6wKEvx1HRBiIdBGOGwK9jm7lwwWw15jXcTpL32YQ6ly7JNgxEqAT1UL0qf0U5c
+         8ePuvTs98WsF87iu3jJpXg0WSGU9VWrm4dPJueZzcNOdf2K+HuHSsBitOP9adijTeu/F
+         MCuBULt1p5ystcIPqa1/FhWj9iAqRzXm75cthZexnmUZFTjdpPy36uWvpX2f7elEiw1i
+         K6/g788pfW1+y37hehZ8PgwvJQ+pyo4MmABTzhn7VzNEI8+sImYTUgKgolYQ4W1PIId7
+         vbR21EW58OVw/BhNjTNgY15fWfAmdPWrbykKf0Ln6ZfatultgTH6li78FUXFwzlgrMPY
+         hdCQ==
+X-Gm-Message-State: AOJu0YzOGpnQbfuP1NRegLBdr9aHXWXcfXpGjgNzme6sfZ7KiSWilmwD
+        z7UxzcJyWRHCWaX3v+fYukYCsapt1E+wysFmFllC7Yb5Q0jXTlyOt8jw1A0KVGZIcMBSdIijS8U
+        g01tir00txVVGS5qWQVNRFURZqisoj+o=
+X-Received: by 2002:a17:902:a9ca:b0:1cc:3fce:8aa8 with SMTP id b10-20020a170902a9ca00b001cc3fce8aa8mr7213831plr.6.1699624619773;
+        Fri, 10 Nov 2023 05:56:59 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHvnibCFGLD2LcrWpIyyqBVGGUrCAA1OS5JcLToi16rJYWpgNia3pmRKEPmzhNrQrfoynXqrQ==
+X-Received: by 2002:a17:902:a9ca:b0:1cc:3fce:8aa8 with SMTP id b10-20020a170902a9ca00b001cc3fce8aa8mr7213816plr.6.1699624619397;
+        Fri, 10 Nov 2023 05:56:59 -0800 (PST)
+Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id f18-20020a170902ce9200b001bbd1562e75sm5401702plg.55.2023.11.10.05.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 05:56:59 -0800 (PST)
+Date:   Fri, 10 Nov 2023 21:56:54 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Carlos Maiolino <carlos@maiolino.me>
+Subject: Re: [Bug report][fstests generic/047] Internal error !(flags &
+ XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.
+ Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+Message-ID: <20231110135654.26yq5s5ttp7dautk@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+References: <20231107080522.5lowalssbmi6lus3@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZUnxswEfoeZQhw5P@dread.disaster.area>
+ <20231107151314.angahkixgxsjwbot@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZUstA+1+IvHJ87eP@dread.disaster.area>
+ <CAN=2_H+CdEK_rEUmYbmkCjSRqhX2cwi5yRHQcKAmKDPF16vqOw@mail.gmail.com>
+ <ZUx429/S9H07xLrA@dread.disaster.area>
+ <20231109140929.jq7bpnuustsup3xf@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZU1nltE2X6qLJ8EL@dread.disaster.area>
+ <20231110013651.fw3j6khkdtjfe2bj@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZU2PhTKqwNEbjK13@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87jzqquefl.fsf@debian-BULLSEYE-live-builder-AMD64>
-X-CM-TRANSID: cCh0CgBXWhD_DU5lyTorAg--.57750S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZFWkXF4ftr13Aw4xZrW8WFg_yoW8JFW3p3
-        WfCa9Y9a9rGr18Ars7tFyUXa45tw4UJrnrWr18W3srCFyqqryjgrWfKrs09Fy3Wr1Y9r4a
-        krs7u34fZ3sxJ37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUgvb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-        j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-        kEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-        JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-        kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-        6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIx
-        AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-        Ja73UjIFyTuYvjxUrR6zUUUUU
-X-CM-SenderInfo: hohrhzxlor0w46kxt4xhlfz01xgou0bp/
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZU2PhTKqwNEbjK13@dread.disaster.area>
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Nov 10, 2023 at 03:16:16PM +0530, Chandan Babu R wrote:
-> On Thu, Nov 09, 2023 at 06:18:48 PM +0530, Chandan Babu R wrote:
-> > On Tue, Nov 07, 2023 at 09:36:07 PM +0800, Long Li wrote:
-> >> On Mon, Jul 31, 2023 at 08:46:16PM +0800, Long Li wrote:
-> >>> This patch set fix two problem when recovery intents fails.
-> >>> 
-> >>> Patches 1-2 fix the possible problem that intent items not released.
-> >>> When recovery intents, new intents items may be created during recovery
-> >>> intents. if recovery fails, new intents items may be left in AIL or
-> >>> leaks.
-> >>
-> >> Hi Chandan,
-> >> 	
-> >> In this patchset, patches 1-2 [1][2] have already been reviewed by Darrick,
-> >> and are not related to patch 3, is it possible to merge patches 1-2 in first?? 	
-> >> Patch 3 seems still has a lot of work to do.
-> >>
-> >> [1] https://patchwork.kernel.org/project/xfs/patch/20230715063647.2094989-2-leo.lilong@huawei.com/
-> >> [2] https://patchwork.kernel.org/project/xfs/patch/20230715063647.2094989-3-leo.lilong@huawei.com/
-> >>
-> >
-> > Sure, I will queue the first two patches for 6.7-rc2. Thanks for notifying me.
+On Fri, Nov 10, 2023 at 01:03:49PM +1100, Dave Chinner wrote:
+> On Fri, Nov 10, 2023 at 09:36:51AM +0800, Zorro Lang wrote:
+> > The g/047 still fails with this 2nd patch. So I did below steps [1],
+> > and get the trace output as [2], those dump_inodes() messages you
+> > added have been printed, please check.
 > 
-> Darrick's email address mentioned under the RVB tag is incorrect. I will
-> update it to djwong@kernel.org when commiting the patches.
+> And that points me at the bug.
 > 
+> dump_inodes: disk ino 0x83: init nblocks 0x8 nextents 0x0/0x0 anextents 0x0/0x0 v3_pad 0x0 nrext64_pad 0x0 di_flags2 0x18
+> dump_inodes: log ino 0x83: init nblocks 0x8 nextents 0x0/0x1 anextents 0x0/0x0 v3_pad 0x1 nrext64_pad 0x0 di_flags2 0x18 big
+>                                                      ^^^^^^^
+> The initial log inode is correct.
+> 
+> dump_inodes: disk ino 0x83: pre nblocks 0x8 nextents 0x0/0x0 anextents 0x0/0x0 v3_pad 0x0 nrext64_pad 0x0 di_flags2 0x18
+> dump_inodes: log ino 0x83: pre nblocks 0x8 nextents 0x0/0x0 anextents 0x0/0x0 v3_pad 0x0 nrext64_pad 0x0 di_flags2 0x18 big
+>                                                     ^^^^^^^
+> 
+> .... but on the second sample, it's been modified and the extent
+> count has been zeroed? Huh, that is unexpected - what did that?
+> 
+> Oh.
+> 
+> Can you test the patch below and see if it fixes the issue? Keep
+> the first verifier patch I sent, then apply the patch below. You can
+> drop the debug traceprintk patch - the patch below should fix it.
 
-Okay, thanks. I used the wrong RVB tag.
+Great, Dave! It works, below testing [1] passed on my s390x now. Maybe I should
+write Tested-by, but as a reporter, so Reported-by might be proper, so...
 
---
-Long Li
+Reported-by: Zorro Lang <zlang@redhat.com>
+
+Anyway, I'm doing a full round fstests "auto" group testing on s390x with this
+patch, to check if there're more issue on big endian machine. If you have
+any specific concern (testing condition) hope to test, please tell me, I'll
+enhance the testing of that part.
+
+Thanks,
+Zorro
+
+[1]
+# ./check generic/047 generic/039 generic/065
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/s390x ibm-z-507 6.6.0+ #1 SMP Wed Nov  8 12:51:20 EST 2023
+MKFS_OPTIONS  -- -f -m crc=1,finobt=1,rmapbt=0,reflink=1,bigtime=1,inobtcount=1 /dev/loop1
+MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/loop1 /mnt/fstests/SCRATCH_DIR
+
+generic/039        0s
+generic/047 10s ...  10s
+generic/065        1s
+Ran: generic/039 generic/047 generic/065
+Passed all 3 tests
+
+> 
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
+> xfs: recovery should not clear di_flushiter unconditionally
+> 
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> Because on v3 inodes, di_flushiter doesn't exist. It overlaps with
+> zero padding in the inode, except when NREXT64=1 configurations are
+> in use and the zero padding is no longer padding but holds the 64
+> bit extent counter.
+> 
+> This manifests obviously on big endian platforms (e.g. s390) because
+> the log dinode is in host order and the overlap is the LSBs of the
+> extent count field. It is not noticed on little endian machines
+> because the overlap is at the MSB end of the extent count field and
+> we need to get more than 2^^48 extents in the inode before it
+> manifests. i.e. the heat death of the universe will occur before we
+> see the problem in little endian machines.
+> 
+> This is a zero-day issue for NREXT64=1 configuraitons on big endian
+> machines. Fix it by only clearing di_flushiter on v2 inodes during
+> recovery.
+> 
+> Fixes: 9b7d16e34bbe ("xfs: Introduce XFS_DIFLAG2_NREXT64 and associated helpers")
+> cc: stable@kernel.org # 5.19+
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_inode_item_recover.c | 32 +++++++++++++++++---------------
+>  1 file changed, 17 insertions(+), 15 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
+> index f4c31c2b60d5..dbdab4ce7c44 100644
+> --- a/fs/xfs/xfs_inode_item_recover.c
+> +++ b/fs/xfs/xfs_inode_item_recover.c
+> @@ -371,24 +371,26 @@ xlog_recover_inode_commit_pass2(
+>  	 * superblock flag to determine whether we need to look at di_flushiter
+>  	 * to skip replay when the on disk inode is newer than the log one
+>  	 */
+> -	if (!xfs_has_v3inodes(mp) &&
+> -	    ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
+> -		/*
+> -		 * Deal with the wrap case, DI_MAX_FLUSH is less
+> -		 * than smaller numbers
+> -		 */
+> -		if (be16_to_cpu(dip->di_flushiter) == DI_MAX_FLUSH &&
+> -		    ldip->di_flushiter < (DI_MAX_FLUSH >> 1)) {
+> -			/* do nothing */
+> -		} else {
+> -			trace_xfs_log_recover_inode_skip(log, in_f);
+> -			error = 0;
+> -			goto out_release;
+> +	if (!xfs_has_v3inodes(mp)) {
+> +		if (ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
+> +			/*
+> +			 * Deal with the wrap case, DI_MAX_FLUSH is less
+> +			 * than smaller numbers
+> +			 */
+> +			if (be16_to_cpu(dip->di_flushiter) == DI_MAX_FLUSH &&
+> +			    ldip->di_flushiter < (DI_MAX_FLUSH >> 1)) {
+> +				/* do nothing */
+> +			} else {
+> +				trace_xfs_log_recover_inode_skip(log, in_f);
+> +				error = 0;
+> +				goto out_release;
+> +			}
+>  		}
+> +
+> +		/* Take the opportunity to reset the flush iteration count */
+> +		ldip->di_flushiter = 0;
+>  	}
+>  
+> -	/* Take the opportunity to reset the flush iteration count */
+> -	ldip->di_flushiter = 0;
+>  
+>  	if (unlikely(S_ISREG(ldip->di_mode))) {
+>  		if ((ldip->di_format != XFS_DINODE_FMT_EXTENTS) &&
+> 
 
