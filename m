@@ -2,68 +2,169 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C4727E8968
-	for <lists+linux-xfs@lfdr.de>; Sat, 11 Nov 2023 07:05:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 084557E8582
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 23:22:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbjKKGFz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 11 Nov 2023 01:05:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36290 "EHLO
+        id S229802AbjKJWWZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 17:22:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjKKGFx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 11 Nov 2023 01:05:53 -0500
-Received: from mail.maprial.com (mail.maprial.com [190.181.35.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43655420B;
-        Fri, 10 Nov 2023 22:05:51 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.maprial.com (Postfix) with ESMTP id CCF5892818F3;
-        Fri, 10 Nov 2023 21:40:40 -0400 (-04)
-Received: from mail.maprial.com ([127.0.0.1])
-        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Muy5rPUIaV_B; Fri, 10 Nov 2023 21:40:39 -0400 (-04)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.maprial.com (Postfix) with ESMTP id BA684816BDE0;
-        Fri, 10 Nov 2023 17:46:51 -0400 (-04)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.maprial.com BA684816BDE0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maprial.com;
-        s=8A254412-65B9-11ED-A564-8B9C10001A2B; t=1699652812;
-        bh=WOZURJ77pkiMUL2pPLC14ifVPRvyTQIBEQmxuN1ezAA=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=NKQvDatcCkxHVdTzsKLyCGNqV8PK3DLWPuKis1CsRPHCNruh8VA6wEF46vCqaYb2E
-         ADrJSDjJawnmFM0C2HS2/cqMEKTdAYC/CbKwo1Yq1IO24EaEVX7HMODU6wC2A35eRr
-         G3GgFsxuqByS3lzLFMwj5FbaeSa9BIRGKwVrwpVM=
-X-Virus-Scanned: amavisd-new at mail.maprial.com
-Received: from mail.maprial.com ([127.0.0.1])
-        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QktQqmz0rVwv; Fri, 10 Nov 2023 17:46:51 -0400 (-04)
-Received: from [192.168.1.152] (unknown [51.179.104.230])
-        by mail.maprial.com (Postfix) with ESMTPSA id 01F3376F6993;
-        Fri, 10 Nov 2023 17:04:17 -0400 (-04)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S229786AbjKJWWY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 17:22:24 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14BA54496
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 14:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699654887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tg0wVWHnfhwo90mRsU0kU9KS8A8DGQq7gTBPmwLKhcI=;
+        b=ONYzEgsBeeDAvlcDEoh21ccwTeijNfohz+XSLnFHVnuSmcjGNesH/pTiILB2VtLtnKRZWa
+        yAMzSptYEdJxj6/3EIKlG4W1ElkFOFgGULCOeubN/dw/XJGi40W2qiC/P9qcRIY3fsocS0
+        RAOLtfm+NbhFooiyytNOxWRM64i0xHg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-613-EVslu0XCNTGQy-9oILGhIQ-1; Fri,
+ 10 Nov 2023 17:21:23 -0500
+X-MC-Unique: EVslu0XCNTGQy-9oILGhIQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DCB551C0BA46;
+        Fri, 10 Nov 2023 22:21:22 +0000 (UTC)
+Received: from [10.22.32.62] (unknown [10.22.32.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EC4B1C060AE;
+        Fri, 10 Nov 2023 22:21:22 +0000 (UTC)
+Message-ID: <52f481a3-bf4f-85ae-9ae6-10a23b48c7c5@redhat.com>
+Date:   Fri, 10 Nov 2023 17:21:22 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?b?4oKsIDEwMC4wMDAuMDAwPw==?=
-To:     Recipients <gvalencia@maprial.com>
-From:   gvalencia@maprial.com
-Date:   Fri, 10 Nov 2023 22:04:07 +0100
-Reply-To: joliushk@gmail.com
-Message-Id: <20231110210418.01F3376F6993@mail.maprial.com>
-X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_INVALID,
-        DKIM_SIGNED,FREEMAIL_FORGED_REPLYTO,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 1/4] locking: Add rwsem_assert_held() and
+ rwsem_assert_held_write()
+Content-Language: en-US
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        Mateusz Guzik <mjguzik@gmail.com>
+References: <20231110204119.3692023-1-willy@infradead.org>
+ <20231110204119.3692023-2-willy@infradead.org>
+From:   Waiman Long <longman@redhat.com>
+In-Reply-To: <20231110204119.3692023-2-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
-X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Goededag,
-Ik ben mevrouw Joanna Liu en een medewerker van Citi Bank Hong Kong.
-Kan ik =E2=82=AC 100.000.000 aan u overmaken? Kan ik je vertrouwen
+On 11/10/23 15:41, Matthew Wilcox (Oracle) wrote:
+> Modelled after lockdep_assert_held() and lockdep_assert_held_write(),
+> but are always active, even when lockdep is disabled.  Of course, they
+> don't test that _this_ thread is the owner, but it's sufficient to catch
+> many bugs and doesn't incur the same performance penalty as lockdep.
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>   include/linux/rwbase_rt.h |  9 ++++++--
+>   include/linux/rwsem.h     | 46 ++++++++++++++++++++++++++++++++++-----
+>   2 files changed, 48 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/linux/rwbase_rt.h b/include/linux/rwbase_rt.h
+> index 1d264dd08625..a04acd85705b 100644
+> --- a/include/linux/rwbase_rt.h
+> +++ b/include/linux/rwbase_rt.h
+> @@ -26,12 +26,17 @@ struct rwbase_rt {
+>   	} while (0)
+>   
+>   
+> -static __always_inline bool rw_base_is_locked(struct rwbase_rt *rwb)
+> +static __always_inline bool rw_base_is_locked(const struct rwbase_rt *rwb)
+>   {
+>   	return atomic_read(&rwb->readers) != READER_BIAS;
+>   }
+>   
+> -static __always_inline bool rw_base_is_contended(struct rwbase_rt *rwb)
+> +static inline void rw_base_assert_held_write(const struct rwbase_rt *rwb)
+> +{
+> +	BUG_ON(atomic_read(&rwb->readers) != WRITER_BIAS);
+> +}
+> +
+> +static __always_inline bool rw_base_is_contended(const struct rwbase_rt *rwb)
+>   {
+>   	return atomic_read(&rwb->readers) > 0;
+>   }
+> diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+> index 1dd530ce8b45..b5b34cca86f3 100644
+> --- a/include/linux/rwsem.h
+> +++ b/include/linux/rwsem.h
+> @@ -66,14 +66,24 @@ struct rw_semaphore {
+>   #endif
+>   };
+>   
+> -/* In all implementations count != 0 means locked */
+> +#define RWSEM_UNLOCKED_VALUE		0UL
+> +#define RWSEM_WRITER_LOCKED		(1UL << 0)
+> +#define __RWSEM_COUNT_INIT(name)	.count = ATOMIC_LONG_INIT(RWSEM_UNLOCKED_VALUE)
+> +
+>   static inline int rwsem_is_locked(struct rw_semaphore *sem)
+>   {
+> -	return atomic_long_read(&sem->count) != 0;
+> +	return atomic_long_read(&sem->count) != RWSEM_UNLOCKED_VALUE;
+>   }
+>   
+> -#define RWSEM_UNLOCKED_VALUE		0L
+> -#define __RWSEM_COUNT_INIT(name)	.count = ATOMIC_LONG_INIT(RWSEM_UNLOCKED_VALUE)
+> +static inline void rwsem_assert_held_nolockdep(const struct rw_semaphore *sem)
+> +{
+> +	WARN_ON(atomic_long_read(&sem->count) == RWSEM_UNLOCKED_VALUE);
+> +}
+That is not correct. You mean "!= RWSEM_UNLOCKED_VALUE". Right?
+> +
+> +static inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
+> +{
+> +	WARN_ON(!(atomic_long_read(&sem->count) & RWSEM_WRITER_LOCKED));
+> +}
+>   
+>   /* Common initializer macros and functions */
+>   
+> @@ -152,11 +162,21 @@ do {								\
+>   	__init_rwsem((sem), #sem, &__key);			\
+>   } while (0)
+>   
+> -static __always_inline int rwsem_is_locked(struct rw_semaphore *sem)
+> +static __always_inline int rwsem_is_locked(const struct rw_semaphore *sem)
+>   {
+>   	return rw_base_is_locked(&sem->rwbase);
+>   }
+>   
+> +static inline void rwsem_assert_held_nolockdep(const struct rw_semaphore *sem)
+> +{
+> +	BUG_ON(!rwsem_is_locked(sem));
+> +}
+> +
 
+There are some inconsistency in the use of WARN_ON() and BUG_ON() in the 
+assertions. For PREEMPT_RT, held_write is a BUG_ON. For non-PREEMPT_RT, 
+held is a BUG_ON. It is not clear why one is BUG_ON and other one is 
+WARN_ON. Is there a rationale for that?
 
-Ik wacht op jullie reacties
-Met vriendelijke groeten
-mevrouw Joanna Liu
+BTW, we can actually check if the current process is the write-lock 
+owner of a rwsem, but not for a reader-owned rwsem.
+
+Cheers,
+Longman
+
