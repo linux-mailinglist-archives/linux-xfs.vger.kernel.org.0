@@ -2,85 +2,76 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2D7B7E8065
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:10:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 906847E7FC0
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 18:58:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235744AbjKJSKT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 13:10:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33136 "EHLO
+        id S229464AbjKJR6Q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 12:58:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344411AbjKJSIS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:08:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6703638227
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 05:57:03 -0800 (PST)
+        with ESMTP id S234701AbjKJR40 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 12:56:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2158939764
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 06:40:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1699624622;
+        s=mimecast20190719; t=1699627231;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=FkBe2/uLSA+w6T92ie2OnmQtjDN0moqsVzizFE4ajKg=;
-        b=VVvtQ6mQhFLBOqDtiMcnQ4cSC6pVk8PKUvG7kzQ1eTkxP3psQoqoaFHJFE1SW6gXTS6HiH
-        +b63cStFy2oa26kO1UoGZU082mjsaDs4KMdBJCFCpm85edt3QZxhVXx8S06USWnmOqYcdC
-        8vqtEo9dIO1nZPlToXJy1m4S4L40DAQ=
+        bh=YbY/ExOolu9c+QNO+25u+1iTHYBsG6uJEdRpQLfNoKw=;
+        b=eTXopygvO/TBUxRczEN8wc8fGAlSuAD7eqwnpPfBQCLdH7LrfN27iCwzJldZkruPZ1hHKp
+        LU/b6GSMqmmBxc9g6ISIh4H3fQF4lpstD0+NF3WfkCR/ggDKmxWnlhGx+fVtiMvF3NxISc
+        sk9xSF6TWKgMGtXGgTyzekAq0G1lYp8=
 Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
  [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-541-ANxkVnWeP5m1YhoHGpnANw-1; Fri, 10 Nov 2023 08:57:01 -0500
-X-MC-Unique: ANxkVnWeP5m1YhoHGpnANw-1
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1cc1ddb34ccso22069005ad.1
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 05:57:01 -0800 (PST)
+ us-mta-78-flvIDmgLN0mSzlw-GzxaVg-1; Fri, 10 Nov 2023 09:40:29 -0500
+X-MC-Unique: flvIDmgLN0mSzlw-GzxaVg-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1cc56cc8139so21625755ad.0
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 06:40:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699624620; x=1700229420;
+        d=1e100.net; s=20230601; t=1699627228; x=1700232028;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FkBe2/uLSA+w6T92ie2OnmQtjDN0moqsVzizFE4ajKg=;
-        b=GZhy6wKEvx1HRBiIdBGOGwK9jm7lwwWw15jXcTpL32YQ6ly7JNgxEqAT1UL0qf0U5c
-         8ePuvTs98WsF87iu3jJpXg0WSGU9VWrm4dPJueZzcNOdf2K+HuHSsBitOP9adijTeu/F
-         MCuBULt1p5ystcIPqa1/FhWj9iAqRzXm75cthZexnmUZFTjdpPy36uWvpX2f7elEiw1i
-         K6/g788pfW1+y37hehZ8PgwvJQ+pyo4MmABTzhn7VzNEI8+sImYTUgKgolYQ4W1PIId7
-         vbR21EW58OVw/BhNjTNgY15fWfAmdPWrbykKf0Ln6ZfatultgTH6li78FUXFwzlgrMPY
-         hdCQ==
-X-Gm-Message-State: AOJu0YzOGpnQbfuP1NRegLBdr9aHXWXcfXpGjgNzme6sfZ7KiSWilmwD
-        z7UxzcJyWRHCWaX3v+fYukYCsapt1E+wysFmFllC7Yb5Q0jXTlyOt8jw1A0KVGZIcMBSdIijS8U
-        g01tir00txVVGS5qWQVNRFURZqisoj+o=
-X-Received: by 2002:a17:902:a9ca:b0:1cc:3fce:8aa8 with SMTP id b10-20020a170902a9ca00b001cc3fce8aa8mr7213831plr.6.1699624619773;
-        Fri, 10 Nov 2023 05:56:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHvnibCFGLD2LcrWpIyyqBVGGUrCAA1OS5JcLToi16rJYWpgNia3pmRKEPmzhNrQrfoynXqrQ==
-X-Received: by 2002:a17:902:a9ca:b0:1cc:3fce:8aa8 with SMTP id b10-20020a170902a9ca00b001cc3fce8aa8mr7213816plr.6.1699624619397;
-        Fri, 10 Nov 2023 05:56:59 -0800 (PST)
+        bh=YbY/ExOolu9c+QNO+25u+1iTHYBsG6uJEdRpQLfNoKw=;
+        b=rnWtiKH/56bKG0vip40qYc9SiX1ZnysV+PolBEviJMLkSxQkZ9q36zmAKMZXSFINcs
+         dIhogE+MEIT5ceLXjSgCH8ApesaqN+g+O4PBN7YPFCulK0FdaXAdkWP0/AxBgoJjHWwz
+         FTchxiFQKt5bHVqWetvYev0+b6/a+Uw/8RIMGLsu79vwZv4sLO0GNTKj1IJTmw7c0p2n
+         Rc0NcYVhT2efkKC3NpK5ih7pB2cJAC/lt7O4/sRIRvJP0vKpOISCPuKIaeLcHlMrzPZo
+         afOQbe/BeOGcFUohVUIJ4LJjU2veOJ9ztzY2tExVG00nvgVIZNX62EucPS2GRcSD1Zby
+         72Qw==
+X-Gm-Message-State: AOJu0YzszYQQjtgII8FwKtEfBJwfjgR96FiHKeO2uzxgRQxK4kXQZR+L
+        EgLsGbCUwjPE85a0c/1O/6w0huCv/ioDP3eujIrWFzo/W/Z0kL9CSWT2PDresGo1HNf6s7M+Hc7
+        e//RF79pN6qoZp9Ax3NP7
+X-Received: by 2002:a17:903:2281:b0:1cc:332f:9e4b with SMTP id b1-20020a170903228100b001cc332f9e4bmr3753185plh.1.1699627228555;
+        Fri, 10 Nov 2023 06:40:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH7HCLG+T2acY7pjZAAYvJ8tZDZXjXwF7QY+zo6+aNzSKnSqSRh62FYR0DZyajugNe1DUYyAQ==
+X-Received: by 2002:a17:903:2281:b0:1cc:332f:9e4b with SMTP id b1-20020a170903228100b001cc332f9e4bmr3753161plh.1.1699627228230;
+        Fri, 10 Nov 2023 06:40:28 -0800 (PST)
 Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id f18-20020a170902ce9200b001bbd1562e75sm5401702plg.55.2023.11.10.05.56.57
+        by smtp.gmail.com with ESMTPSA id az10-20020a170902a58a00b001cc615e6850sm5430949plb.90.2023.11.10.06.40.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Nov 2023 05:56:59 -0800 (PST)
-Date:   Fri, 10 Nov 2023 21:56:54 +0800
+        Fri, 10 Nov 2023 06:40:27 -0800 (PST)
+Date:   Fri, 10 Nov 2023 22:40:19 +0800
 From:   Zorro Lang <zlang@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Carlos Maiolino <carlos@maiolino.me>
-Subject: Re: [Bug report][fstests generic/047] Internal error !(flags &
- XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.
- Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
-Message-ID: <20231110135654.26yq5s5ttp7dautk@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
-References: <20231107080522.5lowalssbmi6lus3@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <ZUnxswEfoeZQhw5P@dread.disaster.area>
- <20231107151314.angahkixgxsjwbot@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <ZUstA+1+IvHJ87eP@dread.disaster.area>
- <CAN=2_H+CdEK_rEUmYbmkCjSRqhX2cwi5yRHQcKAmKDPF16vqOw@mail.gmail.com>
- <ZUx429/S9H07xLrA@dread.disaster.area>
- <20231109140929.jq7bpnuustsup3xf@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <ZU1nltE2X6qLJ8EL@dread.disaster.area>
- <20231110013651.fw3j6khkdtjfe2bj@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <ZU2PhTKqwNEbjK13@dread.disaster.area>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Catherine Hoang <catherine.hoang@oracle.com>,
+        fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] generic: test reads racing with slow reflink
+ operations
+Message-ID: <20231110144019.4uonhyfqk44owdzq@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+References: <169947896328.203781.17647180888752123384.stgit@frogsfrogsfrogs>
+ <169947896885.203781.13438458222742566484.stgit@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZU2PhTKqwNEbjK13@dread.disaster.area>
+In-Reply-To: <169947896885.203781.13438458222742566484.stgit@frogsfrogsfrogs>
 X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,LOTS_OF_MONEY,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
         RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -89,137 +80,229 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Nov 10, 2023 at 01:03:49PM +1100, Dave Chinner wrote:
-> On Fri, Nov 10, 2023 at 09:36:51AM +0800, Zorro Lang wrote:
-> > The g/047 still fails with this 2nd patch. So I did below steps [1],
-> > and get the trace output as [2], those dump_inodes() messages you
-> > added have been printed, please check.
+On Wed, Nov 08, 2023 at 01:29:28PM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
 > 
-> And that points me at the bug.
+> XFS has a rather slow reflink operation.  While a reflink operation is
+> running, other programs cannot read the contents of the source file,
+> which is causing latency spikes.  Catherine Hoang wrote a patch to
+> permit reads, since the source file contents do not change.  This is a
+> functionality test for that patch.
 > 
-> dump_inodes: disk ino 0x83: init nblocks 0x8 nextents 0x0/0x0 anextents 0x0/0x0 v3_pad 0x0 nrext64_pad 0x0 di_flags2 0x18
-> dump_inodes: log ino 0x83: init nblocks 0x8 nextents 0x0/0x1 anextents 0x0/0x0 v3_pad 0x1 nrext64_pad 0x0 di_flags2 0x18 big
->                                                      ^^^^^^^
-> The initial log inode is correct.
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Catherine Hoang <catherine.hoang@oracle.com>
+> ---
+>  configure.ac              |    1 
+>  include/builddefs.in      |    1 
+>  m4/package_libcdev.m4     |   12 ++
+>  src/Makefile              |    4 +
+>  src/t_reflink_read_race.c |  339 +++++++++++++++++++++++++++++++++++++++++++++
+>  tests/generic/1953        |   74 ++++++++++
+>  tests/generic/1953.out    |    6 +
+>  7 files changed, 437 insertions(+)
+>  create mode 100644 src/t_reflink_read_race.c
+>  create mode 100755 tests/generic/1953
+>  create mode 100644 tests/generic/1953.out
 > 
-> dump_inodes: disk ino 0x83: pre nblocks 0x8 nextents 0x0/0x0 anextents 0x0/0x0 v3_pad 0x0 nrext64_pad 0x0 di_flags2 0x18
-> dump_inodes: log ino 0x83: pre nblocks 0x8 nextents 0x0/0x0 anextents 0x0/0x0 v3_pad 0x0 nrext64_pad 0x0 di_flags2 0x18 big
->                                                     ^^^^^^^
 > 
-> .... but on the second sample, it's been modified and the extent
-> count has been zeroed? Huh, that is unexpected - what did that?
-> 
-> Oh.
-> 
-> Can you test the patch below and see if it fixes the issue? Keep
-> the first verifier patch I sent, then apply the patch below. You can
-> drop the debug traceprintk patch - the patch below should fix it.
+> diff --git a/configure.ac b/configure.ac
+> index 4687d8a3c0..7333045330 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -71,6 +71,7 @@ AC_HAVE_BMV_OF_SHARED
+>  AC_HAVE_NFTW
+>  AC_HAVE_RLIMIT_NOFILE
+>  AC_HAVE_FIEXCHANGE
+> +AC_HAVE_FICLONE
+>  
+>  AC_CHECK_FUNCS([renameat2])
+>  AC_CHECK_FUNCS([reallocarray])
+> diff --git a/include/builddefs.in b/include/builddefs.in
+> index 969acf0da2..446350d5fc 100644
+> --- a/include/builddefs.in
+> +++ b/include/builddefs.in
+> @@ -73,6 +73,7 @@ HAVE_NFTW = @have_nftw@
+>  HAVE_BMV_OF_SHARED = @have_bmv_of_shared@
+>  HAVE_RLIMIT_NOFILE = @have_rlimit_nofile@
+>  HAVE_FIEXCHANGE = @have_fiexchange@
+> +HAVE_FICLONE = @have_ficlone@
+>  
+>  GCCFLAGS = -funsigned-char -fno-strict-aliasing -Wall
+>  
+> diff --git a/m4/package_libcdev.m4 b/m4/package_libcdev.m4
+> index 7f73104405..91eb64db21 100644
+> --- a/m4/package_libcdev.m4
+> +++ b/m4/package_libcdev.m4
+> @@ -173,4 +173,16 @@ AC_DEFUN([AC_HAVE_FIEXCHANGE],
+>      ]])],[have_fiexchange=yes
+>         AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+>      AC_SUBST(have_fiexchange)
+> +
+> +# Check if we have FICLONE
+> +AC_DEFUN([AC_HAVE_FICLONE],
+> +  [ AC_MSG_CHECKING([for FICLONE])
+> +    AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+> +#include <sys/ioctl.h>
+> +#include <linux/fs.h>
+> +    ]], [[
+> +	 ioctl(-1, FICLONE, -1);
+> +    ]])],[have_ficlone=yes
+> +       AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)])
+> +    AC_SUBST(have_ficlone)
 
-Great, Dave! It works, below testing [1] passed on my s390x now. Maybe I should
-write Tested-by, but as a reporter, so Reported-by might be proper, so...
+I got below build error:
+  libtoolize: Consider adding '-I m4' to ACLOCAL_AMFLAGS in Makefile.am.
+  cp include/install-sh .
+  aclocal -I m4
+  /usr/bin/m4:m4/package_libcdev.m4:162: ERROR: end of file in string
+  autom4te: error: /usr/bin/m4 failed with exit status: 1
+  aclocal: error: autom4te failed with exit status: 1
+  make: *** [Makefile:66: configure] Error 1
 
-Reported-by: Zorro Lang <zlang@redhat.com>
+I think you missed a "])" at here, below "])" belong to last AC_DEFUN.
 
-Anyway, I'm doing a full round fstests "auto" group testing on s390x with this
-patch, to check if there're more issue on big endian machine. If you have
-any specific concern (testing condition) hope to test, please tell me, I'll
-enhance the testing of that part.
+>    ])
+> diff --git a/src/Makefile b/src/Makefile
+> index 2815f919b2..49dd2f6c1e 100644
+> --- a/src/Makefile
+> +++ b/src/Makefile
+> @@ -94,6 +94,10 @@ ifeq ($(HAVE_SEEK_DATA), yes)
+>   endif
+>  endif
+>  
+> +ifeq ($(HAVE_FICLONE),yes)
+> +     TARGETS += t_reflink_read_race
+> +endif
+> +
+>  CFILES = $(TARGETS:=.c)
+>  LDIRT = $(TARGETS) fssum
+>  
+
+[snip]
+
+> diff --git a/tests/generic/1953 b/tests/generic/1953
+> new file mode 100755
+> index 0000000000..058538e6fe
+> --- /dev/null
+> +++ b/tests/generic/1953
+> @@ -0,0 +1,74 @@
+> +#! /bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (c) 2023, Oracle and/or its affiliates.  All Rights Reserved.
+> +#
+> +# FS QA Test No. 1953
+> +#
+> +# Race file reads with a very slow reflink operation to see if the reads
+> +# actually complete while the reflink is ongoing.  This is a functionality
+> +# test for XFS commit f3ba4762fa56 "xfs: allow read IO and FICLONE to run
+> +# concurrently".
+> +#
+> +. ./common/preamble
+> +_begin_fstest auto clone punch
+> +
+> +# Import common functions.
+> +. ./common/filter
+> +. ./common/attr
+> +. ./common/reflink
+> +
+> +# real QA test starts here
+> +_require_scratch_reflink
+> +_require_cp_reflink
+> +_require_xfs_io_command "fpunch"
+> +_require_test_program "punch-alternating"
+> +_require_test_program "t_reflink_read_race"
+> +
+> +rm -f "$seqres.full"
+> +
+> +echo "Format and mount"
+> +_scratch_mkfs > "$seqres.full" 2>&1
+> +_scratch_mount >> "$seqres.full" 2>&1
+> +
+> +testdir="$SCRATCH_MNT/test-$seq"
+> +mkdir "$testdir"
+> +
+> +calc_space() {
+> +	blocks_needed=$(( 2 ** (fnr + 1) ))
+> +	space_needed=$((blocks_needed * blksz * 5 / 4))
+> +}
+> +
+> +# Figure out the number of blocks that we need to get the reflink runtime above
+> +# 1 seconds
+> +echo "Create a many-block file"
+> +for ((fnr = 1; fnr < 40; fnr++)); do
+> +	free_blocks=$(stat -f -c '%a' "$testdir")
+> +	blksz=$(_get_file_block_size "$testdir")
+> +	space_avail=$((free_blocks * blksz))
+> +	calc_space
+> +	test $space_needed -gt $space_avail && \
+> +		_notrun "Insufficient space for stress test; would only create $blocks_needed extents."
+> +
+> +	off=$(( (2 ** fnr) * blksz))
+> +	$XFS_IO_PROG -f -c "pwrite -S 0x61 -b 4194304 $off $off" "$testdir/file1" >> "$seqres.full"
+> +	"$here/src/punch-alternating" "$testdir/file1" >> "$seqres.full"
+> +
+> +	timeout 1s cp --reflink=always "$testdir/file1" "$testdir/garbage" || break
+
+To make sure we have this program:
+  _require_command "$TIMEOUT_PROG" timeout
+then use $TIMEOUT_PROG at here.
+
+Others looks good to me, if it expects to get below failure on linux 6.6.0-rc6+.
+
+# ./check generic/1953
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 hp-dl380pg8-01 6.6.0-rc6-mainline+ #7 SMP PREEMPT_DYNAMIC Thu Oct 19 22:34:28 CST 2023
+MKFS_OPTIONS  -- -f /dev/loop0
+MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/loop0 /mnt/scratch
+
+generic/1953       - output mismatch (see /root/git/xfstests/results//generic/1953.out.bad)
+    --- tests/generic/1953.out  2023-11-10 22:22:12.379185281 +0800
+    +++ /root/git/xfstests/results//generic/1953.out.bad        2023-11-10 22:28:27.041801352 +0800
+    @@ -3,4 +3,4 @@
+     Create a many-block file
+     Reflink the big file
+     Terminated
+    -test completed successfully
+    +clone finished before any reads
+    ...
+    (Run 'diff -u /root/git/xfstests/tests/generic/1953.out /root/git/xfstests/results//generic/1953.out.bad'  to see the entire diff)
+Ran: generic/1953
+Failures: generic/1953
+Failed 1 of 1 tests
 
 Thanks,
 Zorro
 
-[1]
-# ./check generic/047 generic/039 generic/065
-FSTYP         -- xfs (debug)
-PLATFORM      -- Linux/s390x ibm-z-507 6.6.0+ #1 SMP Wed Nov  8 12:51:20 EST 2023
-MKFS_OPTIONS  -- -f -m crc=1,finobt=1,rmapbt=0,reflink=1,bigtime=1,inobtcount=1 /dev/loop1
-MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/loop1 /mnt/fstests/SCRATCH_DIR
-
-generic/039        0s
-generic/047 10s ...  10s
-generic/065        1s
-Ran: generic/039 generic/047 generic/065
-Passed all 3 tests
-
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
-> xfs: recovery should not clear di_flushiter unconditionally
-> 
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> Because on v3 inodes, di_flushiter doesn't exist. It overlaps with
-> zero padding in the inode, except when NREXT64=1 configurations are
-> in use and the zero padding is no longer padding but holds the 64
-> bit extent counter.
-> 
-> This manifests obviously on big endian platforms (e.g. s390) because
-> the log dinode is in host order and the overlap is the LSBs of the
-> extent count field. It is not noticed on little endian machines
-> because the overlap is at the MSB end of the extent count field and
-> we need to get more than 2^^48 extents in the inode before it
-> manifests. i.e. the heat death of the universe will occur before we
-> see the problem in little endian machines.
-> 
-> This is a zero-day issue for NREXT64=1 configuraitons on big endian
-> machines. Fix it by only clearing di_flushiter on v2 inodes during
-> recovery.
-> 
-> Fixes: 9b7d16e34bbe ("xfs: Introduce XFS_DIFLAG2_NREXT64 and associated helpers")
-> cc: stable@kernel.org # 5.19+
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_inode_item_recover.c | 32 +++++++++++++++++---------------
->  1 file changed, 17 insertions(+), 15 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
-> index f4c31c2b60d5..dbdab4ce7c44 100644
-> --- a/fs/xfs/xfs_inode_item_recover.c
-> +++ b/fs/xfs/xfs_inode_item_recover.c
-> @@ -371,24 +371,26 @@ xlog_recover_inode_commit_pass2(
->  	 * superblock flag to determine whether we need to look at di_flushiter
->  	 * to skip replay when the on disk inode is newer than the log one
->  	 */
-> -	if (!xfs_has_v3inodes(mp) &&
-> -	    ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
-> -		/*
-> -		 * Deal with the wrap case, DI_MAX_FLUSH is less
-> -		 * than smaller numbers
-> -		 */
-> -		if (be16_to_cpu(dip->di_flushiter) == DI_MAX_FLUSH &&
-> -		    ldip->di_flushiter < (DI_MAX_FLUSH >> 1)) {
-> -			/* do nothing */
-> -		} else {
-> -			trace_xfs_log_recover_inode_skip(log, in_f);
-> -			error = 0;
-> -			goto out_release;
-> +	if (!xfs_has_v3inodes(mp)) {
-> +		if (ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
-> +			/*
-> +			 * Deal with the wrap case, DI_MAX_FLUSH is less
-> +			 * than smaller numbers
-> +			 */
-> +			if (be16_to_cpu(dip->di_flushiter) == DI_MAX_FLUSH &&
-> +			    ldip->di_flushiter < (DI_MAX_FLUSH >> 1)) {
-> +				/* do nothing */
-> +			} else {
-> +				trace_xfs_log_recover_inode_skip(log, in_f);
-> +				error = 0;
-> +				goto out_release;
-> +			}
->  		}
+> +done
+> +echo "fnr=$fnr" >> $seqres.full
 > +
-> +		/* Take the opportunity to reset the flush iteration count */
-> +		ldip->di_flushiter = 0;
->  	}
->  
-> -	/* Take the opportunity to reset the flush iteration count */
-> -	ldip->di_flushiter = 0;
->  
->  	if (unlikely(S_ISREG(ldip->di_mode))) {
->  		if ((ldip->di_format != XFS_DINODE_FMT_EXTENTS) &&
+> +echo "Reflink the big file"
+> +$here/src/t_reflink_read_race "$testdir/file1" "$testdir/file2" \
+> +	"$testdir/outcome" &>> $seqres.full
+> +
+> +if [ ! -e "$testdir/outcome" ]; then
+> +	echo "Could not set up program"
+> +elif grep -q "finished read early" "$testdir/outcome"; then
+> +	echo "test completed successfully"
+> +else
+> +	cat "$testdir/outcome"
+> +fi
+> +
+> +# success, all done
+> +status=0
+> +exit
+> diff --git a/tests/generic/1953.out b/tests/generic/1953.out
+> new file mode 100644
+> index 0000000000..8eaacb7ff0
+> --- /dev/null
+> +++ b/tests/generic/1953.out
+> @@ -0,0 +1,6 @@
+> +QA output created by 1953
+> +Format and mount
+> +Create a many-block file
+> +Reflink the big file
+> +Terminated
+> +test completed successfully
 > 
 
