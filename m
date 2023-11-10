@@ -2,68 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B12297E81BF
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:33:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB7997E8019
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:05:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345358AbjKJSdq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 13:33:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39426 "EHLO
+        id S235752AbjKJSFJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 13:05:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345971AbjKJScu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:32:50 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E213F7DBD
-        for <linux-xfs@vger.kernel.org>; Thu,  9 Nov 2023 22:51:29 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-da0344eb3fdso1743913276.3
-        for <linux-xfs@vger.kernel.org>; Thu, 09 Nov 2023 22:51:29 -0800 (PST)
+        with ESMTP id S235731AbjKJSEn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:04:43 -0500
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F957DA8
+        for <linux-xfs@vger.kernel.org>; Thu,  9 Nov 2023 22:49:51 -0800 (PST)
+Received: by mail-ot1-x331.google.com with SMTP id 46e09a7af769-6ce2d4567caso934078a34.2
+        for <linux-xfs@vger.kernel.org>; Thu, 09 Nov 2023 22:49:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1699599089; x=1700203889; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PZuNPkp5pvSL22XckYA+IGnaTuq+xQ2jH7SR/6KORzk=;
-        b=0kCJE6tQcPLPouQ6ukegZw+WcVrKBm5iOf/gaM+HsT2pkl8dJ5gZzmbXdvJ3c5qHjc
-         hcNIeewiXRwzCg7+bL5uyOEdF1oh47enrS6HzaBpSAEoyoXnVL2sVO7nw7Fyw81LM7BW
-         MVmuoOWtcR8DzcGaqYCjVZ3MamoiXczUvo3Ay4f8mpe5zCaYM2KzpMyNyOdbtXA2S4Ts
-         br/xBMyapHFpOddG2gGfpqeHGf1/v/cAkk7fh7A+enXgGdLo6wKcMgdLJjko1AXfzc7o
-         zAWEO+la8yXCy3n7qMdsKi7RRqCHectUWZbbJhDjjKar79lq32q4RCiroI96yoJW9+RO
-         8xEQ==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1699598990; x=1700203790; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UBEETL6nJeFuzIMLy/27m3ZjLavYPDa2hHML8/UEZ/w=;
+        b=SwLMR0EOfMaLegMMs5dEO5EYSso3FBe9B5PbHRb4Rbcvw90BCn0GxngYMGA8PfgUfG
+         /xkl0ZEHWUS1bRwqQGpmVd/j/R+2EQzs39XZEv4Lprj88zm3ixvcfywElYedvqJNyD4Z
+         1WR7hb+ZfZGvk+8re5zIsBTMJ3JL7MRv6bwKmtgWvr9gBEDaUsnjkYq74nAK5S4DQ48p
+         Fva7Ss4SgF1L8JAiZLYgQt/i/u0imgIXI4Pjp63HrUlQU+jtJ7sICRweNVdakPkh9E2q
+         +i0W2mL8c/mGdwDIZ8q+UiA1zczJef/iVZh8WsH+bV3WqndIWCCkxZY8ceEryyUJvWVf
+         UN/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699599089; x=1700203889;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PZuNPkp5pvSL22XckYA+IGnaTuq+xQ2jH7SR/6KORzk=;
-        b=fJ5LoKY5pjABOn5rlWkF9ANp93mpZ+q2UNMZS9qMcQAbsjZlr4KY6Qj00TUWHDF+QC
-         1yqPPcRnEj/Eug1YE3KgJwHavUkEktAg8zRItH2P/5Tg4Kewyu+dwwwjm2wFQaKDwYEP
-         mF57D4VhCo8Vy08FbY7HKuRujbmyFYDLJzYvPx8HyE421uqh7rZzOgpowSpfCAqX/bVk
-         eNc+Yk8OFpjkPPZHTmayVK5bC0Xs6H+g1LotnDHqWnNVG3KeXq+xrXKy6LBlAbOt/jGq
-         bs8bQ0cQ2vb4q4jy5m9ofkt1sthegpBdBdw7sTnPZuvokxn/TPMidTa9QvK/1mG8Qq/6
-         Q1Bg==
-X-Gm-Message-State: AOJu0YyZKSXDuHbNse9vt4gFewbx9m90E1HNz5oqUBND5+IK3/DTYLfL
-        9R6mZoQuiBxr0/hDOk65k110AZoSqJoUKoWmt3M=
-X-Google-Smtp-Source: AGHT+IF1+MliPSNih26mB4oPEvVpRAZMUkkFeascIDvorwCuIuogjGqHCLCGunyqRJsw0hQGe1IfzQ==
-X-Received: by 2002:a05:6871:458a:b0:1e9:b495:bd0 with SMTP id nl10-20020a056871458a00b001e9b4950bd0mr8099309oab.8.1699591506241;
+        d=1e100.net; s=20230601; t=1699598990; x=1700203790;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UBEETL6nJeFuzIMLy/27m3ZjLavYPDa2hHML8/UEZ/w=;
+        b=vrvfy4Yf/rYPcSWkZlz+wYhfdhVc43BRnuVBh+oJMcshSzCPaZysRUtXcy0MNMwp5p
+         YWkQVKpkjW2kxAlf9PTuAb9DOPKRQOjcqrqKIVl6lss/BOeJEPNMlcSQwUoT59nNsJpJ
+         VUhnBqxFPxkn07fiinGsLmsY/gW7si4c+VSR6/NoYGbF5mqez8qI+rKFjQptLnAAhDdn
+         oH6gQOLt3RLhwZHeM/rsgB+KAQKgu5N9khp4hYccF7vymj20EhcbNnry/73NjIVwsGfV
+         QCSb6KqgJLK9XvZuyIbDfYbTrKRSZ+mXm5fYjFpWTZEtKcocnQ9IIBcypRdxjUhxEVS+
+         koXw==
+X-Gm-Message-State: AOJu0YyOFY2qLwrDmDZ49iQmG/gC2Olb+0TKaiKskbNZxAPq5Qa1u99H
+        KPBLhVdzdk3hn3C6wkiRmuxav23BZrenQgSCUSM=
+X-Google-Smtp-Source: AGHT+IHBXhonhDckrD/6UlFlutgdqukkcqiDWEytsNmTs6rnqsy6GpkGqxvvG3f8o2uMbB1zWfqRyg==
+X-Received: by 2002:a05:6a20:8e0b:b0:185:a90d:367e with SMTP id y11-20020a056a208e0b00b00185a90d367emr1361500pzj.2.1699591506838;
         Thu, 09 Nov 2023 20:45:06 -0800 (PST)
 Received: from dread.disaster.area (pa49-180-125-5.pa.nsw.optusnet.com.au. [49.180.125.5])
-        by smtp.gmail.com with ESMTPSA id fi20-20020a056a00399400b006c4d0b53365sm630450pfb.88.2023.11.09.20.45.05
+        by smtp.gmail.com with ESMTPSA id jg22-20020a17090326d600b001c75a07f62esm4401658plb.34.2023.11.09.20.45.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Nov 2023 20:45:05 -0800 (PST)
+        Thu, 09 Nov 2023 20:45:06 -0800 (PST)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.96)
         (envelope-from <dave@fromorbit.com>)
-        id 1r1JOB-00AbtF-1A;
+        id 1r1JOB-00AbtH-1F;
         Fri, 10 Nov 2023 15:45:03 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.97-RC0)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1r1JOA-000000039JY-3mFb;
+        id 1r1JOA-000000039Jb-45ss;
         Fri, 10 Nov 2023 15:45:02 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     zlang@redhat.com
-Subject: [PATCH 0/2] xfs: fix recovery corruption on s390 w/ nrext64
-Date:   Fri, 10 Nov 2023 15:33:12 +1100
-Message-ID: <20231110044500.718022-1-david@fromorbit.com>
+Subject: [PATCH 1/2] xfs: inode recovery does not validate the recovered inode
+Date:   Fri, 10 Nov 2023 15:33:13 +1100
+Message-ID: <20231110044500.718022-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231110044500.718022-1-david@fromorbit.com>
+References: <20231110044500.718022-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,44 +78,68 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+From: Dave Chinner <dchinner@redhat.com>
 
-The following are two patches to fix the corruption bug that
-Zorro recently recently reported on big endian platforms when
-nrext64 is enabled.
+Discovered when trying to track down a weird recovery corruption
+issue that wasn't detected at recovery time.
 
-It is caused by recovery zeroing a v2 inode field even on v3 inodes.
-Before nrext64, this wasn't an issue because the field in v3 inodes
-was just padding (i.e. zeroes) and so writing zero to part of it was
-never noticed. However, nrext64 uses this field for the 64 bit data
-fork extent count, so zeroing part of it becomes a problem.
+The specific corruption was a zero extent count field when big
+extent counts are in use, and it turns out the dinode verifier
+doesn't detect that specific corruption case, either. So fix it too.
 
-The zeroing is done to the xfs_log_dinode, which is held in host
-format. Because of the layout of this field, on little endian
-machines the di_flush_iter field overlaps the high 16 bits of
-di_big_nextents, and so we didn't notice that recovery was
-overwriting the the high bits of the extent count because it's
-always going to be zero bytes (needs to go over 2^48 extents before
-we'd notice) in testing contexts.
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ fs/xfs/libxfs/xfs_inode_buf.c   |  3 +++
+ fs/xfs/xfs_inode_item_recover.c | 14 +++++++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-However, on big endian machines, the di_flushiter field overlays the
-lower 16 bits of the di_big_extents field, and so zeroing
-di_flushiter essentially rounds it down to the nearest 64k. For
-typical testing contexts, that's effectively zeroing the extent
-count.
-
-The fix is two parts. The first patch adds detection of this
-specific corruption to the xfs_dinode verifier, and adds a call to
-the verifier after recovery has recovered the inode. This catches
-corruptions at recovery time, rather than silently writing them back
-and not noticing them until the inode is re-read from disk at
-runtime.
-
-The second patch fixes the recovery bug. It simply moves the
-resetting of the di_flushiter field into the v2 inode specific
-flushiter handling branch. That's always been wrong (i.e. since v3
-inodes were introduced) but it hasn't mattered until now, so it
-marked as fixing the introduction of the nrext64 feature....
-
--Dave.
+diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+index a35781577cad..0f970a0b3382 100644
+--- a/fs/xfs/libxfs/xfs_inode_buf.c
++++ b/fs/xfs/libxfs/xfs_inode_buf.c
+@@ -508,6 +508,9 @@ xfs_dinode_verify(
+ 	if (mode && nextents + naextents > nblocks)
+ 		return __this_address;
+ 
++	if (nextents + naextents == 0 && nblocks != 0)
++		return __this_address;
++
+ 	if (S_ISDIR(mode) && nextents > mp->m_dir_geo->max_extents)
+ 		return __this_address;
+ 
+diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
+index 6b09e2bf2d74..f4c31c2b60d5 100644
+--- a/fs/xfs/xfs_inode_item_recover.c
++++ b/fs/xfs/xfs_inode_item_recover.c
+@@ -286,6 +286,7 @@ xlog_recover_inode_commit_pass2(
+ 	struct xfs_log_dinode		*ldip;
+ 	uint				isize;
+ 	int				need_free = 0;
++	xfs_failaddr_t			fa;
+ 
+ 	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
+ 		in_f = item->ri_buf[0].i_addr;
+@@ -529,8 +530,19 @@ xlog_recover_inode_commit_pass2(
+ 	    (dip->di_mode != 0))
+ 		error = xfs_recover_inode_owner_change(mp, dip, in_f,
+ 						       buffer_list);
+-	/* re-generate the checksum. */
++	/* re-generate the checksum and validate the recovered inode. */
+ 	xfs_dinode_calc_crc(log->l_mp, dip);
++	fa = xfs_dinode_verify(log->l_mp, in_f->ilf_ino, dip);
++	if (fa) {
++		XFS_CORRUPTION_ERROR(
++			"Bad dinode after recovery",
++				XFS_ERRLEVEL_LOW, mp, dip, sizeof(*dip));
++		xfs_alert(mp,
++			"Metadata corruption detected at %pS, inode 0x%llx",
++			fa, in_f->ilf_ino);
++		error = -EFSCORRUPTED;
++		goto out_release;
++	}
+ 
+ 	ASSERT(bp->b_mount == mp);
+ 	bp->b_flags |= _XBF_LOGRECOVERY;
+-- 
+2.42.0
 
