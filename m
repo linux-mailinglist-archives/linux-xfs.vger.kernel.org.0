@@ -2,148 +2,119 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83A427E844A
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 21:43:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C8F7E847B
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 21:43:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbjKJUkw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 15:40:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58932 "EHLO
+        id S235573AbjKJUnC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 15:43:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346380AbjKJUku (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 15:40:50 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E4918B
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 12:40:47 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6b87c1edfd5so2164988b3a.1
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 12:40:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1699648847; x=1700253647; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tWCqM16I96nRm7cAjclexHKEqGdeaB/kpb/asorFgQo=;
-        b=vnyglFT82uwstx5iVYnisBeNqV2+uuM8r6GOWHU9mNadAZEi0/YB/tfqqJn5J65zNV
-         TAB3D0Yh9UL2p1dlf1Xx7tRavTEojTCamX+f1XGvhdRuS1+QriCr0682r78foyUgF9aA
-         Zrm/Wl3CNGaC+cFZrWAbruqlSiphlv5eI+kfjRk0yqhbsm09Lar0+Ifvp9K3bXS/YyEG
-         2uOpWhtCQknEUmWPnVV8rDaFILE68LRxhKxf8er9ZFPNATnXHnc23YM8/3ZvZ+UbDshf
-         8B3UqFurI4TC84Ms4EwVEAVV5EBgrtUotZaSG1zGUPeWhLcoVYcYH868VH+tSXWPOayX
-         pj7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699648847; x=1700253647;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tWCqM16I96nRm7cAjclexHKEqGdeaB/kpb/asorFgQo=;
-        b=azqXs/UP1nrhbuR0mn6Oqx2Le4aPu2sW6FYYydTxcJnmM6UIU2kcypqYcNAApHOQbr
-         JZXpDHuyPc+6jTjX+jWbkrpiCY88OMAjC+AjNiSETUpRhNNNUCBHY7M7VGjBiDdDlUsr
-         XYP9x1zKYC0AFdkpACGKtbgPutFbAxqymBydXak/IpJWLMOdQSiqzBMSGwSPHzkFAf1u
-         t8e56bVdyMgqyv/Io7S/cmzFA1LsHfVpTYNdArPNYlMKL2HTs8Ry7q/eEho8A9mGx//x
-         ieX8jH65OmMPxY1cswpMdODeMZkgBOjz4h6PpH60cWvenUsxHRHXJ2vaeQIoXwNH26PF
-         LFhw==
-X-Gm-Message-State: AOJu0YzpTGK2/g/bjd3HReQbnu98I2wJJzuqorvm+gGDild0n5O0DM9+
-        IreMMFacwYkG/WEZd5DfYZmnQ3WHhwbJlBHtMZg=
-X-Google-Smtp-Source: AGHT+IFsz58hqEkInAw4NVH6iAAukYdFbUq7n749RahZhsVdZGGWE4Cg2q2jh1CKC+AaC99JQrI4FA==
-X-Received: by 2002:a05:6a00:2149:b0:68e:3eb6:d45 with SMTP id o9-20020a056a00214900b0068e3eb60d45mr83927pfk.30.1699648846769;
-        Fri, 10 Nov 2023 12:40:46 -0800 (PST)
-Received: from dread.disaster.area (pa49-180-125-5.pa.nsw.optusnet.com.au. [49.180.125.5])
-        by smtp.gmail.com with ESMTPSA id u25-20020aa78399000000b006bdb0f011e2sm117909pfm.123.2023.11.10.12.40.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Nov 2023 12:40:46 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1r1YJ1-00Au1T-3A;
-        Sat, 11 Nov 2023 07:40:43 +1100
-Date:   Sat, 11 Nov 2023 07:40:43 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, zlang@redhat.com
-Subject: Re: [PATCH 1/2] xfs: inode recovery does not validate the recovered
- inode
-Message-ID: <ZU6VSymhrhgJUS8o@dread.disaster.area>
-References: <20231110044500.718022-1-david@fromorbit.com>
- <20231110044500.718022-2-david@fromorbit.com>
- <20231110192752.GJ1205143@frogsfrogsfrogs>
+        with ESMTP id S1346476AbjKJUmL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 15:42:11 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C18504C09;
+        Fri, 10 Nov 2023 12:41:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=C5X6/h3e8eaTCuBQ6as3UZr2CNlaSfB1exmIWSz8Szc=; b=NoEns8BoaQo66ULG0gb9rTeN1z
+        gT+8MQoAuvTFxX3VYSOZR0e5qNZT4DIQl11LmO6Dwnnaz4ZWjbraCKvJnmca7rbgDyVTUvavaA2ZT
+        pYhaAkn77e1Q2N8IDc/7XgiKLLhispH7ai6cMg4kjqiHqujdyX+/sxEmJ6fmwgcn8NemuLX3orgDU
+        bkj3eKBuKk8yaZtyx25FV9UD7V2jdz6OAFOVUwazBSlRiqKJ/nIzZNGiWTjgkUCs/Dpq0Vz9AfwxA
+        xARjgSG5TV+TFK3Uo/R0D9lDt8FGQzC1mxgNnVnslUKrj8skPZ9w3IyKbv0Xjsxq0eVV6FvtlClfV
+        LU/LcCcQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1r1YJc-00FUT2-U3; Fri, 10 Nov 2023 20:41:20 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v3 0/4] Remove the XFS mrlock
+Date:   Fri, 10 Nov 2023 20:41:15 +0000
+Message-Id: <20231110204119.3692023-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231110192752.GJ1205143@frogsfrogsfrogs>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Nov 10, 2023 at 11:27:52AM -0800, Darrick J. Wong wrote:
-> On Fri, Nov 10, 2023 at 03:33:13PM +1100, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > Discovered when trying to track down a weird recovery corruption
-> > issue that wasn't detected at recovery time.
-> > 
-> > The specific corruption was a zero extent count field when big
-> > extent counts are in use, and it turns out the dinode verifier
-> > doesn't detect that specific corruption case, either. So fix it too.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > ---
-> >  fs/xfs/libxfs/xfs_inode_buf.c   |  3 +++
-> >  fs/xfs/xfs_inode_item_recover.c | 14 +++++++++++++-
-> >  2 files changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-> > index a35781577cad..0f970a0b3382 100644
-> > --- a/fs/xfs/libxfs/xfs_inode_buf.c
-> > +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-> > @@ -508,6 +508,9 @@ xfs_dinode_verify(
-> >  	if (mode && nextents + naextents > nblocks)
-> >  		return __this_address;
-> >  
-> > +	if (nextents + naextents == 0 && nblocks != 0)
-> > +		return __this_address;
-> > +
-> >  	if (S_ISDIR(mode) && nextents > mp->m_dir_geo->max_extents)
-> >  		return __this_address;
-> >  
-> > diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
-> > index 6b09e2bf2d74..f4c31c2b60d5 100644
-> > --- a/fs/xfs/xfs_inode_item_recover.c
-> > +++ b/fs/xfs/xfs_inode_item_recover.c
-> > @@ -286,6 +286,7 @@ xlog_recover_inode_commit_pass2(
-> >  	struct xfs_log_dinode		*ldip;
-> >  	uint				isize;
-> >  	int				need_free = 0;
-> > +	xfs_failaddr_t			fa;
-> >  
-> >  	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
-> >  		in_f = item->ri_buf[0].i_addr;
-> > @@ -529,8 +530,19 @@ xlog_recover_inode_commit_pass2(
-> >  	    (dip->di_mode != 0))
-> >  		error = xfs_recover_inode_owner_change(mp, dip, in_f,
-> >  						       buffer_list);
-> > -	/* re-generate the checksum. */
-> > +	/* re-generate the checksum and validate the recovered inode. */
-> >  	xfs_dinode_calc_crc(log->l_mp, dip);
-> > +	fa = xfs_dinode_verify(log->l_mp, in_f->ilf_ino, dip);
-> > +	if (fa) {
-> 
-> Does xlog_recover_dquot_commit_pass2 need to call xfs_dquot_verify as
-> well?
+XFS has an mrlock wrapper around the rwsem which adds only the
+functionality of knowing whether the rwsem is currently held in read
+or write mode.  Both regular rwsems and rt-rwsems know this, they just
+don't expose it as an API.  By adding that, we can remove the XFS mrlock
+as well as improving the debug assertions for the mmap_lock when lockdep
+is disabled.
 
-Maybe - I haven't looked closely at that, and it depends what the
-dquot buffer verifier does. If it's similar to the inode cluster
-buffer verifier (i.e. only checks for dquots, doesn't verify the
-dquots) then it should do the same thing. I don't have time to do
-this right now because I'm OOO for the next week, so maybe you could
-check this and send a patch for it?
+v3:
+ - Rename __rwsem_assert_held() and __rwsem_assert_held_write() to
+   rwsem_assert_held*_nolockdep()
+ - Use IS_ENABLED(CONFIG_LOCKDEP) to only dump the information once
+ - Use ASSERT instead of BUG_ON in xfs
+ - Fix typo in subject line of patch 4
+ - Drop patch 5 (inode_assert_locked)
+ - Rebase on top of xfs-6.7-merge-2 which had a merge conflict
 
-> This patch looks good though,
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+v2: Add rwsem_assert_held() and rwsem_assert_held_write() instead of
+augmenting the existing rwsem_is_locked() with rwsem_is_write_locked().
+There's also an __rwsem_assert_held() and __rwsem_assert_held_write()
+for the benefit of XFS when it's in a context where lockdep doesn't
+know what's going on.  It's still an improvement, so I hope those who
+are looking for perfection can accept a mere improvement.
 
-Thanks!
+We can do more to replace uses of rwsem_is_locked(), and I have a few of
+those in my tree, but let's focus on these two use cases for now and
+we can trickle in other improvements through other maintainers after 6.8.
 
--Dave.
+Matthew Wilcox (Oracle) (4):
+  locking: Add rwsem_assert_held() and rwsem_assert_held_write()
+  mm: Use rwsem assertion macros for mmap_lock
+  xfs: Replace xfs_isilocked with xfs_assert_ilocked
+  xfs: Remove mrlock wrapper
+
+ fs/xfs/libxfs/xfs_attr.c        |  2 +-
+ fs/xfs/libxfs/xfs_attr_remote.c |  2 +-
+ fs/xfs/libxfs/xfs_bmap.c        | 19 ++++----
+ fs/xfs/libxfs/xfs_defer.c       |  2 +-
+ fs/xfs/libxfs/xfs_inode_fork.c  |  2 +-
+ fs/xfs/libxfs/xfs_rtbitmap.c    |  2 +-
+ fs/xfs/libxfs/xfs_trans_inode.c |  6 +--
+ fs/xfs/mrlock.h                 | 78 ------------------------------
+ fs/xfs/scrub/readdir.c          |  4 +-
+ fs/xfs/xfs_attr_list.c          |  2 +-
+ fs/xfs/xfs_bmap_util.c          | 10 ++--
+ fs/xfs/xfs_dir2_readdir.c       |  2 +-
+ fs/xfs/xfs_dquot.c              |  4 +-
+ fs/xfs/xfs_file.c               |  4 +-
+ fs/xfs/xfs_inode.c              | 86 ++++++++++++---------------------
+ fs/xfs/xfs_inode.h              |  4 +-
+ fs/xfs/xfs_inode_item.c         |  4 +-
+ fs/xfs/xfs_iops.c               |  7 ++-
+ fs/xfs/xfs_linux.h              |  2 +-
+ fs/xfs/xfs_qm.c                 | 10 ++--
+ fs/xfs/xfs_reflink.c            |  2 +-
+ fs/xfs/xfs_rtalloc.c            |  4 +-
+ fs/xfs/xfs_super.c              |  4 +-
+ fs/xfs/xfs_symlink.c            |  2 +-
+ fs/xfs/xfs_trans_dquot.c        |  2 +-
+ include/linux/mmap_lock.h       | 10 ++--
+ include/linux/rwbase_rt.h       |  9 +++-
+ include/linux/rwsem.h           | 46 ++++++++++++++++--
+ 28 files changed, 132 insertions(+), 199 deletions(-)
+ delete mode 100644 fs/xfs/mrlock.h
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.42.0
+
