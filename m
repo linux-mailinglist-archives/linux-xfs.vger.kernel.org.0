@@ -2,77 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA3B7E8147
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A63EC7E8092
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 19:15:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345443AbjKJS1K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 13:27:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37106 "EHLO
+        id S1344857AbjKJSPF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 13:15:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345594AbjKJSZp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:25:45 -0500
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A3F72A8;
-        Thu,  9 Nov 2023 22:29:49 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6FB5467373; Fri, 10 Nov 2023 07:29:44 +0100 (CET)
-Date:   Fri, 10 Nov 2023 07:29:44 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>, axboe@kernel.dk,
-        kbusch@kernel.org, sagi@grimberg.me, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, djwong@kernel.org,
-        viro@zeniv.linux.org.uk, brauner@kernel.org,
-        chandan.babu@oracle.com, dchinner@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-        linux-api@vger.kernel.org, Alan Adamson <alan.adamson@oracle.com>
-Subject: Re: [PATCH 21/21] nvme: Support atomic writes
-Message-ID: <20231110062944.GC26516@lst.de>
-References: <20230929102726.2985188-1-john.g.garry@oracle.com> <20230929102726.2985188-22-john.g.garry@oracle.com> <20231109153603.GA2188@lst.de> <ZUz98KriiLsM8oQd@casper.infradead.org> <20231109154619.GA3491@lst.de> <61b25fe8-22ae-c299-3225-ca835b337d41@oracle.com>
+        with ESMTP id S235393AbjKJSO3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 13:14:29 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 863578682;
+        Thu,  9 Nov 2023 23:34:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WcqbHTawts+uSnzuvifHEMIEpu10PW7yxePWCzc/iZo=; b=CiKifnrFplg/pmYpogdkbkCz9b
+        KyI5DM9/HsfiuRAZcaLtJZFZUiwbP32u0DY+PXi0rgQRu1opftUcxeZRLuNkUNcMX7cZ9Thc/mkPr
+        PCROHWLoP9mceVxpLyVxnWOAKRR+N5Dzz2Ef/bPnkYmEpdbrOd8hrVOb9HjVM7Mkibph1Caf/S7AM
+        jlNirrkuCo1ydJmpMTfT/sDratNFktebkPo4bMm+x1lA7Xu58XwibV+LGlctEBTuSg/Gg/hE4Z84C
+        nm9V576XoqlKNFY6F80r1ydwh+npiI5PtEpUqlcrEw73IIzJzV2kn0O5usurNHeJ72+4uQBVIAU/B
+        sNfUjETw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1r1M2A-0081y5-38;
+        Fri, 10 Nov 2023 07:34:31 +0000
+Date:   Thu, 9 Nov 2023 23:34:30 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Zorro Lang <zlang@redhat.com>, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>,
+        Carlos Maiolino <carlos@maiolino.me>
+Subject: Re: [Bug report][fstests generic/047] Internal error !(flags &
+ XFS_DABUF_MAP_HOLE_OK) at line 2572 of file fs/xfs/libxfs/xfs_da_btree.c.
+ Caller xfs_dabuf_map.constprop.0+0x26c/0x368 [xfs]
+Message-ID: <ZU3dBpU67dG6rq3z@infradead.org>
+References: <20231107080522.5lowalssbmi6lus3@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZUnxswEfoeZQhw5P@dread.disaster.area>
+ <20231107151314.angahkixgxsjwbot@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZUstA+1+IvHJ87eP@dread.disaster.area>
+ <CAN=2_H+CdEK_rEUmYbmkCjSRqhX2cwi5yRHQcKAmKDPF16vqOw@mail.gmail.com>
+ <ZUx429/S9H07xLrA@dread.disaster.area>
+ <20231109140929.jq7bpnuustsup3xf@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZU1nltE2X6qLJ8EL@dread.disaster.area>
+ <20231110013651.fw3j6khkdtjfe2bj@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <ZU2PhTKqwNEbjK13@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <61b25fe8-22ae-c299-3225-ca835b337d41@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZU2PhTKqwNEbjK13@dread.disaster.area>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Nov 09, 2023 at 07:08:40PM +0000, John Garry wrote:
->>> send a write that crossed the atomic write limit, but the drive wouldn't
->>> guarantee that it was atomic except at the atomic write boundary.
->>> Eg with an AWUN of 16kB, you could send five 16kB writes, combine them
->>> into a single 80kB write, and if the power failed midway through, the
->>> drive would guarantee that it had written 0, 16kB, 32kB, 48kB, 64kB or
->>> all 80kB.  Not necessarily in order; it might have written bytes 16-32kB,
->>> 64-80kB and not the other three.
->
-> I didn't think that there are any atomic write guarantees at all if we ever 
-> exceed AWUN or AWUPF or cross the atomic write boundary (if any).
+> +	if (!xfs_has_v3inodes(mp)) {
+> +		if (ldip->di_flushiter < be16_to_cpu(dip->di_flushiter)) {
+> +			/*
+> +			 * Deal with the wrap case, DI_MAX_FLUSH is less
+> +			 * than smaller numbers
+> +			 */
+> +			if (be16_to_cpu(dip->di_flushiter) == DI_MAX_FLUSH &&
+> +			    ldip->di_flushiter < (DI_MAX_FLUSH >> 1)) {
+> +				/* do nothing */
+> +			} else {
+> +				trace_xfs_log_recover_inode_skip(log, in_f);
+> +				error = 0;
+> +				goto out_release;
+> +			}
 
-You're quoting a few mails before me, but I agree.
+Tis just moves the existing code, but the conditional style is really
+weird vs a simple:
 
->> I can see some use for that, but I'm really worried that debugging
->> problems in the I/O merging and splitting will be absolute hell.
->
-> Even if bios were merged for NVMe the total request length still should not 
-> exceed AWUPF. However a check can be added to ensure this for a submitted 
-> atomic write request.
+			if (be16_to_cpu(dip->di_flushiter) != DI_MAX_FLUSH ||
+			    ldip->di_flushiter >= (DI_MAX_FLUSH >> 1)) {
+				trace_xfs_log_recover_inode_skip(log, in_f);
+				error = 0;
+				goto out_release;
+			}
 
-Yes.
+Nitpicking aside, this looks good:
 
-> As for splitting, it is not permitted for atomic writes and only a single 
-> bio is permitted to be created per write. Are more integrity checks 
-> required?
-
-I'm more worried about the problem where we accidentally add a split.
-The whole bio merge/split path is convoluted and we had plenty of
-bugs in the past by not looking at all the correct flags or opcodes.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
