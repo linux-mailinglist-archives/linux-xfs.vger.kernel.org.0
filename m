@@ -2,96 +2,125 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1386E7E8224
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 20:03:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22C667E8287
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 20:32:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343770AbjKJTDW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 14:03:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59778 "EHLO
+        id S236223AbjKJTaR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 14:30:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235415AbjKJTDF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 14:03:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC9CF6DF3
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 10:23:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1699640556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KdqvTdO2716oq+zvVf0KMmOF2aDzL6NfJKKObUNa1q8=;
-        b=AYQ/4LMabBs/1OyXUppKFTkiJvXfTLyhmw1RKXHRVxIpz9mqmwlMyugVZ/6UnILsgioMnI
-        avZSrt39xw1cROaAa+tZ7Gnv1pa0dKneruf3q0n2X6fI/hW+jSY+pwvSIm39A+q/63bWe5
-        iT0E4GG3qF+8tBH6HF8Jkfc8yPcH5kU=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-169-sUE90jpQMgie0n9x4mGDdQ-1; Fri, 10 Nov 2023 13:22:34 -0500
-X-MC-Unique: sUE90jpQMgie0n9x4mGDdQ-1
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7872be95468so214642639f.1
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 10:22:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699640552; x=1700245352;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KdqvTdO2716oq+zvVf0KMmOF2aDzL6NfJKKObUNa1q8=;
-        b=o0+mKAYdOykAxToL62ZzY3d/mlXUo74Ylkb/DZOrrtu/O3YRZAxVKBV4pNxVy0EN0V
-         GieCfMs5KB62DF0axfJPR5VAVLo1Ahddc4TrpAvrbOnBDkqk/o9lhflZaexnEKwtY19u
-         sPDCfHCKGQWlaIJThU6+t084YqwWbNVSHAZo8/fX8AzIqbOWy3lbkIOX5yP48H9Ex9cI
-         NV3JYZ44oBurUdK/ptWfL8UiSqvsYxjj9dPyUrfr60GgXa4kcBwdAN7n9hjezBumO/AM
-         SsPFN8DMctMLXXYOMtLj5Rvx8ZY3w77iYUQE28Adu9Q3V/4qzJlxEQEipD7Dqp9LcpOv
-         tHTA==
-X-Gm-Message-State: AOJu0YzyZ/QGD7AkGPn0BsyVbS1aRYRAAFHCCbkjRiGjGkuhdj2PRtG/
-        vy5fubkQ5KzFInGhrejU5W5sLskYfdbcs0+aloFRuTBlQbppc1NuqFFiuTlnAdAcFNOsJZdizFr
-        rQjRvpW4TZhVfkftA5amSHOzrI3kCQA6Zm8+1kkWO6I1DFuC15R6b4LaqxvbXHiUW7CTbyZRzbZ
-        WcO2M=
-X-Received: by 2002:a05:6602:4185:b0:7a9:571c:5694 with SMTP id bx5-20020a056602418500b007a9571c5694mr119597iob.10.1699640552044;
-        Fri, 10 Nov 2023 10:22:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFot5/ozoFYXWfbeyFaEevx6Wmd9q41kDstnqo1G2uRX3TCrxN8MrK0IqH9Zungu1GtWu86Ag==
-X-Received: by 2002:a05:6602:4185:b0:7a9:571c:5694 with SMTP id bx5-20020a056602418500b007a9571c5694mr119582iob.10.1699640551736;
-        Fri, 10 Nov 2023 10:22:31 -0800 (PST)
-Received: from [10.0.0.71] (sandeen.net. [63.231.237.45])
-        by smtp.gmail.com with ESMTPSA id s6-20020a5ec646000000b0079f7734a77esm4652192ioo.35.2023.11.10.10.22.30
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Nov 2023 10:22:31 -0800 (PST)
-Message-ID: <3ca21cbc-fbe2-4c43-b8af-50bc7467b9cd@redhat.com>
-Date:   Fri, 10 Nov 2023 12:22:30 -0600
+        with ESMTP id S1346318AbjKJTaE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 14:30:04 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871F368AC
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 11:27:53 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB47C433C8;
+        Fri, 10 Nov 2023 19:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699644473;
+        bh=XTwvyNzLD5wG7PTxtdWR2FOOvVG68E5oh85j6VMlulI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KinIt1vZc0pms1vuz+sgjRAynpErEPYk9Je1477JzOkmJ7dE3TtpnvrvTUThrt5C7
+         QDX2UaMeRNUyGFsD+Dy06GnJmkma5Zm2m0GAC3dLYQ5+jEK1GAkjjh9kGeE7hbLj6u
+         pPslos8vLgPxaUelIQyxjpxUdEsuAiNrjUDeUjrLl1QZJNUu1sSxZqRCoLKtvlRAbL
+         /UtofyhHYlFKB1S8eieKz+DD+c39Eu7FruPLyOygdJNKMh9uOvsIjXGUth5PKW+nor
+         bhKhnvufYmLpNpMNJ44Q2vyzrtzANt6XnJjnk5rk+DxN/PmT7ldfnhlg9sXCsBG0o4
+         +vqT4HHvRhKUA==
+Date:   Fri, 10 Nov 2023 11:27:52 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, zlang@redhat.com
+Subject: Re: [PATCH 1/2] xfs: inode recovery does not validate the recovered
+ inode
+Message-ID: <20231110192752.GJ1205143@frogsfrogsfrogs>
+References: <20231110044500.718022-1-david@fromorbit.com>
+ <20231110044500.718022-2-david@fromorbit.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-From:   Eric Sandeen <sandeen@redhat.com>
-Subject: [PATCH] xfs_repair: notify user when cache flush starts
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231110044500.718022-2-david@fromorbit.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-We recently had the opportunity to run xfs_repair on a system
-with 2T of memory and over a billion inodes. After phase 7
-had completed, xfs_repair appeared to have hung for over an
-hour as the massive cache was written back.
+On Fri, Nov 10, 2023 at 03:33:13PM +1100, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> Discovered when trying to track down a weird recovery corruption
+> issue that wasn't detected at recovery time.
+> 
+> The specific corruption was a zero extent count field when big
+> extent counts are in use, and it turns out the dinode verifier
+> doesn't detect that specific corruption case, either. So fix it too.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/libxfs/xfs_inode_buf.c   |  3 +++
+>  fs/xfs/xfs_inode_item_recover.c | 14 +++++++++++++-
+>  2 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+> index a35781577cad..0f970a0b3382 100644
+> --- a/fs/xfs/libxfs/xfs_inode_buf.c
+> +++ b/fs/xfs/libxfs/xfs_inode_buf.c
+> @@ -508,6 +508,9 @@ xfs_dinode_verify(
+>  	if (mode && nextents + naextents > nblocks)
+>  		return __this_address;
+>  
+> +	if (nextents + naextents == 0 && nblocks != 0)
+> +		return __this_address;
+> +
+>  	if (S_ISDIR(mode) && nextents > mp->m_dir_geo->max_extents)
+>  		return __this_address;
+>  
+> diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
+> index 6b09e2bf2d74..f4c31c2b60d5 100644
+> --- a/fs/xfs/xfs_inode_item_recover.c
+> +++ b/fs/xfs/xfs_inode_item_recover.c
+> @@ -286,6 +286,7 @@ xlog_recover_inode_commit_pass2(
+>  	struct xfs_log_dinode		*ldip;
+>  	uint				isize;
+>  	int				need_free = 0;
+> +	xfs_failaddr_t			fa;
+>  
+>  	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
+>  		in_f = item->ri_buf[0].i_addr;
+> @@ -529,8 +530,19 @@ xlog_recover_inode_commit_pass2(
+>  	    (dip->di_mode != 0))
+>  		error = xfs_recover_inode_owner_change(mp, dip, in_f,
+>  						       buffer_list);
+> -	/* re-generate the checksum. */
+> +	/* re-generate the checksum and validate the recovered inode. */
+>  	xfs_dinode_calc_crc(log->l_mp, dip);
+> +	fa = xfs_dinode_verify(log->l_mp, in_f->ilf_ino, dip);
+> +	if (fa) {
 
-In the long run it might be nice to see if we can add progress
-reporting to the cache flush if it's sufficiently large, but
-for now at least let the user know what's going on.
+Does xlog_recover_dquot_commit_pass2 need to call xfs_dquot_verify as
+well?
 
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
----
+This patch looks good though,
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-index ff29bea9..5597b9ba 100644
---- a/repair/xfs_repair.c
-+++ b/repair/xfs_repair.c
-@@ -1388,6 +1388,7 @@
- 	 * verifiers are run (where we discover the max metadata LSN), reformat
- 	 * the log if necessary and unmount.
- 	 */
-+	do_log(_("Flushing cache...\n"));
- 	libxfs_bcache_flush();
- 	format_log_max_lsn(mp);
+--D
 
-
+> +		XFS_CORRUPTION_ERROR(
+> +			"Bad dinode after recovery",
+> +				XFS_ERRLEVEL_LOW, mp, dip, sizeof(*dip));
+> +		xfs_alert(mp,
+> +			"Metadata corruption detected at %pS, inode 0x%llx",
+> +			fa, in_f->ilf_ino);
+> +		error = -EFSCORRUPTED;
+> +		goto out_release;
+> +	}
+>  
+>  	ASSERT(bp->b_mount == mp);
+>  	bp->b_flags |= _XBF_LOGRECOVERY;
+> -- 
+> 2.42.0
+> 
