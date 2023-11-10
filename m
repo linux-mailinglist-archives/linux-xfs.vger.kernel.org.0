@@ -2,131 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DED5E7E7F47
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 18:51:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1386E7E8224
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Nov 2023 20:03:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjKJRvk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Nov 2023 12:51:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        id S1343770AbjKJTDW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Nov 2023 14:03:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjKJRvi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 12:51:38 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB6307EF1B;
-        Fri, 10 Nov 2023 09:50:57 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-50943ccbbaeso3270734e87.2;
-        Fri, 10 Nov 2023 09:50:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699638645; x=1700243445; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=grt+fXmmJ/9GQKnvSpOXZR4bNa7UBy05x/HGBJsWED0=;
-        b=RchLAhugfPDLTttMoM9iU7CaELFRHfsc1MeBkqQnU4S8Sbxr2ZJy4ZWpjyrrkal7Gk
-         4OwmgvzlNMJTHRDdJZQStKZDY7f40Ty/P1ybkyS79lFKp/CZD5QxYx/b9YkJnA6IzgcY
-         m6MPqxEIt6q2LQiNtg989SMINKPa/nmYh+SZgOM3yUnmZyjCu/xcQY7B8zq6XzuXzMtv
-         P3bNsKcl4dnyXS4v734dU+o+ik1z2zDSd4tbpyic/gpKMLoO7EtMhF5TfyRSiglDIDkk
-         zsiRjXfc3NEyCLhwZjrbRXpjQ+vm7JTWTrRGi/C4SpNKeHHmUujmAQAVWC6bjvRHpVLI
-         uNyQ==
+        with ESMTP id S235415AbjKJTDF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Nov 2023 14:03:05 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC9CF6DF3
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 10:23:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1699640556;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KdqvTdO2716oq+zvVf0KMmOF2aDzL6NfJKKObUNa1q8=;
+        b=AYQ/4LMabBs/1OyXUppKFTkiJvXfTLyhmw1RKXHRVxIpz9mqmwlMyugVZ/6UnILsgioMnI
+        avZSrt39xw1cROaAa+tZ7Gnv1pa0dKneruf3q0n2X6fI/hW+jSY+pwvSIm39A+q/63bWe5
+        iT0E4GG3qF+8tBH6HF8Jkfc8yPcH5kU=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-169-sUE90jpQMgie0n9x4mGDdQ-1; Fri, 10 Nov 2023 13:22:34 -0500
+X-MC-Unique: sUE90jpQMgie0n9x4mGDdQ-1
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7872be95468so214642639f.1
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Nov 2023 10:22:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699638645; x=1700243445;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=grt+fXmmJ/9GQKnvSpOXZR4bNa7UBy05x/HGBJsWED0=;
-        b=gDWWqbfXEONQyd1XqKDisL6W47NBzZNCf0oGaihB0Yx2uDVeEnK9DNs3gPrKZTpnjk
-         UNF9URH7CoINqw0ISgX5dQLQgIXuJXvOVEsGZbm9af7z+1vKDF88lTF+d9CC+kS6mdvr
-         cYMxQ0IRnLsKRvCm0fOjrGzIb7vRnx4c74/XcD60bkBSavRNljOZ4Xfr+ikzaEhhgSEM
-         JO7VpuzhJsoY6LSob0ljBaKwZNHe4kqwX2edJuAPYf07n0C9F3bf8B0jysOzd5F9Gg3O
-         yZ/LjkUBVnXonotpL59q/E3g0c9mEwl/jNq8cEAkOHuG+H85z3dYyYlR/Avo2sDdjYzN
-         WJ/w==
-X-Gm-Message-State: AOJu0Yxlc9LZCGnovfAh8LkJPQ3A/CQDnzJVpyg18f1WeXPObY30vatp
-        sv38J9Y2Fzw33/z8Ve432CeIGxILMliRJsnaUaVBBBF09wnSzw==
-X-Google-Smtp-Source: AGHT+IFh8ABulKL4lvR+Y27vT3gC7Y6r+A/cUSNaE107DZZDGksZhMpoVeGCNcPb4JO3asUj1EER8G3o9QliCpYHcLY=
-X-Received: by 2002:ac2:55a3:0:b0:507:a12c:558c with SMTP id
- y3-20020ac255a3000000b00507a12c558cmr4208700lfg.46.1699638645020; Fri, 10 Nov
- 2023 09:50:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699640552; x=1700245352;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KdqvTdO2716oq+zvVf0KMmOF2aDzL6NfJKKObUNa1q8=;
+        b=o0+mKAYdOykAxToL62ZzY3d/mlXUo74Ylkb/DZOrrtu/O3YRZAxVKBV4pNxVy0EN0V
+         GieCfMs5KB62DF0axfJPR5VAVLo1Ahddc4TrpAvrbOnBDkqk/o9lhflZaexnEKwtY19u
+         sPDCfHCKGQWlaIJThU6+t084YqwWbNVSHAZo8/fX8AzIqbOWy3lbkIOX5yP48H9Ex9cI
+         NV3JYZ44oBurUdK/ptWfL8UiSqvsYxjj9dPyUrfr60GgXa4kcBwdAN7n9hjezBumO/AM
+         SsPFN8DMctMLXXYOMtLj5Rvx8ZY3w77iYUQE28Adu9Q3V/4qzJlxEQEipD7Dqp9LcpOv
+         tHTA==
+X-Gm-Message-State: AOJu0YzyZ/QGD7AkGPn0BsyVbS1aRYRAAFHCCbkjRiGjGkuhdj2PRtG/
+        vy5fubkQ5KzFInGhrejU5W5sLskYfdbcs0+aloFRuTBlQbppc1NuqFFiuTlnAdAcFNOsJZdizFr
+        rQjRvpW4TZhVfkftA5amSHOzrI3kCQA6Zm8+1kkWO6I1DFuC15R6b4LaqxvbXHiUW7CTbyZRzbZ
+        WcO2M=
+X-Received: by 2002:a05:6602:4185:b0:7a9:571c:5694 with SMTP id bx5-20020a056602418500b007a9571c5694mr119597iob.10.1699640552044;
+        Fri, 10 Nov 2023 10:22:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFot5/ozoFYXWfbeyFaEevx6Wmd9q41kDstnqo1G2uRX3TCrxN8MrK0IqH9Zungu1GtWu86Ag==
+X-Received: by 2002:a05:6602:4185:b0:7a9:571c:5694 with SMTP id bx5-20020a056602418500b007a9571c5694mr119582iob.10.1699640551736;
+        Fri, 10 Nov 2023 10:22:31 -0800 (PST)
+Received: from [10.0.0.71] (sandeen.net. [63.231.237.45])
+        by smtp.gmail.com with ESMTPSA id s6-20020a5ec646000000b0079f7734a77esm4652192ioo.35.2023.11.10.10.22.30
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Nov 2023 10:22:31 -0800 (PST)
+Message-ID: <3ca21cbc-fbe2-4c43-b8af-50bc7467b9cd@redhat.com>
+Date:   Fri, 10 Nov 2023 12:22:30 -0600
 MIME-Version: 1.0
-References: <20231107212643.3490372-1-willy@infradead.org> <20231107212643.3490372-3-willy@infradead.org>
- <CAHc6FU550j_AYgWz5JgRu84mw5HqrSwd+hYZiHVArnget3gb4w@mail.gmail.com> <ZU5jx2QeujE+868t@casper.infradead.org>
-In-Reply-To: <ZU5jx2QeujE+868t@casper.infradead.org>
-From:   =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
-Date:   Fri, 10 Nov 2023 18:50:33 +0100
-Message-ID: <CAHpGcMK5ODLzONNJiVAzLwxF9BKnFo=h+dP=TEtUXxDc+u+gkw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm: Add folio_fill_tail() and use it in iomap
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org, gfs2@lists.linux.dev,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        linux-erofs@lists.ozlabs.org, "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@redhat.com>
+Subject: [PATCH] xfs_repair: notify user when cache flush starts
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Am Fr., 10. Nov. 2023 um 18:09 Uhr schrieb Matthew Wilcox <willy@infradead.=
-org>:
-> On Thu, Nov 09, 2023 at 10:50:45PM +0100, Andreas Gruenbacher wrote:
-> > On Tue, Nov 7, 2023 at 10:27=E2=80=AFPM Matthew Wilcox (Oracle)
-> > <willy@infradead.org> wrote:
-> > > +static inline void folio_fill_tail(struct folio *folio, size_t offse=
-t,
-> > > +               const char *from, size_t len)
-> > > +{
-> > > +       char *to =3D kmap_local_folio(folio, offset);
-> > > +
-> > > +       VM_BUG_ON(offset + len > folio_size(folio));
-> > > +
-> > > +       if (folio_test_highmem(folio)) {
-> > > +               size_t max =3D PAGE_SIZE - offset_in_page(offset);
-> > > +
-> > > +               while (len > max) {
-> > > +                       memcpy(to, from, max);
-> > > +                       kunmap_local(to);
-> > > +                       len -=3D max;
-> > > +                       from +=3D max;
-> > > +                       offset +=3D max;
-> > > +                       max =3D PAGE_SIZE;
-> > > +                       to =3D kmap_local_folio(folio, offset);
-> > > +               }
-> > > +       }
-> > > +
-> > > +       memcpy(to, from, len);
-> > > +       to =3D folio_zero_tail(folio, offset, to);
-> >
-> > This needs to be:
-> >
-> > to =3D folio_zero_tail(folio, offset  + len, to + len);
->
-> Oh, wow, that was stupid of me.  I only ran an xfstests against ext4,
-> which doesn't exercise this code, not gfs2 or erofs.  Thanks for
-> fixing this up.
->
-> I was wondering about adding the assertion:
->
->         VM_BUG_ON((kaddr - offset) % PAGE_SIZE);
->
-> to catch the possible mistake of calling kmap_local_folio(folio, 0)
-> instead of kmap_local_folio(folio, offset).  But maybe that's
-> sufficiently unlikely a mistake to bother adding a runtime check for.
+We recently had the opportunity to run xfs_repair on a system
+with 2T of memory and over a billion inodes. After phase 7
+had completed, xfs_repair appeared to have hung for over an
+hour as the massive cache was written back.
 
-folio_zero_tail() is a bit of an obscure function, so I'm not sure if
-there will be additional callers. The parameters are described as:
+In the long run it might be nice to see if we can add progress
+reporting to the cache flush if it's sufficiently large, but
+for now at least let the user know what's going on.
 
- * @offset: The byte offset in the folio to start zeroing at.
- * @kaddr: The address the folio is currently mapped to.
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
 
-What about changing the @kaddr description to 'the (mapped) address
-within the folio to start zeroing at' or similar?
+diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
+index ff29bea9..5597b9ba 100644
+--- a/repair/xfs_repair.c
++++ b/repair/xfs_repair.c
+@@ -1388,6 +1388,7 @@
+ 	 * verifiers are run (where we discover the max metadata LSN), reformat
+ 	 * the log if necessary and unmount.
+ 	 */
++	do_log(_("Flushing cache...\n"));
+ 	libxfs_bcache_flush();
+ 	format_log_max_lsn(mp);
 
-Andreas
+
