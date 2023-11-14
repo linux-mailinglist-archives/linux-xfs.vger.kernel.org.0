@@ -2,122 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D60E7EAA9B
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Nov 2023 07:45:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 943BA7EAC04
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Nov 2023 09:49:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231382AbjKNGpo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 14 Nov 2023 01:45:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36502 "EHLO
+        id S232399AbjKNIta (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 14 Nov 2023 03:49:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbjKNGpn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Nov 2023 01:45:43 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DACD44
-        for <linux-xfs@vger.kernel.org>; Mon, 13 Nov 2023 22:45:40 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC4BC433C7;
-        Tue, 14 Nov 2023 06:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699944340;
-        bh=qJNmfLcn5ZZHD6+frjujuXUESqiSBcgGCXmWD3oHixQ=;
-        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-        b=lmwopxOnMDqTlp7viiKbcyIoeJuMlWuZm1+i3pe11qlQmJTPXwah1FRh+TxH7PYoD
-         B+EdtJ7hRwdjGI8Mno3CkPJj6FVySMCiWa8NhT0TMse1fm7JnvpWy0qwUKMf8nN73T
-         /CBZQHtAIKMY29NKfV70FnrSl5w9MAS2w5Y5vgGfbiBcOkkTICfRH659nSoh6Ia/0i
-         VKiQgUZu/PVPIJI7GXGJ32I7c6SZLvsZYR54v3XNiM+VZJOyIynDGOiTOe5VQUS3x6
-         r+iwd38eQ6gxy7fVsF8sLlHn5Nmma6IZcWL1XKshXb0rjzRG7T3FF5SrHN/GxHiGP8
-         nVpkiuux+CiWQ==
-References: <20231114015339.3922119-1-leah.rumancik@gmail.com>
-User-agent: mu4e 1.8.10; emacs 27.1
-From:   Chandan Babu R <chandanbabu@kernel.org>
-To:     Leah Rumancik <leah.rumancik@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com, fred@cloudflare.com
-Subject: Re: [PATCH 5.15 CANDIDATE 00/17] 5.15 backports from 5.19..6.1
-Date:   Tue, 14 Nov 2023 12:13:49 +0530
-In-reply-to: <20231114015339.3922119-1-leah.rumancik@gmail.com>
-Message-ID: <87fs18j0j3.fsf@debian-BULLSEYE-live-builder-AMD64>
+        with ESMTP id S232629AbjKNItS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 14 Nov 2023 03:49:18 -0500
+Received: from mail.commercesolutions.pl (unknown [162.19.155.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E55A2598
+        for <linux-xfs@vger.kernel.org>; Tue, 14 Nov 2023 00:48:11 -0800 (PST)
+Received: by mail.commercesolutions.pl (Postfix, from userid 1002)
+        id 2001223282; Tue, 14 Nov 2023 08:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=commercesolutions.pl;
+        s=mail; t=1699951616;
+        bh=PcMncQpBfIZCnTOfZJY5G1G+gaLn4c9QPfFvoXrE4rA=;
+        h=Date:From:To:Subject:From;
+        b=Bzi53z+GndC7aPP8Gx5wJjwOSaIB0KyLLV+qh5CWCn6qRrwPn52Ka9B8bHuZ7NdSh
+         gOzMjXedVYCtDUwwT3XpmROdJ0JR7ebtU0nCrwT4DQIrsy8DZKpd294bPNFQxmWxEi
+         /h+cmOLm+spzjYerEIduVwnYpGuL4f4fOmweGa/R+3BNP0DIQae+3xDjP+7eZToymn
+         GPoM5bmzFYiKr0Ir45/U+HgMgrmUqZy7duaU+NgjeMeXVNIQX0pCDdTK43E7RyimDA
+         5eTq7rdt1i11MQfG7bwyVksrh62A9eyKodxUhEG0znEC4bkYuekCN0twJeekqV/BuL
+         vfyRFnGlfhxlg==
+Received: by mail.commercesolutions.pl for <linux-xfs@vger.kernel.org>; Tue, 14 Nov 2023 08:46:03 GMT
+Message-ID: <20231114074500-0.1.9w.207c2.0.j8h64567ln@commercesolutions.pl>
+Date:   Tue, 14 Nov 2023 08:46:03 GMT
+From:   "Kamil Tralewski" <kamil.tralewski@commercesolutions.pl>
+To:     <linux-xfs@vger.kernel.org>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
+X-Mailer: mail.commercesolutions.pl
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Nov 13, 2023 at 05:53:21 PM -0800, Leah Rumancik wrote:
-> Hello,
->
-> Here is the next set of fixes for 5.15. Tested on 10 configs x 30 runs
-> with no regressions seen on these commits. Commit 7d839e325a "xfs: check
-> return codes when flushing block devices" is in this range but was left
-> out for now as it revealed a regression which exists upstream. I'll
-> include it in a future set once its fix is accepted.
->
-> - Leah
->
+Dzie=C5=84 dobry,
 
-Looks good to me.
+zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
+=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
+o dalszych rozm=C3=B3w.=20
 
-Acked-by: Chandan Babu R <chandanbabu@kernel.org>
+Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
+=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
+=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
+strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
 
-> Chandan Babu R (1):
->   xfs: Fix false ENOSPC when performing direct write on a delalloc
->     extent in cow fork
->
-> ChenXiaoSong (1):
->   xfs: fix NULL pointer dereference in xfs_getbmap()
->
-> Darrick J. Wong (8):
->   xfs: refactor buffer cancellation table allocation
->   xfs: don't leak xfs_buf_cancel structures when recovery fails
->   xfs: convert buf_cancel_table allocation to kmalloc_array
->   xfs: prevent a UAF when log IO errors race with unmount
->   xfs: fix use-after-free in xattr node block inactivation
->   xfs: don't leak memory when attr fork loading fails
->   xfs: fix intermittent hang during quotacheck
->   xfs: avoid a UAF when log intent item recovery fails
->
-> Gao Xiang (1):
->   xfs: add missing cmap->br_state = XFS_EXT_NORM update
->
-> Guo Xuenan (1):
->   xfs: fix exception caused by unexpected illegal bestcount in leaf dir
->
-> Kaixu Xia (1):
->   xfs: use invalidate_lock to check the state of mmap_lock
->
-> Li Zetao (1):
->   xfs: Fix unreferenced object reported by kmemleak in xfs_sysfs_init()
->
-> Zeng Heng (1):
->   xfs: fix memory leak in xfs_errortag_init
->
-> Zhang Yi (1):
->   xfs: flush inode gc workqueue before clearing agi bucket
->
-> hexiaole (1):
->   xfs: fix inode reservation space for removing transaction
->
->  fs/xfs/libxfs/xfs_dir2_leaf.c   |   9 +-
->  fs/xfs/libxfs/xfs_inode_fork.c  |   1 +
->  fs/xfs/libxfs/xfs_log_recover.h |  14 ++-
->  fs/xfs/libxfs/xfs_trans_resv.c  |   2 +-
->  fs/xfs/xfs_attr_inactive.c      |   8 +-
->  fs/xfs/xfs_bmap_util.c          |  17 +--
->  fs/xfs/xfs_buf_item_recover.c   |  66 +++++++++++
->  fs/xfs/xfs_error.c              |   9 +-
->  fs/xfs/xfs_inode.c              |   4 +-
->  fs/xfs/xfs_log.c                |   9 +-
->  fs/xfs/xfs_log_priv.h           |   3 -
->  fs/xfs/xfs_log_recover.c        |  44 +++----
->  fs/xfs/xfs_qm.c                 |   7 ++
->  fs/xfs/xfs_reflink.c            | 197 ++++++++++++++++++++++++++------
->  fs/xfs/xfs_sysfs.h              |   7 +-
->  15 files changed, 307 insertions(+), 90 deletions(-)
+Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
 
-
--- 
-Chandan
+Pozdrawiam
+Kamil Tralewski
