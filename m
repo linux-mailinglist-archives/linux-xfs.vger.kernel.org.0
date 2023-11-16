@@ -2,53 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63F4F7ED963
+	by mail.lfdr.de (Postfix) with ESMTP id DA7E77ED964
 	for <lists+linux-xfs@lfdr.de>; Thu, 16 Nov 2023 03:28:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344469AbjKPC2n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Nov 2023 21:28:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46834 "EHLO
+        id S1344470AbjKPC2p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Nov 2023 21:28:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235606AbjKPC2n (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Nov 2023 21:28:43 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F59D19D;
-        Wed, 15 Nov 2023 18:28:40 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-5c194b111d6so262853a12.0;
-        Wed, 15 Nov 2023 18:28:40 -0800 (PST)
+        with ESMTP id S1344474AbjKPC2o (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Nov 2023 21:28:44 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7995A199;
+        Wed, 15 Nov 2023 18:28:41 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cc4f777ab9so3374795ad.0;
+        Wed, 15 Nov 2023 18:28:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700101720; x=1700706520; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700101721; x=1700706521; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fm0nurSqmX2QXFRztZniu+GFOzuvFBEG1IBYCjPNRJs=;
-        b=a/TGRGYFVZ1Bkz3hXcfKhI6txyEAxHWZlyUvrgLU0kw17pems4I4DNUG/aJeEcHFmL
-         6d9sS66IOXRhVxF2h8zGyhTJBF+geo4hQ3NrhqzhSjDZRbgXsOU5NdZouELhTpgZm1Lk
-         qEWGFK2nuuURzZJImHCWEedhhJ/zGqC6s3RsV4hBalaUU9d4abhPurn01VO8JJRyTIHX
-         vuEdVwedKzGp4QSQ2lPY2c9+XGhKS+MCFy1sjwrycB/SYz9/0lJndqr9goHCYo/GcR7l
-         0i2prTaa9l1ufmkUxG2e9X48xW+z3c060foVnqU20O593dV3xh75OKpgz2u9uTLDpwuE
-         arCA==
+        bh=YJcMNFYl8mDa5rJZBSlFzRqGzQp2hmbD2/RaSE+W3S0=;
+        b=hAM43yiuBZbfrUhVvPlJrUEbLFxlfqv6ZrGQMjddDlahw+j89vRzs7xwIfYIqvByWy
+         ecsuT9ug+EB4tQbtqXeWPM3Q7RW+bRSIESaNO2rAA1eoz43zIRQcWMPVubseVaxAqvIl
+         liI6+iuOCxfYAwCwdlqs5N8sIEuX54axhGdOUBNB5GA/MuKkJrxAOlYR/NUkrk5w6ce+
+         EDVPyN4Befc1m4YAJOSfNbJIMmFbrBdTHttRPtWgzoVbEQGqJAC97yPXdbobD51o0V9z
+         m9s+We+B3K6HN95ZvShcWzbkaeIt6roRTC8c2VAl1Che/slfcft9vnbMdLOa+/MMvP4z
+         AMjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700101720; x=1700706520;
+        d=1e100.net; s=20230601; t=1700101721; x=1700706521;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Fm0nurSqmX2QXFRztZniu+GFOzuvFBEG1IBYCjPNRJs=;
-        b=i5pNry/dVy7pXfSgHCOX0tDFiu1c3o5qZWMnimvLBW4bzOZ35ezIndzp1NYSkdeA5T
-         uQFY5vYbSV95hJDCd5ub25AXXlRXFMph44iDCGASeGgS96yuJ4PdrU9WaaMliz6kHm16
-         GQ7tDD7BOp/Ph7vt6+vmGg4lAAS+Y+9mFHcALfSrJcdMkiPrjdm09QtsmIqtt4oswsQV
-         xQxhQb0h6Sm7huMoQ5TqNeir284+EGjtCw6HxtGWKX6MvrZ03+lgRlnECgTH0+WTyFr0
-         kSBFe1X9yy52s+iFEK7E7Ysb6a06HVSCiohaUMHCkie2KK+3vLc/jqttIzrEagggmGGZ
-         BrFw==
-X-Gm-Message-State: AOJu0YxGCOEEUfbKnOEQhyRHM4cVLpcBnwToS3p9WIamwLhvqcw+MtiH
-        zjJ7atednS+Zhgai5Ko5nyvzOXc7/rLOoQ==
-X-Google-Smtp-Source: AGHT+IH2g4CPXDAzTdQ281XpPmWim6uGCjXwDSKCIRhgIEI9M8s0LoHWc5gFZektvZ1TB8JmdzVSaQ==
-X-Received: by 2002:a05:6a20:840b:b0:186:de1b:666 with SMTP id c11-20020a056a20840b00b00186de1b0666mr11816916pzd.25.1700101719658;
-        Wed, 15 Nov 2023 18:28:39 -0800 (PST)
+        bh=YJcMNFYl8mDa5rJZBSlFzRqGzQp2hmbD2/RaSE+W3S0=;
+        b=wgbh0VGNFe0zLJEvc2xzsTjIYUwFJeO07SkZGnRymDVf6Zao3h5objnLZ/xPI2+KiA
+         XHzLAFc75rfMKQe5tokzmxlUMMuqKFqENG5gcEYsA9z/JY2cRUa7oy2vcG/O2qdD7pWw
+         QjGP/dXIzGjO1/zEmVlS+AJxFCD2Qy68VVrcY+NWTnZc7je33avHioJVAlSyJw1JoQFs
+         IxkSqsvdIiCh5oNnfvHpRLCzsQAnbmtLs380XBQ4Dw9TZ1dko+jaKW7jHmjt9kDSFC7N
+         qU0T2pGGLiiDcPySQM71K5/fXFefSVTngCQP1eU0fb9MBqaErl/ZttqRnNwI0Iqfqija
+         l6rg==
+X-Gm-Message-State: AOJu0YxG+OShvrbcCE3VzYczajJtYQgkeuxpfqVhxWwY1l2BYdX0z35H
+        TM2GG9AXLXqcjM0jXhTvOWOVcgStTMi/zg==
+X-Google-Smtp-Source: AGHT+IG1RuMRU4+EdVB+nOArBA7fbsQbmVYj/IIUFwy3o24g+9Y9DotbNCQZ8ysvIEfkmoIPJVtwfQ==
+X-Received: by 2002:a17:902:d4c9:b0:1cc:4598:6f46 with SMTP id o9-20020a170902d4c900b001cc45986f46mr8151882plg.57.1700101720696;
+        Wed, 15 Nov 2023 18:28:40 -0800 (PST)
 Received: from lrumancik.svl.corp.google.com ([2620:15c:2a3:200:25ea:d6bb:623c:d6a0])
-        by smtp.gmail.com with ESMTPSA id j9-20020a170903024900b001b8b1f6619asm8087072plh.75.2023.11.15.18.28.38
+        by smtp.gmail.com with ESMTPSA id j9-20020a170903024900b001b8b1f6619asm8087072plh.75.2023.11.15.18.28.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Nov 2023 18:28:39 -0800 (PST)
+        Wed, 15 Nov 2023 18:28:40 -0800 (PST)
 From:   Leah Rumancik <leah.rumancik@gmail.com>
 To:     stable@vger.kernel.org
 Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com,
@@ -59,9 +59,9 @@ Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com,
         Dave Chinner <david@fromorbit.com>,
         Leah Rumancik <leah.rumancik@gmail.com>,
         Chandan Babu R <chandanbabu@kernel.org>
-Subject: [PATCH 5.15 02/17] xfs: don't leak xfs_buf_cancel structures when recovery fails
-Date:   Wed, 15 Nov 2023 18:28:18 -0800
-Message-ID: <20231116022833.121551-2-leah.rumancik@gmail.com>
+Subject: [PATCH 5.15 03/17] xfs: convert buf_cancel_table allocation to kmalloc_array
+Date:   Wed, 15 Nov 2023 18:28:19 -0800
+Message-ID: <20231116022833.121551-3-leah.rumancik@gmail.com>
 X-Mailer: git-send-email 2.43.0.rc0.421.g78406f8d94-goog
 In-Reply-To: <20231116022833.121551-1-leah.rumancik@gmail.com>
 References: <20231116022833.121551-1-leah.rumancik@gmail.com>
@@ -79,35 +79,12 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: "Darrick J. Wong" <djwong@kernel.org>
 
-[ Upstream commit 8db074bd84df5ccc88bff3f8f900f66f4b8349fa ]
+[ Upstream commit 910bbdf2f4d7df46781bc9b723048f5ebed3d0d7 ]
 
-If log recovery fails, we free the memory used by the buffer
-cancellation buckets, but we don't actually traverse each bucket list to
-free the individual xfs_buf_cancel objects.  This leads to a memory
-leak, as reported by kmemleak in xfs/051:
-
-unreferenced object 0xffff888103629560 (size 32):
-  comm "mount", pid 687045, jiffies 4296935916 (age 10.752s)
-  hex dump (first 32 bytes):
-    08 d3 0a 01 00 00 00 00 08 00 00 00 01 00 00 00  ................
-    d0 f5 0b 92 81 88 ff ff 80 64 64 25 81 88 ff ff  .........dd%....
-  backtrace:
-    [<ffffffffa0317c83>] kmem_alloc+0x73/0x140 [xfs]
-    [<ffffffffa03234a9>] xlog_recover_buf_commit_pass1+0x139/0x200 [xfs]
-    [<ffffffffa032dc27>] xlog_recover_commit_trans+0x307/0x350 [xfs]
-    [<ffffffffa032df15>] xlog_recovery_process_trans+0xa5/0xe0 [xfs]
-    [<ffffffffa032e12d>] xlog_recover_process_data+0x8d/0x140 [xfs]
-    [<ffffffffa032e49d>] xlog_do_recovery_pass+0x19d/0x740 [xfs]
-    [<ffffffffa032f22d>] xlog_do_log_recovery+0x6d/0x150 [xfs]
-    [<ffffffffa032f343>] xlog_do_recover+0x33/0x1d0 [xfs]
-    [<ffffffffa032faba>] xlog_recover+0xda/0x190 [xfs]
-    [<ffffffffa03194bc>] xfs_log_mount+0x14c/0x360 [xfs]
-    [<ffffffffa030bfed>] xfs_mountfs+0x50d/0xa60 [xfs]
-    [<ffffffffa03124b5>] xfs_fs_fill_super+0x6a5/0x950 [xfs]
-    [<ffffffff812b92a5>] get_tree_bdev+0x175/0x280
-    [<ffffffff812b7c3a>] vfs_get_tree+0x1a/0x80
-    [<ffffffff812e366f>] path_mount+0x6ff/0xaa0
-    [<ffffffff812e3b13>] __x64_sys_mount+0x103/0x140
+While we're messing around with how recovery allocates and frees the
+buffer cancellation table, convert the allocation to use kmalloc_array
+instead of the old kmem_alloc APIs, and make it handle a null return,
+even though that's not likely.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
@@ -116,36 +93,73 @@ Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Leah Rumancik <leah.rumancik@gmail.com>
 Acked-by: Chandan Babu R <chandanbabu@kernel.org>
 ---
- fs/xfs/xfs_buf_item_recover.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/xfs/libxfs/xfs_log_recover.h |  2 +-
+ fs/xfs/xfs_buf_item_recover.c   | 14 ++++++++++----
+ fs/xfs/xfs_log_recover.c        |  4 +++-
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
+diff --git a/fs/xfs/libxfs/xfs_log_recover.h b/fs/xfs/libxfs/xfs_log_recover.h
+index b8b65a6e9b1e..81a065b0b571 100644
+--- a/fs/xfs/libxfs/xfs_log_recover.h
++++ b/fs/xfs/libxfs/xfs_log_recover.h
+@@ -120,7 +120,7 @@ int xlog_recover_iget(struct xfs_mount *mp, xfs_ino_t ino,
+ 		struct xfs_inode **ipp);
+ void xlog_recover_release_intent(struct xlog *log, unsigned short intent_type,
+ 		uint64_t intent_id);
+-void xlog_alloc_buf_cancel_table(struct xlog *log);
++int xlog_alloc_buf_cancel_table(struct xlog *log);
+ void xlog_free_buf_cancel_table(struct xlog *log);
+ 
+ #ifdef DEBUG
 diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-index dc099b2f4984..635f7f8ed9c2 100644
+index 635f7f8ed9c2..31cbe7deebfa 100644
 --- a/fs/xfs/xfs_buf_item_recover.c
 +++ b/fs/xfs/xfs_buf_item_recover.c
-@@ -1044,9 +1044,22 @@ void
- xlog_free_buf_cancel_table(
+@@ -1025,19 +1025,25 @@ xlog_check_buf_cancel_table(
+ }
+ #endif
+ 
+-void
++int
+ xlog_alloc_buf_cancel_table(
  	struct xlog	*log)
  {
-+	int		i;
-+
- 	if (!log->l_buf_cancel_table)
- 		return;
++	void		*p;
+ 	int		i;
  
-+	for (i = 0; i < XLOG_BC_TABLE_SIZE; i++) {
-+		struct xfs_buf_cancel	*bc;
+ 	ASSERT(log->l_buf_cancel_table == NULL);
+ 
+-	log->l_buf_cancel_table = kmem_zalloc(XLOG_BC_TABLE_SIZE *
+-						 sizeof(struct list_head),
+-						 0);
++	p = kmalloc_array(XLOG_BC_TABLE_SIZE, sizeof(struct list_head),
++			  GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
 +
-+		while ((bc = list_first_entry_or_null(
-+				&log->l_buf_cancel_table[i],
-+				struct xfs_buf_cancel, bc_list))) {
-+			list_del(&bc->bc_list);
-+			kmem_free(bc);
-+		}
-+	}
++	log->l_buf_cancel_table = p;
+ 	for (i = 0; i < XLOG_BC_TABLE_SIZE; i++)
+ 		INIT_LIST_HEAD(&log->l_buf_cancel_table[i]);
 +
- 	kmem_free(log->l_buf_cancel_table);
- 	log->l_buf_cancel_table = NULL;
++	return 0;
  }
+ 
+ void
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 18d8eebc2d44..aeb01d4c0423 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -3256,7 +3256,9 @@ xlog_do_log_recovery(
+ 	 * First do a pass to find all of the cancelled buf log items.
+ 	 * Store them in the buf_cancel_table for use in the second pass.
+ 	 */
+-	xlog_alloc_buf_cancel_table(log);
++	error = xlog_alloc_buf_cancel_table(log);
++	if (error)
++		return error;
+ 
+ 	error = xlog_do_recovery_pass(log, head_blk, tail_blk,
+ 				      XLOG_RECOVER_PASS1, NULL);
 -- 
 2.43.0.rc0.421.g78406f8d94-goog
 
