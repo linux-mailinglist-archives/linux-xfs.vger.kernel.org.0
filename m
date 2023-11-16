@@ -2,130 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 144E47EFB48
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Nov 2023 23:19:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 594A87EFD9D
+	for <lists+linux-xfs@lfdr.de>; Sat, 18 Nov 2023 04:58:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231905AbjKQWTm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Nov 2023 17:19:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34338 "EHLO
+        id S229994AbjKRD6Z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Nov 2023 22:58:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbjKQWTl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Nov 2023 17:19:41 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F9DB8
-        for <linux-xfs@vger.kernel.org>; Fri, 17 Nov 2023 14:19:38 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9106EC433C8;
-        Fri, 17 Nov 2023 22:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700259577;
-        bh=jAGjw9mb66OQ2d28yda+DnddMWeuZ5oGuiwJ1auDhHo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cNvXn8zbtyfG0HIutW9nUvnvd3ucpyKXGbmjQIrREAY8j9dgGALNCFMlU8zWlJUkv
-         WHStPAbT4FOI5j6+G5KboFa3flktyOo7n32NqbJVK+VyLwtCIVnpv7acY/gpsVhNkd
-         1Dbn5S3spwRVLxU1dbcLm+W3zFXC1hWhkXSJHIyg7myzi1rcSswRQkwSnUnCONP68k
-         tUQ7WcF0E/Eim9lX/ohKVlR6CRJBcxwM38Usifc1/CnmPDJOV/Me92yz4IIgclfhRO
-         FqcMmFtfjmeNEXap734lfGRMuB/p8cIizJ0ayCtN3kEG8depaof3uC4iiNAoMYwKyH
-         Y/GXT2Gp8rODw==
-Date:   Fri, 17 Nov 2023 14:19:36 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, zlang@redhat.com
-Subject: Re: [PATCH 1/2] xfs: inode recovery does not validate the recovered
- inode
-Message-ID: <20231117221936.GB36190@frogsfrogsfrogs>
-References: <20231110044500.718022-1-david@fromorbit.com>
- <20231110044500.718022-2-david@fromorbit.com>
- <20231110192752.GJ1205143@frogsfrogsfrogs>
- <ZU6VSymhrhgJUS8o@dread.disaster.area>
+        with ESMTP id S229737AbjKRD6Z (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Nov 2023 22:58:25 -0500
+Received: from mail.durme.pl (mail.durme.pl [217.182.69.186])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814E1D79
+        for <linux-xfs@vger.kernel.org>; Fri, 17 Nov 2023 19:58:22 -0800 (PST)
+Received: by mail.durme.pl (Postfix, from userid 1002)
+        id 94E4F61A47; Thu, 16 Nov 2023 08:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=durme.pl; s=mail;
+        t=1700124911; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
+        h=Date:From:To:Subject:From;
+        b=Lw3v1wv71b/VaPbknAc1+NGnyxtN8ZUr79GmDkh8YaYC3zRlcLNoDV8KWeamE/PHY
+         IawOYNWBQoyKeZHNXNSoT1OHLU7dv5pZRkRhr18UdA8oCLv/ty5FolLRgDI4xmPvSD
+         z3A58YUoqRBvEuiv2zbmfcyt0ORcwrX31DY5o46ndHhokkHojq3E8v6xoydar0esxv
+         En6j1+hjgT9r6zYYxX/B8v7ps9TVEjknnXLGQaBvUYDssFWShsa3VG6sXLFhxjYrrp
+         TsTCm13BBMxEnhmF72GpsgMcpoLmBq7V4GMEZY2dd+zyJu0G6qKFfNziuzb3IZVxmz
+         ++0ZMr0Cl0WZg==
+Received: by mail.durme.pl for <linux-xfs@vger.kernel.org>; Thu, 16 Nov 2023 08:46:25 GMT
+Message-ID: <20231116074501-0.1.5j.rq9m.0.ojo5059r7l@durme.pl>
+Date:   Thu, 16 Nov 2023 08:46:25 GMT
+From:   "Krystian Wieczorek" <krystian.wieczorek@durme.pl>
+To:     <linux-xfs@vger.kernel.org>
+Subject: W sprawie samochodu
+X-Mailer: mail.durme.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZU6VSymhrhgJUS8o@dread.disaster.area>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Nov 11, 2023 at 07:40:43AM +1100, Dave Chinner wrote:
-> On Fri, Nov 10, 2023 at 11:27:52AM -0800, Darrick J. Wong wrote:
-> > On Fri, Nov 10, 2023 at 03:33:13PM +1100, Dave Chinner wrote:
-> > > From: Dave Chinner <dchinner@redhat.com>
-> > > 
-> > > Discovered when trying to track down a weird recovery corruption
-> > > issue that wasn't detected at recovery time.
-> > > 
-> > > The specific corruption was a zero extent count field when big
-> > > extent counts are in use, and it turns out the dinode verifier
-> > > doesn't detect that specific corruption case, either. So fix it too.
-> > > 
-> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > > ---
-> > >  fs/xfs/libxfs/xfs_inode_buf.c   |  3 +++
-> > >  fs/xfs/xfs_inode_item_recover.c | 14 +++++++++++++-
-> > >  2 files changed, 16 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-> > > index a35781577cad..0f970a0b3382 100644
-> > > --- a/fs/xfs/libxfs/xfs_inode_buf.c
-> > > +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-> > > @@ -508,6 +508,9 @@ xfs_dinode_verify(
-> > >  	if (mode && nextents + naextents > nblocks)
-> > >  		return __this_address;
-> > >  
-> > > +	if (nextents + naextents == 0 && nblocks != 0)
-> > > +		return __this_address;
-> > > +
-> > >  	if (S_ISDIR(mode) && nextents > mp->m_dir_geo->max_extents)
-> > >  		return __this_address;
-> > >  
-> > > diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
-> > > index 6b09e2bf2d74..f4c31c2b60d5 100644
-> > > --- a/fs/xfs/xfs_inode_item_recover.c
-> > > +++ b/fs/xfs/xfs_inode_item_recover.c
-> > > @@ -286,6 +286,7 @@ xlog_recover_inode_commit_pass2(
-> > >  	struct xfs_log_dinode		*ldip;
-> > >  	uint				isize;
-> > >  	int				need_free = 0;
-> > > +	xfs_failaddr_t			fa;
-> > >  
-> > >  	if (item->ri_buf[0].i_len == sizeof(struct xfs_inode_log_format)) {
-> > >  		in_f = item->ri_buf[0].i_addr;
-> > > @@ -529,8 +530,19 @@ xlog_recover_inode_commit_pass2(
-> > >  	    (dip->di_mode != 0))
-> > >  		error = xfs_recover_inode_owner_change(mp, dip, in_f,
-> > >  						       buffer_list);
-> > > -	/* re-generate the checksum. */
-> > > +	/* re-generate the checksum and validate the recovered inode. */
-> > >  	xfs_dinode_calc_crc(log->l_mp, dip);
-> > > +	fa = xfs_dinode_verify(log->l_mp, in_f->ilf_ino, dip);
-> > > +	if (fa) {
-> > 
-> > Does xlog_recover_dquot_commit_pass2 need to call xfs_dquot_verify as
-> > well?
-> 
-> Maybe - I haven't looked closely at that, and it depends what the
-> dquot buffer verifier does. If it's similar to the inode cluster
-> buffer verifier (i.e. only checks for dquots, doesn't verify the
-> dquots) then it should do the same thing. I don't have time to do
-> this right now because I'm OOO for the next week, so maybe you could
-> check this and send a patch for it?
+Dzie=C5=84 dobry,
 
-I tossed on a patch to do this and after a couple of days of generic/388
-and generic/475 spinning I haven't noticed any failures.
+chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
+, je=C5=9Bli chodzi o system monitoringu GPS.
 
---D
+Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
+e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
+a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
 
-> > This patch looks good though,
-> > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> 
-> Thanks!
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
+dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
+szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
+mne znaczenie.
+
+Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
+b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
+
+
+Pozdrawiam
+Krystian Wieczorek
