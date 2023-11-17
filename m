@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B51277EF4CC
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Nov 2023 15:52:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F18817EFB2B
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Nov 2023 23:07:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233254AbjKQOwF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Nov 2023 09:52:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43652 "EHLO
+        id S233067AbjKQWHj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Nov 2023 17:07:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232615AbjKQOwE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Nov 2023 09:52:04 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BBAC194;
-        Fri, 17 Nov 2023 06:52:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=xbcUpDlbQzcZtzSAWcv3Q7LJrTanIECAc3h72m1YlgE=; b=YG8Z8q53nFvlTT1i5HTb7FSPvT
-        tOurzVUWVOIZM6sXYGsXeluj9sSjVhsqqCccY1fK574M8KKH47ZlvWDdMTLvaN274V1eKlJ4CBBsK
-        2AwLvC0X+WIsV6Q93Wapc4vR6uGITHw4OoxDDmJZYZrS8qup2KU5X0pDhjgBYa+Smdc3wI8gQd/5c
-        p8P4ZAF/x+FMGggLmvbwBbZMTovB8J++AYDIGYA5LSRL834xUpyeZCOS8I/H4gSJlIsUhoBI3aqoW
-        B0gfLDIWFJnDFHP1zacyv5Gp4Sxj0FLcdmmB9O88KksY6RAXT18J/CduPplrtQCy+7g6MgC3zGbZb
-        pH5XtzIw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1r40C8-009yq3-2D; Fri, 17 Nov 2023 14:51:44 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v4 4/4] xfs: Remove mrlock wrapper
-Date:   Fri, 17 Nov 2023 14:51:42 +0000
-Message-Id: <20231117145142.2378800-5-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20231117145142.2378800-1-willy@infradead.org>
-References: <20231117145142.2378800-1-willy@infradead.org>
+        with ESMTP id S230379AbjKQWHi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Nov 2023 17:07:38 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE772D4D
+        for <linux-xfs@vger.kernel.org>; Fri, 17 Nov 2023 14:07:33 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6656CC433C7;
+        Fri, 17 Nov 2023 22:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1700258853;
+        bh=V142oDvt3hPbZ3WiBahX/4bq2zQvzjIW7/+jyfXMVDo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FeWYFKoNHgAbWm7PW5sCnA3pn74U/f7V+qcAIwiGLvTXDoIdoE0UiYg3PG8vidDoa
+         rqmjXHAda1Mogwf9xRxV6mu0C5FhuX4DFZIbQJGRX58JG/Q+6niLVz8X1xb+AMN+VP
+         nHzSmx0xWkM/yRjVBDKt6Yy9zAemFD3EZ8dRSvLX0lksVTabfQYjToSDkVJ6mkRNIl
+         tIDI4lTGvwALPs6qyHqMQpf9URJRnF0wJFw/PXUn2P0ofYLpJ4lsii6lh/mIPMAquc
+         n9nbNULXhSZnzSBf+/Nxvu9/xToUAbT8D4twwJ4P3U5Xg90wPqT7hnUOOSv6pnvzJ+
+         u6yT7wqN9ywWw==
+Date:   Fri, 17 Nov 2023 14:07:32 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Zorro Lang <zlang@redhat.com>
+Cc:     Omar Sandoval <osandov@osandov.com>, fstests@vger.kernel.org,
+        linux-xfs@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH fstests v2] xfs: test refilling AGFL after lots of btree
+ splits
+Message-ID: <20231117220732.GG36175@frogsfrogsfrogs>
+References: <68cd85697855f686529829a2825b044913148caf.1698699188.git.osandov@fb.com>
+ <fe622bff22bca23648ed1154faeadce3ed51ad3b.1698699498.git.osandov@osandov.com>
+ <20231101064543.uruh3ljicwnedw7x@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <20231101155630.GA1203404@frogsfrogsfrogs>
+ <20231117143232.jool55gt5zysmm55@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231117143232.jool55gt5zysmm55@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,241 +53,158 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-mrlock was an rwsem wrapper that also recorded whether the lock was
-held for read or write.  Now that we can ask the generic code whether
-the lock is held for read or write, we can remove this wrapper and use
-an rwsem directly.
+On Fri, Nov 17, 2023 at 10:32:32PM +0800, Zorro Lang wrote:
+> On Wed, Nov 01, 2023 at 08:56:30AM -0700, Darrick J. Wong wrote:
+> > On Wed, Nov 01, 2023 at 02:45:43PM +0800, Zorro Lang wrote:
+> > > On Mon, Oct 30, 2023 at 02:00:15PM -0700, Omar Sandoval wrote:
+> > > > This is a regression test for patch "xfs: fix internal error from AGFL
+> > > > exhaustion"), which is not yet merged. Without the fix, it will fail
+> > > > with a "Structure needs cleaning" error.
+> > > > 
+> > > > Signed-off-by: Omar Sandoval <osandov@osandov.com>
+> > > > ---
+> > > > Changes since v1 [1]:
+> > > > 
+> > > > - Fixed to check whether mkfs.xfs supports -m rmapbt.
+> > > > - Changed bare $XFS_DB calls to _scratch_xfs_db.
+> > > > - Expanded comment about what happens without the fix.
+> > > > 
+> > > > I didn't add a check for whether everything ended up in AG 0, because it
+> > > > wasn't clear to me what to do in that case. We could skip the test, but
+> > > > it also doesn't hurt to run it anyways.
+> > > > 
+> > > > 1: https://lore.kernel.org/linux-xfs/c7be2fe66a297316b934ddd3a1368b14f39a9f22.1698190540.git.osandov@osandov.com/
+> > > > 
+> > > >  tests/xfs/601     | 68 +++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  tests/xfs/601.out |  2 ++
+> > > 
+> > > The xfs/601 has been taken by:
+> > >   39f88c55 ("generic: test FALLOC_FL_UNSHARE when pagecache is not loaded")
+> > > 
+> > > I'll change this case to another number.
+> > > 
+> > > ...
+> > > Hi Darrick, I just noticed that commit has "generic", but that's a case in
+> > > tests/xfs, and there's not "_supported_fs xfs" in xfs/601. Do you want to
+> > > move it to be a generic case?
+> > 
+> > Yes, the existing xfs/601 regression test (kernel commit 35d30c9cf127)
+> > can become a generic test; and then this one can take its place.
+> 
+> If you need to move current xfs/601 to generic/, better to have another patch.
+> I'll merge this patch in xfs/ at first. Then you can do that moving in your next
+> "random fix" patchset, or I can send a patch to do that.
 
-As the comment says, we can't use lockdep to assert that the ILOCK is
-held for write, because we might be in a workqueue, and we aren't able
-to tell lockdep that we do in fact own the lock.
+<shrug> I'll ./mvtest and send the resulting patch next week unless you
+beat me to it.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/xfs/mrlock.h    | 78 ----------------------------------------------
- fs/xfs/xfs_inode.c | 22 +++++++------
- fs/xfs/xfs_inode.h |  2 +-
- fs/xfs/xfs_iops.c  |  4 +--
- fs/xfs/xfs_linux.h |  2 +-
- fs/xfs/xfs_super.c |  4 +--
- 6 files changed, 18 insertions(+), 94 deletions(-)
- delete mode 100644 fs/xfs/mrlock.h
+--D
 
-diff --git a/fs/xfs/mrlock.h b/fs/xfs/mrlock.h
-deleted file mode 100644
-index 79155eec341b..000000000000
---- a/fs/xfs/mrlock.h
-+++ /dev/null
-@@ -1,78 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (c) 2000-2006 Silicon Graphics, Inc.
-- * All Rights Reserved.
-- */
--#ifndef __XFS_SUPPORT_MRLOCK_H__
--#define __XFS_SUPPORT_MRLOCK_H__
--
--#include <linux/rwsem.h>
--
--typedef struct {
--	struct rw_semaphore	mr_lock;
--#if defined(DEBUG) || defined(XFS_WARN)
--	int			mr_writer;
--#endif
--} mrlock_t;
--
--#if defined(DEBUG) || defined(XFS_WARN)
--#define mrinit(mrp, name)	\
--	do { (mrp)->mr_writer = 0; init_rwsem(&(mrp)->mr_lock); } while (0)
--#else
--#define mrinit(mrp, name)	\
--	do { init_rwsem(&(mrp)->mr_lock); } while (0)
--#endif
--
--#define mrlock_init(mrp, t,n,s)	mrinit(mrp, n)
--#define mrfree(mrp)		do { } while (0)
--
--static inline void mraccess_nested(mrlock_t *mrp, int subclass)
--{
--	down_read_nested(&mrp->mr_lock, subclass);
--}
--
--static inline void mrupdate_nested(mrlock_t *mrp, int subclass)
--{
--	down_write_nested(&mrp->mr_lock, subclass);
--#if defined(DEBUG) || defined(XFS_WARN)
--	mrp->mr_writer = 1;
--#endif
--}
--
--static inline int mrtryaccess(mrlock_t *mrp)
--{
--	return down_read_trylock(&mrp->mr_lock);
--}
--
--static inline int mrtryupdate(mrlock_t *mrp)
--{
--	if (!down_write_trylock(&mrp->mr_lock))
--		return 0;
--#if defined(DEBUG) || defined(XFS_WARN)
--	mrp->mr_writer = 1;
--#endif
--	return 1;
--}
--
--static inline void mrunlock_excl(mrlock_t *mrp)
--{
--#if defined(DEBUG) || defined(XFS_WARN)
--	mrp->mr_writer = 0;
--#endif
--	up_write(&mrp->mr_lock);
--}
--
--static inline void mrunlock_shared(mrlock_t *mrp)
--{
--	up_read(&mrp->mr_lock);
--}
--
--static inline void mrdemote(mrlock_t *mrp)
--{
--#if defined(DEBUG) || defined(XFS_WARN)
--	mrp->mr_writer = 0;
--#endif
--	downgrade_write(&mrp->mr_lock);
--}
--
--#endif /* __XFS_SUPPORT_MRLOCK_H__ */
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 1ed6bed19bec..7661084ca568 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -208,9 +208,9 @@ xfs_ilock(
- 	}
- 
- 	if (lock_flags & XFS_ILOCK_EXCL)
--		mrupdate_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
-+		down_write_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
- 	else if (lock_flags & XFS_ILOCK_SHARED)
--		mraccess_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
-+		down_read_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
- }
- 
- /*
-@@ -251,10 +251,10 @@ xfs_ilock_nowait(
- 	}
- 
- 	if (lock_flags & XFS_ILOCK_EXCL) {
--		if (!mrtryupdate(&ip->i_lock))
-+		if (!down_write_trylock(&ip->i_lock))
- 			goto out_undo_mmaplock;
- 	} else if (lock_flags & XFS_ILOCK_SHARED) {
--		if (!mrtryaccess(&ip->i_lock))
-+		if (!down_read_trylock(&ip->i_lock))
- 			goto out_undo_mmaplock;
- 	}
- 	return 1;
-@@ -303,9 +303,9 @@ xfs_iunlock(
- 		up_read(&VFS_I(ip)->i_mapping->invalidate_lock);
- 
- 	if (lock_flags & XFS_ILOCK_EXCL)
--		mrunlock_excl(&ip->i_lock);
-+		up_write(&ip->i_lock);
- 	else if (lock_flags & XFS_ILOCK_SHARED)
--		mrunlock_shared(&ip->i_lock);
-+		up_read(&ip->i_lock);
- 
- 	trace_xfs_iunlock(ip, lock_flags, _RET_IP_);
- }
-@@ -324,7 +324,7 @@ xfs_ilock_demote(
- 		~(XFS_IOLOCK_EXCL|XFS_MMAPLOCK_EXCL|XFS_ILOCK_EXCL)) == 0);
- 
- 	if (lock_flags & XFS_ILOCK_EXCL)
--		mrdemote(&ip->i_lock);
-+		downgrade_write(&ip->i_lock);
- 	if (lock_flags & XFS_MMAPLOCK_EXCL)
- 		downgrade_write(&VFS_I(ip)->i_mapping->invalidate_lock);
- 	if (lock_flags & XFS_IOLOCK_EXCL)
-@@ -338,10 +338,14 @@ xfs_assert_ilocked(
- 	struct xfs_inode	*ip,
- 	uint			lock_flags)
- {
-+	/*
-+	 * Sometimes we assert the ILOCK is held exclusively, but we're in
-+	 * a workqueue, so lockdep doesn't know we're the owner.
-+	 */
- 	if (lock_flags & XFS_ILOCK_SHARED)
--		rwsem_assert_held(&ip->i_lock.mr_lock);
-+		rwsem_assert_held(&ip->i_lock);
- 	else if (lock_flags & XFS_ILOCK_EXCL)
--		ASSERT(ip->i_lock.mr_writer);
-+		rwsem_assert_held_write_nolockdep(&ip->i_lock);
- 
- 	if (lock_flags & XFS_MMAPLOCK_SHARED)
- 		rwsem_assert_held(&VFS_I(ip)->i_mapping->invalidate_lock);
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index dd8b8339ba1b..3cade5903fda 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -39,7 +39,7 @@ typedef struct xfs_inode {
- 
- 	/* Transaction and locking information. */
- 	struct xfs_inode_log_item *i_itemp;	/* logging information */
--	mrlock_t		i_lock;		/* inode lock */
-+	struct rw_semaphore	i_lock;		/* inode lock */
- 	atomic_t		i_pincount;	/* inode pin count */
- 	struct llist_node	i_gclist;	/* deferred inactivation list */
- 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index e711668d601b..79010d60ee21 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1284,9 +1284,9 @@ xfs_setup_inode(
- 		 */
- 		lockdep_set_class(&inode->i_rwsem,
- 				  &inode->i_sb->s_type->i_mutex_dir_key);
--		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_dir_ilock_class);
-+		lockdep_set_class(&ip->i_lock, &xfs_dir_ilock_class);
- 	} else {
--		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_nondir_ilock_class);
-+		lockdep_set_class(&ip->i_lock, &xfs_nondir_ilock_class);
- 	}
- 
- 	/*
-diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
-index d7873e0360f0..ec3c6c138a63 100644
---- a/fs/xfs/xfs_linux.h
-+++ b/fs/xfs/xfs_linux.h
-@@ -22,7 +22,6 @@ typedef __u32			xfs_nlink_t;
- #include "xfs_types.h"
- 
- #include "kmem.h"
--#include "mrlock.h"
- 
- #include <linux/semaphore.h>
- #include <linux/mm.h>
-@@ -51,6 +50,7 @@ typedef __u32			xfs_nlink_t;
- #include <linux/notifier.h>
- #include <linux/delay.h>
- #include <linux/log2.h>
-+#include <linux/rwsem.h>
- #include <linux/spinlock.h>
- #include <linux/random.h>
- #include <linux/ctype.h>
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 764304595e8b..cd0200ed51f0 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -724,9 +724,7 @@ xfs_fs_inode_init_once(
- 	/* xfs inode */
- 	atomic_set(&ip->i_pincount, 0);
- 	spin_lock_init(&ip->i_flags_lock);
--
--	mrlock_init(&ip->i_lock, MRLOCK_ALLOW_EQUAL_PRI|MRLOCK_BARRIER,
--		     "xfsino", ip->i_ino);
-+	init_rwsem(&ip->i_lock);
- }
- 
- /*
--- 
-2.42.0
-
+> Thanks,
+> Zorro
+> 
+> > 
+> > --D
+> > 
+> > > >  2 files changed, 70 insertions(+)
+> > > >  create mode 100755 tests/xfs/601
+> > > >  create mode 100644 tests/xfs/601.out
+> > > > 
+> > > > diff --git a/tests/xfs/601 b/tests/xfs/601
+> > > > new file mode 100755
+> > > > index 00000000..68df6ac0
+> > > > --- /dev/null
+> > > > +++ b/tests/xfs/601
+> > > > @@ -0,0 +1,68 @@
+> > > > +#! /bin/bash
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +# Copyright (c) Meta Platforms, Inc. and affiliates.
+> > > > +#
+> > > > +# FS QA Test 601
+> > > > +#
+> > > > +# Regression test for patch "xfs: fix internal error from AGFL exhaustion".
+> > > > +#
+> > > > +. ./common/preamble
+> > > > +_begin_fstest auto prealloc punch
+> > > > +
+> > > > +. ./common/filter
+> > > > +
+> > > > +_supported_fs xfs
+> > > > +_require_scratch
+> > > 
+> > > _require_xfs_io_command "fpunch" ?
+> > > 
+> > > I can help to add that, others look good to me.
+> > > 
+> > > Reviewed-by: Zorro Lang <zlang@redhat.com>
+> > > 
+> > > > +_require_test_program punch-alternating
+> > > > +_fixed_by_kernel_commit XXXXXXXXXXXX "xfs: fix internal error from AGFL exhaustion"
+> > > > +
+> > > > +# Disable the rmapbt so we only need to worry about splitting the bnobt and
+> > > > +# cntbt at the same time.
+> > > > +opts=
+> > > > +if $MKFS_XFS_PROG |& grep -q rmapbt; then
+> > > > +	opts="-m rmapbt=0"
+> > > > +fi
+> > > > +_scratch_mkfs $opts | _filter_mkfs > /dev/null 2> "$tmp.mkfs"
+> > > > +. "$tmp.mkfs"
+> > > > +_scratch_mount
+> > > > +
+> > > > +alloc_block_len=$((_fs_has_crcs ? 56 : 16))
+> > > > +allocbt_leaf_maxrecs=$(((dbsize - alloc_block_len) / 8))
+> > > > +allocbt_node_maxrecs=$(((dbsize - alloc_block_len) / 12))
+> > > > +
+> > > > +# Create a big file with a size such that the punches below create the exact
+> > > > +# free extents we want.
+> > > > +num_holes=$((allocbt_leaf_maxrecs * allocbt_node_maxrecs - 1))
+> > > > +$XFS_IO_PROG -c "falloc 0 $((9 * dbsize + num_holes * dbsize * 2))" -f "$SCRATCH_MNT/big"
+> > > > +
+> > > > +# Fill in any small free extents in AG 0. After this, there should be only one,
+> > > > +# large free extent.
+> > > > +_scratch_unmount
+> > > > +mapfile -t gaps < <(_scratch_xfs_db -c 'agf 0' -c 'addr cntroot' -c btdump |
+> > > > +	$SED_PROG -rn 's/^[0-9]+:\[[0-9]+,([0-9]+)\].*/\1/p' |
+> > > > +	tac | tail -n +2)
+> > > > +_scratch_mount
+> > > > +for gap_i in "${!gaps[@]}"; do
+> > > > +	gap=${gaps[$gap_i]}
+> > > > +	$XFS_IO_PROG -c "falloc 0 $((gap * dbsize))" -f "$SCRATCH_MNT/gap$gap_i"
+> > > > +done
+> > > > +
+> > > > +# Create enough free space records to make the bnobt and cntbt both full,
+> > > > +# 2-level trees, plus one more record to make them split all the way to the
+> > > > +# root and become 3-level trees. After this, there is a 7-block free extent in
+> > > > +# the rightmost leaf of the cntbt, and all of the leaves of the cntbt other
+> > > > +# than the rightmost two are full. Without the fix, the free list is also
+> > > > +# empty.
+> > > > +$XFS_IO_PROG -c "fpunch $dbsize $((7 * dbsize))" "$SCRATCH_MNT/big"
+> > > > +"$here/src/punch-alternating" -o 9 "$SCRATCH_MNT/big"
+> > > > +
+> > > > +# Do an arbitrary operation that refills the free list. Without the fix, this
+> > > > +# will allocate 6 blocks from the 7-block free extent in the rightmost leaf of
+> > > > +# the cntbt, then try to insert the remaining 1 block free extent in the
+> > > > +# leftmost leaf of the cntbt. But that leaf is full, so this tries to split the
+> > > > +# leaf and fails because the free list is empty, returning EFSCORRUPTED.
+> > > > +$XFS_IO_PROG -c "fpunch 0 $dbsize" "$SCRATCH_MNT/big"
+> > > > +
+> > > > +echo "Silence is golden"
+> > > > +status=0
+> > > > +exit
+> > > > diff --git a/tests/xfs/601.out b/tests/xfs/601.out
+> > > > new file mode 100644
+> > > > index 00000000..0d70c3e5
+> > > > --- /dev/null
+> > > > +++ b/tests/xfs/601.out
+> > > > @@ -0,0 +1,2 @@
+> > > > +QA output created by 601
+> > > > +Silence is golden
+> > > > -- 
+> > > > 2.41.0
+> > > > 
+> > > > 
+> > > 
+> > > 
+> > 
+> 
+> 
