@@ -2,65 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 594A87EFD9D
-	for <lists+linux-xfs@lfdr.de>; Sat, 18 Nov 2023 04:58:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E9817EFE81
+	for <lists+linux-xfs@lfdr.de>; Sat, 18 Nov 2023 09:22:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbjKRD6Z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Nov 2023 22:58:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44756 "EHLO
+        id S229664AbjKRIWv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 18 Nov 2023 03:22:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbjKRD6Z (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Nov 2023 22:58:25 -0500
-Received: from mail.durme.pl (mail.durme.pl [217.182.69.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814E1D79
-        for <linux-xfs@vger.kernel.org>; Fri, 17 Nov 2023 19:58:22 -0800 (PST)
-Received: by mail.durme.pl (Postfix, from userid 1002)
-        id 94E4F61A47; Thu, 16 Nov 2023 08:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=durme.pl; s=mail;
-        t=1700124911; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
-        h=Date:From:To:Subject:From;
-        b=Lw3v1wv71b/VaPbknAc1+NGnyxtN8ZUr79GmDkh8YaYC3zRlcLNoDV8KWeamE/PHY
-         IawOYNWBQoyKeZHNXNSoT1OHLU7dv5pZRkRhr18UdA8oCLv/ty5FolLRgDI4xmPvSD
-         z3A58YUoqRBvEuiv2zbmfcyt0ORcwrX31DY5o46ndHhokkHojq3E8v6xoydar0esxv
-         En6j1+hjgT9r6zYYxX/B8v7ps9TVEjknnXLGQaBvUYDssFWShsa3VG6sXLFhxjYrrp
-         TsTCm13BBMxEnhmF72GpsgMcpoLmBq7V4GMEZY2dd+zyJu0G6qKFfNziuzb3IZVxmz
-         ++0ZMr0Cl0WZg==
-Received: by mail.durme.pl for <linux-xfs@vger.kernel.org>; Thu, 16 Nov 2023 08:46:25 GMT
-Message-ID: <20231116074501-0.1.5j.rq9m.0.ojo5059r7l@durme.pl>
-Date:   Thu, 16 Nov 2023 08:46:25 GMT
-From:   "Krystian Wieczorek" <krystian.wieczorek@durme.pl>
-To:     <linux-xfs@vger.kernel.org>
-Subject: W sprawie samochodu
-X-Mailer: mail.durme.pl
+        with ESMTP id S229449AbjKRIWv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 18 Nov 2023 03:22:51 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A6BAD6A
+        for <linux-xfs@vger.kernel.org>; Sat, 18 Nov 2023 00:22:46 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43996C433C7;
+        Sat, 18 Nov 2023 08:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1700295765;
+        bh=TZPMn/MAA1ndauppHbEL1Zh6Gr/+Tvjm2NLYGYsMOcc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IQO4XFahKU/LZS6DKdGxC7jiNEJTjl4sM7w+UiQB4YEGs5iuwTUt+ErStom6ffsMc
+         ZE1Nh/oZT6mzqlPo+iPnaFd1tIlvRpbbWEKfCzxD08K9UOTdLem81YIT4sYWD95Lf/
+         jcdw5WnMF9Jsx/wHkufXabYIxYtJGeB0S5RB3u4d55LvgFI5ei86w/AWQaxPmBH06d
+         hLmRSfAvLfLE9Ybnh8LAG6fe2yGCsrN05qyrEtesASIv5Xi43LaPEJwWkDZUMZCuES
+         lsWBOMP0wgUoTJBeVdZ4X+JxV/YROYGNb9svXGXDnBVGMZO3y4u2AhoAHC+Rwd/dp8
+         H6TPEKK7Gmijg==
+User-agent: mu4e 1.8.10; emacs 27.1
+From:   Chandan Babu R <chandanbabu@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     ailiop@suse.com, chandanbabu@kernel.org, dchinner@redhat.com,
+        djwong@kernel.org, hch@lst.de, holger@applied-asynchrony.com,
+        leah.rumancik@gmail.com, leo.lilong@huawei.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        osandov@fb.com, willy@infradead.org
+Subject: [GIT PULL] xfs: bug fixes for 6.7
+Date:   Sat, 18 Nov 2023 13:46:27 +0530
+Message-ID: <87zfzb31yl.fsf@debian-BULLSEYE-live-builder-AMD64>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hi Linus,
 
-chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
-, je=C5=9Bli chodzi o system monitoringu GPS.
+Please pull this branch with changes for xfs for 6.7-rc2. The changes are
+limited to only bug fixes whose summary is provided below.
 
-Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
-e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
-a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
+I did a test-merge with the main upstream branch as of a few minutes ago and
+didn't see any conflicts.  Please let me know if you encounter any problems.
 
-Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
-dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
-szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
-mne znaczenie.
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 
-Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
-b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
 
+are available in the Git repository at:
 
-Pozdrawiam
-Krystian Wieczorek
+  https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-6.7-fixes-1
+
+for you to fetch changes up to 7930d9e103700cde15833638855b750715c12091:
+
+  xfs: recovery should not clear di_flushiter unconditionally (2023-11-13 09:11:41 +0530)
+
+----------------------------------------------------------------
+Bug fixes for 6.7-rc2:
+
+ * Fix deadlock arising due to intent items in AIL not being cleared when log
+   recovery fails.
+ * Fix stale data exposure bug when remapping COW fork extents to data fork.
+ * Fix deadlock when data device flush fails.
+ * Fix AGFL minimum size calculation.
+ * Select DEBUG_FS instead of XFS_DEBUG when XFS_ONLINE_SCRUB_STATS is
+   selected.
+ * Fix corruption of log inode's extent count field when NREXT64 feature is
+ enabled.
+
+Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
+
+----------------------------------------------------------------
+Anthony Iliopoulos (1):
+      xfs: fix again select in kconfig XFS_ONLINE_SCRUB_STATS
+
+Christoph Hellwig (1):
+      xfs: only remap the written blocks in xfs_reflink_end_cow_extent
+
+Dave Chinner (2):
+      xfs: inode recovery does not validate the recovered inode
+      xfs: recovery should not clear di_flushiter unconditionally
+
+Leah Rumancik (1):
+      xfs: up(ic_sema) if flushing data device fails
+
+Long Li (2):
+      xfs: factor out xfs_defer_pending_abort
+      xfs: abort intent items when recovery intents fail
+
+Matthew Wilcox (Oracle) (1):
+      XFS: Update MAINTAINERS to catch all XFS documentation
+
+Omar Sandoval (1):
+      xfs: fix internal error from AGFL exhaustion
+
+ MAINTAINERS                     |  3 +--
+ fs/xfs/Kconfig                  |  2 +-
+ fs/xfs/libxfs/xfs_alloc.c       | 27 +++++++++++++++++++++---
+ fs/xfs/libxfs/xfs_defer.c       | 28 ++++++++++++++++---------
+ fs/xfs/libxfs/xfs_defer.h       |  2 +-
+ fs/xfs/libxfs/xfs_inode_buf.c   |  3 +++
+ fs/xfs/xfs_inode_item_recover.c | 46 +++++++++++++++++++++++++++--------------
+ fs/xfs/xfs_log.c                | 23 +++++++++++----------
+ fs/xfs/xfs_log_recover.c        |  2 +-
+ fs/xfs/xfs_reflink.c            |  1 +
+ 10 files changed, 92 insertions(+), 45 deletions(-)
