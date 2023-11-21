@@ -2,95 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 205A67F2BCF
-	for <lists+linux-xfs@lfdr.de>; Tue, 21 Nov 2023 12:35:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB57E7F2C00
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 Nov 2023 12:47:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233927AbjKULfm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 21 Nov 2023 06:35:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58956 "EHLO
+        id S230428AbjKULrI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 21 Nov 2023 06:47:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjKULfi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Nov 2023 06:35:38 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B9510F;
-        Tue, 21 Nov 2023 03:35:35 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A8579C43397;
-        Tue, 21 Nov 2023 11:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700566534;
-        bh=oGAuwTicPekfqewJ5UASm1lSeWTImG5/jlwpiQOtNH4=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-        b=DmeiffTgUDp1rTSuWTBIH0noGc9+pfAunRCpFV9RP0agCAYOJzagLRJov8sQNK0xv
-         SJHrbaVQHLiOupZd7a2mFgTPUOXUp1/154spaLavMpRostzBSiepUHgTynMYwynL7V
-         3IWdHMmh7cu/rNHtFrBKwX7bDNuHcCaINujM6HooCmFdJFFadfIQHJoVQ8MqKvWSDD
-         bxrOGJZrSBVZwMWvNFFVIEvPlI0+Enpzu1MjAdxxvMQPGBbfA23rjxAKKejtTee+aF
-         3ONz2EzCq/xDGO7VFGmvWMcRlw7AADadVcVnoVlD2K5aWeX8+w9EOgavdmRMLJlO6E
-         GM4SDwgE1dRgA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEB9C61D96;
-        Tue, 21 Nov 2023 11:35:34 +0000 (UTC)
-From:   Joel Granados via B4 Relay 
-        <devnull+j.granados.samsung.com@kernel.org>
-Date:   Tue, 21 Nov 2023 12:35:14 +0100
-Subject: [PATCH v2 4/4] coda: Remove the now superfluous sentinel elements
- from ctl_table array
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231121-jag-sysctl_remove_empty_elem_fs-v2-4-39eab723a034@samsung.com>
-References: <20231121-jag-sysctl_remove_empty_elem_fs-v2-0-39eab723a034@samsung.com>
-In-Reply-To: <20231121-jag-sysctl_remove_empty_elem_fs-v2-0-39eab723a034@samsung.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-        josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Matthew Bobrowski <repnop@google.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        with ESMTP id S229561AbjKULrH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 21 Nov 2023 06:47:07 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8172110F;
+        Tue, 21 Nov 2023 03:47:04 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6c3363a2b93so5158598b3a.3;
+        Tue, 21 Nov 2023 03:47:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700567224; x=1701172024; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Dh0Qezs/2ZRqRfDGUZZwszGFFNv4uXTXsmAQTNvTJ8=;
+        b=Oj/wVkQQqn1YGU3a+RXqlKqr3ABt8yZuvW1qxS0H95dTAclQibbgrG8uHr6/W9bj/s
+         zDsb9xU75Yk1cCgOXByQNi6cfjl2D8MJenfBHH8GS7oIhNzgTzjPNlR0H8dYWYv1F32a
+         l2MBvGNugGYMzRVeXuIeoikkhMz8IW77SZJu49JQCxEcw+ojYM3cqr6Uy89QVstteC3E
+         rxuTWwknuhRvW0CWiaCmVJSfqZAit5vfE8YOP0UqkVBu+L1WKWE3WbQy62MJeaxrp3ya
+         qoeR8VQ3OF9ZnZRHjPwfQ5VtnBToV6Lf+ys/LpvE/4WteHPX5RI+hzxq6OxsNyjwm35c
+         3Ulw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700567224; x=1701172024;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Dh0Qezs/2ZRqRfDGUZZwszGFFNv4uXTXsmAQTNvTJ8=;
+        b=dKYRpq4hI7nUy6wET6svhmG9YMCQl3X5362YxqFBzGcZQAStEGm/Qxk+mwiCpdN9eb
+         hiIW7m6eQTLG/ZbIJuOOzrFLOQeqBNkBJta+poA++IwiDai1MSxO5tIP+ChMnuckOLua
+         9LcptoFA7BvxhaXyKmIjHKmtPV4ZKZs18f5A/Yb9V/SX8p4EO7dvq5Tpo5RBoqrA1+3+
+         09cBfYJWDfKy4AyBOc2XvG8B/92Xalbxf9umM0pzrQYlkj751dTd6lcqBI3RSWBfiqr/
+         C6UpBbvP6sFWWT3Dv2elbMFTxIm0xyQQnhGlqGVlAr/9vp0rXxd1N9gX42pM2hyS/5N3
+         exSA==
+X-Gm-Message-State: AOJu0YyNRlMWMCDnev61kDlzC0U9yGchRHRZo37X1mP1Sv+1gAfhdtqk
+        EXBDLD0Jhpld8FpC0F+iGRQ=
+X-Google-Smtp-Source: AGHT+IEmfo36HWN/pX5H0L9nVyVz7Ausj0X4uQHMXBuvcd8rGMkt4Nlo44xIhzq9d1YRgU2fBl6rKA==
+X-Received: by 2002:a05:6a20:7353:b0:18a:da5a:8a62 with SMTP id v19-20020a056a20735300b0018ada5a8a62mr1976876pzc.59.1700567223928;
+        Tue, 21 Nov 2023 03:47:03 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id fh33-20020a056a00392100b006c06779e593sm7971334pfb.16.2023.11.21.03.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Nov 2023 03:47:03 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+        id E3EDF102106CB; Tue, 21 Nov 2023 18:47:01 +0700 (WIB)
+Date:   Tue, 21 Nov 2023 18:47:01 +0700
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     Vegard Nossum <vegard.nossum@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        Linux XFS <linux-xfs@vger.kernel.org>,
+        Linux Kernel Workflows <workflows@vger.kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Chandan Babu R <chandan.babu@oracle.com>,
         "Darrick J. Wong" <djwong@kernel.org>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu
-Cc:     linux-cachefs@redhat.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@lists.linux.dev,
-        fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, Joel Granados <j.granados@samsung.com>
-X-Mailer: b4 0.13-dev-86aa5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=826; i=j.granados@samsung.com;
- h=from:subject:message-id; bh=EW/W6zZslOuVBpUJvlaE+2AnAGMLV/WhhzCxxx+6aVM=;
- b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBlXJYEhjHRDFWxlKQCSEU/qOb5kLqYz6u3U07bi
- 5UcDbFrWhKJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZVyWBAAKCRC6l81St5ZB
- T28vC/0S1zrvnTbJB+9oXn+IU0QpNx0mcFoiShnCrNbA/8SKyDultWZ4UpuxummzF7Lp+lD5UN+
- 4kqlWdmqD0V15U9xcN+pg38JPAovwP6moJBKy0HxvGy5aKxZ7+Y4R2MALVzBu8ZHTVamwzcZBoQ
- y0Xxbaj4s9W7qSDKOoaeDdm3TElOl7O20irSXZ9xiPuhHRXyCKA3vGE0thmz9U0qY1cg6LkLgPm
- v7Bu7tG7wm6zAxw+5LxN1bNfF50whGqTLF4dxL892xn7dKSHteqNMG72ZipSkLz6DTnnZ16ywxy
- tGL1fmgTYzVDSWs26SDMONstCNERLXUuQgaWOxESQeWhJqyuEmU0SQpHvkMFZvGrrbfBvWc86uV
- UydKbDOAO1UEpnjCajlfO8PErya2zHHi6+08qjXLmzyXf6q6ubr31K9RqsKpvaZ6Ot3MGk/sRDV
- 2H+R3PXl3yyyRe8rC/hT8qKksu59/IYAi6vOcEVkAes4tJCtjzMJ4au9zv7osWjoRyWUs=
-X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
- fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
-X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with auth_id=70
-X-Original-From: Joel Granados <j.granados@samsung.com>
-Reply-To: <j.granados@samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Allison Henderson <allison.henderson@oracle.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Charles Han <hanchunchao@inspur.com>
+Subject: Re: [PATCH] Documentation: xfs: consolidate XFS docs into its own
+ subdirectory
+Message-ID: <ZVyYtQ83KwaOtCkL@archie.me>
+References: <20231121095658.28254-1-bagasdotme@gmail.com>
+ <bbf74f50-c026-4f72-8437-8d15821c0340@oracle.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vb95jMlk3ed/EOb6"
+Content-Disposition: inline
+In-Reply-To: <bbf74f50-c026-4f72-8437-8d15821c0340@oracle.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -99,34 +87,61 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Joel Granados <j.granados@samsung.com>
 
-This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which
-will reduce the overall build time size of the kernel and run time
-memory bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+--vb95jMlk3ed/EOb6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Remove empty sentinel from coda_table
+On Tue, Nov 21, 2023 at 11:16:16AM +0100, Vegard Nossum wrote:
+>=20
+> On 21/11/2023 10:56, Bagas Sanjaya wrote:
+> > XFS docs are currently in upper-level Documentation/filesystems.
+> > Although these are currently 4 docs, they are already outstanding as
+> > a group and can be moved to its own subdirectory.
+> >=20
+> > Consolidate them into Documentation/filesystems/xfs/.
+> >=20
+> > Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> > ---
+> >   Documentation/filesystems/index.rst                |  5 +----
+> >   Documentation/filesystems/xfs/index.rst            | 14 ++++++++++++++
+> >   .../{ =3D> xfs}/xfs-delayed-logging-design.rst       |  0
+> >   .../{ =3D> xfs}/xfs-maintainer-entry-profile.rst     |  0
+> >   .../{ =3D> xfs}/xfs-online-fsck-design.rst           |  0
+> >   .../{ =3D> xfs}/xfs-self-describing-metadata.rst     |  0
+> >   .../maintainer/maintainer-entry-profile.rst        |  2 +-
+> >   7 files changed, 16 insertions(+), 5 deletions(-)
+> >   create mode 100644 Documentation/filesystems/xfs/index.rst
+> >   rename Documentation/filesystems/{ =3D> xfs}/xfs-delayed-logging-desi=
+gn.rst (100%)
+> >   rename Documentation/filesystems/{ =3D> xfs}/xfs-maintainer-entry-pro=
+file.rst (100%)
+> >   rename Documentation/filesystems/{ =3D> xfs}/xfs-online-fsck-design.r=
+st (100%)
+> >   rename Documentation/filesystems/{ =3D> xfs}/xfs-self-describing-meta=
+data.rst (100%)
+>=20
+> I think you need to update MAINTAINERS as well.
+>=20
+> A project-wide git grep for the document names should have turned it up.
 
-Signed-off-by: Joel Granados <j.granados@samsung.com>
----
- fs/coda/sysctl.c | 1 -
- 1 file changed, 1 deletion(-)
+OK, will fix in v2.
 
-diff --git a/fs/coda/sysctl.c b/fs/coda/sysctl.c
-index a247c14aaab7..9f2d5743e2c8 100644
---- a/fs/coda/sysctl.c
-+++ b/fs/coda/sysctl.c
-@@ -36,7 +36,6 @@ static struct ctl_table coda_table[] = {
- 		.mode		= 0600,
- 		.proc_handler	= proc_dointvec
- 	},
--	{}
- };
- 
- void coda_sysctl_init(void)
+Thanks for the suggestion.
 
--- 
-2.30.2
+--=20
+An old man doll... just what I always wanted! - Clara
 
+--vb95jMlk3ed/EOb6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZVyYtQAKCRD2uYlJVVFO
+o6FAAQCgHyPhsgH3UuKype/Cd5adL0D6qda0lLt60JZiGqWaGAD9HNtW9qQ3A+Kw
+tf8Tfv/syImaeaPMNLMH2ssm9G33Fw4=
+=bpQl
+-----END PGP SIGNATURE-----
+
+--vb95jMlk3ed/EOb6--
