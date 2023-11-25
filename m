@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-87-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-88-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 774667F888F
-	for <lists+linux-xfs@lfdr.de>; Sat, 25 Nov 2023 07:11:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19EA17F8890
+	for <lists+linux-xfs@lfdr.de>; Sat, 25 Nov 2023 07:12:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D681B21335
-	for <lists+linux-xfs@lfdr.de>; Sat, 25 Nov 2023 06:11:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A04F7B21319
+	for <lists+linux-xfs@lfdr.de>; Sat, 25 Nov 2023 06:12:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79BF04435;
-	Sat, 25 Nov 2023 06:11:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 908954435;
+	Sat, 25 Nov 2023 06:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PSn4lxMX"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qp4uJVME"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E7C171D
-	for <linux-xfs@vger.kernel.org>; Fri, 24 Nov 2023 22:11:19 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B5501723
+	for <linux-xfs@vger.kernel.org>; Fri, 24 Nov 2023 22:12:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lVzP6oWmGXcbbuLpGSYfF2eV+L9jrEz+o8b3znO+7oY=; b=PSn4lxMXIh+DXMSTBpsjpgiEci
-	qF4yKHk73GZcW+kEFBrkBDlQz3heCffk8SGTGNcD8EDi2O/O3dfdtWGKCt2PdD5T3Naxp2pCpOMTZ
-	1noQzaI1fdCMlGCWojgOtSkr5a/Npeor17/WuwM95fywX41NoahaoNNccAt4PsHxYMu0YuCUuvgnZ
-	eo676/mnCQKYBOn7+I4si0y3SkJ9egtxskMulkaCfLEz05cqLHMngZRFdP3IlwjxCJG9jyKVzHj4D
-	RpbfI5+9BetaIhcfjEf8DGrdYQStbmmI3E0lcT2Sxwp+g86+gCt+ftJmKXox4vRjj5vxfOKWce3zf
-	M6xLh0bg==;
+	bh=ENdh52SjyVCrTMNCHKA0P/wmeR1+bEPuNBWZfxdYWKg=; b=Qp4uJVMEZv3OwKSh5wkrp5o1yZ
+	9PuL3WVvqc9hIIKK+KkfOyvl5ABav9fwls11OFlIltg+GbVn1QLSOG35Q/SfNtsX+8iCufkiomCAy
+	UzUaFmypzY6OYkF9VI8AXRR5Viyp9CjpYGNg8lTsmw75WI69GU7ZIRCXZrjf9pVR6HiXBWeAULwKm
+	cOsiidUVtohaqyZnwbGlIYecJ87yymnrdMGdgW2Hq6wjAOrazQGjUMnRi6v1/MFFMSNfXdyiQOPG3
+	XLJNYvBmGbFcaDAc1PYYpL/gu/0LkFhXOkWg6I1tpCxmuek8f3bnP9m93QmKhCiBmStxlYcu6vJzj
+	ybN1DRFA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6lss-008em0-0S;
-	Sat, 25 Nov 2023 06:11:18 +0000
-Date: Fri, 24 Nov 2023 22:11:18 -0800
+	id 1r6luH-008f28-28;
+	Sat, 25 Nov 2023 06:12:45 +0000
+Date: Fri, 24 Nov 2023 22:12:45 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/5] xfs: repair free space btrees
-Message-ID: <ZWGQBpRw047hCdu4@infradead.org>
+Subject: Re: [PATCH 4/5] xfs: repair inode btrees
+Message-ID: <ZWGQXZckfk6KvocG@infradead.org>
 References: <170086926983.2770967.13303859275299344660.stgit@frogsfrogsfrogs>
- <170086927042.2770967.1697193414262580501.stgit@frogsfrogsfrogs>
+ <170086927060.2770967.9879944169477785031.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,43 +47,19 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170086927042.2770967.1697193414262580501.stgit@frogsfrogsfrogs>
+In-Reply-To: <170086927060.2770967.9879944169477785031.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Nov 24, 2023 at 03:50:33PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Rebuild the free space btrees from the gaps in the rmap btree.
-
-This commit message feels a bit sparse for the amount of code added,
-although I can't really offer a good idea of what to add.
-
-Otherwise just two comments on the interaction with the rest of the
-xfs code, I'll try to digest the new repair code a bit more in the
-meantime.
-
-> +#ifdef CONFIG_XFS_ONLINE_REPAIR
-> +	/*
-> +	 * Alternate btree heights so that online repair won't trip the write
-> +	 * verifiers while rebuilding the AG btrees.
-> +	 */
-> +	uint8_t		pagf_alt_levels[XFS_BTNUM_AGF];
-> +#endif
-
-Alternate and the alt_ prefix doesn't feel very descriptive.  As far as
-I can tell these are about an ongoign repair, so as a at lest somewhat
-better choice call it "pagf_repair_levels"?
-
+> +/* Simple checks for inode records. */
 > +xfs_failaddr_t
-> +xfs_alloc_check_irec(
-> +	struct xfs_btree_cur		*cur,
-> +	const struct xfs_alloc_rec_incore *irec)
+> +xfs_inobt_check_irec(
+> +	struct xfs_btree_cur			*cur,
+> +	const struct xfs_inobt_rec_incore	*irec)
 > +{
-> +	return xfs_alloc_check_perag_irec(cur->bc_ag.pag, irec);
+> +	return xfs_inobt_check_perag_irec(cur->bc_ag.pag, irec);
 > +}
 
-Is there much of a point in even keeping this wrapper vs just
-switching xfs_alloc_check_irec to pass the pag instead of the
-cursor?
+Same comment about just dropping the wrapper.  Otherwise I'll
+need more digestion time for the new code.
 
 
