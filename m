@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-279-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-280-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2B957FE87D
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 06:08:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6028D7FE882
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 06:10:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D9E791C20B79
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 05:08:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77FB91C20B77
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 05:10:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A58C6134A6;
-	Thu, 30 Nov 2023 05:07:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D35F3134A8;
+	Thu, 30 Nov 2023 05:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fCgGIUbp"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mIiims6S"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D089F10D5
-	for <linux-xfs@vger.kernel.org>; Wed, 29 Nov 2023 21:07:56 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7184F10D7
+	for <linux-xfs@vger.kernel.org>; Wed, 29 Nov 2023 21:10:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HCFBD0tIaWP0e1B6fHiJW5cjihGcVjeQRpa6pjtqfAU=; b=fCgGIUbpUrAFPKM72emMZInu0r
-	sPFTDnuD4E1pVeCLUydJVTh9zhI5Pn2YtH1wvuJQ8P18lp+e015LdydfjRXOZIPkqy0lc6DrEm+XM
-	W9jwm+hAi9+K5twZ2ROCWFUlb5zPr35lnarsMpoQAzNWXV55a8nWgBxNYVmUdfPd4v1iJo3qm+a5+
-	TPGdzOKm67nRm1ZMPuR5ZcL2DkrV32IbFkyOpmJ5isFcjVoK3zmmrfW+gJ6WQEdG7EjkYK6e/3Uns
-	iQgsu417D09Bvmty5SOwSJtMzHV2k/gFuGyHFXnudAklVokrAjmRr1lmziG4mioSoqdEp8igcjUQ8
-	Eu8miPYw==;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=mIiims6SbmeG6GpqB6xKPPbzj7
+	4I9J0S7WKUOgP88OYVQLMdxDRs6auH84tDt3Wap44rV8h/AtDB9ZkcwL4XSBo4tMS2X1ozOW/vb8n
+	RY0YZ4q4DF+qxcOmnale2KMSDGf2bxvuavMRYloVeA1l0O3ULVTU6QLA76c59DXIKKXQG3aAUeqHi
+	K0YFlflOKe5rXiFMuNn/mAe+ky3YqyOfO2V/2JHbiRMeR9B5j4f4hQEAT52EEg51dmqBu2ky2dB72
+	duVnrwVlWvXlx1gTdzmbftzm8cfGuffgYV+v90fpLsDc2KsTYD1uYc+TobraZ7K060lGqeUIeCitS
+	uYKtLoTg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8ZHI-009wv1-2L;
-	Thu, 30 Nov 2023 05:07:56 +0000
-Date: Wed, 29 Nov 2023 21:07:56 -0800
+	id 1r8ZJs-009x7F-16;
+	Thu, 30 Nov 2023 05:10:36 +0000
+Date: Wed, 29 Nov 2023 21:10:36 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/5] xfs: repair inode fork block mapping data structures
-Message-ID: <ZWgYrIDVl992ZIsO@infradead.org>
+Subject: Re: [PATCH 5/5] xfs: repair problems in CoW forks
+Message-ID: <ZWgZTABZYWmIXogi@infradead.org>
 References: <170086927899.2771366.12096620230080096884.stgit@frogsfrogsfrogs>
- <170086927942.2771366.11233494127863883983.stgit@frogsfrogsfrogs>
+ <170086927990.2771366.1771440587476913997.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,61 +47,10 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170086927942.2771366.11233494127863883983.stgit@frogsfrogsfrogs>
+In-Reply-To: <170086927990.2771366.1771440587476913997.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Fri, Nov 24, 2023 at 03:53:25PM -0800, Darrick J. Wong wrote:
-> +static int
-> +xrep_bmap_extent_cmp(
-> +	const void			*a,
-> +	const void			*b)
-> +{
-> +	xfs_fileoff_t			ao;
-> +	xfs_fileoff_t			bo;
-> +
-> +	ao = xfs_bmbt_disk_get_startoff((struct xfs_bmbt_rec *)a);
-> +	bo = xfs_bmbt_disk_get_startoff((struct xfs_bmbt_rec *)b);
+Looks good:
 
-It would be nice if we could just have local variables for the
-xfs_bmbt_recs and not need casts.  I guess for that
-xfs_bmbt_disk_get_startoff would need to take a const argument?
-
-Probably something for later.
-
-> +	if (whichfork == XFS_ATTR_FORK)
-> +		return 0;
-
-Nit: I'd probably just split the data fork specific validation
-into a separate helper to keep things nicely organized.
-
-> +	/*
-> +	 * No need to waste time scanning for shared extents if the inode is
-> +	 * already marked.
-> +	 */
-> +	if (whichfork == XFS_DATA_FORK && xfs_is_reflink_inode(sc->ip))
-> +		rb->shared_extents = true;
-
-The comment doesn't seem to match the code.
-
-> +/*
-> + * Try to reserve more blocks for a transaction.
-> + *
-> + * This is for callers that need to attach resources to a transaction, scan
-> + * those resources to determine the space reservation requirements, and then
-> + * modify the attached resources.  In other words, online repair.  This can
-> + * fail due to ENOSPC, so the caller must be able to cancel the transaction
-> + * without shutting down the fs.
-> + */
-> +int
-> +xfs_trans_reserve_more(
-> +	struct xfs_trans	*tp,
-> +	unsigned int		blocks,
-> +	unsigned int		rtextents)
-
-This basically seems to duplicate xfs_trans_reserve except that it skips
-the log reservation.  What about just allowing to pass a NULL resp
-agument to xfs_trans_reserve to skip the log reservation and reuse the
-code?
-
-Otherwise this looks good to me.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
