@@ -1,165 +1,179 @@
-Return-Path: <linux-xfs+bounces-296-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-298-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A9617FEFBE
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 14:09:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69E897FF0D2
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 14:53:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5B7CD1C20BAA
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 13:09:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 151F81F20F05
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Nov 2023 13:53:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BED73C695;
-	Thu, 30 Nov 2023 13:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB3794643B;
+	Thu, 30 Nov 2023 13:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="j0M+lOl+"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C5DD6C
-	for <linux-xfs@vger.kernel.org>; Thu, 30 Nov 2023 05:09:26 -0800 (PST)
-Received: from kwepemi500009.china.huawei.com (unknown [172.30.72.56])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4SgxMp3pkszWhpW;
-	Thu, 30 Nov 2023 21:08:38 +0800 (CST)
-Received: from localhost (10.175.127.227) by kwepemi500009.china.huawei.com
- (7.221.188.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 30 Nov
- 2023 21:09:23 +0800
-Date: Thu, 30 Nov 2023 21:13:15 +0800
-From: Long Li <leo.lilong@huawei.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-CC: <linux-xfs@vger.kernel.org>, <chandanbabu@kernel.org>, <hch@lst.de>
-Subject: Re: [PATCH 5/7] xfs: recreate work items when recovering intent items
-Message-ID: <20231130131315.GA1772751@ceph-admin>
-References: <170120318847.13206.17051442307252477333.stgit@frogsfrogsfrogs>
- <170120321729.13206.3574213430456423200.stgit@frogsfrogsfrogs>
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97900170C;
+	Thu, 30 Nov 2023 05:53:35 -0800 (PST)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AUDnXcU001367;
+	Thu, 30 Nov 2023 13:53:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=HeP1XueRhjsHpWAhcUWUNoyK0cnx/fEeEMwzhs6stek=;
+ b=j0M+lOl+IpGdqDyYvXUzR7gbQAgSqThCFgfMYqKNSKd8sbyOQiIWq+1rSYlpbnJ3T/1w
+ UyxeBzbZEw+DYcO38YmgbMINrTYt1GhA2kJaUxURDpSWzF0Gmno2dgqpG2oCY7KatdDp
+ tvq39mWK1Q7+n/43FwGJuq0m4XMGg31GJvBieIkV6++gBIBORymAPwoqAjXMun7RmB9R
+ FR1UiaQ2+kOsywwmAsyfRnl193efWwThZC1jaKbht1dvmZVjRRZ3vQofcrOQtJBfO/T7
+ jwpcd0f5E0wtKZMt1/UWMtcmhfkG8Ef//wsoBrHsOOeg96ZT4dBM81ZtuCACOUdjJHp+ Dw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3upu2vh3b1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Nov 2023 13:53:25 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AUDniCu002718;
+	Thu, 30 Nov 2023 13:53:24 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3upu2vh3ap-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Nov 2023 13:53:24 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AUDnBHU029486;
+	Thu, 30 Nov 2023 13:53:23 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ukwfke1qv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Nov 2023 13:53:23 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AUDrLWM23528130
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Nov 2023 13:53:22 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D6CD82004D;
+	Thu, 30 Nov 2023 13:53:21 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7149B20043;
+	Thu, 30 Nov 2023 13:53:19 +0000 (GMT)
+Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com.com (unknown [9.43.76.38])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Nov 2023 13:53:19 +0000 (GMT)
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
+        "Darrick J . Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        John Garry <john.g.garry@oracle.com>, dchinner@redhat.com
+Subject: [RFC 0/7] ext4: Allocator changes for atomic write support with DIO
+Date: Thu, 30 Nov 2023 19:23:08 +0530
+Message-Id: <cover.1701339358.git.ojaswin@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hBD7kWuO7Nb_vj1mPT_00MLQichdLJ_H
+X-Proofpoint-ORIG-GUID: zeJyHyfHU1L2PEvisQEtnw9KtFa1_K0H
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <170120321729.13206.3574213430456423200.stgit@frogsfrogsfrogs>
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500009.china.huawei.com (7.221.188.199)
-X-CFilter-Loop: Reflected
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-30_12,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 phishscore=0 malwarescore=0 spamscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311300102
 
-On Tue, Nov 28, 2023 at 12:26:57PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Recreate work items for each xfs_defer_pending object when we are
-> recovering intent items.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  fs/xfs/libxfs/xfs_defer.h  |    9 ++++
->  fs/xfs/xfs_attr_item.c     |   94 +++++++++++++++++++++----------------
->  fs/xfs/xfs_bmap_item.c     |   56 ++++++++++++++--------
->  fs/xfs/xfs_extfree_item.c  |   50 ++++++++++++-------
->  fs/xfs/xfs_refcount_item.c |   61 +++++++++++-------------
->  fs/xfs/xfs_rmap_item.c     |  113 ++++++++++++++++++++++++--------------------
->  6 files changed, 221 insertions(+), 162 deletions(-)
-> 
-> 
-> diff --git a/fs/xfs/libxfs/xfs_defer.h b/fs/xfs/libxfs/xfs_defer.h
-> index 3c923a728323..ee1e76d3f7e8 100644
-> --- a/fs/xfs/libxfs/xfs_defer.h
-> +++ b/fs/xfs/libxfs/xfs_defer.h
-> @@ -130,6 +130,15 @@ struct xfs_defer_pending *xfs_defer_start_recovery(struct xfs_log_item *lip,
->  void xfs_defer_cancel_recovery(struct xfs_mount *mp,
->  		struct xfs_defer_pending *dfp);
->  
-> +static inline void
-> +xfs_defer_recover_work_item(
-> +	struct xfs_defer_pending	*dfp,
-> +	struct list_head		*work)
-> +{
-> +	list_add_tail(work, &dfp->dfp_work);
-> +	dfp->dfp_count++;
-> +}
-> +
->  int __init xfs_defer_init_item_caches(void);
->  void xfs_defer_destroy_item_caches(void);
->  
-> diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-> index 82775e9537df..fbc88325848a 100644
-> --- a/fs/xfs/xfs_attr_item.c
-> +++ b/fs/xfs/xfs_attr_item.c
-> @@ -539,47 +539,22 @@ xfs_attri_validate(
->  	return xfs_verify_ino(mp, attrp->alfi_ino);
->  }
->  
-> -/*
-> - * Process an attr intent item that was recovered from the log.  We need to
-> - * delete the attr that it describes.
-> - */
-> -STATIC int
-> -xfs_attri_item_recover(
-> +static inline struct xfs_attr_intent *
-> +xfs_attri_recover_work(
-> +	struct xfs_mount		*mp,
->  	struct xfs_defer_pending	*dfp,
-> -	struct list_head		*capture_list)
-> +	struct xfs_attri_log_format	*attrp,
-> +	struct xfs_inode		*ip,
-> +	struct xfs_attri_log_nameval	*nv)
->  {
-> -	struct xfs_log_item		*lip = dfp->dfp_intent;
-> -	struct xfs_attri_log_item	*attrip = ATTRI_ITEM(lip);
->  	struct xfs_attr_intent		*attr;
-> -	struct xfs_mount		*mp = lip->li_log->l_mp;
-> -	struct xfs_inode		*ip;
->  	struct xfs_da_args		*args;
-> -	struct xfs_trans		*tp;
-> -	struct xfs_trans_res		resv;
-> -	struct xfs_attri_log_format	*attrp;
-> -	struct xfs_attri_log_nameval	*nv = attrip->attri_nameval;
-> -	int				error;
-> -	int				total;
-> -	int				local;
-> -	struct xfs_attrd_log_item	*done_item = NULL;
-> -
-> -	/*
-> -	 * First check the validity of the attr described by the ATTRI.  If any
-> -	 * are bad, then assume that all are bad and just toss the ATTRI.
-> -	 */
-> -	attrp = &attrip->attri_format;
-> -	if (!xfs_attri_validate(mp, attrp) ||
-> -	    !xfs_attr_namecheck(nv->name.i_addr, nv->name.i_len))
-> -		return -EFSCORRUPTED;
-> -
-> -	error = xlog_recover_iget(mp,  attrp->alfi_ino, &ip);
-> -	if (error)
-> -		return error;
->  
->  	attr = kmem_zalloc(sizeof(struct xfs_attr_intent) +
->  			   sizeof(struct xfs_da_args), KM_NOFS);
->  	args = (struct xfs_da_args *)(attr + 1);
->  
-> +	INIT_LIST_HEAD(&attr->xattri_list);
->  	attr->xattri_da_args = args;
->  	attr->xattri_op_flags = attrp->alfi_op_flags &
->  						XFS_ATTRI_OP_FLAGS_TYPE_MASK;
-> @@ -607,6 +582,8 @@ xfs_attri_item_recover(
->  	switch (attr->xattri_op_flags) {
->  	case XFS_ATTRI_OP_FLAGS_SET:
->  	case XFS_ATTRI_OP_FLAGS_REPLACE:
-> +		int			local;
-> +
->  		args->value = nv->value.i_addr;
->  		args->valuelen = nv->value.i_len;
->  		args->total = xfs_attr_calc_size(args, &local);
- 
-When I compile the kernel with this set of patches, I get the following error:
+This patch series builds on top of John Gary's atomic direct write 
+patch series [1] and enables this support in ext4. This is a 2 step
+process:
 
-fs/xfs/xfs_attr_item.c: In function ‘xfs_attri_recover_work’:                                            
-fs/xfs/xfs_attr_item.c:585:3: error: a label can only be part of a statement and a declaration is not a statement
-  585 |   int   local;                                                                                   
-      |   ^~~ 
+1. Enable aligned allocation in ext4 mballoc. This allows us to allocate
+power-of-2 aligned physical blocks, which is needed for atomic writes.
 
-Thanks,
-Long Li
+2. Hook the direct IO path in ext4 to use aligned allocation to obtain 
+physical blocks at a given alignment, which is needed for atomic IO. If 
+for any reason we are not able to obtain blocks at given alignment we
+fail the atomic write.
+
+Currently this RFC does not impose any restrictions for atomic and non-atomic
+allocations to any inode,  which also leaves policy decisions to user-space
+as much as possible. So, for example, the user space can:
+
+ * Do an atomic direct IO at any alignment and size provided it
+   satisfies underlying device constraints. The only restriction for now
+   is that it should be power of 2 len and atleast of FS block size.
+
+ * Do any combination of non atomic and atomic writes on the same file
+   in any order. As long as the user space is passing the RWF_ATOMIC flag 
+   to pwritev2() it is guaranteed to do an atomic IO (or fail if not
+   possible).
+
+There are some TODOs on the allocator side which are remaining like...
+
+1.  Fallback to original request size when normalized request size (due to
+    preallocation) allocation is not possible.
+2.  Testing some edge cases.
+
+But since all the basic test scenarios were covered, hence we wanted to get
+this RFC out for discussion on atomic write support for DIO in ext4.
+
+Further points for discussion -
+
+1. We might need an inode flag to identify that the inode has blocks/extents
+atomically allocated. So that other userspace tools do not move the blocks of
+the inode for e.g. during resize/fsck etc.
+  a. Should inode be marked as atomic similar to how we have IS_DAX(inode)
+  implementation? Any thoughts?
+
+2. Should there be support for open flags like O_ATOMIC. So that in case if
+user wants to do only atomic writes to an open fd, then all writes can be
+considered atomic.
+
+3. Do we need to have any feature compat flags for FS? (IMO) It doesn't look
+like since say if there are block allocations done which were done atomically,
+it should not matter to FS w.r.t compatibility.
+
+4. Mostly aligned allocations are required when we don't have data=journal
+mode. So should we return -EIO with data journalling mode for DIO request?
+
+Script to test using pwritev2() can be found here: 
+https://gist.github.com/OjaswinM/e67accee3cbb7832bd3f1a9543c01da9
+
+Regards,
+ojaswin
+
+[1] https://lore.kernel.org/linux-fsdevel/20230929102726.2985188-1-john.g.garry@oracle.com
+
+
+Ojaswin Mujoo (7):
+  iomap: Don't fall back to buffered write if the write is atomic
+  ext4: Factor out size and start prediction from
+    ext4_mb_normalize_request()
+  ext4: add aligned allocation support in mballoc
+  ext4: allow inode preallocation for aligned alloc
+  block: export blkdev_atomic_write_valid() and refactor api
+  ext4: Add aligned allocation support for atomic direct io
+  ext4: Support atomic write for statx
+
+ block/fops.c                |  18 ++-
+ fs/ext4/ext4.h              |  10 +-
+ fs/ext4/extents.c           |  14 ++
+ fs/ext4/file.c              |  49 ++++++
+ fs/ext4/inode.c             | 142 ++++++++++++++++-
+ fs/ext4/mballoc.c           | 302 +++++++++++++++++++++++++-----------
+ fs/iomap/direct-io.c        |   8 +-
+ include/linux/blkdev.h      |   2 +
+ include/trace/events/ext4.h |   2 +
+ 9 files changed, 442 insertions(+), 105 deletions(-)
+
+-- 
+2.39.3
 
 
