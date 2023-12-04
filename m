@@ -1,63 +1,30 @@
-Return-Path: <linux-xfs+bounces-353-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-356-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BBC6802AA4
-	for <lists+linux-xfs@lfdr.de>; Mon,  4 Dec 2023 04:56:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DAEC802AED
+	for <lists+linux-xfs@lfdr.de>; Mon,  4 Dec 2023 05:37:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01EE5B209C0
-	for <lists+linux-xfs@lfdr.de>; Mon,  4 Dec 2023 03:56:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B47ED1C208DE
+	for <lists+linux-xfs@lfdr.de>; Mon,  4 Dec 2023 04:37:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B9F524F;
-	Mon,  4 Dec 2023 03:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QP36I/qA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51C0381E;
+	Mon,  4 Dec 2023 04:37:27 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E0C9B6
-	for <linux-xfs@vger.kernel.org>; Sun,  3 Dec 2023 19:56:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701662175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xNKUQpE6ACEyF1q91AK5Pa8cyyFRcdXFb2KIn9j+Qic=;
-	b=QP36I/qAFqBj6eKjFbvlW+Pyu5EpinFHOFCdzKZs1FR2do15JMGeTxJv2dTDNY4jmY3l0H
-	0x9gPGEJD9L1cpmrlz/YVqfFLdoDBEYiSVoygd4UFN+agYqqGnSXdAoUQydPN56uyULyyF
-	M18dT4dGmh2JkBmOJ2ifVgmWZGX09aw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-325-z5VdyYmhPpumcRg0ll2h0w-1; Sun,
- 03 Dec 2023 22:56:07 -0500
-X-MC-Unique: z5VdyYmhPpumcRg0ll2h0w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 988FF3803515;
-	Mon,  4 Dec 2023 03:56:06 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C4215C1596F;
-	Mon,  4 Dec 2023 03:55:55 +0000 (UTC)
-Date: Mon, 4 Dec 2023 11:55:50 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
-	jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org,
-	chandan.babu@oracle.com, dchinner@redhat.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH 02/21] block: Limit atomic writes according to bio and
- queue limits
-Message-ID: <ZW1NxiEh2x82SOai@fedora>
-References: <20230929102726.2985188-1-john.g.garry@oracle.com>
- <20230929102726.2985188-3-john.g.garry@oracle.com>
- <ZW1FOFWsUGUNLajE@fedora>
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E289392
+	for <linux-xfs@vger.kernel.org>; Sun,  3 Dec 2023 20:37:21 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id AFD3D227A8E; Mon,  4 Dec 2023 05:37:18 +0100 (CET)
+Date: Mon, 4 Dec 2023 05:37:18 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH, RFC] libxfs: check the size of on-disk data structures
+Message-ID: <20231204043718.GA25793@lst.de>
+References: <20231108163316.493089-1-hch@lst.de> <20231109195233.GH1205143@frogsfrogsfrogs> <20231110050846.GA24953@lst.de> <20231201020658.GU361584@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -66,25 +33,40 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZW1FOFWsUGUNLajE@fedora>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <20231201020658.GU361584@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Dec 04, 2023 at 11:19:20AM +0800, Ming Lei wrote:
-> On Fri, Sep 29, 2023 at 10:27:07AM +0000, John Garry wrote:
-> > We rely the block layer always being able to send a bio of size
-> > atomic_write_unit_max without being required to split it due to request
-> > queue or other bio limits.
-> > 
-> > A bio may contain min(BIO_MAX_VECS, limits->max_segments) vectors,
-> > and each vector is at worst case the device logical block size from
-> > direct IO alignment requirement.
-> 
-> Both unit_max and unit_min are applied to FS bio, which is built over
-> single userspace buffer, so only the 1st and last vector can include
+On Thu, Nov 30, 2023 at 06:06:58PM -0800, Darrick J. Wong wrote:
+> I copy-pasta'd the whole mess from compiler_types.h and build_bug.h into
+> include/xfs.h.  It works, but it might be kinda egregious though.
 
-Actually it isn't true for pwritev, and sorry for the noise.
+Oh.  I actually have a local patch to simply switch to static_assert
+as that completly relies on the compiler and gives better output.  I
+haven't even written a proper commit log, but this is it:
 
-Thanks,
-Ming
-
+diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
+index 2f24bd42ac1dd7..3a5581ecb36d4c 100644
+--- a/fs/xfs/xfs_ondisk.h
++++ b/fs/xfs/xfs_ondisk.h
+@@ -7,16 +7,16 @@
+ #define __XFS_ONDISK_H
+ 
+ #define XFS_CHECK_STRUCT_SIZE(structname, size) \
+-	BUILD_BUG_ON_MSG(sizeof(structname) != (size), "XFS: sizeof(" \
+-		#structname ") is wrong, expected " #size)
++	static_assert(sizeof(structname) == (size), \
++		"XFS: sizeof(" #structname ") is wrong, expected " #size)
+ 
+ #define XFS_CHECK_OFFSET(structname, member, off) \
+-	BUILD_BUG_ON_MSG(offsetof(structname, member) != (off), \
++	static_assert(offsetof(structname, member) == (off), \
+ 		"XFS: offsetof(" #structname ", " #member ") is wrong, " \
+ 		"expected " #off)
+ 
+ #define XFS_CHECK_VALUE(value, expected) \
+-	BUILD_BUG_ON_MSG((value) != (expected), \
++	static_assert((value) == (expected), \
+ 		"XFS: value of " #value " is wrong, expected " #expected)
+ 
+ static inline void __init
 
