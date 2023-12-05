@@ -1,111 +1,89 @@
-Return-Path: <linux-xfs+bounces-447-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-448-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07E37804969
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 06:42:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 579EB804971
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 06:45:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA321281483
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 05:42:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 919281C20D4F
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 05:45:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82ABAD2EC;
-	Tue,  5 Dec 2023 05:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A324D2F2;
+	Tue,  5 Dec 2023 05:45:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2XRNkIi"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qOb9FyCp"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E275D2E4
-	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 05:42:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B1C77C433CA
-	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 05:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701754921;
-	bh=IBd0jP+ulM0np2mfcCyyIcVzms3twVPDtuyOJ4HCtOs=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=b2XRNkIimCl55J1sGabZChIj0SAZAo+ep1PajigaUNXybNiI6Qun5H9v1SzNWZX7i
-	 Yg+krTK02nY8aGRJzYf62blYpDOE4nI0SuC38eC+Yg57cvdkfTf/szHVoZneCKlW1R
-	 B/Pbbkz2kHbLTs5xm7r3lNRNxxS2I1WTnwcH/2b8+5xM25vjAJBOKUr+aSX+2xRBOX
-	 lzXkmAEK/pg0Xzvb8KnA5NZxaw+VmASDYzOuUiEfcZSX4aqWWhYdIqN//qjWZPdBGV
-	 IeGXz6856/QJVYTJow8cwCdodIEokgpMlaztIuIXPJZrT1QekeUMPdpY9P509xkahq
-	 qgubgIaE0TbXQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 9F4CEC53BD3; Tue,  5 Dec 2023 05:42:01 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: linux-xfs@vger.kernel.org
-Subject: [Bug 218226] XFS: Assertion failed: bp->b_flags & XBF_DONE, file:
- fs/xfs/xfs_trans_buf.c, line: 241
-Date: Tue, 05 Dec 2023 05:42:01 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: david@fromorbit.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218226-201763-ZlgemB31OS@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218226-201763@https.bugzilla.kernel.org/>
-References: <bug-218226-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640B910F;
+	Mon,  4 Dec 2023 21:45:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Q4Xwwf+R6mg0IVTeK/i6oqCoh3sFn0GWCi0J13JBtfc=; b=qOb9FyCpYK/4KobvP2uwty+RVC
+	aKcs8RCIM1GaB+jEVQmkuGJdy+OoBGLcX1doQi0if7JBzag9665/MK5OtORAivTDbIIcdyUq2OKzV
+	Xx9UbaJnUzGeeh5RsPVPgY4YqT0DJlxUw1VN1F2mTNvBjhpShrX42o5RXnUV/cXjSQUrRLToGUZSE
+	FmCu84mXqdwf31dZ+O2oxaY3dpe0YxR2cKwZT0rDW7WEmsffmHSRy5nKQqPyOJ72usqptScFFNBh6
+	rYGN3D8F7qyjExbcouVqdX/XtjSmjlnWSxIY2bpgheRYBytg9CEj+V1w3MZOcvh3sPXc3Hqk7855F
+	MMIPMB3g==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rAOEM-006KRP-0r;
+	Tue, 05 Dec 2023 05:44:26 +0000
+Date: Mon, 4 Dec 2023 21:44:26 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: j.granados@samsung.com, willy@infradead.org, josh@joshtriplett.org,
+	Kees Cook <keescook@chromium.org>,
+	David Howells <dhowells@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Benjamin LaHaise <bcrl@kvack.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, Jan Kara <jack@suse.cz>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Matthew Bobrowski <repnop@google.com>,
+	Anton Altaparmakov <anton@tuxera.com>,
+	Namjae Jeon <linkinjeon@kernel.org>, Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+	linux-cachefs@redhat.com, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+	linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@lists.linux.dev,
+	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+	codalist@coda.cs.cmu.edu
+Subject: Re: [PATCH v2 0/4] sysctl: Remove sentinel elements from fs dir
+Message-ID: <ZW64um8/nJaxBw5i@bombadil.infradead.org>
+References: <20231121-jag-sysctl_remove_empty_elem_fs-v2-0-39eab723a034@samsung.com>
+ <20231122-undifferenziert-weitschuss-a5d8cc56fbd1@brauner>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231122-undifferenziert-weitschuss-a5d8cc56fbd1@brauner>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218226
+On Wed, Nov 22, 2023 at 03:00:29PM +0100, Christian Brauner wrote:
+> Looks fine,
+> Acked-by: Christian Brauner <brauner@kernel.org>
 
---- Comment #4 from Dave Chinner (david@fromorbit.com) ---
-On Tue, Dec 05, 2023 at 03:22:44AM +0000, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D218226
->=20
->             Bug ID: 218226
->            Summary: XFS: Assertion failed: bp->b_flags & XBF_DONE, file:
->                     fs/xfs/xfs_trans_buf.c, line: 241
->            Product: File System
->            Version: 2.5
->           Hardware: All
->                 OS: Linux
->             Status: NEW
->           Severity: normal
->           Priority: P3
->          Component: XFS
->           Assignee: filesystem_xfs@kernel-bugs.kernel.org
->           Reporter: mcgrof@kernel.org
->         Regression: No
->=20
-> While doing fstests baseline testing on v6.6-rc5 with kdevops [0] we found
-> that
-> the XFS assertion with:
->=20
-> XFS: Assertion failed: bp->b_flags & XBF_DONE, file: fs/xfs/xfs_trans_buf=
-.c,
-> line: 241
+Series applied, thanks!
 
-Known issue.
-
-https://lore.kernel.org/linux-xfs/20231128153808.GA19360@lst.de/
-
--Dave.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+  Luis
 
