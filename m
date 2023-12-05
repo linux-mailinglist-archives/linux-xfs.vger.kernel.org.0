@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-430-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-431-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 809328047A9
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 04:41:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D14280484F
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 04:50:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B1AA528167F
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 03:41:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7C812815F0
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 03:50:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E128D8C03;
-	Tue,  5 Dec 2023 03:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8891F8F56;
+	Tue,  5 Dec 2023 03:50:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTnKNRpw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gi24IqPd"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A696979E3
-	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 03:40:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7EE07C43391
-	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 03:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F718BF7
+	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 03:50:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8D05FC433CD
+	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 03:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701747659;
-	bh=wkoC0GKEXruFWLn6mhsTJNlLN+ea03sZQG2VDqIf0D0=;
+	s=k20201202; t=1701748247;
+	bh=qFlqtuHcEcyGsiEum2QiH5i4dBHh45xMwKCYoBhCqFM=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=FTnKNRpwfd5G2Sj+Lis0oJ9nsv0mHGSTlzVgWVVBVw2LnHAWOSXwTW6qcyxeRVZJE
-	 VV5wJb8af+AVzoBPu5HuInsTz/cUZxdINDP7cqhhN8eF389nIZNJ4WOspfqV2Dx/UE
-	 LR6S+azCEAspOR5UCDUQPXehsjj26cCCDQ+Bqn6Fra9BRQJJG5CVY9ZbEf/2xPSLq0
-	 AltT4RCThYyxAfOJNThxuI+KEEkPLDWfVO83pzKnf38pxCyDod/L3Fv1q7L39hinLf
-	 ANDcR/KFrmYDkRRRYXj0n3wDWvSpp2ZhvLWfyZTY+hOMktZE596rUDdaichO1LbYQP
-	 kIYFYFh6YWV4g==
+	b=gi24IqPdNQyBOMCVXjdyGbteH34cAPbZJMvigNyy3dL/BhuyxXLDBoNbhdLg09vwM
+	 jWWm3+1LzKzhekiHt5mxKDmR5PG0s8YqzlXq/bSNdpzRyMlxEL9qF7OBQ/bJI7vvA+
+	 1PrvKU5k4d10IFfq3S33d/s5KFmR88PTjEqYmdinLjq/QWyfYSmTXW/a0FgCTpJTle
+	 IBPyj+KSKdYfIyY3m914uPJDiZ2h0Lcz9P3Ft7/zm7aa3peEl+ul2rp4SQdPOBKDfT
+	 GxoRCWYzul4zc4UXlFm3fqg1SfLdTCUCm5xRwAg0FdOYN/Gqte1oDlUCg4whPg6h5I
+	 1ec4+8CmtpI6A==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 6A8FEC53BCD; Tue,  5 Dec 2023 03:40:59 +0000 (UTC)
+	id 79935C4332E; Tue,  5 Dec 2023 03:50:47 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: linux-xfs@vger.kernel.org
 Subject: [Bug 218226] XFS: Assertion failed: bp->b_flags & XBF_DONE, file:
  fs/xfs/xfs_trans_buf.c, line: 241
-Date: Tue, 05 Dec 2023 03:40:59 +0000
+Date: Tue, 05 Dec 2023 03:50:47 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
@@ -54,7 +54,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218226-201763-2oSDt08gVh@https.bugzilla.kernel.org/>
+Message-ID: <bug-218226-201763-QQZIhODWy9@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218226-201763@https.bugzilla.kernel.org/>
 References: <bug-218226-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -70,27 +70,11 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218226
 
---- Comment #1 from Luis Chamberlain (mcgrof@kernel.org) ---
-Other sections and tests which can trigger this:
+--- Comment #2 from Luis Chamberlain (mcgrof@kernel.org) ---
+And...
 
-  * xfs_crc_rtdev_extsize_28k:
-  - generic/531:
-https://gist.github.com/mcgrof/a339c5f7f2a6b5af08f2b373e0c80294
-  - xfs/502: https://gist.github.com/mcgrof/129316fad6a7f2c19d2263df30aea2e6
-
-  * xfs_reflink:
-  - generic/531:
-https://gist.github.com/mcgrof/4185a54c4b67b1a7ce00b4e4244f61d0
-  - xfs/013: https://gist.github.com/mcgrof/0a2dd092ea36d09d65e52d063e967269
-
-  * xfs_reflink_2k:
-  - generic/531:
-https://gist.github.com/mcgrof/fa8659342f8f4599f6ab6ad4bab5c3e9
-
-  * xfs_reflink_normapbt:
-  - generic/531:
-https://gist.github.com/mcgrof/e169257f7a139243171d7e0202673bec
-  - xfs/013: https://gist.github.com/mcgrof/ab61de6d6de7a9b1673e47dc06bd7a3c
+  * xfs_reflink_logdev:
+  - xfs/013: https://gist.github.com/mcgrof/183e573797d0e7863c1f50eff6a2b8c5
 
 --=20
 You may reply to this email to add a comment.
