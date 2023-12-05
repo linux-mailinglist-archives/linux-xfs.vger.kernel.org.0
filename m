@@ -1,43 +1,45 @@
-Return-Path: <linux-xfs+bounces-441-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-442-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1218804962
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 06:36:12 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67408804963
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 06:36:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92325B20C69
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 05:36:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96B471C20DB6
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Dec 2023 05:36:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ED36D265;
-	Tue,  5 Dec 2023 05:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D068ED283;
+	Tue,  5 Dec 2023 05:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FU9icX2Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgmVfcBY"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31991CA78
-	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 05:36:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D753C433C7;
-	Tue,  5 Dec 2023 05:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A6BCA78
+	for <linux-xfs@vger.kernel.org>; Tue,  5 Dec 2023 05:36:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E485C433C8;
+	Tue,  5 Dec 2023 05:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701754562;
-	bh=NaTdp3lOhH1hxpCEnazBJmtFeEYJSzWp0lxjWV38bs0=;
-	h=Subject:From:To:Cc:Date:From;
-	b=FU9icX2QFFei4Flr6mwFkcB8104Le+FzxRsemT2ufgIS9ZTjCAb4n41f5hwNH3pAv
-	 7BV51lixnoUtyzzNHtpqZ1lrvxsEPxX0eVDYbfq4SIibZuBYosZZDT+YWlLozjkFec
-	 Z0YPrijyUUv0iAwU0PtBOqNNz8YD+AEd1CxbcFcYAe7Jjf1Gv+aDJKJKDlO1AZZqx5
-	 NmWWNwic4FZlypAsWUD97hPwR1qKLWnkDAiBBIleIKyUBujsYs3uDLjCMXZ8kTC0tZ
-	 SkRQ3l2UVbCEg9pJlQF0I6aZVVq16fMC60GXBpk04nGuJ/qOyKkP7ZRjy9sRjwsKgB
-	 8C0XQygevMACA==
-Subject: [PATCHSET 0/2] xfs: elide defer work ->create_done if no intent
+	s=k20201202; t=1701754568;
+	bh=P3O9oWQt14fBbgSQlpZuIpXr7oS948w+/ItnHlQMah4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=XgmVfcBYL2yGZUY9NWO4X1W/WTcMmTTpoRR/x4CX9iGm9JNf93LyJ4OX/Or4oRrlm
+	 t4ZYEAKHfUxUrucD80nYg7pH23W9uRYUx0/e8DgSIp4nQYfDchQqVLz91t5vxFu+B2
+	 xsKqVDomzZVGjVjlO0ZbBk0F6v6bc78J18vCSB08eiSxoJo+mYc9PFr/gmE5Q/G88A
+	 nMkQrrdxXUFPNjlTejiNHCkV//Jn6dXjVZJtkQHyCMhTNzckIHfWnb00X0qyNYruOK
+	 R6lWjmpWIzLEM+hHnCC8mvHk31vdr6nRiPlNKhU6qL4SsNRhk0eZzRy8Uq+R1CwUTl
+	 DuMqU2s5J5QIA==
+Subject: [PATCH 1/2] xfs: document what LARP means
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: hch@lst.de, chandanbabu@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Date: Mon, 04 Dec 2023 21:36:02 -0800
-Message-ID: <170175456196.3910588.9712198406317844529.stgit@frogsfrogsfrogs>
+Date: Mon, 04 Dec 2023 21:36:07 -0800
+Message-ID: <170175456779.3910588.8343836136719400292.stgit@frogsfrogsfrogs>
+In-Reply-To: <170175456196.3910588.9712198406317844529.stgit@frogsfrogsfrogs>
+References: <170175456196.3910588.9712198406317844529.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -48,27 +50,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Christoph pointed out that the defer ops machinery doesn't need to call
-->create_done if the deferred work item didn't generate a log intent
-item in the first place.  Let's clean that up and save an indirect call
-in the non-logged xattr update call path.
+Christoph requested a blurb somewhere explaining exactly what LARP
+means.  I don't know of a good place other than the source code (debug
+knobs aren't covered in Documentation/), so here it is.
 
-If you're going to start using this code, I strongly recommend pulling
-from my git trees, which are linked below.
-
-This has been lightly tested with fstests.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=defer-elide-create-done-6.7
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_defer.c |    4 ++++
- fs/xfs/xfs_attr_item.c    |    3 ---
- fs/xfs/xfs_sysfs.c        |    7 +++++++
- 3 files changed, 11 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_sysfs.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+
+diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
+index a3c6b1548723..59869a1ee49f 100644
+--- a/fs/xfs/xfs_sysfs.c
++++ b/fs/xfs/xfs_sysfs.c
+@@ -229,6 +229,13 @@ pwork_threads_show(
+ }
+ XFS_SYSFS_ATTR_RW(pwork_threads);
+ 
++/*
++ * The "LARP" (Logged extended Attribute Recovery Persistence) debugging knob
++ * sets the XFS_DA_OP_LOGGED flag on all xfs_attr_set operations performed on
++ * V5 filesystems.  As a result, the intermediate progress of all setxattr and
++ * removexattr operations are tracked via the log and can be restarted during
++ * recovery.
++ */
+ static ssize_t
+ larp_store(
+ 	struct kobject	*kobject,
 
 
