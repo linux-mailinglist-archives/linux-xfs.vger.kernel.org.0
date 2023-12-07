@@ -1,43 +1,43 @@
-Return-Path: <linux-xfs+bounces-474-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-475-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE7D7807E54
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 03:23:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD2B5807E55
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 03:23:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F8B31F21A0C
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 02:23:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3482D28260D
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 02:23:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 587E11848;
-	Thu,  7 Dec 2023 02:23:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B48F0185A;
+	Thu,  7 Dec 2023 02:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXccJVQ4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iW4QGqFK"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4121846
-	for <linux-xfs@vger.kernel.org>; Thu,  7 Dec 2023 02:23:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8927EC433C8;
-	Thu,  7 Dec 2023 02:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772981845
+	for <linux-xfs@vger.kernel.org>; Thu,  7 Dec 2023 02:23:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4149FC433C8;
+	Thu,  7 Dec 2023 02:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701915789;
-	bh=bsYd8U0+3X6f/qX6ezCY2eM+1tb+Lbcu6jLpru1TMAI=;
+	s=k20201202; t=1701915795;
+	bh=XzhH07IelkXuVZWPLVE3SmIlZXxblDBZ37jOtwcM9eg=;
 	h=Date:Subject:From:To:Cc:From;
-	b=YXccJVQ43u/sFo6Xm79SutMUu58nwmOFYYiHfUjj9WmGHdKmufwgO0nHEQPfyO5b9
-	 +eR8GBUv597d3l4dnVAGdSpPsAJT/ZG5MXtCjt9d+fbFQezRysmv+e7TOZKU4OpTKF
-	 7koQilwNzk4+XQtaZeTWUVpalyUOcQKwEeaVCajmH2B96E9i0o0dLVn/fVvu1F5pFl
-	 hBuKD/m4C7QuWLAR5Rz2mD+r3tcoSua5rWrckQH1tJr2U2WiDC/PVF/fXS8PKXanYo
-	 QmLCy2sqUDjC93PzwvG9nbxmymP0qc3Na9lxVGrQcN5ZaBJedNTqM1g1rZESC5zVym
-	 hKEsv7hdZZ0Bw==
-Date: Wed, 06 Dec 2023 18:23:09 -0800
-Subject: [PATCHSET v2 0/2] xfs: elide defer work ->create_done if no intent
+	b=iW4QGqFKfPpbRsX8KbjP9LKLCvpMwJImk2wNML3ec6hehiD255x7Jfhy96AmJTNXh
+	 GH+2SbVa0apEKK5gMPKu2e61J9V9qq3xpdXTk+tdKLkC3meDjgoIdeRsX0zQnKr2n9
+	 t1bjym+EtZBkgRSFvG8Ff+Lk6x4VzxyNUBovVEPBk7x6vaePdXV/tSezC8sobeVRtv
+	 aIDfkv7u8NQKi3IN1OFQiMcMhI1VEm56UJAUJJs2YvE3xiAOwBBrUrwVMyqwroUgLa
+	 8DYXgSpeGjL+f0Nh6a3CPUY5wRLKoC82HOjaep18cZvU39Z53UrGjRKsrav0kkpB6A
+	 p/8FJNtCj21RA==
+Date: Wed, 06 Dec 2023 18:23:14 -0800
+Subject: [PATCHSET 0/1] xfs: fix growfsrt failure during rt volume attach
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: chandanbabu@kernel.org, hch@lst.de, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170191563274.1133791.13463182603929465584.stgit@frogsfrogsfrogs>
+Message-ID: <170191563642.1133893.14966073508617867491.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -50,12 +50,8 @@ Content-Transfer-Encoding: 7bit
 
 Hi all,
 
-Christoph pointed out that the defer ops machinery doesn't need to call
-->create_done if the deferred work item didn't generate a log intent
-item in the first place.  Let's clean that up and save an indirect call
-in the non-logged xattr update call path.
-
-v2: pick up rvb tags
+One more series to fix a transaction reservation overrun while
+trying to attach a very large rt volume to a filesystem.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -66,11 +62,9 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=defer-elide-create-done-6.8
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-growfsrt-failures-6.8
 ---
- fs/xfs/libxfs/xfs_defer.c |    4 ++++
- fs/xfs/xfs_attr_item.c    |    3 ---
- fs/xfs/xfs_sysfs.c        |    9 +++++++++
- 3 files changed, 13 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_rtalloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
 
