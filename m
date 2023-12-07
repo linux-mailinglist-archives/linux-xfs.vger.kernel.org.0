@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-553-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-554-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18CAD80806C
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 07:01:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFE1080807D
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 07:03:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BC961F211BE
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 06:01:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A25821C20AA0
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 06:03:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 358A0125CD;
-	Thu,  7 Dec 2023 06:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A06B712B68;
+	Thu,  7 Dec 2023 06:03:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UPtVyAoo"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aqUcjbtv"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E0DF110
-	for <linux-xfs@vger.kernel.org>; Wed,  6 Dec 2023 22:01:01 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35145193
+	for <linux-xfs@vger.kernel.org>; Wed,  6 Dec 2023 22:03:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ddecu0jNmt0iaz52H2+Mj22ldshdlfHfO4cFfgAgz5o=; b=UPtVyAooA/1gnyP++t0z6Adt45
-	vvhKNpQ2aL5bojOhcmVGM6CntoQ9EHoCyXcr1zieAtTkLMDMavmDGTWFzZ5dFnVcHEE+D2whV08fb
-	Q+1AYF8u4zAMM7Ngol2pGT2HoDKZadtsVMJj5Pb+cQzQlUD1WKmI4VtieRfVbCaICVm+V1BA2MlsQ
-	ANmFyaindadKhhwfGH0VDWO24VQ4VJmpmWPxzgAolNd0aPkDfVXG1rAG7g7i1TL+3TU4i5Vfuevr9
-	JmpvRBjjoMFAM7n7/XOl7AT/GU1X1RC3VJMVcFy9LfdjPdMyc5pARAD56tbx3R9aib9c4bDrcdcxh
-	uAFwvi8g==;
+	bh=1fMJP+60nzF1Q0851e76dyAqxnctxKJcumzbmHw0oMU=; b=aqUcjbtv+7GmvZMUTONGCrgy5D
+	csdub+Mc7Nub65ukgkIwFfh1gaJRuonbxSBdpB3eaYfa8EMX/eYqJ2B73t216H7SLyDLQ12iEIDml
+	s8idu4Ua6VTeGaRMh9HxtPu98PQ1E1RPUTHr3fN7GQR1V4/7XmZotEMR1Tz5Gj+xhVD8vam/GetfV
+	Wk4iqfEMr5fRvDdc32RXNwSdxG70vcrswSapuXFFpWLHLe1Yk7G7+fY8eAw4mMzoge0tLW7oGehpw
+	cdP00L3n3ziqaxNWR+5aIs+qeh+4D6pn/OJQUE9e0ri94cATmfBCQcwjU66jd/qYjypCG3yDfybh2
+	vZGQnFcw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rB7RV-00Bwg6-1V;
-	Thu, 07 Dec 2023 06:01:01 +0000
-Date: Wed, 6 Dec 2023 22:01:01 -0800
+	id 1rB7U0-00BwuH-0K;
+	Thu, 07 Dec 2023 06:03:36 +0000
+Date: Wed, 6 Dec 2023 22:03:36 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/9] xfs: zap broken inode forks
-Message-ID: <ZXFfnaaPBBjTEW4S@infradead.org>
+Subject: Re: [PATCH 7/9] xfs: abort directory parent scrub scans if we
+ encounter a zapped directory
+Message-ID: <ZXFgOMVapbhQrSh2@infradead.org>
 References: <170191666087.1182270.4104947285831369542.stgit@frogsfrogsfrogs>
- <170191666188.1182270.114932269965181078.stgit@frogsfrogsfrogs>
- <ZXFfeW715AvqptIq@infradead.org>
+ <170191666222.1182270.11568535367691161509.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -48,14 +48,37 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZXFfeW715AvqptIq@infradead.org>
+In-Reply-To: <170191666222.1182270.11568535367691161509.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Dec 06, 2023 at 10:00:25PM -0800, Christoph Hellwig wrote:
-> Looks good, although as mentioned on the next patch having the health
-> flag first would seem better.
+> +/*
+> + * Decide if this directory has been zapped to satisfy the inode and ifork
+> + * verifiers.  Checking and repairing should be postponed until the directory
+> + * is fixed.
+> + */
+> +bool
+> +xchk_dir_looks_zapped(
+> +	struct xfs_inode	*dp)
+> +{
+> +	/* Repair zapped this dir's data fork a short time ago */
+> +	if (xfs_ifork_zapped(dp, XFS_DATA_FORK))
+> +		return true;
+> +
+> +	/*
+> +	 * If the dinode repair found a bad data fork, it will reset the fork
+> +	 * to extents format with zero records and wait for the bmapbtd
+> +	 * scrubber to reconstruct the block mappings.  Directories always
+> +	 * contain some content, so this is a clear sign of a zapped directory.
+> +	 */
+> +	return dp->i_df.if_format == XFS_DINODE_FMT_EXTENTS &&
+> +	       dp->i_df.if_nextents == 0;
 
-And I guess this means:
+Correct me if I'm wrong:  in general the xfs_ifork_zapped should be
+all that's needed here now, and the check below just finds another
+obvious case if we crashed / unmounted and lost the zapped flag?
+If so maybe update the comment a bit.
+
+Otherwise:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 
