@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-541-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-542-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 273B980801D
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 06:26:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB6D5808022
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 06:26:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CF9AB1F211A3
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 05:26:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 860301F213D3
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Dec 2023 05:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9DA210A02;
-	Thu,  7 Dec 2023 05:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34FD710A2A;
+	Thu,  7 Dec 2023 05:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GxqJddfQ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JHHQQkji"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81111A4
-	for <linux-xfs@vger.kernel.org>; Wed,  6 Dec 2023 21:26:06 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1134010D1
+	for <linux-xfs@vger.kernel.org>; Wed,  6 Dec 2023 21:26:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=X1BTCclTvQ8z/mqWn2z3c9hRd4xzGNcX+JEM7uxIaU8=; b=GxqJddfQMTNd22wUHoKD0PDSas
-	GHSLFMv3aPr1QhMQ4A+Q5nxgBzUl0wlh819+INBmOHUAfwYzLExLpE3wlQp3TWOxs2u5kA9J4T1/u
-	M2f/KpYIGhxjBC5jJZJjKKiL7x+yu7STbg+aFiegm3s5tLr10G1Zf/NPX6W01+nsts8ki3qQHA17e
-	9xf+tXIoxkpCm69iwLN25kc1e0iXOZSlEM+h24CR8u7mMYVA9KhBn7NN1yVxLBA6lyJx93xLwDZKb
-	hdxA+NKWemDRjVq3V85I5Tp9LGaLgue0NqSKz2SnAqFxC3lIW9GA1bUbbdTLPx7aRgOFPqu0wV0PU
-	6UD+zF2Q==;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=JHHQQkjipHRQJxZ05LOzVcDy7h
+	S010rd3RKnihq73zT8aDpuozbEqHlhrkZbh3LbnQT8I+J4MkvHE2tmeUAxK9+dzHUUqf8eKLbcMa/
+	VIagnXzakxNLoQatjj4wii1zUfD+K7FrWIqPmm4jvHz6i80Ri57o+RgBGKWbIgf4ikv3M3Y6FNAx4
+	vHMftIBm8XTfVdG3F3J2vgKVNM3QaB0oq+oegb1/r9d6/mgHpq9yYcWdOU5GlINj1Fv2evQGMEac9
+	jqbJ0rTbz9cORHCz6mTa/wWqBtLQwNfYUPy4gqX881kvxwsdZNARVY8iAzfivppi34gdol9aWMAnS
+	id73hHPg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rB6ti-00BtW8-1H;
-	Thu, 07 Dec 2023 05:26:06 +0000
-Date: Wed, 6 Dec 2023 21:26:06 -0800
+	id 1rB6uA-00Bta5-33;
+	Thu, 07 Dec 2023 05:26:34 +0000
+Date: Wed, 6 Dec 2023 21:26:34 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/6] xfs: set XBF_DONE on newly formatted btree block
- that are ready for writing
-Message-ID: <ZXFXbhzVv2wlBEbX@infradead.org>
+Subject: Re: [PATCH 3/6] xfs: read leaf blocks when computing keys for
+ bulkloading into node blocks
+Message-ID: <ZXFXikLEofQgHnnd@infradead.org>
 References: <170191665134.1180191.6683537290321625529.stgit@frogsfrogsfrogs>
- <170191665178.1180191.7709444254217822674.stgit@frogsfrogsfrogs>
+ <170191665194.1180191.14732920823825360410.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -48,22 +48,10 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170191665178.1180191.7709444254217822674.stgit@frogsfrogsfrogs>
+In-Reply-To: <170191665194.1180191.14732920823825360410.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Dec 06, 2023 at 06:38:50PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> The btree bulkloading code calls xfs_buf_delwri_queue_here when it has
-> finished formatting a new btree block and wants to queue it to be
-> written to disk.  Once the new btree root has been committed, the blocks
-> (and hence the buffers) will be accessible to the rest of the
-> filesystem.  Mark each new buffer as DONE when adding it to the delwri
-> list so that the next btree traversal can skip reloading the contents
-> from disk.
+Looks good:
 
-This still seems like the wrong place to me - it really is the caller
-that fills it out that should set the DONE flag, not a non-standard
-delwri helper that should hopefully go away in the future.
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
