@@ -1,43 +1,43 @@
-Return-Path: <linux-xfs+bounces-604-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-605-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E462280D20F
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Dec 2023 17:38:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 841C280D210
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Dec 2023 17:38:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F47F2818D1
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Dec 2023 16:38:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F916281962
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Dec 2023 16:38:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA26C1D69C;
-	Mon, 11 Dec 2023 16:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A2FA1F16B;
+	Mon, 11 Dec 2023 16:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RUe2wtvU"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GqUFkB6k"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017AAC2
-	for <linux-xfs@vger.kernel.org>; Mon, 11 Dec 2023 08:38:02 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83FC95
+	for <linux-xfs@vger.kernel.org>; Mon, 11 Dec 2023 08:38:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=kFRVmyseUjRZgsiWDUd88An0u1cuEV0SuqTwpagIn+s=; b=RUe2wtvUJYvSs4BXyfCDi1qH12
-	psEuxqY/e1bcf46mhPV0xLLLCn5fkJ4wxRA7kzzcHldIpyUgoOtZ75g6kfMyiHAzomByYzjNwtavD
-	ORSkJ2d23WUjIIqsjAIOSfVZDkJjViSmkMqagcMd6WAWjbaAAZoWdpgifue9H5dUxB7YMIInPU4he
-	8lhP074yvy2Nr3ig8JkppqGpbz6j3rsWVP2biUrL8C6rPBGihJtynUXXM8GloyirO4sgNu1ciY7ai
-	wvJhuXQ9+gwGhEhoJaDgS2JuFzjGCDNAcJVRS0RlsdTHO7HId5HVFchNrY5ZoikTCYLMqCAWGq75a
-	1bnGFbfQ==;
+	bh=BZ7hB4JDE8U95MW6mQ0Xj/9LuQAZT+9aat/HkrPyt0g=; b=GqUFkB6kVZsjvO95uwGitDjosy
+	KJ0QlAgD4lGoTMl6o43V3hN1csinWngr/dapgNxkggJ6cohq5AmYAnkR47p3tSzQvsjdl+4wqYBs1
+	xkhhNsMsOX1tcItTN6X0o8EsHGMR7ImimK3UGeTgHjFeqAiFSO8J8c1HHtNYi8t6DRYDT4g1xFW2e
+	nJIXSn825+zEOoiOfR0IaN08mg3j8LgV0pyPsITgNU39s4LrjA2mvnZwOnl2WzCyOck/epmUMYwkB
+	NCr2ySMQl6Pi5Vv8n8ChrgD8IWYEb3ekznW26uRvc66OiZ7hO/mRuoGYHeK7oze9U4G94hDnRzoyu
+	XuU8Q3fw==;
 Received: from [2001:4bb8:19a:a621:c70:4a89:bc61:3] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCjI9-005sxF-0v;
-	Mon, 11 Dec 2023 16:38:01 +0000
+	id 1rCjIC-005syr-0c;
+	Mon, 11 Dec 2023 16:38:04 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: linux-xfs@vger.kernel.org
-Subject: [PATCH 05/23] xfs_logprint: move all code to set up the fake xlog into logstat()
-Date: Mon, 11 Dec 2023 17:37:24 +0100
-Message-Id: <20231211163742.837427-6-hch@lst.de>
+Subject: [PATCH 06/23] libxlog: remove the verbose argument to xlog_is_dirty
+Date: Mon, 11 Dec 2023 17:37:25 +0100
+Message-Id: <20231211163742.837427-7-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231211163742.837427-1-hch@lst.de>
 References: <20231211163742.837427-1-hch@lst.de>
@@ -50,69 +50,107 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Isolate the code that sets up the fake xlog into the logstat() helper to
-prepare for upcoming changes.
+No caller passes a non-zero verbose argument to xlog_is_dirty.
+Remove the argument the code keyed off by it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- logprint/logprint.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ copy/xfs_copy.c   | 2 +-
+ db/metadump.c     | 4 ++--
+ db/sb.c           | 2 +-
+ include/libxlog.h | 3 +--
+ libxlog/util.c    | 8 +-------
+ 5 files changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/logprint/logprint.c b/logprint/logprint.c
-index 9a8811f46..7d51cdd91 100644
---- a/logprint/logprint.c
-+++ b/logprint/logprint.c
-@@ -52,7 +52,9 @@ Options:\n\
- }
+diff --git a/copy/xfs_copy.c b/copy/xfs_copy.c
+index 66728f199..4bd473a04 100644
+--- a/copy/xfs_copy.c
++++ b/copy/xfs_copy.c
+@@ -784,7 +784,7 @@ main(int argc, char **argv)
+ 	 */
+ 	memset(&xlog, 0, sizeof(struct xlog));
+ 	mp->m_log = &xlog;
+-	c = xlog_is_dirty(mp, mp->m_log, &xargs, 0);
++	c = xlog_is_dirty(mp, mp->m_log, &xargs);
+ 	if (!duplicate) {
+ 		if (c == 1) {
+ 			do_log(_(
+diff --git a/db/metadump.c b/db/metadump.c
+index f9c82148e..e57b024cd 100644
+--- a/db/metadump.c
++++ b/db/metadump.c
+@@ -2615,7 +2615,7 @@ copy_log(void)
+ 	if (!metadump.obfuscate && !metadump.zero_stale_data)
+ 		goto done;
  
- static int
--logstat(xfs_mount_t *mp)
-+logstat(
-+	struct xfs_mount	*mp,
-+	struct xlog		*log)
+-	dirty = xlog_is_dirty(mp, &log, &x, 0);
++	dirty = xlog_is_dirty(mp, &log, &x);
+ 
+ 	switch (dirty) {
+ 	case 0:
+@@ -2945,7 +2945,7 @@ metadump_f(
+ 		if (iocur_top->data) {	/* best effort */
+ 			struct xlog	log;
+ 
+-			if (xlog_is_dirty(mp, &log, &x, 0))
++			if (xlog_is_dirty(mp, &log, &x))
+ 				metadump.dirty_log = true;
+ 		}
+ 		pop_cur();
+diff --git a/db/sb.c b/db/sb.c
+index 2d508c26a..a3a4a758f 100644
+--- a/db/sb.c
++++ b/db/sb.c
+@@ -235,7 +235,7 @@ sb_logcheck(void)
+ 
+ 	libxfs_buftarg_init(mp, x.ddev, x.logdev, x.rtdev);
+ 
+-	dirty = xlog_is_dirty(mp, mp->m_log, &x, 0);
++	dirty = xlog_is_dirty(mp, mp->m_log, &x);
+ 	if (dirty == -1) {
+ 		dbprintf(_("ERROR: cannot find log head/tail, run xfs_repair\n"));
+ 		return 0;
+diff --git a/include/libxlog.h b/include/libxlog.h
+index 3ade7ffaf..a598a7b3c 100644
+--- a/include/libxlog.h
++++ b/include/libxlog.h
+@@ -71,9 +71,8 @@ extern int	print_record_header;
+ /* libxfs parameters */
+ extern libxfs_init_t	x;
+ 
++int xlog_is_dirty(struct xfs_mount *mp, struct xlog *log, libxfs_init_t *x);
+ 
+-extern int xlog_is_dirty(struct xfs_mount *, struct xlog *, libxfs_init_t *,
+-			 int);
+ extern struct xfs_buf *xlog_get_bp(struct xlog *, int);
+ extern int	xlog_bread(struct xlog *log, xfs_daddr_t blk_no, int nbblks,
+ 				struct xfs_buf *bp, char **offset);
+diff --git a/libxlog/util.c b/libxlog/util.c
+index ad60036f8..1022e3378 100644
+--- a/libxlog/util.c
++++ b/libxlog/util.c
+@@ -19,8 +19,7 @@ int
+ xlog_is_dirty(
+ 	struct xfs_mount	*mp,
+ 	struct xlog		*log,
+-	libxfs_init_t		*x,
+-	int			verbose)
++	libxfs_init_t		*x)
  {
- 	int		fd;
- 	char		buf[BBSIZE];
-@@ -103,6 +105,11 @@ logstat(xfs_mount_t *mp)
- 		x.lbsize = BBSIZE;
+ 	int			error;
+ 	xfs_daddr_t		head_blk, tail_blk;
+@@ -58,11 +57,6 @@ xlog_is_dirty(
+ 		return -1;
  	}
  
-+	log->l_dev = mp->m_logdev_targp;
-+	log->l_logBBstart = x.logBBstart;
-+	log->l_logBBsize = x.logBBsize;
-+	log->l_sectBBsize = BTOBB(x.lbsize);
-+	log->l_mp = mp;
- 
- 	if (x.logname && *x.logname) {    /* External log */
- 		if ((fd = open(x.logname, O_RDONLY)) == -1) {
-@@ -212,8 +219,8 @@ main(int argc, char **argv)
- 	if (!libxfs_init(&x))
- 		exit(1);
- 
--	logstat(&mount);
- 	libxfs_buftarg_init(&mount, x.ddev, x.logdev, x.rtdev);
-+	logstat(&mount, &log);
- 
- 	logfd = (x.logfd < 0) ? x.dfd : x.logfd;
- 
-@@ -226,15 +233,9 @@ main(int argc, char **argv)
- 	}
- 
- 	printf(_("daddr: %lld length: %lld\n\n"),
--		(long long)x.logBBstart, (long long)x.logBBsize);
-+		(long long)log.l_logBBstart, (long long)log.l_logBBsize);
- 
--	ASSERT(x.logBBsize <= INT_MAX);
+-	if (verbose)
+-		xlog_warn(
+-	_("%s: head block %" PRId64 " tail block %" PRId64 "\n"),
+-			__func__, head_blk, tail_blk);
 -
--	log.l_dev = mount.m_logdev_targp;
--	log.l_logBBstart  = x.logBBstart;
--	log.l_logBBsize   = x.logBBsize;
--	log.l_sectBBsize  = BTOBB(x.lbsize);
--	log.l_mp          = &mount;
-+	ASSERT(log.l_logBBsize <= INT_MAX);
+ 	if (head_blk != tail_blk)
+ 		return 1;
  
- 	switch (print_operation) {
- 	case OP_PRINT:
 -- 
 2.39.2
 
