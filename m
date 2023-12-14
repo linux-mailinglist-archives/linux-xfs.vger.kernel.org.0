@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-761-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-762-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CF59812847
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA8D9812848
 	for <lists+linux-xfs@lfdr.de>; Thu, 14 Dec 2023 07:35:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B35851F21AF3
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC6C41C214F1
 	for <lists+linux-xfs@lfdr.de>; Thu, 14 Dec 2023 06:35:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5D57D50E;
-	Thu, 14 Dec 2023 06:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DFEED51A;
+	Thu, 14 Dec 2023 06:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nVTv5wbu"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OHx7/6nP"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EDFEA6
-	for <linux-xfs@vger.kernel.org>; Wed, 13 Dec 2023 22:35:15 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B66C100
+	for <linux-xfs@vger.kernel.org>; Wed, 13 Dec 2023 22:35:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=yE+rdZD9NroxBGJ0htqSosyhpKor4f9HCE4ehNpTug4=; b=nVTv5wbuUQmKnAilzIvU59QxL7
-	4fYFb10vCBAP8oN3ReFmz3oeVS8M7fDXFcP9rxVy0BP6BXmU5u4LG1fRvC6bsKTCQErX8y+zurjrS
-	fIebgU6HUF1g7O8m1YDCtKcLigJkY8hN6a/VTX3ZVjxT4w0NGDFBlYDs+cUiD0maVddEmXgFOkW2k
-	fHKd1tbLkXKpIc4Pg/KrnqYptH9hmh3cHMt4qdVdS3Yqv8kaPx9oG43dsxx63N3hrY9O/xaCcQdKK
-	RCGc9YNVTEqKzT7jC0UvFP/+fmnI4Ijqv4KocbddAsKCSDi6gotOGebK5qHygssdh6+pUZf2XyFBJ
-	5dQQPdNQ==;
+	bh=WZdPn/4A1m0DU/bFDiNA+p3G37mgVI/ibSKJm7YBIaU=; b=OHx7/6nPnzFxyok344F85dqr/E
+	Qcy5WZ68igfj9bcnhgZKMUG/YJwy4V7ZDThoTtkV7xxWUtCc4bHIPCCeOR0o9u3MurtAu8LHCw6hs
+	cawcjrk17BKpm8lOTIR91FFr/zZNUmLuvJjUX41cBShsjXfDXmrHuqfAXb7dbc/I5Ek6aQhH6EBys
+	L2FNK7usdXHLQl/NxNQUMQX7Wy5QmmeN+BnW7RT0Dr3mgCVj7epYqUFVCZU6FtwO52QqEnyZg/0qy
+	363OuvWNMdtRya/jXmaH3aVl51UYxdYoPxI6Vw7Kv5romQkduL1gMJBuSAK+RS0tz4fbFODmk6To7
+	mVf5+a6w==;
 Received: from [2001:4bb8:19a:a621:c70:4a89:bc61:3] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDfJR-00GzQh-15;
-	Thu, 14 Dec 2023 06:35:13 +0000
+	id 1rDfJT-00GzRe-2p;
+	Thu, 14 Dec 2023 06:35:16 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Chandan Babu R <chandan.babu@oracle.com>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 12/19] xfs: tidy up xfs_rtallocate_extent_block
-Date: Thu, 14 Dec 2023 07:34:31 +0100
-Message-Id: <20231214063438.290538-13-hch@lst.de>
+Subject: [PATCH 13/19] xfs: tidy up xfs_rtallocate_extent_exact
+Date: Thu, 14 Dec 2023 07:34:32 +0100
+Message-Id: <20231214063438.290538-14-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231214063438.290538-1-hch@lst.de>
 References: <20231214063438.290538-1-hch@lst.de>
@@ -51,109 +51,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Share the xfs_rtallocate_range logic by breaking out of the loop
-instead of duplicating it, invert a check so that the early
-return case comes first instead of in an else, and handle the
-successful case in the straight line instead a branch in the tail
-of the function.
+Use common code for both xfs_rtallocate_range calls by moving
+the !isfree logic into the non-default branch.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_rtalloc.c | 63 +++++++++++++++++++++-----------------------
- 1 file changed, 30 insertions(+), 33 deletions(-)
+ fs/xfs/xfs_rtalloc.c | 34 +++++++++++++---------------------
+ 1 file changed, 13 insertions(+), 21 deletions(-)
 
 diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index fbc60658ef24bf..5f42422a976a3e 100644
+index 5f42422a976a3e..ea6f221c6a193c 100644
 --- a/fs/xfs/xfs_rtalloc.c
 +++ b/fs/xfs/xfs_rtalloc.c
-@@ -257,13 +257,9 @@ xfs_rtallocate_extent_block(
- 			/*
- 			 * i for maxlen is all free, allocate and return that.
- 			 */
--			error = xfs_rtallocate_range(args, i, maxlen);
--			if (error)
--				return error;
--
--			*len = maxlen;
--			*rtx = i;
--			return 0;
-+			bestlen = maxlen;
-+			besti = i;
-+			break;
- 		}
- 		/*
- 		 * In the case where we have a variable-sized allocation
-@@ -283,43 +279,44 @@ xfs_rtallocate_extent_block(
- 		/*
- 		 * If not done yet, find the start of the next free space.
- 		 */
--		if (next < end) {
--			error = xfs_rtfind_forw(args, next, end, &i);
--			if (error)
--				return error;
--		} else
-+		if (next >= end)
- 			break;
-+		error = xfs_rtfind_forw(args, next, end, &i);
-+		if (error)
-+			return error;
- 	}
-+
- 	/*
- 	 * Searched the whole thing & didn't find a maxlen free extent.
- 	 */
--	if (minlen <= maxlen && besti != -1) {
--		xfs_rtxlen_t	p;	/* amount to trim length by */
--
-+	if (maxlen < minlen || besti == -1) {
- 		/*
--		 * If size should be a multiple of prod, make that so.
-+		 * Allocation failed.  Set *nextp to the next block to try.
- 		 */
--		if (prod > 1) {
--			div_u64_rem(bestlen, prod, &p);
--			if (p)
--				bestlen -= p;
--		}
-+		*nextp = next;
-+		return -ENOSPC;
-+	}
+@@ -349,32 +349,24 @@ xfs_rtallocate_extent_exact(
+ 	if (error)
+ 		return error;
  
--		/*
--		 * Allocate besti for bestlen & return that.
--		 */
--		error = xfs_rtallocate_range(args, besti, bestlen);
+-	if (isfree) {
++	if (!isfree) {
+ 		/*
+-		 * If it is, allocate it and return success.
++		 * If not, allocate what there is, if it's at least minlen.
+ 		 */
+-		error = xfs_rtallocate_range(args, start, maxlen);
 -		if (error)
 -			return error;
--		*len = bestlen;
--		*rtx = besti;
+-		*len = maxlen;
+-		*rtx = start;
 -		return 0;
-+	/*
-+	 * If size should be a multiple of prod, make that so.
-+	 */
-+	if (prod > 1) {
-+		xfs_rtxlen_t	p;	/* amount to trim length by */
+-	}
+-	/*
+-	 * If not, allocate what there is, if it's at least minlen.
+-	 */
+-	maxlen = next - start;
+-	if (maxlen < minlen)
+-		return -ENOSPC;
+-
+-	/*
+-	 * Trim off tail of extent, if prod is specified.
+-	 */
+-	if (prod > 1 && (i = maxlen % prod)) {
+-		maxlen -= i;
++		maxlen = next - start;
+ 		if (maxlen < minlen)
+ 			return -ENOSPC;
 +
-+		div_u64_rem(bestlen, prod, &p);
-+		if (p)
-+			bestlen -= p;
++		/*
++		 * Trim off tail of extent, if prod is specified.
++		 */
++		if (prod > 1 && (i = maxlen % prod)) {
++			maxlen -= i;
++			if (maxlen < minlen)
++				return -ENOSPC;
++		}
  	}
 +
  	/*
--	 * Allocation failed.  Set *nextp to the next block to try.
-+	 * Allocate besti for bestlen & return that.
+ 	 * Allocate what we can and return it.
  	 */
--	*nextp = next;
--	return -ENOSPC;
-+	error = xfs_rtallocate_range(args, besti, bestlen);
-+	if (error)
-+		return error;
-+	*len = bestlen;
-+	*rtx = besti;
-+	return 0;
- }
- 
- /*
 -- 
 2.39.2
 
