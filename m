@@ -1,49 +1,51 @@
-Return-Path: <linux-xfs+bounces-877-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-878-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E23118165D4
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Dec 2023 05:57:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 215A88165D5
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Dec 2023 05:57:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81C351F2164D
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A554A28106E
 	for <lists+linux-xfs@lfdr.de>; Mon, 18 Dec 2023 04:57:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A54163AA;
-	Mon, 18 Dec 2023 04:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64BCD63AF;
+	Mon, 18 Dec 2023 04:57:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uAs1oh5m"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1a8V6Hf9"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF31963A3
-	for <linux-xfs@vger.kernel.org>; Mon, 18 Dec 2023 04:57:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3E063A3
+	for <linux-xfs@vger.kernel.org>; Mon, 18 Dec 2023 04:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=QoB1D+DRNklW4NZONWbuHWo8a9xdWBU6GJe2n8ufhW4=; b=uAs1oh5m/MYuzCgBUYlHgrefhc
-	YZWlDefNLcLGtfEkqB60AelYQNtXOjBg+LsbfLGtEtRnqaDI5zPR5pDYkcUTM99Gjf6x60UFRhG+J
-	2VjTsYCrjkolfKCRGZPQtxZvkR9okxkLLUfK9A81LU2o+6M95pw6itweqN8OEgvcwkNBkpULDjOgU
-	QruRjYyrFtNNNJAEVe5NULRDnlkJSfcBt4kMjW65SS5KrtcXsI/c3DyzIgJL4183Yjo/4Suy4RHWW
-	hmw8lelvxTN0fp+3GiD+IvZ9w7AgTEaIeT1PVwxl5KHAilNIw7zB5V5mR29SjTtwviNHBc73ceSGG
-	jilFzq0A==;
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=RcOyIBpxZIGmnqrcm9Igk5aXwyiHQLpr2UMoBuy+kTo=; b=1a8V6Hf9SsjMw2Ifu4eBgI+lCm
+	IxNqFgh6NVRhPN+wBUkmEbAd6+M0uSdWZMrpyPMjHyPCtqv4ENPqYLN6qbQTsCZmx0c6pMcNVf/97
+	qTf/3KHvu6Aq/9THx02ZQid753qsuFd8HuaC9p5cF7XS8Ko9PhDNAKXZoJOtuKsOL+aBjYDJimqOB
+	jIwFLvXajpoZB8nP8zddQGPQIuAdebGctlq5vA4i3v6CYbSIzCsfBKzznIvYepWcJYC5Q2wuH8oRS
+	QEKIVND+LTvGBPt4CEOm0xJcexmeUYYrTZcDlVTpPHUkeCEUtTdhfTPqXZy/bEG/g1O1z4WY+uZis
+	25wFDu8g==;
 Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rF5hD-00956M-25;
-	Mon, 18 Dec 2023 04:57:39 +0000
+	id 1rF5hG-00956T-0M;
+	Mon, 18 Dec 2023 04:57:42 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Chandan Babu R <chandan.babu@oracle.com>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	linux-xfs@vger.kernel.org
-Subject: RT allocator tidy ups v2
-Date: Mon, 18 Dec 2023 05:57:16 +0100
-Message-Id: <20231218045738.711465-1-hch@lst.de>
+Subject: [PATCH 01/22] xfs: consider minlen sized extents in xfs_rtallocate_extent_block
+Date: Mon, 18 Dec 2023 05:57:17 +0100
+Message-Id: <20231218045738.711465-2-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231218045738.711465-1-hch@lst.de>
+References: <20231218045738.711465-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -53,34 +55,32 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi all,
+minlen is the lower bound on the extent length that the caller can
+accept, and maxlen is at this point the maximal available length.
+This means a minlen extent is perfectly fine to use, so do it.  This
+matches the equivalent logic in xfs_rtallocate_extent_exact that also
+accepts a minlen sized extent.
 
-this series has a bunch of tidy ups preparing for my research into
-per-RTG RT bitmaps.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+---
+ fs/xfs/xfs_rtalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The first is a fix for a one-off bug that I could only reproduce with
-my hacky patches, but which seems real.  The second- and third-last
-patches change the policy for retrying allocations that didn't succeed
-and could use very careful review.  The rest is fairly mechanic
-cleanups.
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 8feb58c6241ce4..fe98a96a26484f 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -309,7 +309,7 @@ xfs_rtallocate_extent_block(
+ 	/*
+ 	 * Searched the whole thing & didn't find a maxlen free extent.
+ 	 */
+-	if (minlen < maxlen && besti != -1) {
++	if (minlen <= maxlen && besti != -1) {
+ 		xfs_rtxlen_t	p;	/* amount to trim length by */
+ 
+ 		/*
+-- 
+2.39.2
 
-Changes since v1:
- - various spelling fixes
- - split and refine the cleanups to xfs_rtallocate_block
- - rename xfs_bmap_rtalloc
-
-Diffstat:
- libxfs/xfs_bmap.c     |   57 ++--
- libxfs/xfs_bmap.h     |    2 
- libxfs/xfs_format.h   |   14 -
- libxfs/xfs_rtbitmap.c |  106 +++-----
- libxfs/xfs_rtbitmap.h |    4 
- libxfs/xfs_types.h    |    1 
- scrub/rtsummary.c     |    2 
- xfs_bmap_util.c       |  141 ----------
- xfs_bmap_util.h       |   17 -
- xfs_quota.h           |    5 
- xfs_rtalloc.c         |  648 +++++++++++++++++++++++++-------------------------
- xfs_rtalloc.h         |   37 --
- 12 files changed, 419 insertions(+), 615 deletions(-)
 
