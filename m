@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-1008-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1009-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 738EF81A603
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 18:10:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96B8C81A605
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 18:11:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D8BD1F238B1
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 17:10:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38F231F23546
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 17:11:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4190147785;
-	Wed, 20 Dec 2023 17:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB4B4777A;
+	Wed, 20 Dec 2023 17:10:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GX65nSb0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrM4NzvN"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C35F41874
-	for <linux-xfs@vger.kernel.org>; Wed, 20 Dec 2023 17:10:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E36C433C7;
-	Wed, 20 Dec 2023 17:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9907447785
+	for <linux-xfs@vger.kernel.org>; Wed, 20 Dec 2023 17:10:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183FAC433C9;
+	Wed, 20 Dec 2023 17:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703092239;
-	bh=qHNH2R9m8HpiXUt5wFH9+35GTGqUFUNU8F6jFNZdRYM=;
+	s=k20201202; t=1703092255;
+	bh=pahZ6T2JMNGaZkEg2hjUdm1q1RDJcgjeP/GiM69+FRk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=GX65nSb0vla0cGve6MhHBrMvLMxH4dp8tYpV1Lu1uQzYra4EvFNQSCcdRrJd0cT2d
-	 teqxjDLGCrTHgvWO63xCxnEvYYgPNHS90SI+/FVRdUviRGeIo4gKUS+ma81cCT0xPm
-	 uggsS0DG6YtMaxUTTzDiYVuRCYjwPFe4vrY1tb1+PDmHjuiz5RSwCmy8K0VZM7X86r
-	 ITmfsNhN/mpgjdoVDtR63NpRAaEBvEOqdHi4XNxG30uGztK89pL7jMhcnrT/1jL9Qq
-	 6R2fxNo53j7jF5cwYcpqCyFsopauvpZ0+hZo8OYLv62ea+R8Wq3BN/zH52A2JmGLj2
-	 XFC444r/SxVLA==
-Date: Wed, 20 Dec 2023 09:10:39 -0800
-Subject: [PATCHSET 1/4] xfsprogs: various bug fixes for 6.6
+	b=DrM4NzvNZ864G7Larc0WmOmuHvdvrlKlUGpN7KUKPtkfcm5P8AlDJpB6/rCzvN3V4
+	 +TuGudR+W9YGVaT5bYy96b8DIFhia9TRo5dvwpwx9TUJvb7kAeGiCt1Br6NQiDNq2E
+	 0J/WiuekIPZczKqEt1MYE+tmtGLYGq7ZYvthneeaX+ZH5gjPlmN+Nm65T4G2A5EQan
+	 gBNvcIDXJi2XfZdFw9uPDHCtRWPecUZ0FqfMpCx64P3/JKwCiHJehyDsl8y7f0dsCG
+	 YIKkRL6XZLEoVa9kczy4D8xiS0Xryp5SaDQvFRZhe7aBcHH+j6m0MbWJ5faPSKAdvY
+	 vos4S07JURmhg==
+Date: Wed, 20 Dec 2023 09:10:54 -0800
+Subject: [PATCHSET 2/4] xfs_metadump: various bug fixes
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, cem@kernel.org
 Cc: Chandan Babu R <chandanbabu@kernel.org>, Christoph Hellwig <hch@lst.de>,
  linux-xfs@vger.kernel.org
-Message-ID: <170309218362.1607770.1848898546436984000.stgit@frogsfrogsfrogs>
+Message-ID: <170309218716.1607943.7868749567386210342.stgit@frogsfrogsfrogs>
 In-Reply-To: <20231220170641.GQ361584@frogsfrogsfrogs>
 References: <20231220170641.GQ361584@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,8 +53,8 @@ Content-Transfer-Encoding: 7bit
 
 Hi all,
 
-This series fixes a couple of bugs that I found in the userspace support
-libraries.
+This series fixes numerous errors I found in the new metadump v2 format
+handling code.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -63,18 +63,11 @@ This has been running on the djcloud for months with no problems.  Enjoy!
 Comments and questions are, as always, welcome.
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=xfsprogs-fixes-6.6
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=metadump-fixes-6.6
 ---
- copy/xfs_copy.c      |   24 +++++++++----
- db/block.c           |   14 +++++++
- db/io.c              |   35 +++++++++++++++++-
- db/io.h              |    3 ++
- include/libxfs.h     |    1 +
- libfrog/Makefile     |    1 +
- libfrog/div64.h      |   96 ++++++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/defer_item.c  |    7 ++++
- libxfs/libxfs_priv.h |   77 +---------------------------------------
- 9 files changed, 171 insertions(+), 87 deletions(-)
- create mode 100644 libfrog/div64.h
+ man/man8/xfs_mdrestore.8  |    6 ++
+ man/man8/xfs_metadump.8   |    7 ++-
+ mdrestore/xfs_mdrestore.c |  122 ++++++++++++++++++++++++++-------------------
+ 3 files changed, 81 insertions(+), 54 deletions(-)
 
 
