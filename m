@@ -1,43 +1,44 @@
-Return-Path: <linux-xfs+bounces-1027-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1028-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBBE281A623
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 18:15:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE35381A624
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 18:15:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6BE29B21CEB
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 17:15:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5FCA7B21A9B
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Dec 2023 17:15:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F25E547789;
-	Wed, 20 Dec 2023 17:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DE8A4778C;
+	Wed, 20 Dec 2023 17:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eA0WgQQj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rloz+D1+"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDA34776B
-	for <linux-xfs@vger.kernel.org>; Wed, 20 Dec 2023 17:15:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B793C433C7;
-	Wed, 20 Dec 2023 17:15:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BD44776B
+	for <linux-xfs@vger.kernel.org>; Wed, 20 Dec 2023 17:15:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F50C433C7;
+	Wed, 20 Dec 2023 17:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703092536;
-	bh=9HE6ULMmYz25icKSnr8wET4b0nqzbRpWYcUbOGYim9U=;
+	s=k20201202; t=1703092551;
+	bh=LQML0uCgwvxkfpNg7HmPf0kgc9Sy1HRjWFKvs8m4ZgQ=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=eA0WgQQjtdwBDG4usK27lJAXFC3XT6zYI6zSdcMHG4SAc4HEz2vvvGDDfQWBJQpY7
-	 CWxWELlGFfak5L3oNhfnUElFXSCgzbXlTYVgZC0tm7eO5q5LODguvqPIcGYALpTR6k
-	 g0qN8pvPxkE6cMfjVHrYndg7HF9PIEHrpxubtQTt2Rk6vhJRs6ABoaRVd7C0ybskRn
-	 nCGRP5q0yH4xuMo5kIQDpbgC2mkzPKvRrH5f1KCe+nrJSquHenJxB3khEz5RqxWXFo
-	 8anwlj7RGRa+JSOJQ6xUNf982VR7XD2OKWeiidU2ACHJQ3Gl9MCjLgftq1cjIUj1Fp
-	 hy+LsNWjgAiCQ==
-Date: Wed, 20 Dec 2023 09:15:35 -0800
-Subject: [PATCH 1/3] xfs_scrub: handle spurious wakeups in scan_fs_tree
+	b=Rloz+D1+rrEhy/3EAANSUwcBTnWdnLXOY6xT/Q0TYNEOMjTJKA3w18pK5gAAo75Vs
+	 l+ZlMhFtgVeCGkxxKDXdVOAXFqyTaVDn/40EUF0oe8MCxu2Tnwnw7+3tN8nfn/1zr4
+	 pLHMPETsx+vjo+1PD2/6o1JvV71ZMn+CzxtCY4gy6ihOU91QxRHfAgE5gkGXokmeVk
+	 0eiJ2BXTLbXLN0ZlptM0awsTEmnL1MoQAKeMD3u+4B5klTlSfmwFY7YrPfJnfWyO0G
+	 hOCu59XG5NLaQiOlbUMXv9zW4nzx702mog0IzUNdEZnYPDCDbZux2dAdQr/Cn4ssxy
+	 rc7DyEyo+2nyg==
+Date: Wed, 20 Dec 2023 09:15:51 -0800
+Subject: [PATCH 2/3] xfs_scrub: don't retry unsupported optimizations
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, cem@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <170309219456.1608293.8633973779348446973.stgit@frogsfrogsfrogs>
+Cc: Carlos Maiolino <cmaiolino@redhat.com>, Christoph Hellwig <hch@lst.de>,
+ linux-xfs@vger.kernel.org
+Message-ID: <170309219469.1608293.1771127784149300190.stgit@frogsfrogsfrogs>
 In-Reply-To: <170309219443.1608293.8210327879201043663.stgit@frogsfrogsfrogs>
 References: <170309219443.1608293.8210327879201043663.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -52,30 +53,53 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Coverity reminded me that the pthread_cond_wait can wake up and return
-without the predicate variable (sft.nr_dirs > 0) actually changing.
-Therefore, one has to retest the condition after each wakeup.
+If the kernel says it doesn't support optimizing a data structure, we
+should mark it done and move on.  This is much better than requeuing the
+repair, in which case it will likely keep failing.  Eventually these
+requeued repairs end up in the single-threaded last resort at the end of
+phase 4, which makes things /very/ slow.
 
-Coverity-id: 1554280
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- scrub/vfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scrub/scrub.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 
-diff --git a/scrub/vfs.c b/scrub/vfs.c
-index 577eb6dc..3c1825a7 100644
---- a/scrub/vfs.c
-+++ b/scrub/vfs.c
-@@ -263,7 +263,7 @@ scan_fs_tree(
- 	 * about to tear everything down.
- 	 */
- 	pthread_mutex_lock(&sft.lock);
--	if (sft.nr_dirs)
-+	while (sft.nr_dirs > 0)
- 		pthread_cond_wait(&sft.wakeup, &sft.lock);
- 	assert(sft.nr_dirs == 0);
- 	pthread_mutex_unlock(&sft.lock);
+diff --git a/scrub/scrub.c b/scrub/scrub.c
+index e83d0d9c..1a450687 100644
+--- a/scrub/scrub.c
++++ b/scrub/scrub.c
+@@ -668,6 +668,15 @@ _("Filesystem is shut down, aborting."));
+ 		return CHECK_ABORT;
+ 	case ENOTTY:
+ 	case EOPNOTSUPP:
++		/*
++		 * If the kernel cannot perform the optimization that we
++		 * requested; or we forced a repair but the kernel doesn't know
++		 * how to perform the repair, don't requeue the request.  Mark
++		 * it done and move on.
++		 */
++		if (is_unoptimized(&oldm) ||
++		    debug_tweak_on("XFS_SCRUB_FORCE_REPAIR"))
++			return CHECK_DONE;
+ 		/*
+ 		 * If we're in no-complain mode, requeue the check for
+ 		 * later.  It's possible that an error in another
+@@ -678,13 +687,6 @@ _("Filesystem is shut down, aborting."));
+ 		 */
+ 		if (!(repair_flags & XRM_COMPLAIN_IF_UNFIXED))
+ 			return CHECK_RETRY;
+-		/*
+-		 * If we forced repairs or this is a preen, don't
+-		 * error out if the kernel doesn't know how to fix.
+-		 */
+-		if (is_unoptimized(&oldm) ||
+-		    debug_tweak_on("XFS_SCRUB_FORCE_REPAIR"))
+-			return CHECK_DONE;
+ 		fallthrough;
+ 	case EINVAL:
+ 		/* Kernel doesn't know how to repair this? */
 
 
