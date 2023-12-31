@@ -1,44 +1,43 @@
-Return-Path: <linux-xfs+bounces-1227-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1228-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1941820D41
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 21:04:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99F23820D42
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 21:04:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F420A1C2187E
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:04:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CC57A1C21872
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:04:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2808ABA30;
-	Sun, 31 Dec 2023 20:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07AD4BA34;
+	Sun, 31 Dec 2023 20:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFNHS12s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UsFWoPNk"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C26BA2E
-	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 20:04:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE6C1C433C8;
-	Sun, 31 Dec 2023 20:04:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7063BA2B
+	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 20:04:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5990EC433C8;
+	Sun, 31 Dec 2023 20:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704053051;
-	bh=q99cStT7is21iMNuCN4vJD2s1vom/YiyXEZrtAIMjr8=;
+	s=k20201202; t=1704053067;
+	bh=MbAbzrkfIsktsFjyZQQR84cKd+8NZCRbSN+3Mddnhe8=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=VFNHS12sUnVlaPKk6/JcL4oCqTyL3kX0NYrd5PN1904JyMjvMCp0NJvjBLFzaaJek
-	 Y9bKq2dFdM8oUfT+9y5h8pMKlJgiIixvTzuDJBp3t0qI/0nR0iEm4a5kQNR7QNd4zC
-	 83cFTodSMJIFD6SKGK7VFBoitQuwNlHPr0pUcODd+vGq/Lu02fSaHmC7IbnxLKxAaA
-	 oQQABIEK2YOhFkvLYezu4LH3+bdWg7DaVK60E5cNKWZYdVOkHoeIvYbYHoHf6L+rIB
-	 UGQkLr4fuHbiCtbKdLjN2hRv+sa9q6oYn+Ft8Q/v9N79eUsOqL2K/9UzT3ulnxZyBb
-	 UOhYpUCho0+Ug==
-Date: Sun, 31 Dec 2023 12:04:11 -0800
-Subject: [PATCHSET v2.0 3/4] xfs-documentation: realtime reverse-mapping
- support
+	b=UsFWoPNkZkUlRiCmk6ZZjJmSop/HVSqWIckEVI34TtxCoPmrgkzT5804RnQ4EhieG
+	 gpvkTfl4hrT9sfN+WVBRHhy5A0MoFJBoK13rn/ugQBkJ9xHy6kYNai8WnJ5XXdD3ZD
+	 kzt0K+VgGkFubzIjoOzVQ1VFaT7WosDLPWiqDgiybWny++tBuPIYQHxdzJjJPqa0EW
+	 ePz9y+Mv0VDQPDz0tmskZloQ9qtXEKZE6bTJnxyudxvIsbmCJ/qn7Jfz8MGkr4NBnp
+	 /w6K9HZtObNqXujlvpTZ5/+thO2M6jV05GLpSI1qMxcGa/YSMLERUYdTijlVAQF/J0
+	 LJ1zntHxV7Jjw==
+Date: Sun, 31 Dec 2023 12:04:26 -0800
+Subject: [PATCHSET v2.0 4/4] xfs-documentation: reflink on the realtime device
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: darrick.wong@oracle.com, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405037626.1829975.16480777008172979264.stgit@frogsfrogsfrogs>
+Message-ID: <170405037956.1831712.9546527653473091013.stgit@frogsfrogsfrogs>
 In-Reply-To: <20231231182323.GU361584@frogsfrogsfrogs>
 References: <20231231182323.GU361584@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,7 +52,7 @@ Content-Transfer-Encoding: 7bit
 
 Hi all,
 
-This patch documents the realtime reverse mapping btree.
+This patch documents the realtime reference count btree.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -61,22 +60,23 @@ from my git trees, which are linked below.
 Comments and questions are, as always, welcome.
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-rmap
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-reflink
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-rmap
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-reflink
 
 fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-rmap
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-reflink
 
 xfsdocs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-documentation.git/log/?h=realtime-rmap
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-documentation.git/log/?h=realtime-reflink
 ---
- .../allocation_groups.asciidoc                     |    8 -
- .../internal_inodes.asciidoc                       |    4 
+ .../internal_inodes.asciidoc                       |    5 -
  .../journaling_log.asciidoc                        |    9 +
- design/XFS_Filesystem_Structure/realtime.asciidoc  |    5 
- design/XFS_Filesystem_Structure/rtrmapbt.asciidoc  |  216 ++++++++------------
- 5 files changed, 105 insertions(+), 137 deletions(-)
+ design/XFS_Filesystem_Structure/magic.asciidoc     |    1 
+ design/XFS_Filesystem_Structure/realtime.asciidoc  |    5 -
+ .../XFS_Filesystem_Structure/rtrefcountbt.asciidoc |  173 ++++++++++++++++++++
+ 5 files changed, 190 insertions(+), 3 deletions(-)
+ create mode 100644 design/XFS_Filesystem_Structure/rtrefcountbt.asciidoc
 
 
