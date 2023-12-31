@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-1612-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1613-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15BFF820EF2
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 22:44:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A461820EF3
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 22:44:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6CCD282663
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 21:44:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BE431F22049
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 21:44:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0023BE4D;
-	Sun, 31 Dec 2023 21:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C3DBE4D;
+	Sun, 31 Dec 2023 21:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a76LyxLh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JzBkMIR4"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFDEBE47
-	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 21:44:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13014C433C7;
-	Sun, 31 Dec 2023 21:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2379BE48
+	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 21:44:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B588BC433C7;
+	Sun, 31 Dec 2023 21:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704059059;
-	bh=6KRe6XnEAtY5yLLr8+ngA1i0vYhj/t6UsWAwP8Gx9jk=;
+	s=k20201202; t=1704059074;
+	bh=0NvWL3VCPI/+sBqUQWl2zmG1+1TV8kxDoGaP5fARpaQ=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=a76LyxLhp1Nc5Y5+CbuC57HCJqnizwjIbgalQK5r9SWeMjbzudYyWz4Sq0LBcrAEc
-	 BCWDPbZdZuOSnZ66WSP+ofDQCdItqWxGrWavixMCcmyiySPr/NjqFNAN7DAxpvZ+sn
-	 F2OWA7+Ma/EHuz57bms2bmMCjJ4KbR147aV3N9U2WOgEHZibyXm8UiHE3O6M47Sy4A
-	 J6+eBE6wifW/7cEOTN/YyOxy+23MMYD9gClt0HYBE6yygGDWYM4/5In3yTOHVMf1Ng
-	 N05vQ8tXVywQkCmFPn2GKaFHJmWgtLsgnEJSyI72OFLJvfiBtPh600AUxicx24gRfF
-	 tAAElsOF54srA==
-Date: Sun, 31 Dec 2023 13:44:18 -0800
-Subject: [PATCH 09/10] xfs: simplify usage of the rcur local variable in
- xfs_refcount_finish_one
+	b=JzBkMIR4CjEXKwLT2HaoySI5bNwvNpvjof0fiXJZlyZf6eGqfckrZylv1ywxxZEW8
+	 IUjVZYH/LLokv/vhGewFlP0Johr23V7SAulElwrYk81uXwRSYN/GOLYotPnEMtlZNu
+	 sl8Ru2gqCVR2ZqHmr7aGl7ln2JE9bgIyzNgtc66o7mIlfjKh/K0WK7CS1PIzrdyDQq
+	 WbAORCvVeXXts75967EFJQa0rv19bV4hwRkbKHXl2guBKFu76Xx+Vzr7JOM08iVDwV
+	 jjeFFyN6RCVaXDAsEx3l2qhRVsPzRCzaqdt3DXIW2w6yDaiXZbLQxmG0HOfEhki9Jn
+	 I59TZcwAcscIQ==
+Date: Sun, 31 Dec 2023 13:44:34 -0800
+Subject: [PATCH 10/10] xfs: move xfs_refcount_update_defer_add to
+ xfs_refcount_item.c
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170404851037.1765989.5240045203461279649.stgit@frogsfrogsfrogs>
+Message-ID: <170404851053.1765989.3281178019422983331.stgit@frogsfrogsfrogs>
 In-Reply-To: <170404850874.1765989.3728283509894891914.stgit@frogsfrogsfrogs>
 References: <170404850874.1765989.3728283509894891914.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,50 +53,133 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Only update rcur when we know the final *pcur value.
+Move the code that adds the incore xfs_refcount_update_item deferred
+work data to a transaction live with the CUI log item code.  This means
+that the refcount code no longer has to know about the inner workings of
+the CUI log items.
 
-Inspired-by: Christoph Hellwig <hch@lst.de>
-[djwong: don't leave the caller with a dangling ref]
+As a consequence, we can get rid of the _{get,put}_group helpers.
+
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_refcount.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_refcount.c |    6 ++----
+ fs/xfs/libxfs/xfs_refcount.h |    3 ---
+ fs/xfs/xfs_refcount_item.c   |   24 +++++++++++-------------
+ fs/xfs/xfs_refcount_item.h   |    5 +++++
+ 4 files changed, 18 insertions(+), 20 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
-index 0d1b17a4df6a1..ccb2a1fa5f589 100644
+index ccb2a1fa5f589..edabdf1a97d4b 100644
 --- a/fs/xfs/libxfs/xfs_refcount.c
 +++ b/fs/xfs/libxfs/xfs_refcount.c
-@@ -1341,7 +1341,7 @@ xfs_refcount_finish_one(
- 	struct xfs_btree_cur		**pcur)
+@@ -24,6 +24,7 @@
+ #include "xfs_rmap.h"
+ #include "xfs_ag.h"
+ #include "xfs_health.h"
++#include "xfs_refcount_item.h"
+ 
+ struct kmem_cache	*xfs_refcount_intent_cache;
+ 
+@@ -1435,10 +1436,7 @@ __xfs_refcount_add(
+ 	ri->ri_startblock = startblock;
+ 	ri->ri_blockcount = blockcount;
+ 
+-	trace_xfs_refcount_defer(tp->t_mountp, ri);
+-
+-	xfs_refcount_update_get_group(tp->t_mountp, ri);
+-	xfs_defer_add(tp, &ri->ri_list, &xfs_refcount_update_defer_type);
++	xfs_refcount_defer_add(tp, ri);
+ }
+ 
+ /*
+diff --git a/fs/xfs/libxfs/xfs_refcount.h b/fs/xfs/libxfs/xfs_refcount.h
+index c94b8f71d407b..68acb0b1b4a87 100644
+--- a/fs/xfs/libxfs/xfs_refcount.h
++++ b/fs/xfs/libxfs/xfs_refcount.h
+@@ -74,9 +74,6 @@ xfs_refcount_check_domain(
+ 	return true;
+ }
+ 
+-void xfs_refcount_update_get_group(struct xfs_mount *mp,
+-		struct xfs_refcount_intent *ri);
+-
+ void xfs_refcount_increase_extent(struct xfs_trans *tp,
+ 		struct xfs_bmbt_irec *irec);
+ void xfs_refcount_decrease_extent(struct xfs_trans *tp,
+diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
+index b36d8433098c8..bec3b91e826a4 100644
+--- a/fs/xfs/xfs_refcount_item.c
++++ b/fs/xfs/xfs_refcount_item.c
+@@ -22,6 +22,7 @@
+ #include "xfs_log_recover.h"
+ #include "xfs_ag.h"
+ #include "xfs_btree.h"
++#include "xfs_trace.h"
+ 
+ struct kmem_cache	*xfs_cui_cache;
+ struct kmem_cache	*xfs_cud_cache;
+@@ -319,21 +320,18 @@ xfs_refcount_update_create_done(
+ 	return &cudp->cud_item;
+ }
+ 
+-/* Take a passive ref to the AG containing the space we're refcounting. */
++/* Add this deferred CUI to the transaction. */
+ void
+-xfs_refcount_update_get_group(
+-	struct xfs_mount		*mp,
++xfs_refcount_defer_add(
++	struct xfs_trans		*tp,
+ 	struct xfs_refcount_intent	*ri)
  {
- 	struct xfs_mount		*mp = tp->t_mountp;
--	struct xfs_btree_cur		*rcur;
-+	struct xfs_btree_cur		*rcur = *pcur;
- 	struct xfs_buf			*agbp = NULL;
- 	int				error = 0;
- 	xfs_agblock_t			bno;
-@@ -1359,7 +1359,6 @@ xfs_refcount_finish_one(
- 	 * If we haven't gotten a cursor or the cursor AG doesn't match
- 	 * the startblock, get one now.
- 	 */
--	rcur = *pcur;
- 	if (rcur != NULL && rcur->bc_ag.pag != ri->ri_pag) {
- 		nr_ops = rcur->bc_ag.refc.nr_ops;
- 		shape_changes = rcur->bc_ag.refc.shape_changes;
-@@ -1373,11 +1372,11 @@ xfs_refcount_finish_one(
- 		if (error)
- 			return error;
++	struct xfs_mount		*mp = tp->t_mountp;
++
++	trace_xfs_refcount_defer(mp, ri);
++
+ 	ri->ri_pag = xfs_perag_intent_get(mp, ri->ri_startblock);
+-}
+-
+-/* Release a passive AG ref after finishing refcounting work. */
+-static inline void
+-xfs_refcount_update_put_group(
+-	struct xfs_refcount_intent	*ri)
+-{
+-	xfs_perag_intent_put(ri->ri_pag);
++	xfs_defer_add(tp, &ri->ri_list, &xfs_refcount_update_defer_type);
+ }
  
--		rcur = xfs_refcountbt_init_cursor(mp, tp, agbp, ri->ri_pag);
-+		*pcur = rcur = xfs_refcountbt_init_cursor(mp, tp, agbp,
-+							  ri->ri_pag);
- 		rcur->bc_ag.refc.nr_ops = nr_ops;
- 		rcur->bc_ag.refc.shape_changes = shape_changes;
- 	}
--	*pcur = rcur;
+ /* Cancel a deferred refcount update. */
+@@ -343,7 +341,7 @@ xfs_refcount_update_cancel_item(
+ {
+ 	struct xfs_refcount_intent	*ri = ci_entry(item);
  
- 	switch (ri->ri_type) {
- 	case XFS_REFCOUNT_INCREASE:
+-	xfs_refcount_update_put_group(ri);
++	xfs_perag_intent_put(ri->ri_pag);
+ 	kmem_cache_free(xfs_refcount_intent_cache, ri);
+ }
+ 
+@@ -433,7 +431,7 @@ xfs_cui_recover_work(
+ 	ri->ri_type = pmap->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK;
+ 	ri->ri_startblock = pmap->pe_startblock;
+ 	ri->ri_blockcount = pmap->pe_len;
+-	xfs_refcount_update_get_group(mp, ri);
++	ri->ri_pag = xfs_perag_intent_get(mp, pmap->pe_startblock);
+ 
+ 	xfs_defer_add_item(dfp, &ri->ri_list);
+ }
+diff --git a/fs/xfs/xfs_refcount_item.h b/fs/xfs/xfs_refcount_item.h
+index eb0ab13682d0b..bfee8f30c63ce 100644
+--- a/fs/xfs/xfs_refcount_item.h
++++ b/fs/xfs/xfs_refcount_item.h
+@@ -71,4 +71,9 @@ struct xfs_cud_log_item {
+ extern struct kmem_cache	*xfs_cui_cache;
+ extern struct kmem_cache	*xfs_cud_cache;
+ 
++struct xfs_refcount_intent;
++
++void xfs_refcount_defer_add(struct xfs_trans *tp,
++		struct xfs_refcount_intent *ri);
++
+ #endif	/* __XFS_REFCOUNT_ITEM_H__ */
 
 
