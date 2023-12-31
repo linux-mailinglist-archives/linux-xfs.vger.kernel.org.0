@@ -1,44 +1,45 @@
-Return-Path: <linux-xfs+bounces-1945-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1946-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B18248210CD
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:11:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB56F8210CE
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:11:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F64628272F
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 23:11:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 87E88B21918
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 23:11:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1B7BC2D4;
-	Sun, 31 Dec 2023 23:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745C5C2DA;
+	Sun, 31 Dec 2023 23:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oskycXsk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="reAw1QLw"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE138C2C0
-	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 23:11:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFF3C433C8;
-	Sun, 31 Dec 2023 23:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411CBC2C5
+	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 23:11:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15E75C433C7;
+	Sun, 31 Dec 2023 23:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704064266;
-	bh=dVwKmVNoo0qK223xgHvWXZ0sKwR0hCL+I7iWS0zz+sE=;
+	s=k20201202; t=1704064282;
+	bh=6fLNIenh/+izzgOksenA4UfhR4GURe07oqoTTNmox+c=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=oskycXskezLy1dL3IOPbRIOQwqyl1u1jJgEIidrw2lsG/KolGaQnk3DGuAqBGIShD
-	 0WDzfBPz0v5NubwcDMgnwR2Gen0dtBxuZ8+pagAseB9NzURG1BNjXZovQv31keO2Od
-	 q42F38+IputpDk8I2kh7/LXuyk5Os0gG5NHq8oqVQgPCyCSY3HCLjJ3vHspfOu1tjY
-	 rrIXvJtKSjSAqiVGS9RPeHOR1Km6OC53grHGCjlMuu4hj65/IhwGxv0vvuHvj+aSia
-	 hmObE9R8a7nuOaZAKhzcEp7N9wXb5B11fOEzuRRZYDYj7t0OoWdRnnWbwbX7V3A+4H
-	 16H+bqXYVBuLg==
-Date: Sun, 31 Dec 2023 15:11:06 -0800
-Subject: [PATCH 23/32] xfs_db: report parent pointers in version command
+	b=reAw1QLwrDz3js2H8BFz2jYwk6weuM2R2aAxVOz7YRdtO6nn6U9PiI44zPeCS2ZN2
+	 C1y6Q0bBsRlGnLuZSnmE3Y5X5OyojaMQdKbUloY4L/GaZKMbXV7IoUJMgoZ8nIneb6
+	 /ppngYvMuPh3kEiyRmdFMez2BdcgT/o3z63xvpoT/8UKdgajvrllG92bmmJ0KSWpu+
+	 P6wysbg/USI4MfjhRZWXb0E2a1bvIW1PQBfNPjFeLeEanLX1jASOFBJpc1OZUAXwRY
+	 JzhUKOdT8xnq5rzfx0wlvVFL3bLYocb3BYnk8wFSKKhjUiLlLdj6VXwoq4FxTeMqPx
+	 tMuwqRYb4QR5A==
+Date: Sun, 31 Dec 2023 15:11:21 -0800
+Subject: [PATCH 24/32] xfs_db: report parent bit on xattrs
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, cem@kernel.org
-Cc: catherine.hoang@oracle.com, linux-xfs@vger.kernel.org,
+Cc: Allison Henderson <allison.henderson@oracle.com>,
+ catherine.hoang@oracle.com, linux-xfs@vger.kernel.org,
  allison.henderson@oracle.com
-Message-ID: <170405006407.1804688.3081180575836582476.stgit@frogsfrogsfrogs>
+Message-ID: <170405006421.1804688.16782016668028500385.stgit@frogsfrogsfrogs>
 In-Reply-To: <170405006077.1804688.8762482665401724622.stgit@frogsfrogsfrogs>
 References: <170405006077.1804688.8762482665401724622.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -53,26 +54,43 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Report the presents of PARENT pointers from the version subcommand.
+Display the parent bit on xattr keys
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 ---
- db/sb.c |    2 ++
- 1 file changed, 2 insertions(+)
+ db/attr.c      |    3 +++
+ db/attrshort.c |    3 +++
+ 2 files changed, 6 insertions(+)
 
 
-diff --git a/db/sb.c b/db/sb.c
-index b48767f47fe..9a5d665dfbd 100644
---- a/db/sb.c
-+++ b/db/sb.c
-@@ -706,6 +706,8 @@ version_string(
- 		strcat(s, ",NEEDSREPAIR");
- 	if (xfs_has_large_extent_counts(mp))
- 		strcat(s, ",NREXT64");
-+	if (xfs_has_parent(mp))
-+		strcat(s, ",PARENT");
- 	return s;
- }
- 
+diff --git a/db/attr.c b/db/attr.c
+index ba722e146e2..f29e4a54454 100644
+--- a/db/attr.c
++++ b/db/attr.c
+@@ -82,6 +82,9 @@ const field_t	attr_leaf_entry_flds[] = {
+ 	{ "local", FLDT_UINT1,
+ 	  OI(LEOFF(flags) + bitsz(uint8_t) - XFS_ATTR_LOCAL_BIT - 1), C1, 0,
+ 	  TYP_NONE },
++	{ "parent", FLDT_UINT1,
++	  OI(LEOFF(flags) + bitsz(uint8_t) - XFS_ATTR_PARENT_BIT - 1), C1, 0,
++	  TYP_NONE },
+ 	{ "pad2", FLDT_UINT8X, OI(LEOFF(pad2)), C1, FLD_SKIPALL, TYP_NONE },
+ 	{ NULL }
+ };
+diff --git a/db/attrshort.c b/db/attrshort.c
+index e234fbd8365..872d771d5ed 100644
+--- a/db/attrshort.c
++++ b/db/attrshort.c
+@@ -44,6 +44,9 @@ const field_t	attr_sf_entry_flds[] = {
+ 	{ "secure", FLDT_UINT1,
+ 	  OI(EOFF(flags) + bitsz(uint8_t) - XFS_ATTR_SECURE_BIT - 1), C1, 0,
+ 	  TYP_NONE },
++	{ "parent", FLDT_UINT1,
++	  OI(EOFF(flags) + bitsz(uint8_t) - XFS_ATTR_PARENT_BIT - 1), C1, 0,
++	  TYP_NONE },
+ 	{ "name", FLDT_CHARNS, OI(EOFF(nameval)), attr_sf_entry_name_count,
+ 	  FLD_COUNT, TYP_NONE },
+ 	{ "value", FLDT_CHARNS, attr_sf_entry_value_offset,
 
 
