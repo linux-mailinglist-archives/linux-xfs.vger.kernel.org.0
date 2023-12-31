@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-1199-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1200-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B6E2820D24
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:57:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5931A820D25
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:57:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0685B20D35
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 19:57:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 14FB72820E5
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 19:57:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF77DC8D4;
-	Sun, 31 Dec 2023 19:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B07BC8E4;
+	Sun, 31 Dec 2023 19:57:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPxj2eoo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKfbIvRu"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF39C8CB
-	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 19:56:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174A2C433C8;
-	Sun, 31 Dec 2023 19:56:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A35C8CA;
+	Sun, 31 Dec 2023 19:57:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADE83C433C7;
+	Sun, 31 Dec 2023 19:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704052614;
-	bh=PCLVEhu2o2pTXN5V4FvEmj1yyMB1GxQQtjALXOMQYIQ=;
+	s=k20201202; t=1704052629;
+	bh=LqLUZursVvMo1wWB7+mEsO9KR18liySlVejnFr4QU78=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=nPxj2eooncw23ZPFMWMEeoon8Oh4Atm4IhYn/oVXUHlab+gc4i47rlIz3YBzZOUku
-	 Wxti5CUYlTEXGqn5nQfGCNhgSGg6zHQPz8Tm1m1ocldVLB8986PY5N9ePTnfGl/hFh
-	 /1O9WGFn00lA2ibaZ6gbmVxIuF53Jzq5opEszUa1mhDgPkBvf6GPTCILq4tXIvaj+B
-	 PP5fDwKUnE3x0aOKD/WtqbUcTHGmA+zIn80jDoN+hs8BmY81vvvRA7+kfro366DVeM
-	 CxNxf+COKt/xzvCN/RNxrbL+8SS0vT9OwAWHIwvLeAleDD9gjgYc7gEd5MerDmwjSI
-	 nC3yv3MkpSLYQ==
-Date: Sun, 31 Dec 2023 11:56:53 -0800
-Subject: [PATCHSET 3/3] xfsprogs: defragment free space
+	b=LKfbIvRuA5ZYwg3Q9y40ror4F1p4d8U3ARRN0X5BWU5WalqIViy89D2Nahrc+mULB
+	 /XGFlZMzbYJ1IjBKBONROxeabS+HBNCkQDmFS58oP6xUCHd/13FoK4bTCnR2CKyHm+
+	 MwLMmivNXLtBDPnhcMQLfxWtzsd3jmfKS3WEFtcdz0Fg7BcA+ZYik7DU4gyWM13Wxt
+	 2qbq96NwouM8jprGJcIyhdg1UjbVKneJ1G2QPKlaqW8U2f+aCRzTpLJkqIN/WytBV6
+	 O34UTL5bOcTjrcPENpAjJbFlWX2cWZ2jICUmaInv9r2Nj5q3p14dsNKk4fo+wfkZ01
+	 Q6FIiwYvo+UWg==
+Date: Sun, 31 Dec 2023 11:57:09 -0800
+Subject: [PATCHSET 1/8] fstests: fuzz non-root dquots on xfs
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
-Message-ID: <170405020316.1820796.451112156000559887.stgit@frogsfrogsfrogs>
-In-Reply-To: <20231231182553.GV361584@frogsfrogsfrogs>
-References: <20231231182553.GV361584@frogsfrogsfrogs>
+To: djwong@kernel.org, zlang@redhat.com
+Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, guan@eryu.me
+Message-ID: <170405025600.1821776.14517378233107318876.stgit@frogsfrogsfrogs>
+In-Reply-To: <20231231181215.GA241128@frogsfrogsfrogs>
+References: <20231231181215.GA241128@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,25 +52,16 @@ Content-Transfer-Encoding: 7bit
 
 Hi all,
 
-These patches contain experimental code to enable userspace to defragment
-the free space in a filesystem.  Two purposes are imagined for this
-functionality: clearing space at the end of a filesystem before
-shrinking it, and clearing free space in anticipation of making a large
-allocation.
+During testing of online fsck part 2, I noticed that the dquot iteration
+code in online fsck had some math bugs that resulted in it only ever
+checking the root dquot.  Loooking into why I never noticed that, I
+discovered that fstests also never checked them.  Strengthen our testing
+by adding that.
 
-The first patch adds a new fallocate mode that allows userspace to
-allocate free space from the filesystem into a file.  The goal here is
-to allow the filesystem shrink process to prevent allocation from a
-certain part of the filesystem while a free space defragmenter evacuates
-all the files from the doomed part of the filesystem.
-
-The second patch amends the online repair system to allow the sysadmin
-to forcibly rebuild metadata structures, even if they're not corrupt.
-Without adding an ioctl to move metadata btree blocks, this is the only
-way to dislodge metadata.
-
-This patchset also includes a separate inode migration tool as
-prototyped by Dave Chinner in 2020.
+While we're at it, hide a few more inode fields from the fuzzer, since
+their contents are completely user-controlled and have no other
+validation.  Hence they just generate noise in the test system and
+increase runtimes unnecessarily.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -80,56 +71,24 @@ Comments and questions are, as always, welcome.
 
 --D
 
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=defrag-freespace
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=defrag-freespace
-
 fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=defrag-freespace
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=fuzz-dquots
 ---
- Makefile                        |    2 
- configure.ac                    |    1 
- db/agfl.c                       |  297 ++++
- include/builddefs.in            |    1 
- include/xfs_trace.h             |    4 
- io/prealloc.c                   |   35 
- libfrog/Makefile                |    5 
- libfrog/clearspace.c            | 3103 +++++++++++++++++++++++++++++++++++++++
- libfrog/clearspace.h            |   72 +
- libfrog/fsgeom.h                |   29 
- libfrog/radix-tree.c            |    2 
- libfrog/radix-tree.h            |    2 
- libxfs/libxfs_api_defs.h        |    4 
- libxfs/libxfs_priv.h            |   10 
- libxfs/xfs_alloc.c              |   88 +
- libxfs/xfs_alloc.h              |    3 
- libxfs/xfs_bmap.c               |  149 ++
- libxfs/xfs_bmap.h               |    3 
- libxfs/xfs_fs.h                 |    1 
- libxfs/xfs_fs_staging.h         |   15 
- m4/package_libcdev.m4           |   20 
- man/man2/ioctl_xfs_map_freesp.2 |   76 +
- man/man8/xfs_db.8               |   11 
- man/man8/xfs_io.8               |    8 
- man/man8/xfs_spaceman.8         |   40 +
- spaceman/Makefile               |   10 
- spaceman/clearfree.c            |  164 ++
- spaceman/find_owner.c           |  443 ++++++
- spaceman/init.c                 |    7 
- spaceman/move_inode.c           |  663 ++++++++
- spaceman/relocation.c           |  566 +++++++
- spaceman/relocation.h           |   53 +
- spaceman/space.h                |    6 
- 33 files changed, 5883 insertions(+), 10 deletions(-)
- create mode 100644 libfrog/clearspace.c
- create mode 100644 libfrog/clearspace.h
- create mode 100644 man/man2/ioctl_xfs_map_freesp.2
- create mode 100644 spaceman/clearfree.c
- create mode 100644 spaceman/find_owner.c
- create mode 100644 spaceman/move_inode.c
- create mode 100644 spaceman/relocation.c
- create mode 100644 spaceman/relocation.h
+ check           |   12 ++++++++++++
+ common/fuzzy    |   27 ++++++++++++++++++++++++---
+ common/populate |   14 ++++++++++++++
+ tests/xfs/425   |   10 +++++++---
+ tests/xfs/426   |   10 +++++++---
+ tests/xfs/427   |   10 +++++++---
+ tests/xfs/428   |   10 +++++++---
+ tests/xfs/429   |   10 +++++++---
+ tests/xfs/430   |   10 +++++++---
+ tests/xfs/487   |   10 +++++++---
+ tests/xfs/488   |   10 +++++++---
+ tests/xfs/489   |   10 +++++++---
+ tests/xfs/779   |   10 +++++++---
+ tests/xfs/780   |   10 +++++++---
+ tests/xfs/781   |   10 +++++++---
+ 15 files changed, 134 insertions(+), 39 deletions(-)
 
 
