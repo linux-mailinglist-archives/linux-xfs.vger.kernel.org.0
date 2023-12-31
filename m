@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-1196-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1197-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F9FC820D21
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:56:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2737820D22
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:56:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 31DB7B21648
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 19:56:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3089E1C21818
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 19:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40231C8C8;
-	Sun, 31 Dec 2023 19:56:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F973C8D5;
+	Sun, 31 Dec 2023 19:56:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTNYxNBm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhmBRvM4"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDFEC2D4
-	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 19:56:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 716CFC433C8;
-	Sun, 31 Dec 2023 19:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B9CC8D4
+	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 19:56:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13060C433C7;
+	Sun, 31 Dec 2023 19:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704052567;
-	bh=+/6RYGjb35yFzTDStbgZPa/rNA6doWaWLbugaLs5PlY=;
+	s=k20201202; t=1704052583;
+	bh=L9hZH4biKrT6aLJlL6q54N176SdiZwjCsCFtRtlwWrk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=DTNYxNBmZAYZ64TlO6EweYEA2IOnvm68N/Ud0EP/pEGRq9IexH2j/AUlWeGyYVnkI
-	 WbXEV6lBPFE4Owqbm3gHp45a4xK5/xu6CBRm9fSY5+cGf61UQ8O1NcTNGwtF4wm9qv
-	 dud61Tww58wQ+CIvrBUfKgBhOiVOwaGpJzDeKXuKFFslsdhirZcpEt5Rl48Ll1Yb8E
-	 7PbSgR6lsDHVZ9IXyfsyFvnLxeTU9yriC1KspJSbmh7f9CS2i8YIRqGm0MHjjVcWlD
-	 ApILE8ZyOmATWth7/pdHB9nwmJQ9HbcYMqlfkXMaRL+WJpl7PqRuwmgqZK0ZRPYe3b
-	 uegRy+wlJO01w==
-Date: Sun, 31 Dec 2023 11:56:06 -0800
-Subject: [PATCHSET v2.0 17/17] xfsprogs: enable quota for realtime voluems
+	b=fhmBRvM4QMJjstR2FkRTKgJgqO1hNwOqzcOKsgVyTS6qepC3iAtyfx43GQZbCPOrM
+	 djwbkyYrsvrO+TXj0wmxhuj6a03Xxo5k83mnTdBfqIwVdqB7/szMEq/RFr3OC5ohQO
+	 9pdVWZcibmVAzRxRlnKlY56S+UPqEs0iQ0bC5ywAoVP97cEi3fDYzCqRtHrvAXiBj0
+	 FaQlRm/0wznD7b31a4SpmiojG3KezaQmps6qPe+psGYgkNmdt5Rjpxqjjxx/OSvT2F
+	 qkONYp5pDrmzCKcDZhdK0p5W+Qw0oAAFD5jbUK6tSZBkXpQKK/czMPyZj+lFEwM4Hi
+	 UtJDkTb1Mn+WQ==
+Date: Sun, 31 Dec 2023 11:56:22 -0800
+Subject: [PATCHSET RFC 1/3] xfsprogs: noalloc allocation groups
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405018382.1818295.12964444180016025240.stgit@frogsfrogsfrogs>
-In-Reply-To: <20231231182323.GU361584@frogsfrogsfrogs>
-References: <20231231182323.GU361584@frogsfrogsfrogs>
+Message-ID: <170405019560.1820520.7145960948523376788.stgit@frogsfrogsfrogs>
+In-Reply-To: <20231231182553.GV361584@frogsfrogsfrogs>
+References: <20231231182553.GV361584@frogsfrogsfrogs>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -52,14 +52,13 @@ Content-Transfer-Encoding: 7bit
 
 Hi all,
 
-At some point, I realized that I've refactored enough of the quota code
-in XFS that I should evaluate whether or not quota actually works on
-realtime volumes.  It turns out that with two exceptions, it actually
-does seem to work properly!  There are three broken pieces that I've
-found so far: chown doesn't work, the quota accounting goes wrong when
-the rt bitmap changes size, and the VFS quota ioctls don't report the
-realtime warning counts or limits.  Hence this series fixes two things
-in XFS and re-enables rt quota after a break of a couple decades.
+This series creates a new NOALLOC flag for allocation groups that causes
+the block and inode allocators to look elsewhere when trying to
+allocate resources.  This is either the first part of a patchset to
+implement online shrinking (set noalloc on the last AGs, run fsr to move
+the files and directories) or freeze-free rmapbt rebuilding (set
+noalloc to prevent creation of new mappings, then hook deletion of old
+mappings).  This is still totally a research project.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -70,16 +69,21 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-quotas
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=noalloc-ags
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-quotas
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-quotas
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=noalloc-ags
 ---
- include/xqm.h |    5 ++++-
- quota/state.c |    1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ include/xfs_trace.h  |    2 +
+ include/xfs_trans.h  |    4 ++
+ io/aginfo.c          |   45 ++++++++++++++++++--
+ libxfs/xfs_ag.c      |  114 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_ag.h      |    8 ++++
+ libxfs/xfs_ag_resv.c |   28 +++++++++++-
+ libxfs/xfs_defer.c   |   14 ++++++
+ libxfs/xfs_fs.h      |    5 ++
+ libxfs/xfs_ialloc.c  |    3 +
+ man/man8/xfs_io.8    |    6 ++-
+ 10 files changed, 220 insertions(+), 9 deletions(-)
 
 
