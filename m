@@ -1,43 +1,43 @@
-Return-Path: <linux-xfs+bounces-1183-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-1184-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93982820D10
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:52:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3522820D11
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 20:53:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A2941F21D8E
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 19:52:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67BB1B21515
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 19:53:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBDD7B66B;
-	Sun, 31 Dec 2023 19:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68566B671;
+	Sun, 31 Dec 2023 19:53:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ptkax2Sy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKOPHbH3"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8434B65B
-	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 19:52:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CEB4C433C8;
-	Sun, 31 Dec 2023 19:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347B0B667
+	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 19:52:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8759C433C7;
+	Sun, 31 Dec 2023 19:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704052364;
-	bh=0tb/DPdwWDat4H1kTt1p4BxxeoG9mIvWd2D2EhFdFuk=;
+	s=k20201202; t=1704052379;
+	bh=rQRjlbeGhQEVLdYwm1d02lUTHW7ZoQxplJAZbTrzf7g=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Ptkax2SyHTZ02fP6QWKpq0zwqZCjvxfHwJQ8gdy3L3E2mhW4GC+zMxVfYWmpLaFSn
-	 kuXAnIWTkOolEVc+1gHXN1f+LvO3YEeY60lD1F1ForFenJi04TvtZfCYWt3TwVkTdC
-	 uil8gFHKUYUdZMCCdoguIJ8HFqSN84S39GLJ9KFkkdOr0Z1CSYyOuzEFKNQbvIJwol
-	 4e4zAGuT1GstBo4gd5Use6eXhequ/DYA+VJnvy+cO8NOd3jIV7tIv0tMvnIfnrCBHo
-	 8VRb8a//t1MUfdhvFZOPSHrM/rit0Mc1D2hM10VHgDi19K6BYE7Hx1jSx0xZUplNti
-	 KUzw227N1t4EA==
-Date: Sun, 31 Dec 2023 11:52:43 -0800
-Subject: [PATCHSET v2.0 04/17] xfs_metadump: support external devices
+	b=kKOPHbH33NYk6pQtw17ZTdgTSsgP17pC/Gygfq1H1FxopyL7xa+brEptNeHCCD4KX
+	 Q2ourfOdUhrx+K54z8yuQ/Wh7O6Uv2Oz+2qGgsMRkHSVYSQJtBc6SWPDN8D6cMTznz
+	 LCLjRSDtP8wSVbdJe6FlLF8uvPquf8a3mRDHxNHj2i0fGgtWFC6SNC72rnyM75ZEUe
+	 QXqJmKgcdlrdVWc+NHJ36/3pS1+zvRKp7+0lQA8MqMNXLY74jjOZaQa3HLvGOVgQ+2
+	 8UVu86v+1KRN65VyN7lv/Hcutc8L6Cz1ST5Ubn9DzF+QhH1sKeqtBR6SwdWJCnIKYq
+	 hsW+bY6XpYoOA==
+Date: Sun, 31 Dec 2023 11:52:59 -0800
+Subject: [PATCHSET v2.0 05/17] xfsprogs: refactor realtime meta inode locking
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405011421.1811063.2601536880760874799.stgit@frogsfrogsfrogs>
+Message-ID: <170405011748.1811141.16068744852666586384.stgit@frogsfrogsfrogs>
 In-Reply-To: <20231231182323.GU361584@frogsfrogsfrogs>
 References: <20231231182323.GU361584@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -52,15 +52,10 @@ Content-Transfer-Encoding: 7bit
 
 Hi all,
 
-This series augments the xfs_metadump and xfs_mdrestore utilities to
-capture the contents of an external log in a metadump, and restore it on
-the other end.  This will enable better debugging analysis of broken
-filesystems, since it will now be possible to capture external log data.
-This is a prequisite for the rt groups feature, since we'll also need to
-capture the rt superblocks written to the rt device.
-
-This also means we can capture the contents of external logs for better
-analysis by support staff.
+Replace all the open-coded locking of realtime metadata inodes with a
+single rtlock function that can lock all the pieces that the caller
+wants in a single call.  This will be important for maintaining correct
+locking order later when we start adding more realtime metadata inodes.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -70,14 +65,16 @@ Comments and questions are, as always, welcome.
 
 --D
 
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=metadump-external-devices
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=refactor-rt-locking
 
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=metadump-external-devices
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=refactor-rt-locking
 ---
- db/block.c        |  103 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- man/man8/xfs_db.8 |   17 +++++++++
- 2 files changed, 119 insertions(+), 1 deletion(-)
+ libxfs/libxfs_priv.h  |    1 +
+ libxfs/xfs_bmap.c     |    7 ++----
+ libxfs/xfs_rtbitmap.c |   57 +++++++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_rtbitmap.h |   17 +++++++++++++++
+ 4 files changed, 77 insertions(+), 5 deletions(-)
 
 
