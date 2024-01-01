@@ -1,113 +1,153 @@
-Return-Path: <linux-xfs+bounces-2207-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2230-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA0078211ED
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:18:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB1EB821207
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:24:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78E51282446
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:18:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 634A12814AD
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:24:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C30D7389;
-	Mon,  1 Jan 2024 00:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p0TTIqR6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4839D802;
+	Mon,  1 Jan 2024 00:24:46 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D809C38E
-	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XwXIVTaQHU9IVrNjjbFTwkTR7jIpe506NGsplbrLhD4=; b=p0TTIqR6mk/kRPE+/Dlao3VRYW
-	bni1nnjl5WPC0YqQsxcY9jmtlgxgmE8sNdHQNH3UdKvY7bi5gjGQSgYOWvJ7LMuw8BBN1+2qWqfR8
-	Cj1gOpJLXpgtGgG2H1+Hcrv2Wl4W8weKYrCy/2nmNYg6THv3Zo38UhF+hhNESBRLC/ZXakiclKSuF
-	FmG5brpQkj6nSrQq3HDNVVISZRIhvpHvhb8Ju7Sp4Ri64QBrY4gelrVLOf1T+jJuuAvRJ4MeioP0d
-	AMejQVxP1sZ5lJtb8DQOK7CKTLJXK0QmcvWIlC9cQasjOiza0zUExowZtj/UuxmQE6h9oB4mPOYfe
-	KbDct8YA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rK612-008AYo-HE; Mon, 01 Jan 2024 00:18:48 +0000
-Date: Mon, 1 Jan 2024 00:18:48 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 9/9] xfs: connect in-memory btrees to xfiles
-Message-ID: <ZZIE6P0aoVgAtONY@casper.infradead.org>
-References: <170404829556.1748854.13886473250848576704.stgit@frogsfrogsfrogs>
- <170404829726.1748854.1262147267981918901.stgit@frogsfrogsfrogs>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568247ED
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5542a7f1f3cso9098629a12.2
+        for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 16:24:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704068682; x=1704673482;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eWuC/PleNu1/9K+H7jPGI6S6J65an3P59tr7a0lY/mA=;
+        b=Ci7SDtItF3TOShR8zwIwRKx9ZxmbcLbhXNN5WG/bvuYUUoqPrBxONcHSV68ZbWJFqy
+         PNfxkAJ9Wfmw6ag8r0xUl1tdhM0ZmBcu6Hv7P7il7/rISRXwRFo38QhfSxSJBGoD+v5B
+         G7R4HbzWH+qNKezTZJ2N/81HdBxgGNXzG56wiiXt7mFt7WncQgW1MI9bsl/fvj2OQkvX
+         9TnoIxYq7kFafHzN1y5el8DJ9BzLUcZ2dBAOD9OAgOjfA6c8qHy4Y5L6TLNipoF/U1Qe
+         PwgSY4ilGaUYb2HQgE24j6ag8bpwB7G4Vyb+ljWZ4qzGi8MOEeTutPQDYyeGCvg2Q2Xb
+         OROQ==
+X-Gm-Message-State: AOJu0Yx8JLLVbne6hy4LJbZeCt7N0Su51uBAPqwdog1g+J42Alm8Ycwm
+	WyI9uPRTsicEvd0REhOpTdnFtKBJfAcmgenR
+X-Google-Smtp-Source: AGHT+IEPBPswCkShuF4k2WocvG/xEQRcXUZ7wkYN1UFzwwXfy5OmI2uI/j12oQuGH/19FOH24l0ZzQ==
+X-Received: by 2002:a50:d4c1:0:b0:554:4c8a:ffeb with SMTP id e1-20020a50d4c1000000b005544c8affebmr8422373edj.11.1704068682083;
+        Sun, 31 Dec 2023 16:24:42 -0800 (PST)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id es15-20020a056402380f00b0055267663784sm13974959edb.11.2023.12.31.16.24.41
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 31 Dec 2023 16:24:41 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5542a7f1f3cso9098626a12.2
+        for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 16:24:41 -0800 (PST)
+X-Received: by 2002:a17:906:4716:b0:a23:619f:9e68 with SMTP id
+ y22-20020a170906471600b00a23619f9e68mr5196047ejq.150.1704068681808; Sun, 31
+ Dec 2023 16:24:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170404829726.1748854.1262147267981918901.stgit@frogsfrogsfrogs>
+References: <170405001841.1800712.6745668619742020884.stgit@frogsfrogsfrogs> <170405001950.1800712.15718005791386216226.stgit@frogsfrogsfrogs>
+In-Reply-To: <170405001950.1800712.15718005791386216226.stgit@frogsfrogsfrogs>
+From: Neal Gompa <neal@gompa.dev>
+Date: Sun, 31 Dec 2023 19:24:04 -0500
+X-Gmail-Original-Message-ID: <CAEg-Je-zrh-q-FVDorsRMEjD6ZAbsaNNNCZq2J7FXAqWUyFUJA@mail.gmail.com>
+Message-ID: <CAEg-Je-zrh-q-FVDorsRMEjD6ZAbsaNNNCZq2J7FXAqWUyFUJA@mail.gmail.com>
+Subject: Re: [PATCH 8/9] xfs_scrub_fail: move executable script to /usr/libexec
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: cem@kernel.org, linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Dec 31, 2023 at 12:15:54PM -0800, Darrick J. Wong wrote:
-> +/* Ensure that there is storage backing the given range. */
-> +int
-> +xfile_prealloc(
-> +	struct xfile		*xf,
-> +	loff_t			pos,
-> +	u64			count)
-> +{
-> +	struct inode		*inode = file_inode(xf->file);
-> +	struct address_space	*mapping = inode->i_mapping;
-> +	const struct address_space_operations *aops = mapping->a_ops;
-> +	struct page		*page = NULL;
-> +	unsigned int		pflags;
-> +	int			error = 0;
-> +
-> +	if (count > MAX_RW_COUNT)
-> +		return -E2BIG;
-> +	if (inode->i_sb->s_maxbytes - pos < count)
-> +		return -EFBIG;
-> +
-> +	trace_xfile_prealloc(xf, pos, count);
-> +
-> +	pflags = memalloc_nofs_save();
-> +	while (count > 0) {
-> +		void		*fsdata = NULL;
-> +		unsigned int	len;
-> +		int		ret;
-> +
-> +		len = min_t(ssize_t, count, PAGE_SIZE - offset_in_page(pos));
-> +
-> +		/*
-> +		 * We call write_begin directly here to avoid all the freezer
-> +		 * protection lock-taking that happens in the normal path.
-> +		 * shmem doesn't support fs freeze, but lockdep doesn't know
-> +		 * that and will trip over that.
-> +		 */
-> +		error = aops->write_begin(NULL, mapping, pos, len, &page,
-> +				&fsdata);
-> +		if (error)
-> +			break;
-> +
-> +		/*
-> +		 * xfile pages must never be mapped into userspace, so we skip
-> +		 * the dcache flush.  If the page is not uptodate, zero it to
-> +		 * ensure we never go lacking for space here.
-> +		 */
-> +		if (!PageUptodate(page)) {
-> +			void	*kaddr = kmap_local_page(page);
-> +
-> +			memset(kaddr, 0, PAGE_SIZE);
-> +			SetPageUptodate(page);
-> +			kunmap_local(kaddr);
-> +		}
+On Sun, Dec 31, 2023 at 5:54=E2=80=AFPM Darrick J. Wong <djwong@kernel.org>=
+ wrote:
+>
+> From: Darrick J. Wong <djwong@kernel.org>
+>
+> Per FHS 3.0, non-PATH executable binaries are supposed to live under
+> /usr/libexec, not /usr/lib.  xfs_scrub_fail is an executable script,
+> so move it to libexec in case some distro some day tries to mount
+> /usr/lib as noexec or something.
+>
+> Cc: Neal Gompa <neal@gompa.dev>
+> Link: https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch04s07.html
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  include/builddefs.in             |    1 +
+>  scrub/Makefile                   |    7 +++----
+>  scrub/xfs_scrub_fail@.service.in |    2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+>
+>
+> diff --git a/include/builddefs.in b/include/builddefs.in
+> index eb7f6ba4f03..9d0f9c3bf7c 100644
+> --- a/include/builddefs.in
+> +++ b/include/builddefs.in
+> @@ -52,6 +52,7 @@ PKG_ROOT_SBIN_DIR =3D @root_sbindir@
+>  PKG_ROOT_LIB_DIR=3D @root_libdir@@libdirsuffix@
+>  PKG_LIB_DIR    =3D @libdir@@libdirsuffix@
+>  PKG_LIB_SCRIPT_DIR     =3D @libdir@
+> +PKG_LIBEXEC_DIR        =3D @libexecdir@/@pkg_name@
+>  PKG_INC_DIR    =3D @includedir@/xfs
+>  DK_INC_DIR     =3D @includedir@/disk
+>  PKG_MAN_DIR    =3D @mandir@
+> diff --git a/scrub/Makefile b/scrub/Makefile
+> index fd47b893956..8fb366c922c 100644
+> --- a/scrub/Makefile
+> +++ b/scrub/Makefile
+> @@ -140,8 +140,7 @@ install: $(INSTALL_SCRUB)
+>         @echo "    [SED]    $@"
+>         $(Q)$(SED) -e "s|@sbindir@|$(PKG_SBIN_DIR)|g" \
+>                    -e "s|@scrub_args@|$(XFS_SCRUB_ARGS)|g" \
+> -                  -e "s|@pkg_lib_dir@|$(PKG_LIB_SCRIPT_DIR)|g" \
+> -                  -e "s|@pkg_name@|$(PKG_NAME)|g" \
+> +                  -e "s|@pkg_libexec_dir@|$(PKG_LIBEXEC_DIR)|g" \
+>                    < $< > $@
+>
+>  %.cron: %.cron.in $(builddefs)
+> @@ -151,8 +150,8 @@ install: $(INSTALL_SCRUB)
+>  install-systemd: default $(SYSTEMD_SERVICES)
+>         $(INSTALL) -m 755 -d $(SYSTEMD_SYSTEM_UNIT_DIR)
+>         $(INSTALL) -m 644 $(SYSTEMD_SERVICES) $(SYSTEMD_SYSTEM_UNIT_DIR)
+> -       $(INSTALL) -m 755 -d $(PKG_LIB_SCRIPT_DIR)/$(PKG_NAME)
+> -       $(INSTALL) -m 755 $(XFS_SCRUB_FAIL_PROG) $(PKG_LIB_SCRIPT_DIR)/$(=
+PKG_NAME)
+> +       $(INSTALL) -m 755 -d $(PKG_LIBEXEC_DIR)
+> +       $(INSTALL) -m 755 $(XFS_SCRUB_FAIL_PROG) $(PKG_LIBEXEC_DIR)
+>
+>  install-crond: default $(CRONTABS)
+>         $(INSTALL) -m 755 -d $(CROND_DIR)
+> diff --git a/scrub/xfs_scrub_fail@.service.in b/scrub/xfs_scrub_fail@.ser=
+vice.in
+> index 048b5732459..48a0f25b5f1 100644
+> --- a/scrub/xfs_scrub_fail@.service.in
+> +++ b/scrub/xfs_scrub_fail@.service.in
+> @@ -10,7 +10,7 @@ Documentation=3Dman:xfs_scrub(8)
+>  [Service]
+>  Type=3Doneshot
+>  Environment=3DEMAIL_ADDR=3Droot
+> -ExecStart=3D@pkg_lib_dir@/@pkg_name@/xfs_scrub_fail "${EMAIL_ADDR}" %f
+> +ExecStart=3D@pkg_libexec_dir@/xfs_scrub_fail "${EMAIL_ADDR}" %f
+>  User=3Dmail
+>  Group=3Dmail
+>  SupplementaryGroups=3Dsystemd-journal
+>
 
-Does the xfiles implementation prevent THPs from being created?
-If not, this could lead to an entire THP being marked uptodate even
-though we've only zeroed one page of it.
+Looks great to me.
 
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+
+
+
+--
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
 
