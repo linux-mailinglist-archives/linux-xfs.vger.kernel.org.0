@@ -1,165 +1,80 @@
-Return-Path: <linux-xfs+bounces-2132-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2145-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C564D82119D
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:59:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65B1E8211AF
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 01:03:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7892B1F22537
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Dec 2023 23:59:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 092ABB21B11
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Jan 2024 00:03:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEA79C2EE;
-	Sun, 31 Dec 2023 23:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7583CCA4C;
+	Mon,  1 Jan 2024 00:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJKQZqhB"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SePaBnzy"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8878C2CC
-	for <linux-xfs@vger.kernel.org>; Sun, 31 Dec 2023 23:59:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A55AC433C8;
-	Sun, 31 Dec 2023 23:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704067189;
-	bh=CEtZTmxbVAnZ3Tro47FeozPEYk5JuFhbBny8eSRccJg=;
-	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=VJKQZqhBR+e24Lx6P3lvmYyxWRRpggQoCd5R8dj5TcLYoVbQ+YEbAN+G6Pe0SBmX9
-	 Evq2tzIR7hV8gxzKz2CxyhPZWGroBHtau3UJCiRsZUWjXeWMokQXyXd68ea5uGYNYp
-	 Uwl96HF6KlrcKAaIyujq88bqTlCVY2q6NsGPWEje5AHFuOJkc2U/KDSyLXiOn2UGKW
-	 tpxyg16BKHpkr/5sd6VD/SoR/PJFnO7YQkMtI96sVCbunitqedSctTMIm6aJuhFBsv
-	 S78z0a40ng6TD8SHndBgxWOboOytYgEM6Ulc+8/xnI0IKpRJ3R9iKjrptSGjWA0iY/
-	 FI6qG9mU6Yeqg==
-Date: Sun, 31 Dec 2023 15:59:49 -0800
-Subject: [PATCH 47/52] xfs_scrub: call GETFSMAP for each rt group in parallel
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0FFCA49
+	for <linux-xfs@vger.kernel.org>; Mon,  1 Jan 2024 00:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0mPEveNIhJcwaw6Li4gkYFmoQFyGdDKhbh8j9K1hbt8=; b=SePaBnzyYfTxA47InmbwqjChxh
+	bYVb/3jNAeIM2VBm31Jcfn7pTuobADrusj419jsLUEOlnFhCYau51UK4Q70H+urWed0SrTJJvyA49
+	+WH4A7xBEw8bRHBBMg8AAlLZ+vZqLug9EE/f8EM6neaE4TdbHAlmqvvnN7mvGNrrTrnCUAtPPY3Fm
+	BPhczVD4EwdORpqTf5FDU18zfLZvzp9M2H35Mxr3igwwvcXJu6Ji+p+FSDnfF22PMdLpyjSlwRfWa
+	9PNwr6rcaOxcELT6yHE84M5qBhaScagZxczzF/t38G8NoaHINcog+/9PvMsRSGPVSS/pHCC/DWp+r
+	5xSjvljw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rK5lg-0089ql-QE; Mon, 01 Jan 2024 00:02:56 +0000
+Date: Mon, 1 Jan 2024 00:02:56 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: linux-xfs@vger.kernel.org
-Message-ID: <170405012791.1811243.12452550709925000648.stgit@frogsfrogsfrogs>
-In-Reply-To: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
-References: <170405012128.1811243.5724050972228209086.stgit@frogsfrogsfrogs>
-User-Agent: StGit/0.19
+Subject: Re: [PATCH 1/9] xfs: dump xfiles for debugging purposes
+Message-ID: <ZZIBMC1E8nz4uNiV@casper.infradead.org>
+References: <170404829556.1748854.13886473250848576704.stgit@frogsfrogsfrogs>
+ <170404829594.1748854.13298793357113477286.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170404829594.1748854.13298793357113477286.stgit@frogsfrogsfrogs>
 
-From: Darrick J. Wong <djwong@kernel.org>
+On Sun, Dec 31, 2023 at 12:13:49PM -0800, Darrick J. Wong wrote:
+> +	error = xfile_stat(xf, &sb);
+> +	if (error)
+> +		return error;
+> +
+> +	printk(KERN_ALERT "xfile ino 0x%lx isize 0x%llx dump:", inode->i_ino,
+> +			sb.size);
+> +	pflags = memalloc_nofs_save();
 
-If realtime groups are enabled, we should take advantage of the sharding
-to speed up the spacemap scans.  Do so by issuing per-rtgroup GETFSMAP
-calls.
+Hm, why?  What makes it a bad idea to call back into the filesysteam at
+this point?
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- scrub/spacemap.c |   74 ++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 66 insertions(+), 8 deletions(-)
+> +			page = shmem_read_mapping_page_gfp(mapping,
+> +					datapos >> PAGE_SHIFT, __GFP_NOWARN);
 
+This GFP flag looks wrong.  Why can't we use GFP_KERNEL here?
 
-diff --git a/scrub/spacemap.c b/scrub/spacemap.c
-index f20ecfeac5d..8796cb115ea 100644
---- a/scrub/spacemap.c
-+++ b/scrub/spacemap.c
-@@ -128,6 +128,47 @@ scan_ag_rmaps(
- 	}
- }
- 
-+/* Iterate all the reverse mappings of a realtime group. */
-+static void
-+scan_rtg_rmaps(
-+	struct workqueue	*wq,
-+	xfs_agnumber_t		rgno,
-+	void			*arg)
-+{
-+	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
-+	struct scan_blocks	*sbx = arg;
-+	struct fsmap		keys[2];
-+	off64_t			bperrg;
-+	int			ret;
-+
-+	bperrg = (off64_t)ctx->mnt.fsgeom.rgblocks *
-+		 (off64_t)ctx->mnt.fsgeom.blocksize;
-+
-+	memset(keys, 0, sizeof(struct fsmap) * 2);
-+	keys->fmr_device = ctx->fsinfo.fs_rtdev;
-+	keys->fmr_physical = rgno * bperrg;
-+	(keys + 1)->fmr_device = ctx->fsinfo.fs_rtdev;
-+	(keys + 1)->fmr_physical = ((rgno + 1) * bperrg) - 1;
-+	(keys + 1)->fmr_owner = ULLONG_MAX;
-+	(keys + 1)->fmr_offset = ULLONG_MAX;
-+	(keys + 1)->fmr_flags = UINT_MAX;
-+
-+	if (sbx->aborted)
-+		return;
-+
-+	ret = scrub_iterate_fsmap(ctx, keys, sbx->fn, sbx->arg);
-+	if (ret) {
-+		char		descr[DESCR_BUFSZ];
-+
-+		snprintf(descr, DESCR_BUFSZ, _("dev %d:%d rtgroup %u fsmap"),
-+					major(ctx->fsinfo.fs_datadev),
-+					minor(ctx->fsinfo.fs_datadev),
-+					rgno);
-+		str_liberror(ctx, ret, descr);
-+		sbx->aborted = true;
-+	}
-+}
-+
- /* Iterate all the reverse mappings of a standalone device. */
- static void
- scan_dev_rmaps(
-@@ -208,14 +249,6 @@ scrub_scan_all_spacemaps(
- 		str_liberror(ctx, ret, _("creating fsmap workqueue"));
- 		return ret;
- 	}
--	if (ctx->fsinfo.fs_rt) {
--		ret = -workqueue_add(&wq, scan_rt_rmaps, 0, &sbx);
--		if (ret) {
--			sbx.aborted = true;
--			str_liberror(ctx, ret, _("queueing rtdev fsmap work"));
--			goto out;
--		}
--	}
- 	if (ctx->fsinfo.fs_log) {
- 		ret = -workqueue_add(&wq, scan_log_rmaps, 0, &sbx);
- 		if (ret) {
-@@ -232,6 +265,31 @@ scrub_scan_all_spacemaps(
- 			break;
- 		}
- 	}
-+	if (ctx->fsinfo.fs_rt) {
-+		for (agno = 0; agno < ctx->mnt.fsgeom.rgcount; agno++) {
-+			ret = -workqueue_add(&wq, scan_rtg_rmaps, agno, &sbx);
-+			if (ret) {
-+				sbx.aborted = true;
-+				str_liberror(ctx, ret,
-+						_("queueing rtgroup fsmap work"));
-+				break;
-+			}
-+		}
-+
-+		/*
-+		 * If the fs doesn't have any realtime groups, scan the entire
-+		 * volume all at once, since the above loop did nothing.
-+		 */
-+		if (ctx->mnt.fsgeom.rgcount == 0) {
-+			ret = -workqueue_add(&wq, scan_rt_rmaps, 0, &sbx);
-+			if (ret) {
-+				sbx.aborted = true;
-+				str_liberror(ctx, ret,
-+						_("queueing rtdev fsmap work"));
-+				goto out;
-+			}
-+		}
-+	}
- out:
- 	ret = -workqueue_terminate(&wq);
- 	if (ret) {
+I'm also not thrilled about the use of page APIs instead of folio APIs,
+but given how long this patchset has been in development, I understand why
+you didn't start out with folio APIs.  It's not a blocker by any means.
+
+I can come through and convert it later when I decide that it's finally
+time to get rid of shmem_read_mapping_page_gfp(), which is going to take
+a big gulp because it now means touching GPU drivers ...
 
 
