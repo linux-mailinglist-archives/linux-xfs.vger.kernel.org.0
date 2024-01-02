@@ -1,49 +1,49 @@
-Return-Path: <linux-xfs+bounces-2434-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2435-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A997821A4D
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 11:46:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A3A3821A4F
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 11:46:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 153B01C21C07
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 10:46:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF7D4282FF0
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 10:46:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1FD4DDB3;
-	Tue,  2 Jan 2024 10:46:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0935DDAD;
+	Tue,  2 Jan 2024 10:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SlsG5rvR"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g/8dOVZg"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717E3DDA7
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jan 2024 10:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BCFDDA7
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jan 2024 10:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=SlsG5rvRPR35z8jk9q/hw+tYd4
-	CnoDaoOALqHpQj1Ptqne6P5A+ky9gmLrorow+kQ3k26rcv3fUIdQhdTu+u40ALEDOJ9XqXOAlWhVV
-	8l/JO3J7AWEmYGpX6GwHQTRtkWrhn3T+6sutjFutnZNfrCUcuAatm2C1AUuNU467/uuaF4oENMPG2
-	qYr38IS8NQtbjSrVTAw4Y6/gbIVFyN0c/4gEWeJYvpBm/ylnVSloFbfy2VA0y57pFuIdjEs+txB5r
-	E1VDRlpiTR1c1mAw1f64wqDQ7D1hvxwSaqwetZg18TUcsYJLXMtLeVTHkN5A8GIRpbuLlyfUbQT4m
-	BTJzC5Lg==;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=g/8dOVZgzcVZQbsFaTwyPnQ+v6
+	GSkOAqi35AAVCwRsyczpefz2izwh8phPDYaHbwiRrJnFF/GZ7NqtoJeyBNgJd3KjS/TT/Itq3aZ5m
+	iO8WpI/r5qQXAE9pOQmX3aHLOnCnPSb3Y6DRNl0hL32Lk7WzW0fdoBkI+YOa7pLq/u+xxn3SxnpkR
+	9S+wAwrHPAexI7spuUNczud9zKq+XBRIZRcjAiKG3vhmKR4Qc+FzTgzU97xOZk+Y/8qvgS36tFcQo
+	bKgAYIQApcUX7gcZnpJJpBPuKS08fh+h1rc/5Ky9vEox4kNv9v3gdYeXkM+OZ8LY8PswNiynIkYKV
+	jq2sR8oA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKcI2-007dYJ-07;
-	Tue, 02 Jan 2024 10:46:30 +0000
-Date: Tue, 2 Jan 2024 02:46:30 -0800
+	id 1rKcIM-007dZe-13;
+	Tue, 02 Jan 2024 10:46:50 +0000
+Date: Tue, 2 Jan 2024 02:46:50 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] xfs: add a realtime flag to the bmap update log redo
- items
-Message-ID: <ZZPphlSnKYxkEK9O@infradead.org>
+Subject: Re: [PATCH 3/3] xfs: support recovering bmap intent items targetting
+ realtime extents
+Message-ID: <ZZPpmr0r5owmd90w@infradead.org>
 References: <170404831869.1749931.14460733843503552627.stgit@frogsfrogsfrogs>
- <170404831907.1749931.14510682723075122416.stgit@frogsfrogsfrogs>
+ <170404831924.1749931.14835443792114657795.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170404831907.1749931.14510682723075122416.stgit@frogsfrogsfrogs>
+In-Reply-To: <170404831924.1749931.14835443792114657795.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
 Looks good:
