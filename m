@@ -1,49 +1,35 @@
-Return-Path: <linux-xfs+bounces-2435-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2436-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A3A3821A4F
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 11:46:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03E56821A59
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 11:48:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF7D4282FF0
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 10:46:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABA561F2241E
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jan 2024 10:48:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0935DDAD;
-	Tue,  2 Jan 2024 10:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g/8dOVZg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1598BD304;
+	Tue,  2 Jan 2024 10:48:17 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BCFDDA7
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jan 2024 10:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=g/8dOVZgzcVZQbsFaTwyPnQ+v6
-	GSkOAqi35AAVCwRsyczpefz2izwh8phPDYaHbwiRrJnFF/GZ7NqtoJeyBNgJd3KjS/TT/Itq3aZ5m
-	iO8WpI/r5qQXAE9pOQmX3aHLOnCnPSb3Y6DRNl0hL32Lk7WzW0fdoBkI+YOa7pLq/u+xxn3SxnpkR
-	9S+wAwrHPAexI7spuUNczud9zKq+XBRIZRcjAiKG3vhmKR4Qc+FzTgzU97xOZk+Y/8qvgS36tFcQo
-	bKgAYIQApcUX7gcZnpJJpBPuKS08fh+h1rc/5Ky9vEox4kNv9v3gdYeXkM+OZ8LY8PswNiynIkYKV
-	jq2sR8oA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKcIM-007dZe-13;
-	Tue, 02 Jan 2024 10:46:50 +0000
-Date: Tue, 2 Jan 2024 02:46:50 -0800
-From: Christoph Hellwig <hch@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E02E57E
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jan 2024 10:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id E666668B05; Tue,  2 Jan 2024 11:48:04 +0100 (CET)
+Date: Tue, 2 Jan 2024 11:48:04 +0100
+From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/3] xfs: support recovering bmap intent items targetting
- realtime extents
-Message-ID: <ZZPpmr0r5owmd90w@infradead.org>
-References: <170404831869.1749931.14460733843503552627.stgit@frogsfrogsfrogs>
- <170404831924.1749931.14835443792114657795.stgit@frogsfrogsfrogs>
+Cc: cem@kernel.org, Christoph Hellwig <hch@lst.de>,
+	Neal Gompa <neal@gompa.dev>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCHSET v29.0 34/40] xfs_scrub: fixes for systemd services
+Message-ID: <20240102104804.GA9125@lst.de>
+References: <20231231181215.GA241128@frogsfrogsfrogs> <170405001841.1800712.6745668619742020884.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -52,10 +38,10 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170404831924.1749931.14835443792114657795.stgit@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <170405001841.1800712.6745668619742020884.stgit@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Looks good:
+Can we somehow expedite these plumbing fixes for the next xfsprogs
+release instead of just hiding them in the giant patchbomb?
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 
