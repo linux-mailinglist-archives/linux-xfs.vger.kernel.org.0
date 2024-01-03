@@ -1,755 +1,137 @@
-Return-Path: <linux-xfs+bounces-2468-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2496-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66C64822822
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 06:57:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D416F822AD1
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 11:01:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 480D81C22E28
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 05:57:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 830A9282603
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 10:01:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09EEB1802B;
-	Wed,  3 Jan 2024 05:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7162C18AE8;
+	Wed,  3 Jan 2024 10:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rl7VWgB+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dj0k5qmS"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98D318021;
-	Wed,  3 Jan 2024 05:57:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DEE2C433C7;
-	Wed,  3 Jan 2024 05:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348AE18AE6;
+	Wed,  3 Jan 2024 10:01:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD7EC433C9;
+	Wed,  3 Jan 2024 10:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704261449;
-	bh=SyOCAk1S7VMGrasITMKSHKuWSsUGiKbBDslHB9YGiw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rl7VWgB+lci06fhxzBFkiE2TyYVFFjjCUOpVXLCZt7dfFpCPluRNFut3RmueBtewz
-	 PrUGkyEy1AlWc66IiVnpHG7tdlxmFB9DY5BGQj872IS2v+U6Y882gUAdMDqnmDcX2L
-	 RTJi6QQ8TvBA7jwyU0i+tkI2o5G96vjgpx0unjyNYS+D5LSoqOSP+3If7iuX1jJXuK
-	 ymsPBGaQ/zNzduv4N1iGqsO8906mr3r1N0Nlw1dKQBcnu+6X8SCuCINZPvXNZhz8nZ
-	 KNlvaxdRxr40ZNgIfITDd5ljO7w2VOWo3OpK2qWrtDPX4HJiAItXVFD9D416ZEVwuN
-	 9o3I25yctey0A==
-Date: Tue, 2 Jan 2024 21:57:28 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Chandan Babu R <chandanbabu@kernel.org>
-Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, zlang@redhat.com
-Subject: Re: [PATCH 4/5] xfs: Add support for testing metadump v2
-Message-ID: <20240103055728.GP361584@frogsfrogsfrogs>
-References: <20240102084357.1199843-1-chandanbabu@kernel.org>
- <20240102084357.1199843-5-chandanbabu@kernel.org>
+	s=k20201202; t=1704276061;
+	bh=jNiCOKyl7Csm0+nYV6b69HnF06DNrSW+20c9ngAqZVE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Dj0k5qmSoa97Qu7Mh3AExw9h3p8xnbDbEj364uNvYoUtMAiwImgZ8ZNF3KhUEZsna
+	 C9DZIlkWPCuhnqgbvFjTIBy/CYTq7I7fSkLydTW/pmmmBIVY1bXQ0So8ukJlvk+dMG
+	 WQKFWfBPuQiq1cEYHQLxov8DgjOydOwlA0pKtjYFo1NFwcxQx43KrYJsr0WTkFyThQ
+	 fDpLHO0vE3RycafwoYSP0t8DGCNVYERae1OPSSgVcAxWf8Kj4R90frXEO0ijIqqHrU
+	 JNOxhfS841zpiC5+BlucZ1ENoUG09dkbJlanr1FW0m4AvL9Vo/ILKbLkCwW4ljjGcR
+	 i5Ac0C3tTYWvA==
+User-agent: mu4e 1.10.8; emacs 27.1
+From: Chandan Babu R <chandanbabu@kernel.org>
+To: linux-fsdevel <linux-fsdevel@vger.kernel.org>, linux-xfs@vger.kernel.org
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
+Subject: [BUG REPORT] shrink_dcache_parent() loops indefinitely on a
+ next-20240102 kernel
+Date: Wed, 03 Jan 2024 12:12:12 +0530
+Message-ID: <87le96lorq.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102084357.1199843-5-chandanbabu@kernel.org>
+Content-Type: text/plain
 
-On Tue, Jan 02, 2024 at 02:13:51PM +0530, Chandan Babu R wrote:
-> This commit adds the ability to test metadump v2 to existing metadump tests.
-> 
-> Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
-> ---
->  tests/xfs/129     |  63 ++++++++++++---
->  tests/xfs/129.out |   4 +-
->  tests/xfs/234     |  63 ++++++++++++---
->  tests/xfs/234.out |   4 +-
->  tests/xfs/253     | 195 ++++++++++++++++++++++++++--------------------
->  tests/xfs/291     |  25 +++++-
->  tests/xfs/432     |  29 +++++--
->  tests/xfs/432.out |   3 +-
->  tests/xfs/503     |  94 +++++++++++++---------
->  tests/xfs/503.out |  12 +--
->  10 files changed, 326 insertions(+), 166 deletions(-)
-> 
-> diff --git a/tests/xfs/129 b/tests/xfs/129
-> index 6f2ef564..7226d57d 100755
-> --- a/tests/xfs/129
-> +++ b/tests/xfs/129
-> @@ -16,7 +16,11 @@ _cleanup()
->  {
->      cd /
->      _scratch_unmount > /dev/null 2>&1
-> -    rm -rf $tmp.* $testdir $metadump_file $TEST_DIR/image
-> +    [[ -n $logdev && $logdev != "none" && $logdev != $SCRATCH_LOGDEV ]] && \
-> +	    _destroy_loop_device $logdev
-> +    [[ -n $datadev ]] && _destroy_loop_device $datadev
-> +    rm -rf $tmp.* $testdir $metadump_file $TEST_DIR/data-image \
-> +       $TEST_DIR/log-image
->  }
->  
->  # Import common functions.
-> @@ -47,18 +51,57 @@ seq 1 2 $((nr_blks - 1)) | while read nr; do
->  			$testdir/file2 $((nr * blksz)) $blksz >> $seqres.full
->  done
->  
-> -echo "Create metadump file"
->  _scratch_unmount
-> -_scratch_xfs_metadump $metadump_file
->  
-> -# Now restore the obfuscated one back and take a look around
-> -echo "Restore metadump"
-> -SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
-> -SCRATCH_DEV=$TEST_DIR/image _scratch_mount
-> -SCRATCH_DEV=$TEST_DIR/image _scratch_unmount
-> +max_md_version=1
-> +_scratch_metadump_v2_supported && max_md_version=2
->  
-> -echo "Check restored fs"
-> -_check_generic_filesystem $metadump_file
-> +echo "Create metadump file, restore it and check restored fs"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	# Determine the version to be passed to metadump/mdrestore
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $metadump_file $version
-> +
-> +	# Now restore the obfuscated one back and take a look around
-> +
-> +	# Metadump v2 files can contain contents dumped from an external log
-> +	# device. Use a temporary file to hold the log device contents restored
-> +	# from such a metadump file.
-> +	slogdev=$TEST_DIR/log-image
-> +	if [[ -z $version || $version == "-v 1" || -z $SCRATCH_LOGDEV ]]; then
-> +		slogdev=""
-> +	fi
-> +
-> + 	SCRATCH_DEV=$TEST_DIR/data-image SCRATCH_LOGDEV=$slogdev \
+Hi,
 
-   ^ space before tab
+Executing fstests' recoveryloop test group on XFS on a next-20240102 kernel
+sometimes causes the following hung task report to be printed on the console,
 
-> +		   _scratch_xfs_mdrestore $metadump_file
-> +
-> +	datadev=$(_create_loop_device $TEST_DIR/data-image)
-> +
-> +	logdev=${SCRATCH_LOGDEV}
-> +	if [[ -s $TEST_DIR/log-image ]]; then
-> +		logdev=$(_create_loop_device $TEST_DIR/log-image)
-> +	fi
-> +
-> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_mount
-> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_unmount
-> +
-> +	[[ -z $logdev ]] && logdev=none
-> +	_check_xfs_filesystem $datadev $logdev none
-> +
-> +	if [[ -s $TEST_DIR/log-image ]]; then
-> +		_destroy_loop_device $logdev
-> +		logdev=""
-> +		rm -f $TEST_DIR/log-image
-> +	fi
-> +
-> +	_destroy_loop_device $datadev
-> +	datadev=""
-> +	rm -f $TEST_DIR/data-image
-> +done
+[  190.284008] XFS (loop5): Mounting V5 Filesystem 43ed2bb9-5b51-4bdc-af8d-af2ca7001f3f
+[  190.291326] XFS (loop5): Ending clean mount
+[  190.301165] XFS (loop5): User initiated shutdown received.
+[  190.302808] XFS (loop5): Log I/O Error (0x6) detected at xfs_fs_goingdown+0x93/0xd0 [xfs] (fs/xfs/xfs_fsops.c:458).  Shutting down filesystem.
+[  190.308555] XFS (loop5): Please unmount the filesystem and rectify the problem(s)
+[  190.369214] XFS (loop5): Unmounting Filesystem 43ed2bb9-5b51-4bdc-af8d-af2ca7001f3f
+[  190.404932] XFS (loop5): Mounting V5 Filesystem 43ed2bb9-5b51-4bdc-af8d-af2ca7001f3f
+[  190.419673] XFS (loop5): Ending clean mount
+[  190.429301] XFS (loop5): User initiated shutdown received.
+[  190.431178] XFS (loop5): Log I/O Error (0x6) detected at xfs_fs_goingdown+0x93/0xd0 [xfs] (fs/xfs/xfs_fsops.c:458).  Shutting down filesystem.
+[  190.437622] XFS (loop5): Please unmount the filesystem and rectify the problem(s)
+[  369.717531] INFO: task fsstress:18269 blocked for more than 122 seconds.
+[  369.724323]       Not tainted 6.7.0-rc8-next-20240102+ #1
+[  369.727077] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  369.730717] task:fsstress        state:D stack:0     pid:18269 tgid:18269 ppid:1      flags:0x00004006
+[  369.734945] Call Trace:
+[  369.736468]  <TASK>
+[  369.737768]  __schedule+0x237/0x720
+[  369.739593]  schedule+0x30/0xd0
+[  369.741310]  schedule_preempt_disabled+0x15/0x30
+[  369.743555]  rwsem_down_read_slowpath+0x240/0x4d0
+[  369.745634]  ? xlog_cil_force_seq+0x200/0x270 [xfs]
+[  369.747859]  down_read+0x49/0xa0
+[  369.749436]  super_lock+0xf1/0x120
+[  369.751008]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  369.753530]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  369.755865]  ? xfs_log_force+0x20c/0x230 [xfs]
+[  369.758147]  ? srso_alias_return_thunk+0x5/0xfbef5
+[  369.760391]  ? __pfx_sync_fs_one_sb+0x10/0x10
+[  369.762516]  iterate_supers+0x5a/0xe0
+[  369.764403]  ksys_sync+0x64/0xb0
+[  369.766104]  __do_sys_sync+0xe/0x20
+[  369.767856]  do_syscall_64+0x6c/0x170
+[  369.769684]  entry_SYSCALL_64_after_hwframe+0x6c/0x74
+[  369.771975] RIP: 0033:0x7f2b24e3ed5b
+[  369.773732] RSP: 002b:00007fff7183b058 EFLAGS: 00000202 ORIG_RAX: 00000000000000a2
+[  369.777022] RAX: ffffffffffffffda RBX: 000000000007a120 RCX: 00007f2b24e3ed5b
+[  369.780177] RDX: 0000000000000000 RSI: 00000000796b9c69 RDI: 0000000000000000
+[  369.783356] RBP: 028f5c28f5c28f5c R08: 0000000000000008 R09: 0000000000001010
+[  369.787096] R10: 00007f2b24e15228 R11: 0000000000000202 R12: 0000000000000000
+[  369.790256] R13: 8f5c28f5c28f5c29 R14: 00000000004034c0 R15: 00007f2b250156c0
+[  369.793499]  </TASK>
 
-Given the major differences between v1 and v2, would the two metadump
-tests be easier to understand if this loop were unrolled?
+The sb->s_umount semaphore was owned by a task executing systemd-coredump. The
+systemd-coredump task was busy executing shrink_dcache_parent() as shown below,
 
-I like that it mdrestores to a separate device to preserve the original
-$SCRATCH_DEV metadata between metadump v1 and v2 testing.
+systemd-coredum   18274 [001] 85214.162988:                probe:d_walk: (ffffffff88218580) parent_path="/" fs_type="tmpfs"
+        ffffffff88218581 d_walk+0x1 ([kernel.kallsyms])
+        ffffffff8821a8e2 shrink_dcache_parent+0x52 ([kernel.kallsyms])
+        ffffffff8821ac9b shrink_dcache_for_umount+0x3b ([kernel.kallsyms])
+        ffffffff881f9c10 generic_shutdown_super+0x20 ([kernel.kallsyms])
+        ffffffff881fa667 kill_litter_super+0x27 ([kernel.kallsyms])
+        ffffffff881fb3b5 deactivate_locked_super+0x35 ([kernel.kallsyms])
+        ffffffff88226d30 cleanup_mnt+0x100 ([kernel.kallsyms])
+        ffffffff87eef72c task_work_run+0x5c ([kernel.kallsyms])
+        ffffffff87ec9763 do_exit+0x2b3 ([kernel.kallsyms])
+        ffffffff87ec9b90 do_group_exit+0x30 ([kernel.kallsyms])
+        ffffffff87ec9c38 [unknown] ([kernel.kallsyms])
+        ffffffff88b9930c do_syscall_64+0x6c ([kernel.kallsyms])
+        ffffffff88c000e5 entry_SYSCALL_64+0xa5 ([kernel.kallsyms])
 
->  # success, all done
->  status=0
-> diff --git a/tests/xfs/129.out b/tests/xfs/129.out
-> index da6f43fd..0f24c431 100644
-> --- a/tests/xfs/129.out
-> +++ b/tests/xfs/129.out
-> @@ -1,6 +1,4 @@
->  QA output created by 129
->  Create the original file blocks
->  Reflink every other block
-> -Create metadump file
-> -Restore metadump
-> -Check restored fs
-> +Create metadump file, restore it and check restored fs
-> diff --git a/tests/xfs/234 b/tests/xfs/234
-> index 57d447c0..2f6b1f65 100755
-> --- a/tests/xfs/234
-> +++ b/tests/xfs/234
-> @@ -16,7 +16,11 @@ _cleanup()
->  {
->      cd /
->      _scratch_unmount > /dev/null 2>&1
-> -    rm -rf $tmp.* $metadump_file $TEST_DIR/image
-> +    [[ -n $logdev && $logdev != "none" && $logdev != $SCRATCH_LOGDEV ]] && \
-> +	    _destroy_loop_device $logdev
-> +    [[ -n $datadev ]] && _destroy_loop_device $datadev
-> +    rm -rf $tmp.* $testdir $metadump_file $TEST_DIR/image \
-> +       $TEST_DIR/log-image
->  }
->  
->  # Import common functions.
-> @@ -47,18 +51,57 @@ seq 1 2 $((nr_blks - 1)) | while read nr; do
->  	$XFS_IO_PROG -c "fpunch $((nr * blksz)) $blksz" $testdir/file1 >> $seqres.full
->  done
->  
-> -echo "Create metadump file"
->  _scratch_unmount
-> -_scratch_xfs_metadump $metadump_file
->  
-> -# Now restore the obfuscated one back and take a look around
-> -echo "Restore metadump"
-> -SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
-> -SCRATCH_DEV=$TEST_DIR/image _scratch_mount
-> -SCRATCH_DEV=$TEST_DIR/image _scratch_unmount
-> +max_md_version=1
-> +_scratch_metadump_v2_supported && max_md_version=2
->  
-> -echo "Check restored fs"
-> -_check_generic_filesystem $metadump_file
-> +echo "Create metadump file, restore it and check restored fs"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	# Determine the version to be passed to metadump/mdrestore
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $metadump_file $version
-> +
-> +	# Now restore the obfuscated one back and take a look around
-> +
-> +	# Metadump v2 files can contain contents dumped from an external log
-> +	# device. Use a temporary file to hold the log device contents restored
-> +	# from such a metadump file.
-> +	slogdev=$TEST_DIR/log-image
-> +	if [[ -z $version || $version == "-v 1" || -z $SCRATCH_LOGDEV ]]; then
-> +		slogdev=""
-> +	fi
-> +
-> +	SCRATCH_DEV=$TEST_DIR/data-image SCRATCH_LOGDEV=$slogdev \
-> +		   _scratch_xfs_mdrestore $metadump_file
-> +
-> +	datadev=$(_create_loop_device $TEST_DIR/data-image)
-> +
-> +	logdev=${SCRATCH_LOGDEV}
-> +	if [[ -s $TEST_DIR/log-image ]]; then
-> +		logdev=$(_create_loop_device $TEST_DIR/log-image)
-> +	fi
-> +
-> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_mount
-> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_unmount
-> +
-> +	[[ -z $logdev ]] && logdev=none
-> +	_check_xfs_filesystem $datadev $logdev none
-> +
-> +	if [[ -s $TEST_DIR/log-image ]]; then
-> +		_destroy_loop_device $logdev
-> +		logdev=""
-> +		rm -f $TEST_DIR/log-image
-> +	fi
-> +
-> +	_destroy_loop_device $datadev
-> +	datadev=""
-> +	rm -f $TEST_DIR/data-image
-> +done
->  
->  # success, all done
->  status=0
-> diff --git a/tests/xfs/234.out b/tests/xfs/234.out
-> index 463d4660..fc2ddd77 100644
-> --- a/tests/xfs/234.out
-> +++ b/tests/xfs/234.out
-> @@ -1,6 +1,4 @@
->  QA output created by 234
->  Create the original file blocks
->  Punch every other block
-> -Create metadump file
-> -Restore metadump
-> -Check restored fs
-> +Create metadump file, restore it and check restored fs
-> diff --git a/tests/xfs/253 b/tests/xfs/253
-> index ce902477..b69a1faf 100755
-> --- a/tests/xfs/253
-> +++ b/tests/xfs/253
-> @@ -52,114 +52,139 @@ function create_file() {
->  echo "Disciplyne of silence is goed."
->  
->  _scratch_mkfs >/dev/null 2>&1
-> -_scratch_mount
->  
-> -# Initialize and mount the scratch filesystem, then create a bunch
-> -# of files that exercise the original problem.
-> -#
-> -# The problem arose when a file name produced a hash that contained
-> -# either 0x00 (string terminator) or 0x27 ('/' character) in a
-> -# spot used to determine a character in an obfuscated name.  This
-> -# occurred in one of 5 spots at the end of the name, at position
-> -# (last-4), (last-3), (last-2), (last-1), or (last).
+Trying to obtain more debug data via perf caused the 'perf record' task to
+indefinitely enter into the TASK_UNINTERRUPTIBLE state. I will try to recreate
+the bug and debug it further.
 
-I wonder, could you create the scratch fs and only then move into
-testing v1 and v2 metadump?  Rather than doing the create_file stuff
-twice?  Or do we actually end up with a different fs between the two
-iterations?
+The following is the fstests configuration that was used.
+  FSTYP=xfs
+  TEST_DEV=/dev/loop7
+  TEST_DIR=/media/test
+  SCRATCH_DEV=/dev/loop5
+  SCRATCH_MNT=/media/scratch
+  MKFS_OPTIONS='-f -m reflink=1,rmapbt=1, -i sparse=1,'
+  MOUNT_OPTIONS='-o usrquota,grpquota,prjquota'
+  LOGWRITES_DEV=/dev/loop6
+  SOAK_DURATION=9900
 
-The other two tests here look good enough for now...
+The recoveryloop group of tests can then be executed by,
+$ ./check -g recoveryloop
 
---D
-
-> +max_md_version=1
-> +_scratch_metadump_v2_supported && max_md_version=2
->  
-> -rm -f "${METADUMP_FILE}"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
->  
-> -mkdir -p "${OUTPUT_DIR}"
-> +	cd $here
->  
-> -cd "${OUTPUT_DIR}"
-> -# Start out with some basic test files
-> -create_file 'abcde'		# hash 0x1c58f263 ("normal" name)
-> +	# Initialize and mount the scratch filesystem, then create a bunch of
-> +	# files that exercise the original problem.
-> +	#
-> +	# The problem arose when a file name produced a hash that contained
-> +	# either 0x00 (string terminator) or 0x27 ('/' character) in a spot used
-> +	# to determine a character in an obfuscated name.  This occurred in one
-> +	# of 5 spots at the end of the name, at position (last-4), (last-3),
-> +	# (last-2), (last-1), or (last).
->  
-> -create_file 'f'			# hash 0x00000066 (1-byte name)
-> -create_file 'gh'		# hash 0x000033e8 (2-byte name)
-> -create_file 'ijk'		# hash 0x001a756b (3-byte name)
-> -create_file 'lmno'		# hash 0x0d9b776f (4-byte name)
-> -create_file 'pqrstu'		# hash 0x1e5cf9f2 (6-byte name)
-> -create_file 'abcdefghijklmnopqrstuvwxyz' # a most remarkable word (0x55004ae3)
-> +	_scratch_unmount >> $seqres.full 2>&1
->  
-> -# Create a short directory name; it won't be obfuscated.  Populate
-> -# it with some longer named-files.  The first part of the obfuscated
-> -# filenames should use printable characters.
-> -mkdir foo
-> -create_file 'foo/longer_file_name_1'	# hash 0xe83634ec
-> -create_file 'foo/longer_file_name_2'	# hash 0xe83634ef
-> -create_file 'foo/longer_file_name_3'	# hash 0xe83634ee
-> +	_scratch_mkfs >> $seqres.full 2>&1
->  
-> -# Now create a longer directory name
-> -mkdir longer_directory_name
-> -create_file 'longer_directory_name/f1'	# directory hash 0x9c7accdd
-> -create_file 'longer_directory_name/f2'	# filenames are short, no hash
-> -create_file 'longer_directory_name/f3'
-> +	_scratch_mount
->  
-> -# The problematic name originally reported by Arkadiusz Miśkiewicz
-> +	rm -f "${METADUMP_FILE}"
->  
-> -create_file 'R\323\257NE'	# hash 0x3a4be740, forces  (last-3) = 0x2f
-> +	mkdir -p "${OUTPUT_DIR}"
->  
-> -# Other names that force a 0x00 byte
-> -create_file 'Pbcde'		# hash 0x0c58f260, forces  (last-4) = 0x00
-> -create_file 'a\001\203de'	# hash 0x1000f263, forces  (last-3) = 0x00
-> -create_file 'ab\001\344e'	# hash 0x1c403263, forces  (last-2) = 0x00
-> -create_file 'abc\200e'		# hash 0x1c588063, forces  (last-1) = 0x00
-> -create_file 'abcd\006'		# hash 0x1c58f200, forces    (last) = 0x00
-> +	cd "${OUTPUT_DIR}"
-> +	# Start out with some basic test files
-> +	create_file 'abcde'		# hash 0x1c58f263 ("normal" name)
->  
-> -# Names that force a 0x2f byte; note no name will ever force (last-4) = 0x2f
-> -create_file 'a.\343de'		# hash 0x15f8f263 forces   (last-3) = 0x00
-> -create_file 'ac\257de'		# hash 0x1c4bf263, forces  (last-2) = 0x2f
-> -create_file 'abe\257e'		# hash 0x1c5917e3, forces  (last-1) = 0x2f
-> -create_file 'abcd)'		# hash 0x1c58f22f, forces    (last) = 0x2f
-> +	create_file 'f'			# hash 0x00000066 (1-byte name)
-> +	create_file 'gh'		# hash 0x000033e8 (2-byte name)
-> +	create_file 'ijk'		# hash 0x001a756b (3-byte name)
-> +	create_file 'lmno'		# hash 0x0d9b776f (4-byte name)
-> +	create_file 'pqrstu'		# hash 0x1e5cf9f2 (6-byte name)
-> +	create_file 'abcdefghijklmnopqrstuvwxyz' # a most remarkable word (0x55004ae3)
->  
-> -# The following names are possible results of obfuscating the name
-> -# "abcde".  Previously, xfs_metadump could get hung up trying to
-> -# obfuscate names when too many of the same length had the same hash
-> -# value.
-> -create_file '!bcda'		# essentially a dup of 'abcde'
-> -create_file 'Abcdg'		# essentially a dup of 'abcde'
-> -create_file 'qbcdd'		# essentially a dup of 'abcde'
-> -create_file '1bcd`'		# essentially a dup of 'abcde'
-> -create_file 'Qbcdf'		# essentially a dup of 'abcde'
-> -create_file '\001bcdc'		# essentially a dup of 'abcde'
-> -create_file 'Qbce\346'		# essentially a dup of 'abcde'
-> -create_file 'abb\344e'		# essentially a dup of 'abcde'
-> +	# Create a short directory name; it won't be obfuscated.  Populate it
-> +	# with some longer named-files.  The first part of the obfuscated
-> +	# filenames should use printable characters.
-> +	mkdir foo
-> +	create_file 'foo/longer_file_name_1'	# hash 0xe83634ec
-> +	create_file 'foo/longer_file_name_2'	# hash 0xe83634ef
-> +	create_file 'foo/longer_file_name_3'	# hash 0xe83634ee
->  
-> -# The orphanage directory (lost+found) should not be obfuscated.
-> -# Files thereunder can be, but not if their name is the same as
-> -# their inode number.  Test this.
-> +	# Now create a longer directory name
-> +	mkdir longer_directory_name
-> +	create_file 'longer_directory_name/f1'	# directory hash 0x9c7accdd
-> +	create_file 'longer_directory_name/f2'	# filenames are short, no hash
-> +	create_file 'longer_directory_name/f3'
->  
-> -cd "${SCRATCH_MNT}"
-> -mkdir -p "${ORPHANAGE}"
-> +	# The problematic name originally reported by Arkadiusz Miśkiewicz
->  
-> -TEMP_ORPHAN="${ORPHANAGE}/__orphan__"
-> -NON_ORPHAN="${ORPHANAGE}/__should_be_obfuscated__"
-> +	create_file 'R\323\257NE'	# hash 0x3a4be740, forces  (last-3) = 0x2f
->  
-> -# Create an orphan, whose name is the same as its inode number
-> -touch "${TEMP_ORPHAN}"
-> -INUM=$(ls -i "${TEMP_ORPHAN}" | awk '{ print $1; }')
-> -ORPHAN="${SCRATCH_MNT}/lost+found/${INUM}"
-> -mv "${TEMP_ORPHAN}" "${ORPHAN}"
-> +	# Other names that force a 0x00 byte
-> +	create_file 'Pbcde'		# hash 0x0c58f260, forces  (last-4) = 0x00
-> +	create_file 'a\001\203de'	# hash 0x1000f263, forces  (last-3) = 0x00
-> +	create_file 'ab\001\344e'	# hash 0x1c403263, forces  (last-2) = 0x00
-> +	create_file 'abc\200e'		# hash 0x1c588063, forces  (last-1) = 0x00
-> +	create_file 'abcd\006'		# hash 0x1c58f200, forces    (last) = 0x00
->  
-> -# Create non-orphan, which *should* be obfuscated
-> -touch "${NON_ORPHAN}"
-> +	# Names that force a 0x2f byte; note no name will ever force (last-4) = 0x2f
-> +	create_file 'a.\343de'		# hash 0x15f8f263 forces   (last-3) = 0x00
-> +	create_file 'ac\257de'		# hash 0x1c4bf263, forces  (last-2) = 0x2f
-> +	create_file 'abe\257e'		# hash 0x1c5917e3, forces  (last-1) = 0x2f
-> +	create_file 'abcd)'		# hash 0x1c58f22f, forces    (last) = 0x2f
->  
-> -# Get a listing of all the files before obfuscation
-> -ls -R >> $seqres.full
-> -ls -R | od -c >> $seqres.full
-> +	# The following names are possible results of obfuscating the name
-> +	# "abcde".  Previously, xfs_metadump could get hung up trying to
-> +	# obfuscate names when too many of the same length had the same hash
-> +	# value.
-> +	create_file '!bcda'		# essentially a dup of 'abcde'
-> +	create_file 'Abcdg'		# essentially a dup of 'abcde'
-> +	create_file 'qbcdd'		# essentially a dup of 'abcde'
-> +	create_file '1bcd`'		# essentially a dup of 'abcde'
-> +	create_file 'Qbcdf'		# essentially a dup of 'abcde'
-> +	create_file '\001bcdc'		# essentially a dup of 'abcde'
-> +	create_file 'Qbce\346'		# essentially a dup of 'abcde'
-> +	create_file 'abb\344e'		# essentially a dup of 'abcde'
->  
-> -# Now unmount the filesystem and create a metadump file
-> -cd $here
-> +	# The orphanage directory (lost+found) should not be obfuscated.
-> +	# Files thereunder can be, but not if their name is the same as
-> +	# their inode number.  Test this.
->  
-> -_scratch_unmount
-> -_scratch_xfs_metadump $METADUMP_FILE
-> +	cd "${SCRATCH_MNT}"
-> +	mkdir -p "${ORPHANAGE}"
->  
-> -# Now restore the obfuscated one back and take a look around
-> -_scratch_xfs_mdrestore "$METADUMP_FILE"
-> +	TEMP_ORPHAN="${ORPHANAGE}/__orphan__"
-> +	NON_ORPHAN="${ORPHANAGE}/__should_be_obfuscated__"
->  
-> -_scratch_mount
-> +	# Create an orphan, whose name is the same as its inode number
-> +	touch "${TEMP_ORPHAN}"
-> +	INUM=$(ls -i "${TEMP_ORPHAN}" | awk '{ print $1; }')
-> +	ORPHAN="${SCRATCH_MNT}/lost+found/${INUM}"
-> +	mv "${TEMP_ORPHAN}" "${ORPHAN}"
->  
-> -# Get a listing of all the files after obfuscation
-> -cd ${SCRATCH_MNT}
-> -ls -R >> $seqres.full
-> -ls -R | od -c >> $seqres.full
-> +	# Create non-orphan, which *should* be obfuscated
-> +	touch "${NON_ORPHAN}"
-> +
-> +	# Get a listing of all the files before obfuscation
-> +	ls -R >> $seqres.full
-> +	ls -R | od -c >> $seqres.full
-> +
-> +	# Now unmount the filesystem and create a metadump file
-> +	cd $here
-> +
-> +	_scratch_unmount
-> +	
-> +	_scratch_xfs_metadump $METADUMP_FILE $version
-> +
-> +	# Now restore the obfuscated one back and take a look around
-> +
-> +	slogdev=$SCRATCH_LOGDEV
-> +	if [[ -z $version || $version == "-v 1" ]]; then
-> +		slogdev=""
-> +	fi
-> +
-> +	SCRATCH_LOGDEV=${slogdev} _scratch_xfs_mdrestore "$METADUMP_FILE"
-> +
-> +	_scratch_mount
-> +
-> +	cd "${SCRATCH_MNT}"
-> +
-> +	# Get a listing of all the files after obfuscation
-> +	ls -R >> $seqres.full
-> +	ls -R | od -c >> $seqres.full
-> +done
->  
->  # Finally, re-make the filesystem since to ensure we don't
->  # leave a directory with duplicate entries lying around.
-> diff --git a/tests/xfs/291 b/tests/xfs/291
-> index 54448497..33193eb7 100755
-> --- a/tests/xfs/291
-> +++ b/tests/xfs/291
-> @@ -92,10 +92,27 @@ _scratch_xfs_check >> $seqres.full 2>&1 || _fail "xfs_check failed"
->  
->  # Yes they can!  Now...
->  # Can xfs_metadump cope with this monster?
-> -_scratch_xfs_metadump $tmp.metadump -a -o || _fail "xfs_metadump failed"
-> -SCRATCH_DEV=$tmp.img _scratch_xfs_mdrestore $tmp.metadump || _fail "xfs_mdrestore failed"
-> -SCRATCH_DEV=$tmp.img _scratch_xfs_repair -f &>> $seqres.full || \
-> -	_fail "xfs_repair of metadump failed"
-> +max_md_version=1
-> +_scratch_metadump_v2_supported && max_md_version=2
-> +
-> +for md_version in $(seq 1 $max_md_version); do
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $tmp.metadump -a -o $version || \
-> +		_fail "xfs_metadump failed"
-> +
-> +	slogdev=$SCRATCH_LOGDEV
-> +	if [[ -z $version || $version == "-v 1" ]]; then
-> +		slogdev=""
-> +	fi
-> +	SCRATCH_DEV=$tmp.img SCRATCH_LOGDEV=$slogdev _scratch_xfs_mdrestore \
-> +		   $tmp.metadump || _fail "xfs_mdrestore failed"
-> +	SCRATCH_DEV=$tmp.img _scratch_xfs_repair -f &>> $seqres.full || \
-> +		_fail "xfs_repair of metadump failed"
-> +done
->  
->  # Yes it can; success, all done
->  status=0
-> diff --git a/tests/xfs/432 b/tests/xfs/432
-> index dae68fb2..a215d3ce 100755
-> --- a/tests/xfs/432
-> +++ b/tests/xfs/432
-> @@ -50,6 +50,7 @@ echo "Format and mount"
->  # block.  8187 hashes/dablk / 248 dirents/dirblock = ~33 dirblocks per
->  # dablock.  33 dirblocks * 64k mean that we can expand a directory by
->  # 2112k before we have to allocate another da btree block.
-> +
->  _scratch_mkfs -b size=1k -n size=64k > "$seqres.full" 2>&1
->  _scratch_mount >> "$seqres.full" 2>&1
->  
-> @@ -85,13 +86,29 @@ extlen="$(check_for_long_extent $dir_inum)"
->  echo "qualifying extent: $extlen blocks" >> $seqres.full
->  test -n "$extlen" || _notrun "could not create dir extent > 1000 blocks"
->  
-> -echo "Try to metadump"
-> -_scratch_xfs_metadump $metadump_file -a -o -w
-> -SCRATCH_DEV=$metadump_img _scratch_xfs_mdrestore $metadump_file
-> +echo "Try to metadump, restore and check restored metadump image"
-> +max_md_version=1
-> +_scratch_metadump_v2_supported && max_md_version=2
->  
-> -echo "Check restored metadump image"
-> -SCRATCH_DEV=$metadump_img _scratch_xfs_repair -n &>> $seqres.full || \
-> -	echo "xfs_repair on restored fs returned $?"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $metadump_file -a -o -w $version
-> +
-> +	slogdev=$SCRATCH_LOGDEV
-> +	if [[ -z $version || $version == "-v 1" ]]; then
-> +		slogdev=""
-> +	fi
-> +
-> +	SCRATCH_DEV=$metadump_img SCRATCH_LOGDEV=$slogdev \
-> +		   _scratch_xfs_mdrestore $metadump_file
-> +
-> +	SCRATCH_DEV=$metadump_img _scratch_xfs_repair -n &>> $seqres.full || \
-> +		echo "xfs_repair on restored fs returned $?"
-> +done
->  
->  # success, all done
->  status=0
-> diff --git a/tests/xfs/432.out b/tests/xfs/432.out
-> index 1f135d16..37bac902 100644
-> --- a/tests/xfs/432.out
-> +++ b/tests/xfs/432.out
-> @@ -2,5 +2,4 @@ QA output created by 432
->  Format and mount
->  Create huge dir
->  Check for > 1000 block extent?
-> -Try to metadump
-> -Check restored metadump image
-> +Try to metadump, restore and check restored metadump image
-> diff --git a/tests/xfs/503 b/tests/xfs/503
-> index 8805632d..a1479eb6 100755
-> --- a/tests/xfs/503
-> +++ b/tests/xfs/503
-> @@ -29,6 +29,7 @@ testdir=$TEST_DIR/test-$seq
->  _supported_fs xfs
->  
->  _require_command "$XFS_MDRESTORE_PROG" "xfs_mdrestore"
-> +_require_loop
->  _require_xfs_copy
->  _require_scratch_nocheck
->  _require_populate_commands
-> @@ -40,22 +41,69 @@ _scratch_populate_cached nofill > $seqres.full 2>&1
->  
->  mkdir -p $testdir
->  metadump_file=$testdir/scratch.md
-> -metadump_file_a=${metadump_file}.a
-> -metadump_file_g=${metadump_file}.g
-> -metadump_file_ag=${metadump_file}.ag
->  copy_file=$testdir/copy.img
->  
-> -echo metadump
-> -_scratch_xfs_metadump $metadump_file -a -o >> $seqres.full
-> +check_restored_metadump_image()
-> +{
-> +	local image=$1
->  
-> -echo metadump a
-> -_scratch_xfs_metadump $metadump_file_a -a >> $seqres.full
-> +	loop_dev=$(_create_loop_device $image)
-> +	SCRATCH_DEV=$loop_dev _scratch_mount
-> +	SCRATCH_DEV=$loop_dev _check_scratch_fs
-> +	SCRATCH_DEV=$loop_dev _scratch_unmount
-> +	_destroy_loop_device $loop_dev
-> +}
->  
-> -echo metadump g
-> -_scratch_xfs_metadump $metadump_file_g -g >> $seqres.full
-> +max_md_version=1
-> +_scratch_metadump_v2_supported && max_md_version=2
->  
-> -echo metadump ag
-> -_scratch_xfs_metadump $metadump_file_ag -a -g >> $seqres.full
-> +echo "metadump and mdrestore"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $metadump_file -a -o $version >> $seqres.full
-> +	SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
-> +	check_restored_metadump_image $TEST_DIR/image
-> +done
-> +
-> +echo "metadump a and mdrestore"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $metadump_file -a $version >> $seqres.full
-> +	SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
-> +	check_restored_metadump_image $TEST_DIR/image
-> +done
-> +
-> +echo "metadump g and mdrestore"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $metadump_file -g $version >> $seqres.full
-> +	SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
-> +	check_restored_metadump_image $TEST_DIR/image
-> +done
-> +
-> +echo "metadump ag and mdrestore"
-> +for md_version in $(seq 1 $max_md_version); do
-> +	version=""
-> +	if [[ $max_md_version == 2 ]]; then
-> +		version="-v $md_version"
-> +	fi
-> +
-> +	_scratch_xfs_metadump $metadump_file -a -g $version >> $seqres.full
-> +	SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
-> +	check_restored_metadump_image $TEST_DIR/image
-> +done
->  
->  echo copy
->  $XFS_COPY_PROG $SCRATCH_DEV $copy_file >> $seqres.full
-> @@ -67,30 +115,6 @@ _scratch_mount
->  _check_scratch_fs
->  _scratch_unmount
->  
-> -echo mdrestore
-> -_scratch_xfs_mdrestore $metadump_file
-> -_scratch_mount
-> -_check_scratch_fs
-> -_scratch_unmount
-> -
-> -echo mdrestore a
-> -_scratch_xfs_mdrestore $metadump_file_a
-> -_scratch_mount
-> -_check_scratch_fs
-> -_scratch_unmount
-> -
-> -echo mdrestore g
-> -_scratch_xfs_mdrestore $metadump_file_g
-> -_scratch_mount
-> -_check_scratch_fs
-> -_scratch_unmount
-> -
-> -echo mdrestore ag
-> -_scratch_xfs_mdrestore $metadump_file_ag
-> -_scratch_mount
-> -_check_scratch_fs
-> -_scratch_unmount
-> -
->  # success, all done
->  status=0
->  exit
-> diff --git a/tests/xfs/503.out b/tests/xfs/503.out
-> index 8ef31dbe..496f2516 100644
-> --- a/tests/xfs/503.out
-> +++ b/tests/xfs/503.out
-> @@ -1,12 +1,8 @@
->  QA output created by 503
->  Format and populate
-> -metadump
-> -metadump a
-> -metadump g
-> -metadump ag
-> +metadump and mdrestore
-> +metadump a and mdrestore
-> +metadump g and mdrestore
-> +metadump ag and mdrestore
->  copy
->  recopy
-> -mdrestore
-> -mdrestore a
-> -mdrestore g
-> -mdrestore ag
-> -- 
-> 2.43.0
-> 
-> 
+-- 
+Chandan
 
