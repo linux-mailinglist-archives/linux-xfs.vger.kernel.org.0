@@ -1,48 +1,49 @@
-Return-Path: <linux-xfs+bounces-2495-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2497-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 135AC8229C9
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 09:53:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 27C408234AE
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 19:40:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B303C1F23DCA
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 08:53:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9DBD1F242CD
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Jan 2024 18:40:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188D5182A7;
-	Wed,  3 Jan 2024 08:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2F21C6B3;
+	Wed,  3 Jan 2024 18:40:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hfQrnoSR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYInklBI"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC87182A4
-	for <linux-xfs@vger.kernel.org>; Wed,  3 Jan 2024 08:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dXWGgo1NoUPSogDBR/bk5SuA4AEpQTTkRtHCZ8p8/ic=; b=hfQrnoSR0ztatV7X99xBF1TUC1
-	laYHPNQmXc43Z/7b258nf+etLfjlnnmm1/VGuPeO0FKDQjYgxmrJ3M6BEbvfkqaz3ZnfARPCFj0JA
-	64Jcs8gxzjkx4//MZ5B8X22wu53zk9OGAQ2mW3Dq8Ik2o8DVN+OELaqNWyFtyGafc69U7tI/9rh9X
-	Mc56WA6EXFpIZbZUrqvQX9nC5lTj+SzVv/yuJgKsdhXTMmsz1C3Yh0EwsjdOnuLijSNng4CrKAVel
-	x9qVRDYaRgsxbuMYmsyJ55Kjl1V+/fIFCuusggoumbMa7Ovh4/esWLKxNTwXVD2rqQ0Y2zuJ1+BCn
-	uN344w9Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKx01-00A8MY-13;
-	Wed, 03 Jan 2024 08:53:17 +0000
-Date: Wed, 3 Jan 2024 00:53:17 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org, willy@infradead.org
-Subject: Re: [PATCH 6/9] xfs: consolidate btree block freeing tracepoints
-Message-ID: <ZZUgfWT3ktuE9F5j@infradead.org>
-References: <170404829556.1748854.13886473250848576704.stgit@frogsfrogsfrogs>
- <170404829675.1748854.18135934618780501542.stgit@frogsfrogsfrogs>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FF71C6AE
+	for <linux-xfs@vger.kernel.org>; Wed,  3 Jan 2024 18:40:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7FC8C433C8;
+	Wed,  3 Jan 2024 18:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704307217;
+	bh=waabBS/CPmUr/MI7JIeZ8MPlu1dV/Bksak23nZH38C8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gYInklBIOXZ8lN503DVOwdzaPuYDHlfwqSrPUoCFd7z43U0qxYxF/b4/rzuPyQEi9
+	 Z5sVrSRGGsrPM605ZKdeV7B9UoSfArDXjCajc+JDdrJOuBnJkORpoVji2vlpR91WSf
+	 3urvAiWycoQadjOTJyTIrRp7Od+puYn+Mga5/aur7ZXy/LAQ9wbjwIJAvAlrqwA3gO
+	 f6p0n1Qlc0fLwkxsn3191VdJ6TgOe2iffPsqulvE9crD7nAnqEHuRRqZbkaM3GDS1g
+	 FpKlHPhJsJHeCP2p3UxRuW6YFjKcjXdq+xso6I0Sa9xAdyvCQrex5UzPhIRR3SNnl6
+	 vznifLLifnG6w==
+Date: Wed, 3 Jan 2024 10:40:16 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 4/7] xfs: allow blocking notifier chains with filesystem
+ hooks
+Message-ID: <20240103184016.GQ361584@frogsfrogsfrogs>
+References: <170404826492.1747630.1053076578437373265.stgit@frogsfrogsfrogs>
+ <170404826571.1747630.2096311818934079737.stgit@frogsfrogsfrogs>
+ <ZZPlNOFEfG7KnEk6@infradead.org>
+ <20240103010747.GB241128@frogsfrogsfrogs>
+ <ZZUOxQHqt7WFV8/O@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -51,15 +52,38 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170404829675.1748854.18135934618780501542.stgit@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <ZZUOxQHqt7WFV8/O@infradead.org>
 
-On Sun, Dec 31, 2023 at 12:15:07PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On Tue, Jan 02, 2024 at 11:37:41PM -0800, Christoph Hellwig wrote:
+> On Tue, Jan 02, 2024 at 05:07:47PM -0800, Darrick J. Wong wrote:
+> > The main arches that xfs really cares about are arm64, ppc64, riscv,
+> > s390x, and x86_64, right?  Perhaps there's a stronger case for only
+> > providing blocking notifiers and jump labels since there aren't many
+> > m68k xfs users, right?
 > 
-> Don't waste tracepoint segment memory on per-btree block freeing
-> tracepoints when we can do it from the generic btree code.
+> Yes.  And if there are m68k xfs users, they are even more unlikely to run
+> with online repair enabled as they'd be very memory constrained.
+> 
+> So I suspect always using blocking notifiers would be best to keep
+> the complexity down.  In fact I suspect we should simply make online
+> repair depend on jump labels instead of selecting it when available
+> to remove anoher rarely tested build combination.
 
-The patch looks good, but what is "tracepoint segment memory"?
+Later on in the online fsck patch series, scrub will start using
+LIVE_HOOKS for some of its scanning functionality.  I don't know that
+anyone will really want to use online fsck on weird old systems like you
+said, but while it's EXPERIMENTAL I don't want to lose the option
+entirely.
 
+That said, static branches do have a fallback for !HAVE_ARCH_JUMP_LABEL
+case, which is raw_atomic_read.
+
+I'll get rid of the srcu notifier chain xfs_hook implementation to
+reduce the complexity within xfs.  Online fsck will always use static
+branches + blocking rwsem notifiers.  For modern arches like x64 there
+will be almost zero runtime cost due to the nop sled.  For m68k and
+friends, they can kick the tires on xfs_scrub, but if the performance
+sucks due to the READ_ONCE then oh well.
+
+--D
 
