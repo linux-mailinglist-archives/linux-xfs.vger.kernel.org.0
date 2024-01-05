@@ -1,118 +1,204 @@
-Return-Path: <linux-xfs+bounces-2651-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2655-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A352082547D
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 14:31:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 744A78254B2
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 14:52:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3F331C22754
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 13:31:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6AD671C22B9B
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 13:52:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AF42D61B;
-	Fri,  5 Jan 2024 13:31:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A812DF9A;
+	Fri,  5 Jan 2024 13:52:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XDApVDuB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tO5j9mf1"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A932D788
-	for <linux-xfs@vger.kernel.org>; Fri,  5 Jan 2024 13:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a28b1095064so184612766b.2
-        for <linux-xfs@vger.kernel.org>; Fri, 05 Jan 2024 05:31:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704461483; x=1705066283; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q6+KzCXM5YkP8A1jISM9ILSyDMeuUm71FZWWNzy0y2M=;
-        b=XDApVDuBlC48n5Hut0vHkDRHA+TVBJ2eZJsqfMqlr/o8WW6EuRAKfd2C1p4RlZk+A3
-         Cmv/2xgY6i0qHdMS5u9jLDCAdAWn/MY7n0TJGNncF78h+T2nEp/BN2bGXloH+0neIvrb
-         I3UlZ0V13Nvpb1rlUN5MTnhEyWnMs8DZksURWcj/LsASr3n8FOU+xACbEbU6vAvxOTdQ
-         jXxBuMFWntnElCQSMsWnyQUabV3G2mM+ZmzLTXHbiBLhnm7eLPCY5F1KxJ6sQRb/asEb
-         tFsYU7UTqiYU8hOQ6ukv/07EsvU7kzBN+DqIYrKHiL+ET2OrJcaILDwUU+xpMyNV0q94
-         MaFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704461483; x=1705066283;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q6+KzCXM5YkP8A1jISM9ILSyDMeuUm71FZWWNzy0y2M=;
-        b=jPvPkQgE/ZCFnArYpcPyUYd0FEkmFj+ypeoKJ/Wqn38+zb5nyMvYT1RBKbdvmbe+dF
-         lBQr5L2CJQxyx31I0T0xAHgXM72YZxTG6DMANZG0YdyYscPwNFO37Z5MvNK3WnZ2dq4z
-         Iu+fWz0UNBvcaOlJsj1uz/Mg7xnUGNXeiXcvZO7tXURPcvIqZR1ul9ze3vxdaMs0UFha
-         COHRc+BIFjtwLsZU5CsFW5NIh2hOQ5jHPUgo7jCaHvG0Pz+O1hyjFsU4Ahy0JLq48nS6
-         8dMyush6aJjyJ2p4dxQpvbyh6Kprbkkc21jl4iBG0Gz10c0KuRPgryooPcb9EeZ6Fv7Y
-         X0ng==
-X-Gm-Message-State: AOJu0YxvY+sosA99gDL/W5U3SqJPNietOtD9y9WbsfyyJrtTuygPwC36
-	x60dwnCEkf0CXRhp4qljrwMMWTdw3wcwRLxPXSsv7lUoaWs=
-X-Google-Smtp-Source: AGHT+IH8gkWJE01hcy4oPnbpPL7DZNyghll3et9x5Ahxn9BSPZwDuas0VeMXAMtiJYd8iTuzi1PfIA==
-X-Received: by 2002:a17:906:1107:b0:a28:ac5b:5814 with SMTP id h7-20020a170906110700b00a28ac5b5814mr612703eja.185.1704461483059;
-        Fri, 05 Jan 2024 05:31:23 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id j21-20020a170906255500b00a2990007447sm214277ejb.122.2024.01.05.05.31.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 05:31:22 -0800 (PST)
-Date: Fri, 5 Jan 2024 16:31:19 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Subject: [bug report] xfs: check rt summary file geometry more thoroughly
-Message-ID: <7ed30c07-2e61-4a73-a6a6-f7d15b75765f@moroto.mountain>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD502DF93;
+	Fri,  5 Jan 2024 13:52:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2627C433C8;
+	Fri,  5 Jan 2024 13:52:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704462742;
+	bh=9Nxxc5+qu9t3ufGsphV+D5OlNxSLCWVsX/a4+dB4H5M=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+	b=tO5j9mf1H41qBy//+6p+5sPKLyqPtiBgXPfCxTWx9LAAlOySx5QwBLKYCat79lBdv
+	 EW/EXLrGYrR5QSON/dP7MnC3VL76gNuxB3JXOkfnHC+v35mwyPGCPc12JCnhl49vZe
+	 XxXtN3UWDLLGIDxGwLFdLCO5nBA403zvE4vOSHzLptFUuN3fFJ726kIcvf6plqIN8n
+	 LGs+yH2541tOm1DnwqS5bKzw/HYzWa1KlJ+iHNZzos0LzPzUo+3gQQ+Mw7zLRPtxnL
+	 XH1RsjQINsVRhFSYX4nNQyYRk8QjKuVEaarpOldmknN29eljch4gMaoIIagc/wt2Zv
+	 SDD7V9/fEwMzw==
+References: <20240102084357.1199843-1-chandanbabu@kernel.org>
+ <20240102084357.1199843-6-chandanbabu@kernel.org>
+ <20240103054400.GO361584@frogsfrogsfrogs>
+User-agent: mu4e 1.10.8; emacs 27.1
+From: Chandan Babu R <chandanbabu@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, zlang@redhat.com
+Subject: Re: [PATCH 5/5] xfs: Check correctness of metadump/mdrestore's
+ ability to work with dirty log
+Date: Fri, 05 Jan 2024 19:06:40 +0530
+In-reply-to: <20240103054400.GO361584@frogsfrogsfrogs>
+Message-ID: <87zfxj3n1q.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-Hello Darrick J. Wong,
+On Tue, Jan 02, 2024 at 09:44:00 PM -0800, Darrick J. Wong wrote:
+> On Tue, Jan 02, 2024 at 02:13:52PM +0530, Chandan Babu R wrote:
+>> Add a new test to verify if metadump/mdrestore are able to dump and restore
+>> the contents of a dirty log.
+>> 
+>> Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
+>> ---
+>>  tests/xfs/801     | 115 ++++++++++++++++++++++++++++++++++++++++++++++
+>>  tests/xfs/801.out |  14 ++++++
+>>  2 files changed, 129 insertions(+)
+>>  create mode 100755 tests/xfs/801
+>>  create mode 100644 tests/xfs/801.out
+>> 
+>> diff --git a/tests/xfs/801 b/tests/xfs/801
+>> new file mode 100755
+>> index 00000000..3ed559df
+>> --- /dev/null
+>> +++ b/tests/xfs/801
+>> @@ -0,0 +1,115 @@
+>> +#! /bin/bash
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# Copyright (c) 2024 Oracle, Inc.  All Rights Reserved.
+>> +#
+>> +# FS QA Test 801
+>> +#
+>> +# Test metadump/mdrestore's ability to dump a dirty log and restore it
+>> +# correctly.
+>> +#
+>> +. ./common/preamble
+>> +_begin_fstest auto quick metadump log logprint punch
+>> +
+>> +# Override the default cleanup function.
+>> +_cleanup()
+>> +{
+>> +	cd /
+>> +	rm -r -f $tmp.*
+>> +	_scratch_unmount > /dev/null 2>&1
+>> +}
+>> +
+>> +# Import common functions.
+>> +. ./common/dmflakey
+>> +. ./common/inject
+>> +
+>> +# real QA test starts here
+>> +_supported_fs xfs
+>> +_require_scratch
+>> +_require_test
+>> +_require_xfs_debug
+>> +_require_xfs_io_error_injection log_item_pin
+>> +_require_dm_target flakey
+>> +_require_xfs_io_command "pwrite"
+>> +_require_test_program "punch-alternating"
+>> +
+>> +metadump_file=${TEST_DIR}/${seq}.md
+>> +testfile=${SCRATCH_MNT}/testfile
+>> +
+>> +echo "Format filesystem on scratch device"
+>> +_scratch_mkfs >> $seqres.full 2>&1
+>> +
+>> +max_md_version=1
+>> +_scratch_metadump_v2_supported && max_md_version=2
+>> +
+>> +external_log=0
+>> +if [[ $USE_EXTERNAL = yes && -n "$SCRATCH_LOGDEV" ]]; then
+>> +	external_log=1
+>> +fi
+>> +
+>> +if [[ $max_md_version == 1 && $external_log == 1 ]]; then
+>> +	_notrun "metadump v1 does not support external log device"
+>> +fi
+>> +
+>> +echo "Initialize and mount filesystem on flakey device"
+>> +_init_flakey
+>> +_load_flakey_table $FLAKEY_ALLOW_WRITES
+>> +_mount_flakey
+>> +
+>> +echo "Create test file"
+>> +$XFS_IO_PROG -s -f -c "pwrite 0 5M" $testfile >> $seqres.full
+>> +
+>> +echo "Punch alternative blocks of test file"
+>> +$here/src/punch-alternating $testfile
+>> +
+>> +echo "Mount cycle the filesystem on flakey device"
+>> +_unmount_flakey
+>> +_mount_flakey
+>> +
+>> +device=$(readlink -f $FLAKEY_DEV)
+>> +device=$(_short_dev $device)
+>> +
+>> +echo "Pin log items in the AIL"
+>> +echo 1 > /sys/fs/xfs/${device}/errortag/log_item_pin
+>
+> _scratch_inject_error log_item_pin 1
+>
 
-The patch 04f0c3269b41: "xfs: check rt summary file geometry more
-thoroughly" from Dec 15, 2023 (linux-next), leads to the following
-Smatch static checker warning:
+_scratch_inject_error() internally uses $SCRATCH_DEV. This is not suitable for
+the test since we are working with $FLAKEY_DEV.
 
-	fs/xfs/scrub/rtsummary.c:288 xchk_rtsum_compare()
-	warn: missing error code? 'error'
+>> +
+>> +echo "Create two checkpoint transactions on ondisk log"
+>> +for ct in $(seq 1 2); do
+>> +	offset=$(xfs_io -c 'fiemap' $testfile | tac |  grep -v hole | \
+>
+> $XFS_IO_PROG
+>
 
-fs/xfs/scrub/rtsummary.c
-    268         for (off = 0; off < endoff; off++) {
-    269                 union xfs_suminfo_raw        *ondisk_info;
-    270 
-    271                 /* Read a block's worth of ondisk rtsummary file. */
-    272                 error = xfs_rtsummary_read_buf(&rts->args, off);
-    273                 if (!xchk_fblock_process_error(sc, XFS_DATA_FORK, off, &error))
-    274                         return error;
-    275 
-    276                 /* Read a block's worth of computed rtsummary file. */
-    277                 error = xfsum_copyout(sc, sumoff, rts->words, mp->m_blockwsize);
-    278                 if (error) {
-    279                         xfs_rtbuf_cache_relse(&rts->args);
-    280                         return error;
-    281                 }
-    282 
-    283                 ondisk_info = xfs_rsumblock_infoptr(&rts->args, 0);
-    284                 if (memcmp(ondisk_info, rts->words,
-    285                                         mp->m_blockwsize << XFS_WORDLOG) != 0) {
-    286                         xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, off);
-    287                         xfs_rtbuf_cache_relse(&rts->args);
---> 288                         return error;
-                                ^^^^^^^^^^^^^
-This is zero.  Should be some kind of error code.
+I will fix it up.
 
-    289                 }
-    290 
-    291                 xfs_rtbuf_cache_relse(&rts->args);
-    292                 sumoff += mp->m_blockwsize;
-    293         }
-    294 
-    295         return 0;
-    296 }
+>> +			 head -n 1 | awk -F '[\\[.]' '{ print $2 * 512; }')
+>> +	$XFS_IO_PROG -c "truncate $offset" -c fsync $testfile
+>> +done
+>> +
+>> +echo "Drop writes to filesystem from here onwards"
+>> +_load_flakey_table $FLAKEY_DROP_WRITES
+>> +
+>> +echo "Unpin log items in AIL"
+>> +echo 0 > /sys/fs/xfs/${device}/errortag/log_item_pin
+>
+> _scratch_inject_error log_item_pin 0
+>
+>> +
+>> +echo "Unmount filesystem on flakey device"
+>> +_unmount_flakey
+>> +
+>> +echo "Clean up flakey device"
+>> +_cleanup_flakey
+>> +
+>> +echo -n "Filesystem has a "
+>> +_print_logstate
+>> +
+>> +echo "Create metadump file, restore it and check restored fs"
+>> +for md_version in $(seq 1 $max_md_version); do
+>> +	[[ $md_version == 1 && $external_log == 1 ]] && continue
+>> +
+>> +	version=""
+>> +	if [[ $max_md_version == 2 ]]; then
+>> +		version="-v $md_version"
+>> +	fi
+>> +
+>> +	_scratch_xfs_metadump $metadump_file -a -o $version
+>> +	_scratch_xfs_mdrestore $metadump_file
+>
+> Don't you want to mdrestore to a file or something so that the next
+> iteration of the loop will still be dumping from the exact same fs?
 
-regards,
-dan carpenter
+Yes, you are right. I will make the required changes.
+
+-- 
+Chandan
 
