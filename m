@@ -1,48 +1,48 @@
-Return-Path: <linux-xfs+bounces-2578-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2579-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BB13824DC0
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 05:50:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79E55824DC1
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 05:52:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0B651F22F63
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 04:50:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E3A61C21A70
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 04:52:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A965220;
-	Fri,  5 Jan 2024 04:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ABEA5243;
+	Fri,  5 Jan 2024 04:51:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vh+wKwS3"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E7NWCCSl"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023BA5234
-	for <linux-xfs@vger.kernel.org>; Fri,  5 Jan 2024 04:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211025242
+	for <linux-xfs@vger.kernel.org>; Fri,  5 Jan 2024 04:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=vh+wKwS3OQtNKT/sDsvNownDSW
-	/e1wIhaBrWAGOXKpJNTtBUfpGes4OEHViYCk5mISHqlP7zou8RcAOqRxa+BI8sgTAIJ5RmNfRpf3d
-	+Gq1uHuCVJ1Aq6iWNr7V+2rPCz7I3bQLt+gyJ0slULJUiWNOX4UCYfrSXxYr7lP6qcbsOu22GMhb7
-	WJsEzk9PVGKh/RkOdr2f8ubibzboYT2cWaAm3ciIJlMNCFC7V7fKPBxK7eRr8SM3b+/duDFVQnlfu
-	4DJ7EHKv+plIJhoCYhA1tYcOeCsbqyHrkmLnLI9kVdQcKq0Ef4KxLSayPAiHJOYP26b7KDFPJ2vvJ
-	8PPYvMog==;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=E7NWCCSlIGm05aOgXGSjBwxYHB
+	qpjgozBode39IRAByw7k2dVzS6VBZXonLHoES3oqfdXzsyGfk8C/jy4AAlMp6Z5eyvBrmpPaGrcGX
+	UWmulx36zX/0WKXvV56XYLLxADqyMelvr0g6M4uhz87BJ5ZM65TLy9eeK8ohrMTvylPq3L3FO2pTz
+	8VbX73hpsmR+2QBFQqyVe0DDw117x4AhzpLkH3P6k8mkpYux0jkFyQjz4z2GIyWYDtmgHxac37V3n
+	AecBxPqjPCebEsg0iwZgVNkvdp4Gb7ckpldz+8pR4fGMF2Sx/VryAYSsJx0N2UGNXRA5FLOSTWZyB
+	uYGgGbng==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rLcA5-00FwAK-1R;
-	Fri, 05 Jan 2024 04:50:25 +0000
-Date: Thu, 4 Jan 2024 20:50:25 -0800
+	id 1rLcBW-00FwCi-20;
+	Fri, 05 Jan 2024 04:51:54 +0000
+Date: Thu, 4 Jan 2024 20:51:54 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/3] xfs_scrub: update copyright years for scrub/ files
-Message-ID: <ZZeKkVnQaQ8d0zqv@infradead.org>
-References: <170404989091.1791307.1449422318127974555.stgit@frogsfrogsfrogs>
- <170404989135.1791307.8914004017674892036.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 1/2] mkfs: allow sizing allocation groups for concurrency
+Message-ID: <ZZeK6kaK5kMtQsRd@infradead.org>
+References: <170404989423.1791433.6933477036695309956.stgit@frogsfrogsfrogs>
+ <170404989437.1791433.58561592257201816.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -51,7 +51,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <170404989135.1791307.8914004017674892036.stgit@frogsfrogsfrogs>
+In-Reply-To: <170404989437.1791433.58561592257201816.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
 Looks good:
