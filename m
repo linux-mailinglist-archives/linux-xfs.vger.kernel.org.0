@@ -1,315 +1,118 @@
-Return-Path: <linux-xfs+bounces-2654-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2651-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCFD48254AD
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 14:52:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A352082547D
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 14:31:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B34B285316
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 13:52:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3F331C22754
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Jan 2024 13:31:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79FEE2D791;
-	Fri,  5 Jan 2024 13:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AF42D61B;
+	Fri,  5 Jan 2024 13:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8kD0CD4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XDApVDuB"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E622D78B;
-	Fri,  5 Jan 2024 13:51:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A27AC433C7;
-	Fri,  5 Jan 2024 13:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704462717;
-	bh=coIJIWRfL6D35HRIXTPC4+qbFPcTFOtcNaXUo0rLYGQ=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-	b=a8kD0CD4hyfKeBlKkKkbFXm7OX23NCJjc26otoUAqi+JAMI8L2BWNGw9YsNDFRFAA
-	 vGjRIR1sXAAhVmq0IVFVhhkg//PNhrJyTnRh72Pbn1ZljicADKfiqoOIGw+mQWubPx
-	 Wvs3m8PlYGxsXPTl95H8XywtjtYeLCaXc09vQN7BrEbub4WLRTLG/WzocuzhmCrrNE
-	 hE0OqgI2gCwAqCLpWgKbS29r6MIr9+d8KfNcYPema8MXp8iB2JzVvHQsL0IOJexbqh
-	 h7+tu3a4nJvSO93NSV16FajnNcFdfjJlSQCP6E8xawPtke75b2+H/0Tmg6DWRP+VA/
-	 qN3aKMBGBJz0A==
-References: <20240102084357.1199843-1-chandanbabu@kernel.org>
- <20240102084357.1199843-5-chandanbabu@kernel.org>
- <20240103055728.GP361584@frogsfrogsfrogs>
-User-agent: mu4e 1.10.8; emacs 27.1
-From: Chandan Babu R <chandanbabu@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: fstests@vger.kernel.org, linux-xfs@vger.kernel.org, zlang@redhat.com
-Subject: Re: [PATCH 4/5] xfs: Add support for testing metadump v2
-Date: Fri, 05 Jan 2024 12:34:19 +0530
-In-reply-to: <20240103055728.GP361584@frogsfrogsfrogs>
-Message-ID: <874jfr51mv.fsf@debian-BULLSEYE-live-builder-AMD64>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A932D788
+	for <linux-xfs@vger.kernel.org>; Fri,  5 Jan 2024 13:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a28b1095064so184612766b.2
+        for <linux-xfs@vger.kernel.org>; Fri, 05 Jan 2024 05:31:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704461483; x=1705066283; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q6+KzCXM5YkP8A1jISM9ILSyDMeuUm71FZWWNzy0y2M=;
+        b=XDApVDuBlC48n5Hut0vHkDRHA+TVBJ2eZJsqfMqlr/o8WW6EuRAKfd2C1p4RlZk+A3
+         Cmv/2xgY6i0qHdMS5u9jLDCAdAWn/MY7n0TJGNncF78h+T2nEp/BN2bGXloH+0neIvrb
+         I3UlZ0V13Nvpb1rlUN5MTnhEyWnMs8DZksURWcj/LsASr3n8FOU+xACbEbU6vAvxOTdQ
+         jXxBuMFWntnElCQSMsWnyQUabV3G2mM+ZmzLTXHbiBLhnm7eLPCY5F1KxJ6sQRb/asEb
+         tFsYU7UTqiYU8hOQ6ukv/07EsvU7kzBN+DqIYrKHiL+ET2OrJcaILDwUU+xpMyNV0q94
+         MaFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704461483; x=1705066283;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q6+KzCXM5YkP8A1jISM9ILSyDMeuUm71FZWWNzy0y2M=;
+        b=jPvPkQgE/ZCFnArYpcPyUYd0FEkmFj+ypeoKJ/Wqn38+zb5nyMvYT1RBKbdvmbe+dF
+         lBQr5L2CJQxyx31I0T0xAHgXM72YZxTG6DMANZG0YdyYscPwNFO37Z5MvNK3WnZ2dq4z
+         Iu+fWz0UNBvcaOlJsj1uz/Mg7xnUGNXeiXcvZO7tXURPcvIqZR1ul9ze3vxdaMs0UFha
+         COHRc+BIFjtwLsZU5CsFW5NIh2hOQ5jHPUgo7jCaHvG0Pz+O1hyjFsU4Ahy0JLq48nS6
+         8dMyush6aJjyJ2p4dxQpvbyh6Kprbkkc21jl4iBG0Gz10c0KuRPgryooPcb9EeZ6Fv7Y
+         X0ng==
+X-Gm-Message-State: AOJu0YxvY+sosA99gDL/W5U3SqJPNietOtD9y9WbsfyyJrtTuygPwC36
+	x60dwnCEkf0CXRhp4qljrwMMWTdw3wcwRLxPXSsv7lUoaWs=
+X-Google-Smtp-Source: AGHT+IH8gkWJE01hcy4oPnbpPL7DZNyghll3et9x5Ahxn9BSPZwDuas0VeMXAMtiJYd8iTuzi1PfIA==
+X-Received: by 2002:a17:906:1107:b0:a28:ac5b:5814 with SMTP id h7-20020a170906110700b00a28ac5b5814mr612703eja.185.1704461483059;
+        Fri, 05 Jan 2024 05:31:23 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id j21-20020a170906255500b00a2990007447sm214277ejb.122.2024.01.05.05.31.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 05:31:22 -0800 (PST)
+Date: Fri, 5 Jan 2024 16:31:19 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org
+Subject: [bug report] xfs: check rt summary file geometry more thoroughly
+Message-ID: <7ed30c07-2e61-4a73-a6a6-f7d15b75765f@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Jan 02, 2024 at 09:57:28 PM -0800, Darrick J. Wong wrote:
-> On Tue, Jan 02, 2024 at 02:13:51PM +0530, Chandan Babu R wrote:
->> This commit adds the ability to test metadump v2 to existing metadump tests.
->> 
->> Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
->> ---
->>  tests/xfs/129     |  63 ++++++++++++---
->>  tests/xfs/129.out |   4 +-
->>  tests/xfs/234     |  63 ++++++++++++---
->>  tests/xfs/234.out |   4 +-
->>  tests/xfs/253     | 195 ++++++++++++++++++++++++++--------------------
->>  tests/xfs/291     |  25 +++++-
->>  tests/xfs/432     |  29 +++++--
->>  tests/xfs/432.out |   3 +-
->>  tests/xfs/503     |  94 +++++++++++++---------
->>  tests/xfs/503.out |  12 +--
->>  10 files changed, 326 insertions(+), 166 deletions(-)
->> 
->> diff --git a/tests/xfs/129 b/tests/xfs/129
->> index 6f2ef564..7226d57d 100755
->> --- a/tests/xfs/129
->> +++ b/tests/xfs/129
->> @@ -16,7 +16,11 @@ _cleanup()
->>  {
->>      cd /
->>      _scratch_unmount > /dev/null 2>&1
->> -    rm -rf $tmp.* $testdir $metadump_file $TEST_DIR/image
->> +    [[ -n $logdev && $logdev != "none" && $logdev != $SCRATCH_LOGDEV ]] && \
->> +	    _destroy_loop_device $logdev
->> +    [[ -n $datadev ]] && _destroy_loop_device $datadev
->> +    rm -rf $tmp.* $testdir $metadump_file $TEST_DIR/data-image \
->> +       $TEST_DIR/log-image
->>  }
->>  
->>  # Import common functions.
->> @@ -47,18 +51,57 @@ seq 1 2 $((nr_blks - 1)) | while read nr; do
->>  			$testdir/file2 $((nr * blksz)) $blksz >> $seqres.full
->>  done
->>  
->> -echo "Create metadump file"
->>  _scratch_unmount
->> -_scratch_xfs_metadump $metadump_file
->>  
->> -# Now restore the obfuscated one back and take a look around
->> -echo "Restore metadump"
->> -SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
->> -SCRATCH_DEV=$TEST_DIR/image _scratch_mount
->> -SCRATCH_DEV=$TEST_DIR/image _scratch_unmount
->> +max_md_version=1
->> +_scratch_metadump_v2_supported && max_md_version=2
->>  
->> -echo "Check restored fs"
->> -_check_generic_filesystem $metadump_file
->> +echo "Create metadump file, restore it and check restored fs"
->> +for md_version in $(seq 1 $max_md_version); do
->> +	# Determine the version to be passed to metadump/mdrestore
->> +	version=""
->> +	if [[ $max_md_version == 2 ]]; then
->> +		version="-v $md_version"
->> +	fi
->> +
->> +	_scratch_xfs_metadump $metadump_file $version
->> +
->> +	# Now restore the obfuscated one back and take a look around
->> +
->> +	# Metadump v2 files can contain contents dumped from an external log
->> +	# device. Use a temporary file to hold the log device contents restored
->> +	# from such a metadump file.
->> +	slogdev=$TEST_DIR/log-image
->> +	if [[ -z $version || $version == "-v 1" || -z $SCRATCH_LOGDEV ]]; then
->> +		slogdev=""
->> +	fi
->> +
->> + 	SCRATCH_DEV=$TEST_DIR/data-image SCRATCH_LOGDEV=$slogdev \
->
->    ^ space before tab
->
+Hello Darrick J. Wong,
 
-Sorry, I will fix it.
+The patch 04f0c3269b41: "xfs: check rt summary file geometry more
+thoroughly" from Dec 15, 2023 (linux-next), leads to the following
+Smatch static checker warning:
 
->> +		   _scratch_xfs_mdrestore $metadump_file
->> +
->> +	datadev=$(_create_loop_device $TEST_DIR/data-image)
->> +
->> +	logdev=${SCRATCH_LOGDEV}
->> +	if [[ -s $TEST_DIR/log-image ]]; then
->> +		logdev=$(_create_loop_device $TEST_DIR/log-image)
->> +	fi
->> +
->> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_mount
->> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_unmount
->> +
->> +	[[ -z $logdev ]] && logdev=none
->> +	_check_xfs_filesystem $datadev $logdev none
->> +
->> +	if [[ -s $TEST_DIR/log-image ]]; then
->> +		_destroy_loop_device $logdev
->> +		logdev=""
->> +		rm -f $TEST_DIR/log-image
->> +	fi
->> +
->> +	_destroy_loop_device $datadev
->> +	datadev=""
->> +	rm -f $TEST_DIR/data-image
->> +done
->
-> Given the major differences between v1 and v2, would the two metadump
-> tests be easier to understand if this loop were unrolled?
->
+	fs/xfs/scrub/rtsummary.c:288 xchk_rtsum_compare()
+	warn: missing error code? 'error'
 
-Yes, you are right. Unrolling the loop will improve the readability of the
-code. I will make the required changes.
+fs/xfs/scrub/rtsummary.c
+    268         for (off = 0; off < endoff; off++) {
+    269                 union xfs_suminfo_raw        *ondisk_info;
+    270 
+    271                 /* Read a block's worth of ondisk rtsummary file. */
+    272                 error = xfs_rtsummary_read_buf(&rts->args, off);
+    273                 if (!xchk_fblock_process_error(sc, XFS_DATA_FORK, off, &error))
+    274                         return error;
+    275 
+    276                 /* Read a block's worth of computed rtsummary file. */
+    277                 error = xfsum_copyout(sc, sumoff, rts->words, mp->m_blockwsize);
+    278                 if (error) {
+    279                         xfs_rtbuf_cache_relse(&rts->args);
+    280                         return error;
+    281                 }
+    282 
+    283                 ondisk_info = xfs_rsumblock_infoptr(&rts->args, 0);
+    284                 if (memcmp(ondisk_info, rts->words,
+    285                                         mp->m_blockwsize << XFS_WORDLOG) != 0) {
+    286                         xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, off);
+    287                         xfs_rtbuf_cache_relse(&rts->args);
+--> 288                         return error;
+                                ^^^^^^^^^^^^^
+This is zero.  Should be some kind of error code.
 
-> I like that it mdrestores to a separate device to preserve the original
-> $SCRATCH_DEV metadata between metadump v1 and v2 testing.
->
->>  # success, all done
->>  status=0
->> diff --git a/tests/xfs/129.out b/tests/xfs/129.out
->> index da6f43fd..0f24c431 100644
->> --- a/tests/xfs/129.out
->> +++ b/tests/xfs/129.out
->> @@ -1,6 +1,4 @@
->>  QA output created by 129
->>  Create the original file blocks
->>  Reflink every other block
->> -Create metadump file
->> -Restore metadump
->> -Check restored fs
->> +Create metadump file, restore it and check restored fs
->> diff --git a/tests/xfs/234 b/tests/xfs/234
->> index 57d447c0..2f6b1f65 100755
->> --- a/tests/xfs/234
->> +++ b/tests/xfs/234
->> @@ -16,7 +16,11 @@ _cleanup()
->>  {
->>      cd /
->>      _scratch_unmount > /dev/null 2>&1
->> -    rm -rf $tmp.* $metadump_file $TEST_DIR/image
->> +    [[ -n $logdev && $logdev != "none" && $logdev != $SCRATCH_LOGDEV ]] && \
->> +	    _destroy_loop_device $logdev
->> +    [[ -n $datadev ]] && _destroy_loop_device $datadev
->> +    rm -rf $tmp.* $testdir $metadump_file $TEST_DIR/image \
->> +       $TEST_DIR/log-image
->>  }
->>  
->>  # Import common functions.
->> @@ -47,18 +51,57 @@ seq 1 2 $((nr_blks - 1)) | while read nr; do
->>  	$XFS_IO_PROG -c "fpunch $((nr * blksz)) $blksz" $testdir/file1 >> $seqres.full
->>  done
->>  
->> -echo "Create metadump file"
->>  _scratch_unmount
->> -_scratch_xfs_metadump $metadump_file
->>  
->> -# Now restore the obfuscated one back and take a look around
->> -echo "Restore metadump"
->> -SCRATCH_DEV=$TEST_DIR/image _scratch_xfs_mdrestore $metadump_file
->> -SCRATCH_DEV=$TEST_DIR/image _scratch_mount
->> -SCRATCH_DEV=$TEST_DIR/image _scratch_unmount
->> +max_md_version=1
->> +_scratch_metadump_v2_supported && max_md_version=2
->>  
->> -echo "Check restored fs"
->> -_check_generic_filesystem $metadump_file
->> +echo "Create metadump file, restore it and check restored fs"
->> +for md_version in $(seq 1 $max_md_version); do
->> +	# Determine the version to be passed to metadump/mdrestore
->> +	version=""
->> +	if [[ $max_md_version == 2 ]]; then
->> +		version="-v $md_version"
->> +	fi
->> +
->> +	_scratch_xfs_metadump $metadump_file $version
->> +
->> +	# Now restore the obfuscated one back and take a look around
->> +
->> +	# Metadump v2 files can contain contents dumped from an external log
->> +	# device. Use a temporary file to hold the log device contents restored
->> +	# from such a metadump file.
->> +	slogdev=$TEST_DIR/log-image
->> +	if [[ -z $version || $version == "-v 1" || -z $SCRATCH_LOGDEV ]]; then
->> +		slogdev=""
->> +	fi
->> +
->> +	SCRATCH_DEV=$TEST_DIR/data-image SCRATCH_LOGDEV=$slogdev \
->> +		   _scratch_xfs_mdrestore $metadump_file
->> +
->> +	datadev=$(_create_loop_device $TEST_DIR/data-image)
->> +
->> +	logdev=${SCRATCH_LOGDEV}
->> +	if [[ -s $TEST_DIR/log-image ]]; then
->> +		logdev=$(_create_loop_device $TEST_DIR/log-image)
->> +	fi
->> +
->> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_mount
->> +	SCRATCH_DEV=$datadev SCRATCH_LOGDEV=$logdev _scratch_unmount
->> +
->> +	[[ -z $logdev ]] && logdev=none
->> +	_check_xfs_filesystem $datadev $logdev none
->> +
->> +	if [[ -s $TEST_DIR/log-image ]]; then
->> +		_destroy_loop_device $logdev
->> +		logdev=""
->> +		rm -f $TEST_DIR/log-image
->> +	fi
->> +
->> +	_destroy_loop_device $datadev
->> +	datadev=""
->> +	rm -f $TEST_DIR/data-image
->> +done
->>  
->>  # success, all done
->>  status=0
->> diff --git a/tests/xfs/234.out b/tests/xfs/234.out
->> index 463d4660..fc2ddd77 100644
->> --- a/tests/xfs/234.out
->> +++ b/tests/xfs/234.out
->> @@ -1,6 +1,4 @@
->>  QA output created by 234
->>  Create the original file blocks
->>  Punch every other block
->> -Create metadump file
->> -Restore metadump
->> -Check restored fs
->> +Create metadump file, restore it and check restored fs
->> diff --git a/tests/xfs/253 b/tests/xfs/253
->> index ce902477..b69a1faf 100755
->> --- a/tests/xfs/253
->> +++ b/tests/xfs/253
->> @@ -52,114 +52,139 @@ function create_file() {
->>  echo "Disciplyne of silence is goed."
->>  
->>  _scratch_mkfs >/dev/null 2>&1
->> -_scratch_mount
->>  
->> -# Initialize and mount the scratch filesystem, then create a bunch
->> -# of files that exercise the original problem.
->> -#
->> -# The problem arose when a file name produced a hash that contained
->> -# either 0x00 (string terminator) or 0x27 ('/' character) in a
->> -# spot used to determine a character in an obfuscated name.  This
->> -# occurred in one of 5 spots at the end of the name, at position
->> -# (last-4), (last-3), (last-2), (last-1), or (last).
->
-> I wonder, could you create the scratch fs and only then move into
-> testing v1 and v2 metadump?  Rather than doing the create_file stuff
-> twice?  Or do we actually end up with a different fs between the two
-> iterations?
->
+    289                 }
+    290 
+    291                 xfs_rtbuf_cache_relse(&rts->args);
+    292                 sumoff += mp->m_blockwsize;
+    293         }
+    294 
+    295         return 0;
+    296 }
 
-Yes, Creating the fs once should be sufficient. I will implement the changes
-that have been suggested.
-
-> The other two tests here look good enough for now...
->
-> --D
->
-
--- 
-Chandan
+regards,
+dan carpenter
 
