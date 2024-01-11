@@ -1,120 +1,131 @@
-Return-Path: <linux-xfs+bounces-2746-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2748-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2D6382B680
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jan 2024 22:17:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F69782B697
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jan 2024 22:24:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BE9E2856A1
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jan 2024 21:17:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2BF21C243B4
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jan 2024 21:24:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C501658127;
-	Thu, 11 Jan 2024 21:17:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE09558200;
+	Thu, 11 Jan 2024 21:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HJX6xxE4"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JkAmrtxC"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEA256B7D
-	for <linux-xfs@vger.kernel.org>; Thu, 11 Jan 2024 21:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705007829;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ridr0ybuTqtA9azn6VD/mrq54bMt03k+kb/KRYVYM7g=;
-	b=HJX6xxE4Z62y0sxpC6PrftY2b0DXylSpSbLfgEUriUZLZexLKdGACpKODAzy7yUaSNlVja
-	lJndX5oyLEqQ3giFTsC7sg50xmaxNy3l1r8wkF9T1rdyUempGgQjg/LmEot4w5iEaoz2I+
-	xCZ9sdph8UlflX6CwYcU7++P0AZGi7Y=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-mLYKWw31OdKcc0G5Lnvbcg-1; Thu, 11 Jan 2024 16:17:07 -0500
-X-MC-Unique: mLYKWw31OdKcc0G5Lnvbcg-1
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-5cf2714e392so1434404a12.0
-        for <linux-xfs@vger.kernel.org>; Thu, 11 Jan 2024 13:17:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705007826; x=1705612626;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ridr0ybuTqtA9azn6VD/mrq54bMt03k+kb/KRYVYM7g=;
-        b=j4c3MBMdbn3AuoGUNTZBsrr5SjkQ+ynW3AQY3fsUlAJnSZGu8pyhU6/z/0myqOJFY5
-         6faPt3dT76qqDhtWxclSFcxyUUZgI3/TfuiA/HJb5sltoXYOeXisjVuQOlqfYudsACzp
-         9Vj7fRWKbxpUepxuR/zS2Aw9y0Yyb1/g40uukdn2fHUjtXIbAX+eTpUI5eKNlQzskEe/
-         02dRwxkFMf5FIcsMfZVn+cIhdKkBuQgftf/X20ka0U0gP+KM1wxHaW9JsCnGibz7lsPb
-         xDzCRYQVFn1tyIdDp8oRxgqW2WGiOSg6x9WEIeqIwsBFmBY9F5s3asm6OOW0Ndap4cmh
-         tr7A==
-X-Gm-Message-State: AOJu0YznRcigyouRSN5Ney6WdMcJYcd3L+yZs/zn7HQ9pnubIkOAxT2t
-	NA8aPKzxzCpTw/26eJjT+wzx6x2pc9OZL6VhIhKKp4JNh65BHkjx3gY3hlu1k5dH0aHxlaBiB2y
-	JpWt0bWmvSlskJ5OP3O45rby5hVvj
-X-Received: by 2002:a05:6a20:da84:b0:19a:5257:9828 with SMTP id iy4-20020a056a20da8400b0019a52579828mr674051pzb.22.1705007826606;
-        Thu, 11 Jan 2024 13:17:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHPFfSygW1gHzAgtb3mvGZ0NfDuM/5mo+7IQXyjViC6trvyNk/vEZ2LcWJxPpYU3LGDPK3xfw==
-X-Received: by 2002:a05:6a20:da84:b0:19a:5257:9828 with SMTP id iy4-20020a056a20da8400b0019a52579828mr674039pzb.22.1705007826274;
-        Thu, 11 Jan 2024 13:17:06 -0800 (PST)
-Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id c23-20020aa78817000000b006d095553f2asm1650966pfo.81.2024.01.11.13.17.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 13:17:05 -0800 (PST)
-Date: Fri, 12 Jan 2024 05:17:02 +0800
-From: Zorro Lang <zlang@redhat.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, fstests@vger.kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] xfs: check that the mountpoint is actually mounted
- in _supports_xfs_scrub
-Message-ID: <20240111211702.baimcixgpuhoqbib@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
-References: <20240111142407.2163578-1-hch@lst.de>
- <20240111142407.2163578-2-hch@lst.de>
- <20240111172022.GO723010@frogsfrogsfrogs>
- <20240111172556.GB22255@lst.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBEE5812E;
+	Thu, 11 Jan 2024 21:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=b0t3x6hCu0x/ojo3PHAaC3r4/bQ6bUFU+eeGlqR4ams=; b=JkAmrtxCDZsHE68Vt/5sWw6/E5
+	xy/vZscRMIjfovLNp/OexA4gtXsc2GAVq7qPJrmJpWsgJRZAMD/5NiglDY7f7bndxm8txRepEsok9
+	gKwCWONbgJ4FY6JoWqVES+rYgEYB4GZRnNK0msgYCESzSZB0YqNMvxecCOjjXD6TN6EJKGsTJMrce
+	+0tAOPJAxTQ1GEdJbN1nHSNTHYr3kqSKJIu0gPiDv8SrsvGRSud5oTk38qYKlGZauqQ+MYRM5QB6l
+	JJa42YJ70zYONifTp7j276PAV8tRWEbBx3CDcp14JvDnXC9nceuIIeFeuF7TkIUK8ZIWSAQm9IUIV
+	XHwy30ow==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rO2XO-00EzID-CS; Thu, 11 Jan 2024 21:24:30 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Chandan Babu R <chandan.babu@oracle.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH v5 0/3] Remove the XFS mrlock
+Date: Thu, 11 Jan 2024 21:24:21 +0000
+Message-Id: <20240111212424.3572189-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240111172556.GB22255@lst.de>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 11, 2024 at 06:25:56PM +0100, Christoph Hellwig wrote:
-> On Thu, Jan 11, 2024 at 09:20:22AM -0800, Darrick J. Wong wrote:
-> > > +	mountpoint $mountpoint >/dev/null || echo "$mountpoint is not mounted"
-> > 
-> > The helper needs to return nonzero on failure, e.g.
-> > 
-> > 	if ! mountpoint -q $mountpoint; then
-> > 		echo "$mountpoint is not mounted"
-> > 		return 1
-> > 	fi
-> 
-> No, it doesn't..  I actually did exactly that first, but that causes the
-> test to be _notrun instead of reporting the error and thus telling the
-> author that they usage of this helper is wrong.
+XFS has an mrlock wrapper around the rwsem which adds only the
+functionality of knowing whether the rwsem is currently held in read
+or write mode.  Both regular rwsems and rt-rwsems know this, they just
+don't expose it as an API.  By adding that, we can remove the XFS mrlock
+as well as improving the debug assertions for the mmap_lock when lockdep
+is disabled.
 
-So below "usage" message won't be gotten either, if a _notrun be called
-after this helper return 1 .
+I have an ack on the first patch from Peter, so I would like to see this
+merged through the XFS tree since most of what it touches is XFS.
 
-        if [ -z "$device" ] || [ -z "$mountpoint" ]; then
-                echo "Usage: _supports_xfs_scrub mountpoint device"
-                return 1
-        fi
+v5:
+ - Rebase on 5bad490858c3 (current Linus head) to pick up XFS changes
 
-If there's not _notrun after that, the message will be gotten I think.
-So I think the "return 1" makes sense.
+v4:
+ - Switch the BUG_ONs to WARN_ONs (Wayman, Peter)
 
-What do both of you think ?
+v3:
+ - Rename __rwsem_assert_held() and __rwsem_assert_held_write() to
+   rwsem_assert_held*_nolockdep()
+ - Use IS_ENABLED(CONFIG_LOCKDEP) to only dump the information once
+ - Use ASSERT instead of BUG_ON in xfs
+ - Fix typo in subject line of patch 4
+ - Drop patch 5 (inode_assert_locked)
+ - Rebase on top of xfs-6.7-merge-2 which had a merge conflict
 
-Thanks,
-Zorro
+v2: Add rwsem_assert_held() and rwsem_assert_held_write() instead of
+augmenting the existing rwsem_is_locked() with rwsem_is_write_locked().
+There's also an __rwsem_assert_held() and __rwsem_assert_held_write()
+for the benefit of XFS when it's in a context where lockdep doesn't
+know what's going on.  It's still an improvement, so I hope those who
+are looking for perfection can accept a mere improvement.
 
-> 
+Matthew Wilcox (Oracle) (3):
+  locking: Add rwsem_assert_held() and rwsem_assert_held_write()
+  xfs: Replace xfs_isilocked with xfs_assert_ilocked
+  xfs: Remove mrlock wrapper
+
+ fs/xfs/libxfs/xfs_attr.c        |  2 +-
+ fs/xfs/libxfs/xfs_attr_remote.c |  2 +-
+ fs/xfs/libxfs/xfs_bmap.c        | 21 ++++----
+ fs/xfs/libxfs/xfs_defer.c       |  2 +-
+ fs/xfs/libxfs/xfs_inode_fork.c  |  2 +-
+ fs/xfs/libxfs/xfs_rtbitmap.c    |  2 +-
+ fs/xfs/libxfs/xfs_trans_inode.c |  6 +--
+ fs/xfs/mrlock.h                 | 78 ------------------------------
+ fs/xfs/scrub/readdir.c          |  4 +-
+ fs/xfs/xfs_attr_list.c          |  2 +-
+ fs/xfs/xfs_bmap_util.c          | 10 ++--
+ fs/xfs/xfs_dir2_readdir.c       |  2 +-
+ fs/xfs/xfs_dquot.c              |  4 +-
+ fs/xfs/xfs_file.c               |  4 +-
+ fs/xfs/xfs_inode.c              | 86 ++++++++++++---------------------
+ fs/xfs/xfs_inode.h              |  4 +-
+ fs/xfs/xfs_inode_item.c         |  4 +-
+ fs/xfs/xfs_iops.c               |  7 ++-
+ fs/xfs/xfs_linux.h              |  2 +-
+ fs/xfs/xfs_qm.c                 | 10 ++--
+ fs/xfs/xfs_reflink.c            |  2 +-
+ fs/xfs/xfs_rtalloc.c            |  2 +-
+ fs/xfs/xfs_super.c              |  4 +-
+ fs/xfs/xfs_symlink.c            |  2 +-
+ fs/xfs/xfs_trans.c              |  2 +-
+ fs/xfs/xfs_trans_dquot.c        |  2 +-
+ include/linux/rwbase_rt.h       |  9 +++-
+ include/linux/rwsem.h           | 46 ++++++++++++++++--
+ 28 files changed, 129 insertions(+), 194 deletions(-)
+ delete mode 100644 fs/xfs/mrlock.h
+
+-- 
+2.43.0
 
 
