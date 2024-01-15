@@ -1,282 +1,152 @@
-Return-Path: <linux-xfs+bounces-2796-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2808-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6927082DB15
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Jan 2024 15:13:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4E9682E31F
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jan 2024 00:01:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED40A1F22802
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Jan 2024 14:13:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB7231C22287
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Jan 2024 23:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 450521758C;
-	Mon, 15 Jan 2024 14:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149861B806;
+	Mon, 15 Jan 2024 23:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h4leQcl5"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="qXUdUhQH"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4A117589
-	for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 14:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705327997;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mr6mr30z4Qk2lOdK8Mcyhzn3fR+ctPvC09La47pjBn8=;
-	b=h4leQcl59OWLhz3GfpepSQw/CWJldD3FX/H9Svetufu0rx+0LyVdf99aAWC0eY/PrZtsdg
-	vGrYVbvLsDCSGXhrrERxlJXVR5iUF+OxS441vnyYYxPxAr3lDXX/dlflgo+2/81b099jOT
-	Kaq0pbeUKlA4wA2yxFlvhe/wbe02tXo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-451-dkYs20OMP0ePvQmmKNPkyQ-1; Mon, 15 Jan 2024 09:13:13 -0500
-X-MC-Unique: dkYs20OMP0ePvQmmKNPkyQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1CAD08B39A2;
-	Mon, 15 Jan 2024 14:13:13 +0000 (UTC)
-Received: from bfoster (unknown [10.22.8.116])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AA58F3C25;
-	Mon, 15 Jan 2024 14:13:12 +0000 (UTC)
-Date: Mon, 15 Jan 2024 09:14:30 -0500
-From: Brian Foster <bfoster@redhat.com>
-To: Long Li <leo.lilong@huawei.com>
-Cc: Dave Chinner <david@fromorbit.com>, djwong@kernel.org,
-	chandanbabu@kernel.org, linux-xfs@vger.kernel.org,
-	yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH] xfs: ensure submit buffers on LSN boundaries in error
- handlers
-Message-ID: <ZaU9xmrLRREwQ9Aa@bfoster>
-References: <20231228124646.142757-1-leo.lilong@huawei.com>
- <ZZ86sxUcO0xUpqno@dread.disaster.area>
- <20240112125547.GA3459971@ceph-admin>
- <ZaGH79UhpFUz8hOs@bfoster>
- <20240115133103.GA1665392@ceph-admin>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B2E1B7FE
+	for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 23:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3bd72353d9fso1813164b6e.3
+        for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 15:01:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705359682; x=1705964482; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PfagMjm8PzVKMrg+wKZGGhVGZKWxo8fKxsB+lSjhnWs=;
+        b=qXUdUhQHYDxYtmUGLlxvJGdIn9RqW5Wis3rzmRP77V1k/TvB7P68SUZhCxMAc0tFR3
+         FPoXELWt+nsNEQrftMGCIm5E3TJB+dSCF+LjfbzHyGmSPwVv+s4POYiEpxur+fgD/iBU
+         oszd/NIx28WLTqEraFxfxNeiNi4gBaLUousFugHInzGq7dH5jfVbStcsQD3Jnlj3cJkJ
+         2VLE1uRf/NQ0H+ADOJEv0TM6A1Zmx+tPz1eOPEBPHczM0116nCFdmyYgezWE6iVa/GFA
+         myI0BmfGN9f30Sqc8/+DJ0sEzVdPTmLOir1FyTQ1lSpdX14E480TrPpVHDgMi7OvmPG4
+         4g8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705359682; x=1705964482;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PfagMjm8PzVKMrg+wKZGGhVGZKWxo8fKxsB+lSjhnWs=;
+        b=hnjaFGoAn1/49XTJjqH49uBV2WBkyusa/+7+LlbclzBXBvw7wr1ql0yMurCeVw70KC
+         Ov2Lx9bMwRHz0E8TLRBnLvv5ft/p3yBJHc/O34kEri6uMhcTgpzoNuuneR381O4il3+4
+         iW3XOCUN5AAyCWqtCYG8LVZJLRLL2zXywyDwqyQZRkNn5hrLmXalT9vEpkbYhj0JOdgM
+         iJ4Q7qEmm504ZY2/LLzZy0UILZGdlFVs66xoSrvHjiCV03i6tCVS7KM7CFsftW4RS2xJ
+         dJqbu4I/jNrJ3VM2HsGPsZWuow/PVtd5O6vrJ7cX2fQ4AwibnpYs+t22WzF0zCf8wsh8
+         PnAA==
+X-Gm-Message-State: AOJu0Yz9yBnH60wCjru7t3rvA91PcZ7PrycMhRouvNKt8M/ENszftTS2
+	V9/EC4ftNkJPyr4YXY738BB1gfqkN3m7dWYUO69pN4t0IgY=
+X-Google-Smtp-Source: AGHT+IHkhOvev89Uh5PJlnac0EvcFktAeoujulicV1naw18eGcOKMz6cfBXcgmSg1iTx87RfrIm0Rw==
+X-Received: by 2002:a05:6808:210e:b0:3bd:3530:d051 with SMTP id r14-20020a056808210e00b003bd3530d051mr8141840oiw.6.1705359682649;
+        Mon, 15 Jan 2024 15:01:22 -0800 (PST)
+Received: from dread.disaster.area (pa49-180-249-6.pa.nsw.optusnet.com.au. [49.180.249.6])
+        by smtp.gmail.com with ESMTPSA id k2-20020aa790c2000000b006d9b32812c2sm8075868pfk.101.2024.01.15.15.01.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jan 2024 15:01:19 -0800 (PST)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+	by dread.disaster.area with esmtp (Exim 4.96)
+	(envelope-from <dave@fromorbit.com>)
+	id 1rPVxD-00AtJo-37;
+	Tue, 16 Jan 2024 10:01:15 +1100
+Received: from dave by devoid.disaster.area with local (Exim 4.97)
+	(envelope-from <dave@devoid.disaster.area>)
+	id 1rPVxD-0000000H8VL-1khK;
+	Tue, 16 Jan 2024 10:01:15 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: linux-xfs@vger.kernel.org
+Cc: willy@infradead.org,
+	linux-mm@kvack.org
+Subject: [PATCH 00/12] xfs: remove remaining kmem interfaces and GFP_NOFS usage
+Date: Tue, 16 Jan 2024 09:59:38 +1100
+Message-ID: <20240115230113.4080105-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240115133103.GA1665392@ceph-admin>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 15, 2024 at 09:31:03PM +0800, Long Li wrote:
-> On Fri, Jan 12, 2024 at 01:42:32PM -0500, Brian Foster wrote:
-> > On Fri, Jan 12, 2024 at 08:55:47PM +0800, Long Li wrote:
-> > > On Thu, Jan 11, 2024 at 11:47:47AM +1100, Dave Chinner wrote:
-> > > > On Thu, Dec 28, 2023 at 08:46:46PM +0800, Long Li wrote:
-> > > > > In order to make sure that submits buffers on lsn boundaries in the
-> > > > > abnormal paths, we need to check error status before submit buffers that
-> > > > > have been added from the last record processed. If error status exist,
-> > > > > buffers in the bufffer_list should be canceled.
-> > > > > 
-> > > > > Canceling the buffers in the buffer_list directly isn't correct, unlike
-> > > > > any other place where write list was canceled, these buffers has been
-> > > > > initialized by xfs_buf_item_init() during recovery and held by buf
-> > > > > item, buf items will not be released in xfs_buf_delwri_cancel(). If
-> > > > > these buffers are submitted successfully, buf items assocated with
-> > > > > the buffer will be released in io end process. So releasing buf item
-> > > > > in write list cacneling process is needed.
-> > > > 
-> > > > I still don't think this is correct.
-> > > > 
-> > > > > Fixes: 50d5c8d8e938 ("xfs: check LSN ordering for v5 superblocks during recovery")
-> > > > > Signed-off-by: Long Li <leo.lilong@huawei.com>
-> > > > > ---
-> > > > >  fs/xfs/xfs_buf.c         |  2 ++
-> > > > >  fs/xfs/xfs_log_recover.c | 22 +++++++++++++---------
-> > > > >  2 files changed, 15 insertions(+), 9 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> > > > > index 8e5bd50d29fe..6a1b26aaf97e 100644
-> > > > > --- a/fs/xfs/xfs_buf.c
-> > > > > +++ b/fs/xfs/xfs_buf.c
-> > > > > @@ -2075,6 +2075,8 @@ xfs_buf_delwri_cancel(
-> > > > >  		xfs_buf_lock(bp);
-> > > > >  		bp->b_flags &= ~_XBF_DELWRI_Q;
-> > > > >  		xfs_buf_list_del(bp);
-> > > > > +		if (bp->b_log_item)
-> > > > > +			xfs_buf_item_relse(bp);
-> > > > >  		xfs_buf_relse(bp);
-> > > > 
-> > > > I still don't think this is safe.  The buffer log item might still be
-> > > > tracked in the AIL when the delwri list is cancelled, so the delwri
-> > > > list cancelling cannot release the BLI without removing the item
-> > > > from the AIL, too. The delwri cancelling walk really shouldn't be
-> > > > screwing with AIL state, which means it can't touch the BLIs here.
-> > > > 
-> > > > At minimum, it's a landmine for future users of
-> > > > xfs_buf_delwri_cancel().  A quick look at the quotacheck code
-> > > > indicates that it can cancel delwri lists that have BLIs in the AIL
-> > > > (for newly allocated dquot chunks), so I think this is a real concern.
-> > > > 
-> > > > This is one of the reasons for submitting the delwri list on error;
-> > > > the IO completion code does all the correct cleanup of log items
-> > > > including removing them from the AIL because the buffer is now
-> > > > either clean or stale and no longer needs to be tracked by the AIL.
-> > > 
-> > > Yes, it's not a safety solution.
-> > > 
-> > > > 
-> > > > If the filesystem has been shut down, then delwri list submission
-> > > > will error out all buffers on the list via IO submission/completion
-> > > > and do all the correct cleanup automatically.
-> > > > 
-> > > > I note that write IO errors during log recovery will cause immediate
-> > > > shutdown of the filesytsem via xfs_buf_ioend_handle_error():
-> > > > 
-> > > > 	/*
-> > > >          * We're not going to bother about retrying this during recovery.
-> > > >          * One strike!
-> > > >          */
-> > > >         if (bp->b_flags & _XBF_LOGRECOVERY) {
-> > > >                 xfs_force_shutdown(mp, SHUTDOWN_META_IO_ERROR);
-> > > >                 return false;
-> > > >         }
-> > > > 
-> > > > So I'm guessing that the IO error injection error that caused this
-> > > > failure was on a buffer read part way through recovering items.
-> > > > 
-> > > > Can you confirm that the failure is only seen after read IO error
-> > > > injection and that write IO error injection causes immediate
-> > > > shutdown and so avoids the problem altogether?
-> > > 
-> > > This problem reproduce very hard, we reproduce it only three times.
-> > > There may be several mounts between writing buffer not on LSN boundaries
-> > > and reporting free space btree corruption, I can't distinguish the
-> > > violation happend in which mount during test. So judging by the message
-> > > I've reprodced, I can't confirm that the failure is only seen after read
-> > > IO error injection. Look at one of the kernel message I've reprodced,
-> > > there are several mount fails before reporting free space btree corruption,
-> > > the reasons of mount fail include read IO error and write IO error.
-> > > 
-> > > [51555.801349] XFS (dm-3): Mounting V5 Filesystem
-> > > [51555.982130] XFS (dm-3): Starting recovery (logdev: internal)
-> > > [51558.153638] FAULT_INJECTION: forcing a failure.
-> > >                name fail_make_request, interval 20, probability 1, space 0, times -1
-> > > [51558.153723] XFS (dm-3): log recovery read I/O error at daddr 0x3972 len 1 error -5
-> > > [51558.165996] XFS (dm-3): log mount/recovery failed: error -5
-> > > [51558.166880] XFS (dm-3): log mount failed
-> > > [51558.410963] XFS (dm-3): EXPERIMENTAL big timestamp feature in use. Use at your own risk!
-> > > [51558.410981] XFS (dm-3): EXPERIMENTAL inode btree counters feature in use. Use at your own risk!
-> > > [51558.413074] XFS (dm-3): Mounting V5 Filesystem
-> > > [51558.595739] XFS (dm-3): Starting recovery (logdev: internal)
-> > > [51559.592552] FAULT_INJECTION: forcing a failure.
-> > >                name fail_make_request, interval 20, probability 1, space 0, times -1
-> > > [51559.593008] XFS (dm-3): metadata I/O error in "xfs_buf_ioend_handle_error+0x170/0x760 [xfs]" at daddr 0x1879e0 len 32 error 5
-> > > [51559.593335] XFS (dm-3): Metadata I/O Error (0x1) detected at xfs_buf_ioend_handle_error+0x63c/0x760 [xfs] (fs/xfs/xfs_buf.c:1272).  Shutting down filesystem.
-> > > [51559.593346] XFS (dm-3): Please unmount the filesystem and rectify the problem(s)
-> > > [51559.602833] XFS (dm-3): log mount/recovery failed: error -5
-> > > [51559.603772] XFS (dm-3): log mount failed
-> > > [51559.835690] XFS (dm-3): EXPERIMENTAL big timestamp feature in use. Use at your own risk!
-> > > [51559.835708] XFS (dm-3): EXPERIMENTAL inode btree counters feature in use. Use at your own risk!
-> > > [51559.837829] XFS (dm-3): Mounting V5 Filesystem
-> > > [51560.024083] XFS (dm-3): Starting recovery (logdev: internal)
-> > > [51562.155545] FAULT_INJECTION: forcing a failure.
-> > >                name fail_make_request, interval 20, probability 1, space 0, times -1
-> > > [51562.445074] XFS (dm-3): Ending recovery (logdev: internal)
-> > > [51563.553960] XFS (dm-3): Internal error ltbno + ltlen > bno at line 1976 of file fs/xfs/libxfs/xfs_alloc.c.  Caller xfs_free_ag_extent+0x558/0xd80 [xfs]
-> > > [51563.558629] XFS (dm-3): Corruption detected. Unmount and run xfs_repair
-> > > 
-> > > > 
-> > > > If so, then all we need to do to handle instantiation side errors (EIO, ENOMEM,
-> > > > etc) is this:
-> > > > 
-> > > > 	/*
-> > > > 	 * Submit buffers that have been dirtied by the last record recovered.
-> > > > 	 */
-> > > > 	if (!list_empty(&buffer_list)) {
-> > > > 		if (error) {
-> > > > 			/*
-> > > > 			 * If there has been an item recovery error then we
-> > > > 			 * cannot allow partial checkpoint writeback to
-> > > > 			 * occur.  We might have multiple checkpoints with the
-> > > > 			 * same start LSN in this buffer list, and partial
-> > > > 			 * writeback of a checkpoint in this situation can
-> > > > 			 * prevent future recovery of all the changes in the
-> > > > 			 * checkpoints at this start LSN.
-> > > > 			 *
-> > > > 			 * Note: Shutting down the filesystem will result in the
-> > > > 			 * delwri submission marking all the buffers stale,
-> > > > 			 * completing them and cleaning up _XBF_LOGRECOVERY
-> > > > 			 * state without doing any IO.
-> > > > 			 */
-> > > > 			xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
-> > > > 		}
-> > > > 		error2 = xfs_buf_delwri_submit(&buffer_list);
-> > > > 	}
-> > > >
-> > > 
-> > > This solution is also used in our internally maintained linux branch,
-> > > and after several months of testing, the problem no longer arises. It
-> > > seems safe and reasonable enough.
-> > > 
-> > 
-> > I assume you're referring to the xfs_buf_delwri_cancel() change..? If
-> 
-> I'm not referring to the xfs_buf_delwri_cancel() solution, but to the
-> use of the xlog_force_shutdown() solution. We believe that the shutdown
-> solution is less risky because buffer list can be cleanup automatically
-> via IO submission/completion, it would not change any other logic, so
-> we've used it in our internally maintained linux branch.
-> 
-> On the other hand, I thought it would be better to positively cancel
-> the buffer list, so I sent it out, but I overlooked potential issues... 
-> 
+This series does two things. Firstly it removes the remaining XFS
+specific kernel memory allocation wrappers, converting everything to
+using GFP flags directly. Secondly, it converts all the GFP_NOFS
+flag usage to use the scoped memalloc_nofs_save() API instead of
+direct calls with the GFP_NOFS.
 
-Ah, Ok. Sorry for the confusion. Thanks.
+The first part of the series (fs/xfs/kmem.[ch] removal) is straight
+forward.  We've done lots of this stuff in the past leading up to
+the point; this is just converting the final remaining usage to the
+native kernel interface. The only down-side to this is that we end
+up propagating __GFP_NOFAIL everywhere into the code. This is no big
+deal for XFS - it's just formalising the fact that all our
+allocations are __GFP_NOFAIL by default, except for the ones we
+explicity mark as able to fail. This may be a surprise of people
+outside XFS, but we've been doing this for a couple of decades now
+and the sky hasn't fallen yet.
 
-Brian
+The second part of the series is more involved - in most cases
+GFP_NOFS is redundant because we are already in a scoped NOFS
+context (e.g. transactions) so the conversion to GFP_KERNEL isn't a
+huge issue.
 
-> > so, this is a valid data point but doesn't necessarily help explain
-> > whether the change is correct in any other context. I/O cancel probably
-> > doesn't happen often for one, and even if it does, it's not totally
-> > clear if you're reproducing a situation where the item might be AIL
-> > resident or not at the time (or it is and you have a use after free that
-> > goes undetected). And even if none of that is relevant, that still
-> > doesn't protect against future code changes if this code doesn't respect
-> > the established bli lifecycle rules.
-> 
-> Yes, agree with you.
-> 
-> > 
-> > IIRC, the bli_refcount (sampled via xfs_buf_item_relse()) is not
-> > necessarily an object lifecycle refcount. It simply reflects whether the
-> > item exists in a transaction where it might eventually be dirtied. This
-> > is somewhat tricky, but can also be surmised from some of the logic in
-> > xfs_buf_item_put(), for example.
-> > 
-> > IOW, I think in the simple (non-recovery) case of a buffer being read,
-> > modified and committed by a transaction, the bli would eventually end up
-> > in a state where bli_refcount == 0 but is still resident in the AIL
-> > until eventually written back by xfsaild. That metadata writeback
-> > completion is what eventually frees the bli via xfs_buf_item_done().
-> > 
-> > So if I'm not mistaken wrt to the above example sequence, the
-> > interesting question is if we suppose a buffer is in that intermediate
-> > state of waiting for writeback, and then somebody were to hypothetically
-> > execute a bit of code that simply added the associated buffer to a
-> > delwri q and immediately cancelled it, what would happen with this
-> > change in place? ISTM the remove would prematurely free the buffer/bli
-> > while it's still resident in the AIL and pending writeback, thus
-> > resulting in use-after-free or potential memory/list corruption, etc. Is
-> > that not the case?
-> 
-> Yes, if buf item still in the AIL, it is obviously not right to release
-> the buf item.
-> 
-> Thanks,
-> Long Li
-> 
+However, there are some code paths where we have used GFP_NOFS to
+prevent lockdep warnings because the code is called from both
+GFP_KERNEL and GFP_NOFS contexts and so lockdep gets confused when
+it has tracked code as GFP_NOFS and then sees it enter direct
+reclaim, recurse into the filesystem and take fs locks from the
+GFP_KERNEL caller. There are a couple of other lockdep false
+positive paths that can occur that we've shut up with GFP_NOFS, too.
+More recently, we've been using the __GFP_NOLOCKDEP flag to signal
+this "lockdep gives false positives here" condition, so one of the
+things this patchset does is convert all the GFP_NOFS calls in code
+that can be run from both GFP_KERNEL and GFP_NOFS contexts, and/or
+run both above and below reclaim with GFP_KERNEL | __GFP_NOLOCKDEP.
 
+This means that some allocations have gone from having KM_NOFS tags
+to having GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_NOFAIL. There is an
+increase in verbosity here, but the first step in cleaning all this
+mess up is consistently annotating all the allocation sites with the
+correct tags.
+
+Later in the patchset, we start adding new scoped NOFS contexts to
+cover cases where we really need NOFS but rely on code being called
+to understand that it is actually in a NOFS context. And example of
+this is intent recovery - allocating the intent structure occurs
+outside transaction scope, but still needs to be NOFS scope because
+of all the pending work already queued. The rest of the work is done
+under transaction context, giving it NOFS context, but these initial
+allocations aren't inside that scope. IOWs, the entire intent
+recovery scope should really be covered by a single NOFS context.
+The patch set ends up putting the entire second phase of recovery
+(intents, unlnked list, reflink cleanup) under a single NOFS context
+because we really don't want reclaim to operate on the filesystem
+whilst we are performing these operations. Hence a single high level
+NOFS scope is appropriate here.
+
+The end result is that GFP_NOFS is completely gone from XFS,
+replaced by correct annotations and more widely deployed scoped
+allocation contexts. This passes fstests with lockdep, KASAN and
+other debuggin enabled without any regressions or new lockdep false
+positives.
+
+Comments, thoughts and ideas?
+
+----
+
+Version 1:
+- based on v6.7 + linux-xfs/for-next
 
