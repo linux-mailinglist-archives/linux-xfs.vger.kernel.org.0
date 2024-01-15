@@ -1,78 +1,78 @@
-Return-Path: <linux-xfs+bounces-2804-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2809-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8B5E82E31C
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jan 2024 00:01:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B357282E320
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jan 2024 00:01:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5995FB2217C
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Jan 2024 23:01:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EB6C1F22ED3
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Jan 2024 23:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2BBA1B7FB;
-	Mon, 15 Jan 2024 23:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A66E1B807;
+	Mon, 15 Jan 2024 23:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="n5e+Z1QQ"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="TNKmxfk5"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1CC1B7EC
-	for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 23:01:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ADE1B7EA
+	for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 23:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d4a2526a7eso50544985ad.3
-        for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 15:01:22 -0800 (PST)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6d9bba6d773so8013350b3a.1
+        for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 15:01:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705359681; x=1705964481; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705359683; x=1705964483; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XTU7Fr08s4rUxky9Yys2MV8QifwgSoaYIdZvg8gWTFY=;
-        b=n5e+Z1QQxOzHKqhzwrZ/VvsXBn1VpG/jFTH2lEWurwTpUFS6Sh/jnmqgFIzhKMfFEx
-         zMsOFicRf6gbMtqPCw9U9lmky+42ggexmvUoaiJC2rALZ9CPh+P2Z0n7+thtx39jiKle
-         YHO1FF0PagWpndP2vqrlbO1W6y1CA8qUBovO+WstbePB0pj5Lb1VHbURW0FzviJgL/YL
-         3beq/6cUl88ik5nP1lKBcgoZQ6gVOsGIdATUJDDEMqDlo9TXsrw+5HCYnGhtQnDhwlUA
-         SQHJrbCrzGDsEi1IRUcZjGz+Ks6SAkEj/OMMcUhtqL208f65zcmKldzPupX9e4T2mcBm
-         TO6A==
+        bh=3LJife0DkUSCWANql4//DrwcmVy3A9Mu4G9yC26ZmxY=;
+        b=TNKmxfk50vdv+oU+x85QhK5mWR6UHnOqvuF7rjBLLYQCLGHhSp6KqX7aDnUP2viWbn
+         uRBXsfKGTVIlkLpYG3xAjhs8BEU2uPf3RMJR9B0T6ssWFwc2GnVACRBT6Dv7n6/nS+dZ
+         bmyxGwCxxeF4H6Pc/kloXt9UHdEV5a51NxEnKilRTCzTJLbciEGZ0mRgikqKSXXxZKvg
+         wsZnwGCIxpsyiVZhFuOwlJel/So0D2W/mnv8X3dG5pu7Mi7j/lMfGVEUrV1G1/pYkK9E
+         KLxQr1JrZF4Qaq0j3m/69X4mtwq93oDfFicG/I0pzP7l13uZmkxuSJzUS6pbHD0BxZYB
+         qPAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705359681; x=1705964481;
+        d=1e100.net; s=20230601; t=1705359683; x=1705964483;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XTU7Fr08s4rUxky9Yys2MV8QifwgSoaYIdZvg8gWTFY=;
-        b=mhjd+xR6cJvYN+5vJ1csMSzw9sZqr9TjbuVdiRskDGWqdufDz4vPqfO2ontMVeqiJH
-         P9nlvHYvmAHe00V+YxAUrYSzVskCKcX5qzRAiwPsDipYWv+WS8xzIjbZZbkxEkrHPGC0
-         29a3WLGGx+cnhbCFk8ItueUgZuH/sZFVp21mLQANf66ZMkaXRobTzRFmEeOrfg8q0DKJ
-         ZMQYl7zopBDO7v5ztDReH15rMExKFHpyLL1yUR/LRYJ1xaXsRX1vieFivBI08OjACO5Z
-         DXLjk/RZqABnXlJHUmOWiUHOa2VOWezwMusHDG9ZR9jXhbtS4OZQ7hqK8xnrLqH3xroJ
-         hKHw==
-X-Gm-Message-State: AOJu0Yw/04D8toWVZ3eXZTFhSllD6+XL5W/6bos+1T+nKleH+F9xJvP/
-	9Tb3h3T07dvlyz6quO2dJK43O/IyWlaOespCkdywgHPL4tw=
-X-Google-Smtp-Source: AGHT+IGNiHk1RuGG1sc4v4L0zJg68Gv9p9I32eJCDEJ/+w/GY8Au5JZTtLDF5HjZXmrnuOPcXmWQew==
-X-Received: by 2002:a17:902:c78b:b0:1d4:1bcc:416a with SMTP id w11-20020a170902c78b00b001d41bcc416amr2727232pla.30.1705359681657;
-        Mon, 15 Jan 2024 15:01:21 -0800 (PST)
+        bh=3LJife0DkUSCWANql4//DrwcmVy3A9Mu4G9yC26ZmxY=;
+        b=Fi8oOgBIpHgujJlEMXBgMHd+T8QxP2T+6WpoZk9sQvY3d0KjX2q172/W+g5+pzRqsP
+         61ZzY35QpM7nKbBxNO1p32zoVFn54v15pRIK1fQOdnzpTeV+W/dMoJsAuIzJGjcBaJRE
+         5ZwzYlBZgpfHc4/xYWLXccGe0luOUpzggBWInN+4R/rn2YW5CnK6cIRY7TWkeLNG8HxL
+         qrSXSKxEc0GfbQRxGcxLUOnhIkkAHIvyKLjTav1Ol71yA7QKVVM57Ra9tuZ+jHOYOZkr
+         LGXFL1+Y0adwV5/Ohev6g32yeFqwTYaw2NyOZJMXtKlLRAzLf7eElXObvFlZQRPagK9s
+         DxfQ==
+X-Gm-Message-State: AOJu0Yw6qRWQb36Pau5EohHNs7prFuXEtSlQcRsPDl8mzIdY4HUJIHb2
+	hcGgRaSi/LjWSaXtl9dCnL+fQdBZiHdSfDJMxILXxlLQuoI=
+X-Google-Smtp-Source: AGHT+IHuvnJ8hiLAOei7LMgoGrEcANGg1wnR1tJpH4QRdpptY/qungv5tMun/Ja8vcEiUVKBDoAqbg==
+X-Received: by 2002:a62:8142:0:b0:6d9:8d46:814b with SMTP id t63-20020a628142000000b006d98d46814bmr7449168pfd.20.1705359682966;
+        Mon, 15 Jan 2024 15:01:22 -0800 (PST)
 Received: from dread.disaster.area (pa49-180-249-6.pa.nsw.optusnet.com.au. [49.180.249.6])
-        by smtp.gmail.com with ESMTPSA id jj7-20020a170903048700b001d472670a30sm8176436plb.162.2024.01.15.15.01.18
+        by smtp.gmail.com with ESMTPSA id b12-20020aa78ecc000000b006db105027basm8081256pfr.50.2024.01.15.15.01.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 15:01:18 -0800 (PST)
+        Mon, 15 Jan 2024 15:01:19 -0800 (PST)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
 	by dread.disaster.area with esmtp (Exim 4.96)
 	(envelope-from <dave@fromorbit.com>)
-	id 1rPVxE-00AtKR-0v;
+	id 1rPVxE-00AtKW-18;
 	Tue, 16 Jan 2024 10:01:15 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.97)
 	(envelope-from <dave@devoid.disaster.area>)
-	id 1rPVxD-0000000H8g6-3Een;
+	id 1rPVxD-0000000H8gB-3MLa;
 	Tue, 16 Jan 2024 10:01:15 +1100
 From: Dave Chinner <david@fromorbit.com>
 To: linux-xfs@vger.kernel.org
 Cc: willy@infradead.org,
 	linux-mm@kvack.org
-Subject: [PATCH 10/12] xfs: place the CIL under nofs allocation context
-Date: Tue, 16 Jan 2024 09:59:48 +1100
-Message-ID: <20240115230113.4080105-11-david@fromorbit.com>
+Subject: [PATCH 11/12] xfs: clean up remaining GFP_NOFS users
+Date: Tue, 16 Jan 2024 09:59:49 +1100
+Message-ID: <20240115230113.4080105-12-david@fromorbit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240115230113.4080105-1-david@fromorbit.com>
 References: <20240115230113.4080105-1-david@fromorbit.com>
@@ -86,79 +86,66 @@ Content-Transfer-Encoding: 8bit
 
 From: Dave Chinner <dchinner@redhat.com>
 
-This is core code that needs to run in low memory conditions and
-can be triggered from memory reclaim. While it runs in a workqueue,
-it really shouldn't be recursing back into the filesystem during
-any memory allocation it needs to function.
+These few remaining GFP_NOFS callers do not need to use GFP_NOFS at
+all. They are only called from a non-transactional context or cannot
+be accessed from memory reclaim due to other constraints. Hence they
+can just use GFP_KERNEL.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log_cil.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_btree_staging.c | 4 ++--
+ fs/xfs/xfs_attr_list.c            | 2 +-
+ fs/xfs/xfs_buf.c                  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 815a2181004c..8c3b09777006 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -100,7 +100,7 @@ xlog_cil_ctx_alloc(void)
- {
- 	struct xfs_cil_ctx	*ctx;
+diff --git a/fs/xfs/libxfs/xfs_btree_staging.c b/fs/xfs/libxfs/xfs_btree_staging.c
+index 961f6b898f4b..f0c69f9bb169 100644
+--- a/fs/xfs/libxfs/xfs_btree_staging.c
++++ b/fs/xfs/libxfs/xfs_btree_staging.c
+@@ -139,7 +139,7 @@ xfs_btree_stage_afakeroot(
+ 	ASSERT(!(cur->bc_flags & XFS_BTREE_ROOT_IN_INODE));
+ 	ASSERT(cur->bc_tp == NULL);
  
--	ctx = kzalloc(sizeof(*ctx), GFP_NOFS | __GFP_NOFAIL);
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL | __GFP_NOFAIL);
- 	INIT_LIST_HEAD(&ctx->committing);
- 	INIT_LIST_HEAD(&ctx->busy_extents.extent_list);
- 	INIT_LIST_HEAD(&ctx->log_items);
-@@ -1116,11 +1116,18 @@ xlog_cil_cleanup_whiteouts(
-  * same sequence twice.  If we get a race between multiple pushes for the same
-  * sequence they will block on the first one and then abort, hence avoiding
-  * needless pushes.
-+ *
-+ * This runs from a workqueue so it does not inherent any specific memory
-+ * allocation context. However, we do not want to block on memory reclaim
-+ * recursing back into the filesystem because this push may have been triggered
-+ * by memory reclaim itself. Hence we really need to run under full GFP_NOFS
-+ * contraints here.
-  */
- static void
- xlog_cil_push_work(
- 	struct work_struct	*work)
- {
-+	unsigned int		nofs_flags = memalloc_nofs_save();
- 	struct xfs_cil_ctx	*ctx =
- 		container_of(work, struct xfs_cil_ctx, push_work);
- 	struct xfs_cil		*cil = ctx->cil;
-@@ -1334,12 +1341,14 @@ xlog_cil_push_work(
- 	spin_unlock(&log->l_icloglock);
- 	xlog_cil_cleanup_whiteouts(&whiteouts);
- 	xfs_log_ticket_ungrant(log, ticket);
-+	memalloc_nofs_restore(nofs_flags);
- 	return;
+-	nops = kmalloc(sizeof(struct xfs_btree_ops), GFP_NOFS | __GFP_NOFAIL);
++	nops = kmalloc(sizeof(struct xfs_btree_ops), GFP_KERNEL | __GFP_NOFAIL);
+ 	memcpy(nops, cur->bc_ops, sizeof(struct xfs_btree_ops));
+ 	nops->alloc_block = xfs_btree_fakeroot_alloc_block;
+ 	nops->free_block = xfs_btree_fakeroot_free_block;
+@@ -220,7 +220,7 @@ xfs_btree_stage_ifakeroot(
+ 	ASSERT(cur->bc_flags & XFS_BTREE_ROOT_IN_INODE);
+ 	ASSERT(cur->bc_tp == NULL);
  
- out_skip:
- 	up_write(&cil->xc_ctx_lock);
- 	xfs_log_ticket_put(new_ctx->ticket);
- 	kfree(new_ctx);
-+	memalloc_nofs_restore(nofs_flags);
- 	return;
+-	nops = kmalloc(sizeof(struct xfs_btree_ops), GFP_NOFS | __GFP_NOFAIL);
++	nops = kmalloc(sizeof(struct xfs_btree_ops), GFP_KERNEL | __GFP_NOFAIL);
+ 	memcpy(nops, cur->bc_ops, sizeof(struct xfs_btree_ops));
+ 	nops->alloc_block = xfs_btree_fakeroot_alloc_block;
+ 	nops->free_block = xfs_btree_fakeroot_free_block;
+diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+index 0318d768520a..47453510c0ab 100644
+--- a/fs/xfs/xfs_attr_list.c
++++ b/fs/xfs/xfs_attr_list.c
+@@ -109,7 +109,7 @@ xfs_attr_shortform_list(
+ 	 * It didn't all fit, so we have to sort everything on hashval.
+ 	 */
+ 	sbsize = sf->count * sizeof(*sbuf);
+-	sbp = sbuf = kmalloc(sbsize, GFP_NOFS | __GFP_NOFAIL);
++	sbp = sbuf = kmalloc(sbsize, GFP_KERNEL | __GFP_NOFAIL);
  
- out_abort_free_ticket:
-@@ -1348,6 +1357,7 @@ xlog_cil_push_work(
- 	if (!ctx->commit_iclog) {
- 		xfs_log_ticket_ungrant(log, ctx->ticket);
- 		xlog_cil_committed(ctx);
-+		memalloc_nofs_restore(nofs_flags);
- 		return;
- 	}
- 	spin_lock(&log->l_icloglock);
-@@ -1356,6 +1366,7 @@ xlog_cil_push_work(
- 	/* Not safe to reference ctx now! */
- 	spin_unlock(&log->l_icloglock);
- 	xfs_log_ticket_ungrant(log, ticket);
-+	memalloc_nofs_restore(nofs_flags);
- }
+ 	/*
+ 	 * Scan the attribute list for the rest of the entries, storing
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index de99368000b4..08f2fbc04db5 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -2008,7 +2008,7 @@ xfs_alloc_buftarg(
+ #if defined(CONFIG_FS_DAX) && defined(CONFIG_MEMORY_FAILURE)
+ 	ops = &xfs_dax_holder_operations;
+ #endif
+-	btp = kzalloc(sizeof(*btp), GFP_NOFS | __GFP_NOFAIL);
++	btp = kzalloc(sizeof(*btp), GFP_KERNEL | __GFP_NOFAIL);
  
- /*
+ 	btp->bt_mount = mp;
+ 	btp->bt_bdev_handle = bdev_handle;
 -- 
 2.43.0
 
