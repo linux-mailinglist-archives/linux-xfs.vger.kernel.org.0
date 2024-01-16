@@ -1,156 +1,104 @@
-Return-Path: <linux-xfs+bounces-2802-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2810-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEAA282E31A
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jan 2024 00:01:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 485D882E811
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jan 2024 04:07:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8773AB221DE
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Jan 2024 23:01:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2AF2AB220DE
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Jan 2024 03:07:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BE51B7F7;
-	Mon, 15 Jan 2024 23:01:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA8C26FB5;
+	Tue, 16 Jan 2024 03:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="KMUiIR2m"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="fS3TEv0X"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59251B7EA
-	for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 23:01:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331DE6FA7
+	for <linux-xfs@vger.kernel.org>; Tue, 16 Jan 2024 03:07:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-28ddd807e4bso2323009a91.3
-        for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 15:01:21 -0800 (PST)
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6e0a64d94d1so1589385a34.3
+        for <linux-xfs@vger.kernel.org>; Mon, 15 Jan 2024 19:07:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705359681; x=1705964481; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tgxEN+dxuPsIPQ/X2jxskuPK8v7LK84zp/ZH+sCdiJw=;
-        b=KMUiIR2mM6K4oYgwNLz5/r9E2V5txK/xSZkC/Gvd432M/5pvtefipDhNpiPPBfNNCc
-         tK9hk5xszEZ5yCAU6DZQ10+qbgALP8emdzNn2rCVoKipOzX4yynxoEGki8i2qquiIcjN
-         xRUVZ7GsVQVZD45ebe4U00AaI5rC1lNkwbnZforJrhsWdh9pMmUvd1SmAnxNT04T3Zxy
-         N89RvIGhUNvpH+UE249wkiyI+lo/VI4Of9UpMFtKWyezu2Dv5inPvDVeM7boSTzUDnBP
-         5CR/7BI+3uhkv8GweuC+FfxQpsn52ZrPu2oGCmRI/+D4s5JTJ9BYBvavK42hS6pOxwnT
-         Jidg==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705374450; x=1705979250; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wL0qBWiBkCN64t0DJlGpnsYnRQAkrBhetdbdjTFLd2M=;
+        b=fS3TEv0X4xNlKlZuBXhWLVooRk8QDCxuAeptR4kldn3LV0bp9Q4+CXvpmZjP+LJG9u
+         GJkMIFwP9T5z2XqTyo8NtYJnOJd9rDMxq0popwtB1PSMSXeDExbMnHYvN9wITD15J4Gq
+         XuANeL2rUSj8jcL/WVE4NOHiGs/i9uF6y7+DczrMMMlsuzNrHBsqQGy39ZX28gB69aZ3
+         z+qZAKTwMC+VWHrQnUYwd/ptU3hcJ7VoVXfeQr4+JmTusTfyWfWgN01+eJ2btJ2z8Y9x
+         9STtk3lsOOGxYgxGzDCYqNokC8LtfYZGcVF+h24PJJICeVm4FhSiVR8YZ4uiBLCrqOAd
+         +i2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705359681; x=1705964481;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tgxEN+dxuPsIPQ/X2jxskuPK8v7LK84zp/ZH+sCdiJw=;
-        b=KCrDxqmMlWD6wSqf9saODuqp6mjBrQxXa2TajG5SS8j8rXiOX2i7jQyRnFIrGqSzJL
-         AUqOdTSZshkmtBfXLAZGYVHZ99UZ7gmySB2De02+UmnaIxXU0rbxuNR+eZQtHsVfSvtn
-         cVL+vmB2ayjmmbCK12xiH9L6pqZAjuf3QF7BnkP7YwvrgQAJjaJIZI3HciDhk//zKYGI
-         rouGQVlZkOg/OFpa8Q8MWSPTAf3AsFJASp8rGdrrjoN3g49GVLNzFG5YcOKDgno+Tzuv
-         C+O+5Z9yz6jgenwdCzvH3jcEKfPo0K3jZe9e8/AQbDi35MEFaWLVG/tosi0IxVtKZRCG
-         AdBA==
-X-Gm-Message-State: AOJu0YxCa400HydQCxto4SJW0V0bJ6ny7ZeQZwiZvW1g+fUtkBoRuLnK
-	busliU26N7lfiyLmPEU7DBaGXXU5/dygB4E4wGE+wppR460=
-X-Google-Smtp-Source: AGHT+IGzpNwsKNu7NVgPnlnsyEIybtI/t9LRuDCZhvbpZAVN6r4/IhKNwivF+6D2KG20ozQ0wahSCw==
-X-Received: by 2002:a17:90a:e01:b0:28d:2cee:119e with SMTP id v1-20020a17090a0e0100b0028d2cee119emr3549236pje.39.1705359681331;
-        Mon, 15 Jan 2024 15:01:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705374450; x=1705979250;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wL0qBWiBkCN64t0DJlGpnsYnRQAkrBhetdbdjTFLd2M=;
+        b=vxExh/erKoU6nKPrsKBI+AWHRPnckMK0wXxfRODq5aAmhYrVCTeHXUMgzXa223pPvr
+         DdSl1Woqp72Slfc9J46oBEfPpRPcX7cdCmZVJKkeqxf98yVquypl+XjDosqaNS7Zl6jx
+         A8jWJ8dLiP+dPt7ZtMbShA7PYr9sKAmhNJgMpY32e1FHXC86BhtRpI2tpuDrrGqIX98g
+         qyjXMVw4A4bzl4fkA/7N6eMlwmMe7GdLqL3DqU1uEcTBjdYdbCuSuSzzBVp35nMKHoae
+         fhRiSOh+HnqwWV+TnUQqJzBHpLrsgA//m0YBoEL4W2DTrRpeIzNcqinTZhKp9I5FQ8zn
+         7TNw==
+X-Gm-Message-State: AOJu0Yycs2EKBIGVIuijkDJgP97oy33SQ/V7gUQbHwoYtut/zn6GhjBc
+	eLqtSumCLh6ecNFsNfwvUhrZvikBWZ6/ZA==
+X-Google-Smtp-Source: AGHT+IEWcK2VO4aACKAStgCaiUMFDJ1mIYf5m1oD1S9Q7oOM/p128nW2OuN92AxZuuHzvtISGtog3Q==
+X-Received: by 2002:a9d:6519:0:b0:6dd:eb24:9d1d with SMTP id i25-20020a9d6519000000b006ddeb249d1dmr5267455otl.72.1705374449847;
+        Mon, 15 Jan 2024 19:07:29 -0800 (PST)
 Received: from dread.disaster.area (pa49-180-249-6.pa.nsw.optusnet.com.au. [49.180.249.6])
-        by smtp.gmail.com with ESMTPSA id sh2-20020a17090b524200b0028dfdfc9a8esm8737391pjb.37.2024.01.15.15.01.18
+        by smtp.gmail.com with ESMTPSA id e26-20020a65679a000000b005cddfe17c0csm7789779pgr.92.2024.01.15.19.07.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jan 2024 15:01:18 -0800 (PST)
-Received: from [192.168.253.23] (helo=devoid.disaster.area)
-	by dread.disaster.area with esmtp (Exim 4.96)
-	(envelope-from <dave@fromorbit.com>)
-	id 1rPVxE-00AtKZ-1D;
-	Tue, 16 Jan 2024 10:01:15 +1100
-Received: from dave by devoid.disaster.area with local (Exim 4.97)
-	(envelope-from <dave@devoid.disaster.area>)
-	id 1rPVxD-0000000H8gH-3WIC;
-	Tue, 16 Jan 2024 10:01:15 +1100
+        Mon, 15 Jan 2024 19:07:29 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rPZnS-00AxzI-1m;
+	Tue, 16 Jan 2024 14:07:26 +1100
+Date: Tue, 16 Jan 2024 14:07:26 +1100
 From: Dave Chinner <david@fromorbit.com>
-To: linux-xfs@vger.kernel.org
-Cc: willy@infradead.org,
-	linux-mm@kvack.org
-Subject: [PATCH 12/12] xfs: use xfs_defer_alloc a bit more
-Date: Tue, 16 Jan 2024 09:59:50 +1100
-Message-ID: <20240115230113.4080105-13-david@fromorbit.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240115230113.4080105-1-david@fromorbit.com>
-References: <20240115230113.4080105-1-david@fromorbit.com>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Chandan Babu R <chandan.babu@oracle.com>, linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 0/3] Remove the XFS mrlock
+Message-ID: <ZaXy7uKOvtiTadCr@dread.disaster.area>
+References: <20240111212424.3572189-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111212424.3572189-1-willy@infradead.org>
 
-From: Dave Chinner <dchinner@redhat.com>
+On Thu, Jan 11, 2024 at 09:24:21PM +0000, Matthew Wilcox (Oracle) wrote:
+> XFS has an mrlock wrapper around the rwsem which adds only the
+> functionality of knowing whether the rwsem is currently held in read
+> or write mode.  Both regular rwsems and rt-rwsems know this, they just
+> don't expose it as an API.  By adding that, we can remove the XFS mrlock
+> as well as improving the debug assertions for the mmap_lock when lockdep
+> is disabled.
+> 
+> I have an ack on the first patch from Peter, so I would like to see this
+> merged through the XFS tree since most of what it touches is XFS.
 
-Noticed by inspection, simple factoring allows the same allocation
-routine to be used for both transaction and recovery contexts.
+With the minor nits that have already been noticed fix up, the whole
+series looks good to me.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_defer.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index 8ae4401f6810..6ed3a5fda081 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -819,7 +819,7 @@ xfs_defer_can_append(
- /* Create a new pending item at the end of the transaction list. */
- static inline struct xfs_defer_pending *
- xfs_defer_alloc(
--	struct xfs_trans		*tp,
-+	struct list_head		*dfops,
- 	const struct xfs_defer_op_type	*ops)
- {
- 	struct xfs_defer_pending	*dfp;
-@@ -828,7 +828,7 @@ xfs_defer_alloc(
- 			GFP_KERNEL | __GFP_NOFAIL);
- 	dfp->dfp_ops = ops;
- 	INIT_LIST_HEAD(&dfp->dfp_work);
--	list_add_tail(&dfp->dfp_list, &tp->t_dfops);
-+	list_add_tail(&dfp->dfp_list, dfops);
- 
- 	return dfp;
- }
-@@ -846,7 +846,7 @@ xfs_defer_add(
- 
- 	dfp = xfs_defer_find_last(tp, ops);
- 	if (!dfp || !xfs_defer_can_append(dfp, ops))
--		dfp = xfs_defer_alloc(tp, ops);
-+		dfp = xfs_defer_alloc(&tp->t_dfops, ops);
- 
- 	xfs_defer_add_item(dfp, li);
- 	trace_xfs_defer_add_item(tp->t_mountp, dfp, li);
-@@ -870,7 +870,7 @@ xfs_defer_add_barrier(
- 	if (dfp)
- 		return;
- 
--	xfs_defer_alloc(tp, &xfs_barrier_defer_type);
-+	xfs_defer_alloc(&tp->t_dfops, &xfs_barrier_defer_type);
- 
- 	trace_xfs_defer_add_item(tp->t_mountp, dfp, NULL);
- }
-@@ -885,14 +885,9 @@ xfs_defer_start_recovery(
- 	struct list_head		*r_dfops,
- 	const struct xfs_defer_op_type	*ops)
- {
--	struct xfs_defer_pending	*dfp;
-+	struct xfs_defer_pending	*dfp = xfs_defer_alloc(r_dfops, ops);
- 
--	dfp = kmem_cache_zalloc(xfs_defer_pending_cache,
--			GFP_KERNEL | __GFP_NOFAIL);
--	dfp->dfp_ops = ops;
- 	dfp->dfp_intent = lip;
--	INIT_LIST_HEAD(&dfp->dfp_work);
--	list_add_tail(&dfp->dfp_list, r_dfops);
- }
- 
- /*
 -- 
-2.43.0
-
+Dave Chinner
+david@fromorbit.com
 
