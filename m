@@ -1,87 +1,87 @@
-Return-Path: <linux-xfs+bounces-2839-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2841-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24420831438
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jan 2024 09:10:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DC3C83217F
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jan 2024 23:22:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C7C1D2877C2
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jan 2024 08:10:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51B8E1F24190
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Jan 2024 22:22:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D6F422073;
-	Thu, 18 Jan 2024 08:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA4E321AC;
+	Thu, 18 Jan 2024 22:22:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TISuaZPH"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="AhjvAXOU"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2728F20B10;
-	Thu, 18 Jan 2024 08:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B5032193
+	for <linux-xfs@vger.kernel.org>; Thu, 18 Jan 2024 22:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705565085; cv=none; b=I8w3yI1LSrlZ5EuQbomGkEKUfNSddSspmA7TULPclaMAHXkdFWjPYD4ZclnY524kL+dNwdJGKGOEgr6E0FUDucH1DR0WjS1voxmKu2U4VI8aLBG+Vlb0SK9bPiR8g3JDdRnASKQdDHJQdu0jirp3D/Jo5tokzLex+szqTVW3MrI=
+	t=1705616544; cv=none; b=GwPE2Y8m3ypJJI+3ZKXjHQaCTB6vfhnUMNQD6ZpxCJjpOr8mK+dNwJOc3WHbNyx/IwqquDfrbJ94y55UfYjg1VxY0xIR8Bci2vddzg5vGg/AXxpr2OJBLe3/nFsOWnzJ4vh+LSIRXw8LnZOROvWo0rwNUxZ4xYNoQ1ZpwFqV3Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705565085; c=relaxed/simple;
-	bh=Isrr1X12IsIZCh+hOUB2fTKG5taUMkZjF0gTPyNNEAA=;
-	h=Received:DKIM-Signature:Received:Received:Received:Received:
-	 Received:Received:Received:From:To:Cc:Subject:Date:Message-Id:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding:X-TM-AS-GCONF:X-Proofpoint-GUID:
-	 X-Proofpoint-ORIG-GUID:X-Proofpoint-Virus-Version:
-	 X-Proofpoint-Spam-Details; b=qFIIylOzJy9oBo8X5ePH/J1XH+0BpinnNKnC+i8GI12FGvaGpfhYKno7zM3B02bkYxxUBjmZ9W7EPwB9ib6ShrkhFsJzrItwXysZPWWTh9KU1gqJ2URCNXeG0WcB7VC8nQu2gsYKxYhERPT5eEu96/jQFMdzNBsTX08VjT9XtHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TISuaZPH; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40I7oocq009670;
-	Thu, 18 Jan 2024 08:04:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=AmRsDf2UHYAbAbmc8ihNWLxJC5WvTdmS07elNqb4DPo=;
- b=TISuaZPH9xaLur3lvZqvrDF376vxZm7NEbOlhJLj3dqSaWCgVG/Etz4aqjOWhdkHaZOT
- q5qDAm9sUFMoDUst33j7DvQz/ATYVfR9W8HoU1bzZsU7LBAYSBLiFYrOnaXWZp0AXquN
- /dZ6Bhw75MXvdreA0wEsirqHbG5VYyc2X5q+wOuyVMD5WdoXAe50Vay3a6HGsXGOw0DY
- cV/icFPkk/JmC3t5qao/6ZaWoDE/t1eq7QRF7ogUVD9ufONdZAdmjRe44sJfhb97xAga
- Y85FWsT+O17ipvosGHLmlNJWY60nDcXa2qD/8zyI9VwMMiYcXjT2awZBZulOkDn7R/Q1 kA== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vpyrk8m52-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jan 2024 08:04:16 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40I77MnU005807;
-	Thu, 18 Jan 2024 08:04:14 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vm6bkt1s3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jan 2024 08:04:14 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40I84CsQ25821724
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jan 2024 08:04:12 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 56F682004B;
-	Thu, 18 Jan 2024 08:04:12 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5983220040;
-	Thu, 18 Jan 2024 08:04:10 +0000 (GMT)
-Received: from li-c1fdab4c-355a-11b2-a85c-ef242fe9efb4.in.ibm.com (unknown [9.109.201.126])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 18 Jan 2024 08:04:10 +0000 (GMT)
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        linux-xfs@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: sshegde@linux.ibm.com, mpe@ellerman.id.au, mingo@kernel.org,
-        peterz@infradead.org, chandan.babu@oracle.com, anton@tuxera.com
-Subject: [RFC PATCH 3/3] arch/powerpc: remove duplicate ifdefs
-Date: Thu, 18 Jan 2024 13:33:26 +0530
-Message-Id: <20240118080326.13137-4-sshegde@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240118080326.13137-1-sshegde@linux.ibm.com>
-References: <20240118080326.13137-1-sshegde@linux.ibm.com>
+	s=arc-20240116; t=1705616544; c=relaxed/simple;
+	bh=84W3Bd5MABUgqXS5IdrwnrLtM1D5jLLSOMBtMMnAZ8g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CohNWX0sfXucbcsZXuuAti0QxCk2+R0vq8wf4bpBdJlXZ9R6jIQj1OKCivObwwBuGOP1LDs8M3/bdR4zXLRpCcYMX/xf5Y12kXiFS8Ek4seQCZez8v/Ep/qu7TyCTXpRWW6LTtku7UjZlT4H0XmbIcy3a7GLu1VFcNRvTPjFXLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=AhjvAXOU; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36197b6e875so659355ab.0
+        for <linux-xfs@vger.kernel.org>; Thu, 18 Jan 2024 14:22:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705616542; x=1706221342; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y0T98cpX+SULSpjNgtsPYqzkRNNaWj63ZWS5JTebEXY=;
+        b=AhjvAXOUvWPO6BBmql9eMeehJ02BHCKZnAzPEH2htB2TYSAhKNJlLM8PIenxRnnHHI
+         noycMAiMjLsLvy71HT9o3gL2YKf+nlkcSwHcMopcor2d7GJOrsXzkIMQ1l4xGHeNisYe
+         Yg+AVGB1j7nePe3jPI4ITlZScWhBZ/DflPJ9Qdoh6YtOAaHeV5TxRkAAlJ/gChxLTKLe
+         tPiiWHeX3nF5bwMkuaGhT/p6WvR9TG6jZn3JiNbKVvIhKpEpSw3XUtvmWj3j5fa8fhvE
+         YiK5fcDygAlEDvW+9qbt5FxpsTME3TC7H8He2C+2o3qj9aKI5f5cIvJm66i3Hf+3SMH8
+         oqCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705616542; x=1706221342;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y0T98cpX+SULSpjNgtsPYqzkRNNaWj63ZWS5JTebEXY=;
+        b=XNiwINiJDgchKFO5ipAhM40zRE1ZqKOXaVEoYrwbIrReXpoGSN52tFFViPbY4PW+vk
+         yk7O2dLBO+SBxtXRXKDWeFnixBT/1eXAJRGeWni4aDwlDLh1MLM/0hgMv/TGE5/kUP4K
+         QuTmpxnsRrOD6t84ZLveH1xJHQP08ch/x1c5VsQ40QuERvSDUACtdwcG8TwW1xlVinF9
+         vTsMGlU3P0yn0TtU9xLTDUXZZtZPV4mlOeU7znOhhpJjsbEr3lrNubrBRPmQJd5yuufF
+         gMJo0giJ+834WBHZro0RDBnpVOvXmloEC68NXl0MKHDmNM+rxTy6qyr2StOcNqgTGnQN
+         2sHg==
+X-Gm-Message-State: AOJu0YxqUJxnvHUUawWDbdKS4iHiowmxrmTBrOFj/csmhPVbSY1TjquD
+	0g4W16lp05ZSUPl/ivFtT2B7d8xzuBZf2lm74O1W26hE2aRlKwDRF2OZLU6SdyIbQd8rvyhGjxN
+	E
+X-Google-Smtp-Source: AGHT+IGlPKlu2kdXNkTMeiemaK5KwMkc7BAynefIhrrtwhxn/LDegX2GgQDreG0TxMQNpJ7/MxkpxA==
+X-Received: by 2002:a05:6e02:1d89:b0:361:a719:6024 with SMTP id h9-20020a056e021d8900b00361a7196024mr865850ila.30.1705616542047;
+        Thu, 18 Jan 2024 14:22:22 -0800 (PST)
+Received: from dread.disaster.area (pa49-180-249-6.pa.nsw.optusnet.com.au. [49.180.249.6])
+        by smtp.gmail.com with ESMTPSA id y37-20020a634965000000b005ceeeea1816sm2137336pgk.77.2024.01.18.14.22.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 14:22:21 -0800 (PST)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+	by dread.disaster.area with esmtp (Exim 4.96)
+	(envelope-from <dave@fromorbit.com>)
+	id 1rQamB-00CCGK-0V;
+	Fri, 19 Jan 2024 09:22:18 +1100
+Received: from dave by devoid.disaster.area with local (Exim 4.97)
+	(envelope-from <dave@devoid.disaster.area>)
+	id 1rQamA-0000000HMlj-2Z5n;
+	Fri, 19 Jan 2024 09:22:18 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: linux-xfs@vger.kernel.org
+Cc: willy@infradead.org,
+	linux-mm@kvack.org
+Subject: [RFC] [PATCH 0/3] xfs: use large folios for buffers
+Date: Fri, 19 Jan 2024 09:19:38 +1100
+Message-ID: <20240118222216.4131379-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -89,117 +89,58 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ybzYR_15sOZJwGfICg1PC-UelNSZi1tz
-X-Proofpoint-ORIG-GUID: ybzYR_15sOZJwGfICg1PC-UelNSZi1tz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-18_04,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 mlxscore=0 spamscore=0 suspectscore=0
- phishscore=0 clxscore=1015 impostorscore=0 malwarescore=0
- priorityscore=1501 mlxlogscore=657 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311290000 definitions=main-2401180056
 
-when a ifdef is used in the below manner, second one could be considered as
-duplicate.
+The XFS buffer cache supports metadata buffers up to 64kB, and it does so by
+aggregating multiple pages into a single contiguous memory region using
+vmapping. This is expensive (both the setup and the runtime TLB mapping cost),
+and would be unnecessary if we could allocate large contiguous memory regions
+for the buffers in the first place.
 
-ifdef DEFINE_A
-...code block...
-ifdef DEFINE_A
-...code block...
-endif
-...code block...
-endif
+Enter multi-page folios.
 
-few places in arch/powerpc where this pattern was seen. In addition to that
-in paca.h, CONFIG_PPC_BOOK3S_64 was defined back to back. merged the two
-ifdefs.
+This patchset converts the buffer cache to use the folio API, then enhances it
+to optimisitically use large folios where possible. It retains the old "vmap an
+array of single page folios" functionality as a fallback when large folio
+allocation fails. This means that, like page cache support for large folios, we
+aren't dependent on large folio allocation succeeding all the time.
 
-No functional change is intended here. It only aims to improve code
-readability.
+This relegates the single page array allocation mechanism to the "slow path"
+that we don't have to care so much about performance of this path anymore. This
+might allow us to simplify it a bit in future.
 
-Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
----
- arch/powerpc/include/asm/paca.h           | 4 ----
- arch/powerpc/kernel/asm-offsets.c         | 2 --
- arch/powerpc/platforms/powermac/feature.c | 2 --
- arch/powerpc/xmon/xmon.c                  | 2 --
- 4 files changed, 10 deletions(-)
+One of the issues with the folio conversion is that we use a couple of APIs that
+take struct page ** (i.e. pointers to page pointer arrays) and there aren't
+folio counterparts. These are the bulk page allocator and vm_map_ram(). In the
+cases where they are used, we cast &bp->b_folios[] to (struct page **) knowing
+that this array will only contain single page folios and that single page folios
+and struct page are the same structure and so have the same address. This is a
+bit of a hack (hence the RFC) but I'm not sure that it's worth adding folio
+versions of these interfaces right now. We don't need to use the bulk page
+allocator so much any more, because that's now a slow path and we could probably
+just call folio_alloc() in a loop like we used to. What to do about vm_map_ram()
+is a little less clear....
 
-diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
-index e667d455ecb4..1d58da946739 100644
---- a/arch/powerpc/include/asm/paca.h
-+++ b/arch/powerpc/include/asm/paca.h
-@@ -163,9 +163,7 @@ struct paca_struct {
- 	u64 kstack;			/* Saved Kernel stack addr */
- 	u64 saved_r1;			/* r1 save for RTAS calls or PM or EE=0 */
- 	u64 saved_msr;			/* MSR saved here by enter_rtas */
--#ifdef CONFIG_PPC64
- 	u64 exit_save_r1;		/* Syscall/interrupt R1 save */
--#endif
- #ifdef CONFIG_PPC_BOOK3E_64
- 	u16 trap_save;			/* Used when bad stack is encountered */
- #endif
-@@ -214,8 +212,6 @@ struct paca_struct {
- 	/* Non-maskable exceptions that are not performance critical */
- 	u64 exnmi[EX_SIZE];	/* used for system reset (nmi) */
- 	u64 exmc[EX_SIZE];	/* used for machine checks */
--#endif
--#ifdef CONFIG_PPC_BOOK3S_64
- 	/* Exclusive stacks for system reset and machine check exception. */
- 	void *nmi_emergency_sp;
- 	void *mc_emergency_sp;
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 9f14d95b8b32..f029755f9e69 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -246,9 +246,7 @@ int main(void)
- 	OFFSET(PACAHWCPUID, paca_struct, hw_cpu_id);
- 	OFFSET(PACAKEXECSTATE, paca_struct, kexec_state);
- 	OFFSET(PACA_DSCR_DEFAULT, paca_struct, dscr_default);
--#ifdef CONFIG_PPC64
- 	OFFSET(PACA_EXIT_SAVE_R1, paca_struct, exit_save_r1);
--#endif
- #ifdef CONFIG_PPC_BOOK3E_64
- 	OFFSET(PACA_TRAP_SAVE, paca_struct, trap_save);
- #endif
-diff --git a/arch/powerpc/platforms/powermac/feature.c b/arch/powerpc/platforms/powermac/feature.c
-index 81c9fbae88b1..2cc257f75c50 100644
---- a/arch/powerpc/platforms/powermac/feature.c
-+++ b/arch/powerpc/platforms/powermac/feature.c
-@@ -2333,7 +2333,6 @@ static struct pmac_mb_def pmac_mb_defs[] = {
- 		PMAC_TYPE_POWERMAC_G5,		g5_features,
- 		0,
- 	},
--#ifdef CONFIG_PPC64
- 	{	"PowerMac7,3",			"PowerMac G5",
- 		PMAC_TYPE_POWERMAC_G5,		g5_features,
- 		0,
-@@ -2359,7 +2358,6 @@ static struct pmac_mb_def pmac_mb_defs[] = {
- 		0,
- 	},
- #endif /* CONFIG_PPC64 */
--#endif /* CONFIG_PPC64 */
- };
+The other issue I tripped over in doing this conversion is that the
+discontiguous buffer straddling code in the buf log item dirty region tracking
+is broken. We don't actually exercise that code on existing configurations, and
+I tripped over it when tracking down a bug in the folio conversion. I fixed it
+and short-circuted the check for contiguous buffers, but that didn't fix the
+failure I was seeing (which was not handling bp->b_offset and large folios
+properly when building bios).
 
- /*
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index b3b94cd37713..f413c220165c 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -643,10 +643,8 @@ static int xmon_core(struct pt_regs *regs, volatile int fromipi)
- 			touch_nmi_watchdog();
- 		} else {
- 			cmd = 1;
--#ifdef CONFIG_SMP
- 			if (xmon_batch)
- 				cmd = batch_cmds(regs);
--#endif
- 			if (!locked_down && cmd)
- 				cmd = cmds(regs);
- 			if (locked_down || cmd != 0) {
---
-2.39.3
+Apart from those issues, the conversion and enhancement is relatively straight
+forward.  It passes fstests on both 512 and 4096 byte sector size storage (512
+byte sectors exercise the XBF_KMEM path which has non-zero bp->b_offset values)
+and doesn't appear to cause any problems with large directory buffers, though I
+haven't done any real testing on those yet. Large folio allocations are
+definitely being exercised, though, as all the inode cluster buffers are 16kB on
+a 512 byte inode V5 filesystem.
+
+Thoughts, comments, etc?
+
+Note: this patchset is on top of the NOFS removal patchset I sent a
+few days ago. That can be pulled from this git branch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-kmem-cleanup
 
 
