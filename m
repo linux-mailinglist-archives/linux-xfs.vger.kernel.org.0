@@ -1,88 +1,82 @@
-Return-Path: <linux-xfs+bounces-2893-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-2895-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B8568361C1
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jan 2024 12:32:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE2218362AB
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jan 2024 12:54:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70BBA1C23D28
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jan 2024 11:32:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64DB31F2AB7E
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jan 2024 11:54:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845253BB4D;
-	Mon, 22 Jan 2024 11:21:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BA1D3A8F5;
+	Mon, 22 Jan 2024 11:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="QPWQAF9E"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="tylJPfR3"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C543BB51
-	for <linux-xfs@vger.kernel.org>; Mon, 22 Jan 2024 11:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423FB3A8F4
+	for <linux-xfs@vger.kernel.org>; Mon, 22 Jan 2024 11:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705922473; cv=none; b=B5uwm/CpEbz3B1OSNQVKeGOrHHQWNR+lbxCRAbB9CztBecf9M4oo2uUdCrhLCMLrxoRBzsIIvsk8WTxLlPICNRv3KPgd9h0+QnJIKJBxfUg4Io9dgER+dal1gZ0OeesWVblrI+UukFRhnXMMcUM9rwD5sD9vMeO1DuzolVWojKM=
+	t=1705924422; cv=none; b=jlsAO0gRkRexTMZTQZlD406FDot9F4S8bjArftTinIj1IkXAtkJFdan6nvlhxac7xErB7ns5HRRF6TY1AEXS6yV2UvxOHNQq4I1OGBYG29U0wVUSmUNW2QwXIzHpcBS6XAwYDLpsQzYg9V6JNtDrq52ankY9+zvzg/tw219Vut8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705922473; c=relaxed/simple;
-	bh=SyzTg9VJs+XiKuTZui8QFn45g732+4X0RI9/qMtM9NI=;
+	s=arc-20240116; t=1705924422; c=relaxed/simple;
+	bh=W2Avw8wb1Qrnsv2XZFDHMC+q0rUEdrC/wi4fdjtI8Zs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QOZQqe4iTcblSUhiVIukdvSA5ZKLvx5wtgTCDMVavS8JBW6YrkKeA1XYfLUNmMQEYoIWmIxStf1aw/H/DVHI7mmm2eIEMjLfxrey0C8FRaffLA9eK8C7sjgw00m3UqAZAyuLqRyD6yjG84yMpuX9ZOabg4ZeAMqmUegnyFIA6no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=QPWQAF9E; arc=none smtp.client-ip=209.85.210.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9QhKYHcOBxLOeLs96UyL5A5kwxLfnixaPzX+BXJeHHWAncJP00wrGwX7e0oLJ9LoEfmIeymPXOlmbCOuM9Ad7TWaj11GpCVcefPSUCe7uocW5UP1rfh3deS4fVwmC9/9w8V4TIk68UETLeuFd0Kt26ZnlkfxRxDqoA/UHxFh0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=tylJPfR3; arc=none smtp.client-ip=209.85.210.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6dbd65d3db6so578206b3a.3
-        for <linux-xfs@vger.kernel.org>; Mon, 22 Jan 2024 03:21:11 -0800 (PST)
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dd8cba736aso2215368a34.3
+        for <linux-xfs@vger.kernel.org>; Mon, 22 Jan 2024 03:53:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705922471; x=1706527271; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1705924420; x=1706529220; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ydBUbEMreIqbIMihUS/Kgz/H9vCi4TtibpqalZLZnuA=;
-        b=QPWQAF9EJPBM3LaVh0W7BGZMmBQKgWsB/fAX9Pduel/oH0wda7IWEMh6juOVfV/k/p
-         NPeKgZSWzRk7CvK3p1poXVTrJa4gTNCUqbTc6uFl2NOy5NTLTWUFQDwzaqtHeNSTx6VT
-         B+TS8m22koyC7wg+mcFEHXAdNXqrxAi/vWas0tzJIaC0Lpv/Olg9uVsD5RW/q3V7ElBP
-         8RWyKUz5Qjepae7ELyV9fewpSZXCtjEFoAh7SrcqXc3Vc3lLMuRp9EPDsgyipao2y1hH
-         De1LUTpjRklVqTYitga++DLq+7usukLgMQqRtLiOHjcJgIh3QgPIlT3kaLGe4wJxx2jl
-         Araw==
+        bh=4lvDGi3XtCFwulPhjEFTJBsNK4AKTWo6BAFDZ+Ol/6E=;
+        b=tylJPfR3MPxuRahY5wzYM1CnGirQOxU2xv2/LSu4ql8FYPxeO1Sj3zq8WVjQYv3pkf
+         CPzvrzrUoAD8EunFxH3enM0rMdf1XuNumza88I7tSDjhjAEGJgy23WG+YOWUt+Frer5S
+         //mme92md+TMs+aScwWmGA+XB07YZ1A8PdUpUbtRkG5mx3X4izM2CHv3mRKXjpqP7wmw
+         9Xuc8JU2rNAudv7buel6yyxBG7L3iwgDjfmL97/0EmudnR0LoKDSmtqIqCHVdyoTt5Un
+         o9OO0ddmq2t2ZqYuuuEC+XhtZarbnft9uZ5X0Ex0fpCIy7qEjqDw3mCZKGOVG4ZfVTqs
+         xqLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705922471; x=1706527271;
+        d=1e100.net; s=20230601; t=1705924420; x=1706529220;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ydBUbEMreIqbIMihUS/Kgz/H9vCi4TtibpqalZLZnuA=;
-        b=JzCQfLfh3wjOElwm9ID5Pnq3CCVB2EnRvZ3ljI5DOSZVNRNKvUJWdi535Y7lPz6mMz
-         cTfOOudaakLUcfT1KMEuHxl6Nk55ClhL/8vcLbFCCe/6rKbHxTkKZNAZc7+y6GbkraOF
-         JVD1Y0BueWeiFcN+TNTjNHdCkfSkdvg+s7lyBu26Zu9sI8mTw0YZQiXEhywLeyKA/9Or
-         00E5NXV9cG7wunjPeTh0fY51gwPyqtKJPvg+NSEXpIs3Oxo5G1jNP1WU8PnSrOWzLRDE
-         SWaxT1WStgKtt53w+sJyHLDTfcRoacv1Srz9NlAbCKGYM4QSdaEL1Ya4eOsEjp7LZciY
-         dIkA==
-X-Gm-Message-State: AOJu0YzX3cJZ9p6v6DvJ38uNASEqAYR9a8umgjepw+d+s0EmLFxjJXDJ
-	LSYU2hC7HXLgbWVBazu3oAf6bW8fgmc2AwvQOFZm+W4JJjz1Byy/EZIxH4yxIho=
-X-Google-Smtp-Source: AGHT+IGvacqwVOJtQKNnfdm8+2pkpHhhiKGz2N8iW9S4Sqyhgpem1AM3j9e3tO0i9SnpGJ5FC+97vQ==
-X-Received: by 2002:a05:6a21:9184:b0:19a:328a:3a with SMTP id tp4-20020a056a21918400b0019a328a003amr1655885pzb.60.1705922470799;
-        Mon, 22 Jan 2024 03:21:10 -0800 (PST)
+        bh=4lvDGi3XtCFwulPhjEFTJBsNK4AKTWo6BAFDZ+Ol/6E=;
+        b=CzTrSYkT2x4XBBdsOU1lrf4KbA6teJidC9/P0D7wJtOvSz6uEDHwouGwBU6rVOOnK0
+         rT9XhwKxc45h0yOSKk6aQxnGnMURRst8vmdD6gc4V6VWcEWfgX6LqiIq0md7KSqeX7Cd
+         bkL94nKMac+e3Uk295AWdNBFelnFKEKbxzopYOQCZbs3a28kjJMSzasb2ibCrha+e3cF
+         fIrO4Yw2KMgUvn6froisXk1rwbGSDuprPYgNGrlhL2B1g0QVqdCK4q5ihyDqLr0HLrWL
+         bb4jxDitj8kbfi18PUOrLGDCy5tFeBLy1C75EPKBRwFeNLlyCV7AM4VULeknC2v1Ryv2
+         g80w==
+X-Gm-Message-State: AOJu0YwWOf3IcZgxQczhvLrk3CgLQaNHVNfR3x/RORBmD+CW3Y3rgWI1
+	9kcebsso3LuJHMT/mzFnxgPz+eBduCbvuxXnOKHU4Tv3DA/lUm93eokVcSBJaOc=
+X-Google-Smtp-Source: AGHT+IGScjgt6UBLLx+2xQYb5zDJnwz9kSx2S8tAvCRRK2WxYQ3E4GLNCu1B9AyKuLtV1W5tVHAhJQ==
+X-Received: by 2002:a05:6830:3a83:b0:6dd:e0d5:80f6 with SMTP id dj3-20020a0568303a8300b006dde0d580f6mr4543051otb.12.1705924420181;
+        Mon, 22 Jan 2024 03:53:40 -0800 (PST)
 Received: from dread.disaster.area (pa49-180-249-6.pa.nsw.optusnet.com.au. [49.180.249.6])
-        by smtp.gmail.com with ESMTPSA id z6-20020aa78886000000b006da24688178sm9383985pfe.39.2024.01.22.03.21.10
+        by smtp.gmail.com with ESMTPSA id s16-20020a639250000000b005c200b11b77sm8314062pgn.86.2024.01.22.03.53.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 03:21:10 -0800 (PST)
+        Mon, 22 Jan 2024 03:53:39 -0800 (PST)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
 	(envelope-from <david@fromorbit.com>)
-	id 1rRsMV-00DkNH-2o;
-	Mon, 22 Jan 2024 22:21:07 +1100
-Date: Mon, 22 Jan 2024 22:21:07 +1100
+	id 1rRsrw-00Dkyv-2w;
+	Mon, 22 Jan 2024 22:53:36 +1100
+Date: Mon, 22 Jan 2024 22:53:36 +1100
 From: Dave Chinner <david@fromorbit.com>
-To: Zorro Lang <zlang@redhat.com>
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [xfstests generic/648] 64k directory block size (-n size=65536)
- crash on _xfs_buf_ioapply
-Message-ID: <Za5PoyT0WZdqgphT@dread.disaster.area>
-References: <20231218140134.gql6oecpezvj2e66@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <ZainBd2Jz6I0Pgm1@dread.disaster.area>
- <20240119013807.ivgvwe7yxweamg2m@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <ZaoiBF9KqyMt3URQ@dread.disaster.area>
- <20240120112600.phkv37z4nx3pj2jn@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
- <ZaxeOXSb0+jPYCe1@dread.disaster.area>
- <20240122072312.usotep2ajokhcuci@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-xfs@vger.kernel.org, linux-mm@kvack.org
+Subject: Re:
+Message-ID: <Za5XQDOutk93L5w1@dread.disaster.area>
+References: <20240118222216.4131379-1-david@fromorbit.com>
+ <87zfwxk75o.fsf@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -91,59 +85,61 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240122072312.usotep2ajokhcuci@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+In-Reply-To: <87zfwxk75o.fsf@linux.intel.com>
 
-On Mon, Jan 22, 2024 at 03:23:12PM +0800, Zorro Lang wrote:
-> On Sun, Jan 21, 2024 at 10:58:49AM +1100, Dave Chinner wrote:
-> > On Sat, Jan 20, 2024 at 07:26:00PM +0800, Zorro Lang wrote:
-> > > On Fri, Jan 19, 2024 at 06:17:24PM +1100, Dave Chinner wrote:
-> > > > Perhaps a bisect from 6.7 to 6.7+linux-xfs/for-next to identify what
-> > > > fixed it? Nothing in the for-next branch really looks relevant to
-> > > > the problem to me....
-> > > 
-> > > Hi Dave,
-> > > 
-> > > Finally, I got a chance to reproduce this issue on latest upstream mainline
-> > > linux (HEAD=9d64bf433c53) (and linux-xfs) again.
-> > > 
-> > > Looks like some userspace updates hide the issue, but I haven't found out what
-> > > change does that, due to it's a big change about a whole system version. I
-> > > reproduced this issue again by using an old RHEL distro (but the kernel is the newest).
-> > > (I'll try to find out what changes cause that later if it's necessary)
-> > > 
-> > > Anyway, I enabled the "CONFIG_XFS_ASSERT_FATAL=y" and "CONFIG_XFS_DEBUG=y" as
-> > > you suggested. And got the xfs metadump file after it crashed [1] and rebooted.
-> > > 
-> > > Due to g/648 tests on a loopimg in SCRATCH_MNT, so I didn't dump the SCRATCH_DEV,
-> > > but dumped the $SCRATCH_MNT/testfs file, you can get the metadump file from:
-> > > 
-> > > https://drive.google.com/file/d/14q7iRl7vFyrEKvv_Wqqwlue6vHGdIFO1/view?usp=sharing
-> > 
-> > Ok, I forgot the log on s390 is in big endian format. I don't have a
-> > bigendian machine here, so I can't replay the log to trace it or
-> > find out what disk address the buffer belongs. I can't even use
-> > xfs_logprint to dump the log.
-> > 
-> > Can you take that metadump, restore it on the s390 machine, and
-> > trace a mount attempt? i.e in one shell run 'trace-cmd record -e
-> > xfs\*' and then in another shell run 'mount testfs.img /mnt/test'
+On Mon, Jan 22, 2024 at 02:13:23AM -0800, Andi Kleen wrote:
+> Dave Chinner <david@fromorbit.com> writes:
 > 
-> The 'mount testfs.img /mnt/test' will crash the kernel and reboot
-> the system directly ...
-
-Turn off panic-on-oops. Some thing like 'echo 0 >
-/proc/sys/kernel/panic_on_oops' will do that, I think.
-
-
-> > and then after the assert fail terminate the tracing and run
-> > 'trace-cmd report > testfs.trace.txt'?
+> > Thoughts, comments, etc?
 > 
-> ... Can I still get the trace report after rebooting?
+> The interesting part is if it will cause additional tail latencies
+> allocating under fragmentation with direct reclaim, compaction
+> etc. being triggered before it falls back to the base page path.
 
-Not that I know of. But, then again, I don't reboot test machines
-when an oops or assert fail occurs - I like to have a warm corpse
-left behind that I can poke around in with various blunt instruments
-to see what went wrong....
+It's not like I don't know these problems exist with memory
+allocation. Go have a look at xlog_kvmalloc() which is an open coded
+kvmalloc() that allows the high order kmalloc allocations to
+fail-fast without triggering all the expensive and unnecessary
+direct reclaim overhead (e.g. compaction!) because we can fall back
+to vmalloc without huge concerns. When high order allocations start
+to fail, then we fall back to vmalloc and then we hit the long
+standing vmalloc scalability problems before anything else in XFS or
+the IO path becomes a bottleneck.
+
+IOWs, we already know that fail-fast high-order allocation is a more
+efficient and effective fast path than using vmalloc/vmap_ram() all
+the time. As this is an RFC, I haven't implemented stuff like this
+yet - I haven't seen anything in the profiles indicating that high
+order folio allocation is failing and causing lots of reclaim
+overhead, so I simply haven't added fail-fast behaviour yet...
+
+> In fact it is highly likely it will, the question is just how bad it is.
+> 
+> Unfortunately benchmarking for that isn't that easy, it needs artificial
+> memory fragmentation and then some high stress workload, and then
+> instrumenting the transactions for individual latencies. 
+
+I stress test and measure XFS metadata performance under sustained
+memory pressure all the time. This change has not caused any
+obvious regressions in the short time I've been testing it.
+
+I still need to do perf testing on large directory block sizes. That
+is where high-order allocations will get stressed - that's where
+xlog_kvmalloc() starts dominating the profiles as it trips over
+vmalloc scalability issues...
+
+> I would in any case add a tunable for it in case people run into this.
+
+No tunables. It either works or it doesn't. If we can't make
+it work reliably by default, we throw it in the dumpster, light it
+on fire and walk away.
+
+> Tail latencies are a common concern on many IO workloads.
+
+Yes, for user data operations it's a common concern. For metadata,
+not so much - there's so many far worse long tail latencies in
+metadata operations (like waiting for journal space) that memory
+allocation latencies in the metadata IO path are largely noise....
 
 -Dave.
 -- 
