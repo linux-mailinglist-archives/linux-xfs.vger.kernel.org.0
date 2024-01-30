@@ -1,280 +1,295 @@
-Return-Path: <linux-xfs+bounces-3222-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-3224-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 642CD84315C
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jan 2024 00:37:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08D57843174
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jan 2024 00:44:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1CA31F249B4
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jan 2024 23:37:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3BDD2873E0
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jan 2024 23:44:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA32F79959;
-	Tue, 30 Jan 2024 23:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C9578665;
+	Tue, 30 Jan 2024 23:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="qpXHPa3G"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ezz6fE0S";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="dp8S9j7z"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E9D2B9BD
-	for <linux-xfs@vger.kernel.org>; Tue, 30 Jan 2024 23:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706657846; cv=none; b=StjdMFtcUAKS4/FvAN+jAsfRxZ/7ofBqipOLQ9ig/p9lZp2hfBMdsNxx1oG+Mqox/VzhO2AU/t6nlu9mQE5E+Vwf9mmvrOOxM5dni8ZjNlodEpMxuoxODzKcY0zE1mU2hHZpP5IHc9XpOVI92p7UGrVUNCYw4dN6X8jmzwAe08c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706657846; c=relaxed/simple;
-	bh=nj26O4j2yRbE2IBzvkDQYVUr6PtJaGsOK/JobG7JKCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HsWqRq0huhErgWCw0EsTmFxcbU0OlF+pN0TuiFIzns+/zJ6Yg/AqYrC7yWvD+6vPxtNKI++6kOQLYe4H2jDTiuKKSo+qCuzoY8f/vtComHhlkjAkEB63JQASD7wd7gCzFRczL+ybuIWGY7w+Wsjo/4yexNZcAXFmpa/JUkdQdpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=qpXHPa3G; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ddc268ce2bso2681687b3a.0
-        for <linux-xfs@vger.kernel.org>; Tue, 30 Jan 2024 15:37:24 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F757EEF1
+	for <linux-xfs@vger.kernel.org>; Tue, 30 Jan 2024 23:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706658270; cv=fail; b=J/z79a76t0Glk7smOzwzZFgmnCL+64lyM5wXZp0+ccTgORnmmaXkN+uH7RDugEgRbxCLb3Yt9XAXJyPKzJZTZ6EuNwIlDs8ounHLUSOKRXQtq1yRJ81hNkd6z6s3vk//Bv6EbfiQmsugZfnrdFQ6sCMo0Ab5LLEQpogkIGTFndc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706658270; c=relaxed/simple;
+	bh=LHOWXE2WP6oiMElo5LkJVNOub3UmqdtG8Zt/tp0azSA=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=gVlSwcC4belsjHd/dlh7tsc2lZSbqgj0ml7G9cN33DFiKaoor9p8gEDsRsKI2gvHQvg11M9nqTf7YfVLtN91rdZUfSL6dJ4EHPrW5GBORAU7FbhJxTpf4b4HTvTtjA3Mw1JvRTlHfAvKsrj4d27EIse6qe8JZxfs7A2fY1B2Ul0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ezz6fE0S; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=dp8S9j7z; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40UKxUhn026019
+	for <linux-xfs@vger.kernel.org>; Tue, 30 Jan 2024 23:44:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=corp-2023-11-20;
+ bh=f8kQRzRcC1YEKqMDl+zis7xzbnnCfbWha1Eh4YVFWU4=;
+ b=ezz6fE0Suq9PoRrHMkB6QWquOlvyKm7x8SE1uSwrAy38grK+8aGH+ZFSpoi9pgjrIFgO
+ i2klg8X9B+UbiPvm/y61dvh0ZGw8g8BupM7u0tk9Ef2xl7LtHDlTnvGhcV1BCRx4FXon
+ WEp5gaUTqRbl/oOxa007loGWM46P12T8NLWsFxEJRQ1Yb/irEz3BVIJr/Ps7gxMr0/Qa
+ o3OyjVHnSCn+3x0bcPHw2rCdPphZia4GYuSSaYPvxDBiE9mcL/kBwevT1bQdytkw4zWM
+ iqr6fGAvtLkyiEbPIpYb1j7k6SHunlGjQ/zCZTMTF2ooqAd/1bV2jbHnVfzXEB5FCfrS 7w== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvrrcghk3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <linux-xfs@vger.kernel.org>; Tue, 30 Jan 2024 23:44:26 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40UMEG30014646
+	for <linux-xfs@vger.kernel.org>; Tue, 30 Jan 2024 23:44:24 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr9e97jw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <linux-xfs@vger.kernel.org>; Tue, 30 Jan 2024 23:44:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hNE/z2ieaiA6GfTCEG617vtsPg2JFXfQZYfArOSCvHnOtYvJqzctR7HuSOScJwIx0HXMfU207/PeQ121CQLoVTYFoSU4dlPRk1uEeRd5j/mMZDy14HZcPF8Wh9KbDBX+oE/oD9eZ+EA0hx0im0JfYKvHUdN2kmnGyyrM8nYVeqC6OXWb7Bzl/u6HkRoDXvMnxTcD7aCcyumaYRA2JsH5BBC2SAvfiNwTKY1tY9MCUjWyEDQVGi8g1JAhOdO4xUGW4888iug/3gGBHhG9o8mq8eSk6nRShU6jzyg4b3O5yX4CQmTdVF3o91Dif/aIKEWTIk//JHGPksqKihp4FZtVrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f8kQRzRcC1YEKqMDl+zis7xzbnnCfbWha1Eh4YVFWU4=;
+ b=hO/uJAN2ZFaMVpJJdElYQdnv67oD0bNXles7Qp9Fu/oRJF66FCOrMTnT0FiBT5Mz9pB1zHYgxQxZU/liyg4eS0osZR7H+VozLZMxPIr3OdqGZlM93MM6MfaKnkQO4FBMSw0MvJDlxfuPT4vfSomrKFRm8iyEvmKmWKrRSNE27ijJ3EOJt2+KFbO+YdJGQjOrhf0Dm7c8/EY5aijjCy0eOqq2XQrbhqFWtp/wUdNZcj6YE11sXD80Xqf52rcTM2YOG1U9v+MPVvvwfhGsfALM6IAk9pAbLDryfsX0c0OaPokCQV6qgOiruaf3DiepFfcC56icv5KATZ+pFHmO+Q3/HA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706657843; x=1707262643; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N/JCHM9AlyZpIdYvobl3nit5sSwfVrojdec2FUtAdqo=;
-        b=qpXHPa3Gft7GCz/acGdMa5l+S5L37lniLEPemR4nv5/HstrP6LSWK36oVJhGYFHBvt
-         qabbPD/Ns3gvmvVQSiE0opKN46F0VOiJeKwBoxctuVdJwEVz51HksoGRd86i2575ITxg
-         St7mEsotInX9IK6RW+VMMEfWmY2/7c/zKUAVDRHjwzD93Xt4VyiHynEpdiMtNS2VouEy
-         KkjmVBDy6OnzayH/3akeifePAZHJtqxGjRe6/PJpwQ7YgZg7sDOsqKuXyjON1zv7NwhZ
-         bJRHH1t1NP0SfRv5mlpNVqlutBFZgVavn3N9C/tmUB22xE+XbBpHOaxpighCPZS0C0bA
-         01iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706657843; x=1707262643;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N/JCHM9AlyZpIdYvobl3nit5sSwfVrojdec2FUtAdqo=;
-        b=PT2fqRDiN1hKSmYsTDJo+O79MiP5NdwPXrWzYP+86br9TdxQr3why1VP+wtstL8nGo
-         Pa3ANgT9ShFXn5NzaNyGbGSRdTxKbo+Fu/EMp+JY07Vvy6YxoEgGD7co8BUyxgXpPAKO
-         ARr1ZsZ1tQWPlmrFMOW5ip0M3XxF04JDf7IGAo3nge2CIMEqeNXM2L8oxf3Xtd4XuReF
-         GZUNlC3aCoPlHmMI2dqBt5UVOG6ZkyLLsB/az/e1vCjERLuk2WEm9ocjMjCHlUSKfJ0D
-         37o2LZWFWCtbnFQnciYJfYgBUwlzE8fK9k54SfD3Y9We9XEIs0hqMW/vcuJ4Jh0uMTEn
-         bFcA==
-X-Gm-Message-State: AOJu0YxWyEKe1LLFQJ8h7+nQlYhu8G5TaSZ+zmZZEsv41vRgonmMuwzw
-	QBKNccxyUAcm8yNHhtYFBB3KKVgJW8+D0w5hyC6JJ8+tQM+FWGTDUzOv8hzrJRw=
-X-Google-Smtp-Source: AGHT+IGcq/2OsDs8b9lsvt9PoLIXEKFIsw+IbJJHa1NLbozM5MTkwkE1NzK9MWzN0rBVG9jZqfSPWQ==
-X-Received: by 2002:a17:902:820a:b0:1d8:dd64:ff2 with SMTP id x10-20020a170902820a00b001d8dd640ff2mr66646pln.88.1706657843171;
-        Tue, 30 Jan 2024 15:37:23 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id x13-20020a170902ea8d00b001d77a0e1374sm830681plb.151.2024.01.30.15.37.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 15:37:22 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rUxfK-00HWCG-0P;
-	Wed, 31 Jan 2024 10:37:18 +1100
-Date: Wed, 31 Jan 2024 10:37:18 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: syzbot <syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com>
-Cc: adilger.kernel@dilger.ca, chandan.babu@oracle.com, jack@suse.com,
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Subject: current->journal_info got nested! (was Re: [syzbot] [xfs?] [ext4?]
- general protection fault in jbd2__journal_start)
-Message-ID: <ZbmILkfdGks57J4a@dread.disaster.area>
-References: <000000000000e98460060fd59831@google.com>
- <000000000000d6e06d06102ae80b@google.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f8kQRzRcC1YEKqMDl+zis7xzbnnCfbWha1Eh4YVFWU4=;
+ b=dp8S9j7zO0wbk7GM29u55uy04SfQhwDsQTVBnFpnJBSo6LBolqOeMjbOpcS8oyKYuJP1UoNyDc8Z2+PSazMLwBjXTocHue267GHA79RqZiPXF661aCyCMkgp9iZ62lKEdGUSKv14jfSFRpq34aE2APpaU2aiuMvxvjWnJc0C4YE=
+Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
+ by CH0PR10MB5305.namprd10.prod.outlook.com (2603:10b6:610:d9::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.22; Tue, 30 Jan
+ 2024 23:44:21 +0000
+Received: from BLAPR10MB5316.namprd10.prod.outlook.com
+ ([fe80::5758:bb17:6bb2:ab4f]) by BLAPR10MB5316.namprd10.prod.outlook.com
+ ([fe80::5758:bb17:6bb2:ab4f%4]) with mapi id 15.20.7249.017; Tue, 30 Jan 2024
+ 23:44:21 +0000
+From: Catherine Hoang <catherine.hoang@oracle.com>
+To: linux-xfs@vger.kernel.org
+Subject: [PATCH 6.6 CANDIDATE v1 00/21] xfs backports for 6.6.y (from v6.7)
+Date: Tue, 30 Jan 2024 15:43:58 -0800
+Message-Id: <20240130234419.45896-1-catherine.hoang@oracle.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR21CA0005.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::15) To BLAPR10MB5316.namprd10.prod.outlook.com
+ (2603:10b6:208:326::6)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000d6e06d06102ae80b@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5316:EE_|CH0PR10MB5305:EE_
+X-MS-Office365-Filtering-Correlation-Id: ddd8f0b2-2ff2-42ea-9382-08dc21ed61a6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	V4se0KYFsfmbtbIK0Xy5PkfUPNmbey5Moxq77BLBQgCMzWmMonMRnEsi5PERLATK/VEOsHywdoBMeIjTmSItmFhy52mmjf11aZgyGNftoy9c6WloLKJKxJNBHT2ZfCsoF02rXAPWKvqArgb0DhlraVuF8iY14RemjjEbiNcHFm1onJnW3tpuMkRqtZjkshqeKa/hfNvNJS+vzKX/U8s+NWBFJNuPptRbUfMkXaX90bZJVPYKlkRN/DKsHb1C35run1fB41avrvK0cyNVX5T50gi+iyH1GN7O39V3tlaa541wxYJD63i0RP2BAzRbSHUnP2FTE782VcP/YElqzyOgdBZV9/gwFJ+TuzVUvZ4hn5QkcRHIDq8Ynj+WVG6kY5B5I3s7MPBVyAxs1EWHjSiwyl7BbMnR2mKz9whaZeXVNU+gtrX5075CuQYzcgXCRg9jtLxdpV/ZCigk8LQ8TBre3S3z56o/O/1v+wWwnSOM6A5cNkA/lBk8sTI6aZrabKxtG9cSeG91fH5vwauAa0fMv5RPxWIv6Qvws73z/RkfcxOHwN010tyB0CvjEdkWES1zegFaWiE7WkFXKaO1edfftWyAYFhP3akh/8fu48pqEGPuo51yxZaeWIiJifjeSLrk
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(39860400002)(396003)(346002)(366004)(230173577357003)(230273577357003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(6666004)(6506007)(83380400001)(316002)(6486002)(478600001)(86362001)(66946007)(6916009)(66556008)(66476007)(2616005)(41300700001)(6512007)(44832011)(5660300002)(8936002)(8676002)(38100700002)(2906002)(1076003)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?ZEhZU1Jma1RMZEZPVzZlU2t4NUFlZ3dhMTdtTnNPTEdScGp2UHoraWdDVzVT?=
+ =?utf-8?B?aU1xTXdIQ2lVdEI5MlY4NGN3d2VMTE5ZYkQzVm16OHBSeUhmNVBoYm9xaGk5?=
+ =?utf-8?B?aGZuM0tlQlZiNnNzZmI4TFNZRHZuaTBkZE9DcXZWYTg0Mzh6cFBQZVJzMGU1?=
+ =?utf-8?B?V2w2WFZKQy9wbm1pVE5tL0FNUlVab0xDNmZrTUwzTytjWlVtdkRhL2oyaEd4?=
+ =?utf-8?B?OUN1MEtMVmh2WmxDMmdwWGMxMEJzQjgxN1RSQlFWTnVodWw4RmkrSmE4WEhX?=
+ =?utf-8?B?V3RjMGdacktXcEJwT3JxRmtHYW9MMG5IdXF5QWU4MnVmZ09DNEljb3JrS3U2?=
+ =?utf-8?B?cmc0Q3VHWTRaQnY5VTVpZ0VJRDFQUU5USXE0dnFEWWdGUUY1UkFsakJibWpw?=
+ =?utf-8?B?Z1doRE1XQkRJaDUycGZhcWJrb2xIWkphMzZRRmgzbjlTQmwwMm9LUlZHcllT?=
+ =?utf-8?B?OXo5S3RWTmpoOFpiVXUwc0dNU01VOWNGL2pnQWJxNEpBOTVvOFZYWStpYzFH?=
+ =?utf-8?B?SGJ6WktpYTRBcEZKem4xYjVycG15RWtBVWV5WnJFRFdoWEx3ZFhUYXZTemZW?=
+ =?utf-8?B?MzhoVlMyMFZPSzEwNUFOL3JoeXhvaVhsR0E5N2RHd1RGd21FMk1zd0RNWWRm?=
+ =?utf-8?B?UzNUYmZvRHdHZ3dFdmxBQVk0SHZzWkJwODZteHpTREVOWFV2OFhRSWpHaG1V?=
+ =?utf-8?B?VE1FdElrNWpXM2Y1YVN5bmdTd2Uwc1VmYWcwMjNiMEtMMGpBbG9TclI1YU5v?=
+ =?utf-8?B?NDh1REpZOVpmQXEwUHQ0S0R1b0kvb0NEd2RDM09wb2dEZ2lmSTNlNlBQWW9G?=
+ =?utf-8?B?T1JTd2RWVjZ0Z0thdi9yYlAvLzlKck5wK0crRDM3STNBekdkM1kyakVFL01p?=
+ =?utf-8?B?QUw0c2loS3BCWDVvNkcyMUV1NHpqL0VQZHZLbVlpbm9Qbjd2ZnZ3azl5akNL?=
+ =?utf-8?B?cWw1d004WU5pUE5NQzFPalFBZzJEN1NyRnIydENBUlV4YVZkS3hjMm5tKzJW?=
+ =?utf-8?B?NkFORHc2QVBBOGJGNzc3VlgyWFFyQmdXeUdaVGovU0tBc2x3dnRMSFBnV3dx?=
+ =?utf-8?B?S0s0b1RMMG5LMVN4ZHk3SlRSR213KzlEa3FsdmN1b1hDYURFeUp0cjQ5UnpD?=
+ =?utf-8?B?SlVvUmZ3TVBEdjV1OENNcXhLbWRvanU5OVpkZHlTNXlPYktxYzN6ZUphOEJI?=
+ =?utf-8?B?UU1DL3IvdGNyRmdQTFZ0ZEw2ejIyWjhobS9ZSllKQTdqdS8rQnl6azFnTnhz?=
+ =?utf-8?B?ZTQrcEtsNTFPT0xaMks4dFh6SGVtNS8rVkZhblRUVHczS08rRUhvdzdyT1hO?=
+ =?utf-8?B?Zk04VlBTeVpkZkxIMjVRZW5pdWk1ZGx0OU5nay81YnNzdUF6Z2o0Ny9tbVRL?=
+ =?utf-8?B?cGhFUy80TUROTnRMcXpyYlhyeVJ5WGdTbmlzaENhd1J0ZXNHc1FQZW5lMGxX?=
+ =?utf-8?B?STI2UUNNeVptV3pHUkkyaHVLQXI3ODlYRUVDdTJqMDF4cjQ5eVpMaUJWcnVo?=
+ =?utf-8?B?NVptUXo0N01RY202RlNsV3ZZVkQ5bkU5TTF1N3hNZmo2MGZ0NjFBWVZjTkRH?=
+ =?utf-8?B?WmpJRld4c3RCVkkvZEpUdUJwRmJFVGd2UjdOMmVuM2toTG0zVTNLOUQwdGY0?=
+ =?utf-8?B?eG85S21abTdGbjBqVDNXNmF4QUxnS0dQQzdFck4rMHo1VEZpQ0lxcUE3dHNh?=
+ =?utf-8?B?UjhGY2JzTUFkSXdra3FMWTZzMGpZMFlFRXEwc0lJbHJXZ0tySnl1SEpUSndY?=
+ =?utf-8?B?M2VXb25zOTBDdjdtOFJrTlFGaVdDZnVkRTRYL3p5bGxCdjZkdTgyKzJuTUpG?=
+ =?utf-8?B?dGxwSHZWc2pUWXhSK21WVmFJVjlYK3JrRTJER2hNQ0Q5R3IxUHJicnhsM1k4?=
+ =?utf-8?B?SmJNQmR6dUIyT2VYT1dTbzZxY1M2bG9pa0txU2N3SzBOWDJKQ3hjcEVEK3Bq?=
+ =?utf-8?B?b1g3VXozdmovNWpDTXduSHZoSzR6NTVwTndZWjFoS24yOFM3dXVoZmtpRjE1?=
+ =?utf-8?B?L3hOOU5xVmdKTFNnckxlMzVLVzVCNFE0VXBzR0NKdk1UVC9YRzB2aFFjbW1Y?=
+ =?utf-8?B?V3p5WW5nbVNoY3loOGRwNnE4bXZuT2xUYklOL1pXbC83TGdndDYreDJBK0RZ?=
+ =?utf-8?B?S1NHQ0lNdktoWEZVbzFQcjQ1Ti9MWUFRTG1BeVpSeGUzQjRtWjh6UWY4Q1Rw?=
+ =?utf-8?B?b1hnc1QrekhJc2dVRTdXbEpVeHQ5UU9INCtGb0g4YXRiY2QrSW5xeHFtbjRZ?=
+ =?utf-8?B?enBpRTJTa3k4ZmRqN3ZkdlhUcmxnPT0=?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	RybGrvdY6hQLfPo0XFGNUN18jzvEtxcSgSgUfqSqOTXZyJlvgnlq5gkw5bAkb4ms+nGzvZm0rSqiIKgo23E4FExkwAAGtcH4LWssRjUcTHKmL9ShGIdu+6l4LGJJtR11RD8OdlBJNo2SdZDJYTqn6HSLitSBA93VvKPmIu0uJs+vO5TzpdP7GFvqT4sd9Z16/dvKipDI3bz97HKgpNWLGHoqTj5ZioQ1TklU3uqbI+HQ21MGWDvqfFFlV0U4i1XlqoSUuz3i/z82bv941qjxb0vuGyJ9ILUhE1Ej/oNs7/jjoTzQmwWdiBN+TRsies80v9f3pow/C1BbitGT6tI8lzOeEe4vGYM6hdjwIgQB4kICnBuEGRIPrO0V183oxHd3KZj1scX2TprXjv+LlSp9w1MLcDkjjDKRZi4jRca/CvZ6VGemMXxiGwfN4mevZCk0r3xSgcS8hzj3q9zb2vLYYAyKFzt0sP+EbCvyoD5RAXrDJVNpDdbNeghMU2JRF4E+Hd1nPlnlxRP3xWmwzUOHFKlbsziGgqFjAK3A41d5ZheDKUSthhq4AKBAl8bCYkuxm2WmRA0Uu3IGjl0eCJz7fcPVP98mT7IR6gnO0CZfmOI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddd8f0b2-2ff2-42ea-9382-08dc21ed61a6
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2024 23:44:21.0511
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p1+Y/SNzKiiE8NShRI3vIaC95xaMBhRA3hYKAfuUsazyD22OTwA3mM6pqvFT+iJYfoKgNVL6PXUqqM+Qb2p7+D0xb5ZVBoMdyAolvUMYmao=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5305
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-30_12,2024-01-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 suspectscore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401300179
+X-Proofpoint-ORIG-GUID: MikTt1wwNt5rS4-LAuQvE5jFi715KAnf
+X-Proofpoint-GUID: MikTt1wwNt5rS4-LAuQvE5jFi715KAnf
 
-On Tue, Jan 30, 2024 at 06:52:21AM -0800, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    861c0981648f Merge tag 'jfs-6.8-rc3' of github.com:kleikam..
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=13ca8d97e80000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b0b9993d7d6d1990
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cdee56dbcdf0096ef605
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=104393efe80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1393b90fe80000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/7c6cc521298d/disk-861c0981.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/6203c94955db/vmlinux-861c0981.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/17e76e12b58c/bzImage-861c0981.xz
-> mounted in repro: https://storage.googleapis.com/syzbot-assets/d31d4eed2912/mount_3.gz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com
-> 
-> general protection fault, probably for non-canonical address 0xdffffc000a8a4829: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: probably user-memory-access in range [0x0000000054524148-0x000000005452414f]
-> CPU: 1 PID: 5065 Comm: syz-executor260 Not tainted 6.8.0-rc2-syzkaller-00031-g861c0981648f #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-> RIP: 0010:jbd2__journal_start+0x87/0x5d0 fs/jbd2/transaction.c:496
-> Code: 74 63 48 8b 1b 48 85 db 74 79 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 63 4d 8f ff 48 8b 2b 48 89 e8 48 c1 e8 03 <42> 80 3c 28 00 74 08 48 89 ef e8 4a 4d 8f ff 4c 39 65 00 0f 85 1a
-> RSP: 0018:ffffc900043265c8 EFLAGS: 00010203
-> RAX: 000000000a8a4829 RBX: ffff8880205fa3a8 RCX: ffff8880235dbb80
-> RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff88801c1a6000
-> RBP: 000000005452414e R08: 0000000000000c40 R09: 0000000000000001
-               ^^^^^^^^
-Hmmmm - TRAN. That's looks suspicious, I'll come back to that.
+Hi all,
 
-> R10: dffffc0000000000 R11: ffffed1003834871 R12: ffff88801c1a6000
-> R13: dffffc0000000000 R14: 0000000000000c40 R15: 0000000000000002
-> FS:  0000555556f90380(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020020000 CR3: 0000000021fed000 CR4: 00000000003506f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  __ext4_journal_start_sb+0x215/0x5b0 fs/ext4/ext4_jbd2.c:112
->  __ext4_journal_start fs/ext4/ext4_jbd2.h:326 [inline]
->  ext4_dirty_inode+0x92/0x110 fs/ext4/inode.c:5969
->  __mark_inode_dirty+0x305/0xda0 fs/fs-writeback.c:2452
->  generic_update_time fs/inode.c:1905 [inline]
->  inode_update_time fs/inode.c:1918 [inline]
->  __file_update_time fs/inode.c:2106 [inline]
->  file_update_time+0x39b/0x3e0 fs/inode.c:2136
->  ext4_page_mkwrite+0x207/0xdf0 fs/ext4/inode.c:6090
->  do_page_mkwrite+0x197/0x470 mm/memory.c:2966
->  wp_page_shared mm/memory.c:3353 [inline]
->  do_wp_page+0x20e3/0x4c80 mm/memory.c:3493
->  handle_pte_fault mm/memory.c:5160 [inline]
->  __handle_mm_fault+0x26a3/0x72b0 mm/memory.c:5285
->  handle_mm_fault+0x27e/0x770 mm/memory.c:5450
->  do_user_addr_fault arch/x86/mm/fault.c:1415 [inline]
->  handle_page_fault arch/x86/mm/fault.c:1507 [inline]
->  exc_page_fault+0x2ad/0x870 arch/x86/mm/fault.c:1563
->  asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:570
+This series contains backports for 6.6 from the 6.7 release. Tested on 30
+runs of kdevops with the following configurations:
 
-EXt4 is triggering a BUG_ON:
+1. CRC
+2. No CRC (512 and 4k block size)
+3. Reflink (1k and 4k block size)
+4. Reflink without rmapbt
+5. External log device
 
-	handle_t *handle = journal_current_handle();
-	int err;
+The patches included are from the following series:
 
-	if (!journal)
-		return ERR_PTR(-EROFS);
+[PATCHSET v1.1 0/4] xfs: minor bugfixes for rt stuff
+xfs: bump max fsgeom struct version
+xfs: hoist freeing of rt data fork extent mappings
+xfs: prevent rt growfs when quota is enabled
+xfs: rt stubs should return negative errnos when rt disabled
 
-	if (handle) {
->>>>>>>>>	J_ASSERT(handle->h_transaction->t_journal == journal);
-		handle->h_ref++;
-		return handle;
-	}
+[PATCHSET v1.1 0/8] xfs: clean up realtime type usage
+xfs: fix units conversion error in xfs_bmap_del_extent_delay
+xfs: make sure maxlen is still congruent with prod when rounding down
 
-via a journal assert failure. It appears that current->journal_info
-isn't what it is supposed to be. It's finding something with TRAN in
-it, I think. I'll come back to this.
+[PATCH v6] xfs: introduce protection for drop nlink
 
-What syzbot is doing is creating a file on it's root filesystem and
-write()ing 0x208e24b bytes (zeroes from an anonymous mmap() region,
-I think) to it to initialise it's contents.
+[PATCH v2] xfs: handle nimaps=0 from xfs_bmapi_write in xfs_alloc_file_space
 
-Then it mmap()s the ext4 file for 0xb36000 bytes and copies the raw
-test filesystem image in the source code into it.  It then creates a
-memfd that it decompresses the data in the mapped ext4 file into and
-creates a loop device that points to that memfd. It then mounts the
-loop device and we get an XFS filesystem which doesn't appear to
-contain any corruptions in it at all.  It then runs a bulkstat pass
-on the the XFS filesystem.
+[PATCH v4] xfs: allow read IO and FICLONE to run concurrently
 
-This is where it gets interesting. The user buffer that XFS
-copies the inode data into points to a memory address inside the
-range of the ext4 file that the filesystem image was copied to.
-It does not overlap with the filesystem image.
+[PATCH v3 0/3] xfs: fix two problem when recovery intents fails
+xfs: factor out xfs_defer_pending_abort
+xfs: abort intent items when recovery intents fail
 
-Hence when XFS goes to copy the inodes into the user buffer, it
-triggers write page faults on the ext4 backing file.
+[PATCH] xfs: only remap the written blocks in xfs_reflink_end_cow_extent
 
-That's this part of the trace:
+[PATCH v3] xfs: up(ic_sema) if flushing data device fails
+
+[PATCH v3] xfs: fix internal error from AGFL exhaustion
+
+[PATCH] xfs: fix again select in kconfig XFS_ONLINE_SCRUB_STATS
+
+[PATCH 0/2] xfs: fix recovery corruption on s390 w/ nrext64
+xfs: inode recovery does not validate the recovered inode
+
+[PATCHSET 0/2] xfs: dquot recovery validation strengthening
+xfs: clean up dqblk extraction
+xfs: dquot recovery does not validate the recovered dquot
+
+add and use a per-mapping stable writes flag v2
+filemap: add a per-mapping stable writes flag 
+xfs: clean up FS_XFLAG_REALTIME handling in xfs_ioctl_setattr_xflags 
+xfs: respect the stable writes flag on the RT device
 
 
-> RIP: 0010:rep_movs_alternative+0x4a/0x70 arch/x86/lib/copy_user_64.S:71
-> Code: 75 f1 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 8b 06 48 89 07 48 83 c6 08 48 83 c7 08 83 e9 08 74 df 83 f9 08 73 e8 eb c9 <f3> a4 c3 48 89 c8 48 c1 e9 03 83 e0 07 f3 48 a5 89 c1 85 c9 75 b3
-> RSP: 0018:ffffc900043270f8 EFLAGS: 00050202
-> RAX: ffffffff848cda01 RBX: 0000000020020040 RCX: 0000000000000040
-> RDX: 0000000000000000 RSI: ffff8880131873b0 RDI: 0000000020020000
-> RBP: 1ffff92000864f26 R08: ffff8880131873ef R09: 1ffff11002630e7d
-> R10: dffffc0000000000 R11: ffffed1002630e7e R12: 00000000000000c0
-> R13: dffffc0000000000 R14: 000000002001ff80 R15: ffff888013187330
->  copy_user_generic arch/x86/include/asm/uaccess_64.h:112 [inline]
->  raw_copy_to_user arch/x86/include/asm/uaccess_64.h:133 [inline]
->  _copy_to_user+0x86/0xa0 lib/usercopy.c:41
->  copy_to_user include/linux/uaccess.h:191 [inline]
->  xfs_bulkstat_fmt+0x4f/0x120 fs/xfs/xfs_ioctl.c:744
->  xfs_bulkstat_one_int+0xd8b/0x12e0 fs/xfs/xfs_itable.c:161
->  xfs_bulkstat_iwalk+0x72/0xb0 fs/xfs/xfs_itable.c:239
->  xfs_iwalk_ag_recs+0x4c3/0x820 fs/xfs/xfs_iwalk.c:220
->  xfs_iwalk_run_callbacks+0x25b/0x490 fs/xfs/xfs_iwalk.c:376
->  xfs_iwalk_ag+0xad6/0xbd0 fs/xfs/xfs_iwalk.c:482
->  xfs_iwalk+0x360/0x6f0 fs/xfs/xfs_iwalk.c:584
->  xfs_bulkstat+0x4f8/0x6c0 fs/xfs/xfs_itable.c:308
->  xfs_ioc_bulkstat+0x3d0/0x450 fs/xfs/xfs_ioctl.c:867
->  xfs_file_ioctl+0x6a5/0x1980 fs/xfs/xfs_ioctl.c:1994
->  vfs_ioctl fs/ioctl.c:51 [inline]
->  __do_sys_ioctl fs/ioctl.c:871 [inline]
->  __se_sys_ioctl+0xf8/0x170 fs/ioctl.c:857
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf5/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+Anthony Iliopoulos (1):
+  xfs: fix again select in kconfig XFS_ONLINE_SCRUB_STATS
 
-What is interesting here is this is running in an empty XFS
-transaction context so that the bulkstat operation garbage collects
-all the buffers it accesses without us having to explicit cleanup -
-they all get released when we cancel the transaction context at the
-end of the process.
+Catherine Hoang (1):
+  xfs: allow read IO and FICLONE to run concurrently
 
-But that means copy-out is running inside a transaction context, and
-that means current->journal_info contains a pointer to the current
-struct xfs_trans the bulkstat operation is using.
+Cheng Lin (1):
+  xfs: introduce protection for drop nlink
 
-Guess what we have as the first item in a struct xfs_trans? That's
-right, it's a magic number, and that magic number is:
+Christoph Hellwig (5):
+  xfs: handle nimaps=0 from xfs_bmapi_write in xfs_alloc_file_space
+  xfs: only remap the written blocks in xfs_reflink_end_cow_extent
+  filemap: add a per-mapping stable writes flag
+  xfs: clean up FS_XFLAG_REALTIME handling in xfs_ioctl_setattr_xflags
+  xfs: respect the stable writes flag on the RT device
 
-#define XFS_TRANS_HEADER_MAGIC  0x5452414e      /* TRAN */
+Darrick J. Wong (8):
+  xfs: bump max fsgeom struct version
+  xfs: hoist freeing of rt data fork extent mappings
+  xfs: prevent rt growfs when quota is enabled
+  xfs: rt stubs should return negative errnos when rt disabled
+  xfs: fix units conversion error in xfs_bmap_del_extent_delay
+  xfs: make sure maxlen is still congruent with prod when rounding down
+  xfs: clean up dqblk extraction
+  xfs: dquot recovery does not validate the recovered dquot
 
-It should be obvious what has happened now -
-current->journal_info is not null, so ext4 thinks it owns the
-structure attached there and panics when it finds that it isn't an
-ext4 journal handle being held there.
+Dave Chinner (1):
+  xfs: inode recovery does not validate the recovered inode
 
-I don't think there are any clear rules as to how filesystems can
-and can't use current->journal_info. In general, a task can't jump
-from one filesystem to another inside a transaction context like
-this, so there's never been a serious concern about nested
-current->journal_info assignments like this in the past.
+Leah Rumancik (1):
+  xfs: up(ic_sema) if flushing data device fails
 
-XFS is doing nothing wrong - we're allowed to define transaction
-contexts however we want and use current->journal_info in this way.
-However, we have to acknowledge that ext4 has also done nothing
-wrong by assuming current->journal_info should below to it if it is
-not null. Indeed, XFS does the same thing.
+Long Li (2):
+  xfs: factor out xfs_defer_pending_abort
+  xfs: abort intent items when recovery intents fail
 
-The question here is what to do about this? The obvious solution is
-to have save/restore semantics in the filesystem code that
-sets/clears current->journal_info, and then filesystems can also do
-the necessary "recursion into same filesystem" checks they need to
-ensure that they aren't nesting transactions in a way that can
-deadlock.
+Omar Sandoval (1):
+  xfs: fix internal error from AGFL exhaustion
 
-Maybe there are other options - should filesystems even be allowed to
-trigger page faults when they have set current->journal_info?
+ fs/inode.c                      |  2 ++
+ fs/xfs/Kconfig                  |  2 +-
+ fs/xfs/libxfs/xfs_alloc.c       | 27 ++++++++++++--
+ fs/xfs/libxfs/xfs_bmap.c        | 21 +++--------
+ fs/xfs/libxfs/xfs_defer.c       | 28 +++++++++------
+ fs/xfs/libxfs/xfs_defer.h       |  2 +-
+ fs/xfs/libxfs/xfs_inode_buf.c   |  3 ++
+ fs/xfs/libxfs/xfs_rtbitmap.c    | 33 +++++++++++++++++
+ fs/xfs/libxfs/xfs_sb.h          |  2 +-
+ fs/xfs/xfs_bmap_util.c          | 24 +++++++------
+ fs/xfs/xfs_dquot.c              |  5 +--
+ fs/xfs/xfs_dquot_item_recover.c | 21 +++++++++--
+ fs/xfs/xfs_file.c               | 63 ++++++++++++++++++++++++++-------
+ fs/xfs/xfs_inode.c              | 24 +++++++++++++
+ fs/xfs/xfs_inode.h              | 17 +++++++++
+ fs/xfs/xfs_inode_item_recover.c | 14 +++++++-
+ fs/xfs/xfs_ioctl.c              | 30 ++++++++++------
+ fs/xfs/xfs_iops.c               |  7 ++++
+ fs/xfs/xfs_log.c                | 23 ++++++------
+ fs/xfs/xfs_log_recover.c        |  2 +-
+ fs/xfs/xfs_reflink.c            |  5 +++
+ fs/xfs/xfs_rtalloc.c            | 33 +++++++++++++----
+ fs/xfs/xfs_rtalloc.h            | 27 ++++++++------
+ include/linux/pagemap.h         | 17 +++++++++
+ mm/page-writeback.c             |  2 +-
+ 25 files changed, 331 insertions(+), 103 deletions(-)
 
-What other potential avenues are there that could cause this sort of
-transaction context nesting that we haven't realised exist? Does
-ext4 data=jounral have problems like this in the data copy-in path?
-What other filesystems allow page faults in transaction contexts?
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+2.39.3
+
 
