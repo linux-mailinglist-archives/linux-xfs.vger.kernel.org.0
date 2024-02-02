@@ -1,129 +1,114 @@
-Return-Path: <linux-xfs+bounces-3432-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-3435-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A5B0847B3B
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Feb 2024 22:05:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D38F847D25
+	for <lists+linux-xfs@lfdr.de>; Sat,  3 Feb 2024 00:33:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D72F1C21A33
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Feb 2024 21:05:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5AAE28A133
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Feb 2024 23:33:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 450A6134CCD;
-	Fri,  2 Feb 2024 21:00:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E689312C806;
+	Fri,  2 Feb 2024 23:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lqFXIBkP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVk9IhZy"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1907D1308CC;
-	Fri,  2 Feb 2024 21:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E5612C801
+	for <linux-xfs@vger.kernel.org>; Fri,  2 Feb 2024 23:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706907635; cv=none; b=NsPJEBvajfJSsWoS/zKrwsZOqpF0ZZJ04e3IiydeEY5VvEpPDZO6JZPphXPLv+EyP2D4RJIHutnAh15b73xoyd8p0wdjbGjCNh1RWtL37fvQ3hwPE2iu+eBB3jDtLDsnWei/HAyytpvBzh9l2MxZ60gxDVpPPpj9DgavYyIK77w=
+	t=1706916824; cv=none; b=FBZ4IjF0QCepjIomhRPzxL7IInu/dvLRb2kTzaaqGOjvzJO4TFRCTqG7Zlj7Js7itUqaEf3xUjjto7vzn3dX0bFwsKezCtDU6XkBH6/OVcKMbYTeZ8xrKNXXvjW4CulXdQFBVC5RTTlLJNnDldNxAADZMc9lPzp8tlGAY9fxdHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706907635; c=relaxed/simple;
-	bh=umcqlnyoni1L+YV9DQVqbsmdwpCSWY7IqX3VvZk7A10=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rbOtM6ATpw0iehzxJqnTKaGAIRqt6S89WEf/YoQ486IYxeiQ4v4PMdeBQinTO6IiTSNw6bu26J9sP+98a8Crkb1/Uk8EesEkTweG3GsL0SrCYqRYWfy4UItvyBChorVhrNNsUV2J/nD1+VjjGuHLkKmsVVC3NHWM33e0YXZj9Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=lqFXIBkP; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1706907632;
-	bh=umcqlnyoni1L+YV9DQVqbsmdwpCSWY7IqX3VvZk7A10=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lqFXIBkPDeZLU45mjUmnm0q3K473FzSvhK0mnrXvhigDtwWMPffN/nvDG+HjmLhap
-	 XrVKFSp8liCgJWM5Eg0tCRrj2fhEw2prPWKm1ioqpCgipg1igi1SaDbnkeKOm6XGCA
-	 5TNwnhRSJ8qxzVcg2hGw3+/ggGMs07Oerum0TU9KO61RsOC0dkF05xsu1dTLTBbqhh
-	 N/kWbUj5cfkrNfMI6UKWA0tHM87k+2eksxppdkVd2mkAhQ8jBpJZZiG1ADrMpVpvQM
-	 jagnOvFu4AVyj7SZMGqU2NuRYa7LnjHCXrByox5plK8AOgTnfOaP/F8tHh2RJd0ft0
-	 pwO0PxPGfxN1Q==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TRSpl58jJzX2N;
-	Fri,  2 Feb 2024 16:00:31 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-xfs@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	nvdimm@lists.linux.dev,
-	linux-s390@vger.kernel.org,
-	Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>
-Subject: [RFC PATCH v4 12/12] virtio: Cleanup alloc_dax() error handling
-Date: Fri,  2 Feb 2024 16:00:19 -0500
-Message-Id: <20240202210019.88022-13-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240202210019.88022-1-mathieu.desnoyers@efficios.com>
-References: <20240202210019.88022-1-mathieu.desnoyers@efficios.com>
+	s=arc-20240116; t=1706916824; c=relaxed/simple;
+	bh=iclG1KsbI+k1I/nVcJPH01ea2c/wYs+D7WE/fFpi0gs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jY+Jw5D8RaMr2GAFl4lx11t96LfKPvjICQUpv2dGI7kdiCB066uDHcCNdmDDPoJrQcStOgSYR0VvW+b2SGJ1IpjX+QcNzBw524dBvai0dI8t6DShnzowac9etkiHqKn1iWqCnZCUf8RpgLh5qlcPauTU/Sw3d+5tt9IdKzgcUXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVk9IhZy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FEBC433C7;
+	Fri,  2 Feb 2024 23:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706916824;
+	bh=iclG1KsbI+k1I/nVcJPH01ea2c/wYs+D7WE/fFpi0gs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CVk9IhZyRebqRixeMpXBHdLPubhnHt0P+rQ26oKMIKeEYccTHguVGlK+xpWvRCHQd
+	 /yu/UPKovWFESKK5gtvpp+Q7EpYGKZ2+VTnQrnaSCtWtZrmh8yigBFIBGCCeYMxNEL
+	 nv+fIVAfeAsFCdq7jkrzmKy6iYfbsu452Aqav3wiNZokrIkeJD93jP5BgJqnkIoM97
+	 DTGaxxMuT06DlA7qNlGz9mVeKBCIMVWYJHi5pmW2JDPfYdQyqmTIHCxWRT/cn5m8nY
+	 wsua8il4MJa+jxupy0wrLJE/0qIIQ/KA/OVcOpQJrsEfR63hjPsD1mMLqAhtFR2HG5
+	 lsSdkSn+Fz+vQ==
+Date: Fri, 2 Feb 2024 15:33:43 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Brian Foster <bfoster@redhat.com>
+Cc: Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [RFC PATCH v2] xfs: run blockgc on freeze to avoid iget stalls
+ after reclaim
+Message-ID: <20240202233343.GM616564@frogsfrogsfrogs>
+References: <20240119193645.354214-1-bfoster@redhat.com>
+ <Za3fwLKtjC+B8aZa@dread.disaster.area>
+ <ZbJYP63PgykS1CwU@bfoster>
+ <ZbLyxHSkE5eCCRRZ@dread.disaster.area>
+ <Zbe9+EY5bLjhPPJn@bfoster>
+ <Zbrw07Co5vhrDUfd@dread.disaster.area>
+ <Zb1FhDn09pwFvE7O@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zb1FhDn09pwFvE7O@bfoster>
 
-Now that alloc_dax() returns ERR_PTR(-EOPNOTSUPP) rather than NULL,
-the callers do not have to handle NULL return values anymore.
+On Fri, Feb 02, 2024 at 02:41:56PM -0500, Brian Foster wrote:
+> On Thu, Feb 01, 2024 at 12:16:03PM +1100, Dave Chinner wrote:
+> > On Mon, Jan 29, 2024 at 10:02:16AM -0500, Brian Foster wrote:
+> > > On Fri, Jan 26, 2024 at 10:46:12AM +1100, Dave Chinner wrote:
+> > > > On Thu, Jan 25, 2024 at 07:46:55AM -0500, Brian Foster wrote:
+> > > > > On Mon, Jan 22, 2024 at 02:23:44PM +1100, Dave Chinner wrote:
+> > > > > > On Fri, Jan 19, 2024 at 02:36:45PM -0500, Brian Foster wrote:
+> ...
+> > Here's the fixes for the iget vs inactive vs freeze problems in the
+> > upstream kernel:
+> > 
+> > https://lore.kernel.org/linux-xfs/20240201005217.1011010-1-david@fromorbit.com/T/#t
+> > 
+> > With that sorted, are there any other issues we know about that
+> > running a blockgc scan during freeze might work around?
+> > 
+> 
+> The primary motivation for the scan patch was the downstream/stable
+> deadlock issue. The reason I posted it upstream is because when I
+> considered the overall behavior change, I thought it uniformly
+> beneficial to both contexts based on the (minor) benefits of the side
+> effects of the scan. You don't need me to enumerate them, and none of
+> them are uniquely important or worth overanalyzing.
+> 
+> The only real question that matters here is do you agree with the
+> general reasoning for a blockgc scan during freeze, or shall I drop the
+> patch?
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-xfs@vger.kernel.org
-Cc: dm-devel@lists.linux.dev
-Cc: nvdimm@lists.linux.dev
-Cc: linux-s390@vger.kernel.org
----
- fs/fuse/virtio_fs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't see any particular downside to flushing {block,inode}gc work
+during a freeze, other than the loss of speculative preallocations
+sounds painful.
 
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 621b1bca2d55..a28466c2da71 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -809,8 +809,8 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
- 		return 0;
- 
- 	dax_dev = alloc_dax(fs, &virtio_fs_dax_ops);
--	if (IS_ERR_OR_NULL(dax_dev)) {
--		int rc = IS_ERR(dax_dev) ? PTR_ERR(dax_dev) : -EOPNOTSUPP;
-+	if (IS_ERR(dax_dev)) {
-+		int rc = PTR_ERR(dax_dev);
- 		return rc == -EOPNOTSUPP ? 0 : rc;
- 	}
- 
--- 
-2.39.2
+Does Dave's patchset to recycle NEEDS_INACTIVE inodes eliminate the
+stall problem?
 
+--D
+
+> Brian
+> 
+> > -Dave.
+> > -- 
+> > Dave Chinner
+> > david@fromorbit.com
+> > 
+> 
+> 
 
