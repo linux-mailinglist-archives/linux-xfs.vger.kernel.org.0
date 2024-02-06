@@ -1,129 +1,148 @@
-Return-Path: <linux-xfs+bounces-3537-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-3539-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 477DB84ADCF
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Feb 2024 06:15:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6E4784AE12
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Feb 2024 06:24:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB34A1F2493A
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Feb 2024 05:15:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 842E3286251
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Feb 2024 05:24:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 650CD7C6C0;
-	Tue,  6 Feb 2024 05:13:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C9AB7319C;
+	Tue,  6 Feb 2024 05:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VdauWuR6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFwpM/vD"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A9F7C092
-	for <linux-xfs@vger.kernel.org>; Tue,  6 Feb 2024 05:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCD173196
+	for <linux-xfs@vger.kernel.org>; Tue,  6 Feb 2024 05:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707196405; cv=none; b=XsGKbzrb2bbBsgtcjnPQ7wLbhN3Z0oEKpnhzkg49D8k1JOGNtagoFc2tNyqirARN2qxDfN9VaFDcfP6HaHQbZ+X7v/VguV/z1b/Bmy0hElImqMxW8d+80B3DEn03e8D1iWf8ufoTS2xj4A6R7I8iB9AciXcan2sNVjKdUlTVnw0=
+	t=1707197063; cv=none; b=WA0KYETVuLarWI1PcKymYaCXW3VHNeEo4bwRIoZd9QdIXhrbWGZrMDZa5MFZNevw11e0mGP0P31+yao2zX3cF1oZHUAIPckM8V0PShafWs9xJHM1yHwdUoCueGGjQ/ZBoszfE3mhLfQBl4c2Gc8tXYU1etIhyeK+GlKLz29yP9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707196405; c=relaxed/simple;
-	bh=Dx6Og2qKBOC9/kdVvY6Nv9dhBbtczwNYqoJh2KK9vQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VVnFCRGl5bgAGBvHETQuV3wFRDuiuCCeNXToZwzyFilfRgY2udM9IbmQBUIaGWAt50QyIYXnbMZf6CNP4a/CZAqOgJB6hmz0MG3U5eIB7kATosDXc7b8RyUtzte97UnkB5GRQslTy0ad579CE6w3+MvX9TD+9X005dPUAWVV9tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VdauWuR6; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Tue, 6 Feb 2024 00:13:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1707196401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M67dP06bznKXKLynj8t19rv2NZMnEI3pdWkIiizmI8g=;
-	b=VdauWuR6rRX/kTjcpWCglj6tRGZomg4I15P8WkjLZyMJhYTFbHhQlv4QODRcKc/vLbyBII
-	AbG/gam9CRZVaM2TvvJ6WrOAJxgTSVHdKSjLFgzT9Qe1fQV7C9O5a0ecXElwHBsLtbp2UI
-	LDFouBB4MGbZuYM/hLSKuGP8rbON4aE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, dsterba@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH 4/6] fs: FS_IOC_GETSYSFSNAME
-Message-ID: <bhxmfqyqjkpjtxhyj2w2pnzbx2whnc2qurg2fcjpphuli2lyzc@bea4fzncsnhc>
-References: <20240205200529.546646-1-kent.overstreet@linux.dev>
- <20240205200529.546646-5-kent.overstreet@linux.dev>
- <20240205222732.GO616564@frogsfrogsfrogs>
- <7si54ajkdqbauf2w64xnzfdglkokifgsjptmkxwdhgymxpk353@zf6nfn53manb>
- <20240206013931.GK355@twin.jikos.cz>
- <ca885dd8-4ac1-43a9-9b0c-79b63cae0620@infradead.org>
- <xutnab3bbeeyp7gq2wwy36lus275d5tapdclmcg5sl7bfngo6a@ek5u4ja56gut>
- <20240206050853.GQ616564@frogsfrogsfrogs>
+	s=arc-20240116; t=1707197063; c=relaxed/simple;
+	bh=89Mh0CMhsjSzkeY9ielS7vk2zt3NkjXa/EV+YenbvvQ=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=d3NFuqNZMFVolTQ3s9NKgjmH0CrWJ/vWVxaE6VisaBRhk7+aTbzmOoDZQkjmAeVfe7ScperSkTh90D0LPeVaLuB+4cZk39sQZ2ZyqIN0lbwakpDmzb5omgryncR18HdT/bBIS9VMoUaX+COltftJGrxF0bQdkSC8MOJL8BQXB5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFwpM/vD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E437C433F1;
+	Tue,  6 Feb 2024 05:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707197062;
+	bh=89Mh0CMhsjSzkeY9ielS7vk2zt3NkjXa/EV+YenbvvQ=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+	b=lFwpM/vD3gAEVGPQ9Wc8ETyNKRt23sC721jmdj4/aqDwD1GsiTzJvogfAEgs4MpCK
+	 Vw1V98Hm9PQ2AKkvRpfyG2yE0Ixl+N7yj9mTEkq4PoUQyylDwOW7Cz3lmQcgT+lgx5
+	 aAmc+kBHS18eACiwDBfG0QU/4TnKMfOZVvV/YduiYRk02QF7iOP5qIHrAYmMDDGCDR
+	 98f4zybi6+6Mts9Fwu1eKu1GrsYEAWIr3xSWFsuAeAGv0gn12cQJDZRAcicPT6mBf3
+	 eMGIjj0KxC7QuGcKpEcFKe9FGPXxn4NtezR0TDlzDB5nxSu7vpkptk83kBUBtScOtD
+	 4Uwu7HO/bOihg==
+References: <20240205222011.95476-1-catherine.hoang@oracle.com>
+User-agent: mu4e 1.10.8; emacs 27.1
+From: Chandan Babu R <chandanbabu@kernel.org>
+To: Catherine Hoang <catherine.hoang@oracle.com>
+Cc: linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 6.6 CANDIDATE v2 00/21] xfs backports for 6.6.y (from v6.7)
+Date: Tue, 06 Feb 2024 10:53:13 +0530
+In-reply-to: <20240205222011.95476-1-catherine.hoang@oracle.com>
+Message-ID: <87h6im9ncs.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240206050853.GQ616564@frogsfrogsfrogs>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On Mon, Feb 05, 2024 at 09:08:53PM -0800, Darrick J. Wong wrote:
-> On Mon, Feb 05, 2024 at 11:33:11PM -0500, Kent Overstreet wrote:
-> > On Mon, Feb 05, 2024 at 08:20:10PM -0800, Randy Dunlap wrote:
-> > > 
-> > > 
-> > > On 2/5/24 17:39, David Sterba wrote:
-> > > > On Mon, Feb 05, 2024 at 05:43:37PM -0500, Kent Overstreet wrote:
-> > > >> On Mon, Feb 05, 2024 at 02:27:32PM -0800, Darrick J. Wong wrote:
-> > > >>> On Mon, Feb 05, 2024 at 03:05:15PM -0500, Kent Overstreet wrote:
-> > > >>>> @@ -231,6 +235,7 @@ struct fsxattr {
-> > > >>>>  #define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
-> > > >>>>  #define FS_IOC_GETFSUUID		_IOR(0x94, 51, struct fsuuid2)
-> > > >>>>  #define FS_IOC_SETFSUUID		_IOW(0x94, 52, struct fsuuid2)
-> > > >>>> +#define FS_IOC_GETFSSYSFSNAME		_IOR(0x94, 53, struct fssysfsname)
-> > > >>>
-> > > >>> 0x94 is btrfs, don't add things to their "name" space.
-> > > >>
-> > > >> Can we please document this somewhere!?
-> > > >>
-> > > >> What, dare I ask, is the "namespace" I should be using?
-> > > > 
-> > > > Grep for _IOCTL_MAGIC in include/uapi:
-> > > > 
-> > > > uapi/linux/aspeed-lpc-ctrl.h:#define __ASPEED_LPC_CTRL_IOCTL_MAGIC 0xb2
-> > > > uapi/linux/aspeed-p2a-ctrl.h:#define __ASPEED_P2A_CTRL_IOCTL_MAGIC 0xb3
-> > > > uapi/linux/bt-bmc.h:#define __BT_BMC_IOCTL_MAGIC        0xb1
-> > > > uapi/linux/btrfs.h:#define BTRFS_IOCTL_MAGIC 0x94
-> > > > uapi/linux/f2fs.h:#define F2FS_IOCTL_MAGIC              0xf5
-> > > > uapi/linux/ipmi_bmc.h:#define __IPMI_BMC_IOCTL_MAGIC        0xB1
-> > > > uapi/linux/pfrut.h:#define PFRUT_IOCTL_MAGIC 0xEE
-> > > > uapi/rdma/rdma_user_ioctl.h:#define IB_IOCTL_MAGIC RDMA_IOCTL_MAGIC
-> > > > uapi/rdma/rdma_user_ioctl_cmds.h:#define RDMA_IOCTL_MAGIC       0x1b
-> > > > 
-> > > > The label ioctls inherited the 0x94 namespace for backward
-> > > > compatibility but as already said, it's the private namespace of btrfs.
-> > > > 
-> > > 
-> > > or more generally, see Documentation/userspace-api/ioctl/ioctl-number.rst.
-> > > 
-> > > For 0x94, it says:
-> > > 
-> > > 0x94  all    fs/btrfs/ioctl.h                                        Btrfs filesystem
-> > >              and linux/fs.h                                          some lifted to vfs/generic
-> > 
-> > You guys keep giving the same info over and over again, instead of
-> > anything that would be actually helpful...
-> > 
-> > Does anyone know what the proper "namespace" is for new VFS level
-> > ioctls?
-> > 
-> > ...Anyone?
-> 
-> I propose you use 0x15 (NAK) and add it to the Documentation/ as the
-> official VFS ioctl namespace. ;)
+On Mon, Feb 05, 2024 at 02:19:50 PM -0800, Catherine Hoang wrote:
+> Hi all,
+>
+> This series contains backports for 6.6 from the 6.7 release. Tested on 30
+> runs of kdevops with the following configurations:
+>
+> 1. CRC
+> 2. No CRC (512 and 4k block size)
+> 3. Reflink (1k and 4k block size)
+> 4. Reflink without rmapbt
+> 5. External log device
+>
 
-Done!
+Looks good to me.
+
+Acked-by: Chandan Babu R <chandanbabu@kernel.org>
+
+> Changes from v1:
+> - add "MAINTAINERS: add Catherine as xfs maintainer for 6.6.y"
+>
+> Anthony Iliopoulos (1):
+>   xfs: fix again select in kconfig XFS_ONLINE_SCRUB_STATS
+>
+> Catherine Hoang (2):
+>   MAINTAINERS: add Catherine as xfs maintainer for 6.6.y
+>   xfs: allow read IO and FICLONE to run concurrently
+>
+> Cheng Lin (1):
+>   xfs: introduce protection for drop nlink
+>
+> Christoph Hellwig (4):
+>   xfs: handle nimaps=0 from xfs_bmapi_write in xfs_alloc_file_space
+>   xfs: only remap the written blocks in xfs_reflink_end_cow_extent
+>   xfs: clean up FS_XFLAG_REALTIME handling in xfs_ioctl_setattr_xflags
+>   xfs: respect the stable writes flag on the RT device
+>
+> Darrick J. Wong (8):
+>   xfs: bump max fsgeom struct version
+>   xfs: hoist freeing of rt data fork extent mappings
+>   xfs: prevent rt growfs when quota is enabled
+>   xfs: rt stubs should return negative errnos when rt disabled
+>   xfs: fix units conversion error in xfs_bmap_del_extent_delay
+>   xfs: make sure maxlen is still congruent with prod when rounding down
+>   xfs: clean up dqblk extraction
+>   xfs: dquot recovery does not validate the recovered dquot
+>
+> Dave Chinner (1):
+>   xfs: inode recovery does not validate the recovered inode
+>
+> Leah Rumancik (1):
+>   xfs: up(ic_sema) if flushing data device fails
+>
+> Long Li (2):
+>   xfs: factor out xfs_defer_pending_abort
+>   xfs: abort intent items when recovery intents fail
+>
+> Omar Sandoval (1):
+>   xfs: fix internal error from AGFL exhaustion
+>
+>  MAINTAINERS                     |  1 +
+>  fs/xfs/Kconfig                  |  2 +-
+>  fs/xfs/libxfs/xfs_alloc.c       | 27 ++++++++++++--
+>  fs/xfs/libxfs/xfs_bmap.c        | 21 +++--------
+>  fs/xfs/libxfs/xfs_defer.c       | 28 +++++++++------
+>  fs/xfs/libxfs/xfs_defer.h       |  2 +-
+>  fs/xfs/libxfs/xfs_inode_buf.c   |  3 ++
+>  fs/xfs/libxfs/xfs_rtbitmap.c    | 33 +++++++++++++++++
+>  fs/xfs/libxfs/xfs_sb.h          |  2 +-
+>  fs/xfs/xfs_bmap_util.c          | 24 +++++++------
+>  fs/xfs/xfs_dquot.c              |  5 +--
+>  fs/xfs/xfs_dquot_item_recover.c | 21 +++++++++--
+>  fs/xfs/xfs_file.c               | 63 ++++++++++++++++++++++++++-------
+>  fs/xfs/xfs_inode.c              | 24 +++++++++++++
+>  fs/xfs/xfs_inode.h              | 17 +++++++++
+>  fs/xfs/xfs_inode_item_recover.c | 14 +++++++-
+>  fs/xfs/xfs_ioctl.c              | 30 ++++++++++------
+>  fs/xfs/xfs_iops.c               |  7 ++++
+>  fs/xfs/xfs_log.c                | 23 ++++++------
+>  fs/xfs/xfs_log_recover.c        |  2 +-
+>  fs/xfs/xfs_reflink.c            |  5 +++
+>  fs/xfs/xfs_rtalloc.c            | 33 +++++++++++++----
+>  fs/xfs/xfs_rtalloc.h            | 27 ++++++++------
+>  23 files changed, 312 insertions(+), 102 deletions(-)
+
+
+-- 
+Chandan
 
