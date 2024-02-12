@@ -1,78 +1,79 @@
-Return-Path: <linux-xfs+bounces-3692-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-3695-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8E92851A87
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Feb 2024 18:02:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8B44851A8A
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Feb 2024 18:02:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1FA0BB23C73
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Feb 2024 17:02:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7441A288080
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Feb 2024 17:02:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 244E541202;
-	Mon, 12 Feb 2024 17:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E5BD4174F;
+	Mon, 12 Feb 2024 17:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JgW9LGCn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hk4cq2CS"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5362941775
-	for <linux-xfs@vger.kernel.org>; Mon, 12 Feb 2024 17:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C6E45945
+	for <linux-xfs@vger.kernel.org>; Mon, 12 Feb 2024 17:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707757228; cv=none; b=Xe+ZU/SBsLPLUTby7U0kcWl+FJjPr0tD4z+Iii1/jTTvh6KT5Us5r0acoYEdCKrUrWRK6VGXPn5OphRbw2fQAFB1tdCmM9tRKSI9F5uVIkeDPwOeeflpb+/Ek9p4IGpwDDiWL1HXaJIEDapTP3t0o7pTYogWLgAFHeBsCOnyNbM=
+	t=1707757230; cv=none; b=ructvGIov9TnTBIDpVtpqKuJ76/4k5i7zGLExAixjiVa4hNqxHfZiO+OttSotXttmv/yGjB5oP1OlDqr4XG8m0ve+68OiF1wXPmUU/JR5rRuKu0WngOnIL/CTq8APxjY3I8tDx84ExpSD/Yrjq9/A+e+1bFH1rCYciFYbujEVI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707757228; c=relaxed/simple;
-	bh=QdzJQ1kBU4GhtNmWFv/v5q2u9OPK6bqQ8YoEEN+UHm4=;
+	s=arc-20240116; t=1707757230; c=relaxed/simple;
+	bh=3huMSuptuBha2CwG1y0/SfdkyV9jIivWktDsQLKbc70=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GvJolZ8TbCE0Djd3ihPIF5CadxCrJ340jfaTNTZJwSQULJz2vz38UharhGwGqMXcFjy80eb4PO91S82/YbI285CS1ncIAy2Khtq/zls58AUiABVVaInf78XLLS3W8gBhe27L23c3FikG1nK6Rg+/qVf2ai8FhyvY9qG5Eaet6VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JgW9LGCn; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=PqyHRRy99q5xmMPmP4pzFDpaqb8gpV5GX08J0Dw0BenZRlDO2/VsIawV88oI2oGBy32Jg/YV8zxeNH9dnv611PybfJv6GlPmLGaM4cQWF+3ib0gts+DFSKxxJPSZqm2VzdbRCpMbaq1a4ubwd4ZsyztCPfgek8HC5ZuW37A14bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hk4cq2CS; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707757226;
+	s=mimecast20190719; t=1707757227;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CCVu6C3sA7ElU4nB0aYXUKm+yvCdjGTpJNzXHRX3ZOA=;
-	b=JgW9LGCnZDiFFS+5oFXz9kfjQzIUQJlFgpFprnFoUh7qloSO3DWO+vVsjDZ99Y3Iah/GLF
-	aeW8/qrUhC1mWLwBVqNdT0wdk91++mzg6Ojs4xaPu2QQClZ5YwrAU0l7fD1U3HKBosmQn+
-	xuGxd0ns4RYoiXM3ns/CadIJ4DQ+YPI=
+	bh=O/7GvRpwmqndoF+ccNvwmWywMN3/sSl/624LXUp5jis=;
+	b=Hk4cq2CSlOy6a2/vfb3Av9fU+RSWtD8IGDCXD3O8UKG6N7GzFexOXv43IHIWLSaXQV5AeD
+	Q2TCUyl4cqDtcipDJ8rNJZVci9Ng0aEwmYNVwSDHwVQRs6ZymZzaDsCEey+xOjv/RjSMmv
+	C96pq+F9sXTeglX09n1hX7/HV0HTDTA=
 Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
  [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-e6_y9y2YO_WEX7yAEBp6rw-1; Mon, 12 Feb 2024 12:00:24 -0500
-X-MC-Unique: e6_y9y2YO_WEX7yAEBp6rw-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56001d4c9c8so2107868a12.0
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Feb 2024 09:00:24 -0800 (PST)
+ us-mta-36-66rEke76PoqvAHPqIoOtXw-1; Mon, 12 Feb 2024 12:00:25 -0500
+X-MC-Unique: 66rEke76PoqvAHPqIoOtXw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-55fc415b15aso3642192a12.0
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Feb 2024 09:00:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707757223; x=1708362023;
+        d=1e100.net; s=20230601; t=1707757224; x=1708362024;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CCVu6C3sA7ElU4nB0aYXUKm+yvCdjGTpJNzXHRX3ZOA=;
-        b=QanXXI2h/8E0/WoYsCqXa1lPoP2DB70yu4ZteHoHS5ICOTfTwlP8bYFeY9WlZUZ77j
-         WmyJcaTb5v8TBVem9U5t4g3KlA0E4zqpRBFbP3wjVd6cZghJExiw/knVrs8/gaLq7C0c
-         mPFdAA9rXs2A4e5meK1J1Myxxehr7JhXcRQdVOMC9SNQQ/za9BdmrcyURuJFM2LWgoXj
-         ih4lSLkpXzVj2HYw3FKI2NZyG4lOffyUuhBbVMMrbqYOinoKW8liZO33dCfXxWTi1UJV
-         K75IEUvV/MM3hw5Z9opqMOvP2JFr2iTyZgtjJe3+vqJofisuWjLnILEhpOLdPMMLsMUH
-         82rQ==
-X-Gm-Message-State: AOJu0Yw7zfil8a2uOgoSQ7/Qqg2T6iC87GDxtw0teylyGiJOcPeqGYnA
-	iDQ6xa3gmh4k6gBZyx+ok1zUeXGbZa0FZDtrk7/4QwEJLwuK127JyKu1xnkshC7knpNOVweWtRx
-	1Fe5Dfct2qmwl9mo9Il3K+O/2xIjhcfg7sRoGxO/vOQzoLKv34aUyYwRR
-X-Received: by 2002:a50:fa86:0:b0:55f:fd61:b08f with SMTP id w6-20020a50fa86000000b0055ffd61b08fmr5444430edr.4.1707757223185;
-        Mon, 12 Feb 2024 09:00:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGX4QsV2jwPgEK3ppOb+fAmuTGxzi5pj46ICsgxsM5V1RWud/SUlTZ9QaiHLZpC1sd63X9YYw==
-X-Received: by 2002:a50:fa86:0:b0:55f:fd61:b08f with SMTP id w6-20020a50fa86000000b0055ffd61b08fmr5444416edr.4.1707757223016;
-        Mon, 12 Feb 2024 09:00:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVbixGwNn2/iQes+rCvgVp/F3RjBSehosjFCAIvdLXWSMONtUscMUhdVZvz2ojDIXeQtTNHdhZ8OVZwgnN/hd7k6GmI5Ryp54qW3fmznAn2ASgRznKnI1XzfIgGrVB3dwYWfYVzmpZ0hy2OW2vDHkBCu2jmZU1UIQXfV1xRLXQkWg38QoXASDkPImLM3obGk9jg3wyKszAXbZUxea+dMcCgzt2VQyuH8wp/
+        bh=O/7GvRpwmqndoF+ccNvwmWywMN3/sSl/624LXUp5jis=;
+        b=DtPxthUvaH29X6BWSdJDqqMLAGSJSqTxvPP+imBSat8dHUUrF7iqe9KA+JZZngokSw
+         /AsY6qgjbmPfwC242jAA5Bu/uevkg9qeUYvQrozO+13G+7rh/2aDRPXbt02DU04KxEaw
+         kn1uzLWGfAA3SRR2ZAkFXeDrF0cOKseHkk1odAbcu/CM3DDzr5Sra+LOiaD3iTSVlExU
+         Cnk0IwjO5MC3pJkOuCVS+1SLXuEzXr4YqgWPJ3pvkKPZOfqCPiR98UwBKjtagKy0w/Yc
+         MNCMk/5Kd/3tYShDuEggwmA2jUI017/k1OtQstiZYodsoYGI7rCVQ0/TZBLSS8bIKXku
+         2gug==
+X-Forwarded-Encrypted: i=1; AJvYcCVHlgf+I8hFzPXkzqd0kis/tnU6yZ3SBuX+Dd1+7Adt8CgYxH3D/sIjvfsiae09XTMxp7nHAeuV5ety8nEc8py03iIwjySBtVaO
+X-Gm-Message-State: AOJu0Yy8TEhd6721RAZLrJ8rG7lN7egzpZ1q7Ft3LjetMfmgFgZqCYBx
+	26av6iYNyi+uzqTMGeubHplpYwBjZXI6hdfqjIFZqFbiBNZWSaSi2BITwQLN6P1S+NuRr1N+GEq
+	yNzpu6iRAHnpVgvZCdjMwFFlXJM3SAv3dxYIUQAvE5NaMl9Kj4QpNRVGd
+X-Received: by 2002:a05:6402:2405:b0:55f:cc6d:29b5 with SMTP id t5-20020a056402240500b0055fcc6d29b5mr52470eda.21.1707757224284;
+        Mon, 12 Feb 2024 09:00:24 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH42HIFL/dxKgR7EyOrBhc7xXCpi26qG+Fua//JDh3CFnZGhulP1ThwFDEDHGR3MncapDV1sg==
+X-Received: by 2002:a05:6402:2405:b0:55f:cc6d:29b5 with SMTP id t5-20020a056402240500b0055fcc6d29b5mr52460eda.21.1707757224085;
+        Mon, 12 Feb 2024 09:00:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUY6g9lFbfToZ6KmsvUog3OF70TqTeRgGoC22qmpr2jCPKLvbuFVjIq05EHMUe49MvRMFzVuy29Mh6GJIT6KrIM8cjQ7qF2q5tZa1yNTy1oj9j/AInK7bE+csVY6aVl+btLiGQ+1+sPxkGqT/bsGmYuD94elGcJQZvp0Mbu/COh91A4Guz98UtLS/1F6UUbm+YLFurg6FjBkxzzLYFk5j8Y18gMWHLOeKMK
 Received: from thinky.redhat.com ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id 14-20020a0564021f4e00b0056176e95a88sm2620261edz.32.2024.02.12.09.00.21
+        by smtp.gmail.com with ESMTPSA id 14-20020a0564021f4e00b0056176e95a88sm2620261edz.32.2024.02.12.09.00.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 09:00:22 -0800 (PST)
+        Mon, 12 Feb 2024 09:00:23 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 To: fsverity@lists.linux.dev,
 	linux-xfs@vger.kernel.org,
@@ -81,9 +82,9 @@ To: fsverity@lists.linux.dev,
 	djwong@kernel.org,
 	ebiggers@kernel.org
 Cc: Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH v4 23/25] xfs: make scrub aware of verity dinode flag
-Date: Mon, 12 Feb 2024 17:58:20 +0100
-Message-Id: <20240212165821.1901300-24-aalbersh@redhat.com>
+Subject: [PATCH v4 24/25] xfs: add fs-verity ioctls
+Date: Mon, 12 Feb 2024 17:58:21 +0100
+Message-Id: <20240212165821.1901300-25-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240212165821.1901300-1-aalbersh@redhat.com>
 References: <20240212165821.1901300-1-aalbersh@redhat.com>
@@ -95,28 +96,49 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-fs-verity adds new inode flag which causes scrub to fail as it is
-not yet known.
+Add fs-verity ioctls to enable, dump metadata (descriptor and Merkle
+tree pages) and obtain file's digest.
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/attr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_ioctl.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index 9a1f59f7b5a4..ae4227cb55ec 100644
---- a/fs/xfs/scrub/attr.c
-+++ b/fs/xfs/scrub/attr.c
-@@ -494,7 +494,7 @@ xchk_xattr_rec(
- 	/* Retrieve the entry and check it. */
- 	hash = be32_to_cpu(ent->hashval);
- 	badflags = ~(XFS_ATTR_LOCAL | XFS_ATTR_ROOT | XFS_ATTR_SECURE |
--			XFS_ATTR_INCOMPLETE | XFS_ATTR_PARENT);
-+			XFS_ATTR_INCOMPLETE | XFS_ATTR_PARENT | XFS_ATTR_VERITY);
- 	if ((ent->flags & badflags) != 0)
- 		xchk_da_set_corrupt(ds, level);
- 	if (ent->flags & XFS_ATTR_LOCAL) {
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 048d83acda0a..5d64e11bf056 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -43,6 +43,7 @@
+ #include <linux/mount.h>
+ #include <linux/namei.h>
+ #include <linux/fileattr.h>
++#include <linux/fsverity.h>
+ 
+ /*
+  * xfs_find_handle maps from userspace xfs_fsop_handlereq structure to
+@@ -2174,6 +2175,22 @@ xfs_file_ioctl(
+ 		return error;
+ 	}
+ 
++	case FS_IOC_ENABLE_VERITY:
++		if (!xfs_has_verity(mp))
++			return -EOPNOTSUPP;
++		return fsverity_ioctl_enable(filp, (const void __user *)arg);
++
++	case FS_IOC_MEASURE_VERITY:
++		if (!xfs_has_verity(mp))
++			return -EOPNOTSUPP;
++		return fsverity_ioctl_measure(filp, (void __user *)arg);
++
++	case FS_IOC_READ_VERITY_METADATA:
++		if (!xfs_has_verity(mp))
++			return -EOPNOTSUPP;
++		return fsverity_ioctl_read_metadata(filp,
++						    (const void __user *)arg);
++
+ 	default:
+ 		return -ENOTTY;
+ 	}
 -- 
 2.42.0
 
