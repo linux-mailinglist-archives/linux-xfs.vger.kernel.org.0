@@ -1,154 +1,111 @@
-Return-Path: <linux-xfs+bounces-3928-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-3930-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD76E856678
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Feb 2024 15:48:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9544B856AB6
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Feb 2024 18:16:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BC0728B8DE
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Feb 2024 14:48:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51E6B28B554
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Feb 2024 17:16:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8064B134CDF;
-	Thu, 15 Feb 2024 14:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FA8E136675;
+	Thu, 15 Feb 2024 17:16:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ENsTjpMx"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J2x03zKk"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03521332A3;
-	Thu, 15 Feb 2024 14:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7655213399E;
+	Thu, 15 Feb 2024 17:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708008406; cv=none; b=nhxdkOII6Cqq0Y7ojeIXW6k3zJXYWI1yioPRKP2g8OIOWfAvmzAgulMyjh6rqZLfjM5bO7KB9PbVZSer00DiGCSsIPJPCPzzYmng8u5oSrsH2Y1TjLCd5a1aS1xuIqWNQvqUFnbySnaPULcB1s46R9wnzFNivSQR3VxDz432P9c=
+	t=1708017382; cv=none; b=qXfrtBuIeRHwoAOl0+ZDRI8VnYDG4bxrTfhdDB5b24LxwL4p0+KFtZ3LpA0Gr4+xXw6Duv+SwYCLH9RqxcaeFQJqcyLerZz2v86+L9Qs2xz0KJV/4P8yXy/2RIC41eNePxrfWApPCJeXy6VHHkgGAqR5lbglxpzywkVWk0JCogY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708008406; c=relaxed/simple;
-	bh=5LHEXykJS2jSVE2sCzHC5a4cdCFsRj5a/HPr77qf3tA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rKzoFS3MRSeTMf9OfIgfcuntynBmB6FPdxIWonmKPryybJ9sxB3JQx6HW0h1cfZrZW/Qb2YrpoKQAFka+k4iEnzxZGbu++ub+2Wg5Kp5p0uuscIZVRqqrII0ZMpqs0YY+WEGnbuXJfEFS4qaXrrW+9G3VhuDKNQBR4CRnSuIBDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=ENsTjpMx; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1708008402;
-	bh=5LHEXykJS2jSVE2sCzHC5a4cdCFsRj5a/HPr77qf3tA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ENsTjpMxLU1wLGqd749X/HFQGZd/c3vnn8cNkbklbkw6Pg6ZW7i6kFn81cmiMnX3+
-	 AbjNIOQ8Du3bNfmEJ8ZLtHAEh0KN98NHRKAqLepXYe1cfaCpmfcsbCNtihbA+rngpk
-	 gdKdOKG+DbN5qVXdiKBMVZ7wpzDIjNSoxyh+Vd42SjLriNTZtWbYCMLCt7u6Qn1nmu
-	 FRcBlkrrjkJK8qAxMZJRIWdmbiie8ckjCZ+DVLtUMi93fbaISmkA9HGWfDx1wJBAES
-	 AWp7GQO12TcvOlhqO1bgojD2BVkaufnnQiT6uu4SauxatVT43b1st5JzJmJMrUSf6v
-	 pZsOUVUzt8qNA==
-Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TbHvQ3nTxzZPr;
-	Thu, 15 Feb 2024 09:46:42 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dave Chinner <david@fromorbit.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arch@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-xfs@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	nvdimm@lists.linux.dev,
-	linux-s390@vger.kernel.org
-Subject: [PATCH v6 9/9] dax: Fix incorrect list of data cache aliasing architectures
-Date: Thu, 15 Feb 2024 09:46:33 -0500
-Message-Id: <20240215144633.96437-10-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240215144633.96437-1-mathieu.desnoyers@efficios.com>
-References: <20240215144633.96437-1-mathieu.desnoyers@efficios.com>
+	s=arc-20240116; t=1708017382; c=relaxed/simple;
+	bh=VbPhq+uqtD0wh4xdtcIH/nBhQoxzNU7yJP6GxEcdnl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uBC2rbHII/F7BYdvcvSjegEaU9c9LxqiTI0Q4S8jRYrqW4Q0rjka0C4XMDXX/W8vuR6SdDURmNemsTUxvUoQs9v7SDwVCaG6+yzWtlMFMiXN3P6GXm4FfIbNx/WH0GXK95y+WzAqk8Tf7ufR10M0DhQh57g9ku/ts7FZIczCuL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=J2x03zKk; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mjtUPw1XtkanAX7DpRAs9DDb/3wQHhRms0qJ3CAstOs=; b=J2x03zKk8Y+WdwlkSSOo+8lrTP
+	efYt8Aiiw9DGvVxvI3y+UnVYRl4YGh0t0HCkhDsj0sGaRN1YgEnkCTT5GPlOGMM5Btifb8rSwpoqo
+	tzL5CEAHxfdC+Ot7PdSGLya0iNNK68dM1H3nDUzIZSyqET1uVyQjm/NkuviJbeZMhxOuMH5j0Z6xo
+	Yi6ODLJbMvDUqDyUftlDBOWbVbKEPFVzPe6BIU49KLlkuHqOC3hlzF8YZwiH49JZZ6cKHY9q2H8Y2
+	zRIqlXkIDMDbMQkhwRcx574gUc+VrTG6wHbC7scOevJ2RcFM7gHZlHlB5DAwhq3QCENztXL/zB08U
+	F40o9u6w==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rafLM-0000000H8gW-48qU;
+	Thu, 15 Feb 2024 17:16:16 +0000
+Date: Thu, 15 Feb 2024 09:16:16 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Hugh Dickins <hughd@google.com>, Jan Kara <jack@suse.cz>,
+	Christian Brauner <brauner@kernel.org>, zlang@redhat.com,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Daniel Gomez <da.gomez@samsung.com>, linux-mm@kvack.org,
+	xfs <linux-xfs@vger.kernel.org>,
+	Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>, kdevops@lists.linux.dev
+Subject: Re: mm/truncate.c:669 VM_BUG_ON_FOLIO() - hit on XFS on different
+ tests
+Message-ID: <Zc5G4PcKcQKCB54E@bombadil.infradead.org>
+References: <ZXObKBfw/0bcRQNr@bombadil.infradead.org>
+ <ZXQAgFl8WGr2pK7R@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXQAgFl8WGr2pK7R@casper.infradead.org>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-commit d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-prevents DAX from building on architectures with virtually aliased
-dcache with:
+On Sat, Dec 09, 2023 at 05:52:00AM +0000, Matthew Wilcox wrote:
+> On Fri, Dec 08, 2023 at 02:39:36PM -0800, Luis Chamberlain wrote:
+> > Commit aa5b9178c0190 ("mm: invalidation check mapping before folio_contains")
+> > added on v6.6-rc1 moved the VM_BUG_ON_FOLIO() on invalidate_inode_pages2_range()
+> > after the truncation check.
+> > 
+> > We managed to hit this VM_BUG_ON_FOLIO() a few times on v6.6-rc5 with a slew
+> > of fstsets tests on kdevops [0] on the following XFS config as defined by
+> > kdevops XFS's configurations [1] for XFS with the following failure rates
+> > annotated:
+> > 
+> >   * xfs_reflink_4k: F:1/278 - one out of 278 times
+> >     - generic/451: (trace pasted below after running test over 17 hours)
+> >   * xfs_nocrc_4k: F:1/1604 - one ou tof 1604 times
+> >      - generic/451: https://gist.github.com/mcgrof/2c40a14979ceeb7321d2234a525c32a6
+> > 
+> > To be clear F:1/1604 means you can run the test in a loop and on test number
+> > about 1604 you may run into the bug. It would seem Zorro had hit also
+> > with a 64k directory size (mkfs.xfs -n size=65536) on v5.19-rc2, so prior 
+> > to Hugh's move of the VM_BUG_ON_FOLIO() while testing generic/132 [0].
+> > 
+> > My hope is that this could help those interested in reproducing, to
+> > spawn up kdevops and just run the test in a loop in the same way.
+> > Likewise, if you have a fix to test we can test it as well, but it will
+> > take a while as we want to run the test in a loop over and over many
+> > times.
+> 
+> I'm pretty sure this is the same problem recently diagnosed by Charan.
+> It's terribly rare, so it'll take a while to find out.  Try the attached
+> patch?
 
-  depends on !(ARM || MIPS || SPARC)
+Confirmed, at least v6.8-rc2 no longer as this as the commit
+fc346d0a70a1 ("mm: migrate high-order folios in swap cache correctly")
+was merged as of v6.7-rc8. I ran the test 400 times in a loop.
 
-This check is too broad (e.g. recent ARMv7 don't have virtually aliased
-dcaches), and also misses many other architectures with virtually
-aliased data cache.
+I'll remove this now from the expunges on kdevops for v6.8-rc2 baseline.
 
-This is a regression introduced in the v4.0 Linux kernel where the
-dax mount option is removed for 32-bit ARMv7 boards which have no data
-cache aliasing, and therefore should work fine with FS_DAX.
-
-This was turned into the following check in alloc_dax() by a preparatory
-change:
-
-        if (ops && (IS_ENABLED(CONFIG_ARM) ||
-            IS_ENABLED(CONFIG_MIPS) ||
-            IS_ENABLED(CONFIG_SPARC)))
-                return NULL;
-
-Use cpu_dcache_is_aliasing() instead to figure out whether the environment
-has aliasing data caches.
-
-Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-xfs@vger.kernel.org
-Cc: dm-devel@lists.linux.dev
-Cc: nvdimm@lists.linux.dev
----
- drivers/dax/super.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index ce5bffa86bba..a21a7c262382 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -13,6 +13,7 @@
- #include <linux/uio.h>
- #include <linux/dax.h>
- #include <linux/fs.h>
-+#include <linux/cacheinfo.h>
- #include "dax-private.h"
- 
- /**
-@@ -455,9 +456,7 @@ struct dax_device *alloc_dax(void *private, const struct dax_operations *ops)
- 	 * except for device-dax (NULL operations pointer), which does
- 	 * not use aliased mappings from the kernel.
- 	 */
--	if (ops && (IS_ENABLED(CONFIG_ARM) ||
--	    IS_ENABLED(CONFIG_MIPS) ||
--	    IS_ENABLED(CONFIG_SPARC)))
-+	if (ops && cpu_dcache_is_aliasing())
- 		return ERR_PTR(-EOPNOTSUPP);
- 
- 	if (WARN_ON_ONCE(ops && !ops->zero_page_range))
--- 
-2.39.2
-
+  Luis
 
