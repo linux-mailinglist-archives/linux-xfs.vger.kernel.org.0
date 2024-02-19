@@ -1,58 +1,58 @@
-Return-Path: <linux-xfs+bounces-3990-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-3987-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9486285A7AC
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Feb 2024 16:42:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FBEC85A7A8
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Feb 2024 16:42:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0B2BCB24732
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Feb 2024 15:42:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36E17284D7A
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Feb 2024 15:42:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5908538F9F;
-	Mon, 19 Feb 2024 15:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2A2A3C463;
+	Mon, 19 Feb 2024 15:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vpKQ7I4q"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R7EmV+06"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F8C3C46F
-	for <linux-xfs@vger.kernel.org>; Mon, 19 Feb 2024 15:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B873C49E
+	for <linux-xfs@vger.kernel.org>; Mon, 19 Feb 2024 15:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708357288; cv=none; b=E6UDhh5wq7LZuGSfNV8T/6ZBQhAW79nDSDCO+yXSisdFyEX01U95U+l7GC1AcpI21XoEsajd+fMAJ97B6DyQJMFCjSeEQWrLTIelA9FcKtoTUV268oNhkDv6J8jvimtEwzEJSUOuijZ609D8DiqGWFV9QqhcpiP5o+kUyv9a2Tc=
+	t=1708357284; cv=none; b=aBNxJCVGZQC+0/Xl5tXv2gBKe+YhDai2iSuWqulwaFjt+PT0w8eo+VjsXkDEZz31X9eyMUl4LWyxrvBL9K5oDgyB8oqnfjebAiep57KFR99Jx8g/zbj2gD4k2gUGDEpiEGuNkwxOP1TIqcb/4+mfjexCqRnTo6pBO3cLrRWQKDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708357288; c=relaxed/simple;
-	bh=kjezjegH0bEskBPLwkLYy3sUPnw52vb/m3GF7tsvhSM=;
+	s=arc-20240116; t=1708357284; c=relaxed/simple;
+	bh=ByJelDI/L0k7ivD9qZyHZAXaA16iaj4/YPoT5rhJSKQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nLVLvrWChdoUNHJU13+dixfB8YtF7oG21sDrcgpayBY8v3Y4aTJ9BZhloUFV2HsrDZFXoJDnexX9P+2YnqqrX1zwxz91bpUKhJlj1GQ5yDXb9kM82N76NTuijeIalyy1rnFl7mXt2LEU95Sq07m8pa8ps3Bsx7K3U+6cRg54sOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vpKQ7I4q; arc=none smtp.client-ip=90.155.50.34
+	 MIME-Version; b=dyawJ2R0s+777w1u/t4homl85Ap/+uPZNfsGTcYmon2DB8s1OE23EwB/8CxqJDXdGlh+O/ezPPj94+Tal0U6RuuzKq/fIuufUDh5kHLad8krKZWiykCpiJsBzDrT74D3rDyBHCOgOQ6JiE/CSIoRpYuAhAgjj6vgasP+HYlp2iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R7EmV+06; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-Type:Content-ID:Content-Description;
-	bh=/sjtukwbPIpQ61d1l+W3tfcfqlCJlYDYvgB+kfF6dEg=; b=vpKQ7I4qCS0dh5Kayj8WiowTsD
-	Gr828TOGi+gWVQo8Y4fvnyjpv/xQp8S+t+Atl26GCngg8Ef0W8v2qS3TphcMeMeF9vrZW0V51I+ev
-	yYU0+8qkaElILixwh9TThLnGWbHC+8Sgh9LdixXskZiUIofo0oTlim0BmqikEAtjCPjvB1m4fadFq
-	Ei7FKGPAODgnX8TSH/PCnn7+uGf2TrTXYng5uX5vCoRIcGUTdQsIoZ9D9u7R64v2DOX+A0UVcTyLt
-	yFPsVuSR8UqY6R6STt34eMiFxaQPovpsAJ7RCRAID68dJi7DKhObDyN5slcbJPHFNdopA+4w5b9OC
-	Knkug8IQ==;
+	bh=TEuomnWWNMxLa5RRpm2MUnjxSVrkyIZgnPa/YSVJEV4=; b=R7EmV+069xhOoctawHTJiaUhis
+	neDYTRTPbwuB0KrXk+AFzgYIwTPbvbQIeUZpaYEdFma4Av+6kNL+pdYBZN10j0XVdO8D5REZ+sugR
+	kLJ3+If8bksyzjcl9SSxg6oqlBLiukkdLebIh1ZCIxoGT+4sjDwVc5Qns4eQr/zkeR+hsed1vPy5Y
+	ZE62R0MHFyIvSjsYNRCZ33LYapmnZX2/+m6tEyt6KxcclO8FAVzBnnEoxpeW1CyROFD5krcmfOaM6
+	8ptvCQlth9BFifMr77/gFEti7OBCeb9S6iBgmnaJbGdy8V3ha9L2IZwhSPTuTFk6OPT9EZnxsef+f
+	DyrEYqtA==;
 Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rc5lg-0000000DA43-3qmm;
-	Mon, 19 Feb 2024 15:41:20 +0000
+	id 1rc5lh-0000000DA48-08WN;
+	Mon, 19 Feb 2024 15:41:21 +0000
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To: Chandan Babu R <chandanbabu@kernel.org>
 Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	linux-xfs@vger.kernel.org,
 	"Darrick J . Wong" <djwong@kernel.org>,
 	Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH v6 2/3] xfs: Replace xfs_isilocked with xfs_assert_ilocked
-Date: Mon, 19 Feb 2024 15:41:12 +0000
-Message-ID: <20240219154115.3136901-3-willy@infradead.org>
+Subject: [PATCH v6 3/3] xfs: Remove mrlock wrapper
+Date: Mon, 19 Feb 2024 15:41:13 +0000
+Message-ID: <20240219154115.3136901-4-willy@infradead.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240219154115.3136901-1-willy@infradead.org>
 References: <20240219154115.3136901-1-willy@infradead.org>
@@ -64,649 +64,243 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To use the new rwsem_assert_held()/rwsem_assert_held_write(), we can't
-use the existing ASSERT macro.  Add a new xfs_assert_ilocked() and
-convert all the callers.
+mrlock was an rwsem wrapper that also recorded whether the lock was
+held for read or write.  Now that we can ask the generic code whether
+the lock is held for read or write, we can remove this wrapper and use
+an rwsem directly.
 
-Fix an apparent bug in xfs_isilocked(): If the caller specifies
-XFS_IOLOCK_EXCL | XFS_ILOCK_EXCL, xfs_assert_ilocked() will check both
-the IOLOCK and the ILOCK are held for write.  xfs_isilocked() only
-checked that the ILOCK was held for write.
-
-xfs_assert_ilocked() is always on, even if DEBUG or XFS_WARN aren't
-defined.  It's a cheap check, so I don't think it's worth defining
-it away.
+As the comment says, we can't use lockdep to assert that the ILOCK is
+held for write, because we might be in a workqueue, and we aren't able
+to tell lockdep that we do in fact own the lock.
 
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/xfs/libxfs/xfs_attr.c        |  2 +-
- fs/xfs/libxfs/xfs_attr_remote.c |  2 +-
- fs/xfs/libxfs/xfs_bmap.c        | 21 +++++-----
- fs/xfs/libxfs/xfs_defer.c       |  2 +-
- fs/xfs/libxfs/xfs_inode_fork.c  |  2 +-
- fs/xfs/libxfs/xfs_rtbitmap.c    |  2 +-
- fs/xfs/libxfs/xfs_trans_inode.c |  6 +--
- fs/xfs/scrub/readdir.c          |  4 +-
- fs/xfs/xfs_attr_list.c          |  2 +-
- fs/xfs/xfs_bmap_util.c          | 10 ++---
- fs/xfs/xfs_dir2_readdir.c       |  2 +-
- fs/xfs/xfs_dquot.c              |  4 +-
- fs/xfs/xfs_file.c               |  4 +-
- fs/xfs/xfs_inode.c              | 68 ++++++++++-----------------------
- fs/xfs/xfs_inode.h              |  2 +-
- fs/xfs/xfs_inode_item.c         |  4 +-
- fs/xfs/xfs_iops.c               |  3 +-
- fs/xfs/xfs_qm.c                 | 10 ++---
- fs/xfs/xfs_reflink.c            |  2 +-
- fs/xfs/xfs_rtalloc.c            |  2 +-
- fs/xfs/xfs_symlink.c            |  2 +-
- fs/xfs/xfs_trans.c              |  2 +-
- fs/xfs/xfs_trans_dquot.c        |  2 +-
- 23 files changed, 65 insertions(+), 95 deletions(-)
+ fs/xfs/mrlock.h    | 78 ----------------------------------------------
+ fs/xfs/xfs_inode.c | 22 +++++++------
+ fs/xfs/xfs_inode.h |  2 +-
+ fs/xfs/xfs_iops.c  |  4 +--
+ fs/xfs/xfs_linux.h |  2 +-
+ fs/xfs/xfs_super.c |  4 +--
+ 6 files changed, 18 insertions(+), 94 deletions(-)
+ delete mode 100644 fs/xfs/mrlock.h
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 82ab559f1da1..673a4b6d2e8d 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -224,7 +224,7 @@ int
- xfs_attr_get_ilocked(
- 	struct xfs_da_args	*args)
- {
--	ASSERT(xfs_isilocked(args->dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(args->dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL);
- 
- 	if (!xfs_inode_hasattr(args->dp))
- 		return -ENOATTR;
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-index d440393b40eb..1c007ebf153a 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.c
-+++ b/fs/xfs/libxfs/xfs_attr_remote.c
-@@ -545,7 +545,7 @@ xfs_attr_rmtval_stale(
- 	struct xfs_buf		*bp;
- 	int			error;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	if (XFS_IS_CORRUPT(mp, map->br_startblock == DELAYSTARTBLOCK) ||
- 	    XFS_IS_CORRUPT(mp, map->br_startblock == HOLESTARTBLOCK))
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index b525524a2da4..68ab22a2a453 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -1189,7 +1189,7 @@ xfs_iread_extents(
- 	if (!xfs_need_iread_extents(ifp))
- 		return 0;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	ir.loaded = 0;
- 	xfs_iext_first(ifp, &ir.icur);
-@@ -3898,7 +3898,7 @@ xfs_bmapi_read(
- 
- 	ASSERT(*nmap >= 1);
- 	ASSERT(!(flags & ~(XFS_BMAPI_ATTRFORK | XFS_BMAPI_ENTIRE)));
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_SHARED|XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL);
- 
- 	if (WARN_ON_ONCE(!ifp))
- 		return -EFSCORRUPTED;
-@@ -4369,7 +4369,7 @@ xfs_bmapi_write(
- 	ASSERT(tp != NULL);
- 	ASSERT(len > 0);
- 	ASSERT(ifp->if_format != XFS_DINODE_FMT_LOCAL);
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(!(flags & XFS_BMAPI_REMAP));
- 
- 	/* zeroing is for currently only for data extents, not metadata */
-@@ -4666,7 +4666,7 @@ xfs_bmapi_remap(
- 	ifp = xfs_ifork_ptr(ip, whichfork);
- 	ASSERT(len > 0);
- 	ASSERT(len <= (xfs_filblks_t)XFS_MAX_BMBT_EXTLEN);
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(!(flags & ~(XFS_BMAPI_ATTRFORK | XFS_BMAPI_PREALLOC |
- 			   XFS_BMAPI_NORMAP)));
- 	ASSERT((flags & (XFS_BMAPI_ATTRFORK | XFS_BMAPI_PREALLOC)) !=
-@@ -5291,7 +5291,7 @@ __xfs_bunmapi(
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(len > 0);
- 	ASSERT(nexts >= 0);
- 
-@@ -5635,8 +5635,7 @@ xfs_bmse_merge(
- 
- 	blockcount = left->br_blockcount + got->br_blockcount;
- 
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_ILOCK_EXCL);
- 	ASSERT(xfs_bmse_can_merge(left, got, shift));
- 
- 	new = *left;
-@@ -5764,7 +5763,7 @@ xfs_bmap_collapse_extents(
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
- 
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL | XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_ILOCK_EXCL);
- 
- 	error = xfs_iread_extents(tp, ip, whichfork);
- 	if (error)
-@@ -5837,7 +5836,7 @@ xfs_bmap_can_insert_extents(
- 	int			is_empty;
- 	int			error = 0;
- 
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL);
- 
- 	if (xfs_is_shutdown(ip->i_mount))
- 		return -EIO;
-@@ -5879,7 +5878,7 @@ xfs_bmap_insert_extents(
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
- 
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL | XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_ILOCK_EXCL);
- 
- 	error = xfs_iread_extents(tp, ip, whichfork);
- 	if (error)
-@@ -6257,7 +6256,7 @@ xfs_bunmapi_range(
- 	xfs_filblks_t		unmap_len = endoff - startoff + 1;
- 	int			error = 0;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	while (unmap_len > 0) {
- 		ASSERT((*tpp)->t_highest_agno == NULLAGNUMBER);
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index 6ed3a5fda081..c13276095cc0 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -1006,7 +1006,7 @@ xfs_defer_ops_capture(
- 	 * transaction.
- 	 */
- 	for (i = 0; i < dfc->dfc_held.dr_inos; i++) {
--		ASSERT(xfs_isilocked(dfc->dfc_held.dr_ip[i], XFS_ILOCK_EXCL));
-+		xfs_assert_ilocked(dfc->dfc_held.dr_ip[i], XFS_ILOCK_EXCL);
- 		ihold(VFS_I(dfc->dfc_held.dr_ip[i]));
- 	}
- 
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 136d5d7b9de9..60758f75182b 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -565,7 +565,7 @@ xfs_iextents_copy(
- 	struct xfs_bmbt_irec	rec;
- 	int64_t			copied = 0;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL | XFS_ILOCK_SHARED));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL | XFS_ILOCK_SHARED);
- 	ASSERT(ifp->if_bytes > 0);
- 
- 	for_each_xfs_iext(ifp, &icur, &rec) {
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
-index e31663cb7b43..1f6e05fc359b 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.c
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.c
-@@ -934,7 +934,7 @@ xfs_rtfree_extent(
- 	struct timespec64	atime;
- 
- 	ASSERT(mp->m_rbmip->i_itemp != NULL);
--	ASSERT(xfs_isilocked(mp->m_rbmip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(mp->m_rbmip, XFS_ILOCK_EXCL);
- 
- 	error = xfs_rtcheck_alloc_range(&args, start, len);
- 	if (error)
-diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-index 70e97ea6eee7..69fc5b981352 100644
---- a/fs/xfs/libxfs/xfs_trans_inode.c
-+++ b/fs/xfs/libxfs/xfs_trans_inode.c
-@@ -31,7 +31,7 @@ xfs_trans_ijoin(
- {
- 	struct xfs_inode_log_item *iip;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	if (ip->i_itemp == NULL)
- 		xfs_inode_item_init(ip, ip->i_mount);
- 	iip = ip->i_itemp;
-@@ -60,7 +60,7 @@ xfs_trans_ichgtime(
- 	struct timespec64	tv;
- 
- 	ASSERT(tp);
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	tv = current_time(inode);
- 
-@@ -90,7 +90,7 @@ xfs_trans_log_inode(
- 	struct inode		*inode = VFS_I(ip);
- 
- 	ASSERT(iip);
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(!xfs_iflags_test(ip, XFS_ISTALE));
- 
- 	tp->t_flags |= XFS_TRANS_DIRTY;
-diff --git a/fs/xfs/scrub/readdir.c b/fs/xfs/scrub/readdir.c
-index 16462332c897..dfdcb96b6c16 100644
---- a/fs/xfs/scrub/readdir.c
-+++ b/fs/xfs/scrub/readdir.c
-@@ -281,7 +281,7 @@ xchk_dir_walk(
- 		return -EIO;
- 
- 	ASSERT(S_ISDIR(VFS_I(dp)->i_mode));
--	ASSERT(xfs_isilocked(dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL);
- 
- 	if (dp->i_df.if_format == XFS_DINODE_FMT_LOCAL)
- 		return xchk_dir_walk_sf(sc, dp, dirent_fn, priv);
-@@ -332,7 +332,7 @@ xchk_dir_lookup(
- 		return -EIO;
- 
- 	ASSERT(S_ISDIR(VFS_I(dp)->i_mode));
--	ASSERT(xfs_isilocked(dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL);
- 
- 	if (dp->i_df.if_format == XFS_DINODE_FMT_LOCAL) {
- 		error = xfs_dir2_sf_lookup(&args);
-diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
-index 47453510c0ab..56021403f447 100644
---- a/fs/xfs/xfs_attr_list.c
-+++ b/fs/xfs/xfs_attr_list.c
-@@ -504,7 +504,7 @@ xfs_attr_list_ilocked(
- {
- 	struct xfs_inode		*dp = context->dp;
- 
--	ASSERT(xfs_isilocked(dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(dp, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL);
- 
- 	/*
- 	 * Decide on what work routines to call based on the inode size.
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index cb2a4b940292..2fe306fd71fc 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -508,8 +508,8 @@ xfs_can_free_eofblocks(
- 	 * Caller must either hold the exclusive io lock; or be inactivating
- 	 * the inode, which guarantees there are no other users of the inode.
- 	 */
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL) ||
--	       (VFS_I(ip)->i_state & I_FREEING));
-+	if (!(VFS_I(ip)->i_state & I_FREEING))
-+		xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL);
- 
- 	/* prealloc/delalloc exists only on regular files */
- 	if (!S_ISREG(VFS_I(ip)->i_mode))
-@@ -965,8 +965,7 @@ xfs_collapse_file_space(
- 	xfs_fileoff_t		shift_fsb = XFS_B_TO_FSB(mp, len);
- 	bool			done = false;
- 
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
--	ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL);
- 
- 	trace_xfs_collapse_file_space(ip);
- 
-@@ -1035,8 +1034,7 @@ xfs_insert_file_space(
- 	xfs_fileoff_t		shift_fsb = XFS_B_TO_FSB(mp, len);
- 	bool			done = false;
- 
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
--	ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL);
- 
- 	trace_xfs_insert_file_space(ip);
- 
-diff --git a/fs/xfs/xfs_dir2_readdir.c b/fs/xfs/xfs_dir2_readdir.c
-index cc6dc56f455d..e82dd5d65cde 100644
---- a/fs/xfs/xfs_dir2_readdir.c
-+++ b/fs/xfs/xfs_dir2_readdir.c
-@@ -522,7 +522,7 @@ xfs_readdir(
- 		return -EIO;
- 
- 	ASSERT(S_ISDIR(VFS_I(dp)->i_mode));
--	ASSERT(xfs_isilocked(dp, XFS_IOLOCK_SHARED | XFS_IOLOCK_EXCL));
-+	xfs_assert_ilocked(dp, XFS_IOLOCK_SHARED | XFS_IOLOCK_EXCL);
- 	XFS_STATS_INC(dp->i_mount, xs_dir_getdents);
- 
- 	args.dp = dp;
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index e38fe4c8f25b..308b5f33b712 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -950,7 +950,7 @@ xfs_qm_dqget_inode(
- 	if (error)
- 		return error;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(xfs_inode_dquot(ip, type) == NULL);
- 
- 	id = xfs_qm_id_for_quotatype(ip, type);
-@@ -1007,7 +1007,7 @@ xfs_qm_dqget_inode(
- 	}
- 
- dqret:
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	trace_xfs_dqget_miss(dqp);
- 	*O_dqpp = dqp;
- 	return 0;
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index e33e5e13b95f..632653e00906 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -879,7 +879,7 @@ xfs_break_dax_layouts(
- {
- 	struct page		*page;
- 
--	ASSERT(xfs_isilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL));
-+	xfs_assert_ilocked(XFS_I(inode), XFS_MMAPLOCK_EXCL);
- 
- 	page = dax_layout_busy_page(inode->i_mapping);
- 	if (!page)
-@@ -900,7 +900,7 @@ xfs_break_layouts(
- 	bool			retry;
- 	int			error;
- 
--	ASSERT(xfs_isilocked(XFS_I(inode), XFS_IOLOCK_SHARED|XFS_IOLOCK_EXCL));
-+	xfs_assert_ilocked(XFS_I(inode), XFS_IOLOCK_SHARED | XFS_IOLOCK_EXCL);
- 
- 	do {
- 		retry = false;
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 37ec247edc13..634df4f8484d 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -328,52 +328,26 @@ xfs_ilock_demote(
- 	trace_xfs_ilock_demote(ip, lock_flags, _RET_IP_);
- }
- 
+diff --git a/fs/xfs/mrlock.h b/fs/xfs/mrlock.h
+deleted file mode 100644
+index 79155eec341b..000000000000
+--- a/fs/xfs/mrlock.h
++++ /dev/null
+@@ -1,78 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (c) 2000-2006 Silicon Graphics, Inc.
+- * All Rights Reserved.
+- */
+-#ifndef __XFS_SUPPORT_MRLOCK_H__
+-#define __XFS_SUPPORT_MRLOCK_H__
+-
+-#include <linux/rwsem.h>
+-
+-typedef struct {
+-	struct rw_semaphore	mr_lock;
 -#if defined(DEBUG) || defined(XFS_WARN)
--static inline bool
--__xfs_rwsem_islocked(
--	struct rw_semaphore	*rwsem,
--	bool			shared)
+-	int			mr_writer;
+-#endif
+-} mrlock_t;
+-
+-#if defined(DEBUG) || defined(XFS_WARN)
+-#define mrinit(mrp, name)	\
+-	do { (mrp)->mr_writer = 0; init_rwsem(&(mrp)->mr_lock); } while (0)
+-#else
+-#define mrinit(mrp, name)	\
+-	do { init_rwsem(&(mrp)->mr_lock); } while (0)
+-#endif
+-
+-#define mrlock_init(mrp, t,n,s)	mrinit(mrp, n)
+-#define mrfree(mrp)		do { } while (0)
+-
+-static inline void mraccess_nested(mrlock_t *mrp, int subclass)
 -{
--	if (!debug_locks)
--		return rwsem_is_locked(rwsem);
--
--	if (!shared)
--		return lockdep_is_held_type(rwsem, 0);
--
--	/*
--	 * We are checking that the lock is held at least in shared
--	 * mode but don't care that it might be held exclusively
--	 * (i.e. shared | excl). Hence we check if the lock is held
--	 * in any mode rather than an explicit shared mode.
--	 */
--	return lockdep_is_held_type(rwsem, -1);
+-	down_read_nested(&mrp->mr_lock, subclass);
 -}
 -
--bool
--xfs_isilocked(
-+void
-+xfs_assert_ilocked(
+-static inline void mrupdate_nested(mrlock_t *mrp, int subclass)
+-{
+-	down_write_nested(&mrp->mr_lock, subclass);
+-#if defined(DEBUG) || defined(XFS_WARN)
+-	mrp->mr_writer = 1;
+-#endif
+-}
+-
+-static inline int mrtryaccess(mrlock_t *mrp)
+-{
+-	return down_read_trylock(&mrp->mr_lock);
+-}
+-
+-static inline int mrtryupdate(mrlock_t *mrp)
+-{
+-	if (!down_write_trylock(&mrp->mr_lock))
+-		return 0;
+-#if defined(DEBUG) || defined(XFS_WARN)
+-	mrp->mr_writer = 1;
+-#endif
+-	return 1;
+-}
+-
+-static inline void mrunlock_excl(mrlock_t *mrp)
+-{
+-#if defined(DEBUG) || defined(XFS_WARN)
+-	mrp->mr_writer = 0;
+-#endif
+-	up_write(&mrp->mr_lock);
+-}
+-
+-static inline void mrunlock_shared(mrlock_t *mrp)
+-{
+-	up_read(&mrp->mr_lock);
+-}
+-
+-static inline void mrdemote(mrlock_t *mrp)
+-{
+-#if defined(DEBUG) || defined(XFS_WARN)
+-	mrp->mr_writer = 0;
+-#endif
+-	downgrade_write(&mrp->mr_lock);
+-}
+-
+-#endif /* __XFS_SUPPORT_MRLOCK_H__ */
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 634df4f8484d..110077ca3d2a 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -203,9 +203,9 @@ xfs_ilock(
+ 	}
+ 
+ 	if (lock_flags & XFS_ILOCK_EXCL)
+-		mrupdate_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
++		down_write_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
+ 	else if (lock_flags & XFS_ILOCK_SHARED)
+-		mraccess_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
++		down_read_nested(&ip->i_lock, XFS_ILOCK_DEP(lock_flags));
+ }
+ 
+ /*
+@@ -246,10 +246,10 @@ xfs_ilock_nowait(
+ 	}
+ 
+ 	if (lock_flags & XFS_ILOCK_EXCL) {
+-		if (!mrtryupdate(&ip->i_lock))
++		if (!down_write_trylock(&ip->i_lock))
+ 			goto out_undo_mmaplock;
+ 	} else if (lock_flags & XFS_ILOCK_SHARED) {
+-		if (!mrtryaccess(&ip->i_lock))
++		if (!down_read_trylock(&ip->i_lock))
+ 			goto out_undo_mmaplock;
+ 	}
+ 	return 1;
+@@ -298,9 +298,9 @@ xfs_iunlock(
+ 		up_read(&VFS_I(ip)->i_mapping->invalidate_lock);
+ 
+ 	if (lock_flags & XFS_ILOCK_EXCL)
+-		mrunlock_excl(&ip->i_lock);
++		up_write(&ip->i_lock);
+ 	else if (lock_flags & XFS_ILOCK_SHARED)
+-		mrunlock_shared(&ip->i_lock);
++		up_read(&ip->i_lock);
+ 
+ 	trace_xfs_iunlock(ip, lock_flags, _RET_IP_);
+ }
+@@ -319,7 +319,7 @@ xfs_ilock_demote(
+ 		~(XFS_IOLOCK_EXCL|XFS_MMAPLOCK_EXCL|XFS_ILOCK_EXCL)) == 0);
+ 
+ 	if (lock_flags & XFS_ILOCK_EXCL)
+-		mrdemote(&ip->i_lock);
++		downgrade_write(&ip->i_lock);
+ 	if (lock_flags & XFS_MMAPLOCK_EXCL)
+ 		downgrade_write(&VFS_I(ip)->i_mapping->invalidate_lock);
+ 	if (lock_flags & XFS_IOLOCK_EXCL)
+@@ -333,10 +333,14 @@ xfs_assert_ilocked(
  	struct xfs_inode	*ip,
  	uint			lock_flags)
  {
--	if (lock_flags & (XFS_ILOCK_EXCL|XFS_ILOCK_SHARED)) {
--		if (!(lock_flags & XFS_ILOCK_SHARED))
--			return !!ip->i_lock.mr_writer;
--		return rwsem_is_locked(&ip->i_lock.mr_lock);
--	}
-+	if (lock_flags & XFS_ILOCK_SHARED)
-+		rwsem_assert_held(&ip->i_lock.mr_lock);
-+	else if (lock_flags & XFS_ILOCK_EXCL)
-+		ASSERT(ip->i_lock.mr_writer);
++	/*
++	 * Sometimes we assert the ILOCK is held exclusively, but we're in
++	 * a workqueue, so lockdep doesn't know we're the owner.
++	 */
+ 	if (lock_flags & XFS_ILOCK_SHARED)
+-		rwsem_assert_held(&ip->i_lock.mr_lock);
++		rwsem_assert_held(&ip->i_lock);
+ 	else if (lock_flags & XFS_ILOCK_EXCL)
+-		ASSERT(ip->i_lock.mr_writer);
++		rwsem_assert_held_write_nolockdep(&ip->i_lock);
  
--	if (lock_flags & (XFS_MMAPLOCK_EXCL|XFS_MMAPLOCK_SHARED)) {
--		return __xfs_rwsem_islocked(&VFS_I(ip)->i_mapping->invalidate_lock,
--				(lock_flags & XFS_MMAPLOCK_SHARED));
--	}
-+	if (lock_flags & XFS_MMAPLOCK_SHARED)
-+		rwsem_assert_held(&VFS_I(ip)->i_mapping->invalidate_lock);
-+	else if (lock_flags & XFS_MMAPLOCK_EXCL)
-+		rwsem_assert_held_write(&VFS_I(ip)->i_mapping->invalidate_lock);
- 
--	if (lock_flags & (XFS_IOLOCK_EXCL | XFS_IOLOCK_SHARED)) {
--		return __xfs_rwsem_islocked(&VFS_I(ip)->i_rwsem,
--				(lock_flags & XFS_IOLOCK_SHARED));
--	}
--
--	ASSERT(0);
--	return false;
-+	if (lock_flags & XFS_IOLOCK_SHARED)
-+		rwsem_assert_held(&VFS_I(ip)->i_rwsem);
-+	else if (lock_flags & XFS_IOLOCK_EXCL)
-+		rwsem_assert_held_write(&VFS_I(ip)->i_rwsem);
- }
--#endif
- 
- /*
-  * xfs_lockdep_subclass_ok() is only used in an ASSERT, so is only called when
-@@ -1342,9 +1316,9 @@ xfs_itruncate_extents_flags(
- 	xfs_fileoff_t		first_unmap_block;
- 	int			error = 0;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
--	ASSERT(!atomic_read(&VFS_I(ip)->i_count) ||
--	       xfs_isilocked(ip, XFS_IOLOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
-+	if (atomic_read(&VFS_I(ip)->i_count))
-+		xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL);
- 	ASSERT(new_size <= XFS_ISIZE(ip));
- 	ASSERT(tp->t_flags & XFS_TRANS_PERM_LOG_RES);
- 	ASSERT(ip->i_itemp != NULL);
-@@ -1596,7 +1570,7 @@ xfs_inactive_ifree(
- 	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
- 
- 	error = xfs_ifree(tp, ip);
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	if (error) {
- 		/*
- 		 * If we fail to free the inode, shut down.  The cancel
-@@ -2350,7 +2324,7 @@ xfs_ifree(
- 	struct xfs_inode_log_item *iip = ip->i_itemp;
- 	int			error;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(VFS_I(ip)->i_nlink == 0);
- 	ASSERT(ip->i_df.if_nextents == 0);
- 	ASSERT(ip->i_disk_size == 0 || !S_ISREG(VFS_I(ip)->i_mode));
-@@ -2419,7 +2393,7 @@ static void
- xfs_iunpin(
- 	struct xfs_inode	*ip)
- {
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL|XFS_ILOCK_SHARED));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL | XFS_ILOCK_SHARED);
- 
- 	trace_xfs_inode_unpin_nowait(ip, _RET_IP_);
- 
-@@ -3182,7 +3156,7 @@ xfs_iflush(
- 	struct xfs_mount	*mp = ip->i_mount;
- 	int			error;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL|XFS_ILOCK_SHARED));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL | XFS_ILOCK_SHARED);
- 	ASSERT(xfs_iflags_test(ip, XFS_IFLUSHING));
- 	ASSERT(ip->i_df.if_format != XFS_DINODE_FMT_BTREE ||
- 	       ip->i_df.if_nextents > XFS_IFORK_MAXEXT(ip, XFS_DATA_FORK));
+ 	if (lock_flags & XFS_MMAPLOCK_SHARED)
+ 		rwsem_assert_held(&VFS_I(ip)->i_mapping->invalidate_lock);
 diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 97f63bacd4c2..dcc818901a79 100644
+index dcc818901a79..796d11065fe2 100644
 --- a/fs/xfs/xfs_inode.h
 +++ b/fs/xfs/xfs_inode.h
-@@ -523,7 +523,7 @@ void		xfs_ilock(xfs_inode_t *, uint);
- int		xfs_ilock_nowait(xfs_inode_t *, uint);
- void		xfs_iunlock(xfs_inode_t *, uint);
- void		xfs_ilock_demote(xfs_inode_t *, uint);
--bool		xfs_isilocked(struct xfs_inode *, uint);
-+void		xfs_assert_ilocked(struct xfs_inode *, uint);
- uint		xfs_ilock_data_map_shared(struct xfs_inode *);
- uint		xfs_ilock_attr_map_shared(struct xfs_inode *);
+@@ -39,7 +39,7 @@ typedef struct xfs_inode {
  
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index bfbeafc8e120..f28d653300d1 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -650,7 +650,7 @@ xfs_inode_item_pin(
- {
- 	struct xfs_inode	*ip = INODE_ITEM(lip)->ili_inode;
+ 	/* Transaction and locking information. */
+ 	struct xfs_inode_log_item *i_itemp;	/* logging information */
+-	mrlock_t		i_lock;		/* inode lock */
++	struct rw_semaphore	i_lock;		/* inode lock */
+ 	atomic_t		i_pincount;	/* inode pin count */
+ 	struct llist_node	i_gclist;	/* deferred inactivation list */
  
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(lip->li_buf);
- 
- 	trace_xfs_inode_pin(ip, _RET_IP_);
-@@ -756,7 +756,7 @@ xfs_inode_item_release(
- 	unsigned short		lock_flags;
- 
- 	ASSERT(ip->i_itemp != NULL);
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	lock_flags = iip->ili_lock_flags;
- 	iip->ili_lock_flags = 0;
 diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index be102fd49560..12510d20813b 100644
+index 12510d20813b..66f8c47642e8 100644
 --- a/fs/xfs/xfs_iops.c
 +++ b/fs/xfs/xfs_iops.c
-@@ -796,8 +796,7 @@ xfs_setattr_size(
- 	uint			lock_flags = 0;
- 	bool			did_zeroing = false;
- 
--	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
--	ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL);
- 	ASSERT(S_ISREG(inode->i_mode));
- 	ASSERT((iattr->ia_valid & (ATTR_UID|ATTR_GID|ATTR_ATIME|ATTR_ATIME_SET|
- 		ATTR_MTIME_SET|ATTR_TIMES_SET)) == 0);
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 5bcd67cae16a..b5b555698ae1 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -254,7 +254,7 @@ xfs_qm_dqattach_one(
- 	struct xfs_dquot	*dqp;
- 	int			error;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	error = 0;
+@@ -1284,9 +1284,9 @@ xfs_setup_inode(
+ 		 */
+ 		lockdep_set_class(&inode->i_rwsem,
+ 				  &inode->i_sb->s_type->i_mutex_dir_key);
+-		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_dir_ilock_class);
++		lockdep_set_class(&ip->i_lock, &xfs_dir_ilock_class);
+ 	} else {
+-		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_nondir_ilock_class);
++		lockdep_set_class(&ip->i_lock, &xfs_nondir_ilock_class);
+ 	}
  
  	/*
-@@ -322,7 +322,7 @@ xfs_qm_dqattach_locked(
- 	if (!xfs_qm_need_dqattach(ip))
- 		return 0;
+diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+index caccb7f76690..75245932e0ad 100644
+--- a/fs/xfs/xfs_linux.h
++++ b/fs/xfs/xfs_linux.h
+@@ -20,7 +20,6 @@ typedef __u32			xfs_dev_t;
+ typedef __u32			xfs_nlink_t;
  
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
+ #include "xfs_types.h"
+-#include "mrlock.h"
  
- 	if (XFS_IS_UQUOTA_ON(mp) && !ip->i_udquot) {
- 		error = xfs_qm_dqattach_one(ip, XFS_DQTYPE_USER,
-@@ -353,7 +353,7 @@ xfs_qm_dqattach_locked(
- 	 * Don't worry about the dquots that we may have attached before any
- 	 * error - they'll get detached later if it has not already been done.
- 	 */
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	return error;
+ #include <linux/semaphore.h>
+ #include <linux/mm.h>
+@@ -50,6 +49,7 @@ typedef __u32			xfs_nlink_t;
+ #include <linux/notifier.h>
+ #include <linux/delay.h>
+ #include <linux/log2.h>
++#include <linux/rwsem.h>
+ #include <linux/spinlock.h>
+ #include <linux/random.h>
+ #include <linux/ctype.h>
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 6ce1e6deb7ec..b31652fa7004 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -716,9 +716,7 @@ xfs_fs_inode_init_once(
+ 	/* xfs inode */
+ 	atomic_set(&ip->i_pincount, 0);
+ 	spin_lock_init(&ip->i_flags_lock);
+-
+-	mrlock_init(&ip->i_lock, MRLOCK_ALLOW_EQUAL_PRI|MRLOCK_BARRIER,
+-		     "xfsino", ip->i_ino);
++	init_rwsem(&ip->i_lock);
  }
  
-@@ -1811,7 +1811,7 @@ xfs_qm_vop_chown(
- 				 XFS_TRANS_DQ_RTBCOUNT : XFS_TRANS_DQ_BCOUNT;
- 
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	ASSERT(XFS_IS_QUOTA_ON(ip->i_mount));
- 
- 	/* old dquot */
-@@ -1899,7 +1899,7 @@ xfs_qm_vop_create_dqattach(
- 	if (!XFS_IS_QUOTA_ON(mp))
- 		return;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	if (udqp && XFS_IS_UQUOTA_ON(mp)) {
- 		ASSERT(ip->i_udquot == NULL);
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index d5ca8bcae65b..e64ef2a293b6 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -527,7 +527,7 @@ xfs_reflink_allocate_cow(
- 	int			error;
- 	bool			found;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 	if (!ip->i_cowfp) {
- 		ASSERT(!xfs_is_reflink_inode(ip));
- 		xfs_ifork_init_cow(ip);
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 2f85567f3d75..b62b5c34413e 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1260,7 +1260,7 @@ xfs_rtpick_extent(
- 	uint64_t		seq;		/* sequence number of file creation */
- 	struct timespec64	ts;		/* timespec in inode */
- 
--	ASSERT(xfs_isilocked(mp->m_rbmip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(mp->m_rbmip, XFS_ILOCK_EXCL);
- 
- 	ts = inode_get_atime(VFS_I(mp->m_rbmip));
- 	if (!(mp->m_rbmip->i_diflags & XFS_DIFLAG_NEWRTBM)) {
-diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-index 92974a4414c8..c2dc8c501bdc 100644
---- a/fs/xfs/xfs_symlink.c
-+++ b/fs/xfs/xfs_symlink.c
-@@ -44,7 +44,7 @@ xfs_readlink_bmap_ilocked(
- 	int			fsblocks = 0;
- 	int			offset;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL);
- 
- 	fsblocks = xfs_symlink_blocks(mp, pathlen);
- 	error = xfs_bmapi_read(ip, 0, fsblocks, mval, &nmaps, 0);
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index 12d45e93f07d..7350640059cc 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -1273,7 +1273,7 @@ xfs_trans_reserve_more_inode(
- 	unsigned int		rtx = xfs_extlen_to_rtxlen(mp, rblocks);
- 	int			error;
- 
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	error = xfs_trans_reserve(tp, &resv, dblocks, rtx);
- 	if (error)
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index aa00cf67ad72..9c159d016ecf 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -796,7 +796,7 @@ xfs_trans_reserve_quota_nblks(
- 		return 0;
- 
- 	ASSERT(!xfs_is_quota_inode(&mp->m_sb, ip->i_ino));
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
- 
- 	if (force)
- 		qflags |= XFS_QMOPT_FORCE_RES;
+ /*
 -- 
 2.43.0
 
