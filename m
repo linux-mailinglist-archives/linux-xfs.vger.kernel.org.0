@@ -1,162 +1,103 @@
-Return-Path: <linux-xfs+bounces-4238-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-4241-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55DC9868499
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Feb 2024 00:28:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D9198684EA
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Feb 2024 01:11:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB2C3B2188C
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Feb 2024 23:28:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25F421C22077
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Feb 2024 00:11:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8B98135A45;
-	Mon, 26 Feb 2024 23:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4260A634;
+	Tue, 27 Feb 2024 00:11:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MCwtZwGa"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="YYm0IyVm"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B5A13541B;
-	Mon, 26 Feb 2024 23:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B855A36E
+	for <linux-xfs@vger.kernel.org>; Tue, 27 Feb 2024 00:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708990114; cv=none; b=EtMAEFNYkGfe+0Pn3jy6v0N2Z0MUNll96TlU2A8LWZynDuypozqfqp/VtbXg4n1rF287fKAE66eUfTBtVj7iK3Jn5efC+xvTYexhUqmGW6epQdZxox56YTStjLAPrYuMPwtscVSkg9RQqNHkkpMYq8cGGw1pzk6RFGtvOnqeCcU=
+	t=1708992703; cv=none; b=L10DJjRRQBCUZfz1taTXoQMoY/1ZQorTudjYhEhvq3i/04Mx20//6fbih/1jhrXy0VIZXJdiH38BPAFpBuOd9he0MO1cW8pcwrTOFORZQRTFzkf6VVSeHrDk86APS1Rq1da/ednPWvZabG2rDkd11jDThFzYL/v1jT/mpQoPgUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708990114; c=relaxed/simple;
-	bh=vpnQdb+6rc5A4iBkipWUZqFQkOPYet+kLGEWv6NTJ4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=S3DO/VXeg4UGS0+HJzbvHcwErRgTVRHW4IV1/RjqAndrc4WKSgUWK00nOOrQ3ko5nTqvpWoqg3HKjnKwVb4gmjxgL3cTvYguob2PGaGopA0plg9IfniZeD9yrS/EaR/jYoYC4fXP/Sn5CdMK2oRim/S6EQ9MlNP1qIXYPotbjWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=MCwtZwGa; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1708990108;
-	bh=7/s82SZsxC7vPzBKKfBkGYTuP9xvJQUaq4CPgmdV56c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MCwtZwGaX48rjnIvqpbI546NJeYqWMA2DuG4VFwG7vtceyrx7N8O97G9b0gf6CQmz
-	 r6JMkAFBT32KjrOAs7DYkOZg3GCK3ABN9WEhSbq7lRCFeb/EoWC0sJB414J/2tRLqj
-	 8mVVi7sEOsjfTaGk/NPg9MV+VsUjp5lH8LKS+LqR/MI9Ug23URenlrtymskpJOHzOO
-	 gmR1cgcIGxXWhjuAAXBRt7ZSIhG8tzkIWr7V+Lza6PGIt26ZXQE9/N0k6gMakNIIiz
-	 5DXodFRRBloosIbnfWx7aprGeiVqh2j4boyU2et+fS1lYhOY5Y/55Ss/0BYOjvfjen
-	 jK4LIYHkGViOQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TkGyM6Tslz4wc1;
-	Tue, 27 Feb 2024 10:28:27 +1100 (AEDT)
-Date: Tue, 27 Feb 2024 10:28:27 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christian Brauner <brauner@kernel.org>, "Darrick J. Wong"
- <djwong@kernel.org>, David Chinner <david@fromorbit.com>
-Cc: <linux-xfs@vger.kernel.org>, Chandan Babu R <chandanbabu@kernel.org>,
- Dave Chinner <dchinner@redhat.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the vfs-brauner tree with the xfs tree
-Message-ID: <20240227102827.313113cd@canb.auug.org.au>
+	s=arc-20240116; t=1708992703; c=relaxed/simple;
+	bh=dEoBz9m0slFVgcoXqGtlcJrDCx1iq6SVFOW/0O52FIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jtp98pXBrBYkQnm/IG+XqssfrpSKIMW17mkFoNqe1cf1Q4KKlMpDV9y48QFE+ULAyqm4qs1Ib7FiTAsg+7xFoMI429r3oXo0bDRqRULGRM3lRD3zG8q7pfMh69g3Zaam4/ceLyTMUsnjJ1SQo0xpvZsJTJMtgphEAG3nLXbwt0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=YYm0IyVm; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d8b70b39efso3781827a12.0
+        for <linux-xfs@vger.kernel.org>; Mon, 26 Feb 2024 16:11:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1708992701; x=1709597501; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dEoBz9m0slFVgcoXqGtlcJrDCx1iq6SVFOW/0O52FIM=;
+        b=YYm0IyVmVexEK/75LfR4w5bpjgHdYMKbh0y/MsOQqO8biUoPnbWdJE25fksnANo7WZ
+         uY6v68GdLCJ9TDHNv437kl2LchyMCrKZMFN97uD2mhYRdmmGoZqZ5DDYRSe7LAZBK9uS
+         r/Dia88wTmdvrRWiX9ckI/acsMZ9s7TfSGl4XdynUsJJyQgpOcFu6FKFWm+Qmh7PDnGi
+         v924shzI0/x6iH0v0uImo8qkVoS00FgQicTmLziKfd3dCkDAqkpvFwlKVVIyu6BOuwuy
+         8ZDaA+Xmjku0gmXH2eWScD9ao3lvWn4LCA/CcmBcL49Ymy29wTExGGG5CQSfHxEM5Zb3
+         5dDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708992701; x=1709597501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dEoBz9m0slFVgcoXqGtlcJrDCx1iq6SVFOW/0O52FIM=;
+        b=CElgk6OccQpM250AQT6RG8NZkyOumg7YLjGjj2ZqBPraWNt9YBbOMcKsnuHF+1PBHm
+         HJq2Ok6mVDHBcsi1g7vg6tyMbA86URW0PO0K0AysXxh6S01yICQjnpaIgmph7khBvm/1
+         YOL/Sr9ts3VU8s9EXgTC+qRLGmeBd4wCIKuJrIwbCAXQhgbUctbUxxjhT/FG9/WhbitG
+         E0hTn+lfJBj3B4607aVgTx8WC80RPXqJNwDepa0Ia004Ps5mP9onFbWT3ilTR777TIJ+
+         dntf6OsDZgHEp4aask//vzqZlc/ilxNZTVuepSm7gCwF0j8OWfaFschKp02vW3BbIw5e
+         Zimg==
+X-Gm-Message-State: AOJu0YxfH2bNp6A0u5hu7R88748UYntFsyAZzJVb/RJ8cWxFYNSytb+C
+	PZqHDVpyswHWKbmRXrE7ZmFPYtxJlQpZAd9ym42th6uFN7bbiVJNWP2KL0gtOeJfnTlWkLOlbn4
+	k
+X-Google-Smtp-Source: AGHT+IF5Ifj/ewrC/7Q/H9L6lxvw29JhUH4y94uSnw+Tfgb4nuDT2i7PGFA6C/R6LwsLriKaCP/Syg==
+X-Received: by 2002:a17:90a:cc5:b0:299:879a:7da7 with SMTP id 5-20020a17090a0cc500b00299879a7da7mr6684725pjt.34.1708992701095;
+        Mon, 26 Feb 2024 16:11:41 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-247-196.pa.nsw.optusnet.com.au. [49.181.247.196])
+        by smtp.gmail.com with ESMTPSA id ci7-20020a17090afc8700b0029996fd70e2sm5138196pjb.45.2024.02.26.16.11.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Feb 2024 16:11:40 -0800 (PST)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+	by dread.disaster.area with esmtp (Exim 4.96)
+	(envelope-from <dave@fromorbit.com>)
+	id 1rel4L-00ByRN-1b;
+	Tue, 27 Feb 2024 11:11:37 +1100
+Received: from dave by devoid.disaster.area with local (Exim 4.97)
+	(envelope-from <dave@devoid.disaster.area>)
+	id 1rel4K-000000030uk-45zh;
+	Tue, 27 Feb 2024 11:11:37 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: linux-xfs@vger.kernel.org
+Cc: chandanbabu@kernel.org
+Subject: [PATCH 0/2] xfs: kmalloc/kfree conversion fixes
+Date: Tue, 27 Feb 2024 11:05:30 +1100
+Message-ID: <20240227001135.718165-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zMghNRgdfH=5PkYXoN51Xav";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/zMghNRgdfH=5PkYXoN51Xav
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Chandan,
 
-Hi all,
+These two patches are fixes for the two recently reported issues
+with the kmem removal patchset. They've passes fstests and fsmark
+scalability tests with 64kB directory block size, should should have
+been exercising >64kB allocations through xlog_kvmalloc(). These
+should (eventuallly) trigger the vmalloc() path and so should
+exercise the vfree path through kvfree() instead of crashing...
 
-Today's linux-next merge of the vfs-brauner tree got a conflict in:
+-Dave.
 
-  fs/xfs/xfs_buf.c
-
-between commits:
-
-  d4c75a1b40cd ("xfs: convert remaining kmem_free() to kfree()")
-  5076a6040ca1 ("xfs: support in-memory buffer cache targets")
-
-from the xfs tree and commit:
-
-  1b9e2d90141c ("xfs: port block device access to files")
-
-from the vfs-brauner tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/xfs/xfs_buf.c
-index 7fc26e64368d,01b41fabbe3c..000000000000
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@@ -2030,8 -1951,9 +2030,8 @@@ xfs_free_buftarg
-  	fs_put_dax(btp->bt_daxdev, btp->bt_mount);
-  	/* the main block device is closed by kill_block_super */
-  	if (btp->bt_bdev !=3D btp->bt_mount->m_super->s_bdev)
-- 		bdev_release(btp->bt_bdev_handle);
-+ 		fput(btp->bt_bdev_file);
- -
- -	kmem_free(btp);
- +	kfree(btp);
-  }
- =20
-  int
-@@@ -2095,20 -1994,20 +2095,20 @@@ out_destroy_lru
-  struct xfs_buftarg *
-  xfs_alloc_buftarg(
-  	struct xfs_mount	*mp,
-- 	struct bdev_handle	*bdev_handle)
-+ 	struct file		*bdev_file)
-  {
- -	xfs_buftarg_t		*btp;
- +	struct xfs_buftarg	*btp;
-  	const struct dax_holder_operations *ops =3D NULL;
- =20
-  #if defined(CONFIG_FS_DAX) && defined(CONFIG_MEMORY_FAILURE)
-  	ops =3D &xfs_dax_holder_operations;
-  #endif
- -	btp =3D kmem_zalloc(sizeof(*btp), KM_NOFS);
- +	btp =3D kzalloc(sizeof(*btp), GFP_KERNEL | __GFP_NOFAIL);
- =20
-  	btp->bt_mount =3D mp;
-- 	btp->bt_bdev_handle =3D bdev_handle;
-- 	btp->bt_dev =3D bdev_handle->bdev->bd_dev;
-- 	btp->bt_bdev =3D bdev_handle->bdev;
-+ 	btp->bt_bdev_file =3D bdev_file;
-+ 	btp->bt_bdev =3D file_bdev(bdev_file);
-+ 	btp->bt_dev =3D btp->bt_bdev->bd_dev;
-  	btp->bt_daxdev =3D fs_dax_get_by_bdev(btp->bt_bdev, &btp->bt_dax_part_of=
-f,
-  					    mp, ops);
- =20
-
---Sig_/zMghNRgdfH=5PkYXoN51Xav
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmXdHpsACgkQAVBC80lX
-0GxrnggAkx3gftIJ07lW96LpqENWFh7RzH4cT5vUQTE2bBbRGNBXCGc/aVwwXrjm
-Y/iZcJE8C1Nj/iw7aFVqHrAia0ua5aI/KmjLvGPIMzhS7AAorZEqpfNj9Hpv6ZHh
-hfla0emge+q2g1vH91aFmr24BAEdpjsjNspmbjsZ+sg2pEljcuF0L61Miqpu8AUd
-YA0apU4pthA+3M9f5EaX6XRmhLxLeYZ73if4a586rldUr/TmF6hgugNY/PbFvVHx
-g3Js19WVLoiHWOLUxM2HB9JjihIasPmka17Dsrn3GVWtv6tU2EMEqvg1OpCPaw+S
-Y9ugshaujilSFahd0skL67Y6A4Rsjg==
-=oNoD
------END PGP SIGNATURE-----
-
---Sig_/zMghNRgdfH=5PkYXoN51Xav--
 
