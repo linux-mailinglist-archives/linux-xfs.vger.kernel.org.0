@@ -1,124 +1,116 @@
-Return-Path: <linux-xfs+bounces-4499-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-4503-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B337B86C4D0
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Feb 2024 10:20:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4815A86C863
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Feb 2024 12:46:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DE892884D3
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Feb 2024 09:20:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A0C91C20B91
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Feb 2024 11:46:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38B7959B55;
-	Thu, 29 Feb 2024 09:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A805F7CF39;
+	Thu, 29 Feb 2024 11:45:41 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DDE59167;
-	Thu, 29 Feb 2024 09:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23157E0E4;
+	Thu, 29 Feb 2024 11:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709198412; cv=none; b=l9bI09sc8Di4ZFkKZQrcnfk3icHA90p+dMkGZq4n666FyBk7tsmkPXPXw+hl1N0bi6FXCSs0RrbU8qZwJ6I1G3u3QNxjucuhn5/hL1T6LUuDCH4QCaO6Q5nQ1kmSUBxBKcGWcD/moc0m88iW5cL3b7u/Rwtw2YcmMbvh3QPaHvM=
+	t=1709207141; cv=none; b=IDbsgHKrUU1PszECizn4PCUyAJJhA7s03+WvWe+hHv6DaQWD7uwpJsSNdYWfVV2L9h3dTkk7pUw0Hb06RL0t+2VOqvi0ShM5Tm5JhWfHnfS5kI7DJPTwOmpr+gke1mSFmp4OzkaDyNWNsw344o5qSEkelQ0byXH6d00/UF5actw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709198412; c=relaxed/simple;
-	bh=iGHP7pwpeOVDDFpZ0noQ898rYHBuWLE3gLeIZkVM71E=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=aiDzo7P3A4GhJGuqlczsZ/MSdeg33AebzehUaCDn0LjtGBn/5knAN/8rKWKCBEpgMO4lls6T2KU8WwlzSdKlbXkcsRsJRRF58dcgwbilD9RCsEOm5VhryTInY1eKSfrz/3AXYWm6jfek+IqH1v6v3IqNN5QSpF+srZb6A9bRWeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Tllzz1psXz4f3jHd;
-	Thu, 29 Feb 2024 17:19:59 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 7E5281A0F7F;
-	Thu, 29 Feb 2024 17:20:04 +0800 (CST)
-Received: from [10.174.176.34] (unknown [10.174.176.34])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ5BTOBl5aoEFg--.45042S3;
-	Thu, 29 Feb 2024 17:20:04 +0800 (CST)
-Subject: Re: [RFC PATCH v3 07/26] iomap: don't increase i_size if it's not a
- write operation
-To: Christoph Hellwig <hch@infradead.org>
-Cc: djwong@kernel.org, Dave Chinner <david@fromorbit.com>,
- linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
- tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
- ritesh.list@gmail.com, willy@infradead.org, zokeefe@google.com,
- yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
- wangkefeng.wang@huawei.com
-References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
- <20240127015825.1608160-8-yi.zhang@huaweicloud.com>
- <ZcsCP4h-ExNOcdD6@infradead.org>
- <9b0040ef-3d9d-6246-4bdd-82b9a8f55fa2@huaweicloud.com>
- <Zd-v_25DKYI1hn-l@infradead.org>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <9c9f1831-a772-299b-072b-1c8116c3fb35@huaweicloud.com>
-Date: Thu, 29 Feb 2024 17:20:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1709207141; c=relaxed/simple;
+	bh=hngxUyHulZ27eylXtud4AjMHhGagOr3zuKNraEBD/S0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sh2+t9C8oNY7wNuXmIivoSKqym6/ZyrpyatMUpa4EYcsI+FlSM3iOQ1KQ9Lvcima6rbFiRGuQLEfXEOVZfZgQy1MRDnsZCQu51wlAMigCEHlbguCA6VSAwGMfWdoKz+9Q2V+w06o2/xajaH0mUbdDQPCruk67GgOoMVQ+oyAjA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Tlq9M6mSQzvW29;
+	Thu, 29 Feb 2024 19:43:19 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 067BB1404DB;
+	Thu, 29 Feb 2024 19:45:31 +0800 (CST)
+Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
+ (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 29 Feb
+ 2024 19:45:30 +0800
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+To: <brauner@kernel.org>, <david@fromorbit.com>, <djwong@kernel.org>,
+	<jack@suse.cz>, <tytso@mit.edu>
+CC: <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
+	<yi.zhang@huawei.com>
+Subject: [PATCH RFC 0/2] ext4: Do endio process under irq context for DIO overwrites
+Date: Thu, 29 Feb 2024 19:38:47 +0800
+Message-ID: <20240229113849.2222577-1-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zd-v_25DKYI1hn-l@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgBHZQ5BTOBl5aoEFg--.45042S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF1UWFy7tF1xCryxKw15urg_yoW8GF1Dpr
-	WF9FykKr1qg3y5ur1kuay7Jw10kw1fZrW8Aryjgw45Gan3XFyxZryjgay09FWqgrZ7Zw1Y
-	qF4UWaySyry0vaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUFDGOUUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-Hello Christoph!
+Recently we found an ext4 performance regression problem between 4.18
+and 5.10 by following test command on a x86 physical machine with nvme:
+  fio -direct=1 -iodepth=128 -rw=randwrite -ioengine=libaio -bs=4k
+      -size=2G -numjobs=1 -time_based -runtime=60 -group_reporting
+      -filename=/test/test -name=Rand_write_Testing --cpus_allowed=1
+4.18: 288k IOPS    5.10: 234k IOPS
 
-On 2024/2/29 6:13, Christoph Hellwig wrote:
-> On Wed, Feb 28, 2024 at 04:53:32PM +0800, Zhang Yi wrote:
->> So, we have to handle above case for xfs. I suppose we could keep
->> increasing i_size if the zeroed folio is entirely outside of i_size,
->> make sure we could write back and allocate blocks for the
->> zeroed & delayed extent, something like below, any suggestions ?
-> 
-> Sorry for being dumb, but what was the problem solved by not updating
-> the size for ext4 again?  (for unshare I can't see any reason to
-> ever update the inode size)
-> 
+After anlayzing the changes between above two versions, we found that
+the endio context changed since commit 378f32bab3714("ext4: introduce
+direct I/O write using iomap infrastructure"), in aio DIO overwriting
+case. And the problem still exist in latest mainline.
+4.18: endio is processed under irq context
+ dio_bio_end_aio
+  defer_completion = dio->defer_completion || ... // defer_completion is
+                                                  // false for overwrite
+  if (defer_completion) {
+    queue_work
+  } else {
+    dio_complete                          // endio in irq context
+  }
+mainline: endio is processed in kworker
+ iomap_dio_bio_end_io
+  if (dio->flags & IOMAP_DIO_INLINE_COMP) // false, only for read
+  if (dio->flags & IOMAP_DIO_CALLER_COMP) // false, only for io_uring
+  queue_work                              // endio in kworker context
 
-The problem I want to slove by not updating the size for ext4 is
-truncate. Now ext4 use iomap_zero_range() for the case of zero
-partial blocks, and ext4's truncate is different from xfs.
+Assume that nvme irq registers on cpu 1, and fio runs on cpu 1, it could
+be possible(Actually we did reproduce it easily) that fio, nvme irq and
+kworker all run on cpu 1. Firstly, compared with 4.18, there are extra
+operations(eg. queue work and wake up kworker) while processing endio,
+which is slower than processing endio under nvme irq context. Secondly,
+fio and kworker will race to get cpu resource, which will slow down fio.
 
-Let's think about a simple case, we have a reg file with size 3K,
-then truncate it to 1K. ext4 first set i_size to 1K and then call
-ext4_block_truncate_page() to zero out data after 1K(EOF) through
-iomap_zero_range(). But now it will update i_size in
-iomap_write_end(), so the size of the file will increase to 4K,
-this is wrong. xfs first zero out data through iomap_truncate_page()
-and then set file size to 1K, so the file size is 3K->4K->1K.
-Although the result is correct, but the increasing in
-iomap_zero_range() is also not necessary, so so I'm just gonna
-delete the i_size updating in iomap_zero_range(). It's not for
-unhare.
+There is no need to do
+ext4_convert_unwritten_extents/ext4_handle_inode_extension under
+ext4_dio_write_end_io in overwriting case, so we can put ext4 dio endio
+under irq context.
 
-Thanks,
-Yi.
+It is worth noting that iomap_dio_complete shouldn't be executed under
+irq context if datasync is required(IOMAP_DIO_NEED_SYNC), so overwriting
+endio is still done in kworker for this situation.
 
+Zhihao Cheng (2):
+  iomap: Add a IOMAP_DIO_MAY_INLINE_COMP flag
+  ext4: Optimize endio process for DIO overwrites
+
+ fs/ext4/file.c        |  8 ++++++--
+ fs/iomap/direct-io.c  | 10 ++++++++--
+ include/linux/iomap.h |  6 ++++++
+ 3 files changed, 20 insertions(+), 4 deletions(-)
+
+-- 
+2.39.2
 
 
