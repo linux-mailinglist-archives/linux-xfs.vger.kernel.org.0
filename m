@@ -1,218 +1,100 @@
-Return-Path: <linux-xfs+bounces-4640-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-4642-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22AD5872E5D
-	for <lists+linux-xfs@lfdr.de>; Wed,  6 Mar 2024 06:31:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54735872FC7
+	for <lists+linux-xfs@lfdr.de>; Wed,  6 Mar 2024 08:35:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89088B25E43
-	for <lists+linux-xfs@lfdr.de>; Wed,  6 Mar 2024 05:31:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00A831F21B39
+	for <lists+linux-xfs@lfdr.de>; Wed,  6 Mar 2024 07:35:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5769E1A58E;
-	Wed,  6 Mar 2024 05:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAA7317BCC;
+	Wed,  6 Mar 2024 07:35:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="xYJ/OjvF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ny7ucwHP"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8055A1BDD6
-	for <linux-xfs@vger.kernel.org>; Wed,  6 Mar 2024 05:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69FEDDA8;
+	Wed,  6 Mar 2024 07:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709703059; cv=none; b=XsOSU/3SLXhA0+U+E4bLbHOpi0EGxOQ6iX/1b5PvFGGvcSgSqNiy+iy2T0m/vfc3znQy9e2jjSerg3edU1jmEXCMYlcV0jyqOxV/u0oPi6lkmN+gSiFWvbfG+DgVb/L+8DxMnfRPbyO8ZcvxTlBGxWhfKJ0oX8+8Z6h/PfbX9bI=
+	t=1709710539; cv=none; b=PETe6mENlGZ9rxncAJsCSSc27WYm/P3lFBJ1WtDxakt6FTgNjCb9xeO88Evo4G/AXAW4V7MG8rcSYGBRRCKU1HnTTCqg2ByG9YEZQDa+qcfe9w14QPkcs+s1t8BckkWFCFlbqmaF4uk0KBuk0BUdmLvC9GrCc4unek+dfQB2Nms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709703059; c=relaxed/simple;
-	bh=8V/UNrq6anFxrcLsstoH28hj/LpgQW7e9LuklhLINRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PRvpsnXg/6cblNkyosLU4VqopzL9BKz/izCbu4Q5yk6lMODZ5i6AxyP8XcxHRF696oPN4kwRoZBImmke1p32GbAe2dPWLDDoHR2eg23xJFXdlQV5Nol4bxF4gflp5snC+y2YLMbZ6XwETDL/hl10vyLnK7O5Pa1v3GATN4hwtN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=xYJ/OjvF; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dc49b00bdbso58449085ad.3
-        for <linux-xfs@vger.kernel.org>; Tue, 05 Mar 2024 21:30:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1709703057; x=1710307857; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+qH3gbB+If+3pSpMLmVxmMDFt37zGR941038IrgIW/M=;
-        b=xYJ/OjvFAOo/IKEO+T3tkCbSSiBXJaKTvIvTNaNPAqFn2Hq/0Hl4DK7cHv9aOUoVYD
-         YAQUiCnkpattPRmgoHe+T0op2zEtRrnn0vNR+dqcv/DnKTFqVudaBgF5lrjtdqvxk2bd
-         EwAFAGDri/MU2kmyv3a2ExLVkdduYCUoCV1kY4ygSe6gX+m7yVwkP/hD4950nUgK4r+/
-         0thD+Np8wOmFgdklwq6mYLUWa8q5V7Fonyg2iKBokXSKSDTQiDmhRKJai4c8FcH6CH83
-         1ehu5f/sZ/WFV6CbP4ByEgTyx9Cz4Kz+x+a4ODoLaUTwQj4G+HZwQJ14wU5XfUxqfC1x
-         NxMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709703057; x=1710307857;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+qH3gbB+If+3pSpMLmVxmMDFt37zGR941038IrgIW/M=;
-        b=oi8kCpNW6NBH0vLQia2iPIeW6m6dJa2U9CTYwSU4VfN7ZRrMh/pDFJMhcDDUCIgm07
-         4rqMXd+fqydRpTro/cDxv4VswzetWZo7w3wli0oRmabQyuqD9J8aYRx/pIB3Tz8wfunz
-         xf+q91E231ef7Qbaf4nOOtjaITrVIH1OlhlizPRqT4tLz+Gm2sonkW3L6eLVb73AO+To
-         tZvfRZPEUu5Z/s7jb0qWxYXRTXRChBy0cgnhXAlfodJLXrP9cXssV7TwZ5N9HqD/85fY
-         qq2DavxfyJK1A+KkXRSa6WjmwvzUaEApzWajrowDEkkVO5jMe7dH1lsB6xJst0XELUnN
-         UI4A==
-X-Gm-Message-State: AOJu0YxBBrjfOniDBxS//w2SWevRMFk3NyRGfJNTTNHB+eONiZqNqSnb
-	xXfOwFNnssR4BfamTdJpM0Ajw6QrT09y/0KmrzIxeOu6chMPgSa1MfR5aa8KST5UUufbKC6Z3mA
-	A
-X-Google-Smtp-Source: AGHT+IEj8hahOqCoyFVQQNg3KRD65aiOeLE5xP7mGy1U1e4grz2/RDAdnK260AH3cHYloAZDFfVIAw==
-X-Received: by 2002:a17:902:b48b:b0:1dc:7b6:867a with SMTP id y11-20020a170902b48b00b001dc07b6867amr3371201plr.21.1709703056627;
-        Tue, 05 Mar 2024 21:30:56 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-192-230.pa.nsw.optusnet.com.au. [49.181.192.230])
-        by smtp.gmail.com with ESMTPSA id x11-20020a170902a38b00b001dcdb39613fsm11660820pla.244.2024.03.05.21.30.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 21:30:55 -0800 (PST)
-Received: from [192.168.253.23] (helo=devoid.disaster.area)
-	by dread.disaster.area with esmtp (Exim 4.96)
-	(envelope-from <dave@fromorbit.com>)
-	id 1rhjrg-00FfkK-1j;
-	Wed, 06 Mar 2024 16:30:52 +1100
-Received: from dave by devoid.disaster.area with local (Exim 4.97)
-	(envelope-from <dave@devoid.disaster.area>)
-	id 1rhjrg-00000006xMA-0HPB;
-	Wed, 06 Mar 2024 16:30:52 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: linux-xfs@vger.kernel.org
-Cc: john.g.garry@oracle.com,
-	ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com
-Subject: [PATCH 3/3] xfs: introduce forced allocation alignment
-Date: Wed,  6 Mar 2024 16:20:13 +1100
-Message-ID: <20240306053048.1656747-4-david@fromorbit.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240306053048.1656747-1-david@fromorbit.com>
-References: <ZeeaKrmVEkcXYjbK@dread.disaster.area>
- <20240306053048.1656747-1-david@fromorbit.com>
+	s=arc-20240116; t=1709710539; c=relaxed/simple;
+	bh=ZxEsLNm9Va7/5G2C6LzLhTCIEf6+xBkDskPbkaC6IXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t11+YLAtt7A08K3ULthVuIeAdl2QXRPgu3mDIzfqRDOrGNPWjdgg7d2mFD4GR4AKuWuzpyk5GNfBO4JnnkcAj4fq+rpHE1ZH6tFg0A/iFJ69JvtQzG6jM3tBpU+HF3H80WsbKyd9qGDIfzJ7kapQW+BSrgvy27UVBk1wHgMlBCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ny7ucwHP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A88BFC433C7;
+	Wed,  6 Mar 2024 07:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709710539;
+	bh=ZxEsLNm9Va7/5G2C6LzLhTCIEf6+xBkDskPbkaC6IXE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ny7ucwHPWM0rKDUF3x02vOyXH05F4iUc/nR8ps3Mq6ryfeUbmxoh/6stpvsdyh/28
+	 U7D0yfLVdN+9i+b1sktona474Shl+1L6/QXeOl0KUevYc1Rz81+oaywdtV1wqQp6w5
+	 SBD0Xnelz7IukR8By1e5MEaox8MCqlkOfC1d2O441Zt457jNMHtrAtQql19hLPzsWj
+	 SynP194sW0mLpJZn8W01HuSeQpUwRgrngrpzXUGxXgAyL44H5E5hUJ7VWmc6+8LFMo
+	 VFNutsNGIoYV/7lW1cWuaNXKGQWiSKJ570BxFhD70R4zLFqPRUZ/sTubFvFD+aL5LM
+	 iBZKPVJ9fKX7g==
+User-agent: mu4e 1.10.8; emacs 27.1
+From: Chandan Babu R <chandanbabu@kernel.org>
+To: kbusch@kernel.org
+Cc: linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: [BUG REPORT] General protection fault while discarding extents on
+ XFS on next-20240305
+Date: Wed, 06 Mar 2024 12:49:29 +0530
+Message-ID: <87y1avlsmw.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi,
 
-When forced allocation alignment is specified, the extent will
-be aligned to the extent size hint size rather than stripe
-alignment. If aligned allocation cannot be done, then the allocation
-is failed rather than attempting non-aligned fallbacks.
+Executing generic/251 on an XFS filesystem with next-20240305 kernel caused
+the following call trace,
 
-Note: none of the per-inode force align configuration is present
-yet, so this just triggers off an "always false" wrapper function
-for the moment.
+[ 6105.092156] XFS (loop5): discard failed for extent [0x344,4], error -4
+[ 6105.094267] general protection fault, probably for non-canonical address 0xdffffc000000002a: 0000 [#1] PREEMPT SMP KASAN NOPTI
+[ 6105.097056] KASAN: null-ptr-deref in range [0x0000000000000150-0x0000000000000157]
+[ 6105.098639] CPU: 1 PID: 906401 Comm: fstrim Kdump: loaded Not tainted 6.8.0-rc7-next-20240305+ #1
+[ 6105.100368] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.6.6 08/22/2023
+[ 6105.102049] RIP: 0010:submit_bio_noacct+0x3bc/0x17e0
+[ 6105.103441] Code: 00 00 41 89 c5 41 83 e5 01 0f 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 4d 63 ed 4a 8d bc 2b 56 01 00 00 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48 89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 d3 0f 00 00
+[ 6105.107067] RSP: 0018:ffa00000056a7898 EFLAGS: 00010203
+[ 6105.108547] RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 1fe2200032629a49
+[ 6105.110107] RDX: 000000000000002a RSI: 00000000007fffff RDI: 0000000000000157
+[ 6105.111686] RBP: ff1100019314d200 R08: 0000000000000000 R09: ff110001026e0880
+[ 6105.113281] R10: ff110001026e0887 R11: 0000000000000001 R12: ff1100019314d210
+[ 6105.114871] R13: 0000000000000001 R14: ff1100019314d208 R15: ff110001026e0860
+[ 6105.116446] FS:  00007f6f4bbfd800(0000) GS:ff110003ee480000(0000) knlGS:0000000000000000
+[ 6105.118185] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 6105.119630] CR2: 000055997361d4a8 CR3: 000000016f144004 CR4: 0000000000771ef0
+[ 6105.121230] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 6105.122772] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 6105.124510] PKRU: 55555554
+[ 6105.125601] Call Trace:
+3[ 6105.126672]  <TASK>
+[ 6105.133971]  xfs_discard_extents+0x340/0x860 [xfs]
+[ 6105.139534]  xfs_ioc_trim+0x4b1/0x960 [xfs]
+[ 6105.150011]  xfs_file_ioctl+0xc49/0x1370 [xfs]
+[ 6105.167691]  __x64_sys_ioctl+0x132/0x1a0
+[ 6105.168725]  do_syscall_64+0x69/0x170
+[ 6105.169681]  entry_SYSCALL_64_after_hwframe+0x6c/0x74
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_alloc.h |  1 +
- fs/xfs/libxfs/xfs_bmap.c  | 29 +++++++++++++++++++++++------
- fs/xfs/xfs_inode.h        |  5 +++++
- 3 files changed, 29 insertions(+), 6 deletions(-)
+The above *probably* occured because __blkdev_issue_discard() noticed a pending
+signal, processed the bio, freed the bio and returned a non-NULL bio pointer
+to the caller (i.e. xfs_discard_extents()).
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index aa2c103d98f0..7de2e6f64882 100644
---- a/fs/xfs/libxfs/xfs_alloc.h
-+++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -66,6 +66,7 @@ typedef struct xfs_alloc_arg {
- #define XFS_ALLOC_USERDATA		(1 << 0)/* allocation is for user data*/
- #define XFS_ALLOC_INITIAL_USER_DATA	(1 << 1)/* special case start of file */
- #define XFS_ALLOC_NOBUSY		(1 << 2)/* Busy extents not allowed */
-+#define XFS_ALLOC_FORCEALIGN		(1 << 3)/* forced extent alignment */
- 
- /* freespace limit calculations */
- unsigned int xfs_alloc_set_aside(struct xfs_mount *mp);
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index c2ddf1875e52..7a0ef0900097 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -3411,9 +3411,10 @@ xfs_bmap_alloc_account(
-  * Calculate the extent start alignment and the extent length adjustments that
-  * constrain this allocation.
-  *
-- * Extent start alignment is currently determined by stripe configuration and is
-- * carried in args->alignment, whilst extent length adjustment is determined by
-- * extent size hints and is carried by args->prod and args->mod.
-+ * Extent start alignment is currently determined by forced inode alignment or
-+ * stripe configuration and is carried in args->alignment, whilst extent length
-+ * adjustment is determined by extent size hints and is carried by args->prod
-+ * and args->mod.
-  *
-  * Low level allocation code is free to either ignore or override these values
-  * as required.
-@@ -3426,11 +3427,18 @@ xfs_bmap_compute_alignments(
- 	struct xfs_mount	*mp = args->mp;
- 	xfs_extlen_t		align = 0; /* minimum allocation alignment */
- 
--	/* stripe alignment for allocation is determined by mount parameters */
--	if (mp->m_swidth && xfs_has_swalloc(mp))
-+	/*
-+	 * Forced inode alignment takes preference over stripe alignment.
-+	 * Stripe alignment for allocation is determined by mount parameters.
-+	 */
-+	if (xfs_inode_has_forcealign(ap->ip)) {
-+		args->alignment = xfs_get_extsz_hint(ap->ip);
-+		args->datatype |= XFS_ALLOC_FORCEALIGN;
-+	} else if (mp->m_swidth && xfs_has_swalloc(mp)) {
- 		args->alignment = mp->m_swidth;
--	else if (mp->m_dalign)
-+	} else if (mp->m_dalign) {
- 		args->alignment = mp->m_dalign;
-+	}
- 
- 	if (ap->flags & XFS_BMAPI_COWFORK)
- 		align = xfs_get_cowextsz_hint(ap->ip);
-@@ -3617,6 +3625,11 @@ xfs_bmap_btalloc_low_space(
- {
- 	int			error;
- 
-+	if (args->alignment > 1 && (args->datatype & XFS_ALLOC_FORCEALIGN)) {
-+		args->fsbno = NULLFSBLOCK;
-+		return 0;
-+	}
-+
- 	args->alignment = 1;
- 	if (args->minlen > ap->minlen) {
- 		args->minlen = ap->minlen;
-@@ -3668,6 +3681,8 @@ xfs_bmap_btalloc_filestreams(
- 
- 	/* Attempt non-aligned allocation if we haven't already. */
- 	if (!error && args->fsbno == NULLFSBLOCK && args->alignment > 1)  {
-+		if (args->datatype & XFS_ALLOC_FORCEALIGN)
-+			return error;
- 		args->alignment = 1;
- 		error = xfs_alloc_vextent_near_bno(args, ap->blkno);
- 	}
-@@ -3726,6 +3741,8 @@ xfs_bmap_btalloc_best_length(
- 
- 	/* Attempt non-aligned allocation if we haven't already. */
- 	if (!error && args->fsbno == NULLFSBLOCK && args->alignment > 1)  {
-+		if (args->datatype & XFS_ALLOC_FORCEALIGN)
-+			return error;
- 		args->alignment = 1;
- 		error = xfs_alloc_vextent_start_ag(args, ap->blkno);
- 	}
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 0f9d32cbae72..94fa79ae1591 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -312,6 +312,11 @@ static inline bool xfs_inode_has_large_extent_counts(struct xfs_inode *ip)
- 	return ip->i_diflags2 & XFS_DIFLAG2_NREXT64;
- }
- 
-+static inline bool xfs_inode_has_forcealign(struct xfs_inode *ip)
-+{
-+	return false;
-+}
-+
- /*
-  * Return the buftarg used for data allocations on a given inode.
-  */
+xfs_discard_extents() then tries to process the freed bio once again.
+
 -- 
-2.43.0
-
+Chandan
 
