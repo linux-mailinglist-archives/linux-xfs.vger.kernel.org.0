@@ -1,205 +1,114 @@
-Return-Path: <linux-xfs+bounces-4745-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-4749-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0DF0877B79
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Mar 2024 08:55:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 587B6877FFC
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Mar 2024 13:30:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2586DB20DB8
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Mar 2024 07:55:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B8A49B21EB6
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Mar 2024 12:30:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A119810A22;
-	Mon, 11 Mar 2024 07:55:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E12D3FB9C;
+	Mon, 11 Mar 2024 12:30:06 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C71F1C33;
-	Mon, 11 Mar 2024 07:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402CF383A9;
+	Mon, 11 Mar 2024 12:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710143738; cv=none; b=TyESY5/3Gdc4xdXC//ilmlY9HnDz3AAtqh1i8EjBwGqs9wbI+HUkB9sGNE+5Q6n97+RPeQLXgHg7xCKSqb0K939Wii0JNyW+QeiBdOA4QrYsNfbOFYdhoMFCy+KDIv2P9fM9VgTiG4GO6ooCb++3QXTRoViWm9/84eVBJl6xXyU=
+	t=1710160205; cv=none; b=qLPdBGwJmLLYZFwWOslPv0X6y+bM65/2EgDDOe3vU8tHQ2giFlhcSSvVCDDaCFupRnC85aWRGLnMPIrbFS/lbTksZFxS2erPvZqxn2JsQxDaujYcHE9fp6lkJ/JkWAuijYh/dAh5L+ihSKEWeTDO6QPuRvko/keS4uPcp+/TdjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710143738; c=relaxed/simple;
-	bh=/qk/PxlGm1WvdPUtKgJrgC5mcmmOT+1hrUu8hH8Vgts=;
-	h=Subject:From:To:CC:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=E4Z2PE1wAv1syUwA6UzdbbR61zS5RVPoXYm97MSlm0bPbm8ecOWPORlxl4I1qzg5Ii3OrI2qCFOrb24vQiBsLoZPB7ChZzHfDl+aG5R9+Q+8TEAAI+SsxQn0gCS7iI3QoAVQ8GplGnLWLISUiQXNv3zjtNR9C4bTcnU90reCR3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TtTXf6503z1h1v9;
-	Mon, 11 Mar 2024 15:53:06 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1043B1402E1;
-	Mon, 11 Mar 2024 15:55:32 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 11 Mar 2024 15:55:31 +0800
-Subject: Re: [PATCH RFC 1/2] iomap: Add a IOMAP_DIO_MAY_INLINE_COMP flag
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-To: Dave Chinner <david@fromorbit.com>
-CC: <brauner@kernel.org>, <djwong@kernel.org>, <jack@suse.cz>,
-	<tytso@mit.edu>, <linux-xfs@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-ext4@vger.kernel.org>, <yi.zhang@huawei.com>
-References: <20240229113849.2222577-1-chengzhihao1@huawei.com>
- <20240229113849.2222577-2-chengzhihao1@huawei.com>
- <ZeEkFUCUQ4eR7AlX@dread.disaster.area>
- <3de3ede5-31e0-2b7b-f523-9fd22090401f@huawei.com>
-Message-ID: <8263025e-15e6-fbc7-2826-f6f9ac3d9043@huawei.com>
-Date: Mon, 11 Mar 2024 15:55:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1710160205; c=relaxed/simple;
+	bh=xMM2DNemWdbPKiUWoRG3Me9R5Y6sBkgMp7tKEGkoQJM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OYDcN8I1u5EAHKXAxhcaD0aPljhuB9PraBuhwev/hxqFFQXIsaio++8BQndObscOKW+lVdM+cZHxoR7jBTqL+ZXSH3yMTACi5Xzg2EdOSO+DMo8aO9XDSMT1HLTvaakVAUiM8n0BYDWzAO/aRC6tsDJbNj4H7pmOTKkLyDVEaCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Ttbgx41qWz4f3lgB;
+	Mon, 11 Mar 2024 20:29:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 37E501A017A;
+	Mon, 11 Mar 2024 20:29:57 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxAt+e5lAE9+Gg--.62739S4;
+	Mon, 11 Mar 2024 20:29:55 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	tytso@mit.edu,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH 0/4] xfs/iomap: fix non-atomic clone operation and don't update size when zeroing range post eof
+Date: Mon, 11 Mar 2024 20:22:51 +0800
+Message-Id: <20240311122255.2637311-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <3de3ede5-31e0-2b7b-f523-9fd22090401f@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+X-CM-TRANSID:cCh0CgDHlxAt+e5lAE9+Gg--.62739S4
+X-Coremail-Antispam: 1UD129KBjvJXoWruF4xJrWfAr1DXr48tFyrJFb_yoW8JF1DpF
+	saka1S9r1xGr1xurs3KF45Gw45ta1rZr1UWr1fGw1rZ3y8Ary29r4IgF4FkrWUJr9akw4F
+	qr129Fy8K34UArDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VU1
+	a9aPUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-在 2024/3/1 18:02, Zhihao Cheng 写道:
-> 在 2024/3/1 8:40, Dave Chinner 写道:
-> 
-Hi Dave. Friendly ping.
-> Hi Dave, thanks for your detailed and nice suggestions, I have a few 
-> questions below.
->> On Thu, Feb 29, 2024 at 07:38:48PM +0800, Zhihao Cheng wrote:
->>> It will be more efficient to execute quick endio process(eg. non-sync
->>> overwriting case) under irq process rather than starting a worker to
->>> do it.
->>> Add a flag to control DIO to be finished inline(under irq context), 
->>> which
->>> can be used for non-sync overwriting case.
->>> Besides, skip invalidating pages if DIO is finished inline, which will
->>> keep the same logic with dio_bio_end_aio in non-sync overwriting case.
->>>
->>> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
->>
->> A nice idea, but I don't think an ext4 specific API flag is the
->> right way to go about enabling this. The iomap dio code knows if
->> the write is pure overwrite already - we have the IOMAP_F_DIRTY flag
->> for that, and we combine this with IOMAP_DIO_WRITE_THROUGH to do the
->> pure overwrite FUA optimisations.
->>
->> That is:
->>
->>         /*
->>                   * Use a FUA write if we need datasync semantics, 
->> this is a pure
->>                   * data IO that doesn't require any metadata updates 
->> (including
->>                   * after IO completion such as unwritten extent 
->> conversion) and
->>                   * the underlying device either supports FUA or 
->> doesn't have
->>                   * a volatile write cache. This allows us to avoid 
->> cache flushes
->>                   * on IO completion. If we can't use writethrough and 
->> need to
->>                   * sync, disable in-task completions as dio 
->> completion will
->>                   * need to call generic_write_sync() which will do a 
->> blocking
->>                   * fsync / cache flush call.
->>                   */
->>                  if (!(iomap->flags & (IOMAP_F_SHARED|IOMAP_F_DIRTY)) &&
->>                      (dio->flags & IOMAP_DIO_WRITE_THROUGH) &&
->>                      (bdev_fua(iomap->bdev) || 
->> !bdev_write_cache(iomap->bdev)))
->>                          use_fua = true;
->>
->> Hence if we want to optimise pure overwrites that have no data sync
->> requirements, we already have the detection and triggers in place to
->> do this. We just need to change the way we set up the IO flags to
->> allow write-through (i.e. non-blocking IO completions) to use inline
->> completions.
->>
->> In __iomap_dio_rw():
->>
->> +    /* Always try to complete inline. */
->> +    dio->flags |= IOMAP_DIO_INLINE_COMP;
->>     if (iov_iter_rw(iter) == READ) {
->> -               /* reads can always complete inline */
->> -               dio->flags |= IOMAP_DIO_INLINE_COMP;
->> ....
->>
->>     } else {
->> +        /* Always try write-through semantics. If we can't
->> +         * use writethough, it will be disabled along with
->> +         * IOMAP_DIO_INLINE_COMP before dio completion is run
->> +         * so it can be deferred to a task completion context
->> +         * appropriately.
->> +         */
->> +               dio->flags |= IOMAP_DIO_WRITE | IOMAP_DIO_WRITE_THROUGH;
-> 
-> There is a behavior change here, if we set IOMAP_DIO_WRITE_THROUGH 
-> unconditionally, non-datasync IO will be set with REQ_FUA, which means 
-> that device will flush writecache for each IO, will it affect the 
-> performance in non-sync dio case?
->>         iomi.flags |= IOMAP_WRITE;
->> -               dio->flags |= IOMAP_DIO_WRITE;
->> .....
->>         /* for data sync or sync, we need sync completion processing */
->>                  if (iocb_is_dsync(iocb)) {
->>                          dio->flags |= IOMAP_DIO_NEED_SYNC;
->>
->> -                      /*
->> -                       * For datasync only writes, we optimistically 
->> try using
->> -                       * WRITE_THROUGH for this IO. This flag 
->> requires either
->> -                       * FUA writes through the device's write cache, 
->> or a
->> -                       * normal write to a device without a volatile 
->> write
->> -                       * cache. For the former, Any non-FUA write 
->> that occurs
->> -                       * will clear this flag, hence we know before 
->> completion
->> -                       * whether a cache flush is necessary.
->> -                       */
->> -                       if (!(iocb->ki_flags & IOCB_SYNC))
->> -                               dio->flags |= IOMAP_DIO_WRITE_THROUGH;
->> +            * For sync writes we know we are going to need
->> +            * blocking completion processing, so turn off
->> +            * writethrough now.
->> +            */
->>             if (iocb->ki_flags & IOCB_SYNC) {
->>                 dio->flags &= ~(IOMAP_DIO_WRITE_THROUGH |
->>                         IOMAP_DIO_INLINE_COMP);
->>             }
->>                  }
->>
-> 
-> [...]
->>
->> However, this does mean that any spinlock taken in the ->end_io()
->> callbacks now needs to be irq safe. e.g. in xfs_dio_write_end_io()
->> the spinlock protection around inode size updates will need to use
->> an irq safe locking, as will the locking in the DIO submission path
->> that it serialises against in xfs_file_write_checks(). That probably
->> is best implemented as a separate spinlock.
->>
->> There will also be other filesystems that need to set IOMAP_F_DIRTY
->> unconditionally (e.g. zonefs) because they always take blocking
->> locks in their ->end_io callbacks and so must always run in task
->> context...
-> Should we add a new flag(eg. IOMAP_F_ENDIO_IRQ ?) to indicate that the 
-> endio cannot be done under irq? Because I think IOMAP_F_DIRTY means that 
-> the metadata needs to be written, if we add a new semantics(endio must 
-> be done in defered work) for this flag, the code will looks a little 
-> complicated.
-> 
-> 
-> .
+From: Zhang Yi <yi.zhang@huawei.com>
+
+This patch series fix a problem of exposing zeroed data on xfs since the
+non-atomic clone operation. This problem was found while I was
+developing ext4 buffered IO iomap conversion (ext4 is relying on this
+fix [1]), the root cause of this problem and the discussion about the
+solution please see [2]. After fix the problem, iomap_zero_range()
+doesn't need to update i_size so that ext4 can use it to zero partial
+block, e.g. truncate eof block [3].
+
+[1] https://lore.kernel.org/linux-ext4/20240127015825.1608160-1-yi.zhang@huaweicloud.com/
+[2] https://lore.kernel.org/linux-ext4/9b0040ef-3d9d-6246-4bdd-82b9a8f55fa2@huaweicloud.com/
+[3] https://lore.kernel.org/linux-ext4/9c9f1831-a772-299b-072b-1c8116c3fb35@huaweicloud.com/
+
+Thanks,
+Yi.
+
+Zhang Yi (4):
+  xfs: match lock mode in xfs_buffered_write_iomap_begin()
+  xfs: convert delayed extents to unwritten when zeroing post eof blocks
+  iomap: don't increase i_size if it's not a write operation
+  iomap: cleanup iomap_write_iter()
+
+ fs/iomap/buffered-io.c | 78 +++++++++++++++++++++---------------------
+ fs/xfs/xfs_iomap.c     | 39 ++++++++++++++++++---
+ 2 files changed, 73 insertions(+), 44 deletions(-)
+
+-- 
+2.39.2
 
 
