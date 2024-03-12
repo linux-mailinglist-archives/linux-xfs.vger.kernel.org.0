@@ -1,51 +1,51 @@
-Return-Path: <linux-xfs+bounces-4777-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-4782-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D27CC879680
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 15:38:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 888148796BC
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 15:46:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5B731C2224C
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 14:38:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA5561C20915
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 14:46:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617417A703;
-	Tue, 12 Mar 2024 14:38:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70C0D7C6DD;
+	Tue, 12 Mar 2024 14:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maiolino.me header.i=@maiolino.me header.b="HyTaY8I5"
+	dkim=pass (2048-bit key) header.d=maiolino.me header.i=@maiolino.me header.b="LkGs+muB"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from mail-4317.proton.ch (mail-4317.proton.ch [185.70.43.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B0978286
-	for <linux-xfs@vger.kernel.org>; Tue, 12 Mar 2024 14:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF377AE72
+	for <linux-xfs@vger.kernel.org>; Tue, 12 Mar 2024 14:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710254319; cv=none; b=Wl90Qy9wuRuj5dqvkUbCkutc6WmKLjzGlG1qouWrbunjqxcbMV0/lGsL031jHhau3p8kHvQ8y9+ePTVwdkuKV6Dg4sHh8NGugOci5w8Scm2ZR0xqrg2NfOrt0L5HOcjfIDBMTAp4Ddq3kDUZZP263sPgM7gOJH9rROm1/c1uC/c=
+	t=1710254752; cv=none; b=ZpltdtvQ8YIi5Ojg9dD2Y9hgYv+QSzrb6NeGm6BdxZehzYHxQ2OoP3Lx3Fycxwa4k7fGFS7u73x6DXF7ABPQzn8iSEMB9guPwd/SrPSKcf9XOrhCxjvMEKpsAR7M0ZOdGLQYRE3/ha7ZsCqedFQkGmlCB4dw0GVZwFtdnvLrb6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710254319; c=relaxed/simple;
-	bh=XL3+k/y/DQuQRT4hzFN0I9mNNGtKmhnjIxH6vLM+EQk=;
-	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=htiS2MVMiGapXcm4ACPabK0aeIA2tJejmzIlutq4SyLC5SprxTBijzPRp9G9o3+K032V6Rh9u1i3Lh6+xBuul1sVuBvwFD9p4T81pVNaIkHCY78wiFIudPi3cSnSR+XPX6cY/Jt3o9lslA8oBnGbN2ukuUs+VROEDAa+qjP17J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maiolino.me; spf=pass smtp.mailfrom=maiolino.me; dkim=pass (2048-bit key) header.d=maiolino.me header.i=@maiolino.me header.b=HyTaY8I5; arc=none smtp.client-ip=188.165.51.139
+	s=arc-20240116; t=1710254752; c=relaxed/simple;
+	bh=t0cFqoV0fjb8tTDlSnL2xTUwybfl/OIZ/8TZiWlMg4I=;
+	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=pQjcAIWswJMymqgtGsUW/bKrzPm2fu3/CyG4Xs2XO5hzLIqTzVvFhbH8mt46y4++mtmXIzhqhfucmxbitVIVGONwPOhkPZRL2Pi4Q38Ez778dWAB5YiuNkpn01Ohwi8SpzTkcmi4xLI9ZMavOGwi2ni9cAsKhuhVFmNv6oHPbE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maiolino.me; spf=pass smtp.mailfrom=maiolino.me; dkim=pass (2048-bit key) header.d=maiolino.me header.i=@maiolino.me header.b=LkGs+muB; arc=none smtp.client-ip=185.70.43.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=maiolino.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maiolino.me
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maiolino.me;
-	s=protonmail; t=1710254300; x=1710513500;
-	bh=EmvoJb9t+ULApoN/diS0TXT7/mqK7KQm4wQTbX8XObc=;
+	s=protonmail; t=1710254742; x=1710513942;
+	bh=4p2Nv5powM353qdvqRtZyVy1FELLETWD5xFTK/nI4ZM=;
 	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
 	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=HyTaY8I57Y+9bvIqdXIPtke/En+we7yS6oGRNnIwjZvBQYaMGinJrZEUpwDfsQM13
-	 s1dOh2X6O8k2tsBYzYdyl7wnCqBs/bNpGI/pjQBlHPfbPE1bLCe+6SDLTF9XveYrCq
-	 gAdK+Nn5nndgsOHY0MZQkSRoL+q3grcWy0nuBzCsEFaX0H6Ll1X8tbYoTT6erlw0l4
-	 opbd2y6uQLXUirD0f7aCdVKaSfViVRNXx0y1csThCIouzmXP6T72PZdtX0X8YYI5eI
-	 NNOwtlzPvs+vzJcT/G9eQAJSh0wMPtfeHrBBMBQhhPApqJfVnnUCC3tZWoTv8MFhQl
-	 +R/qaUpE8a9mA==
-Date: Tue, 12 Mar 2024 14:38:05 +0000
+	b=LkGs+muBK990UBEKj6QR2Wk/XJNfCiPsJ57l7bRY7cgMhNeH2cj9yJYXHK5mPYHf6
+	 HNUiYQgDGPcJzXAnDEtK5HJWD4mRbhYIyC0Nnv19LCHYnxkKmZkZdj2JtpWHnecnab
+	 ybaFJ62d6jvYosPRJUD8sBaEtITJlVZa+k+42LcQxTffbBEuUKFO3l6lx1KmM56BcW
+	 PGsfsGYs32yIKt4jX8RqZMOKe5i4g2uOYdouLGq4mkCZp18JNy+jGM02TkskxPenc8
+	 BWobpAMB2ugPFwjn3oM+YFubeNpGjM7Ezfey8fvEFtHOw1/6V2p9ezyedvzVF5QXya
+	 wxfJiBMseGBtg==
+Date: Tue, 12 Mar 2024 14:45:14 +0000
 To: linux-xfs@vger.kernel.org
 From: Carlos Maiolino <carlos@maiolino.me>
-Subject: [ANNOUNCE] xfsprogs: for-next updated to 127b66a4d
-Message-ID: <kj4r4hxnifrr5oxpbn7wvabasyg4xpi46j2bauo6auqzs7mlsl@oi2ed6v373au>
+Subject: [ANNOUNCE] xfsdump: for-next updated to 252b097
+Message-ID: <pbubbjeox7a6zkgxytxlr6h3j45smcswbnyhpth2lv4fc4gvw6@5s34pvajqn3s>
 Feedback-ID: 28765827:user:proton
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -53,24 +53,24 @@ List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------cefba3c8be0a68da1d08470580405f31247be73a75606ffe5fc9789beaf84655"; charset=utf-8
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------a6c56bd5c124c3463cf2cbf11f868fb44765e78fd7b76e9eaa278994e30ac345"; charset=utf-8
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------cefba3c8be0a68da1d08470580405f31247be73a75606ffe5fc9789beaf84655
+--------a6c56bd5c124c3463cf2cbf11f868fb44765e78fd7b76e9eaa278994e30ac345
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 12 Mar 2024 15:38:02 +0100
+Date: Tue, 12 Mar 2024 15:45:11 +0100
 From: Carlos Maiolino <carlos@maiolino.me>
 To: linux-xfs@vger.kernel.org
-Subject: [ANNOUNCE] xfsprogs: for-next updated to 127b66a4d
-Message-ID: <kj4r4hxnifrr5oxpbn7wvabasyg4xpi46j2bauo6auqzs7mlsl@oi2ed6v373au>
+Subject: [ANNOUNCE] xfsdump: for-next updated to 252b097
+Message-ID: <pbubbjeox7a6zkgxytxlr6h3j45smcswbnyhpth2lv4fc4gvw6@5s34pvajqn3s>
 MIME-Version: 1.0
 Content-Disposition: inline
 
 Hello.
 
-The xfsprogs for-next branch, located at:
+The xfsdump for-next branch, located at:
 
-https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git/refs/?h=for-next
+https://git.kernel.org/pub/scm/fs/xfs/xfsdump-dev.git/refs/?h=for-next
 
 Has just been updated.
 
@@ -79,58 +79,25 @@ the list and not included in this update, please let me know.
 
 The new head of the for-next branch is commit:
 
-127b66a4d8afc6f3dfe8929c01b1f1e63c1ebf31
+252b0979e97b23a17cafae303040c4a7f942bb3b
 
-5 new commits:
+2 new commits:
 
-Bastian Germann (1):
-      [86f3757ae] debian: Increase build verbosity, add terse support
+Christoph Hellwig (1):
+      [252b097] xfsdump/xfsrestore: don't use O_DIRECT on the RT device
 
-Darrick J. Wong (1):
-      [127b66a4d] xfs_db: don't hardcode 'type data' size at 512b
-
-Sam James (2):
-      [ebe85b803] io: Adapt to >= 64-bit time_t
-      [9dae86dce] build: Request 64-bit time_t where possible
-
-Violet Purcell (1):
-      [9e726740f] Remove use of LFS64 interfaces
+Pavel Reichl (1):
+      [577e51a] xfsdump: Fix memory leak
 
 Code Diffstat:
 
- copy/xfs_copy.c           |  2 +-
- db/block.c                |  3 ++-
- db/io.c                   |  3 ++-
- debian/rules              |  4 ++++
- fsr/xfs_fsr.c             |  2 +-
- include/builddefs.in      |  4 ++--
- io/bmap.c                 |  6 +++---
- io/copy_file_range.c      |  4 ++--
- io/cowextsize.c           |  6 +++---
- io/fadvise.c              |  2 +-
- io/fiemap.c               |  6 +++---
- io/fsmap.c                |  6 +++---
- io/io.h                   | 10 +++++-----
- io/madvise.c              |  2 +-
- io/mincore.c              |  2 +-
- io/mmap.c                 | 13 +++++++------
- io/pread.c                | 22 +++++++++++-----------
- io/pwrite.c               | 20 ++++++++++----------
- io/reflink.c              |  4 ++--
- io/seek.c                 |  6 +++---
- io/sendfile.c             |  6 +++---
- io/stat.c                 |  8 ++++----
- io/sync_file_range.c      |  2 +-
- io/truncate.c             |  2 +-
- libxfs/rdwr.c             |  8 ++++----
- mdrestore/xfs_mdrestore.c |  2 +-
- repair/prefetch.c         |  2 +-
- scrub/spacemap.c          |  6 +++---
- spaceman/freesp.c         |  4 ++--
- spaceman/trim.c           |  2 +-
- 30 files changed, 88 insertions(+), 81 deletions(-)
+ doc/xfsdump.html  |  1 -
+ dump/content.c    | 46 +++++++++-------------------------------------
+ restore/content.c | 41 +----------------------------------------
+ restore/tree.c    | 15 ++++++++++++++-
+ 4 files changed, 24 insertions(+), 79 deletions(-)
 
---------cefba3c8be0a68da1d08470580405f31247be73a75606ffe5fc9789beaf84655
+--------a6c56bd5c124c3463cf2cbf11f868fb44765e78fd7b76e9eaa278994e30ac345
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -138,13 +105,13 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: ProtonMail
 
-wnUEARYIACcFAmXwaMwJEOk12U/828uvFiEEj32Dn/1+aNUZzl9s6TXZT/zb
-y68AAOg4AQCdLhjr+hZq4ApuQF45ts7R+HO7v33Xr3Yp5/gOclWv3wD/cJ+E
-k7qYY6Fe3O4pYWN6XMnJIgA5O8HPi/6J8qNzyAg=
-=nQqV
+wnUEARYIACcFAmXwanoJEOk12U/828uvFiEEj32Dn/1+aNUZzl9s6TXZT/zb
+y68AAK3YAQDeBrmRbLVPuhyXBYlk7wy5n+lLt6CDgW/01uGdDTS/8QD/TWiy
+MteqMV04/GcPj9rrKLVcdjsGnEhvwu5iDcostAM=
+=XfO0
 -----END PGP SIGNATURE-----
 
 
---------cefba3c8be0a68da1d08470580405f31247be73a75606ffe5fc9789beaf84655--
+--------a6c56bd5c124c3463cf2cbf11f868fb44765e78fd7b76e9eaa278994e30ac345--
 
 
