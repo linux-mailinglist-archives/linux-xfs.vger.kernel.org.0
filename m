@@ -1,50 +1,49 @@
-Return-Path: <linux-xfs+bounces-4781-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-4783-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E103A8796BA
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 15:46:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DB828796C4
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 15:48:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8AFA7B21842
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 14:46:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C927F1F221DA
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Mar 2024 14:48:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178237C0AF;
-	Tue, 12 Mar 2024 14:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 833207B3DF;
+	Tue, 12 Mar 2024 14:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n6DBj6cI"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d/miBaPZ"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778A17AE72;
-	Tue, 12 Mar 2024 14:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148B97AE72;
+	Tue, 12 Mar 2024 14:48:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710254748; cv=none; b=q34JmhXj1fkCKDDbW10DLGVdU6KNePfhgnpgQwbhDi2OaWTYfz11Zz+s0m/GN9IX6Pb4B1o69Ws+mijgWp3rOwUb/vLKeWZge5dYprJKsvZvdTMj7oOFqZ0+s1u5lFN1Cm5HBaRYVGC1g/Te+7qItPvUvQ2Pm0/7msLLTuUApzg=
+	t=1710254909; cv=none; b=GO25DOfoneFlPpHtggMMW6t1kZlRIAx0FQQIwqyMGL+w0rKp3K1ooH4MUUSHQzj9ZzbmTN5Zqdh95RCiUxpG8/WNNR26B9lDQ3NgsAg0yynF2EBiJIvDKPqWT6SzyWoCqVH4+eMaNADlACv3dzRzqWabVkpOMqVvGW01tvIFdYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710254748; c=relaxed/simple;
-	bh=/Zv+Ufy9VDvIabahDOh3hEnN/W+K4UKzQDGq9mpwqHI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jZXR1aD1amKM/bpDbjPgJbY+j/QRyEOS7/e2pYDPUEvQnd82c1jfnoych/+gn2P4RAKPb4+WrfHZ3ghX4dcSn1IQgONKvP/+AQFz8BfoFGWvYdGB4cCA2PPUnW5K6uNpuooM2ka8jo5W2f7gclAFJGMaTHw1MX6zUqFbPkv5xUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n6DBj6cI; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1710254909; c=relaxed/simple;
+	bh=7w3XeBJMmAtE65uQl32FUcatV/W5i4cp2Ud3Ixk3lhA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NvqMzajU4B2fww+KQPlVwZNl48KB34EPW0lv/1vT4WPxQH0eQAYZdGMRZc1Pln1snWz9CwmVAUbEKMZjJmvj6PBGnPkGkL+7Py+447d8O6toCz47AIgmwlz3UpkFtllXZX/gvRdmqV2D/flFCRQLLPO8uDu/wd5m0xlsG7xpdbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d/miBaPZ; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=0Naseq0Wthv0thDdBSJ3JbI1Kt4lTFJ0xfpQrsvbeLw=; b=n6DBj6cIvlaCzVs49C5D7MAdTw
-	yPDIeDJ8locxWfJvQzocOq7NkXowJVZ5Eiuik6ppG9NLJI7YPgffh2EtLYrExz9L4bbCq6JCA7Jfm
-	ZMgoQpZoqyL6ExOG7ZcIozTJGVE0MXsE/9SQO6LwGlVcPj46gRogBYp49QhmXgCwTaIOhkGZKCoE4
-	xKo6R1Uy2/Gh09c246vl+E1bFO7awaYHJZbexMU8nH5LLWcEnlCv0oHiWGRXvxz2Aeh3oCk/k0w7c
-	1GLx53cdqMtmq0HHAparu1oSsz11PIrbTl2HlifjnB0s1uYoACmekRSDeiIyIbFI7tRTk/E9bu7Vo
-	gB/Bt0cQ==;
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=pn7Anh9njmnmAu3L5gNvV/rJYKFjcYmEsb1l8Are5AM=; b=d/miBaPZhadtVwJsjoqOML0mBL
+	qCtO46aMlr6PrABMvl+1v/hsGUgCIxQInFRR4dQrvbSweY/7TlZ8ZK56H8tFhyPpo/qx3a+5RvmKo
+	D+z9nLpbw+PUxSB3081x4919oOnu6p/2DcweIAubyr5HAwo6J6R0EAzHDuqtg/VfYs1JeRkLtVd+6
+	iG3ZeMOCxZYAruRHOZPHHQKF5l8RzInZMoaP+Rw+WqJUkoWH3WuyMOKUNUQnK7m3PPiDX3y3Facpn
+	O4GyicPJO3epY5m8PhOdWCeqFrYXcy2ohz07H/MAWyV8CZ4MY9ChmJ21DrnfsBz1J6YkU6fiNRb7a
+	wsy8+9Zg==;
 Received: from [50.226.187.238] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rk3Ny-00000006C8z-1Shx;
-	Tue, 12 Mar 2024 14:45:46 +0000
+	id 1rk3QZ-00000006D6R-1cGg;
+	Tue, 12 Mar 2024 14:48:27 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Jens Axboe <axboe@kernel.dk>,
 	Chandan Babu R <chandanbabu@kernel.org>,
@@ -52,12 +51,10 @@ To: Jens Axboe <axboe@kernel.dk>,
 Cc: linux-block@vger.kernel.org,
 	linux-nvme@lists.infradead.org,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 3/5] block: add a blk_alloc_discard_bio helper
-Date: Tue, 12 Mar 2024 08:45:29 -0600
-Message-Id: <20240312144532.1044427-4-hch@lst.de>
+Subject: RFCv2: fix fatal signal handling in __blkdev_issue_discard
+Date: Tue, 12 Mar 2024 08:48:21 -0600
+Message-Id: <20240312144826.1045212-1-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240312144532.1044427-1-hch@lst.de>
-References: <20240312144532.1044427-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -67,103 +64,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Factor out a helper from __blkdev_issue_discard that chews off as much as
-possible from a discard range and allocates a bio for it.
+[sorry for the resend, the hotel wifi just broke down]
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-lib.c     | 58 ++++++++++++++++++++++++++-------------------
- include/linux/bio.h |  3 +++
- 2 files changed, 37 insertions(+), 24 deletions(-)
+Hi all,
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 50923508a32466..fd97f4dd34e7f4 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -55,36 +55,46 @@ static void await_bio_chain(struct bio *bio)
- 	blk_wait_io(&done);
- }
- 
-+struct bio *blk_alloc_discard_bio(struct block_device *bdev,
-+		sector_t *sector, sector_t *nr_sects, gfp_t gfp_mask)
-+{
-+	sector_t bio_sects = min(*nr_sects, bio_discard_limit(bdev, *sector));
-+	struct bio *bio;
-+
-+	if (WARN_ON_ONCE(!(gfp_mask & __GFP_RECLAIM)))
-+		return NULL;
-+	if (!bio_sects)
-+		return NULL;
-+
-+	bio = bio_alloc(bdev, 0, REQ_OP_DISCARD, gfp_mask);
-+	bio->bi_iter.bi_sector = *sector;
-+	bio->bi_iter.bi_size = bio_sects << SECTOR_SHIFT;
-+	*sector += bio_sects;
-+	*nr_sects -= bio_sects;
-+	/*
-+	 * We can loop for a long time in here if someone does full device
-+	 * discards (like mkfs).  Be nice and allow us to schedule out to avoid
-+	 * softlocking if preempt is disabled.
-+	 */
-+	cond_resched();
-+	return bio;
-+}
-+
- int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
- 		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop)
- {
--	struct bio *bio = *biop;
--
--	while (nr_sects) {
--		sector_t req_sects =
--			min(nr_sects, bio_discard_limit(bdev, sector));
-+	struct bio *bio;
- 
--		bio = blk_next_bio(bio, bdev, 0, REQ_OP_DISCARD, gfp_mask);
--		bio->bi_iter.bi_sector = sector;
--		bio->bi_iter.bi_size = req_sects << 9;
--		sector += req_sects;
--		nr_sects -= req_sects;
--
--		/*
--		 * We can loop for a long time in here, if someone does
--		 * full device discards (like mkfs). Be nice and allow
--		 * us to schedule out to avoid softlocking if preempt
--		 * is disabled.
--		 */
--		cond_resched();
--		if (fatal_signal_pending(current)) {
--			await_bio_chain(bio);
--			return -EINTR;
--		}
-+	while (!fatal_signal_pending(current)) {
-+		bio = blk_alloc_discard_bio(bdev, &sector, &nr_sects, gfp_mask);
-+		if (!bio)
-+			return 0;
-+		*biop = bio_chain_and_submit(*biop, bio);
- 	}
- 
--	*biop = bio;
--	return 0;
-+	if (*biop)
-+		await_bio_chain(*biop);
-+	return -EINTR;
- }
- EXPORT_SYMBOL(__blkdev_issue_discard);
- 
-diff --git a/include/linux/bio.h b/include/linux/bio.h
-index 643d61b7cb82f7..74138c815657fd 100644
---- a/include/linux/bio.h
-+++ b/include/linux/bio.h
-@@ -826,4 +826,7 @@ struct bio *blk_next_bio(struct bio *bio, struct block_device *bdev,
- 		unsigned int nr_pages, blk_opf_t opf, gfp_t gfp);
- struct bio *bio_chain_and_submit(struct bio *prev, struct bio *new);
- 
-+struct bio *blk_alloc_discard_bio(struct block_device *bdev,
-+		sector_t *sector, sector_t *nr_sects, gfp_t gfp_mask);
-+
- #endif /* __LINUX_BIO_H */
--- 
-2.39.2
+this tries to address the block for-next oops Chandan reported on XFS.
+I can't actually reproduce it unfortunately, but this series should
+sort it out by movign the fatal_signal_pending check out of all but
+the ioctl path.  The write_zeroes and secure_erase path will need
+similar treatment eventually.
 
+Tested with blktests and the xfstests discard group for xfs only.
+
+Changes since v1:
+ - open code the fatal signal logic in the ioctl handler
+ - better bio-level helpers
+ - drop the file system cleanups for now
+
+Diffstat:
+ block/bio.c         |   48 +++++++++++++++++++++++----
+ block/blk-lib.c     |   90 +++++++++++++++-------------------------------------
+ block/blk.h         |    1 
+ block/ioctl.c       |   35 +++++++++++++++++---
+ include/linux/bio.h |    4 ++
+ 5 files changed, 102 insertions(+), 76 deletions(-)
 
