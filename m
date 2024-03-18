@@ -1,89 +1,89 @@
-Return-Path: <linux-xfs+bounces-5274-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5276-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F15487F34D
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 23:48:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 205CD87F34F
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 23:48:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E9F31C21727
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 22:48:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B187B2245A
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 22:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656265BAEA;
-	Mon, 18 Mar 2024 22:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A67ED5C609;
+	Mon, 18 Mar 2024 22:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="GHKgLxm9"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="DfClY/Ok"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3FA5A798
-	for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 22:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3A45B67F
+	for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 22:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710802045; cv=none; b=Js11wbEcex6wXjRPnKE0LapK349dJ9DQb0o1AHy26tG2thojP/mLDWu5E4JWvL9BdAUV6UQFz8OXzbpBwOs+KIvkKfG8OaITe1MZ7OVnYCSYPaZpdMRZwbvimVNWt/SFeZ6BIx2dabi4E9AI+NMDFaEiCKlxQDBLvUnk0EWOcxo=
+	t=1710802046; cv=none; b=AwDGIxN9AG+Mz3Gu+cmna7M2jdYHMysP5QVRdJtb5IGjPqqCCEtqmSV8bFHqSVVgeb4r12jIYNiRqP9OZ4HP481Qq1SwJGtuGXgKY7CxE4fez0u+oAQW+leikJgVJu/+xn2xfU6LBF4NejkYOCmREvgnbyLTcy5ymEbl/lqljIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710802045; c=relaxed/simple;
-	bh=SM+zOtg637VlMoOCHC1/uAF4AhAoJR9ut2b/g1I/1fM=;
+	s=arc-20240116; t=1710802046; c=relaxed/simple;
+	bh=gYvZ4VTyvR3Cet8F4IcLQ2wPy0s4YFPJ/WGozXb/sJA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CkP1GiVyIMQSyyChicZqdvZG43IzEBLXfyQW9a4PGWANYWOTAVIYRdGHJOY0y+E7OwG2vt8L2LBmAhK6iF/rzCDo6jhLrx00WClU83uCjMi/hBAlr0uEr3bBL2k4LObmAbFGwC1SJV3tMmxlFkTpLRZztgd1bKD2RiLOIZ6YlH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=GHKgLxm9; arc=none smtp.client-ip=209.85.215.176
+	 MIME-Version; b=Jslh7tHiZ2QADH6CzyK3ouPcC/fKUHkCQ/3iBN49RveOTvFukXcLSjHTYAu0VTl8K3HS+vqTC9vA2IZOce1EOSZHjhHGXo2XTAGh3Y5eFrNKN9MEAMua++61ymtmclGUGXyZCjidOUP/DDi+xfFNFh2aNYhW9ptG1Uok/3Ticjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=DfClY/Ok; arc=none smtp.client-ip=209.85.167.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so4051216a12.1
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 15:47:23 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c3880cd471so1033804b6e.1
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 15:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710802042; x=1711406842; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710802043; x=1711406843; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=izLpdGG9zFIbngyCVDnJZ8cYvhbFmPtZFud8nwT1kDc=;
-        b=GHKgLxm9BF4XKirWDUSWj5ti7S53gBj0thBHt0d6nPYf5B7uUUzVfuiul6QOwmbkqW
-         vIifJXz7Wvtk1P+SvquMRmqrpzJQumGN8diNZYyo6WrYpPysDAdzAMy2YGV7OFYZ3oLm
-         Uq4A3kyRzPiH1g5bs8dqCgAhu+kbIAc4IMwKYXXsJtoLD1VoiJ79pFd/67YKSYYZ0Fsp
-         78XUh8PV/eK2pTyz6WoifiMshD/91rWBXxrf+pPJY46ZVlat/MYY/8sGQBR7WvF/BmHg
-         mw9Bkjj1SjDP/Q+YjWIoXo9LgdIqkiO52HtWr13cYhVC9h2VwBpVMP7lbEOu4wmuuOY1
-         hymA==
+        bh=wsXcgC1rC1spo4+ayjNMuIUIXQ6miuqb4Yy0Qx/qbwA=;
+        b=DfClY/OkgY8RiofupmJSXQqmvRegdqCRLI5NmJfj0tkuo4ANbEPFZZ0dmAUkeu26hY
+         BroGlAsDNpP8cqkOb8bAtAJ73IyZIxgvv4OQbW8TitYY+QGeAH7e12w9Z5IdQokbTq+8
+         XUow8Vob6W6ZC3W6jsNXiHIzpvdgfauIv3KN3IqHMKmWcb5HqwjvqbH6ah6tM1dPgVPV
+         33p2hfX3gwkGWpu1mlItBU+UpSXpHcB/KtdcBluCk3cXFn4235fElbpwfVOQFuRDowNV
+         bXqtArZ/VtzJu0q3nZaoxg20yYJ3Wo5gbDwvCRXRe2MO1xb8M05uuiPHxKNGf89Nur7F
+         guHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710802042; x=1711406842;
+        d=1e100.net; s=20230601; t=1710802043; x=1711406843;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=izLpdGG9zFIbngyCVDnJZ8cYvhbFmPtZFud8nwT1kDc=;
-        b=aU50WabPNyk9ajdpCRFRksJXkBRndvIAvp20xtUo18tHCZH68S/kBEfrlmx+kSVnx/
-         6Xzvia5swJF1LoPk0+U5k3DbIRjGFj2xwF5fAmMpHXrlG7EPs9gTGkd4GJ2cbk5FAxLL
-         YqcBBJ3LBBWocRoLXKhMJs0NLCeI+vngy0TdgMw6niMY/h87CG8zJQfANZvgoLl5Bv+z
-         4sEWzVHyJ+pFuLcxZlrYStdeCZyj3OZITRdtfGRXm6VOCy98jwUba/gEdzZd9Nm13CPt
-         KdU33ilOqmuwfHhRKmgHIv3izT4XK7HUOY+1RJaRVAA2UUNXLpCs0M8yvUeAoFZV2mgE
-         QsDg==
-X-Gm-Message-State: AOJu0Yx64vvnwcaY3VCi7jGNemt8CP7LcwoXtn3Jm4X/Yefn7+eJryFc
-	T0FoCs2EcnejJrRltBSIeflUftApA40rxuRlsUYyX6HvNbIgg17FKqSzFXutq0B6f5Ps9nFgUY3
-	T
-X-Google-Smtp-Source: AGHT+IG0a3C96H68UdT+ivqCggFzET1llKH5+1nPDy/Zq46A0hNhE2qG9+EvI7IUXpBDWB2Mya6i6g==
-X-Received: by 2002:a17:90b:ecc:b0:29b:9a08:6007 with SMTP id gz12-20020a17090b0ecc00b0029b9a086007mr9319892pjb.46.1710802042162;
-        Mon, 18 Mar 2024 15:47:22 -0700 (PDT)
+        bh=wsXcgC1rC1spo4+ayjNMuIUIXQ6miuqb4Yy0Qx/qbwA=;
+        b=CziGhfnf8w0iNlTfpasnsIoloFf/YTiGLHjdcDg5Na6TeNd0C+XYZSdkBPajZHlxKZ
+         /0DUm5OQmXOsh+qPws0JZznxSUfC+L8fGCv3mNmT2D2CSbY6o4haH/2Ty+dFxE/XMjTY
+         z16EhMEvn4esHpakeCJTfGqNW2sVzmhrV++ACgdovVbux3RPK7f+SpgAPwkqJQQvRhsn
+         P6pwqDuTqIJMIa9KV/+sQbuZU6xR/6uL7Bb5wgP1tPbeMkJEDkxQOAyKqIDSIDGSDpW/
+         XUI3EdR4gLATwKgPQO4OpCoTNXDBdAiOA2RIOu8Fz6xM9Oid+s54MQc8IA6jWtYkA+2c
+         L5oQ==
+X-Gm-Message-State: AOJu0Yx1QqLIxBD20SHmu3BE2zjQ7yW7EP9IsRl+KocuDLSFKsvc500q
+	4w0xZ73XVHecA7AMgWlkGEIvdLV2+5alSDoVWlu+lMGHA12dPivVn+PfJM1LobsDmMwY1S0Dazh
+	X
+X-Google-Smtp-Source: AGHT+IECX3q/k9o3eFzUAkkw6viY5VZwsP9uQRKMLvH+htNtxkJwjcRjyfoOvu4wVTgiXwtB4cM4zw==
+X-Received: by 2002:a05:6808:17a6:b0:3c3:923c:4262 with SMTP id bg38-20020a05680817a600b003c3923c4262mr1682655oib.17.1710802043298;
+        Mon, 18 Mar 2024 15:47:23 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-185-123.pa.nsw.optusnet.com.au. [49.180.185.123])
-        by smtp.gmail.com with ESMTPSA id sk4-20020a17090b2dc400b0029abb8b1265sm8318378pjb.49.2024.03.18.15.47.19
+        by smtp.gmail.com with ESMTPSA id b24-20020aa78718000000b006e68954b9c7sm8441406pfo.44.2024.03.18.15.47.19
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 18 Mar 2024 15:47:20 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
 	by dread.disaster.area with esmtp (Exim 4.96)
 	(envelope-from <dave@fromorbit.com>)
-	id 1rmLlG-003o0e-0K
+	id 1rmLlG-003o0j-0R
 	for linux-xfs@vger.kernel.org;
 	Tue, 19 Mar 2024 09:47:17 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.97)
 	(envelope-from <dave@devoid.disaster.area>)
-	id 1rmLlF-0000000E83B-2XNL
+	id 1rmLlF-0000000E83G-2i0m
 	for linux-xfs@vger.kernel.org;
 	Tue, 19 Mar 2024 09:47:17 +1100
 From: Dave Chinner <david@fromorbit.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 7/9] xfs: walk b_addr for buffer I/O
-Date: Tue, 19 Mar 2024 09:45:58 +1100
-Message-ID: <20240318224715.3367463-8-david@fromorbit.com>
+Subject: [PATCH 8/9] xfs: use vmalloc for multi-folio buffers
+Date: Tue, 19 Mar 2024 09:45:59 +1100
+Message-ID: <20240318224715.3367463-9-david@fromorbit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240318224715.3367463-1-david@fromorbit.com>
 References: <20240318224715.3367463-1-david@fromorbit.com>
@@ -97,187 +97,296 @@ Content-Transfer-Encoding: 8bit
 
 From: Christoph Hellwig <hch@lst.de>
 
-Instead of walking the folio array just walk the kernel virtual
-address in ->b_addr.  This prepares for using vmalloc for buffers
-and removing the b_folio array.
+Instead of allocating the folios manually using the bulk page
+allocator and then using vm_map_page just use vmalloc to allocate
+the entire buffer - vmalloc will use the bulk allocator internally
+if it fits.
 
-[dchinner: ported to folios-based buffers.]
+With this the b_folios array can go away as well as nothing uses it.
+
+[dchinner: port to folio based buffers.]
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_buf.c | 110 +++++++++++++----------------------------------
- fs/xfs/xfs_buf.h |   2 -
- 2 files changed, 29 insertions(+), 83 deletions(-)
+ fs/xfs/xfs_buf.c     | 164 ++++++++++++-------------------------------
+ fs/xfs/xfs_buf.h     |   2 -
+ fs/xfs/xfs_buf_mem.c |   9 +--
+ 3 files changed, 45 insertions(+), 130 deletions(-)
 
 diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index a77e2d8c8107..303945554415 100644
+index 303945554415..6d6bad80722e 100644
 --- a/fs/xfs/xfs_buf.c
 +++ b/fs/xfs/xfs_buf.c
-@@ -358,7 +358,6 @@ xfs_buf_alloc_kmem(
+@@ -282,29 +282,6 @@ _xfs_buf_alloc(
+ 	return 0;
+ }
+ 
+-static void
+-xfs_buf_free_folios(
+-	struct xfs_buf	*bp)
+-{
+-	uint		i;
+-
+-	ASSERT(bp->b_flags & _XBF_FOLIOS);
+-
+-	if (xfs_buf_is_vmapped(bp))
+-		vm_unmap_ram(bp->b_addr, bp->b_folio_count);
+-
+-	for (i = 0; i < bp->b_folio_count; i++) {
+-		if (bp->b_folios[i])
+-			__folio_put(bp->b_folios[i]);
+-	}
+-	mm_account_reclaimed_pages(bp->b_folio_count);
+-
+-	if (bp->b_folios != bp->b_folio_array)
+-		kfree(bp->b_folios);
+-	bp->b_folios = NULL;
+-	bp->b_flags &= ~_XBF_FOLIOS;
+-}
+-
+ static void
+ xfs_buf_free_callback(
+ 	struct callback_head	*cb)
+@@ -323,13 +300,22 @@ xfs_buf_free(
+ 
+ 	ASSERT(list_empty(&bp->b_lru));
+ 
+-	if (xfs_buftarg_is_mem(bp->b_target))
++	if (xfs_buftarg_is_mem(bp->b_target)) {
+ 		xmbuf_unmap_folio(bp);
+-	else if (bp->b_flags & _XBF_FOLIOS)
+-		xfs_buf_free_folios(bp);
+-	else if (bp->b_flags & _XBF_KMEM)
+-		kfree(bp->b_addr);
++		goto free;
++	}
+ 
++	if (!(bp->b_flags & _XBF_KMEM))
++		mm_account_reclaimed_pages(bp->b_folio_count);
++
++	if (bp->b_flags & _XBF_FOLIOS)
++		__folio_put(kmem_to_folio(bp->b_addr));
++	else
++		kvfree(bp->b_addr);
++
++	bp->b_flags &= _XBF_KMEM | _XBF_FOLIOS;
++
++free:
+ 	call_rcu(&bp->b_rcu, xfs_buf_free_callback);
+ }
+ 
+@@ -356,8 +342,6 @@ xfs_buf_alloc_kmem(
+ 		bp->b_addr = NULL;
+ 		return -ENOMEM;
  	}
- 	bp->b_folios = bp->b_folio_array;
- 	bp->b_folios[0] = kmem_to_folio(bp->b_addr);
--	bp->b_offset = offset_in_folio(bp->b_folios[0], bp->b_addr);
+-	bp->b_folios = bp->b_folio_array;
+-	bp->b_folios[0] = kmem_to_folio(bp->b_addr);
  	bp->b_folio_count = 1;
  	bp->b_flags |= _XBF_KMEM;
  	return 0;
-@@ -1549,87 +1548,44 @@ xfs_buf_bio_end_io(
- static void
- xfs_buf_ioapply_map(
+@@ -377,14 +361,15 @@ xfs_buf_alloc_folio(
  	struct xfs_buf	*bp,
--	int		map,
--	int		*buf_offset,
--	int		*count,
-+	unsigned int	map,
-+	unsigned int	*buf_offset,
- 	blk_opf_t	op)
+ 	gfp_t		gfp_mask)
  {
--	int		folio_index;
--	unsigned int	total_nr_folios = bp->b_folio_count;
--	int		nr_folios;
- 	struct bio	*bio;
--	sector_t	sector =  bp->b_maps[map].bm_bn;
- 	int		size;
--	int		offset;
++	struct folio	*folio;
+ 	int		length = BBTOB(bp->b_length);
+ 	int		order = get_order(length);
  
--	/*
--	 * If the start offset if larger than a single page, we need to be
--	 * careful. We might have a high order folio, in which case the indexing
--	 * is from the start of the buffer. However, if we have more than one
--	 * folio single page folio in the buffer, we need to skip the folios in
--	 * the buffer before the start offset.
--	 */
--	folio_index = 0;
--	offset = *buf_offset;
--	if (bp->b_folio_count > 1) {
--		while (offset >= PAGE_SIZE) {
--			folio_index++;
--			offset -= PAGE_SIZE;
--		}
-+	/* Limit the IO size to the length of the current vector. */
-+	size = min_t(unsigned int, BBTOB(bp->b_maps[map].bm_len),
-+			BBTOB(bp->b_length) - *buf_offset);
+-	bp->b_folio_array[0] = folio_alloc(gfp_mask, order);
+-	if (!bp->b_folio_array[0])
++	folio = folio_alloc(gfp_mask, order);
++	if (!folio)
+ 		return false;
+ 
+-	bp->b_folios = bp->b_folio_array;
++	bp->b_addr = folio_address(folio);
+ 	bp->b_folio_count = 1;
+ 	bp->b_flags |= _XBF_FOLIOS;
+ 	return true;
+@@ -400,15 +385,11 @@ xfs_buf_alloc_folio(
+  * contiguous memory region that we don't have to map and unmap to access the
+  * data directly.
+  *
+- * The second type of buffer is the multi-folio buffer. These are *always* made
+- * up of single page folios so that they can be fed to vmap_ram() to return a
+- * contiguous memory region we can access the data through.
+- *
+- * We don't use high order folios for this second type of buffer (yet) because
+- * having variable size folios makes offset-to-folio indexing and iteration of
+- * the data range more complex than if they are fixed size. This case should now
+- * be the slow path, though, so unless we regularly fail to allocate high order
+- * folios, there should be little need to optimise this path.
++ * The second type of buffer is the vmalloc()d buffer. This provides the buffer
++ * with the required contiguous memory region but backed by discontiguous
++ * physical pages. vmalloc() typically doesn't fail, but it can and so we may
++ * need to wrap the allocation in a loop to prevent low memory failures and
++ * shutdowns.
+  */
+ static int
+ xfs_buf_alloc_folios(
+@@ -416,7 +397,7 @@ xfs_buf_alloc_folios(
+ 	xfs_buf_flags_t	flags)
+ {
+ 	gfp_t		gfp_mask = GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_NOWARN;
+-	long		filled = 0;
++	unsigned	nofs_flag;
+ 
+ 	if (flags & XBF_READ_AHEAD)
+ 		gfp_mask |= __GFP_NORETRY;
+@@ -425,89 +406,32 @@ xfs_buf_alloc_folios(
+ 	if (!(flags & XBF_READ))
+ 		gfp_mask |= __GFP_ZERO;
+ 
+-	/* Optimistically attempt a single high order folio allocation. */
+-	if (xfs_buf_alloc_folio(bp, gfp_mask))
+-		return 0;
+-
+ 	/* Fall back to allocating an array of single page folios. */
+ 	bp->b_folio_count = DIV_ROUND_UP(BBTOB(bp->b_length), PAGE_SIZE);
+-	if (bp->b_folio_count <= XB_FOLIOS) {
+-		bp->b_folios = bp->b_folio_array;
+-	} else {
+-		bp->b_folios = kzalloc(sizeof(struct folio *) * bp->b_folio_count,
+-					gfp_mask);
+-		if (!bp->b_folios)
+-			return -ENOMEM;
+-	}
+-	bp->b_flags |= _XBF_FOLIOS;
+ 
++	/* Optimistically attempt a single high order folio allocation. */
++	if (xfs_buf_alloc_folio(bp, gfp_mask))
++		return 0;
 +
-+	if (WARN_ON_ONCE(bp->b_folio_count > BIO_MAX_VECS)) {
-+		xfs_buf_ioerror(bp, -EIO);
-+		return;
++	/* We are done if an order-0 allocation has already failed. */
++	if (bp->b_folio_count == 1)
++		return -ENOMEM;
+ 
+ 	/*
+-	 * Bulk filling of pages can take multiple calls. Not filling the entire
+-	 * array is not an allocation failure, so don't back off if we get at
+-	 * least one extra page.
++	 * XXX(dgc): I think dquot reclaim is the only place we can get
++	 * to this function from memory reclaim context now. If we fix
++	 * that like we've fixed inode reclaim to avoid writeback from
++	 * reclaim, this nofs wrapping can go away.
+ 	 */
+-	for (;;) {
+-		long	last = filled;
+-
+-		filled = alloc_pages_bulk_array(gfp_mask, bp->b_folio_count,
+-						(struct page **)bp->b_folios);
+-		if (filled == bp->b_folio_count) {
+-			XFS_STATS_INC(bp->b_mount, xb_page_found);
+-			break;
+-		}
+-
+-		if (filled != last)
+-			continue;
+-
+-		if (flags & XBF_READ_AHEAD) {
+-			xfs_buf_free_folios(bp);
+-			return -ENOMEM;
+-		}
+-
+-		XFS_STATS_INC(bp->b_mount, xb_page_retries);
+-		memalloc_retry_wait(gfp_mask);
+-	}
+-
+-	if (bp->b_folio_count == 1) {
+-		/* A single folio buffer is always mappable */
+-		bp->b_addr = folio_address(bp->b_folios[0]);
+-	} else {
+-		int retried = 0;
+-		unsigned nofs_flag;
+-
+-		/*
+-		 * vm_map_ram() will allocate auxiliary structures (e.g.
+-		 * pagetables) with GFP_KERNEL, yet we often under a scoped nofs
+-		 * context here. Mixing GFP_KERNEL with GFP_NOFS allocations
+-		 * from the same call site that can be run from both above and
+-		 * below memory reclaim causes lockdep false positives. Hence we
+-		 * always need to force this allocation to nofs context because
+-		 * we can't pass __GFP_NOLOCKDEP down to auxillary structures to
+-		 * prevent false positive lockdep reports.
+-		 *
+-		 * XXX(dgc): I think dquot reclaim is the only place we can get
+-		 * to this function from memory reclaim context now. If we fix
+-		 * that like we've fixed inode reclaim to avoid writeback from
+-		 * reclaim, this nofs wrapping can go away.
+-		 */
+-		nofs_flag = memalloc_nofs_save();
+-		do {
+-			bp->b_addr = vm_map_ram((struct page **)bp->b_folios,
+-					bp->b_folio_count, -1);
+-			if (bp->b_addr)
+-				break;
+-			vm_unmap_aliases();
+-		} while (retried++ <= 1);
+-		memalloc_nofs_restore(nofs_flag);
+-
+-		if (!bp->b_addr) {
+-			xfs_warn_ratelimited(bp->b_mount,
+-				"%s: failed to map %u folios", __func__,
+-				bp->b_folio_count);
+-			xfs_buf_free_folios(bp);
+-			return -ENOMEM;
+-		}
++	nofs_flag = memalloc_nofs_save();
++	bp->b_addr = __vmalloc(BBTOB(bp->b_length), gfp_mask);
++	memalloc_nofs_restore(nofs_flag);
++
++	if (!bp->b_addr) {
++		xfs_warn_ratelimited(bp->b_mount,
++			"%s: failed to allocate %u folios", __func__,
++			bp->b_folio_count);
++		return -ENOMEM;
  	}
  
--	/*
--	 * Limit the IO size to the length of the current vector, and update the
--	 * remaining IO count for the next time around.
--	 */
--	size = min_t(int, BBTOB(bp->b_maps[map].bm_len), *count);
--	*count -= size;
--	*buf_offset += size;
--
--next_chunk:
- 	atomic_inc(&bp->b_io_remaining);
--	nr_folios = bio_max_segs(total_nr_folios);
- 
--	bio = bio_alloc(bp->b_target->bt_bdev, nr_folios, op, GFP_NOIO);
--	bio->bi_iter.bi_sector = sector;
-+	bio = bio_alloc(bp->b_target->bt_bdev, bp->b_folio_count, op, GFP_NOIO);
-+	bio->bi_iter.bi_sector = bp->b_maps[map].bm_bn;
- 	bio->bi_end_io = xfs_buf_bio_end_io;
- 	bio->bi_private = bp;
- 
--	for (; size && nr_folios; nr_folios--, folio_index++) {
--		struct folio	*folio = bp->b_folios[folio_index];
--		int		nbytes = folio_size(folio) - offset;
--
--		if (nbytes > size)
--			nbytes = size;
--
--		if (!bio_add_folio(bio, folio, nbytes,
--				offset_in_folio(folio, offset)))
--			break;
--
--		offset = 0;
--		sector += BTOBB(nbytes);
--		size -= nbytes;
--		total_nr_folios--;
--	}
--
--	if (likely(bio->bi_iter.bi_size)) {
--		if (xfs_buf_is_vmapped(bp)) {
--			flush_kernel_vmap_range(bp->b_addr,
--						xfs_buf_vmap_len(bp));
--		}
--		submit_bio(bio);
--		if (size)
--			goto next_chunk;
--	} else {
--		/*
--		 * This is guaranteed not to be the last io reference count
--		 * because the caller (xfs_buf_submit) holds a count itself.
--		 */
--		atomic_dec(&bp->b_io_remaining);
--		xfs_buf_ioerror(bp, -EIO);
--		bio_put(bio);
--	}
--
-+	do {
-+		void		*data = bp->b_addr + *buf_offset;
-+		struct folio	*folio = kmem_to_folio(data);
-+		unsigned int	off = offset_in_folio(folio, data);
-+		unsigned int	len = min_t(unsigned int, size,
-+						folio_size(folio) - off);
-+
-+		bio_add_folio_nofail(bio, folio, len, off);
-+		size -= len;
-+		*buf_offset += len;
-+	} while (size);
-+
-+	if (xfs_buf_is_vmapped(bp))
-+		flush_kernel_vmap_range(bp->b_addr, xfs_buf_vmap_len(bp));
-+	submit_bio(bio);
- }
- 
- STATIC void
-@@ -1638,8 +1594,7 @@ _xfs_buf_ioapply(
- {
- 	struct blk_plug	plug;
- 	blk_opf_t	op;
--	int		offset;
--	int		size;
-+	unsigned int	offset = 0;
- 	int		i;
- 
- 	/*
-@@ -1701,16 +1656,9 @@ _xfs_buf_ioapply(
- 	 * _xfs_buf_ioapply_vec() will modify them appropriately for each
- 	 * subsequent call.
- 	 */
--	offset = bp->b_offset;
--	size = BBTOB(bp->b_length);
- 	blk_start_plug(&plug);
--	for (i = 0; i < bp->b_map_count; i++) {
--		xfs_buf_ioapply_map(bp, i, &offset, &size, op);
--		if (bp->b_error)
--			break;
--		if (size <= 0)
--			break;	/* all done */
--	}
-+	for (i = 0; i < bp->b_map_count; i++)
-+		xfs_buf_ioapply_map(bp, i, &offset, op);
- 	blk_finish_plug(&plug);
- }
- 
+ 	return 0;
 diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index aef7015cf9f3..4d515407713b 100644
+index 4d515407713b..68c24947ca1a 100644
 --- a/fs/xfs/xfs_buf.h
 +++ b/fs/xfs/xfs_buf.h
-@@ -198,8 +198,6 @@ struct xfs_buf {
- 	atomic_t		b_pin_count;	/* pin count */
- 	atomic_t		b_io_remaining;	/* #outstanding I/O requests */
- 	unsigned int		b_folio_count;	/* size of folio array */
--	unsigned int		b_offset;	/* page offset of b_addr,
--						   only for _XBF_KMEM buffers */
- 	int			b_error;	/* error code on I/O */
+@@ -190,8 +190,6 @@ struct xfs_buf {
+ 	struct xfs_buf_log_item	*b_log_item;
+ 	struct list_head	b_li_list;	/* Log items list head */
+ 	struct xfs_trans	*b_transp;
+-	struct folio		**b_folios;	/* array of folio pointers */
+-	struct folio		*b_folio_array[XB_FOLIOS]; /* inline folios */
+ 	struct xfs_buf_map	*b_maps;	/* compound buffer map */
+ 	struct xfs_buf_map	__b_map;	/* inline compound buffer map */
+ 	int			b_map_count;
+diff --git a/fs/xfs/xfs_buf_mem.c b/fs/xfs/xfs_buf_mem.c
+index 26734c64c10e..336e7c8effb7 100644
+--- a/fs/xfs/xfs_buf_mem.c
++++ b/fs/xfs/xfs_buf_mem.c
+@@ -169,8 +169,6 @@ xmbuf_map_folio(
+ 	unlock_page(page);
  
- 	/*
+ 	bp->b_addr = page_address(page);
+-	bp->b_folios = bp->b_folio_array;
+-	bp->b_folios[0] = folio;
+ 	bp->b_folio_count = 1;
+ 	return 0;
+ }
+@@ -180,15 +178,10 @@ void
+ xmbuf_unmap_folio(
+ 	struct xfs_buf		*bp)
+ {
+-	struct folio		*folio = bp->b_folios[0];
+-
+ 	ASSERT(xfs_buftarg_is_mem(bp->b_target));
+ 
+-	folio_put(folio);
+-
++	folio_put(kmem_to_folio(bp->b_addr));
+ 	bp->b_addr = NULL;
+-	bp->b_folios[0] = NULL;
+-	bp->b_folios = NULL;
+ 	bp->b_folio_count = 0;
+ }
+ 
 -- 
 2.43.0
 
