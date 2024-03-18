@@ -1,89 +1,89 @@
-Return-Path: <linux-xfs+bounces-5275-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5268-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79F9387F34E
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 23:48:37 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1641C87F343
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 23:47:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31383281423
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 22:48:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9604DB21DC3
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Mar 2024 22:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142015C5ED;
-	Mon, 18 Mar 2024 22:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 657795B5AD;
+	Mon, 18 Mar 2024 22:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="Qj79iU0d"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="I/X8ZBRo"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9535A7A2
-	for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 22:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616095A0FB
+	for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 22:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710802045; cv=none; b=NuuBqQl71vUrA3gEqiFUf+4LzBplCfI2WMHs/miy4tMlNYInvKOiQYEssMoJrtxW6efQCrllEAK/jK0zklCkBz/ntguDHgUisdUYG+pZRWng3M5/nmj5RxPsBRFC6UKx0zUteAwgVZaJwGOXwkY5xSnf4+6AGk7KXYhUBEBcT3A=
+	t=1710802043; cv=none; b=JT8aiK4kDXZw1KcUfGwqtk3UvoFn5r7FV16JFXjMFNoUwtv7v1b3WxQRb5wCPtUi+hzwRu5OkjfZBql+YIRqe5ZNtc62tp3UxOFQWMKwR5ycnH1A8Ep1RhccdzKalbVtVQu4P9ObS39lV4qcjzK9n50bvNP6qBzEVzxtyXS7bw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710802045; c=relaxed/simple;
-	bh=eClcKlGyuXmgmkOlQBqAWdCs0lpa8zHsQRIlGbLRFq8=;
+	s=arc-20240116; t=1710802043; c=relaxed/simple;
+	bh=iQHJ3R1VRQl6P1iSPrb5ihz3huFQ08mRpf60HLd6tfc=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AS/0DFJHxq7HVqaGrUhps2t30Zr8ZDl+aZymYK6q+R+e9JKgIH5o7Yoj1lAa/fIbbCn2YhotqOPXoj/xkq9PFY7JQPolS4fwqz7AdhoNzCpCkP9Em+vm4HC02sHdAMLJiKCFVrMhS70DKhXlFj9GWxqnUYnWS8vlZcYCLanDgm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=Qj79iU0d; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=I0DV/eDHkHIBr6nHqi1EAV3c1NbLqP6zCxXzSKKVq9UuZFGg2QKsfDhVDMR+AGSnq7y1PXUmdFVsLgIoNlUiE+Mnbbly0uyDpLO8yyzp4+42g1o43U6uZLUl4ZqRFFwiF7ZmqE7xFT5fAukYNELCsXlvWw+j0qf70f47sligYKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=I/X8ZBRo; arc=none smtp.client-ip=209.85.167.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6082eab17so4335257b3a.1
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 15:47:23 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3c396fec63aso18067b6e.0
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 15:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710802043; x=1711406843; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710802040; x=1711406840; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JnpP1GtmUIoAcPmBdqTeygAolN7tFjfhfWABcpsi9+k=;
-        b=Qj79iU0d6nV5LNF9F5KAlLELFCTlGV1vuoQYqZt9RUnCbH6TfPXAG0Fz9utigowre3
-         r3mOcTRk5p9onkoTmTu6n2itz3gc/KFv2RjweK9Zv7a+5oKPxqLsILoZ0iPFujtOfUic
-         fb+LYQoflcBjVSizfuFEZ19II9dcWQGbB3ESQpWFGHSlBnwbvKz2NIbRc4oB5/S9NJLm
-         GYdAA9yOrcANH+D2aPr84SIZMzL4Sq4+zRwk05vghIbt6Rc1GcRnB1oyH2OvGBc5arja
-         sSzrxPJNC21DQ/gmlCaNBCxbH/n9BW4OBs6advcoJ45GOUf8Vmko6djKhDmoZiYKcG51
-         HRxQ==
+        bh=h5JVHHFRtp3gXxIEzQNyoJCJxo5de6rum96dhqTSxwM=;
+        b=I/X8ZBRoEc1XnC4BwgLz5xldr5PrXbvUoAZSBWgwiQr5BqtHFi3zqHEcgHgAZYx0qi
+         vwKPfFA2SnZeE8qV0gQbwJHx9wdjFCbfduMs1P3W3H0SKAPzOyJxRcn3UrfSTYI/TM0R
+         7pnHDCZjOhp/TRnmz+28bbA7VijMEuqS0aXJdj7Meo3a8GQpwOXt7NPO3pd+x1VzFQ87
+         8hks9Vfj9POGsHTvH6DHAjoVZmjy89ixSyIng/0WafF5mNRO+4+0zSwIDVSjgIyRPCMW
+         22U0pfGx+0dPgo28PnJH/BOxPtxqoDcrTy8DpI9tXx8pco91xmwyUSrCM5WnDk7ptqgP
+         T6uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710802043; x=1711406843;
+        d=1e100.net; s=20230601; t=1710802040; x=1711406840;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JnpP1GtmUIoAcPmBdqTeygAolN7tFjfhfWABcpsi9+k=;
-        b=N15wZk5HhKdrZFbKgsM8uuZZZB8auHv3IpDjTQvtCucVpAYt26KsIuF4OEj7n7+RcF
-         nLCdlug9ycvoLBhtaBBYrSTg9pcfPgw4d3o2jaocxXwre0ZRB5Wl6RiVKXHYviuqUruz
-         25FgZ6FeNo4pxaPl+qpwZ6OHGPoALYunPo/dhmmEngfb7augSQXHHC3R5KgiAQu7qJoM
-         4PD65ueoZmHSJ8AjzSILurAgOdJjnTr3f8qAjXd/gOwIRabDEqGwEzggAodrHqUTi/S7
-         ZX/Fd/mfnwNoHzbc4XpGNjUZ2U4c7nVyW+CGV5WXx9XCLTmOTtNl79zmIn2cFjZ03DTd
-         lnPA==
-X-Gm-Message-State: AOJu0YwLAn0HKz6aQmIRhCytyy91XW4MJzu+CdVYJt9lkD1dXT88O2db
-	mcWwMlUnm8hR6f71cwdbpgNvM3XOB7DVSP5sjhQgFm3b9UCrmXMNigZmERssIZqV7poIjRSYX8J
-	k
-X-Google-Smtp-Source: AGHT+IH+T/PqIzj0HKphdG6UdHDJLI4K8ZjMp4QUZZs9veIzSdxDoIYx1Q0QUnaZFSszWFeAvv4YwQ==
-X-Received: by 2002:a05:6a20:8410:b0:1a1:2d3a:2d19 with SMTP id c16-20020a056a20841000b001a12d3a2d19mr11656853pzd.51.1710802042919;
-        Mon, 18 Mar 2024 15:47:22 -0700 (PDT)
+        bh=h5JVHHFRtp3gXxIEzQNyoJCJxo5de6rum96dhqTSxwM=;
+        b=AzTQWbdHb8/rg+CK/KGTcNq03C0yu0d4LWr758AymOnt7MndBxhQGiEXk0VVpv5AIw
+         J4DJxu9L8W0SO5gtPQoYJnb3s/ef0zf7cEB6g/7WSYshcvs5Jap0Aqs+dgoMNZT/S3wZ
+         taNP42KK3Lipuy1dp5Hp8KGPXob/LlTAVymBFRGPu4jl/3l2yRhTLVLKBTfdV9HtsWNz
+         TZ5l7VdOTqMDWoiFEzSunrAhSnP6afdmEELwMPImcjFA44DY1sGHReG43GhRNc9/Vlmg
+         7tGq17HDWD+giQTDHoIRXCXTFGKxjfWbexBE6uM69mIduozAvNtOLGbXC1JQm5UqpleM
+         VMCQ==
+X-Gm-Message-State: AOJu0YyD1v35/8xaVneiq86qOIRea5mcD9KPel0KW55APPs9PnP2pxoY
+	f9HPtndS4THdDWDkafALnN+S/3Tc1GIKdZjXRlFiC4IQKVGIpp8UhsHVe5MUe1RZUjg/gmdqHt4
+	7
+X-Google-Smtp-Source: AGHT+IED9YjR2jKt3TDOA4OnJlagiU5T0lV9p5E9sr0EPAiIYcKMBbvlhqSvKcwUZ/0/hjEDsDw4yQ==
+X-Received: by 2002:a05:6808:6485:b0:3c3:74f9:4578 with SMTP id fh5-20020a056808648500b003c374f94578mr14630173oib.16.1710802040245;
+        Mon, 18 Mar 2024 15:47:20 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-185-123.pa.nsw.optusnet.com.au. [49.180.185.123])
-        by smtp.gmail.com with ESMTPSA id ca17-20020a056a02069100b005dc9439c56bsm6587667pgb.13.2024.03.18.15.47.19
+        by smtp.gmail.com with ESMTPSA id gu25-20020a056a004e5900b006e7040519a1sm5030643pfb.216.2024.03.18.15.47.19
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 15:47:20 -0700 (PDT)
+        Mon, 18 Mar 2024 15:47:19 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
 	by dread.disaster.area with esmtp (Exim 4.96)
 	(envelope-from <dave@fromorbit.com>)
-	id 1rmLlF-003o0P-38
+	id 1rmLlG-003o0S-00
 	for linux-xfs@vger.kernel.org;
 	Tue, 19 Mar 2024 09:47:17 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.97)
 	(envelope-from <dave@devoid.disaster.area>)
-	id 1rmLlF-0000000E82u-1zo1
+	id 1rmLlF-0000000E82y-28oU
 	for linux-xfs@vger.kernel.org;
 	Tue, 19 Mar 2024 09:47:17 +1100
 From: Dave Chinner <david@fromorbit.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 4/9] xfs: kill XBF_UNMAPPED
-Date: Tue, 19 Mar 2024 09:45:55 +1100
-Message-ID: <20240318224715.3367463-5-david@fromorbit.com>
+Subject: [PATCH 5/9] xfs: buffer items don't straddle pages anymore
+Date: Tue, 19 Mar 2024 09:45:56 +1100
+Message-ID: <20240318224715.3367463-6-david@fromorbit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240318224715.3367463-1-david@fromorbit.com>
 References: <20240318224715.3367463-1-david@fromorbit.com>
@@ -95,258 +95,195 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Christoph Hellwig <hch@lst.de>
+From: Dave Chinner <dchinner@redhat.com>
 
-Unmapped buffer access is a pain, so kill it. The switch to large
-folios means we rarely pay a vmap penalty for large buffers,
-so this functionality is largely unnecessary now.
+Unmapped buffers don't exist anymore, so the page straddling
+detection and slow path code can go away now.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_ialloc.c    |  2 +-
- fs/xfs/libxfs/xfs_inode_buf.c |  2 +-
- fs/xfs/scrub/inode_repair.c   |  3 +-
- fs/xfs/xfs_buf.c              | 62 ++---------------------------------
- fs/xfs/xfs_buf.h              | 16 ++++++---
- fs/xfs/xfs_buf_item.c         |  2 +-
- fs/xfs/xfs_buf_item_recover.c |  8 +----
- fs/xfs/xfs_inode.c            |  3 +-
- 8 files changed, 19 insertions(+), 79 deletions(-)
+ fs/xfs/xfs_buf_item.c | 124 ------------------------------------------
+ 1 file changed, 124 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index e5ac3e5430c4..fa27a50f96ac 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -362,7 +362,7 @@ xfs_ialloc_inode_init(
- 				(j * M_IGEO(mp)->blocks_per_cluster));
- 		error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d,
- 				mp->m_bsize * M_IGEO(mp)->blocks_per_cluster,
--				XBF_UNMAPPED, &fbuf);
-+				0, &fbuf);
- 		if (error)
- 			return error;
- 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index d0dcce462bf4..68989f4bf793 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -136,7 +136,7 @@ xfs_imap_to_bp(
- 	int			error;
- 
- 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp, imap->im_blkno,
--			imap->im_len, XBF_UNMAPPED, bpp, &xfs_inode_buf_ops);
-+			imap->im_len, 0, bpp, &xfs_inode_buf_ops);
- 	if (xfs_metadata_is_sick(error))
- 		xfs_agno_mark_sick(mp, xfs_daddr_to_agno(mp, imap->im_blkno),
- 				XFS_SICK_AG_INODES);
-diff --git a/fs/xfs/scrub/inode_repair.c b/fs/xfs/scrub/inode_repair.c
-index eab380e95ef4..7b31f1ad194f 100644
---- a/fs/xfs/scrub/inode_repair.c
-+++ b/fs/xfs/scrub/inode_repair.c
-@@ -1309,8 +1309,7 @@ xrep_dinode_core(
- 
- 	/* Read the inode cluster buffer. */
- 	error = xfs_trans_read_buf(sc->mp, sc->tp, sc->mp->m_ddev_targp,
--			ri->imap.im_blkno, ri->imap.im_len, XBF_UNMAPPED, &bp,
--			NULL);
-+			ri->imap.im_blkno, ri->imap.im_len, 0, &bp, NULL);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 7d9303497763..2cd3671f3ce3 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -239,7 +239,7 @@ _xfs_buf_alloc(
- 	 * We don't want certain flags to appear in b_flags unless they are
- 	 * specifically set by later operations on the buffer.
- 	 */
--	flags &= ~(XBF_UNMAPPED | XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD);
-+	flags &= ~(XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD);
- 
- 	atomic_set(&bp->b_hold, 1);
- 	atomic_set(&bp->b_lru_ref, 1);
-@@ -403,9 +403,7 @@ xfs_buf_alloc_folio(
-  *
-  * The second type of buffer is the multi-folio buffer. These are *always* made
-  * up of single page folios so that they can be fed to vmap_ram() to return a
-- * contiguous memory region we can access the data through, or mark it as
-- * XBF_UNMAPPED and access the data directly through individual folio_address()
-- * calls.
-+ * contiguous memory region we can access the data through.
-  *
-  * We don't use high order folios for this second type of buffer (yet) because
-  * having variable size folios makes offset-to-folio indexing and iteration of
-@@ -486,8 +484,6 @@ _xfs_buf_map_folios(
- 	if (bp->b_folio_count == 1) {
- 		/* A single folio buffer is always mappable */
- 		bp->b_addr = folio_address(bp->b_folios[0]);
--	} else if (flags & XBF_UNMAPPED) {
--		bp->b_addr = NULL;
- 	} else {
- 		int retried = 0;
- 		unsigned nofs_flag;
-@@ -1844,60 +1840,6 @@ __xfs_buf_submit(
- 	return error;
- }
- 
--void *
--xfs_buf_offset(
--	struct xfs_buf		*bp,
--	size_t			offset)
--{
--	struct folio		*folio;
--
--	if (bp->b_addr)
--		return bp->b_addr + offset;
--
--	/* Single folio buffers may use large folios. */
--	if (bp->b_folio_count == 1) {
--		folio = bp->b_folios[0];
--		return folio_address(folio) + offset_in_folio(folio, offset);
--	}
--
--	/* Multi-folio buffers always use PAGE_SIZE folios */
--	folio = bp->b_folios[offset >> PAGE_SHIFT];
--	return folio_address(folio) + (offset & (PAGE_SIZE-1));
--}
--
--void
--xfs_buf_zero(
--	struct xfs_buf		*bp,
--	size_t			boff,
--	size_t			bsize)
--{
--	size_t			bend;
--
--	bend = boff + bsize;
--	while (boff < bend) {
--		struct folio	*folio;
--		int		folio_index, folio_offset, csize;
--
--		/* Single folio buffers may use large folios. */
--		if (bp->b_folio_count == 1) {
--			folio = bp->b_folios[0];
--			folio_offset = offset_in_folio(folio,
--						bp->b_offset + boff);
--		} else {
--			folio_index = (boff + bp->b_offset) >> PAGE_SHIFT;
--			folio_offset = (boff + bp->b_offset) & ~PAGE_MASK;
--			folio = bp->b_folios[folio_index];
--		}
--
--		csize = min_t(size_t, folio_size(folio) - folio_offset,
--				      BBTOB(bp->b_length) - boff);
--		ASSERT((csize + folio_offset) <= folio_size(folio));
--
--		memset(folio_address(folio) + folio_offset, 0, csize);
--		boff += csize;
--	}
--}
--
- /*
-  * Log a message about and stale a buffer that a caller has decided is corrupt.
-  *
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index f059ae3d2755..aef7015cf9f3 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -51,7 +51,6 @@ struct xfs_buf;
- #define XBF_LIVESCAN	 (1u << 28)
- #define XBF_INCORE	 (1u << 29)/* lookup only, return if found in cache */
- #define XBF_TRYLOCK	 (1u << 30)/* lock requested, but do not wait */
--#define XBF_UNMAPPED	 (1u << 31)/* do not map the buffer */
- 
- 
- typedef unsigned int xfs_buf_flags_t;
-@@ -74,8 +73,7 @@ typedef unsigned int xfs_buf_flags_t;
- 	/* The following interface flags should never be set */ \
- 	{ XBF_LIVESCAN,		"LIVESCAN" }, \
- 	{ XBF_INCORE,		"INCORE" }, \
--	{ XBF_TRYLOCK,		"TRYLOCK" }, \
--	{ XBF_UNMAPPED,		"UNMAPPED" }
-+	{ XBF_TRYLOCK,		"TRYLOCK" }
- 
- /*
-  * Internal state flags.
-@@ -320,12 +318,20 @@ extern void __xfs_buf_ioerror(struct xfs_buf *bp, int error,
- #define xfs_buf_ioerror(bp, err) __xfs_buf_ioerror((bp), (err), __this_address)
- extern void xfs_buf_ioerror_alert(struct xfs_buf *bp, xfs_failaddr_t fa);
- void xfs_buf_ioend_fail(struct xfs_buf *);
--void xfs_buf_zero(struct xfs_buf *bp, size_t boff, size_t bsize);
- void __xfs_buf_mark_corrupt(struct xfs_buf *bp, xfs_failaddr_t fa);
- #define xfs_buf_mark_corrupt(bp) __xfs_buf_mark_corrupt((bp), __this_address)
- 
- /* Buffer Utility Routines */
--extern void *xfs_buf_offset(struct xfs_buf *, size_t);
-+static inline void *xfs_buf_offset(struct xfs_buf *bp, size_t offset)
-+{
-+	return bp->b_addr + offset;
-+}
-+
-+static inline void xfs_buf_zero(struct xfs_buf *bp, size_t boff, size_t bsize)
-+{
-+	memset(bp->b_addr + boff, 0, bsize);
-+}
-+
- extern void xfs_buf_stale(struct xfs_buf *bp);
- 
- /* Delayed Write Buffer Routines */
 diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index d1407cee48d9..7b66d3fe4ecd 100644
+index 7b66d3fe4ecd..cbc06605d31c 100644
 --- a/fs/xfs/xfs_buf_item.c
 +++ b/fs/xfs/xfs_buf_item.c
-@@ -69,7 +69,7 @@ xfs_buf_item_straddle(
+@@ -56,31 +56,6 @@ xfs_buf_log_format_size(
+ 			(blfp->blf_map_size * sizeof(blfp->blf_data_map[0]));
+ }
+ 
+-/*
+- * We only have to worry about discontiguous buffer range straddling on unmapped
+- * buffers. Everything else will have a contiguous data region we can copy from.
+- */
+-static inline bool
+-xfs_buf_item_straddle(
+-	struct xfs_buf		*bp,
+-	uint			offset,
+-	int			first_bit,
+-	int			nbits)
+-{
+-	void			*first, *last;
+-
+-	if (bp->b_folio_count == 1)
+-		return false;
+-
+-	first = xfs_buf_offset(bp, offset + (first_bit << XFS_BLF_SHIFT));
+-	last = xfs_buf_offset(bp,
+-			offset + ((first_bit + nbits) << XFS_BLF_SHIFT));
+-
+-	if (last - first != nbits * XFS_BLF_CHUNK)
+-		return true;
+-	return false;
+-}
+-
+ /*
+  * Return the number of log iovecs and space needed to log the given buf log
+  * item segment.
+@@ -97,11 +72,8 @@ xfs_buf_item_size_segment(
+ 	int				*nvecs,
+ 	int				*nbytes)
  {
- 	void			*first, *last;
+-	struct xfs_buf			*bp = bip->bli_buf;
+ 	int				first_bit;
+ 	int				nbits;
+-	int				next_bit;
+-	int				last_bit;
  
--	if (bp->b_folio_count == 1 || !(bp->b_flags & XBF_UNMAPPED))
-+	if (bp->b_folio_count == 1)
- 		return false;
- 
- 	first = xfs_buf_offset(bp, offset + (first_bit << XFS_BLF_SHIFT));
-diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-index 09e893cf563c..d74bf7bb7794 100644
---- a/fs/xfs/xfs_buf_item_recover.c
-+++ b/fs/xfs/xfs_buf_item_recover.c
-@@ -891,7 +891,6 @@ xlog_recover_buf_commit_pass2(
- 	struct xfs_mount		*mp = log->l_mp;
- 	struct xfs_buf			*bp;
- 	int				error;
--	uint				buf_flags;
- 	xfs_lsn_t			lsn;
- 
- 	/*
-@@ -910,13 +909,8 @@ xlog_recover_buf_commit_pass2(
- 	}
- 
- 	trace_xfs_log_recover_buf_recover(log, buf_f);
+ 	first_bit = xfs_next_bit(blfp->blf_data_map, blfp->blf_map_size, 0);
+ 	if (first_bit == -1)
+@@ -114,15 +86,6 @@ xfs_buf_item_size_segment(
+ 		nbits = xfs_contig_bits(blfp->blf_data_map,
+ 					blfp->blf_map_size, first_bit);
+ 		ASSERT(nbits > 0);
 -
--	buf_flags = 0;
--	if (buf_f->blf_flags & XFS_BLF_INODE_BUF)
--		buf_flags |= XBF_UNMAPPED;
+-		/*
+-		 * Straddling a page is rare because we don't log contiguous
+-		 * chunks of unmapped buffers anywhere.
+-		 */
+-		if (nbits > 1 &&
+-		    xfs_buf_item_straddle(bp, offset, first_bit, nbits))
+-			goto slow_scan;
 -
- 	error = xfs_buf_read(mp->m_ddev_targp, buf_f->blf_blkno, buf_f->blf_len,
--			  buf_flags, &bp, NULL);
-+			  0, &bp, NULL);
- 	if (error)
- 		return error;
+ 		(*nvecs)++;
+ 		*nbytes += nbits * XFS_BLF_CHUNK;
  
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index ea48774f6b76..e7a724270423 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -2405,8 +2405,7 @@ xfs_ifree_cluster(
- 		 * to mark all the active inodes on the buffer stale.
- 		 */
- 		error = xfs_trans_get_buf(tp, mp->m_ddev_targp, blkno,
--				mp->m_bsize * igeo->blocks_per_cluster,
--				XBF_UNMAPPED, &bp);
-+				mp->m_bsize * igeo->blocks_per_cluster, 0, &bp);
- 		if (error)
- 			return error;
+@@ -137,43 +100,6 @@ xfs_buf_item_size_segment(
+ 	} while (first_bit != -1);
  
+ 	return;
+-
+-slow_scan:
+-	ASSERT(bp->b_addr == NULL);
+-	last_bit = first_bit;
+-	nbits = 1;
+-	while (last_bit != -1) {
+-
+-		*nbytes += XFS_BLF_CHUNK;
+-
+-		/*
+-		 * This takes the bit number to start looking from and
+-		 * returns the next set bit from there.  It returns -1
+-		 * if there are no more bits set or the start bit is
+-		 * beyond the end of the bitmap.
+-		 */
+-		next_bit = xfs_next_bit(blfp->blf_data_map, blfp->blf_map_size,
+-					last_bit + 1);
+-		/*
+-		 * If we run out of bits, leave the loop,
+-		 * else if we find a new set of bits bump the number of vecs,
+-		 * else keep scanning the current set of bits.
+-		 */
+-		if (next_bit == -1) {
+-			if (first_bit != last_bit)
+-				(*nvecs)++;
+-			break;
+-		} else if (next_bit != last_bit + 1 ||
+-		           xfs_buf_item_straddle(bp, offset, first_bit, nbits)) {
+-			last_bit = next_bit;
+-			first_bit = next_bit;
+-			(*nvecs)++;
+-			nbits = 1;
+-		} else {
+-			last_bit++;
+-			nbits++;
+-		}
+-	}
+ }
+ 
+ /*
+@@ -286,8 +212,6 @@ xfs_buf_item_format_segment(
+ 	struct xfs_buf		*bp = bip->bli_buf;
+ 	uint			base_size;
+ 	int			first_bit;
+-	int			last_bit;
+-	int			next_bit;
+ 	uint			nbits;
+ 
+ 	/* copy the flags across from the base format item */
+@@ -332,15 +256,6 @@ xfs_buf_item_format_segment(
+ 		nbits = xfs_contig_bits(blfp->blf_data_map,
+ 					blfp->blf_map_size, first_bit);
+ 		ASSERT(nbits > 0);
+-
+-		/*
+-		 * Straddling a page is rare because we don't log contiguous
+-		 * chunks of unmapped buffers anywhere.
+-		 */
+-		if (nbits > 1 &&
+-		    xfs_buf_item_straddle(bp, offset, first_bit, nbits))
+-			goto slow_scan;
+-
+ 		xfs_buf_item_copy_iovec(lv, vecp, bp, offset,
+ 					first_bit, nbits);
+ 		blfp->blf_size++;
+@@ -356,45 +271,6 @@ xfs_buf_item_format_segment(
+ 	} while (first_bit != -1);
+ 
+ 	return;
+-
+-slow_scan:
+-	ASSERT(bp->b_addr == NULL);
+-	last_bit = first_bit;
+-	nbits = 1;
+-	for (;;) {
+-		/*
+-		 * This takes the bit number to start looking from and
+-		 * returns the next set bit from there.  It returns -1
+-		 * if there are no more bits set or the start bit is
+-		 * beyond the end of the bitmap.
+-		 */
+-		next_bit = xfs_next_bit(blfp->blf_data_map, blfp->blf_map_size,
+-					(uint)last_bit + 1);
+-		/*
+-		 * If we run out of bits fill in the last iovec and get out of
+-		 * the loop.  Else if we start a new set of bits then fill in
+-		 * the iovec for the series we were looking at and start
+-		 * counting the bits in the new one.  Else we're still in the
+-		 * same set of bits so just keep counting and scanning.
+-		 */
+-		if (next_bit == -1) {
+-			xfs_buf_item_copy_iovec(lv, vecp, bp, offset,
+-						first_bit, nbits);
+-			blfp->blf_size++;
+-			break;
+-		} else if (next_bit != last_bit + 1 ||
+-		           xfs_buf_item_straddle(bp, offset, first_bit, nbits)) {
+-			xfs_buf_item_copy_iovec(lv, vecp, bp, offset,
+-						first_bit, nbits);
+-			blfp->blf_size++;
+-			first_bit = next_bit;
+-			last_bit = next_bit;
+-			nbits = 1;
+-		} else {
+-			last_bit++;
+-			nbits++;
+-		}
+-	}
+ }
+ 
+ /*
 -- 
 2.43.0
 
