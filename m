@@ -1,92 +1,92 @@
-Return-Path: <linux-xfs+bounces-5406-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5411-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 908FA88647D
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:55:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CBC8886488
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 02:00:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F1C31F22650
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 00:55:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB3FCB21361
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:00:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A098A38B;
-	Fri, 22 Mar 2024 00:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 402BE65C;
+	Fri, 22 Mar 2024 01:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="tAa+nvuJ"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="2QLpDCL0"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D4B633
-	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 00:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD4C376
+	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 01:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711068895; cv=none; b=QwptKz2B9Dz2+XLEsNKRFviM116uwxWPHOnG7tO9zx2zU6Y7i1mzQdZeiE5wxXZ/UfDiEqCAC9QaISVAiv4/Y3YwWdtX9Fz0pIWnTGYoFClEpuF2gXGG/OysYluasl1by+lnloVcHqrjlVC59OLG8CYa12G6lvFT/Iq/oQ9I4Ag=
+	t=1711069231; cv=none; b=hVmpZUaS4dXSYgxBMsT1pqi2Zr35mFw1T0gO9jWAoPHEDrZw4uIDDoSznY7ymDmKKrV9fKTYTCqEIw1aZgdEXbUtYK3pvax5gxDaLqwFGguBMDbrAX9+csLBF7O+hz8INf1qJ1ni7albzIA7hq6iFkvAtSmIM3gALT5kunDc7Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711068895; c=relaxed/simple;
-	bh=S3eEGSjkR86ZNkdRpe3MVnL+/ySKRYbCgld1pfgBbvk=;
+	s=arc-20240116; t=1711069231; c=relaxed/simple;
+	bh=R/n9TvbmbKIAIifKXoWEDN0Gi0anl3Oy7twO9B1t0BI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lfQ4IFjuZsGPXhewxUgx2r15rrl1ISEfBogMIG9C6i7YY7WMVXNgOIGqBKnq7rGqC4cwJPNyquj9la5jHcD2fanIyMcOGwm48icrSQRgy23oAubMXIYnwx4Jw9Gcu7xAz9Aus5rdf3ejWyPAIg4sMy18HgwGJFSwbUv+VR9Dfec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=tAa+nvuJ; arc=none smtp.client-ip=209.85.214.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=bymFQrbihi9hpQhWxRwolUZivWT+FskeZ+k+VFoBwryuocd4qC6W2KWHfxMugwNu/7cdg3QvUIUsSQaA3OyFJLI85PpwcNv+AbgsPwNGQfJhaPm35uCEG0mslgdqmCE2JsymgJSudWMIkMh9uYd3ZLY8B8Sxm0tnTpqn8qRqv2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=2QLpDCL0; arc=none smtp.client-ip=209.85.161.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1def89f0cfdso20444165ad.0
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 17:54:53 -0700 (PDT)
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a4a2d99598so826867eaf.2
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 18:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711068893; x=1711673693; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711069228; x=1711674028; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
          :resent-from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7HbiphqWxs0ewV61tAtMera9tZGJrkPb6qoFIZT6d6U=;
-        b=tAa+nvuJuTrmSfaCrbFch8pBgESrIYDeQ8aJia9+t5p5/JMZUMKK6MJnj1OIYf0l/h
-         W9GJkA1wn9usHbCwCA5EqB7XtyetVueRCmB8y5ttaKvCgeeu5C0P3YAogkN4o6e7VRhQ
-         ZjR9y2ut0VbYuLK6Dhi6qAEBrrgv0SNYShRWPQfdnYQEJ6zm++RMHYWQ5SLRoXnw/b6d
-         PoqW3rcYeUd07h77Cnq5CTq3k2vziJkXZfeVGECEzr2EO2AuggxinJkoGnKuO8GBIHd5
-         HOdLsvUDyMRyfi6fTl4/FrkjJePEndKVH1GayyVsbsxWHCVK2WJKnjEV+dATaCCsXlCo
-         tzuA==
+        bh=zAF2OQsdd50jyNFznhxA8Yvx5VgWEhwogk7UZowB/ws=;
+        b=2QLpDCL0LqupBP2clQL0jCoi6EPHN5BsBaJywjEGC8WE3y/k+pYmNojv6uwSKW1PuQ
+         A2P0/24cQ73oqrqZJWfOGYHEKm4nlYMP4iItnUq2FL6iQt3+YAg0kmdGKmgKUHncEYXj
+         HMWrXnhDdHflzNL40hAeAXx+EpSOeMHWQ16hM8D/Vguo/GNZ76KOKJmZ9uhUAvfVi3Lt
+         CC0g4w8q8AHHUBsX/oOsDsIE6M7/roxj8G4ikZ2aZgP5c/gHM8iGBWFTmZxvoVkXv36X
+         LNsRW9vw0viYm7ZnAZn/Z0ny9VBIV9DKLkuwnUdNWUvCOpj8u1uJcGF/GKTCllmjZGkH
+         dI5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711068893; x=1711673693;
+        d=1e100.net; s=20230601; t=1711069228; x=1711674028;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
          :resent-from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7HbiphqWxs0ewV61tAtMera9tZGJrkPb6qoFIZT6d6U=;
-        b=s56+y6I1Zc7lrnJI/r4SijG1fdPm24Jeme0fJTOGhCo9h8tRjFl5LoZxB0A5pzT1dy
-         nl73c4vXsWTSW/EpAj6qN953yZen5nhtmsTj70fsupdPyluvct/zryu6M2FiMskXzCAt
-         5bOtMxAqZKMkYCZDBS/D/enFCVjfquqiOrzE/+HGnv6MTtdH7iRsdGWGlo3vlFoz5+zF
-         6Zd3lTAJcULIxx8zddMt3Lwi4TLvSTVb1NmsHR1W4FO5QWP6wsmFhcha08QTBN/pW7Uf
-         hHI+X71QFU3mkzS2AUx/w6inHoITFP5pJTajyIPyBh35lGwBcHnk1ihQxz+FCo7b4cTQ
-         y5Aw==
-X-Gm-Message-State: AOJu0YzjIlhgjlZa6FwhBmef5yYNNOvbwNoRsQaGJclWoMCfHGsRnAQs
-	pPjZUqjcxtWq6zUXnPSCXZurkFz1/D0OLb4nGokZ7bIuWg2IKwmlUeLEBVJhvm0TCsdgygPB4df
-	g
-X-Google-Smtp-Source: AGHT+IFfM4/zOJDAIZh+8vdCyku7oK6xMh9g+N6CY5Zmj2RGzdUzl5kjbA1l4TfFTI0DS40biE1+ug==
-X-Received: by 2002:a17:902:e883:b0:1df:f6d0:539a with SMTP id w3-20020a170902e88300b001dff6d0539amr939973plg.15.1711068892885;
-        Thu, 21 Mar 2024 17:54:52 -0700 (PDT)
+        bh=zAF2OQsdd50jyNFznhxA8Yvx5VgWEhwogk7UZowB/ws=;
+        b=rpVs1IgQBc4KiDZ/y/AL9PYlwsf/3PN2R9N4d7lXoBXuPjHyunV0j3DLDl/N0Bc1cf
+         9TFAj/3elA9IWlBcaoe/5fopKYg36VD2BCZpmfyVYHOcKGmcT/suaUz63cWARBVLzpla
+         q/I7Uht/YYiiTXqliwnmYMdvrVN2KM2AOQJ+Tx4yicbYIB8n3BgkNUWrPsA0zx9zo3C2
+         46SwnYQ5xyw7sQhROoHzzXXEQNTSHTXwoHwWnrC4xEjyMROgUYEyR5b9d9ueyjQwlNaC
+         qcz0AnMukD9VmYGtMBcjkQ8QmMj8SOBKA5q3vWDVnkoTN2tkaIvlhnNGy7Np7ou1hZgB
+         lRHQ==
+X-Gm-Message-State: AOJu0Yy2tSVrjdHpn04LrOniR+jKmsx+HMP1UY98dpETReaj/MGD+xsc
+	4NWDGQxAmWZB9eoHNM3h6OYA4ao/ralt96b2loJ9o7i6/RZbxxiXhm4/f8Jc6IpCsGfdkJEaIY4
+	X
+X-Google-Smtp-Source: AGHT+IH2TlF6cvXzWBsvo2PtPT+elIkxeUA9i015xlM5tDxT2Xq2O6gAS4q4lr4UWY4T5ZI2CHy0Yg==
+X-Received: by 2002:a05:6a20:3ca2:b0:1a1:667c:eece with SMTP id b34-20020a056a203ca200b001a1667ceecemr1476787pzj.2.1711068902033;
+        Thu, 21 Mar 2024 17:55:02 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id s7-20020a170902b18700b001dd7d00f7afsm511294plr.18.2024.03.21.17.54.52
+        by smtp.gmail.com with ESMTPSA id fd8-20020a056a002e8800b006e6c3753786sm456014pfb.41.2024.03.21.17.55.01
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 17:54:52 -0700 (PDT)
+        Thu, 21 Mar 2024 17:55:01 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
 	(envelope-from <david@fromorbit.com>)
-	id 1rnTBJ-005TZF-2w
+	id 1rnTBT-005TZc-0K
 	for linux-xfs@vger.kernel.org;
-	Fri, 22 Mar 2024 11:54:49 +1100
+	Fri, 22 Mar 2024 11:54:59 +1100
 Resent-From: Dave Chinner <david@fromorbit.com>
-Resent-Date: Fri, 22 Mar 2024 11:54:49 +1100
-Resent-Message-ID: <ZfzW2VOMhq4nLd1M@dread.disaster.area>
+Resent-Date: Fri, 22 Mar 2024 11:54:59 +1100
+Resent-Message-ID: <ZfzW40JtJAuVA/Me@dread.disaster.area>
 Resent-To: linux-xfs@vger.kernel.org
-Date: Wed, 20 Mar 2024 10:36:50 +1100
+Date: Wed, 20 Mar 2024 10:59:25 +1100
 From: Dave Chinner <david@fromorbit.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
 Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 4/9] xfs: kill XBF_UNMAPPED
-Message-ID: <Zfohkhh/D7KHHZTq@dread.disaster.area>
+Subject: Re: [PATCH 9/9] xfs: rename bp->b_folio_count
+Message-ID: <Zfom3fCEDR7RyMPc@dread.disaster.area>
 References: <20240318224715.3367463-1-david@fromorbit.com>
- <20240318224715.3367463-5-david@fromorbit.com>
- <20240319173046.GQ1927156@frogsfrogsfrogs>
+ <20240318224715.3367463-10-david@fromorbit.com>
+ <ZflApWnBkHDmo4HJ@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -95,48 +95,25 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319173046.GQ1927156@frogsfrogsfrogs>
+In-Reply-To: <ZflApWnBkHDmo4HJ@infradead.org>
 
-On Tue, Mar 19, 2024 at 10:30:46AM -0700, Darrick J. Wong wrote:
-> On Tue, Mar 19, 2024 at 09:45:55AM +1100, Dave Chinner wrote:
-> > From: Christoph Hellwig <hch@lst.de>
+On Tue, Mar 19, 2024 at 12:37:09AM -0700, Christoph Hellwig wrote:
+> On Tue, Mar 19, 2024 at 09:46:00AM +1100, Dave Chinner wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
 > > 
-> > Unmapped buffer access is a pain, so kill it. The switch to large
-> > folios means we rarely pay a vmap penalty for large buffers,
-> > so this functionality is largely unnecessary now.
+> > The count is used purely to allocate the correct number of bvecs for
+> > submitting IO. Rename it to b_bvec_count.
 > 
-> What was the original point of unmapped buffers?  Was it optimizing for
-> not using vmalloc space for inode buffers on 32-bit machines?
+> Well, I think we should just kill it as it simplies is the rounded
+> up length in PAGE_SIZE units.  The patch below passes a quick xfstests
+> run and is on top of this series:
 
-Largely, yes. This is original XFS-on-Irix design details from the
-early 1990s.
+This seems like a reasonable approach - fixing the
+mm_account_reclaimed_pages() issues earlier in the patch set meant
+I'd already done the xfs_buf_free() changes you made here. :)
 
-The Irix buffer cache could vmap multi-page buffers on demand, but
-it could also ask the page allocator/page cache to use use 16kB or
-64kB large pages for the buffers to avoid needing vmap. The Irix mm
-subsystem was multi-page size aware even on 32 bit machines
-(heterogenous, simultaneous use of 4kB, 16kB, 64kB, 256kB, 2MB, and
-16MB page sizes within the page cache and the buffer cache was
-supported). However, the kernel had a limited vmap pool size even
-on 64 bit machines. Hence buffers tended to be mapped and unmapped
-at access time similar to how we use kmap_*() on Linux.
-
-As a result, base page size allocation was still always preferred,
-so in the cases where vmap or larger pages were not actually
-needed they were avoided via unmapped buffers.
-
-It's definitely a positive for us that the linux mm is nearing
-functional parity with Irix from the mid 1990s. It means we can
-slowly remove the compromises the Linux XFS port had to make to
-work on Linux.  If we can now just get GFP_NOFAIL as the the
-official memory allocator policy....
-
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> 
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-
-Thanks!
+That just leaves the vmap wrappers to be fixed up - I think I'll
+just replace the b_folio_count rename patch with that cleanup...
 
 -Dave.
 -- 
