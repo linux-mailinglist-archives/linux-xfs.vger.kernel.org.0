@@ -1,70 +1,197 @@
-Return-Path: <linux-xfs+bounces-5290-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5304-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76B1487F4D2
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 02:11:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAD6387F54E
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 03:16:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3EF01F2174D
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 01:11:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4750D1F21D63
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 02:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B6C7470;
-	Tue, 19 Mar 2024 01:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DDBD651B9;
+	Tue, 19 Mar 2024 02:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pLbNi1Ja"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="pTaefcOp"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE176AC0
-	for <linux-xfs@vger.kernel.org>; Tue, 19 Mar 2024 01:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B15A65191
+	for <linux-xfs@vger.kernel.org>; Tue, 19 Mar 2024 02:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710810671; cv=none; b=NUf2Ro0st/95iW4KBiPwkriSGbL6eEE89FmZux0WpWBM9l4HhO859SL5lbd5y/erRKgwkYsqN/qVOxwPmCJr/LVRWHZZGI+JD8hOQWPQuxXaby91dfvPPfuONZ98Xjg9IHJxyXBCnOI4RaB1cM7583OO+0Qus2Dn78NEozYNf9E=
+	t=1710814556; cv=none; b=cKjFKKEv/Wn325W/ZkzSj6STJ9XRl/VKEk28zv9GabuAQMVkST/oB5O5W3Sw7k/e0Id8zljK1hfhEMReAX1Zoxe5OFa439pmuwGGgYUmiXJoWn/R4C/kywpqcFPTx8AqRXTymGOG3JvLpNMdUCV1w0drP3txfwJXPYvV6e0wdIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710810671; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEpgY+gEF9A8stf8u2PO0hei0f2Y8fgwuA6CjcqrP5KIton9zgm9ilGq6DAlDUQVRQIIcm+2K0rmelpBn9i8zHfKbWj592VkLoMCCqnh7X5OjYhKBm11f3Z+Whq9JnfTm1cn6Iw6O3sVxWKpxMnS9CLoTITeVczs0O+GNzLoa1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pLbNi1Ja; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=pLbNi1Jah6gbBjKf07jk3FGzk8
-	XCqNY+bCXsZGpWlHVvfwEy6Cl9e2He4L2MfhQAMLZRq4o7JTCVaIYsXlyLAWpZ1Bdr6D5rRVbZXwW
-	bxuc+uo/dC3epFb5R1TcVjzSXPp1uhQyxwiRikYC/TOxbT9TcaEPo4lNfOnaSjf1HoK2OwDrQfBYs
-	Um6t/PTsx8lxAfi+nyyvEuOdqgwrxNpBbjlWF2AaPgk8l1ZhEtvcVjyoY2aha+plgfHenWz/bE2j7
-	eLlHpqdg9poF/+tAl9ya6CnKIUywU7DUx1M10rdYuu59jYQvRAyqYLmwKh5uwm8AHCe3WE1CEDHeJ
-	tkMzPXHQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmO0P-0000000AlpU-0C4u;
-	Tue, 19 Mar 2024 01:11:05 +0000
-Date: Mon, 18 Mar 2024 18:11:05 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2] xfs: allow sunit mount option to repair bad primary
- sb stripe values
-Message-ID: <ZfjmKe5udMuTZTlY@infradead.org>
-References: <ZfjcTxZEYl5Mzg9O@dread.disaster.area>
+	s=arc-20240116; t=1710814556; c=relaxed/simple;
+	bh=bXwa2aCarJ0GdklwcURZ1oIRZL/ZzexX2/PWVVdqOHc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=cWRJnbQ96r1MtpC5JDrpmYpU025AL69jD8pAKJZunzw8s68S7BYuZjM6aJk5ry/cG65fy+juYAgPEjN+/iidNpLHznykLS9lTF25tRmDItm15sGl+VV777uqCgGHhDpZAtn58RCm7/5YTCWnsLLAJApE4zJ31OpXAKMXUnozRzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=pTaefcOp; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e682dbd84bso1546315a34.0
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Mar 2024 19:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1710814553; x=1711419353; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CZLy57S+MnfI6h+fcuLt4FP3xNUFClmjuk/uq2cjzFQ=;
+        b=pTaefcOp/H5WyR4/YqQU0c/cosZdmWGn8MRZzQUs3Wk2/4HxI6fbY3GZQAqvYBxOWO
+         dMlD8cREcCxtTHqbVozJvNNtT8BWEgRP/jBeaRnHGZ/gN60z+IBUTTPT9NMiKipKxjIW
+         qeP19RlYAEKU5Is0IDLi6YUEPSMnmgDjefG0bJ1lCCSwWYMmbD4WIX2cgIYZ+fXac4s5
+         JKUqadmb08uXZfvMs84mUZj9Y+LSDB1GC9nUal8JfhMYpboheSHRLt7dJIdXsc95f+iG
+         bOQcUfaTeaarLmDyDHeq0FczTyVWDT2Z6dYMzF770Fc+6bFhoeaLnMJ9PYq0sLkWfmPF
+         ho2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710814553; x=1711419353;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CZLy57S+MnfI6h+fcuLt4FP3xNUFClmjuk/uq2cjzFQ=;
+        b=jlWpXdgvUr6ig4vln9K81Cg3mIjF0vgtV/gPjvHqV5GJ/J0zeVyNhxIXW1175TAVJy
+         K5LFRI/rSc4FOkwanel5B/tP9Yk/puwDdCScD/EFrLVrXnz1nJtBguIpeeiR/IiW6Iap
+         Jcx2xnf7cX/YW83YddGkI1DeBfRNErxU+TqqWaH1ECv1zSYVHZ8whCfN5iA02+JTFP3N
+         g1BKKlzSaSY1RA579Xl0aF1pLF2bDFH0YiGHnmul2RMfuwr7htRU8Ub9f2qPofFaT2HC
+         QeOy7uDhvUl7+zDFl3AwkBZ/kcXmlJcTr/p/dnTeRlMF2vn9cCCZDWtGMWpIjvcg2SdT
+         cn6w==
+X-Gm-Message-State: AOJu0YziNg1xjQ83KET2TqaZ82LDIX+R9++GtIV3EK5StWfl1U4hA4be
+	HCodnIYh6Rp8qb5KOySpSpwA4/w1gOPql660E10xga4gw2hzGJ9TQdH5gWVcKEZcs/ugQx0z3oj
+	e
+X-Google-Smtp-Source: AGHT+IHa8GYEL2A7V8ukcoBg/8EOgwcbuTU7TOLkfPEiLG8pPCXCTdD3hxEbarGyfD3EuFzLRUxqXA==
+X-Received: by 2002:a05:6808:3992:b0:3c2:3f40:3813 with SMTP id gq18-20020a056808399200b003c23f403813mr18900755oib.29.1710814553199;
+        Mon, 18 Mar 2024 19:15:53 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-185-123.pa.nsw.optusnet.com.au. [49.180.185.123])
+        by smtp.gmail.com with ESMTPSA id h62-20020a638341000000b005dc832ed816sm7942116pge.59.2024.03.18.19.15.51
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Mar 2024 19:15:52 -0700 (PDT)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+	by dread.disaster.area with esmtp (Exim 4.96)
+	(envelope-from <dave@fromorbit.com>)
+	id 1rmP13-003s4v-1k
+	for linux-xfs@vger.kernel.org;
+	Tue, 19 Mar 2024 13:15:49 +1100
+Received: from dave by devoid.disaster.area with local (Exim 4.97)
+	(envelope-from <dave@devoid.disaster.area>)
+	id 1rmP12-0000000Ec6g-48u3
+	for linux-xfs@vger.kernel.org;
+	Tue, 19 Mar 2024 13:15:49 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: linux-xfs@vger.kernel.org
+Subject: [PATCH 0/5] xfs: fix discontiguous metadata block recovery
+Date: Tue, 19 Mar 2024 13:15:19 +1100
+Message-ID: <20240319021547.3483050-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfjcTxZEYl5Mzg9O@dread.disaster.area>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-Looks good:
+Recently Zorro tripped over a failure with 64kB directory blocks on
+s390x via generic/648. Recovery was reporting failures like this:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+ XFS (loop3): Mounting V5 Filesystem c1954438-a18d-4b4a-ad32-0e29c40713ed
+ XFS (loop3): Starting recovery (logdev: internal)
+ XFS (loop3): Bad dir block magic!
+ XFS: Assertion failed: 0, file: fs/xfs/xfs_buf_item_recover.c, line: 414
+ ....
 
+Or it was succeeding and later operations were detecting directory
+block corruption during idrectory operations such as:
+
+ XFS (loop3): Metadata corruption detected at __xfs_dir3_data_check+0x372/0x6c0 [xfs], xfs_dir3_block block 0x1020
+ XFS (loop3): Unmount and run xfs_repair
+ XFS (loop3): First 128 bytes of corrupted metadata buffer:
+ 00000000: 58 44 42 33 00 00 00 00 00 00 00 00 00 00 10 20  XDB3...........
+ ....
+
+Futher triage and diagnosis pointed to the fact that the test was
+generating a discontiguous (multi-extent) directory block and that
+directory block was not being recovered correctly when it was
+encountered.
+
+Zorro captured a trace, and what we saw in the trace was a specific
+pattern of buffer log items being processed through every phase of
+recovery:
+
+ xfs_log_recover_buf_not_cancel: dev 7:0 daddr 0x2c2ce0, bbcount 0x10, flags 0x5000, size 2, map_size 2
+ xfs_log_recover_item_recover: dev 7:0 tid 0xce3ce480 lsn 0x300014178, pass 1, item 0x8ea70fc0, item type XFS_LI_BUF item region count/total 2/2
+ xfs_log_recover_buf_not_cancel: dev 7:0 daddr 0x331fb0, bbcount 0x58, flags 0x5000, size 2, map_size 11
+ xfs_log_recover_item_recover: dev 7:0 tid 0xce3ce480 lsn 0x300014178, pass 1, item 0x8f36c040, item type XFS_LI_BUF item region count/total 2/2
+
+The item addresses, tid and LSN change, but the order of the two
+buf log items does not.
+
+These are both "flags 0x5000" which means both log items are
+XFS_BLFT_DIR_BLOCK_BUF types, and they are both partial directory
+block buffers, and they are discontiguous. They also have different
+types of log items both before and after them, so it is likely these
+are two extents within the same compound buffer.
+
+The way we log compound buffers is that we create a buf log format
+item for each extent in the buffer, and then we log each range as a
+separate buf log format item. IOWs, to recovery these fragments of
+the directory block appear just like complete regular buffers that
+need to be recovered.
+
+Hence what we see above is the first buffer (daddr 0x2c2ce0, bbcount
+0x10) is the first extent in the directory block that contains the
+header and magic number, so it recovers and verifies just fine. The
+second buffer is the tail of the directory block, and it does not
+contain a magic number because it starts mid-way through the
+directory block. Hence the magic number verification fails and the
+buffer is not recovered.
+
+Compound buffers were logged this way so that they didn't require a
+change of log format to recover. Prior to compound buffers, the
+directory code kept it's own dabuf structure to map multiple extents
+in a single directory block, and they got logged as separate buffer
+log format items as well.
+
+So the problem isn't directly related to the conversion of dabufs to
+compound buffers - the problem is related to the buffer recovery
+verification code not knowing that directory buffer fragments are
+valid recovery targets.
+
+Hence the fixes in this patchset are to log recovery, and do not
+change runtime behaviour at all. The first thing we do is change the
+buffer recovery code to consider a type mismatch between the BLF and
+the buffer contents as a fatal error instead of a warning. If we
+just warn and continue, the recovered metadata may still be corrupt
+and so we should just abort with -EFSCORRUPTED when this occurs.
+That addresses the silent recovery success followed by runtime
+detection of directory corruption issue that was encountered.
+
+We then need to untangle the buffer recovery code a bit. Inode
+buffer, dquot buffer and regular buffer recovery are all a bit
+different, but they are tightly intertwined. neither dquot nor inode
+buffer recovery need discontiguous buffer recovery detection, and
+they also have different constraints so separate them out. We also
+always recover inode and dquot buffers, so we don't need check
+magic numbers or decode internal lsns to determine if they should be
+recovered.
+
+With that done, we can then add code to the general buffer recovery
+to detect partial block recovery situations. We check the BLF type
+to determine if it is a directory buffer, and add a path for
+recovery of partial directory block items. This allows recovery of
+regions of directory blocks that do not start at offset 0 in the
+directory block. This fixes the initial "bad dir block magic" issue
+reported, and results in correct recovery of discontiguous directory
+blocks.
+
+IOWs, this appears to be a log recovery problem and not a runtime
+issue. I think the fix will be to allow directory blocks to fail the
+magic number check if and only if the buffer length does not match
+the directory block size (i.e. it is a partial directory block
+fragment being recovered).
+
+This passes repeated looping over '-g enospc -g recoveryloop' on
+64kb directory block size configurations, so the change to recovery
+hasn't caused any obvious regressions in fixing this issue.
+
+Thoughts?
 
