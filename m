@@ -1,91 +1,57 @@
-Return-Path: <linux-xfs+bounces-5408-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5347-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 013A588647F
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:55:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FB23880689
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 22:08:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85153B21C45
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 00:55:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A37391F22CAB
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 21:08:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10C0538D;
-	Fri, 22 Mar 2024 00:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA9C3CF73;
+	Tue, 19 Mar 2024 21:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="PVTzpqZe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXhxMwXK"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDEE376
-	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 00:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88CBF3C485;
+	Tue, 19 Mar 2024 21:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711068938; cv=none; b=kQj9Usv4BumxDPt+q/kjPXsAEmaZsFehFAAZ9vmnL8b1y5BxJiPZgQ5A6tukoblWlerPAL8ol5EVxmWJGCjnCElLwNUMznMhbDcGv5Z+X1/RRH9ZyCqChi0kOh9DnBbLNPZ86WfFSRXwBIydgSmTsYbTWZkkfsIQ53G8+H3e9j0=
+	t=1710882486; cv=none; b=qMiF1XCBU0mUW4634RwdYRZnyzfJECftJsPFwU4Q4+nr58ILi9Tc/XMMfyA+xcs2mPXHHzTSYCUNtPs/gdjpcw0muYry0BL9r6od5+AuL4aZDE/fE/FTwEF1ItdsRzpY4ShKUqYlrJphmoe4QKMknyeZSu4++BgRga6aQrp7Z0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711068938; c=relaxed/simple;
-	bh=xQxNJ8kCfHsspZRGjTsPfFSY9/ylcF3uSoL/Qrvc1Pk=;
+	s=arc-20240116; t=1710882486; c=relaxed/simple;
+	bh=4YY28ffhMpVq+c07gRVzOqaSW91JO13rslhjeezFpTY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+cPJ//oreUUe3R5sw0W7waJZZPF+FXJAU1tWlVIloNmtgoDW6sIlbFBGkekcYvzDDOfCJy7BIQjMMU0zXdHXPCrscpfKFSu3GLaYZgsb4jlQLeMw5BXFLn/+qjoWjucfyRW5XCcFyZF9QT1pPdS0jd2iGzWVDtqJPd/a0bSaFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=PVTzpqZe; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6e74aa08d15so1102034b3a.1
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 17:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711068937; x=1711673737; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
-         :resent-from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LKaT0mpcrx+UomlG3LljN5ozk489Jua0qlNeNCr81oY=;
-        b=PVTzpqZetF+XoXNJDtnHSF4FSL4dR5MYlDG4k+6GVtraOJjvq8dpQD6viQ91drykhr
-         kKMokbc+pObplRdY6hxP9z/bq4evA9ovOM0Q4yMU/CfZU9TnfI3a5S9k5SLfQTpotuFw
-         +5ZhTYd8qQZEUdGxxNDCsAfqpu/EFy1VlGliMuPWYdK6eBWM66tzvOp6+EHXCRL9JeFI
-         h67wNvFT0eCLdP3ORzWwYOK3OyhKHV8h2rBHA/heOEKeF9EUySMHr+MLuaOqQvVGB84S
-         K3VM9aJ/x55gbdy/8lqZfyoF87mFVIflFaOPwn46H2KGXwK9Oglkq2smsbHPCvYYCkl4
-         xgkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711068937; x=1711673737;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
-         :resent-from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LKaT0mpcrx+UomlG3LljN5ozk489Jua0qlNeNCr81oY=;
-        b=b9SP0XXJDyBOISrjr5pqK3ZHANaGWduHFq3Xj5xhqAjJB9bdw4A/rfatQIB82hs5Mz
-         zT08WyvTPlvQ/JtMzm8dnnriB/jcSPswBqemk2oyqYYo3plrhz0n0GdYgthqCso+Tl/a
-         3bOaz+QZU/yy+zuZGlv+Bs8cksxwCv6/rbctY3+cg6vxLpZAkoZaY0i3magQ5tgyl1TM
-         3SjK+oLeRVQzdg/n5dEc0of54JBdjFiGrJ04KGK34R+8l/uMKP3RQ8j4VusgZvHIc+TW
-         29KNgBM8tvmNVBwYFgLrURq16rp++p8YBzEFKAnpu8b0moDspPC4KfJLTTYKY2kAxvj0
-         JQVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVC2Xn7z87NBgLQd1/5reI3jSwj1Sf4U5USXJ+bjaQNrETf0YD9abofhApx/cbBdC5aA9pVAiXbkVO93ZRHwhgK6BK5aHgMS0Iz
-X-Gm-Message-State: AOJu0YyaTlJHEirj/t4FWojuDBQSdPb2HJoDdyRVJgG5FH5ih30n18Bc
-	gHWHwMpaVBZ9m4pEa3mPz+dH9YMK6ussIzKPeFkfE2pEoKNBZFR7/nzvOYd3lbtS5mMthsKRuF+
-	X
-X-Google-Smtp-Source: AGHT+IHvHATkEeYQxUXiIjlxXj1Q4ib++fwVHVNEFbH9eAwvkcTnZijiSz0fbzn1bG7LZd+JvjVpLA==
-X-Received: by 2002:a17:90b:1bcf:b0:29c:7769:419b with SMTP id oa15-20020a17090b1bcf00b0029c7769419bmr1065584pjb.9.1711068936677;
-        Thu, 21 Mar 2024 17:55:36 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id p10-20020a17090a930a00b0029c61521eb5sm4245357pjo.43.2024.03.21.17.55.36
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 17:55:36 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rnTC1-005TnO-2r
-	for linux-xfs@vger.kernel.org;
-	Fri, 22 Mar 2024 11:55:33 +1100
-Resent-From: Dave Chinner <david@fromorbit.com>
-Resent-Date: Fri, 22 Mar 2024 11:55:33 +1100
-Resent-Message-ID: <ZfzXBe+0fT/VHbK6@dread.disaster.area>
-Resent-To: linux-xfs@vger.kernel.org
-Date: Wed, 20 Mar 2024 08:05:13 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: chandan.babu@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: compile out v4 support if disabled
-Message-ID: <Zfn+CTA88U78hiQw@dread.disaster.area>
-References: <20240319071952.682266-1-hch@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QF5PGJwANC6KDVi9x3HBBKuEEvvCekUEEKZzE0TSX+nO3CRw5XIazHXwZiI1wZS+gvvkklLRavW4elnCKEA3YKhf++zGjskNAUrxzkV9e+gcqz5SdV1itidoXRlTjifslm8uKWVU0NckiVjqfJ16fKRKhsWsPZflb6sYcyaVZyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXhxMwXK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14DA0C433C7;
+	Tue, 19 Mar 2024 21:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710882486;
+	bh=4YY28ffhMpVq+c07gRVzOqaSW91JO13rslhjeezFpTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CXhxMwXK4qIol6IWNrQ+SNhNVdrQMyft4sjfljLQwLpojdDeG1eT+3zQQWbrjgooe
+	 H33gInUX5oM3pEPXpe6BzhACEikWjv42le8cLXiVU9neNAq2fnSyEbCc1mmQlPSZdo
+	 i/DpMZYD2dU3BF2QM4tmaUwrSwsQENnQvBEQbhlb+pX3GE+WqHIaaSqhnpnu1drQ2j
+	 YE9toO6e4g6FXGH1XdEqVBRF9rw0rBdF941EpuV68Jgzb1yH/v8duz6K/ik8Fk0HT9
+	 bB7DxMBDOcEZLmpW2KTQ3185baA/Ge5IjxkKXWHS36/JGpgZ/EJp66o8XXfqCChivr
+	 CERfliH/1ixug==
+Date: Tue, 19 Mar 2024 14:08:05 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
+	david@fromorbit.com, tytso@mit.edu, jack@suse.cz,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH v3 8/9] iomap: make iomap_write_end() return a boolean
+Message-ID: <20240319210805.GM1927156@frogsfrogsfrogs>
+References: <20240319011102.2929635-1-yi.zhang@huaweicloud.com>
+ <20240319011102.2929635-9-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -94,49 +60,175 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319071952.682266-1-hch@lst.de>
+In-Reply-To: <20240319011102.2929635-9-yi.zhang@huaweicloud.com>
 
-On Tue, Mar 19, 2024 at 05:19:51PM +1000, Christoph Hellwig wrote:
-> Add a strategic IS_ENABLED to let the compiler eliminate the unused
-> non-crc code is CONFIG_XFS_SUPPORT_V4 is disabled.
+On Tue, Mar 19, 2024 at 09:11:01AM +0800, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
 > 
-> This saves almost 20k worth of .text for my .config:
+> For now, we can make sure iomap_write_end() always return 0 or copied
+> bytes, so instead of return written bytes, convert to return a boolean
+> to indicate the copied bytes have been written to the pagecache.
 > 
-> $ size xfs.o.*
->    text	   data	    bss	    dec	    hex	filename
-> 1351126	 294836	    592	1646554	 191fda	xfs.o.new
-> 1371453	 294868	    592	1666913	 196f61	xfs.o.old
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/xfs_mount.h |  7 ++++++-
->  fs/xfs/xfs_super.c | 22 +++++++++++++---------
->  2 files changed, 19 insertions(+), 10 deletions(-)
+>  fs/iomap/buffered-io.c | 50 +++++++++++++++++++++++++++---------------
+>  1 file changed, 32 insertions(+), 18 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index e880aa48de68bb..24fe6e7913c49f 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -327,6 +327,12 @@ static inline void xfs_add_ ## name (struct xfs_mount *mp) \
->  	xfs_sb_version_add ## name(&mp->m_sb); \
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 291648c61a32..004673ea8bc1 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -790,7 +790,7 @@ static int iomap_write_begin(struct iomap_iter *iter, loff_t pos,
+>  	return status;
 >  }
 >  
-> +static inline bool xfs_has_crc(struct xfs_mount *mp)
-> +{
-> +	return IS_ENABLED(CONFIG_XFS_SUPPORT_V4) &&
-> +		(mp->m_features & XFS_FEAT_CRC);
-> +}
+> -static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
+> +static bool __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
+>  		size_t copied, struct folio *folio)
+>  {
+>  	flush_dcache_folio(folio);
+> @@ -807,14 +807,14 @@ static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
+>  	 * redo the whole thing.
+>  	 */
+>  	if (unlikely(copied < len && !folio_test_uptodate(folio)))
+> -		return 0;
+> +		return false;
+>  	iomap_set_range_uptodate(folio, offset_in_folio(folio, pos), len);
+>  	iomap_set_range_dirty(folio, offset_in_folio(folio, pos), copied);
+>  	filemap_dirty_folio(inode->i_mapping, folio);
+> -	return copied;
+> +	return true;
+>  }
+>  
+> -static size_t iomap_write_end_inline(const struct iomap_iter *iter,
+> +static void iomap_write_end_inline(const struct iomap_iter *iter,
+>  		struct folio *folio, loff_t pos, size_t copied)
+>  {
+>  	const struct iomap *iomap = &iter->iomap;
+> @@ -829,21 +829,32 @@ static size_t iomap_write_end_inline(const struct iomap_iter *iter,
+>  	kunmap_local(addr);
+>  
+>  	mark_inode_dirty(iter->inode);
+> -	return copied;
+>  }
+>  
+> -/* Returns the number of bytes copied.  May be 0.  Cannot be an errno. */
+> -static size_t iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
+> +/*
+> + * Returns true if all copied bytes have been written to the pagecache,
+> + * otherwise return false.
+> + */
+> +static bool iomap_write_end(struct iomap_iter *iter, loff_t pos, size_t len,
+>  		size_t copied, struct folio *folio)
+>  {
+>  	const struct iomap *srcmap = iomap_iter_srcmap(iter);
+> +	bool ret = true;
+>  
+> -	if (srcmap->type == IOMAP_INLINE)
+> -		return iomap_write_end_inline(iter, folio, pos, copied);
+> -	if (srcmap->flags & IOMAP_F_BUFFER_HEAD)
+> -		return block_write_end(NULL, iter->inode->i_mapping, pos, len,
+> -				       copied, &folio->page, NULL);
+> -	return __iomap_write_end(iter->inode, pos, len, copied, folio);
+> +	if (srcmap->type == IOMAP_INLINE) {
+> +		iomap_write_end_inline(iter, folio, pos, copied);
+> +	} else if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
+> +		size_t bh_written;
+> +
+> +		bh_written = block_write_end(NULL, iter->inode->i_mapping, pos,
+> +					len, copied, &folio->page, NULL);
+> +		WARN_ON_ONCE(bh_written != copied && bh_written != 0);
+> +		ret = bh_written == copied;
+> +	} else {
+> +		ret = __iomap_write_end(iter->inode, pos, len, copied, folio);
+> +	}
+> +
+> +	return ret;
 
-Is that right? This can only return true if V4 support is compiled
-in, but it should be the other way around - always return true if
-V4 support is not compiled in. i.e:
+This could be cleaned up even further:
 
-	if (!IS_ENABLED(CONFIG_XFS_SUPPORT_V4))
+	if (srcmap->type == IOMAP_INLINE) {
+		iomap_write_end_inline(iter, folio, pos, copied);
 		return true;
-	return mp->m_features & XFS_FEAT_CRC;
+	}
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+	if (srcmap->flags & IOMAP_F_BUFFER_HEAD) {
+		size_t bh_written;
+
+		bh_written = block_write_end(NULL, iter->inode->i_mapping, pos,
+					len, copied, &folio->page, NULL);
+		WARN_ON_ONCE(bh_written != copied && bh_written != 0);
+		return bh_written == copied;
+	}
+
+	return __iomap_write_end(iter->inode, pos, len, copied, folio);
+
+>  }
+>  
+>  static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
+> @@ -907,7 +918,8 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
+>  			flush_dcache_folio(folio);
+>  
+>  		copied = copy_folio_from_iter_atomic(folio, offset, bytes, i);
+> -		written = iomap_write_end(iter, pos, bytes, copied, folio);
+> +		written = iomap_write_end(iter, pos, bytes, copied, folio) ?
+> +			  copied : 0;
+>  
+>  		/*
+>  		 * Update the in-memory inode size after copying the data into
+> @@ -1285,6 +1297,7 @@ static loff_t iomap_unshare_iter(struct iomap_iter *iter)
+>  		int status;
+>  		size_t offset;
+>  		size_t bytes = min_t(u64, SIZE_MAX, length);
+> +		bool ret;
+>  
+>  		status = iomap_write_begin(iter, pos, bytes, &folio);
+>  		if (unlikely(status))
+> @@ -1296,9 +1309,9 @@ static loff_t iomap_unshare_iter(struct iomap_iter *iter)
+>  		if (bytes > folio_size(folio) - offset)
+>  			bytes = folio_size(folio) - offset;
+>  
+> -		bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
+> +		ret = iomap_write_end(iter, pos, bytes, bytes, folio);
+>  		__iomap_put_folio(iter, pos, bytes, folio);
+> -		if (WARN_ON_ONCE(bytes == 0))
+> +		if (WARN_ON_ONCE(!ret))
+
+If you named this variable "write_end_ok" then the diagnostic output
+from the WARN_ONs would say that.  That said, it also encodes the line
+number so it's not a big deal to leave this as it is.
+
+With at least the first cleanup applied,
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+>  			return -EIO;
+>  
+>  		cond_resched();
+> @@ -1347,6 +1360,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
+>  		int status;
+>  		size_t offset;
+>  		size_t bytes = min_t(u64, SIZE_MAX, length);
+> +		bool ret;
+>  
+>  		status = iomap_write_begin(iter, pos, bytes, &folio);
+>  		if (status)
+> @@ -1361,9 +1375,9 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
+>  		folio_zero_range(folio, offset, bytes);
+>  		folio_mark_accessed(folio);
+>  
+> -		bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
+> +		ret = iomap_write_end(iter, pos, bytes, bytes, folio);
+>  		__iomap_put_folio(iter, pos, bytes, folio);
+> -		if (WARN_ON_ONCE(bytes == 0))
+> +		if (WARN_ON_ONCE(!ret))
+>  			return -EIO;
+>  
+>  		pos += bytes;
+> -- 
+> 2.39.2
+> 
+> 
 
