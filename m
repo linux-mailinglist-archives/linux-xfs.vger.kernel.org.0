@@ -1,59 +1,96 @@
-Return-Path: <linux-xfs+bounces-5360-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5412-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B811288071D
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 23:07:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C93588648C
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 02:01:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E03E82819A1
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 22:07:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EA097B21AF6
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:01:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4CF34F5E6;
-	Tue, 19 Mar 2024 22:07:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D464217FD;
+	Fri, 22 Mar 2024 01:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPlVI8+i"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="w3yYjdld"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD544F217;
-	Tue, 19 Mar 2024 22:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1B910F2
+	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 01:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710886064; cv=none; b=VQhhoeawezFSzfmReoRDVtVVFC6BN4MXlK/lymCGlwsPKP9Uzf1g/Y4+CCtFu9pFJkz7g5UTA4Gehei07ZEeCk80So4MHJt8dAzIYjyl3rgwI25AJHmeE3xUXFmGexq26BZGq8ZwucCwdK5+9+vazuhKz7WdRui8gUXDiHCY9M4=
+	t=1711069253; cv=none; b=jA4ox0tOw5ImhxTHdRZCIhl9fdWGMkLLf+EPdZLq0zHV7sqHjPgHpbIJ2Oynn7A6ymWs47Bm+h7bLriXhh0Gz7vJWx3YUn9VQYlr9P6xMSyDFv30MtXapSsG9NWZiYDYI5k8v781ODCOMfI70Js7C5eLcR57f1xSvZGQA2w+xWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710886064; c=relaxed/simple;
-	bh=h0l6BvmGc4RnVLcgjaZZBNAvFtveWCLZCTnIqDxlgao=;
+	s=arc-20240116; t=1711069253; c=relaxed/simple;
+	bh=KvoAF7df7YsAv4HtcPH8gUSIXw7LYl1fOSpxkpqRr3A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SRuw11ACy0uLmSFyZU7n0AkgDiF1Clkkg4Y+3QW5RxhPDanhi12QTPFGfuG+pwgpBNKQ9Xo3+sDFgQFzuWM11HoBWSttCWOHDNZ92moL0ac6dCOvT0inv3lw8apg0AsQ1j1lYAcl4zssgGeom8obuq5GdmuKzZChGqKLWgkqWjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPlVI8+i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF8E3C433C7;
-	Tue, 19 Mar 2024 22:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710886063;
-	bh=h0l6BvmGc4RnVLcgjaZZBNAvFtveWCLZCTnIqDxlgao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TPlVI8+i0+pIn7OhuRUCSBa++0XF33/hHvn9rdg/tykQ9vlRsHV424zMRriWUrqNz
-	 Ht7Tb15MsXwHoEKSv398BaIyygVYi+f8LLf2gkAdqAX8kDPEIpF5AZJJIdp5p9Tyxf
-	 wC1pwwCo1IU3o5PHdkgQzP2hEBcwUlKpx2jQElphs0TtQwW174t/VuVO59vVmN66IC
-	 axceiUyBR7uRmDE1b3FPrC9vCK33mc3ERoHvaRE2UhIBVvZZBikekBAsPgXLV9eFkf
-	 vkMFZAbXSNqxanwGdjPivpMhSe/0sBIb4dPBT/cnEkHAzJQAz9F7y3Ls89x5MlCF5T
-	 6jcwjZmaaMUdQ==
-Date: Tue, 19 Mar 2024 15:07:43 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: aalbersh@redhat.com, Mark Tinguely <tinguely@sgi.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	Christoph Hellwig <hch@lst.de>, Dave Chinner <dchinner@redhat.com>,
-	linux-fsdevel@vger.kernel.org, fsverity@lists.linux.dev,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCHSET v5.3] fs-verity support for XFS
-Message-ID: <20240319220743.GF6226@frogsfrogsfrogs>
-References: <20240317161954.GC1927156@frogsfrogsfrogs>
- <171069245829.2684506.10682056181611490828.stgit@frogsfrogsfrogs>
- <20240318163512.GB1185@sol.localdomain>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sbYPCS2LAR90Dx0iC66+wUPAn7Xf+hlAV7SodZ+5gK74OuuXh85wtUxlIHMKMQNrytLKD4I8hHZxXAWVQscnFAq6TK79HYw3uqZkT+YRgjts94tngjAikzMhS0yYjaw1EUozYj8C+VC22sj2nkMmmRO2JA6BY2FBXkVdfLPlfYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=w3yYjdld; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6962e6fbf60so16052746d6.1
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 18:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711069251; x=1711674051; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
+         :resent-from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L2hcaTEbriam9/7FssVKUi7kol9l4gPNKSXgZqspLoI=;
+        b=w3yYjdldJAh6p2iQ8qLxu5YR7Pop6APcdfATgZX6edOSUph5dic0NhlxNFAT737l/E
+         Yo3NiYyDUgO+AdtUGLEdIOXaP1bds019A4/leWr18Rt8BapAWjy+HBqrOhWP0bMQC6BE
+         buHEA85sAD1JqoElMMXNFzct18KbjEBjHRoepn/6IOX2w8MfnUTjNgUMApB9XWR6qRbS
+         hNBxMJu3vhFX2u6SPx/jCN+YuiOaQnxXjjiXR7B5b7B193neH6zsOvMlUN6LoXdwcVn8
+         cTfhFo7h6JaxlZb9ELI0BSvhWmjYs7mue1l0MxikmsOq4M812ze3ENe2IAdiH/aV6P6z
+         amvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711069251; x=1711674051;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
+         :resent-from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L2hcaTEbriam9/7FssVKUi7kol9l4gPNKSXgZqspLoI=;
+        b=ewXVmXNO0WNnWJsqehDrqqFRd6v4KFJfB5fe2h/rBu/K6gUkC2Gl0a89/3g23DV3Ga
+         JW1yp8AhkpfhGLVRxtGk9q4ppSYDDbyUtTxObJiZlv/enLsbpXIcWMJ8it/i9QSDVjci
+         NY3YoL3RfNX2wBqYVqwwrJAB867h//sojScHlDkE4RFgyO0LxOhtgHyjE3M+LRlMLlnU
+         DWvwuX6stYWPkbhnLUcaCTHNMlTnGcN0TeOgX6Ppbp587nXV9vSvtL0DPWSgio/xnOmu
+         XTYz2vemqSYQRBMh+XiaSb4aec5nWNht/SW3m08nd8lHqu8l9pa2eie+kE8CdNqHAPyp
+         f1Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnI8ll8DX1fKDH+gcS6r+b8V/ytFe28rcnQR2I9Y0aNtl5X1cryCiHmQVnALT3RCksWSDXoj8xC+xTdkpei3RJ8wYXfS7I0nCn
+X-Gm-Message-State: AOJu0Yy1WhqTvmNdIBUomphUvdNd3mkZhpR3qJoySMSYREsDdA3rLibq
+	5qTlOl0a3Hzy7J7Xj98/1mHlonyQJ9fWepWH43E5rm1pTTO/Bp4io9HdFIuxs1ccbbUUmr4Gx2q
+	t
+X-Google-Smtp-Source: AGHT+IFQujk20HQNp07F05p6OBjCkSRXjL+9L9HkX0g5klynnlOCbrZc0os3Jsvcr82MNXxvqSbFnQ==
+X-Received: by 2002:a05:6a20:3d8d:b0:1a1:484b:bb72 with SMTP id s13-20020a056a203d8d00b001a1484bbb72mr1398954pzi.51.1711068888492;
+        Thu, 21 Mar 2024 17:54:48 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
+        by smtp.gmail.com with ESMTPSA id 2-20020a056a00070200b006e58da8bb6asm451344pfl.132.2024.03.21.17.54.48
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 17:54:48 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rnTBF-005TZ2-32
+	for linux-xfs@vger.kernel.org;
+	Fri, 22 Mar 2024 11:54:45 +1100
+Resent-From: Dave Chinner <david@fromorbit.com>
+Resent-Date: Fri, 22 Mar 2024 11:54:45 +1100
+Resent-Message-ID: <ZfzW1XmqVF66SXzq@dread.disaster.area>
+Resent-To: linux-xfs@vger.kernel.org
+Date: Wed, 20 Mar 2024 09:23:58 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 3/9] xfs: convert buffer cache to use high order folios
+Message-ID: <ZfoQfsuxEoxrhiVP@dread.disaster.area>
+References: <20240318224715.3367463-1-david@fromorbit.com>
+ <20240318224715.3367463-4-david@fromorbit.com>
+ <20240319172909.GP1927156@frogsfrogsfrogs>
+ <ZfoEVAxVyPxqzapN@infradead.org>
+ <20240319213827.GQ1927156@frogsfrogsfrogs>
+ <ZfoGh53HyJuZ_2EG@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -62,65 +99,28 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240318163512.GB1185@sol.localdomain>
+In-Reply-To: <ZfoGh53HyJuZ_2EG@infradead.org>
 
-On Mon, Mar 18, 2024 at 09:35:12AM -0700, Eric Biggers wrote:
-> On Sun, Mar 17, 2024 at 09:22:52AM -0700, Darrick J. Wong wrote:
-> > Hi all,
-> > 
-> > From Darrick J. Wong:
-> > 
-> > This v5.3 patchset builds upon v5.2 of Andrey's patchset to implement
-> > fsverity for XFS.
+On Tue, Mar 19, 2024 at 02:41:27PM -0700, Christoph Hellwig wrote:
+> On Tue, Mar 19, 2024 at 02:38:27PM -0700, Darrick J. Wong wrote:
+> > 64k is the maximum xattr value size, yes.  But remote xattr value blocks
+> > now have block headers complete with owner/uuid/magic/etc.  Each block
+> > can only store $blksz-56 bytes now.  Hence that 64k value needs
+> > ceil(65536 / 4040) == 17 blocks on a 4k fsb filesystem.
 > 
-> Is this ready for me to review, or is my feedback on v5 still being
-> worked on?
+> Uggg, ok.  I thought we'd just treat remote xattrs as data and don't
+> add headers.
 
-It's still being worked on.  I figured it was time to push my work tree
-back to Andrey so everyone could see the results of me attempting to
-understand the fsverity patchset by working around in the codebase.
+We needed CRCs for them, and they can be discontiguous so we also
+needed self identifying information so xattrs could be reconstructed
+from the header information.
 
-From your perspective, I suspect the most interesting patches will be 5,
-6, 7+10+14, 11-13, and 15-17.  For everyone on the XFS side, patches
-27-39 are the most interesting since they change the caching strategy
-and slim down the ondisk format.
+If I was doing the v5 stuff again, I would have put a the
+information in the remote xattr name structure held in the dabtree
+record, not the actual xattr data extent. But hindsight is 20:20....
 
-> From a quick glance, not everything from my feedback has been
-> addressed.
-
-That's correct.  I cleaned up the mechanics of passing merkle trees
-around, but I didn't address the comments about per-sb workqueues,
-fsverity tracepoints, or whether or not iomap should allocate biosets.
-Roughly, here's what I did in the generic code:
-
-I fixed the FS_XFLAG_VERITY handling so that you can't clear it via
-FS_IOC_FSSETXATTR.
-
-I also rewrote and augmented the "drop dead merkle tree" functions in
-xfs_verity to clean out incomplete trees when ->end_enable tells us we
-failed; and to clean out extra blocks in the ->begin_enable just in case
-the file shrank since a failed attempt to enable fsverity.
-
-As for online repair, the "fsverity: expose merkle tree geometry to
-callers" enables the kernel to do some basic online checking that there
-aren't excessive merkle tree blocks and that fsverity can read the
-descriptor.  In my djwong-wtf tree, xfs_scrub gains the ability to read
-the entire file into the pagecache (and hence validate the verity info)
-via MADV_POPULATE READ, and now it has a patch to read the entire merkle
-tree/descriptor/signature just to make sure those can actually be read.
-
-Most of the things you gave feedback about in "fsverity: support
-block-based Merkle tree caching" I think I cleaned up in "fsverity: fix
-"support block-based Merkle tree caching"" and "fsverity: rely on cached
-block callers to retain verified state".  I kept those separate so that
-Andrey could see what I did, though they really ought to be merged into
-the main support patch.
-
-Note that I greatly expanded the usage of struct fsverity_blockbuf and
-changed the verified flag handling so that the invalidation function was
-no longer necessary.
-
---D
-
-> - Eric
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
