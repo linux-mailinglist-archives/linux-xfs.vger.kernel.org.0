@@ -1,76 +1,130 @@
-Return-Path: <linux-xfs+bounces-5357-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5402-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F06B8806DD
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 22:41:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E495886438
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:02:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EA0C2831B9
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 21:41:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17C752841D1
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 00:02:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B65D3405CC;
-	Tue, 19 Mar 2024 21:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD43CBE66;
+	Fri, 22 Mar 2024 00:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fwj7muBp"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="M9KRF8yI"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597D03C488
-	for <linux-xfs@vger.kernel.org>; Tue, 19 Mar 2024 21:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219E4BE5A
+	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 00:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710884511; cv=none; b=hma+Fqnl10+3PGunqVwHIOShwuDGfi2Hf5WFLyU8tx85jF+mm0ovHq6oS4dno258VMQ3eK4+cdqQc73BkHe2kkk6eTkaMktUIdxf5Syo5cjk6wJq9sjo9JY2sVIsHMUUntTn9oJrGHF1CVsL1k/80DB2qvAKyc8ZaxYm00M/E7E=
+	t=1711065728; cv=none; b=I2W+1EZaR9m4FiDMDLCKgxqTIPUAkVQYTBQv5qX1fWFyLVXNmRCsCT8qNCA5PPhnf04vL/lLR77sryEdUnRvMy5iugUsrmcpeMYupGCjSgdz/pn6LM0T+LH8eAk+ATk4ObUpuIksZIREUh+g4wguob0WmLuYnrtbZ9a/fy4Xzbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710884511; c=relaxed/simple;
-	bh=1drbyQ/xt+SGe1B0ggjL6DTqTxFTWXfui5b7FaZKqTU=;
+	s=arc-20240116; t=1711065728; c=relaxed/simple;
+	bh=6+G1sjHqFPVArExQiyfW7MUfRkLiQCAT4ozOgZwjtwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NjocK7noBPDrJuUketnOmRUDWURa6twJop25k8aJgvi2ACHnpjb6Ac+UAll+qOJp8bmW2HdZnpDxdTTSFPucftUACNTjW+3kFgE50B7RE/WU/cE/nkIRLNyrUOmAD/RRtZdC9xiSPHLceiGRHmTCgzhm69PhD1/g8KE8/BOBmEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Fwj7muBp; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=z09T5nhTC1gKuE4wmJfEpAcuXAKqLdgSWGXEO6doNWI=; b=Fwj7muBpesALEuhoNJdXnZdL8N
-	3T+GdPg1elNGp5p1TCWVAZxdK6yAJtYuxiQOFrsSNXsh+tuIyZGyuQak+VBhb3hA5FcLrg6yFcXyx
-	xy4eRlEpBNHbUXnrWYjOE0KT/6JIzG5KMSbLStBvKE1KV5y8tbgUx4TTjL5Glxf1lG6ZO3BpoFOxx
-	pGCtYmxuVxa0vZxD4YV7ke/6B8Cn2O5i2D7ZtUMNPFx4ZvADSCfeG9rl1oUEx/zbiqyONfx+wFRwN
-	ZyM2blgBSMGXn0onNT6E7EFuGIw3lakmAP24IXSdtPQnM/LcachTkiV3ZMDcZRexcZ7329PWmhoCX
-	M1Augfiw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmhDR-0000000EKTh-3vNb;
-	Tue, 19 Mar 2024 21:41:49 +0000
-Date: Tue, 19 Mar 2024 14:41:49 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 6/9] xfs: map buffers in xfs_buf_alloc_folios
-Message-ID: <ZfoGnUXD5BtD04jH@infradead.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=f9scr5gwzg3h2e5LF7EUYsrSNqxsSbq0qnfC9iRH+N0v2GkWXDFXACBnPPTQcwswVui4p9gV2H9xveWwUJkAo0w3UAhoSW7qWS+iNfWxWQbRYPkUf+Ayuh7/KoLg7E3aTASB88Tjrs2KVDi+zmrQ5EkrE++28N9Tt9s1o7EeOwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=M9KRF8yI; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1dffa5e3f2dso10030315ad.2
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 17:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711065726; x=1711670526; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :resent-to:resent-message-id:resent-date:resent-from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UjGog3ZvffaVpb6rTr/ObLpWPMullTEcsb0ecf3K6VE=;
+        b=M9KRF8yIaiqc5RuiL69HeVyJIdN+AUXi2/KIDmgsN9jW6klxfx4XECp2KI4vPiVoqB
+         IJZJQBL8YApwYDnnBMfwrA/tUefIoLTKRnUZGEfxZ2cig9vfpBcnIf6H5TJLLEjYbZyp
+         67tShZs7b+BcOZwqiswwk5k5fwJMqbTZOpshzlKqln6uVeCJJJtJJUUFzRYYOkMT+Ahu
+         QFI4Cb4uZVNTccLm123tIN31ojOuqbY8TSwjvfEgX6+JJ4fFNSyZaw8yjb0WHmCutpEn
+         Sktgx9gg8z85eiEZK6kqAmgMa8M2xKwINoc/oRa57h6T0TAskb9rCycesUjgxpz/sfMf
+         A5sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711065726; x=1711670526;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :resent-to:resent-message-id:resent-date:resent-from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UjGog3ZvffaVpb6rTr/ObLpWPMullTEcsb0ecf3K6VE=;
+        b=AH8blPHxlSb64VggNyVZViLlgXzrdG2Ne65qI19W3SO+OWzu5tcN77xRcVhlpudvOo
+         75uQI9uxDv4wLAsBkSnzU5wql0wC+zRAjGf6MYvJuAxMB5i7TyML4Gh9beoPd03Oz5By
+         nmG8arOPrfRUqk2nqHqc9X1EqZta3lmlI+9Rm+yU+eRZkzNGf1NHE8x/Q9uEP8ncDpW2
+         L61LIN5koEJ6DbwNGjhvYO0xuv7pv6ZZBaAeqf/hqe4142FMbpwVFMbBOy7gvO+c+DLo
+         kD7HAROlJrl4s+1iBmFEBYFV1+Tdhh5HqHByynht54OiuMa+Jquqqz3+yhOIYUOqGDX7
+         HVew==
+X-Gm-Message-State: AOJu0Ywrag65pStzCnBIgQnuzjWScUoS8g9LHSjKr/xY3+zEQps1llCx
+	uaFqb6LCDzjq0uvReAsvzP5WuAvQbu4O9NXGTFv6o9BHQ6gVqGGQPwyl7asW6I4BphgnqwrrN3a
+	Z
+X-Google-Smtp-Source: AGHT+IFsy60fgVv7TQHdvDLM16F1daaOX0FPwY0TNLlgZzLzHsPhmqRiI7TbveF7sVDAz3P2JYIo9w==
+X-Received: by 2002:a05:6a21:6d83:b0:1a3:6a2b:a7d3 with SMTP id wl3-20020a056a216d8300b001a36a2ba7d3mr1352904pzb.47.1711065233932;
+        Thu, 21 Mar 2024 16:53:53 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
+        by smtp.gmail.com with ESMTPSA id r11-20020aa79ecb000000b006e6a684a6ddsm396275pfq.220.2024.03.21.16.53.53
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 16:53:53 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rnSEI-005It5-2k
+	for linux-xfs@vger.kernel.org;
+	Fri, 22 Mar 2024 10:53:50 +1100
+Resent-From: Dave Chinner <david@fromorbit.com>
+Resent-Date: Fri, 22 Mar 2024 10:53:50 +1100
+Resent-Message-ID: <ZfzIjqLLx7KarFua@dread.disaster.area>
+Resent-To: linux-xfs@vger.kernel.org
+Date: Wed, 20 Mar 2024 08:42:37 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/9] xfs: use folios in the buffer cache
+Message-ID: <ZfoGzbDXQsrtlc4i@dread.disaster.area>
 References: <20240318224715.3367463-1-david@fromorbit.com>
- <20240318224715.3367463-7-david@fromorbit.com>
- <20240319173413.GS1927156@frogsfrogsfrogs>
- <ZfoEgJ7U7A6BxwIl@infradead.org>
- <20240319213919.GR1927156@frogsfrogsfrogs>
+ <20240318224715.3367463-3-david@fromorbit.com>
+ <Zfk2hhhXU78WSo18@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240319213919.GR1927156@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zfk2hhhXU78WSo18@infradead.org>
 
-On Tue, Mar 19, 2024 at 02:39:19PM -0700, Darrick J. Wong wrote:
-> We might as well fix the split infinitive as well:
+On Mon, Mar 18, 2024 at 11:53:58PM -0700, Christoph Hellwig wrote:
+> So while this looks good to me,
 > 
-> "...no good reason not to map the buffer pages..."
+> > +	for (i = 0; i < bp->b_folio_count; i++) {
+> > +		if (bp->b_folios[i])
+> > +			__folio_put(bp->b_folios[i]);
+> 
+> The __folio_put here really needs to be folio_put or page alloc
+> debugging gets very unhappy.
 
-fine.
+*nod*
+
+I can't remember why I used that in the first place...
+
+> But even with that fixed on top of this patch the first mount just hangs
+> without a useful kernel backtrace in /proc/*/stack, although running
+> with the entire ѕeries applied it does pass the basic sanity checking
+> so far.
+
+Huh. It worked before I folded in your patches to clean everything
+up; I don't tend to test individual patches if the whole series
+works. I guess I screwed something up somewhere and then fixed it
+later - I'll sort that out.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
