@@ -1,58 +1,93 @@
-Return-Path: <linux-xfs+bounces-5348-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5409-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B82A088068D
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 22:08:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D959A886480
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:55:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DBD71F22C5B
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 21:08:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08FFC1C214C1
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 00:55:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B26E4085F;
-	Tue, 19 Mar 2024 21:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52F3C38B;
+	Fri, 22 Mar 2024 00:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9V208Bq"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="lQh+1/Cr"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C51340848;
-	Tue, 19 Mar 2024 21:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99DE633
+	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 00:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710882530; cv=none; b=jB3Ch49lOKVqf4V0hBGIgsHjMce8EGDMoEnDjByKA++5aOjAM9D3so2qqIBaaFm0VZgW4NGzwk24yKfuKO3ACeBKPPHP4J3/wdrldMp5S9lQE28n2aXyDPXHD+1S9w5U6gjyK8VXm18/AGhEVBVDyAt2+SF6YhMGadlEnLyNdsE=
+	t=1711068945; cv=none; b=SuJBI9v8T4tog9scEC7NdGpJsC7drvzKjqXenV9B7BIb+R0v9k9tPA+Jr9HtBddK9jl8F12B5S9kfMSmCcPQp3aFDqRE2b3FYzJimTBj5wQTYxhrDJF5r9ydanCvyH75OvAE2ExlxZCz6dUNsQO4XKoeBeYCCrtpFa6uEtHuTvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710882530; c=relaxed/simple;
-	bh=KHWCCVBCSz3OsrVItaSDJ3IohJcPE3aaz3WKW/4aJp4=;
+	s=arc-20240116; t=1711068945; c=relaxed/simple;
+	bh=4cWD8IG4gVGiQGrcNxBtU++hLFIc5E57whvnEJ7aJe0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/LlEqAefLXJ61qLcJWc2NvYdaB2GK2UNjhprhYVFSh7Km12yfkBcOGlxXeVo89uV+SXD3teW270ycKTLBp+aRgB2hC4910GNp/UyE1n/MwzRfuNgdwbV9WFPvJI/8eXbS0fHr2271NyUTAWAsDb/cWBmnubKo4hD5CfJ48m4kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9V208Bq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC2CC433C7;
-	Tue, 19 Mar 2024 21:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710882529;
-	bh=KHWCCVBCSz3OsrVItaSDJ3IohJcPE3aaz3WKW/4aJp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l9V208BqBNStOLy6e8gC1pFtC8KqT758A93xDnbzGtPv+PHsiZ8iIsbi+T5oOAxZP
-	 vEcKZNXeaTX+f7yMIfZh2XGqSsTdK900idwPLl9xSrjm34SygTG74uR2EU2PuLRC3B
-	 ym/K43YkTR8hVhH4wkZndhrm6xfYWbJktDzn2/hLcj5xToe7dAD4p59Fmn1hI8Geyc
-	 x+lv2OUh3pIwJhyPdde/HWgENgmwqH7yQSxzTc0XIy5cEygu4GfS2mFGv/hB75VbjZ
-	 2t8hsYtrS0Z6OS1YLG6eG5WjukKYbAbM2OgdpdsXVY/+/aMuGMpuVcL7HCU1EsAypO
-	 dgUuywfedgwbw==
-Date: Tue, 19 Mar 2024 14:08:49 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
-	david@fromorbit.com, tytso@mit.edu, jack@suse.cz,
-	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
-Subject: Re: [PATCH v3 9/9] iomap: do some small logical cleanup in buffered
- write
-Message-ID: <20240319210849.GN1927156@frogsfrogsfrogs>
-References: <20240319011102.2929635-1-yi.zhang@huaweicloud.com>
- <20240319011102.2929635-10-yi.zhang@huaweicloud.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oRO55zXvk7ygx9si/Yx8C5eGJYGEx5VgvAIDG5F1CXBfMbpvKOyZpeoosVik9bErFOgg1QEfUuH/8SiC2WPpmKtAmjpzxzZUsoaaNLq3Ktfae1McsfmjQgXFaPLlSgj/XuMavS9RMYpgR/2YspMzjSs2aVwO32YU9Z+iXM7o2AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=lQh+1/Cr; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dddbe47ac1so17709115ad.1
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 17:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711068943; x=1711673743; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
+         :resent-from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BsfO+CLAsWTNw6PWeCfjLK5xvJALMzLomuu7B9NzRX8=;
+        b=lQh+1/CrRsCyYJ4Pyh2Vty2xzyuq+7dkOy9BqowWlsTHc/YdtL3+LHGIcOlpMF+9C+
+         VuNkCGeL9cKw3l2PNUwee8ObCp1bdktY6lqvZ7nhZGm1fenmBPT0KlyANOULHzvHQeH2
+         gbJKB+vQY97O84P8Ky9MZfDvIBKDcV293T+vYSMdw9BCbLgixBv0nq/agl+zpBmPgVcp
+         mPagrddIdX6sVEzMHvdBuTxryW7Bv0W1D52f/jgWZS/FI6QaJvK6gIKzOp8zcuSvVg7g
+         jMLoFcnNEUifrEOn13fdYm6eUdW1P2++xihUGH4363rgTFBSRJ9uwLCrFZfEbLDeSFlV
+         Sl3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711068943; x=1711673743;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
+         :resent-from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BsfO+CLAsWTNw6PWeCfjLK5xvJALMzLomuu7B9NzRX8=;
+        b=F3TZiBPE5YNN3KIVPCUs/5VDHg6ZagE/hjfoEVGGg9lbiv5Ob8lmaFiH2gMLN4wkBz
+         +E3OuYr6timeC6UBEdm250pspTPZBL8O143hzHH2toCyA3sUZRJ0ABLqm57rKmHLXTfE
+         VZyZ0KNP1BWsayveroVA1TUSW2dkr3j3uQ/kz3y8YYNG1liEsEWC2TwGzWdxsDhLanOe
+         lmI64QaFXNHfOMICrXFyHcCwjHctiRKIC1uH6Wgl4PD+JYVpD1PKFmtYZU584GTORyZC
+         dtUZQ+qsPFtpnW30w1cFYYS6d5szYlC9sYD+yT6kZ9kQNbI4m259MtQtpar32pRWIPos
+         hGng==
+X-Forwarded-Encrypted: i=1; AJvYcCU+QQT2+2wYa3XpYzrnRokqWBIQAIZG74QtHOFRMbV5S23HkLrAjlhJS7RO4XpGMIIo6H8rcAwpWjh7vHYx7gVterD1BYaGJot7
+X-Gm-Message-State: AOJu0Yx5e+2TG/j7Hf7tF2/pesgyGYT55RXud9PJF3UUPpfqkrbKzri4
+	hQtaYyvBl+r9iikaUOQsdX7JNHEihetrpjV1LrpvcrXQwt5+F8FkWwy4ALvQvQ+QYnmywe7xHFM
+	J
+X-Google-Smtp-Source: AGHT+IFQEgL+RL1egCK+VADB9m2DsuaPoYHeBKGxD0WDpWrVM88c0Jneq1nYtGcJgtkqeUT6M14tqw==
+X-Received: by 2002:a17:90b:4f4a:b0:29f:931a:8b63 with SMTP id pj10-20020a17090b4f4a00b0029f931a8b63mr842892pjb.17.1711068942880;
+        Thu, 21 Mar 2024 17:55:42 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
+        by smtp.gmail.com with ESMTPSA id lb11-20020a170902fa4b00b001d949393c50sm497973plb.187.2024.03.21.17.55.42
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 17:55:42 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rnTC8-005Tnf-0U
+	for linux-xfs@vger.kernel.org;
+	Fri, 22 Mar 2024 11:55:40 +1100
+Resent-From: Dave Chinner <david@fromorbit.com>
+Resent-Date: Fri, 22 Mar 2024 11:55:40 +1100
+Resent-Message-ID: <ZfzXDK5JJmbrkKr0@dread.disaster.area>
+Resent-To: linux-xfs@vger.kernel.org
+Date: Wed, 20 Mar 2024 08:13:21 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, chandan.babu@oracle.com,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] xfs: compile out v4 support if disabled
+Message-ID: <Zfn/8e7MhbFcvHL0@dread.disaster.area>
+References: <20240319071952.682266-1-hch@lst.de>
+ <20240319175909.GY1927156@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -61,58 +96,64 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319011102.2929635-10-yi.zhang@huaweicloud.com>
+In-Reply-To: <20240319175909.GY1927156@frogsfrogsfrogs>
 
-On Tue, Mar 19, 2024 at 09:11:02AM +0800, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
+On Tue, Mar 19, 2024 at 10:59:09AM -0700, Darrick J. Wong wrote:
+> On Tue, Mar 19, 2024 at 05:19:51PM +1000, Christoph Hellwig wrote:
+> > Add a strategic IS_ENABLED to let the compiler eliminate the unused
+> > non-crc code is CONFIG_XFS_SUPPORT_V4 is disabled.
+> > 
+> > This saves almost 20k worth of .text for my .config:
+> > 
+> > $ size xfs.o.*
+> >    text	   data	    bss	    dec	    hex	filename
+> > 1351126	 294836	    592	1646554	 191fda	xfs.o.new
+> > 1371453	 294868	    592	1666913	 196f61	xfs.o.old
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  fs/xfs/xfs_mount.h |  7 ++++++-
+> >  fs/xfs/xfs_super.c | 22 +++++++++++++---------
+> >  2 files changed, 19 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> > index e880aa48de68bb..24fe6e7913c49f 100644
+> > --- a/fs/xfs/xfs_mount.h
+> > +++ b/fs/xfs/xfs_mount.h
+> > @@ -327,6 +327,12 @@ static inline void xfs_add_ ## name (struct xfs_mount *mp) \
+> >  	xfs_sb_version_add ## name(&mp->m_sb); \
+> >  }
+> >  
+> > +static inline bool xfs_has_crc(struct xfs_mount *mp)
+> > +{
+> > +	return IS_ENABLED(CONFIG_XFS_SUPPORT_V4) &&
+> > +		(mp->m_features & XFS_FEAT_CRC);
 > 
-> Since iomap_write_end() can never return a partial write length, the
-> comperation between written, copied and bytes becomes useless, just
+> Can you save even more text bytes by defining
+> xfs_has_{nlink,v3inodes,projid32,lazysbcount,pquotino,attr2} to 1?
+> And I guess defining noattr2 to 0?
 
-  comparison
+That sounds like a new __XFS_HAS_V4_FEAT() that has a thrid
+parameter to define the value when V4 support is not compiled in.
 
-> merge them with the unwritten branch.
-> 
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+e.g.
 
-With the spelling error fixed,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+#define __XFS_HAS_V4_FEAT(name, NAME, v5_support) \
+static inline bool xfs_has_ ## name (struct xfs_mount *mp) \
+{ \
+	if (!IS_ENABLED(CONFIG_XFS_SUPPORT_V4))	\
+		return v5_support; \
+        return mp->m_features & XFS_FEAT_ ## NAME; \
+}
 
---D
+That way we have a single macro that tells us that it is a V4
+defined feature, and the documents the support of that feature in V5
+filesystems. And when it comes to removing v4 support, we have clear
+code documentation as to which features we need to remove or make
+unconditional across the code base.
 
-> ---
->  fs/iomap/buffered-io.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 004673ea8bc1..f2fb89056259 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -937,11 +937,6 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
->  
->  		if (old_size < pos)
->  			pagecache_isize_extended(iter->inode, old_size, pos);
-> -		if (written < bytes)
-> -			iomap_write_failed(iter->inode, pos + written,
-> -					   bytes - written);
-> -		if (unlikely(copied != written))
-> -			iov_iter_revert(i, copied - written);
->  
->  		cond_resched();
->  		if (unlikely(written == 0)) {
-> @@ -951,6 +946,9 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
->  			 * halfway through, might be a race with munmap,
->  			 * might be severe memory pressure.
->  			 */
-> +			iomap_write_failed(iter->inode, pos, bytes);
-> +			iov_iter_revert(i, copied);
-> +
->  			if (chunk > PAGE_SIZE)
->  				chunk /= 2;
->  			if (copied) {
-> -- 
-> 2.39.2
-> 
-> 
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
