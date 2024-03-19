@@ -1,93 +1,56 @@
-Return-Path: <linux-xfs+bounces-5409-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5349-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D959A886480
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:55:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B365F88069F
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 22:17:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08FFC1C214C1
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 00:55:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E529C1C21117
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Mar 2024 21:17:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52F3C38B;
-	Fri, 22 Mar 2024 00:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB7EF3FB9E;
+	Tue, 19 Mar 2024 21:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="lQh+1/Cr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLSYEA8v"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99DE633
-	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 00:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CF53FB2F;
+	Tue, 19 Mar 2024 21:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711068945; cv=none; b=SuJBI9v8T4tog9scEC7NdGpJsC7drvzKjqXenV9B7BIb+R0v9k9tPA+Jr9HtBddK9jl8F12B5S9kfMSmCcPQp3aFDqRE2b3FYzJimTBj5wQTYxhrDJF5r9ydanCvyH75OvAE2ExlxZCz6dUNsQO4XKoeBeYCCrtpFa6uEtHuTvQ=
+	t=1710883067; cv=none; b=cV8gm2HCT0LzUnt8ClgEuUUs1oZIji72afwq736ZRWXGmuJtFUjldAhmL46E0wZ6DLZl8LznFPxye5aJnrGs8E6AftIh0LEMY7ZtHVxcu73kAXr65kvpgBPWfIuYfNpvaT9EF+DUiBesMX5EJGCDSvdiIwH6d1NKrmbsVoU6tOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711068945; c=relaxed/simple;
-	bh=4cWD8IG4gVGiQGrcNxBtU++hLFIc5E57whvnEJ7aJe0=;
+	s=arc-20240116; t=1710883067; c=relaxed/simple;
+	bh=36O9vw9EBtZzC6TQxml09VKdUquslgZ2K9MadCGJOjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRO55zXvk7ygx9si/Yx8C5eGJYGEx5VgvAIDG5F1CXBfMbpvKOyZpeoosVik9bErFOgg1QEfUuH/8SiC2WPpmKtAmjpzxzZUsoaaNLq3Ktfae1McsfmjQgXFaPLlSgj/XuMavS9RMYpgR/2YspMzjSs2aVwO32YU9Z+iXM7o2AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=lQh+1/Cr; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1dddbe47ac1so17709115ad.1
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 17:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711068943; x=1711673743; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
-         :resent-from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BsfO+CLAsWTNw6PWeCfjLK5xvJALMzLomuu7B9NzRX8=;
-        b=lQh+1/CrRsCyYJ4Pyh2Vty2xzyuq+7dkOy9BqowWlsTHc/YdtL3+LHGIcOlpMF+9C+
-         VuNkCGeL9cKw3l2PNUwee8ObCp1bdktY6lqvZ7nhZGm1fenmBPT0KlyANOULHzvHQeH2
-         gbJKB+vQY97O84P8Ky9MZfDvIBKDcV293T+vYSMdw9BCbLgixBv0nq/agl+zpBmPgVcp
-         mPagrddIdX6sVEzMHvdBuTxryW7Bv0W1D52f/jgWZS/FI6QaJvK6gIKzOp8zcuSvVg7g
-         jMLoFcnNEUifrEOn13fdYm6eUdW1P2++xihUGH4363rgTFBSRJ9uwLCrFZfEbLDeSFlV
-         Sl3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711068943; x=1711673743;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:resent-to:resent-message-id:resent-date
-         :resent-from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BsfO+CLAsWTNw6PWeCfjLK5xvJALMzLomuu7B9NzRX8=;
-        b=F3TZiBPE5YNN3KIVPCUs/5VDHg6ZagE/hjfoEVGGg9lbiv5Ob8lmaFiH2gMLN4wkBz
-         +E3OuYr6timeC6UBEdm250pspTPZBL8O143hzHH2toCyA3sUZRJ0ABLqm57rKmHLXTfE
-         VZyZ0KNP1BWsayveroVA1TUSW2dkr3j3uQ/kz3y8YYNG1liEsEWC2TwGzWdxsDhLanOe
-         lmI64QaFXNHfOMICrXFyHcCwjHctiRKIC1uH6Wgl4PD+JYVpD1PKFmtYZU584GTORyZC
-         dtUZQ+qsPFtpnW30w1cFYYS6d5szYlC9sYD+yT6kZ9kQNbI4m259MtQtpar32pRWIPos
-         hGng==
-X-Forwarded-Encrypted: i=1; AJvYcCU+QQT2+2wYa3XpYzrnRokqWBIQAIZG74QtHOFRMbV5S23HkLrAjlhJS7RO4XpGMIIo6H8rcAwpWjh7vHYx7gVterD1BYaGJot7
-X-Gm-Message-State: AOJu0Yx5e+2TG/j7Hf7tF2/pesgyGYT55RXud9PJF3UUPpfqkrbKzri4
-	hQtaYyvBl+r9iikaUOQsdX7JNHEihetrpjV1LrpvcrXQwt5+F8FkWwy4ALvQvQ+QYnmywe7xHFM
-	J
-X-Google-Smtp-Source: AGHT+IFQEgL+RL1egCK+VADB9m2DsuaPoYHeBKGxD0WDpWrVM88c0Jneq1nYtGcJgtkqeUT6M14tqw==
-X-Received: by 2002:a17:90b:4f4a:b0:29f:931a:8b63 with SMTP id pj10-20020a17090b4f4a00b0029f931a8b63mr842892pjb.17.1711068942880;
-        Thu, 21 Mar 2024 17:55:42 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id lb11-20020a170902fa4b00b001d949393c50sm497973plb.187.2024.03.21.17.55.42
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 17:55:42 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rnTC8-005Tnf-0U
-	for linux-xfs@vger.kernel.org;
-	Fri, 22 Mar 2024 11:55:40 +1100
-Resent-From: Dave Chinner <david@fromorbit.com>
-Resent-Date: Fri, 22 Mar 2024 11:55:40 +1100
-Resent-Message-ID: <ZfzXDK5JJmbrkKr0@dread.disaster.area>
-Resent-To: linux-xfs@vger.kernel.org
-Date: Wed, 20 Mar 2024 08:13:21 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, chandan.babu@oracle.com,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: compile out v4 support if disabled
-Message-ID: <Zfn/8e7MhbFcvHL0@dread.disaster.area>
-References: <20240319071952.682266-1-hch@lst.de>
- <20240319175909.GY1927156@frogsfrogsfrogs>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HZUbk2iVrEFj+PY0cfkfRORDKtty7JrMztxDiyuwiiGU5cDvFjFSclYps9sElYCTjRWyJlOBSPRwEKU+d29pXDQlGdPF4hbA0uVRduCez9ErsjvB3c602xDGkAQzqwzOaUeCDZbAhJkZyqrqcPpzH+IpJ0wpCH89mT3cX3cWfzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLSYEA8v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1FFC43390;
+	Tue, 19 Mar 2024 21:17:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710883067;
+	bh=36O9vw9EBtZzC6TQxml09VKdUquslgZ2K9MadCGJOjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iLSYEA8vW3d8FQAvkBwx8Q3kdLJVvG77T4i71PCYA8JvV1kkWypUyFo3BVvvOxBIq
+	 fGGc9dWa3kEqaQ1B8FzaNNJ1UxjXCx+m2q7v8FhKP81wcaPQpLbDOoqyuavSgFYmuI
+	 pUUq5fhVW6dW3HcLbapi759oO+yRY2Su/HQkPs9RUa9r/820Gn7whZ4b5S190Tu+MI
+	 fIp6KynVOP5GYTMvxik3qR+QBiSz68qpEaHP0xl7KGGByXc6WI8Hzr+dZheatQEhyH
+	 v46YlrpXtgWQO4hksEEnYcfczWG0Iskt+Xb8KlGZ+lPG4XhDQSmALPNXNLFsz//mhx
+	 oY+xMvhfb64YQ==
+Date: Tue, 19 Mar 2024 14:17:46 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: ebiggers@kernel.org, linux-fsdevel@vger.kernel.org,
+	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 24/40] xfs: disable direct read path for fs-verity files
+Message-ID: <20240319211746.GO1927156@frogsfrogsfrogs>
+References: <171069245829.2684506.10682056181611490828.stgit@frogsfrogsfrogs>
+ <171069246296.2684506.17423583037447505680.stgit@frogsfrogsfrogs>
+ <eb7rlbfslyht2vmn7ocqcx5fkjyrle4ocgex6hmjxzs4gtkkgm@mvmsrj7sgojd>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -96,64 +59,71 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319175909.GY1927156@frogsfrogsfrogs>
+In-Reply-To: <eb7rlbfslyht2vmn7ocqcx5fkjyrle4ocgex6hmjxzs4gtkkgm@mvmsrj7sgojd>
 
-On Tue, Mar 19, 2024 at 10:59:09AM -0700, Darrick J. Wong wrote:
-> On Tue, Mar 19, 2024 at 05:19:51PM +1000, Christoph Hellwig wrote:
-> > Add a strategic IS_ENABLED to let the compiler eliminate the unused
-> > non-crc code is CONFIG_XFS_SUPPORT_V4 is disabled.
+On Mon, Mar 18, 2024 at 08:48:47PM +0100, Andrey Albershteyn wrote:
+> On 2024-03-17 09:29:39, Darrick J. Wong wrote:
+> > From: Andrey Albershteyn <aalbersh@redhat.com>
 > > 
-> > This saves almost 20k worth of .text for my .config:
+> > The direct path is not supported on verity files. Attempts to use direct
+> > I/O path on such files should fall back to buffered I/O path.
 > > 
-> > $ size xfs.o.*
-> >    text	   data	    bss	    dec	    hex	filename
-> > 1351126	 294836	    592	1646554	 191fda	xfs.o.new
-> > 1371453	 294868	    592	1666913	 196f61	xfs.o.old
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
+> > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> > [djwong: fix braces]
+> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > > ---
-> >  fs/xfs/xfs_mount.h |  7 ++++++-
-> >  fs/xfs/xfs_super.c | 22 +++++++++++++---------
-> >  2 files changed, 19 insertions(+), 10 deletions(-)
+> >  fs/xfs/xfs_file.c |   15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
 > > 
-> > diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> > index e880aa48de68bb..24fe6e7913c49f 100644
-> > --- a/fs/xfs/xfs_mount.h
-> > +++ b/fs/xfs/xfs_mount.h
-> > @@ -327,6 +327,12 @@ static inline void xfs_add_ ## name (struct xfs_mount *mp) \
-> >  	xfs_sb_version_add ## name(&mp->m_sb); \
-> >  }
+> > 
+> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > index 74dba917be93..0ce51a020115 100644
+> > --- a/fs/xfs/xfs_file.c
+> > +++ b/fs/xfs/xfs_file.c
+> > @@ -281,7 +281,8 @@ xfs_file_dax_read(
+> >  	struct kiocb		*iocb,
+> >  	struct iov_iter		*to)
+> >  {
+> > -	struct xfs_inode	*ip = XFS_I(iocb->ki_filp->f_mapping->host);
+> > +	struct inode		*inode = iocb->ki_filp->f_mapping->host;
+> > +	struct xfs_inode	*ip = XFS_I(inode);
+> >  	ssize_t			ret = 0;
 > >  
-> > +static inline bool xfs_has_crc(struct xfs_mount *mp)
-> > +{
-> > +	return IS_ENABLED(CONFIG_XFS_SUPPORT_V4) &&
-> > +		(mp->m_features & XFS_FEAT_CRC);
+> >  	trace_xfs_file_dax_read(iocb, to);
+> > @@ -334,10 +335,18 @@ xfs_file_read_iter(
+> >  
+> >  	if (IS_DAX(inode))
+> >  		ret = xfs_file_dax_read(iocb, to);
+> > -	else if (iocb->ki_flags & IOCB_DIRECT)
+> > +	else if (iocb->ki_flags & IOCB_DIRECT && !fsverity_active(inode))
 > 
-> Can you save even more text bytes by defining
-> xfs_has_{nlink,v3inodes,projid32,lazysbcount,pquotino,attr2} to 1?
-> And I guess defining noattr2 to 0?
+> Brackets missing
 
-That sounds like a new __XFS_HAS_V4_FEAT() that has a thrid
-parameter to define the value when V4 support is not compiled in.
+Oops, will fix that.  Thanks!
 
-e.g.
+--D
 
-#define __XFS_HAS_V4_FEAT(name, NAME, v5_support) \
-static inline bool xfs_has_ ## name (struct xfs_mount *mp) \
-{ \
-	if (!IS_ENABLED(CONFIG_XFS_SUPPORT_V4))	\
-		return v5_support; \
-        return mp->m_features & XFS_FEAT_ ## NAME; \
-}
-
-That way we have a single macro that tells us that it is a V4
-defined feature, and the documents the support of that feature in V5
-filesystems. And when it comes to removing v4 support, we have clear
-code documentation as to which features we need to remove or make
-unconditional across the code base.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> >  		ret = xfs_file_dio_read(iocb, to);
+> > -	else
+> > +	else {
+> > +		/*
+> > +		 * In case fs-verity is enabled, we also fallback to the
+> > +		 * buffered read from the direct read path. Therefore,
+> > +		 * IOCB_DIRECT is set and need to be cleared (see
+> > +		 * generic_file_read_iter())
+> > +		 */
+> > +		iocb->ki_flags &= ~IOCB_DIRECT;
+> >  		ret = xfs_file_buffered_read(iocb, to);
+> > +	}
+> >  
+> >  	if (ret > 0)
+> >  		XFS_STATS_ADD(mp, xs_read_bytes, ret);
+> > 
+> > 
+> 
+> -- 
+> - Andrey
+> 
+> 
 
