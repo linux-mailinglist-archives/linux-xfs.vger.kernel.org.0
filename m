@@ -1,90 +1,90 @@
-Return-Path: <linux-xfs+bounces-5404-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5403-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E714788647B
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:51:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8756788643D
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 01:07:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D39021C21A2A
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 00:51:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9C167B220B9
+	for <lists+linux-xfs@lfdr.de>; Fri, 22 Mar 2024 00:07:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3579038D;
-	Fri, 22 Mar 2024 00:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F940633;
+	Fri, 22 Mar 2024 00:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="SOCpfeWe"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="OuUNKfpP"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8019B376
-	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 00:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CE1383
+	for <linux-xfs@vger.kernel.org>; Fri, 22 Mar 2024 00:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711068712; cv=none; b=JLwvIA9v2UZGo1vCeaMFzjxpGjG432d3kAjMZy+DLJaIvESjhtVCvo0+qBlgRD+cpZZEfDng1ilDMKmCnqy9JVsV7Qiw7elPpbQnUjN+qA9CJLolBhem1rS1SBOacitpmks6YQVNo8eRKG5u8Y7hjcOikP/ngWalIURflNOd5PE=
+	t=1711066034; cv=none; b=qXQuoCPg5uPyoK7wwoeBUSjGf/mlBXcOmS7Z4eMdC3Nn21QNCR8Xv4yfwRT/WqD3Hfu2IJwB95hvb4v0xh5dvf0/VpyAaOqoFHpeDS5vomvqz2O7maE+v7nVHcMCs3N7xsmkkbMPErjdFt9o5nKch61xveGk+WsDfCrSK0M8mYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711068712; c=relaxed/simple;
+	s=arc-20240116; t=1711066034; c=relaxed/simple;
 	bh=6+G1sjHqFPVArExQiyfW7MUfRkLiQCAT4ozOgZwjtwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gzgKvd9KLYKlHyXfYOxKuF5P/DOvuhLRrTvy7Emcr5GZrxMbgoDnGytGl/KoWpSBCMPBsAA/8XJfKndFUjxQRcoBD3TPAyLVKbKJLePitHOGDvRP+mqi0gCc7OCgSG46t5JfLSAVfcVk7Z7u08oHx7dHrqn2f2ZAkQSb8mhz+V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=SOCpfeWe; arc=none smtp.client-ip=209.85.214.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=NbRS+DSkmYkYfu+MKNMtyBBvOMrlcoW8y9XvI9dfoiRcp97r7mj2rR4eEMaMU69sqNcvEFNdY5uCDixrPB3LqpwfVX304VtiT14BcaXUGZbXisQ+yb+m0KSoC6T+QMSIlMDKs5QkEe5wtm2MI/Wf657erX53LopJ6hF5UZ9eqCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=OuUNKfpP; arc=none smtp.client-ip=209.85.166.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e00d1e13a2so9572975ad.0
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 17:51:50 -0700 (PDT)
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3684bee9ddfso7135395ab.1
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Mar 2024 17:07:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711068710; x=1711673510; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1711066031; x=1711670831; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :resent-to:resent-message-id:resent-date:resent-from:from:to:cc
          :subject:date:message-id:reply-to;
         bh=UjGog3ZvffaVpb6rTr/ObLpWPMullTEcsb0ecf3K6VE=;
-        b=SOCpfeWene2LHpj5gCDHdyKCFasrVB/J5km4dOHfrzSHDgsge3535lKFwEiY5rzB0e
-         osubfV6DwVnFGDcTfJjJgcBFQmTvf6BuCtOgf+R2l/UyQruSn4L7fat5TBNYFZHw7aBd
-         qBTV3gCD7xl9M9EJD/E2n3c2V2EI7mp7iK69QG/cyMC3oasR7wv/Q+zroSnFySRLNAmT
-         plq8PDIrB42Ne/WPaaPn2Kgo8gdru2HWWuHjdecaptcUdD+OQlJREdp0kD5Lit8h11je
-         C2L87FGAJmSl+FjmUmRYF+kbTUjPdhZu3ZRTZJD45SIimdgttdAqjEKcsrCLoEDTkzXl
-         48CQ==
+        b=OuUNKfpPbm9sBPDy558IS3zxu4ka+hW5XlLyPPZlSuVyi4HQ2XPdP2bMYRfULQtlSK
+         f18vtAJmIlbiGQLAH2+hpRNCEgytzQRilLbODbgrhPQifCl6wKG9/cYQzQA1+Uz//XqL
+         tckO3VkqDC1hxEK30wvN6xBD6R+36P0Xt3jkVWM6vvdx0MYEMaXl4dgDi4GSd3gCWej2
+         tTk4ACM7cTnZGC9t0/iN6SVecO1mMgfkMzaOeZNYwj2Oon9rqJsI6HEU+frIhwQ4mqOu
+         zm+5I6DYM5WNkiiEKOTerobdFODYxFIcH8llyNAeUpk4Xdb/lhZJHtVNQHwmpwNTQmXy
+         HLfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711068710; x=1711673510;
+        d=1e100.net; s=20230601; t=1711066031; x=1711670831;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :resent-to:resent-message-id:resent-date:resent-from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
         bh=UjGog3ZvffaVpb6rTr/ObLpWPMullTEcsb0ecf3K6VE=;
-        b=gkoDTdO9+wLSgxvQeb+JHSPyvcHhkS4ZPV2f38SpOI2xoOBSb9x6oc1apyp0rx15bt
-         eOe1td45EMzl8DMF056LV6Wth7ZtfBJqC8kdUg6mtI0olKPpdZXZ9qhuejVt1j7lJaRg
-         pT9mn1OyUqTfUfVZnx5yguxR4eAMfQuhOD5niWi7HrAnp3B1wefByQTWZvaW7MTAMl8v
-         SnhTSyts0ATQ/psPIJWo8CJ9HYz/Uip/Pn8K7UeLo+3VqlIV5+83koAjUPqIPu4idIGR
-         2kemXiDLsCRKYc1G1EhCha93U4oBVEnvivBL4MYXpsjtTTjXmCDJAUUmP0AN66RCOTEQ
-         ja9g==
-X-Gm-Message-State: AOJu0YzsWWQRqrIZBbBJCk+ABA8jI8g1FZvzYFcqGgb/bNJNpLwL2EqW
-	62ziD7EiKFi9UI2dvgVm2BRJAZYsg+Br/sNghVNqn2MeVPCtfWRri83exVHl+eeW0qBWOmfIkJw
-	I
-X-Google-Smtp-Source: AGHT+IHIyfsVeY0Bm0Bu6MU69E9eo1XSDEY3purj8swjWJ0NkjkmSHogVloEDV67KPnYDwD+llgzyw==
-X-Received: by 2002:a17:902:6805:b0:1e0:63e7:a915 with SMTP id h5-20020a170902680500b001e063e7a915mr1084082plk.6.1711068709484;
-        Thu, 21 Mar 2024 17:51:49 -0700 (PDT)
+        b=T1H/P2iVP0W1DX4bvE6KLk4Y01xw6t18SQA/X6TqaYheKvECn3vgSbLqRlXuPghKKw
+         NSezk7bjJts4XzTtaJzWxtC/C5h5ZjBPzv1Jaaj23QBVBnoV8Go/92pXgjHxq19qejxL
+         /94n4AAGnteNcorD/T4Et6Y/OwGuRhBgA5vOfT9iBlJFLTP5lwjaT19JYFXVCknvUBDn
+         tqcLUEJ+BYGLWiLuQsUQEZI8jIUXsvlUOKj9V4yq0ev5Pje0YsMAWAcWkJR2dwAJV5Z+
+         c4rFUPJ6OHa21cTaKv5T+tV4mfsMaNXxu3Zwgh5mjMCKQihatpWLs9u8sBM+Tn4tpJkP
+         j0Jw==
+X-Gm-Message-State: AOJu0YxOFTcGkxmMhNpK14OC5uS9WqHCzwQbSGLuQ9AOjoIqPLBr2xGW
+	xRGIZMBC3X7YMdgXqTtMGJ8zisJxoPYUAEMLWGx1okRAj0jbe0iI4zdqsMByhT4B+9GsYFLjvld
+	L
+X-Google-Smtp-Source: AGHT+IGrQKASXjXw42Td3Sylm4F7pbntFEMt/ZG5Oa0Q5UrU7xw4L4QL1almfJR9EMBFQ+Yq1wapPQ==
+X-Received: by 2002:a05:6358:48c3:b0:17b:759:65c2 with SMTP id pf3-20020a05635848c300b0017b075965c2mr1053022rwc.10.1711065549780;
+        Thu, 21 Mar 2024 16:59:09 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id z9-20020a170902708900b001db8145a1a2sm487124plk.274.2024.03.21.17.51.48
+        by smtp.gmail.com with ESMTPSA id s66-20020a632c45000000b005d6b5934deesm427841pgs.48.2024.03.21.16.59.09
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 17:51:48 -0700 (PDT)
+        Thu, 21 Mar 2024 16:59:09 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
 	(envelope-from <david@fromorbit.com>)
-	id 1rnT8M-005TR5-1k
+	id 1rnSJP-005JCO-0S
 	for linux-xfs@vger.kernel.org;
-	Fri, 22 Mar 2024 11:51:46 +1100
+	Fri, 22 Mar 2024 10:59:07 +1100
 Resent-From: Dave Chinner <david@fromorbit.com>
-Resent-Date: Fri, 22 Mar 2024 11:51:46 +1100
-Resent-Message-ID: <ZfzWIs6+6Fw+EnyI@dread.disaster.area>
+Resent-Date: Fri, 22 Mar 2024 10:59:07 +1100
+Resent-Message-ID: <ZfzJyw3h4iHpzNNr@dread.disaster.area>
 Resent-To: linux-xfs@vger.kernel.org
 Date: Wed, 20 Mar 2024 08:42:37 +1100
 From: Dave Chinner <david@fromorbit.com>
 To: Christoph Hellwig <hch@infradead.org>
 Cc: linux-xfs@vger.kernel.org
 Subject: Re: [PATCH 2/9] xfs: use folios in the buffer cache
-Message-ID: <ZfoGzbDXQsrtlc4I@dread.disaster.area>
+Message-ID: <ZfoGzbDXQsrtlc4i@dread.disaster.area>
 References: <20240318224715.3367463-1-david@fromorbit.com>
  <20240318224715.3367463-3-david@fromorbit.com>
  <Zfk2hhhXU78WSo18@infradead.org>
