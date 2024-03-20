@@ -1,192 +1,141 @@
-Return-Path: <linux-xfs+bounces-5373-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5379-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C637D881009
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 11:37:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8A2E88109E
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 12:14:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CF5328289D
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 10:37:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86FDFB2206C
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 11:14:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D82A39FED;
-	Wed, 20 Mar 2024 10:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="irOxKMZv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6477E4206A;
+	Wed, 20 Mar 2024 11:13:17 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6844538398
-	for <linux-xfs@vger.kernel.org>; Wed, 20 Mar 2024 10:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F7D3EA76;
+	Wed, 20 Mar 2024 11:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710931056; cv=none; b=QW0kZGFQVgRuhimsDnTZa+93JNP1Cb9TKeAAUJ/V981tmPe88W2zxZVO58ggvMs0qz3nW/3opcE8/GE9HL2etJ8Zn5eNVkwZsU+3h7YsmMQohgEhxYZGjQMlgcRR6C0gwLRCvd7H86JCm482tRRdcCQBC360cKUF+kDeYkn2F/k=
+	t=1710933197; cv=none; b=fk5xCc0bpoMUdP3rLOxl3cYj/vqESngqxtPLMtK/QBPZZPkuKaDVz0rZ4C0HnJSpSrPmJLZm0by6TyB+EEYdrc7g/sf+zEvyipIYQVA8omzDeWls1gf8i2+UdPTVdptO4hjtxpVy7rTaLCJtF0yN9k8t3zZO3n+Vbv3cWJ47x+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710931056; c=relaxed/simple;
-	bh=9UYs4ZwejA0f5HPmQh6g5I9ponZ+C0/FZF4IS9lsAzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8yqk3zuoy50ryEJAep1sFfZZ0c0FL/LLybYf/ua6/PF4uOFcvdO6C0Y9oBpr0xfHmkkJeLXzVxfAz3njZGg1EQF3Qu65GUy6YxLnrDDGUHqspewBKfbWGId2fKIy2KmVjaGAZSF7FPhqwKvl8GC8ifTPyu9pWeN+qHWjj5bH28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=irOxKMZv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710931053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ADJP39t1GFmXzKGwztEyWbu3Yu1GQbVpqFj8SngTSA0=;
-	b=irOxKMZvknRAEvnJ6eqlPEvWWot60ztPvaVBRFJejWzIczMGPSqvFoo5Vs4RZzMcDYckbN
-	lc2EC15eZf0+4rWwIocp59QB+HsOaIQ/qHvlQREwkl9NUmLZTG4EkSlsA1r0108gA2LniI
-	H1/3Uk54zxIG5FX8mc3CJiVb/FGLHr4=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-166-Z2kXbRGdMJWdq8BDRikFiw-1; Wed, 20 Mar 2024 06:37:31 -0400
-X-MC-Unique: Z2kXbRGdMJWdq8BDRikFiw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a4698fc37dfso303280366b.2
-        for <linux-xfs@vger.kernel.org>; Wed, 20 Mar 2024 03:37:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710931050; x=1711535850;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ADJP39t1GFmXzKGwztEyWbu3Yu1GQbVpqFj8SngTSA0=;
-        b=GFVgoVcIT5mLL9F+5zrLTv4h7uFaSkxhXMsoFY62/tYcoyFTn2CSzJb1hGmRvx3O/D
-         N7Y4yyqjUE5GPuZJR5opBPyJlonueGV3dvI1IXu5bffSdnipBFL0eP6RlXDZ++jGICmN
-         fLjXjbv2LfiCfENgv12Oo8v6FpTHier/8C+0d7DSHknZppFZv6LpvX1nBNj2oI6BpSK9
-         FhipFBlPwcrcVFBY12V12J+yoTwbOrjQtgxqaE9Y3d5A0GMtxAPGuGwIIK1sMh9nPAs1
-         c0hMSbf40q1kGKt1P6owx0Ia8AXL8P78lf4/Q/3Q5lu4ngwqgaFEGTL0UgBqz1yGDUqD
-         XK5A==
-X-Forwarded-Encrypted: i=1; AJvYcCX5fD/LwEzTkxLGYr0iC2AAMTtufPW/7SF7d6YilKYcAPUQymEQGYN9cGcAGVjmNnJ/Q7enRURYgJowWeqJg4EUSnTvUAKg+uN5
-X-Gm-Message-State: AOJu0Yz9Sz01PZX6gvSEkt8i9Z+5lCLF9RBMQ7lfWz39n7VEaCnRbvp4
-	/R0E/6QZYw8U8fjA+c6WepC17fVtXfi/KvfoP5zaBMIdwuolSu2PdOZSMNHmNwotpKFR225WYml
-	FF2HzN+9XT1jJzGukhRu9+Fcn/1hDZoJMalX5Fj+c1d/9+8oRubcZjAEs
-X-Received: by 2002:a17:907:6d0d:b0:a46:a927:115e with SMTP id sa13-20020a1709076d0d00b00a46a927115emr10378526ejc.39.1710931050413;
-        Wed, 20 Mar 2024 03:37:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIJTAG9ko72Loy57po7F4TUY1dy0JWk8zC92Uf2ucyNg7WDekar5E7XdbMe/WRMTnJxVjXFg==
-X-Received: by 2002:a17:907:6d0d:b0:a46:a927:115e with SMTP id sa13-20020a1709076d0d00b00a46a927115emr10378499ejc.39.1710931049760;
-        Wed, 20 Mar 2024 03:37:29 -0700 (PDT)
-Received: from thinky ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id wr6-20020a170907700600b00a4623030893sm7019903ejb.126.2024.03.20.03.37.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 03:37:29 -0700 (PDT)
-Date: Wed, 20 Mar 2024 11:37:28 +0100
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: ebiggers@kernel.org, linux-fsdevel@vger.kernel.org, 
-	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 08/29] fsverity: add per-sb workqueue for post read
- processing
-Message-ID: <ktc3ofsctond43xfc3lerr4evy3a3hsclyxm24cmhf7fsxxfsw@gjqnq57cbeoy>
-References: <171035223299.2613863.12196197862413309469.stgit@frogsfrogsfrogs>
- <171035223488.2613863.7583467519759571221.stgit@frogsfrogsfrogs>
- <20240319233010.GV1927156@frogsfrogsfrogs>
+	s=arc-20240116; t=1710933197; c=relaxed/simple;
+	bh=pqgG9XiYdvHdG28JU9r54k4+2xkXPT42fwDscdTZagk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k9y8QcWhvBWEzjKa2+aZrm744pYsbsW4TVzTYcKU7W6pD7LsnygXiAznLfsx/4qzfnjGK4XEngL1F3KnfTBG8sQAzLv0Whojs79Ncm5NYgtG/oouvBdq6CEV3oGgxLSyBd6FoRz2DAhxglGP98TpbIEoLmAkIsUDgV3HOHWaPVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V05YB1kjmz4f3kht;
+	Wed, 20 Mar 2024 19:13:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 3B65C1A0199;
+	Wed, 20 Mar 2024 19:13:08 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBXKBG5xPplGX0fHg--.18516S4;
+	Wed, 20 Mar 2024 19:13:06 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	tytso@mit.edu,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH v4 0/9] xfs/iomap: fix non-atomic clone operation and don't update size when zeroing range post eof
+Date: Wed, 20 Mar 2024 19:05:39 +0800
+Message-Id: <20240320110548.2200662-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240319233010.GV1927156@frogsfrogsfrogs>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBXKBG5xPplGX0fHg--.18516S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr43trykKw4fZryxGF4kZwb_yoW5GrykpF
+	ZxKwsIkrsYqr1fZrn7AF45Xw1rK3Z7Gr4UCr4xGws3Z3yUZF1xZa1IgF1F9rWUAr93Wa1j
+	qF4jyF97Gr1UAFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+	Up6wZUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 2024-03-19 16:30:10, Darrick J. Wong wrote:
-> On Wed, Mar 13, 2024 at 10:54:39AM -0700, Darrick J. Wong wrote:
-> > From: Andrey Albershteyn <aalbersh@redhat.com>
-> > 
-> > For XFS, fsverity's global workqueue is not really suitable due to:
-> > 
-> > 1. High priority workqueues are used within XFS to ensure that data
-> >    IO completion cannot stall processing of journal IO completions.
-> >    Hence using a WQ_HIGHPRI workqueue directly in the user data IO
-> >    path is a potential filesystem livelock/deadlock vector.
-> > 
-> > 2. The fsverity workqueue is global - it creates a cross-filesystem
-> >    contention point.
-> > 
-> > This patch adds per-filesystem, per-cpu workqueue for fsverity
-> > work. This allows iomap to add verification work in the read path on
-> > BIO completion.
-> > 
-> > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-> > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> >  fs/super.c               |    7 +++++++
-> >  include/linux/fs.h       |    2 ++
-> >  include/linux/fsverity.h |   22 ++++++++++++++++++++++
-> >  3 files changed, 31 insertions(+)
-> > 
-> > 
-> > diff --git a/fs/super.c b/fs/super.c
-> > index d35e85295489..338d86864200 100644
-> > --- a/fs/super.c
-> > +++ b/fs/super.c
-> > @@ -642,6 +642,13 @@ void generic_shutdown_super(struct super_block *sb)
-> >  			sb->s_dio_done_wq = NULL;
-> >  		}
-> >  
-> > +#ifdef CONFIG_FS_VERITY
-> > +		if (sb->s_read_done_wq) {
-> > +			destroy_workqueue(sb->s_read_done_wq);
-> > +			sb->s_read_done_wq = NULL;
-> > +		}
-> > +#endif
-> > +
-> >  		if (sop->put_super)
-> >  			sop->put_super(sb);
-> >  
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index ed5966a70495..9db24a825d94 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -1221,6 +1221,8 @@ struct super_block {
-> >  #endif
-> >  #ifdef CONFIG_FS_VERITY
-> >  	const struct fsverity_operations *s_vop;
-> > +	/* Completion queue for post read verification */
-> > +	struct workqueue_struct *s_read_done_wq;
-> >  #endif
-> >  #if IS_ENABLED(CONFIG_UNICODE)
-> >  	struct unicode_map *s_encoding;
-> > diff --git a/include/linux/fsverity.h b/include/linux/fsverity.h
-> > index 0973b521ac5a..45b7c613148a 100644
-> > --- a/include/linux/fsverity.h
-> > +++ b/include/linux/fsverity.h
-> > @@ -241,6 +241,22 @@ void fsverity_enqueue_verify_work(struct work_struct *work);
-> >  void fsverity_invalidate_block(struct inode *inode,
-> >  		struct fsverity_blockbuf *block);
-> >  
-> > +static inline int fsverity_set_ops(struct super_block *sb,
-> > +				   const struct fsverity_operations *ops)
-> > +{
-> > +	sb->s_vop = ops;
-> > +
-> > +	/* Create per-sb workqueue for post read bio verification */
-> > +	struct workqueue_struct *wq = alloc_workqueue(
-> > +		"pread/%s", (WQ_FREEZABLE | WQ_MEM_RECLAIM), 0, sb->s_id);
-> 
-> Looking at this more closely, why is it that the fsverity_read_queue
-> is unbound and tagged WQ_HIGHPRI, whereas this one is instead FREEZEABLE
-> and MEM_RECLAIM and bound?
-> 
-> If it's really feasible to use /one/ workqueue for all the read
-> post-processing then this ought to be a fs/super.c helper ala
-> sb_init_dio_done_wq.  That said, from Eric's comments on the v5 thread
-> about fsverity and fscrypt locking horns over workqueue stalls I'm not
-> convinced that's true.
+Changes since v3:
+ - Improve some git message comments and do some minor code cleanup, no
+   logic changes.
 
-There's good explanation by Dave why WQ_HIGHPRI is not a good fit
-for XFS (potential livelock/deadlock):
+Changes since v2:
+ - Merge the patch for dropping of xfs_convert_blocks() and the patch
+   for modifying xfs_bmapi_convert_delalloc().
+ - Reword the commit message of the second patch.
 
-https://lore.kernel.org/linux-xfs/20221214054357.GI3600936@dread.disaster.area/
+Changes since v1:
+ - Make xfs_bmapi_convert_delalloc() to allocate the target offset and
+   drop the writeback helper xfs_convert_blocks().
+ - Don't use xfs_iomap_write_direct() to convert delalloc blocks for
+   zeroing posteof case, use xfs_bmapi_convert_delalloc() instead.
+ - Fix two off-by-one issues when converting delalloc blocks.
+ - Add a separate patch to drop the buffered write failure handle in
+   zeroing and unsharing.
+ - Add a comments do emphasize updating i_size should under folio lock.
+ - Make iomap_write_end() to return a boolean, and do some cleanups in
+   buffered write begin path.
 
-Based on his feedback I changed it to per-filesystem.
+This patch series fix a problem of exposing zeroed data on xfs since the
+non-atomic clone operation. This problem was found while I was
+developing ext4 buffered IO iomap conversion (ext4 is relying on this
+fix [1]), the root cause of this problem and the discussion about the
+solution please see [2]. After fix the problem, iomap_zero_range()
+doesn't need to update i_size so that ext4 can use it to zero partial
+block, e.g. truncate eof block [3].
+
+[1] https://lore.kernel.org/linux-ext4/20240127015825.1608160-1-yi.zhang@huaweicloud.com/
+[2] https://lore.kernel.org/linux-ext4/9b0040ef-3d9d-6246-4bdd-82b9a8f55fa2@huaweicloud.com/
+[3] https://lore.kernel.org/linux-ext4/9c9f1831-a772-299b-072b-1c8116c3fb35@huaweicloud.com/
+
+Thanks,
+Yi.
+
+Zhang Yi (9):
+  xfs: match lock mode in xfs_buffered_write_iomap_begin()
+  xfs: make the seq argument to xfs_bmapi_convert_delalloc() optional
+  xfs: make xfs_bmapi_convert_delalloc() to allocate the target offset
+  xfs: convert delayed extents to unwritten when zeroing post eof blocks
+  iomap: drop the write failure handles when unsharing and zeroing
+  iomap: don't increase i_size if it's not a write operation
+  iomap: use a new variable to handle the written bytes in
+    iomap_write_iter()
+  iomap: make iomap_write_end() return a boolean
+  iomap: do some small logical cleanup in buffered write
+
+ fs/iomap/buffered-io.c   | 105 ++++++++++++++++++++++-----------------
+ fs/xfs/libxfs/xfs_bmap.c |  40 +++++++++++++--
+ fs/xfs/xfs_aops.c        |  54 ++++++--------------
+ fs/xfs/xfs_iomap.c       |  39 +++++++++++++--
+ 4 files changed, 144 insertions(+), 94 deletions(-)
 
 -- 
-- Andrey
+2.39.2
 
 
