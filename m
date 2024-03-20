@@ -1,130 +1,100 @@
-Return-Path: <linux-xfs+bounces-5382-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5384-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66F9D8810A4
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 12:15:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB9A38813B6
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 15:53:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2237C285586
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 11:15:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73E05B210CB
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Mar 2024 14:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 113AE47F48;
-	Wed, 20 Mar 2024 11:13:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18768481DD;
+	Wed, 20 Mar 2024 14:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8rYJa+h"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6213FB85;
-	Wed, 20 Mar 2024 11:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD99515E9C
+	for <linux-xfs@vger.kernel.org>; Wed, 20 Mar 2024 14:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710933197; cv=none; b=X+NkiRYvR9OQBklImjARKR75y1OYiiJriNVKUM+IXgxoCkKn4KfN9mSGbD4iqytgneAnjQtCeRqZQgBagMyWifz9sJkmY0j3D7Jsrafar7J1LKgVYC3kgN8WfOWpDbgNdZgyIMI4qyWKDRiCSJ/NmnjNJ16xOrEMdqKPViYxdBU=
+	t=1710946409; cv=none; b=ELI0fVplsqZQnZF3mvnEiYcUyKTCa4wKRUvAQ/tTYYbvwtgXHmpF8OilLfBHizLGNvLmZrrNOaFbolD+hdhVzUNPHLyGS+PXzpPGvA2w9yc3FW2Ehgyply19tKnkTqgJ4ueKidQ+iNpzfz3ysAlFH9N2W565LxT4fDRZ1yZylgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710933197; c=relaxed/simple;
-	bh=qgIE2jFp9im9LqSBP/kwSYaRQY8JGtGSjb9/WzRyD+E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WVajRWAc7TTF5bohaTAamfIHZ4TT/LiirWUbTMHEeTWb8MjCjbmvbFJ8+qYfsxF3qV/y0q/CldzuVjqc6+jrl0dT3plab/4a28NKuIoaGTSOxqdYtoGqSet4ppxh1FZQF1NbTG0I0o1P//cMrC9WTPXD8ofHmJNdmNKuk+8G2Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V05YG6lmzz4f3kpW;
-	Wed, 20 Mar 2024 19:13:06 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id E6B451A016E;
-	Wed, 20 Mar 2024 19:13:12 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBXKBG5xPplGX0fHg--.18516S13;
-	Wed, 20 Mar 2024 19:13:12 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	tytso@mit.edu,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v4 9/9] iomap: do some small logical cleanup in buffered write
-Date: Wed, 20 Mar 2024 19:05:48 +0800
-Message-Id: <20240320110548.2200662-10-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240320110548.2200662-1-yi.zhang@huaweicloud.com>
-References: <20240320110548.2200662-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1710946409; c=relaxed/simple;
+	bh=r+gh/iklFT3L8b/jAjNYWa9xoJc26fEJUJOKO9Ms2IM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NfZRlek6kNufh4lerf9Zk3yIEe4GOTRM/+nx9qbhXTzGIgylEY/wG5OuVOHb0w96lMN/wzcTVOpzSFnHw4YSJwpyug+lLIEOO9jyXqDLcEEELieZR+HyHY9+M5qa0M0F5XJtHM9ptZM0WHVT35s4AKzJFZN9+UWZ6ftnw23JS0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8rYJa+h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D14C433F1;
+	Wed, 20 Mar 2024 14:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710946409;
+	bh=r+gh/iklFT3L8b/jAjNYWa9xoJc26fEJUJOKO9Ms2IM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8rYJa+hVp5lRxeVjivRQ/phHWbyUqT/h6e3EnSQ9WlwavZAJkRWAR6S/IuR4gSka
+	 8AaTfLQFdyX0/6RGbaZsoKuiTehie6aVx9VbrM00xJ6zT9jkc1xc6lmogQTe/0vadM
+	 8pgdaiSQjR5sTBbHdY0uoDFRk7GZfe149VGT4fWulKoT7/mHexjQKFoU/QKRKwdGmc
+	 KeVnal9MoV7YXwmzNKgHA68d6Ns2EHiGV4fAVPks2Vqhp/GfKep3rq4gFSaSGzyKpo
+	 rRBbDXHSaRFAK7sDiY0Tib0Q98L5L8oTfLeEFucq+cw3cO2KrNYFAHbb6XCZdwqLIs
+	 TGNMEkY4fqJIQ==
+Date: Wed, 20 Mar 2024 07:53:28 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Andre Noll <maan@tuebingen.mpg.de>
+Cc: Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 4/4] xfs: reactivate XFS_NEED_INACTIVE inodes from
+ xfs_iget
+Message-ID: <20240320145328.GX1927156@frogsfrogsfrogs>
+References: <20240319001707.3430251-1-david@fromorbit.com>
+ <20240319001707.3430251-5-david@fromorbit.com>
+ <Zfqg3b3mC8Se7GMU@tuebingen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXKBG5xPplGX0fHg--.18516S13
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrykWry8urWrAFW5Cr4fGrg_yoW8GrWkpF
-	nxKaykurW0qw17u3WkAF9ruFWjya93Kry7GrW8Gw45urs8ArWYgFy09ayYv3W8Xr97CryS
-	yr4vy348W3W5ArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUl
-	2NtUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+In-Reply-To: <Zfqg3b3mC8Se7GMU@tuebingen.mpg.de>
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On Wed, Mar 20, 2024 at 09:39:57AM +0100, Andre Noll wrote:
+> On Tue, Mar 19, 11:16, Dave Chinner wrote
+> > +		/*
+> > +		 * Well, that sucks. Put the inode back on the inactive queue.
+> > +		 * Do this while still under the ILOCK so that we can set the
+> > +		 * NEED_INACTIVE flag and clear the INACTIVATING flag an not
+> > +		 * have another lookup race with us before we've finished
+> > +		 * putting the inode back on the inodegc queue.
+> > +		 */
+> > +		spin_unlock(&ip->i_flags_lock);
+> > +		ip->i_flags |= XFS_NEED_INACTIVE;
+> > +		ip->i_flags &= ~XFS_INACTIVATING;
+> > +		spin_unlock(&ip->i_flags_lock);
+> 
+> This doesn't look right. Shouldn't the first spin_unlock() be spin_lock()?
 
-Since iomap_write_end() can never return a partial write length, the
-comparison between written, copied and bytes becomes useless, just
-merge them with the unwritten branch.
+Yes.  So much for my hand inspection of code. :(
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/iomap/buffered-io.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+(Doesn't simple lock debugging catch these sorts of things?)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index dc863a76c72a..a111e8b816df 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -937,11 +937,6 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 
- 		if (old_size < pos)
- 			pagecache_isize_extended(iter->inode, old_size, pos);
--		if (written < bytes)
--			iomap_write_failed(iter->inode, pos + written,
--					   bytes - written);
--		if (unlikely(copied != written))
--			iov_iter_revert(i, copied - written);
- 
- 		cond_resched();
- 		if (unlikely(written == 0)) {
-@@ -951,6 +946,9 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 			 * halfway through, might be a race with munmap,
- 			 * might be severe memory pressure.
- 			 */
-+			iomap_write_failed(iter->inode, pos, bytes);
-+			iov_iter_revert(i, copied);
-+
- 			if (chunk > PAGE_SIZE)
- 				chunk /= 2;
- 			if (copied) {
--- 
-2.39.2
+((It sure would be nice if locking returned a droppable "object" to do
+the unlock ala Rust and then spin_lock could be __must_check.))
+
+--D
+
+> Also, there's a typo in the comment (s/an/and).
+> Best
+> Andre
+> -- 
+> Max Planck Institute for Biology
+> Tel: (+49) 7071 601 829
+> Max-Planck-Ring 5, 72076 Tübingen, Germany
+> http://people.tuebingen.mpg.de/maan/
+
 
 
