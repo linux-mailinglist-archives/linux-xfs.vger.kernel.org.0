@@ -1,96 +1,96 @@
-Return-Path: <linux-xfs+bounces-5471-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5469-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09B2488B699
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 02:12:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F2E688B37A
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Mar 2024 23:08:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C563EB45B8E
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Mar 2024 22:08:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAA331F360B9
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Mar 2024 22:08:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EA2871739;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FEBE71B48;
 	Mon, 25 Mar 2024 22:08:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X7yOu/J6";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rsPwWuXV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gYm1sXQH";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="drU/SpkR"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B50271747
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C255D737
 	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711404505; cv=fail; b=sJaUKDpqV8U3YoNR4cCY2gXsdhlpax+aJm3pmGIfKElc9WpSJTg2/X11JMzUK0+3dxS3P5O1Uyuqm+3lk+0ndwDmQj0KsY1HMfnWWP3D+a7JfAIfuDsD5HMVKCw9wWENXqFfNcPXAq8mkR4w+tQK6Ngk70/QmdYR028Fut9O0f0=
+	t=1711404504; cv=fail; b=tudL0x8j3Yx0MhWbOgaj91tKSzxAVYwigFui9n3kRyj2tCaq3UELSch0socQh3F20pOXjt3Zq/sWuUSvXW9ggM50X4l99saQySwdqv8YuQHdBppFmhiysXVImCeXM5QMiWntTy2p95A8LbLOMy2RyjfW5C11QBUV9OMElbzz5wA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711404505; c=relaxed/simple;
-	bh=hZgIyjX10qsOaqHEWxFRmfK3lfRT5srw83ssH/qjqsY=;
+	s=arc-20240116; t=1711404504; c=relaxed/simple;
+	bh=JPMCXlV8206KHdV3q3FC2lyQ1FTXFbeAbGNdMV1Ja8I=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aCEN4ida5hVv1nd2Jwnnn5gpektUTd0wqvtPFXCSqcmGHSf+9zx8vAFYe3BdessvVAr6fHmxvN7o8aaW32eG8MKdNMbWxKkoiQ3asNpPt7WbovpD8PTuYokXdRyBZfZZ3Kr60kPSvVS7nXTsz5tzF/JCak80RqJ/iN6CJ5l7g9U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=X7yOu/J6; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rsPwWuXV; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Type:MIME-Version; b=Q2FYgaxxGi6oAP6O3RDCNX9ks8fvWJk82Y157l7PcGOdXq2W4ccBeaULhYwHNFkZ1uZyfvlAqCQ9wiP4JS2LVuYuBhJpvGv9H10GcgDQ3luh5mni+pO2a1c1H0wFw5mm5WVMhew/tMRbCItTSEpyNDk5oM3Pl4llKFrohL2zhqw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gYm1sXQH; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=drU/SpkR; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PLG94F032565
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PLFwwB019789
 	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references : content-transfer-encoding :
  content-type : mime-version; s=corp-2023-11-20;
- bh=+25WyXrzuippma5QtHRS6LN/Fw5xJeR9GHTYiePAS88=;
- b=X7yOu/J6vJ/M3gVi8twlPtavB6BhaLCF9ngV9I/m1G5tl9mK70m+CJ1qpk/H5ViNJM7i
- KY6zqGa6kBlb36tbzpSEnhSi3k6QDhy+btdU3waiD6jq5c0SsOQFfeXVx5/qt1AcxpZT
- 8TAASwrIVZ2HYWhY/CLddVPS2QpvGZKUPz5M4go/LLhVtdxWwgIbsWWmi2xPBQFAwhIj
- WVos35KxQUu7bngVj16QL7OqraXz8N/XwPdghUzyzv/3GP3b8ZJJXTpHG759oE/lJkb2
- Y2GgfGiYyWxpUin04kukRJPZo/l5pDr26R8XsoVsSHC0Grk3Ddqzjdx//WH+S9t9F7+m 7g== 
+ bh=RdCapkp5Ewd/yu5KRIjI89apQOsXtVBasfPPPY5MzTs=;
+ b=gYm1sXQHO5rQzSW9Sp3gEidFFGtg5LXqSAvdFjzHLdEkc8uKFqAcGyexOQEc5wOlLRyU
+ Ma/z4Yuhy/4/NUUAKBxCoJB/AgJnGAHXrFXPhjX8xXJaTuLvpyiANDpXmOcA/sV7HaNP
+ bk28vMeIu+AhAdCPNWU0RIEOdpPdMfXJ/PNCB00REaSAS+um1qUHI6rjC2tW9S8zGnq5
+ n6bairRZy3NtEeLwBhBwUOd+fhsmK9sOjxatiQ+BnYNNwTET8vQ+gz5cT0uOKmP93dev
+ N76QgYoz3Xypw0HXzuwcViaMWndHe0B3Wbko0yCOl85nctrjVBG5wJ0nvCxUUwrM1+WQ 6w== 
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x2f6h2r8c-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x28ct32gr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
 	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:22 +0000
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42PKNtd2024519
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42PKNtd4024519
 	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:21 GMT
 Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh6ccn9-2
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh6ccn9-3
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
 	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:21 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LSayUvXN24NZwK8B28drWq7nVkJ8GFwDkkUvJdOmNXsgzgrNN51SoUE20FjPHYDrGLV72RzbU2cFp4ZKuLQzG/D6tCwuWKFbVhHG2J9afPP1fCmKbQBPmzN2V+6dhpQ2gaUCsPaino4JlKus0l2XA7qbRZeP+YIQh/FCaY/P50mWzC+bgBQ2hrwAWQkUIRyX3c1zo3XcMhxON9U+0bzPEQHork8bhbBBfGXjxI10iM4RdIlqnmjY0v927Ux1fsYBdTxDTtKo3auOJqNvmoOFT7kTFcxN9HBjP9iX9WId4RjXrQPdlB6bJ8Xznu9gUs2igpDurgK8D0Ns55qpV7Vqbg==
+ b=IrpjZIAkTdEtDsF7cuZJ/AEfo+V+Mg3iauN2+UCt2DCaJvrsuaQk+Z4P5DhQNRU6B7nCdPCj2vwewgDeNy1XOPyIhfSHfIrp0VaFuOe9T6ScDrdzx2tJNplZmPGsXEUhLnhQVsSTHEFVYp15PCF1t8QSfxVxPmYZVQ6ypp6q6ruNBVI9fK9g8qsk/yih7Gi4tlwnUVmheAKY32y8Aw58jKVc6Tm9QSJu+dto37Ydg1b1oUCdnjR+woGDpv+6jZQVkhhOEb4nKBNrCfzTdoygikmYWXrLekDNqeGunZ7HH7LKLRMjXQ/GKH3gYjuxc+suz04KWpoUsJdFA/EpAhX9MQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+25WyXrzuippma5QtHRS6LN/Fw5xJeR9GHTYiePAS88=;
- b=EhIzAm2bcmA0TR9X9h8nPx9/hvZ3ntg+OUJvEBqNOY8SJv11wC4WgM5xBsbwN38n91rX5vPXGYlpFxIUDylariAi+22hR9846l+zxT48DbGi0tW9HcrJmpbZDx0JGmabdWgohjlLdb+sp328O/gtb8r0wybwf9QF1nw2rOFOlI6dTGjUSLIcDwt/tevvhYFUWtDTal+uDSiv+J4Ju8CtCfkQVhh5LJvkOJQouGPFChwlCI6efczEBjFww6sbCKbWws1LKwmZu26rxc/1J9mJhMtFJtChe0EmVREmJ0fWsWv6DTW7cpAlFgOKfgDPwjzG4uq29Lwrp6j/6gquRZqJwQ==
+ bh=RdCapkp5Ewd/yu5KRIjI89apQOsXtVBasfPPPY5MzTs=;
+ b=jiMCWFzbDPLCpVBBya1ZBOLmXr56RX25S4eetSWAWYfulGKjMb6exn0i346s5MJQxzjP0GiRw8r1CIaKWl2b3R9WKZY6mp3AMKDSSivdtl4dnW9ZI5qipkywikOq2eeX2zBm3LtCyZDL0W/oSr+3aV61/0FEUq/WaAETQHZZDhs/CPIrHyIPefyjjMllWYDP9iK8wm/SQMwQlen8N3yR8L6xmZoDETW17jvZij/R8OkTAwN+ishAXT89HBqIoGEKYFlEYt78WLbqvvn6IdDHLdYiW/UWfsFDlasgU01FBwQ1pib/D76oEtf4Q/VAOXCCMa05n5sx+BV2zfWh1ziHhQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+25WyXrzuippma5QtHRS6LN/Fw5xJeR9GHTYiePAS88=;
- b=rsPwWuXVmouQse4XJ0bJ0/HrzrvkTuspaaJMeUqyYgtafbG8jNa8x/Szm32bRNpbFN5UnxFM2nEhFmV3avo/MnbAASaRq4LvcvtN5sPG93dqyHMaBmmsPlI7RBtmDvVr2bE6pg/JpsBn97NjsMSuCuqOR7jJ74GtydlqJYYnYo4=
+ bh=RdCapkp5Ewd/yu5KRIjI89apQOsXtVBasfPPPY5MzTs=;
+ b=drU/SpkRZQhw2xvSyaL/iwUtJ5Ppyq0VoLKrqpEH3ZY8J0UlC9cn5ywcPWIdhspGIfKUnNg2Ba0vRdujlLEst23xzr0gU+X3rNA5p71qyVmfa55QjMWvjc03BhHzepx5Y78TZjEdZt84bAy9bm213nF3ZRxEquuzA1pFrEJYrUY=
 Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
  by DS7PR10MB5005.namprd10.prod.outlook.com (2603:10b6:5:3ac::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 22:08:01 +0000
+ 2024 22:08:03 +0000
 Received: from BLAPR10MB5316.namprd10.prod.outlook.com
  ([fe80::404e:f2ff:fe2c:bd7a]) by BLAPR10MB5316.namprd10.prod.outlook.com
  ([fe80::404e:f2ff:fe2c:bd7a%4]) with mapi id 15.20.7409.031; Mon, 25 Mar 2024
- 22:08:01 +0000
+ 22:08:03 +0000
 From: Catherine Hoang <catherine.hoang@oracle.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 6.6 CANDIDATE 14/24] xfs: fix an off-by-one error in xreap_agextent_binval
-Date: Mon, 25 Mar 2024 15:07:14 -0700
-Message-Id: <20240325220724.42216-15-catherine.hoang@oracle.com>
+Subject: [PATCH 6.6 CANDIDATE 15/24] xfs: force all buffers to be written during btree bulk load
+Date: Mon, 25 Mar 2024 15:07:15 -0700
+Message-Id: <20240325220724.42216-16-catherine.hoang@oracle.com>
 X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 In-Reply-To: <20240325220724.42216-1-catherine.hoang@oracle.com>
 References: <20240325220724.42216-1-catherine.hoang@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BYAPR03CA0023.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::36) To BLAPR10MB5316.namprd10.prod.outlook.com
+X-ClientProxiedBy: BYAPR03CA0035.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::48) To BLAPR10MB5316.namprd10.prod.outlook.com
  (2603:10b6:208:326::6)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -104,53 +104,53 @@ X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	0HRRTmqewiKVbOGMwSnVmmnzy6nyDOyYJozPC953T3GdeY9tHoTJhZ74/scsHm6zcxjRoI9kQ4R/OOwdR1sZyFJZ/Tz6zYPAayyWoAaomkPOAygw1QAIlM/efih5Xkh02ztiFpN19nNO/pixerJab6mzZlPRZnN9rVC9IUw1EbteRXGehY8vRKtR4eELOkiyQ49CVCZmeRg3GnQ8NzHUibUkHoJlgUBEe5MdC79AxkeHulldZJHd6GgmH/ZbZyQP4QeGsSCRbSH9KKY2FOensm2479JezJQuB/u9587G3f3a9Q03r4Ef/LHnDhVu24lP7ipzQM6VWMe1AJxRg3UtRgw0QOmpHphFuQAfcZbZzaG7FZBNGI35NzC4XnlCXse2QoXtheHxm5+K3fCd+vqEERcjCNBBTAI31oWlJLai9kccFHuplPr+s2G552IcEQ3cFuXcUCRRX1sl7C7Tm7/xWTh7trVdwOam6F3LgLvmm4DTzuarFMDVQqUdeB4iCoX78I+qKwRtgsrkGd8H7JNppv2pZLYD1C8W0U5gukICr7PsvQ+n/mza529aSJgl7hrR+2h/NkhEWq97NU5ZehXQU72bwEceY5oDKhD6Ky1lyiXP+Le9gUqSXn1C0TXPLTmbyXRrVosoOqnVrJobJZNE+HX/RAF6QGKJd0GIWVOOGIY=
+	91S33lIFUN+vDxgEbg0l33bPexSgw7r/NDbuu/TkGx1GHrS8Ff4hNJeJ9g7dris60ewUWSp9z8i2fyMpb0Piqjvr0CpgiF0oTGo82agAw/bQJYX32gerbmlTj1DiObXUmSIR6mKAslJPOKDA4vYTh4S+OQVMDqCfpJ8VkCUXCVzGsFFeyiBWInoTfG0IKs+pS6caaXr68QOK5eZ9eI2VfGsazobZFzWjy0z7JtKjPHb/VHLQXFkCnyQkUnceLegrHyVEUGQpzT70S+HKxj26tdhTs35qLW1F7f0cfUTVYzRsr39vqEuhh8euFi/aECzVoo/AHXpYoYT0JHL8up2NqX7rqxEErt28buOcSzm+uhli/ziWlqlFbs4tBcfzLbiRZB8s+6xYpp/JeMq4zcG8QQmI0/mBW34G+HdWTm1KUe3ynnNa4YItDxaZLI5aCgEr3PbEdspmPSXBMHPSS5rRMCCY8pit4IJ7exJPGXAxM1cirTCT5gMYhzAZ4ceaUXkGW8m9OjbIAn9yKxCkSyyqESoJN/dq/ZofuFWZABNFoUOA3pbjrIL7lLLB6ayAynlCinYN2aUsB3lMQLrQRciODAzt3AXyn7LYi32ZZGuzYy2Ukom/RN/R2PzbrzZw+aFlK/gtcmbJXz0WuNIsvYfBMLA2v6bTGkQIyu0THGrg0YQ=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?UV+opYZXSepD4kSu6w6oWOLQafBK/e923Qkc6CLXYGF98X8rGQSYrcqv1Ljk?=
- =?us-ascii?Q?lV1a2LXeH/yYiSh5ABpdxWvpFcDHEim52iCu9B9TFC0QuomRru8wUTtGq4A+?=
- =?us-ascii?Q?qG87h/xb1bWKLBLhvaaNgAn6vgp/S2HbCDX4F19JLxmIAdGo/dHmOkBO7nY8?=
- =?us-ascii?Q?OlXHEMPO7oRmv0wSZGg+v35kY+XBdNwdAmpioGryiV1vNr3wZUXksqIu8oJy?=
- =?us-ascii?Q?s8VKlohbgZyKVR6DlefhO4TPTtthfdJ7eilGFA1dYRb527YyXBd1fKFPjnDA?=
- =?us-ascii?Q?KewkmaXLd4wxF2E8dG9peU1lasJWVj1KUR+VMrDQaZvA94P8ugP/kMuqi3gC?=
- =?us-ascii?Q?pnPIsI0P1kBVi5ENNvSMGovimA0e72gsZKPZXfzHRRX4mL5jXot82rRdq6b5?=
- =?us-ascii?Q?Z7G+OMRGWI03EODw/dq1g2z05M49Mqq6bANIad/lAaBa4h+T5hkL1p2h3okY?=
- =?us-ascii?Q?YOaZPQD5gzoZi1mVNeBxyjVDb1wka7FkmE3/Cqe1oyYgWvNn4VqkpG5RD28O?=
- =?us-ascii?Q?ctWsQhcRlROn9qCCZB5TvNXF43TwIn8xIuqaN7ggoOT0E7XEYMwwwOW5VM2W?=
- =?us-ascii?Q?4YyPDfCQlFccDLN8t/lpybEqT/rQervvwVyI0Q3N+ljRMl/N6O3cxAog/GOS?=
- =?us-ascii?Q?ezrzIMey7pMM1q5hXTxYZac7IvevMb24M86f5fdTXQeJQgfNW3VByrxnhOii?=
- =?us-ascii?Q?LwqXF1VKYOOXL4mT0b1pNI0y2s7ZnfYUXTH5KjqwcIsPjZ4h4uwu6ZxNp8oP?=
- =?us-ascii?Q?92od6R3YLGlStJ8YctkSTxyDR6gtoK1mAcmM5wzqRtcbPeDYT+i7d/9JoOAe?=
- =?us-ascii?Q?zKC9XlPYDsgIf0iFL6TEnWEwTX2a7B4jhz27xAMpKLxUGT9ST3BdgV+MV3Oc?=
- =?us-ascii?Q?Wb8BJoY0X9iLgGnCG9+i8m3GsdaylM4hZ/DsIJZCZgGlJbbnu+HM9nxLeqZz?=
- =?us-ascii?Q?lFtaZi+4APTlflPaJUJfSzgaAfFn6/mvRqwWJXWPkaePpjBR6NFAFBpQ0ATy?=
- =?us-ascii?Q?j/PN97ZoqmciEjhh80e5uox3vurCb6eNvQ3MCYIkjcUzF+jXfV953YuVgN4p?=
- =?us-ascii?Q?JrddkG58W7GoVQm1f0c7cKA4WHxErfgQUSP//ws8CMT9xQV02xiQgZ4caLyG?=
- =?us-ascii?Q?EoQgsrHQ6TwpuPRQUVGntwkQ7zAsn3zpfj8iTdK29MPmvju3QVsow6ubWQJT?=
- =?us-ascii?Q?P4BKUOnDjUeOsjRJCjs+uBYKt5t0jipcHBWqnimA6R63FyRWc2AFax2jXfEl?=
- =?us-ascii?Q?UAyUdMviiQVkPUZEwRzTH/+4qRrkNLgPumWQKSeL87iSMqizKzUrpCrswjnU?=
- =?us-ascii?Q?AE3YdbejFYQ8nSr/RnjqEkTfTvaNjoQJi7ZOeYS8FONoCCRcTnb0ccr0Er6b?=
- =?us-ascii?Q?iNSYD3sGLvzacBwfpY6k0OqCvHx2d3Kp2hkJ+ijal/TDTHqR4KKbEKDjFGzJ?=
- =?us-ascii?Q?WBe2+0cuuLV6MRvNImxm6E15GFKTj6L4A3oVsD5ovXipnzsDnHxnU1nUAUWw?=
- =?us-ascii?Q?J48jJ0Xf4JPqd19nUx0CrRB5XYVHfgOKpe4a5LP0+eQkcGKZkIU8DOMUbkdJ?=
- =?us-ascii?Q?lp6Z2ktYJ76j+g7jilBW5y3E/SjWRKy10zCC0mR0Q8TrsT85SCzHa0QfA6sz?=
- =?us-ascii?Q?tQ4M+lxTiex2LrJtVzeJt917FKuSt3RdwkXuADBI6gdSCwQckUUZMxlUyjCy?=
- =?us-ascii?Q?yNybgA=3D=3D?=
+	=?us-ascii?Q?+Ir5VRiTEEDTgo0Pfs+fs8eDkV2A9CVv0wGJwyH9wf8S11uR8R7+mY+X9DYd?=
+ =?us-ascii?Q?XSRj2EPphwp/kK8arO3sDFLrqPaIuk+RExsCIV0k1kgHO/pUe1eLUejgl1MN?=
+ =?us-ascii?Q?yAL02i+UoWHWR+alO5IhV2xur6d4zE6e7LX0iYW5Ip/SUZpu3u86ht/OE81c?=
+ =?us-ascii?Q?XjjiCjQzR4pKaPrsgY8PkZmVcs5NY2QsoDJfUfbw6iAWnX2opDuZ+BgAG9ma?=
+ =?us-ascii?Q?hlxaR18Da8F6agX9ptgozfPedW4LItmKIHdsOD2UmyAL/+51zTq3y9l3ES9Z?=
+ =?us-ascii?Q?ufJVbU0fStsNkQDwfoccfGtkQjl/p+GD7kePs/wd+zz/b1LmGdVTQ346zQRe?=
+ =?us-ascii?Q?ZdBZDF4MGc0ua16zrnX6fctFZZiTOl8qUJvXoi32tkTePuLR3x3aRUci1OEn?=
+ =?us-ascii?Q?bAxvrFlo/6lRoK2f6e7KICK5yDaDX8zEcgIbyLCKyBt21vPbEZUnnXPk9dE2?=
+ =?us-ascii?Q?hO3fZ5fLi8BdOLJfL2Nnj42Z8j+9AwqVz0cFTJMnDuuTp0gqmX4VOQBvjo52?=
+ =?us-ascii?Q?eBb0zzj9kW25M4m2UgNKTKzDyocVRL+i47Ie3oIgfo0aS5fPZxZcUrwBfwwb?=
+ =?us-ascii?Q?PVaULtAuoGTJ8Q6w1l2Ev6XTFJeTKY5yia1WsYJLQaBm5Z/VUk17vqEwfG4p?=
+ =?us-ascii?Q?EuH1shuQ67fTJHEOs0sRz0tJJkLZ+SspeB++pKMdP08ILw499K3U4V6UR7fX?=
+ =?us-ascii?Q?c9s+WI5k1O91lvdnaISxXERvYiRAgNT0r0FWKVfBmmGxiMVYzXk0Iv4yBJGm?=
+ =?us-ascii?Q?xPJ/wCT1JwI0fxyIOmA4aR81JieNqH+Uoutf0Eu9cPBbsshARDgjWXD3ljAm?=
+ =?us-ascii?Q?6w+WsWFwALBWpasQoTCqlKP8rhG8LAMW2MOX2IXZtp0z8iSiS8v+/kz588t8?=
+ =?us-ascii?Q?a2QqqlwKue1JMccvRMlPDROSuYNULQdkXPBi+7Bu3gwWffg7Z3q8MLoraD2e?=
+ =?us-ascii?Q?V0Ii8rEVGrYP3bFlNiM3CfFCLWdAfKm0w9BWbD0iGqTh3w4HyRezM8JPB6nS?=
+ =?us-ascii?Q?ENvo9CsqIw5iYhqp/qzufHx5HRUZF6OIJJZHTn8UhmMy/uUbRaPPLZuoKAps?=
+ =?us-ascii?Q?HFMHFYxdcffj+5V0X/G2qThYqn8sig+HbvD8cEC2u8WpjpoVq0RvzAmIEFqr?=
+ =?us-ascii?Q?f3X+lNIXng2PI/kuIM61OE0YSjOjZDzJDxpbU4AKxUYdJom9die3qzyf/jxm?=
+ =?us-ascii?Q?jjClHfLLDlf/qd1TLZtAWCs66jX3gbKv2B0CtgRDEJf2xHk4sw6jK5oHdc/O?=
+ =?us-ascii?Q?AXuAcRpVhe7IwnvACU9GIQ37YphpUG8mL5qM+KRIlkx6bZ5Owf+j5TllxYyL?=
+ =?us-ascii?Q?fSD5PA5aZQ4k+nDYENOxJjD68IhlwvGwNpyzefJ24SwgxbGxwVH769R/p/0Q?=
+ =?us-ascii?Q?qFFvmctfvDi8xpT8QQj09wq32iupRUnmJ6ZFYI91rpgC3ni/v0RzlEMO4To2?=
+ =?us-ascii?Q?Ax36G4FYqwVfPD4ii0cRsabwY1sEqUTfUVbVCasX9ho6BKFJ9NvowgkMd2Kn?=
+ =?us-ascii?Q?33o4BF6KqNLQlirpxhqUOkdhalDAcn7MmWsaTUD9isNnf+h7oypcrxyPYGbu?=
+ =?us-ascii?Q?NL3k/GzBeHqUKGcl1L86olsni0aAna0vfKfH7M1O28MdCGIIGfYbbkpHOQ7F?=
+ =?us-ascii?Q?yVcXtzDQiSdFRpBHBP68b/26Kx22Fq2XdVCe8A6/GDIYQdt1zfDrY9Q8hjSy?=
+ =?us-ascii?Q?yB6PIA=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	yFuO9/PBo95NEuqxGXIfgNzs2TiGQQ1lpVSK/TFFXDk9LDa0T8dg8kqkTq95wFYnS3TelT0AH148NQv6Ms0mbZHsAsVvDQqhfVlUW4OukgaThKRnGZy0ZIm6sIJttPEh6vRRwJ05flYFofk1cuxJG9cbi50EmDGmZYJlWkpwBDAHX2pHdA3zmJIxq+LlD4lWjF8CXJD+kTMDeQXz/aokpO9E9mPxELW40IFzy6QOTECvr9GYD91xJmjBR0yNCt5F+jPIntgP6/qQ3dPPxLAJd/GCKaooPFrg1GKUtxS2/YedOjxfDbIZn2XC3RBUDbJAYsK301HAORSHoy5qFt0OvQ2G9otMji0B9jcoJLAHlaY/S9Db7XhYl0V/nzBZZlJGzk1gVhoke6vJfWwpGewsihVUy0alEMKqwpKtzIv620j4JYX9CXa1YFVkr05u9mPBBWLnCQeRBFeRfEJIT+AHtxJ+fNyEJw/+OF9GQoPh5wE/g4+Oiupa6jKilLgPNUCLxP/BzTFk6E066WsdU3bOg3VzLOIhj11ZeakBUjcscUHpLSgmxRwu2v9C/sw7Tvod+jAgeP0lu2leEDXQIn2HK/FIhcWjkqkrfVEs5g3eRu8=
+	+xohphjo0BY7Jl3MZrwvJOiaduR6yNlcCV3KRZ84X3Eya22uprMQE7+0hNDpvBlm74iMziC42JI20TfopVsmLm0RiuaGBuGmBqhpnCYCRK+dpA4Q2/CPdIg4NMEqbNXUNv1/7NMTMH8gH+JAv8GPTf8L6tfnL3pbsTtNA5l6hWkPosuY4+MbTwTz5BNqK1XRip9QnxXtMXcb+C2s6qMO21gwrEp8WUAbKOyG9+u6EyKtYuq+a7imRUUJuHBUCF5D0wUQLqGzs7mc6bVSli5aJV2cy5pyg3tZOrSDTJquVbk57VKHjghRZ3HA7gPI2116M7j88e+W2Y7mI8R/w81uw7Il1p4KGILnq1jkeEqqqQOUCaFCQzrACB+qmvFIibb6qqWUtvOReOdXzM5udvpZIItSgSlokiFnTBs09JyaDei0TvgUQNBKMqgJRzihb4JkZcwWj9yJ4TbQt14rIfFLwj8D9BNHx/fNfr8SesA7pqL5XYKu115LOA01Ld2EFqptlPc6FT+180xWSH/UPXftTVOtHSSnd44yVhnyvnJwnw+CY8ExlnfdoJp1KVfDo3h8P8Cjtq+G/2P/02/iYwo2hL/EJ6sAYPBfD1+RokNO8CE=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e8e092a-da0a-4c71-c2e2-08dc4d180961
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eefca3a-bb57-4ad1-8af0-08dc4d180a81
 X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 22:08:01.3118
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 22:08:03.1846
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vl2e7AQp9pJv12+OTWtTOiJcjLU9P5npdQEONiTX04gLNxk8MBK+8l/uRX/2cpGkz/RNzGt4igCyqDaqazftFhaJ58YY3x7qUdj3B1bxMpI=
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8TDncN9bCG/ix6G+oUlxfVEQDutYZTAQwJ1PL/7u01FbSsJHN+XdffAdVJdDkZN+P80DTggWSolouC0boB+sGhI5aAbk/3MDeNGEf7HWpFg=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5005
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
@@ -159,77 +159,225 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malw
  suspectscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2403210000 definitions=main-2403250138
-X-Proofpoint-GUID: PpIx2O4I3XJ23MMcxSlNB3LTSxyRNEnD
-X-Proofpoint-ORIG-GUID: PpIx2O4I3XJ23MMcxSlNB3LTSxyRNEnD
+X-Proofpoint-GUID: SBo5XQR_67stZS-DPtRDZ8DGhhL1p77p
+X-Proofpoint-ORIG-GUID: SBo5XQR_67stZS-DPtRDZ8DGhhL1p77p
 
 From: "Darrick J. Wong" <djwong@kernel.org>
 
-commit c0e37f07d2bd3c1ee3fb5a650da7d8673557ed16 upstream.
+commit 13ae04d8d45227c2ba51e188daf9fc13d08a1b12 upstream.
 
-Overall, this function tries to find and invalidate all buffers for a
-given extent of space on the data device.  The inner for loop in this
-function tries to find all xfs_bufs for a given daddr.  The lengths of
-all possible cached buffers range from 1 fsblock to the largest needed
-to contain a 64k xattr value (~17fsb).  The scan is capped to avoid
-looking at anything buffer going past the given extent.
+While stress-testing online repair of btrees, I noticed periodic
+assertion failures from the buffer cache about buffers with incorrect
+DELWRI_Q state.  Looking further, I observed this race between the AIL
+trying to write out a btree block and repair zapping a btree block after
+the fact:
 
-Unfortunately, the loop continuation test is wrong -- max_fsbs is the
-largest size we want to scan, not one past that.  Put another way, this
-loop is actually 1-indexed, not 0-indexed.  Therefore, the continuation
-test should use <=, not <.
+AIL:    Repair0:
 
-As a result, online repairs of btree blocks fails to stale any buffers
-for btrees that are being torn down, which causes later assertions in
-the buffer cache when another thread creates a different-sized buffer.
-This happens in xfs/709 when allocating an inode cluster buffer:
+pin buffer X
+delwri_queue:
+set DELWRI_Q
+add to delwri list
 
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 3346128 at fs/xfs/xfs_message.c:104 assfail+0x3a/0x40 [xfs]
- CPU: 0 PID: 3346128 Comm: fsstress Not tainted 6.7.0-rc4-djwx #rc4
- RIP: 0010:assfail+0x3a/0x40 [xfs]
- Call Trace:
-  <TASK>
-  _xfs_buf_obj_cmp+0x4a/0x50
-  xfs_buf_get_map+0x191/0xba0
-  xfs_trans_get_buf_map+0x136/0x280
-  xfs_ialloc_inode_init+0x186/0x340
-  xfs_ialloc_ag_alloc+0x254/0x720
-  xfs_dialloc+0x21f/0x870
-  xfs_create_tmpfile+0x1a9/0x2f0
-  xfs_rename+0x369/0xfd0
-  xfs_vn_rename+0xfa/0x170
-  vfs_rename+0x5fb/0xc30
-  do_renameat2+0x52d/0x6e0
-  __x64_sys_renameat2+0x4b/0x60
-  do_syscall_64+0x3b/0xe0
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
+        stale buf X:
+        clear DELWRI_Q
+        does not clear b_list
+        free space X
+        commit
 
-A later refactoring patch in the online repair series fixed this by
-accident, which is why I didn't notice this until I started testing only
-the patches that are likely to end up in 6.8.
+delwri_submit   # oops
 
-Fixes: 1c7ce115e521 ("xfs: reap large AG metadata extents when possible")
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
+Worse yet, I discovered that running the same repair over and over in a
+tight loop can result in a second race that cause data integrity
+problems with the repair:
+
+AIL:    Repair0:        Repair1:
+
+pin buffer X
+delwri_queue:
+set DELWRI_Q
+add to delwri list
+
+        stale buf X:
+        clear DELWRI_Q
+        does not clear b_list
+        free space X
+        commit
+
+                        find free space X
+                        get buffer
+                        rewrite buffer
+                        delwri_queue:
+                        set DELWRI_Q
+                        already on a list, do not add
+                        commit
+
+                        BAD: committed tree root before all blocks written
+
+delwri_submit   # too late now
+
+I traced this to my own misunderstanding of how the delwri lists work,
+particularly with regards to the AIL's buffer list.  If a buffer is
+logged and committed, the buffer can end up on that AIL buffer list.  If
+btree repairs are run twice in rapid succession, it's possible that the
+first repair will invalidate the buffer and free it before the next time
+the AIL wakes up.  Marking the buffer stale clears DELWRI_Q from the
+buffer state without removing the buffer from its delwri list.  The
+buffer doesn't know which list it's on, so it cannot know which lock to
+take to protect the list for a removal.
+
+If the second repair allocates the same block, it will then recycle the
+buffer to start writing the new btree block.  Meanwhile, if the AIL
+wakes up and walks the buffer list, it will ignore the buffer because it
+can't lock it, and go back to sleep.
+
+When the second repair calls delwri_queue to put the buffer on the
+list of buffers to write before committing the new btree, it will set
+DELWRI_Q again, but since the buffer hasn't been removed from the AIL's
+buffer list, it won't add it to the bulkload buffer's list.
+
+This is incorrect, because the bulkload caller relies on delwri_submit
+to ensure that all the buffers have been sent to disk /before/
+committing the new btree root pointer.  This ordering requirement is
+required for data consistency.
+
+Worse, the AIL won't clear DELWRI_Q from the buffer when it does finally
+drop it, so the next thread to walk through the btree will trip over a
+debug assertion on that flag.
+
+To fix this, create a new function that waits for the buffer to be
+removed from any other delwri lists before adding the buffer to the
+caller's delwri list.  By waiting for the buffer to clear both the
+delwri list and any potential delwri wait list, we can be sure that
+repair will initiate writes of all buffers and report all write errors
+back to userspace instead of committing the new structure.
+
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
 ---
- fs/xfs/scrub/reap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_btree_staging.c |  4 +--
+ fs/xfs/xfs_buf.c                  | 44 ++++++++++++++++++++++++++++---
+ fs/xfs/xfs_buf.h                  |  1 +
+ 3 files changed, 42 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/scrub/reap.c b/fs/xfs/scrub/reap.c
-index 86a62420e02c..822f5adf7f7c 100644
---- a/fs/xfs/scrub/reap.c
-+++ b/fs/xfs/scrub/reap.c
-@@ -247,7 +247,7 @@ xreap_agextent_binval(
- 		max_fsbs = min_t(xfs_agblock_t, agbno_next - bno,
- 				xfs_attr3_rmt_blocks(mp, XFS_XATTR_SIZE_MAX));
+diff --git a/fs/xfs/libxfs/xfs_btree_staging.c b/fs/xfs/libxfs/xfs_btree_staging.c
+index dd75e208b543..29e3f8ccb185 100644
+--- a/fs/xfs/libxfs/xfs_btree_staging.c
++++ b/fs/xfs/libxfs/xfs_btree_staging.c
+@@ -342,9 +342,7 @@ xfs_btree_bload_drop_buf(
+ 	if (*bpp == NULL)
+ 		return;
  
--		for (fsbcount = 1; fsbcount < max_fsbs; fsbcount++) {
-+		for (fsbcount = 1; fsbcount <= max_fsbs; fsbcount++) {
- 			struct xfs_buf	*bp = NULL;
- 			xfs_daddr_t	daddr;
- 			int		error;
+-	if (!xfs_buf_delwri_queue(*bpp, buffers_list))
+-		ASSERT(0);
+-
++	xfs_buf_delwri_queue_here(*bpp, buffers_list);
+ 	xfs_buf_relse(*bpp);
+ 	*bpp = NULL;
+ }
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index c1ece4a08ff4..20c1d146af1d 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -2049,6 +2049,14 @@ xfs_alloc_buftarg(
+ 	return NULL;
+ }
+ 
++static inline void
++xfs_buf_list_del(
++	struct xfs_buf		*bp)
++{
++	list_del_init(&bp->b_list);
++	wake_up_var(&bp->b_list);
++}
++
+ /*
+  * Cancel a delayed write list.
+  *
+@@ -2066,7 +2074,7 @@ xfs_buf_delwri_cancel(
+ 
+ 		xfs_buf_lock(bp);
+ 		bp->b_flags &= ~_XBF_DELWRI_Q;
+-		list_del_init(&bp->b_list);
++		xfs_buf_list_del(bp);
+ 		xfs_buf_relse(bp);
+ 	}
+ }
+@@ -2119,6 +2127,34 @@ xfs_buf_delwri_queue(
+ 	return true;
+ }
+ 
++/*
++ * Queue a buffer to this delwri list as part of a data integrity operation.
++ * If the buffer is on any other delwri list, we'll wait for that to clear
++ * so that the caller can submit the buffer for IO and wait for the result.
++ * Callers must ensure the buffer is not already on the list.
++ */
++void
++xfs_buf_delwri_queue_here(
++	struct xfs_buf		*bp,
++	struct list_head	*buffer_list)
++{
++	/*
++	 * We need this buffer to end up on the /caller's/ delwri list, not any
++	 * old list.  This can happen if the buffer is marked stale (which
++	 * clears DELWRI_Q) after the AIL queues the buffer to its list but
++	 * before the AIL has a chance to submit the list.
++	 */
++	while (!list_empty(&bp->b_list)) {
++		xfs_buf_unlock(bp);
++		wait_var_event(&bp->b_list, list_empty(&bp->b_list));
++		xfs_buf_lock(bp);
++	}
++
++	ASSERT(!(bp->b_flags & _XBF_DELWRI_Q));
++
++	xfs_buf_delwri_queue(bp, buffer_list);
++}
++
+ /*
+  * Compare function is more complex than it needs to be because
+  * the return value is only 32 bits and we are doing comparisons
+@@ -2181,7 +2217,7 @@ xfs_buf_delwri_submit_buffers(
+ 		 * reference and remove it from the list here.
+ 		 */
+ 		if (!(bp->b_flags & _XBF_DELWRI_Q)) {
+-			list_del_init(&bp->b_list);
++			xfs_buf_list_del(bp);
+ 			xfs_buf_relse(bp);
+ 			continue;
+ 		}
+@@ -2201,7 +2237,7 @@ xfs_buf_delwri_submit_buffers(
+ 			list_move_tail(&bp->b_list, wait_list);
+ 		} else {
+ 			bp->b_flags |= XBF_ASYNC;
+-			list_del_init(&bp->b_list);
++			xfs_buf_list_del(bp);
+ 		}
+ 		__xfs_buf_submit(bp, false);
+ 	}
+@@ -2255,7 +2291,7 @@ xfs_buf_delwri_submit(
+ 	while (!list_empty(&wait_list)) {
+ 		bp = list_first_entry(&wait_list, struct xfs_buf, b_list);
+ 
+-		list_del_init(&bp->b_list);
++		xfs_buf_list_del(bp);
+ 
+ 		/*
+ 		 * Wait on the locked buffer, check for errors and unlock and
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index df8f47953bb4..5896b58c5f4d 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -318,6 +318,7 @@ extern void xfs_buf_stale(struct xfs_buf *bp);
+ /* Delayed Write Buffer Routines */
+ extern void xfs_buf_delwri_cancel(struct list_head *);
+ extern bool xfs_buf_delwri_queue(struct xfs_buf *, struct list_head *);
++void xfs_buf_delwri_queue_here(struct xfs_buf *bp, struct list_head *bl);
+ extern int xfs_buf_delwri_submit(struct list_head *);
+ extern int xfs_buf_delwri_submit_nowait(struct list_head *);
+ extern int xfs_buf_delwri_pushbuf(struct xfs_buf *, struct list_head *);
 -- 
 2.39.3
 
