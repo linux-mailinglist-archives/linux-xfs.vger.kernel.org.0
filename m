@@ -1,348 +1,678 @@
-Return-Path: <linux-xfs+bounces-5480-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5483-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0435C88B380
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Mar 2024 23:08:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F3E888B573
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 00:42:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71D841F34037
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Mar 2024 22:08:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE3151F39F40
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Mar 2024 23:42:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C557E73518;
-	Mon, 25 Mar 2024 22:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CEF583CA7;
+	Mon, 25 Mar 2024 23:41:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fj47CYXY";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="XJIjSHHg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXnPlyM1"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38F37317F
-	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711404509; cv=fail; b=M95xyxxSGqC018mTK9h10ee2luhttKXBIyUo+67Banr8HAQ3hRIcs0GUPDs2xYhr5NC55AIhLsWAvc6bZFYL7+2DQC1MuUI8eEoXostWnQiz4MbVbuuZvUaTd2gnWLXerJN0TIMVifaeW8+hD8tULfoC0Le1DzyPW+eVWR0kqh0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711404509; c=relaxed/simple;
-	bh=pKdC/G6Ih7Ig4Vf4Gc/Z4ZYqIoS+h5vUlA3n0z3Ra+c=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HGwSshNCp5uUOR8MbsThAlrZqJVAt1VyNBcisT9dwMkRLVztg/0+GJv5zhfhPO1T62856/GG00+SgMVIib9zduSZ6OluQIG1ThpDABXF5gFYY/VLOU7ay+C9EhC1BK0axuNgNXSfggRtzcOBNby48jpl/v8yAdsrKCmALoiT5Ug=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fj47CYXY; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=XJIjSHHg; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42PLG7r7020631
-	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references : content-transfer-encoding :
- content-type : mime-version; s=corp-2023-11-20;
- bh=sw6i7h+4dxG3QttKtuRnO5ujt2LKRN0UyL9QPDZOLBk=;
- b=fj47CYXY3EKH9o4r5Tn43wZWgK0+o/QnKBDbs1xpfe5axmRSHdTMRS4oMINgvB04uMfv
- lQO956Je3VTpXI+8vJPqbRcRDH6IAzFrho6LQSkldyJzaTJR1i4Mf27DOpcBtJ+BEUkz
- zXbrNYoIFMAh6FsgrKPdn704Nr6OZf2ooKLQM2djVq5tj2EvDYJCP3tfTPyWldu9cUDt
- aJIqEay+z7xEjzMMfY/h7zZK0/BVdYRPOiHH05Me1Sm3avNJ8UidyO6k6jL9sgDWisRX
- Ycp8uAF7YUpUZJJYnMHZu4Bs4b71lCk6sOAk7RPdDjLbq5WUz382BvpS6jrvIm1YDMlj 0w== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x28ct32h5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:26 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 42PKPhAN015960
-	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:25 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x1nh64raq-8
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 22:08:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WOJxLvxSHn7OyxQyrIiUf6OQ35dqwWvOFG13sjMhArY75eDvvk38WwZhCK02sUovmWE4S7vA0Y81npbajWVCwoSQnIjDDzll+BJYsIxEUo3APD+F2knzpt5ymo4W2NsTjLE+5j9VEqv52fy2jrGmWHhjTXnLDJWSM8m/xP4kwfPyZmPbR4H1r8P9INA47aEawwnRLX9CHpolbF5vdjhg5UN60KwhvrkjXNe6qqkTpMRAwE8UfsykXFjgYZx/EPM9kx3T3EUToYuIkMXLQx4itz3DCa7rLCoSDOL2GyBEkyTFLq+S3AtdzffLhB2x3S5dbDvXbGiu6rskt1sWnh5Ugg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sw6i7h+4dxG3QttKtuRnO5ujt2LKRN0UyL9QPDZOLBk=;
- b=Cy7tFXtz1lzVHTLPeHzjzqVr9Ulakk3OV0ETXonT/pOBGGz5vbg5HpZJYn8hQZ8337AT1uIG9sDCRQKldm35Y3DmGe+2v8lVq0Gl5tgu7babCa8dgLVDbwdCJDRq7EuPOK+yXc3bIQIzgS87NALNsUI/LfaKXTHNAaqYrI0dE+zhLzLKZc1sGxBXwJpZ4HS3Dx6ENSHcxX1pta1Q32MAkNOSl8qkcssyVqtKggjfHgGZB8izjQqnbsEUa0wQ3lhqkfUBB9Vh0QTOcADzGNnCCFAimQECeoH1tkJGRyhZmTKnhEzzC5Z1L101gxJpvaM8Dt+RHjU41e7+65eA7JUNhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sw6i7h+4dxG3QttKtuRnO5ujt2LKRN0UyL9QPDZOLBk=;
- b=XJIjSHHg+1WwShJxHbua7XmNQ9G4vkA+0lYItC9e4komtEMfzKxW2Y51TsUYE1SAO8mYeNjnwysj8keZkGnOaOF8tvagN5R2oREsZVbTzNYObL0ZBkBtyyxp5lvJju2X4NQcHCcpYDRTPytfx4s7qynbeIkGvW1z6diowpXXCoI=
-Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
- by DS7PR10MB5005.namprd10.prod.outlook.com (2603:10b6:5:3ac::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.31; Mon, 25 Mar
- 2024 22:08:19 +0000
-Received: from BLAPR10MB5316.namprd10.prod.outlook.com
- ([fe80::404e:f2ff:fe2c:bd7a]) by BLAPR10MB5316.namprd10.prod.outlook.com
- ([fe80::404e:f2ff:fe2c:bd7a%4]) with mapi id 15.20.7409.031; Mon, 25 Mar 2024
- 22:08:19 +0000
-From: Catherine Hoang <catherine.hoang@oracle.com>
-To: linux-xfs@vger.kernel.org
-Subject: [PATCH 6.6 CANDIDATE 24/24] xfs: remove conditional building of rt geometry validator functions
-Date: Mon, 25 Mar 2024 15:07:24 -0700
-Message-Id: <20240325220724.42216-25-catherine.hoang@oracle.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20240325220724.42216-1-catherine.hoang@oracle.com>
-References: <20240325220724.42216-1-catherine.hoang@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR04CA0022.namprd04.prod.outlook.com
- (2603:10b6:a03:217::27) To BLAPR10MB5316.namprd10.prod.outlook.com
- (2603:10b6:208:326::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0033883CBC
+	for <linux-xfs@vger.kernel.org>; Mon, 25 Mar 2024 23:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711410115; cv=none; b=ErojuDwdKXIYWywjE5DaG+wVIAoPn2FrgNXAZgwaivnSV61DcMz17p5ujJZ0csFiEcz4ZlodN0PQrYTEZHP7pRVav7SfbJr+hxi+302JzjuRtm6GLVsSTLghbrYLBQNiwlg40bfcQR0+50arNIm/QXiRWZ1XA4WMO8uggkVq8kQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711410115; c=relaxed/simple;
+	bh=Uldleu7PvEX83DWFumYHhOp6gQXq1o4KcdI4IhOpW5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KcUhFeXWK2LU0KH8Hhe0lz6cUerWVcBvQWY+4xvDH84eVdRURTqMuBDyEQCEfp68GYDkdOvmPdz/tz8b6nOihOMHrPeeQkTx63LBhWfDz2M+tI1zRglKcby17Z80avK/ra8Sp1liLy8EAPm9zgGuAa4igBErFh//0ZtIOVlZXyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXnPlyM1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836D4C43394;
+	Mon, 25 Mar 2024 23:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711410114;
+	bh=Uldleu7PvEX83DWFumYHhOp6gQXq1o4KcdI4IhOpW5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eXnPlyM172qwMCGY06OrInMKbZpi28QkKFa5JvskcmUDJEnyu0LO6lMXS8EXS9A0p
+	 FKrM1zq5pxLKeWO7xMOiuq5Gl7R/HDJ4k9auIEXetWfjNsrnqvp9fUv8MVHkV9a0Wh
+	 h7CGN7sPRHlXXn3QIxjq0irg0IVz069yBW4v5VmtMc87wLz4BL0p3exGhRcxi8Edhk
+	 rz3TP65OGa+7pkguvTrlo0CpD6tR5i69qcTFL+6gL+XgYEy28w3cslDl/FxULhPmqT
+	 VqX98UJa+G+IhoaMAXesYWuJr086qzVuMLDXOBhyfmtmqmYstYih3skbvz4fqY+XPJ
+	 NFQ7CS39KvHFw==
+Date: Mon, 25 Mar 2024 16:41:53 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Chandan Babu R <chandan.babu@oracle.com>,
+	Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 04/11] xfs: split xfs_mod_freecounter
+Message-ID: <20240325234153.GD6414@frogsfrogsfrogs>
+References: <20240325022411.2045794-1-hch@lst.de>
+ <20240325022411.2045794-5-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BLAPR10MB5316:EE_|DS7PR10MB5005:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	q82EnUY2Z3q8ZVIEp2/P4WArZ2M4fvOMYypqpQslh+4WatFJkyTaQj8jp7LbuX2SUeDVuiBxVnZE9pRH4cAhsSPQ0O85CT3Gr/HNdtBCCycx+sXItOOdgtp5zM/rxw/OCInSGwTyAVZnH9aNZp3dTVhCHxgqhtMZeoOEpOt1HuecM/Jxz08EE+m2QTLb26q2YwJmkh+jkjZG85yHSeZF7pEj+dpOLMi0fJhhOS1NFhDn2qil00DwdLnJ3QgXgb9XoP8AqZF0yJkTiWPZsOmeRVTu4tJiXXn1WLUT09NSUweBj5zzMx6ATsasYHG6iOGpU3unvVprN9DJTe2WU6a+ol9uhRaBDB49qoT2u3V2zdVYJ3/j17H00oOMYUAqfA50APZhQV8Ygi2XHIaj0go4zE5h0U8CBjSJjqS9GGtlTTtsI1T0nbx8e1sHu1aHUiG+P7QdEGi6uTdg08jCIPx/UJ6JZbQf1yxW3GXTTQaaCEKKXgziupOLrEwXsXUNABvbspNi9aTYqJRTI50RKTu8ljwOeGmLm1q7pQg6wTZ7eCaFguSqNaLnYgDN6DG+6WH1fLFvys2zWAUgWExAkkS5ri9qaG341CnVn/PRs3Fhld1IkkW9QiSf2QjaW4l3O9IdJpv9l2rK84PXJMFZ+uy6ZWwG056ZiQmekocqq8CUGSc=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?XwdI+G6iU7TtBf1N4YVLc0GOX6hmWb+Mo7G+gRdOyRSqRzjBNHH6j+m/xT3n?=
- =?us-ascii?Q?uFihPOSMWGvqEMivXdh+mBcZWx+peqPHA06VhndDN5Fk83ZAYI1rG/Lefqdb?=
- =?us-ascii?Q?S6VUXAk/DYeEoFf2tPfC9HEouGsUS2+687dQKpMTOeTXI+/Oq78W9pC6Ff4E?=
- =?us-ascii?Q?VHSU3z1OlArUzKHzoHgR16kjt/adbWohRBPYbHAa7T18QObXmYvGQCr+n9ob?=
- =?us-ascii?Q?YdERfcp5YgARIyNgT17cgPC+gh6XtH/Y2Y2zXNsx0vsRk1DzI/+OYq06nqbU?=
- =?us-ascii?Q?bYc9rXJOwh252QOdeg8kAU2+QiMJY+gn7mABE5ga+J2sNfgfrzSizK3hZMTW?=
- =?us-ascii?Q?EryeZoIYnmS/mAkP3sN3fJizivaOAtRKQL+5Nd/fer1J0e5oU9BP+lJ6mrJ6?=
- =?us-ascii?Q?ei52GTalhrJoPQE5U8ClC0JgEJKF90zDUwJS4Y2gBcrqs9ZCkxrUSR70Sb5y?=
- =?us-ascii?Q?G642u+kZHRnzcXSI2Nj8hafu3UzKG/23X6PJv1DJZja3FIid3MJ6QWzlXUWg?=
- =?us-ascii?Q?GVkLt5SJwJUa3I69cppa0FOxX3fQi3RPao+B9XI8q60iS0wIvvah2cyrvaop?=
- =?us-ascii?Q?bUELZs4yPE//oBUigPxO9Cz6RwSV8NiBNuQ3t2iI9dPLlZoeJ6usG9CD6PFq?=
- =?us-ascii?Q?rq40dwoX2ngARFbvCV/yFZp7Ecd8zuay5+mwqRjr8u53x035xSMELQdjXHyA?=
- =?us-ascii?Q?Gshw6sdGtdrUOSFUGbzkhEFVXaznjxD+hEZ5mNziDqRJtsIzIIu208lPXucz?=
- =?us-ascii?Q?1J6W/6H+3SNO7hwJDiwz/0UugDL41eIsYFHdha1ue4pD68bd1eFUfPSner9A?=
- =?us-ascii?Q?ifDVzzve86ZY+Y5vTNF+57+2QkHGkPRkPIoScGR+CGHsVWOrbL/T1SXjfp8h?=
- =?us-ascii?Q?7SjRML1kTSqiLjs9juEctjCgMUlq8QKvaFybALhytdPGGNYz1ed8WkOSKX+e?=
- =?us-ascii?Q?5MqFMjnchuua1Qclon2gauB6j95GYvzu7TjKdikdeiGv99/9Kw7z4uSz54Lc?=
- =?us-ascii?Q?Rq3fphCUNtI01Pyt39unkbJuqB1vti4Cjgu+1etVYwLwuj8OkpJWo/ixn3At?=
- =?us-ascii?Q?AkTuNIHi4CCiYbjOIbB6WHchqpb9TSfg3lODSycAk0IPW/LWwf59tKB90AqZ?=
- =?us-ascii?Q?2HqMVY/dvj4XzmXcouzh++ZwhVjy78cJHbnwIHNI8i6vBsh8e0aArnnHiop5?=
- =?us-ascii?Q?aevYjU48xCnzdB2cJajtaS9nFDBpa3y3dEREOmia9ANHYeIs53O1XmS3gcuT?=
- =?us-ascii?Q?jiGJNx2AF4+cXgxRmzmswBekSZneY6iOBt3IhrOgqDo2kG3q9wZc8oxNspPq?=
- =?us-ascii?Q?MWL+FhnA3g8Kgeyqu4qNCFjAJJtPeaob0muluoiXoOmUweUVvoD0lmg1AdeU?=
- =?us-ascii?Q?AzlNnHizmyZP43XRzeAau3eXe1rbaZMqjScjj+ccQMCTcswMxE05/Mc51M0q?=
- =?us-ascii?Q?rjrJSo/cRVsC0tKWbXexsFC4Fnm+tf2kUtBKC/4VSNcMtWqA2VMx/qSRc7KH?=
- =?us-ascii?Q?MwUehqtbLsF+3fMAykISxA7s/N+kiuNuGjDq3NloAyH8lHFwshN1yGvdOBo4?=
- =?us-ascii?Q?rsm9i00Z+ln7Qab0wUMAVlB0JyFQpdbQupm2OrNt1+grvpnllhQIwejFxggp?=
- =?us-ascii?Q?+PWGop55oXdf0h5U44/SriTCIH6rkiAwhW70pRBVuN5uFPdvQJ/CvEiDo4JA?=
- =?us-ascii?Q?LzQLTA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	sWu2FHbyDjAMnNeIJTQLBdBsJE9AIVtOGkAcQf+XCgTuiTagb/f8lA2mtlsh3USdpdv8lwKu50SnaCSP/kCZ5J+khIkIlSWXeTnXYUrzs6dxenQRNqHQvfppVaQbz/44KXWfV6GwUx7f2OOV/tfrSoG4cqe5RTQ4TlvcszNbzI2KZdLbf263X48mk/WN0T9YrtWFQrxEPBXAidw7nzLZuWQCsdVB0fqPnvECTEwEZh653Nicw25RkoIoQoy8osfpCd2k+jJo7g9UJ3+gJyWQ9Z4Dnrnd5uyMdyDDjC4/V0aWwBtsV734XeHaMTcAQy2mYYRo8EgZ33/1OioN0xILE5dqpoGUKGSRDu/ag4/enz5FwRUC0cQ6zFFV92a280KIH2fQfumMpFd96r2qnqK8r7FafbooXQdt+sFTo/wna7D8npyfM9OYKk7rvkP2DXqp0ipDDQr1LKVEd4NkHKMMhEiF7pEBP2BIVkWMsGKqJz4iaLChNuAk628lcRKAqHrdOWhPdgZ/Dlmm9UxFq0/8/N5v3/q418S5u4eJ9EnMYCkxGqQTfPyZm3ut7Q4PGe4I8CBQb/IZt+rKh3ixPhXAQ7nwkmu+QmeaUIcOvA9fJL4=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43dd4bf3-ae3b-45c2-fa50-08dc4d181439
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2024 22:08:19.5189
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RS1/FNWt+tsLZUc9cTXPLApXy8ZVGiVOfX43iGEue7HcmDc8iFV2Dl/9TiDoT2KtYOBwd78JyT1aJ2yVS4BLiTwc/B+LoAdwV91VwPZipmo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5005
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-25_22,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403250138
-X-Proofpoint-GUID: tAvXoeRch2x7_f9Oay6mGzYq8-EX2axH
-X-Proofpoint-ORIG-GUID: tAvXoeRch2x7_f9Oay6mGzYq8-EX2axH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325022411.2045794-5-hch@lst.de>
 
-From: "Darrick J. Wong" <djwong@kernel.org>
+On Mon, Mar 25, 2024 at 10:24:04AM +0800, Christoph Hellwig wrote:
+> xfs_mod_freecounter has two entirely separate code paths for adding or
+> subtracting from the free counters.  Only the subtract case looks at the
+> rsvd flag and can return an error.
+> 
+> Split xfs_mod_freecounter into separate helpers for subtracting or
+> adding the freecounter, and remove all the impossible to reach error
+> handling for the addition case.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-commit 881f78f472556ed05588172d5b5676b48dc48240 upstream.
+I'm guessing that the difference between v3 and v4 is that you can more
+easily integrate a freertx reserve pool now?
 
-[backport: resolve merge conflicts due to refactoring rtbitmap/summary
-macros and accessors]
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-I mistakenly turned off CONFIG_XFS_RT in the Kconfig file for arm64
-variant of the djwong-wtf git branch.  Unfortunately, it took me a good
-hour to figure out that RT wasn't built because this is what got printed
-to dmesg:
+--D
 
-XFS (sda2): realtime geometry sanity check failed
-XFS (sda2): Metadata corruption detected at xfs_sb_read_verify+0x170/0x190 [xfs], xfs_sb block 0x0
-
-Whereas I would have expected:
-
-XFS (sda2): Not built with CONFIG_XFS_RT
-XFS (sda2): RT mount failed
-
-The root cause of these problems is the conditional compilation of the
-new functions xfs_validate_rtextents and xfs_compute_rextslog that I
-introduced in the two commits listed below.  The !RT versions of these
-functions return false and 0, respectively, which causes primary
-superblock validation to fail, which explains the first message.
-
-Move the two functions to other parts of libxfs that are not
-conditionally defined by CONFIG_XFS_RT and remove the broken stubs so
-that validation works again.
-
-Fixes: e14293803f4e ("xfs: don't allow overly small or large realtime volumes")
-Fixes: a6a38f309afc ("xfs: make rextslog computation consistent with mkfs")
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
-Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
----
- fs/xfs/libxfs/xfs_rtbitmap.c | 14 --------------
- fs/xfs/libxfs/xfs_rtbitmap.h | 16 ----------------
- fs/xfs/libxfs/xfs_sb.c       | 14 ++++++++++++++
- fs/xfs/libxfs/xfs_sb.h       |  2 ++
- fs/xfs/libxfs/xfs_types.h    | 12 ++++++++++++
- fs/xfs/scrub/rtbitmap.c      |  1 +
- fs/xfs/scrub/rtsummary.c     |  1 +
- 7 files changed, 30 insertions(+), 30 deletions(-)
-
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
-index 8db1243beacc..760172a65aff 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.c
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.c
-@@ -1131,17 +1131,3 @@ xfs_rtalloc_extent_is_free(
- 	return 0;
- }
- 
--/*
-- * Compute the maximum level number of the realtime summary file, as defined by
-- * mkfs.  The historic use of highbit32 on a 64-bit quantity prohibited correct
-- * use of rt volumes with more than 2^32 extents.
-- */
--uint8_t
--xfs_compute_rextslog(
--	xfs_rtbxlen_t		rtextents)
--{
--	if (!rtextents)
--		return 0;
--	return xfs_highbit64(rtextents);
--}
--
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
-index 4e49aadf0955..b89712983347 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.h
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.h
-@@ -71,20 +71,6 @@ xfs_rtfree_extent(
- int xfs_rtfree_blocks(struct xfs_trans *tp, xfs_fsblock_t rtbno,
- 		xfs_filblks_t rtlen);
- 
--uint8_t xfs_compute_rextslog(xfs_rtbxlen_t rtextents);
--
--/* Do we support an rt volume having this number of rtextents? */
--static inline bool
--xfs_validate_rtextents(
--	xfs_rtbxlen_t		rtextents)
--{
--	/* No runt rt volumes */
--	if (rtextents == 0)
--		return false;
--
--	return true;
--}
--
- #else /* CONFIG_XFS_RT */
- # define xfs_rtfree_extent(t,b,l)			(-ENOSYS)
- # define xfs_rtfree_blocks(t,rb,rl)			(-ENOSYS)
-@@ -92,8 +78,6 @@ xfs_validate_rtextents(
- # define xfs_rtalloc_query_all(m,t,f,p)			(-ENOSYS)
- # define xfs_rtbuf_get(m,t,b,i,p)			(-ENOSYS)
- # define xfs_rtalloc_extent_is_free(m,t,s,l,i)		(-ENOSYS)
--# define xfs_compute_rextslog(rtx)			(0)
--# define xfs_validate_rtextents(rtx)			(false)
- #endif /* CONFIG_XFS_RT */
- 
- #endif /* __XFS_RTBITMAP_H__ */
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index acba0694abf4..571bb2a770ac 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -1375,3 +1375,17 @@ xfs_validate_stripe_geometry(
- 	}
- 	return true;
- }
-+
-+/*
-+ * Compute the maximum level number of the realtime summary file, as defined by
-+ * mkfs.  The historic use of highbit32 on a 64-bit quantity prohibited correct
-+ * use of rt volumes with more than 2^32 extents.
-+ */
-+uint8_t
-+xfs_compute_rextslog(
-+	xfs_rtbxlen_t		rtextents)
-+{
-+	if (!rtextents)
-+		return 0;
-+	return xfs_highbit64(rtextents);
-+}
-diff --git a/fs/xfs/libxfs/xfs_sb.h b/fs/xfs/libxfs/xfs_sb.h
-index 19134b23c10b..2e8e8d63d4eb 100644
---- a/fs/xfs/libxfs/xfs_sb.h
-+++ b/fs/xfs/libxfs/xfs_sb.h
-@@ -38,4 +38,6 @@ extern int	xfs_sb_get_secondary(struct xfs_mount *mp,
- extern bool	xfs_validate_stripe_geometry(struct xfs_mount *mp,
- 		__s64 sunit, __s64 swidth, int sectorsize, bool silent);
- 
-+uint8_t xfs_compute_rextslog(xfs_rtbxlen_t rtextents);
-+
- #endif	/* __XFS_SB_H__ */
-diff --git a/fs/xfs/libxfs/xfs_types.h b/fs/xfs/libxfs/xfs_types.h
-index 6b1a2e923360..311c5ee67748 100644
---- a/fs/xfs/libxfs/xfs_types.h
-+++ b/fs/xfs/libxfs/xfs_types.h
-@@ -240,4 +240,16 @@ bool xfs_verify_fileoff(struct xfs_mount *mp, xfs_fileoff_t off);
- bool xfs_verify_fileext(struct xfs_mount *mp, xfs_fileoff_t off,
- 		xfs_fileoff_t len);
- 
-+/* Do we support an rt volume having this number of rtextents? */
-+static inline bool
-+xfs_validate_rtextents(
-+	xfs_rtbxlen_t		rtextents)
-+{
-+	/* No runt rt volumes */
-+	if (rtextents == 0)
-+		return false;
-+
-+	return true;
-+}
-+
- #endif	/* __XFS_TYPES_H__ */
-diff --git a/fs/xfs/scrub/rtbitmap.c b/fs/xfs/scrub/rtbitmap.c
-index 2e5fd52f7af3..0f574a1d2cb1 100644
---- a/fs/xfs/scrub/rtbitmap.c
-+++ b/fs/xfs/scrub/rtbitmap.c
-@@ -14,6 +14,7 @@
- #include "xfs_rtbitmap.h"
- #include "xfs_inode.h"
- #include "xfs_bmap.h"
-+#include "xfs_sb.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- 
-diff --git a/fs/xfs/scrub/rtsummary.c b/fs/xfs/scrub/rtsummary.c
-index f4635a920470..7676718dac72 100644
---- a/fs/xfs/scrub/rtsummary.c
-+++ b/fs/xfs/scrub/rtsummary.c
-@@ -16,6 +16,7 @@
- #include "xfs_rtbitmap.h"
- #include "xfs_bit.h"
- #include "xfs_bmap.h"
-+#include "xfs_sb.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/trace.h"
--- 
-2.39.3
-
+> ---
+>  fs/xfs/libxfs/xfs_ag.c      |  4 +--
+>  fs/xfs/libxfs/xfs_ag_resv.c | 24 ++++---------
+>  fs/xfs/libxfs/xfs_ag_resv.h |  2 +-
+>  fs/xfs/libxfs/xfs_alloc.c   |  4 +--
+>  fs/xfs/libxfs/xfs_bmap.c    | 23 +++++++------
+>  fs/xfs/scrub/fscounters.c   |  2 +-
+>  fs/xfs/scrub/repair.c       |  5 +--
+>  fs/xfs/xfs_fsops.c          | 29 +++++-----------
+>  fs/xfs/xfs_fsops.h          |  2 +-
+>  fs/xfs/xfs_mount.c          | 67 +++++++++++++++++++------------------
+>  fs/xfs/xfs_mount.h          | 27 ++++++++++-----
+>  fs/xfs/xfs_super.c          |  6 +---
+>  fs/xfs/xfs_trace.h          |  1 -
+>  fs/xfs/xfs_trans.c          | 25 +++++---------
+>  14 files changed, 97 insertions(+), 124 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
+> index dc1873f76bffd5..189e3296fef6de 100644
+> --- a/fs/xfs/libxfs/xfs_ag.c
+> +++ b/fs/xfs/libxfs/xfs_ag.c
+> @@ -963,9 +963,7 @@ xfs_ag_shrink_space(
+>  	 * Disable perag reservations so it doesn't cause the allocation request
+>  	 * to fail. We'll reestablish reservation before we return.
+>  	 */
+> -	error = xfs_ag_resv_free(pag);
+> -	if (error)
+> -		return error;
+> +	xfs_ag_resv_free(pag);
+>  
+>  	/* internal log shouldn't also show up in the free space btrees */
+>  	error = xfs_alloc_vextent_exact_bno(&args,
+> diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
+> index da1057bd0e6067..216423df939e5c 100644
+> --- a/fs/xfs/libxfs/xfs_ag_resv.c
+> +++ b/fs/xfs/libxfs/xfs_ag_resv.c
+> @@ -126,14 +126,13 @@ xfs_ag_resv_needed(
+>  }
+>  
+>  /* Clean out a reservation */
+> -static int
+> +static void
+>  __xfs_ag_resv_free(
+>  	struct xfs_perag		*pag,
+>  	enum xfs_ag_resv_type		type)
+>  {
+>  	struct xfs_ag_resv		*resv;
+>  	xfs_extlen_t			oldresv;
+> -	int				error;
+>  
+>  	trace_xfs_ag_resv_free(pag, type, 0);
+>  
+> @@ -149,30 +148,19 @@ __xfs_ag_resv_free(
+>  		oldresv = resv->ar_orig_reserved;
+>  	else
+>  		oldresv = resv->ar_reserved;
+> -	error = xfs_mod_fdblocks(pag->pag_mount, oldresv, true);
+> +	xfs_add_fdblocks(pag->pag_mount, oldresv);
+>  	resv->ar_reserved = 0;
+>  	resv->ar_asked = 0;
+>  	resv->ar_orig_reserved = 0;
+> -
+> -	if (error)
+> -		trace_xfs_ag_resv_free_error(pag->pag_mount, pag->pag_agno,
+> -				error, _RET_IP_);
+> -	return error;
+>  }
+>  
+>  /* Free a per-AG reservation. */
+> -int
+> +void
+>  xfs_ag_resv_free(
+>  	struct xfs_perag		*pag)
+>  {
+> -	int				error;
+> -	int				err2;
+> -
+> -	error = __xfs_ag_resv_free(pag, XFS_AG_RESV_RMAPBT);
+> -	err2 = __xfs_ag_resv_free(pag, XFS_AG_RESV_METADATA);
+> -	if (err2 && !error)
+> -		error = err2;
+> -	return error;
+> +	__xfs_ag_resv_free(pag, XFS_AG_RESV_RMAPBT);
+> +	__xfs_ag_resv_free(pag, XFS_AG_RESV_METADATA);
+>  }
+>  
+>  static int
+> @@ -216,7 +204,7 @@ __xfs_ag_resv_init(
+>  	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_AG_RESV_FAIL))
+>  		error = -ENOSPC;
+>  	else
+> -		error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
+> +		error = xfs_dec_fdblocks(mp, hidden_space, true);
+>  	if (error) {
+>  		trace_xfs_ag_resv_init_error(pag->pag_mount, pag->pag_agno,
+>  				error, _RET_IP_);
+> diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+> index b74b210008ea7e..ff20ed93de7724 100644
+> --- a/fs/xfs/libxfs/xfs_ag_resv.h
+> +++ b/fs/xfs/libxfs/xfs_ag_resv.h
+> @@ -6,7 +6,7 @@
+>  #ifndef __XFS_AG_RESV_H__
+>  #define	__XFS_AG_RESV_H__
+>  
+> -int xfs_ag_resv_free(struct xfs_perag *pag);
+> +void xfs_ag_resv_free(struct xfs_perag *pag);
+>  int xfs_ag_resv_init(struct xfs_perag *pag, struct xfs_trans *tp);
+>  
+>  bool xfs_ag_resv_critical(struct xfs_perag *pag, enum xfs_ag_resv_type type);
+> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+> index 9da52e92172aba..6cb8b2ddc541b4 100644
+> --- a/fs/xfs/libxfs/xfs_alloc.c
+> +++ b/fs/xfs/libxfs/xfs_alloc.c
+> @@ -79,7 +79,7 @@ xfs_prealloc_blocks(
+>  }
+>  
+>  /*
+> - * The number of blocks per AG that we withhold from xfs_mod_fdblocks to
+> + * The number of blocks per AG that we withhold from xfs_dec_fdblocks to
+>   * guarantee that we can refill the AGFL prior to allocating space in a nearly
+>   * full AG.  Although the space described by the free space btrees, the
+>   * blocks used by the freesp btrees themselves, and the blocks owned by the
+> @@ -89,7 +89,7 @@ xfs_prealloc_blocks(
+>   * until the fs goes down, we subtract this many AG blocks from the incore
+>   * fdblocks to ensure user allocation does not overcommit the space the
+>   * filesystem needs for the AGFLs.  The rmap btree uses a per-AG reservation to
+> - * withhold space from xfs_mod_fdblocks, so we do not account for that here.
+> + * withhold space from xfs_dec_fdblocks, so we do not account for that here.
+>   */
+>  #define XFS_ALLOCBT_AGFL_RESERVE	4
+>  
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index 5fb7b38921c9a3..240507cbe4db3e 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -1983,10 +1983,11 @@ xfs_bmap_add_extent_delay_real(
+>  	}
+>  
+>  	/* adjust for changes in reserved delayed indirect blocks */
+> -	if (da_new != da_old) {
+> -		ASSERT(state == 0 || da_new < da_old);
+> -		error = xfs_mod_fdblocks(mp, (int64_t)(da_old - da_new),
+> -				false);
+> +	if (da_new < da_old) {
+> +		xfs_add_fdblocks(mp, da_old - da_new);
+> +	} else if (da_new > da_old) {
+> +		ASSERT(state == 0);
+> +		error = xfs_dec_fdblocks(mp, da_new - da_old, false);
+>  	}
+>  
+>  	xfs_bmap_check_leaf_extents(bma->cur, bma->ip, whichfork);
+> @@ -2688,8 +2689,8 @@ xfs_bmap_add_extent_hole_delay(
+>  	}
+>  	if (oldlen != newlen) {
+>  		ASSERT(oldlen > newlen);
+> -		xfs_mod_fdblocks(ip->i_mount, (int64_t)(oldlen - newlen),
+> -				 false);
+> +		xfs_add_fdblocks(ip->i_mount, oldlen - newlen);
+> +
+>  		/*
+>  		 * Nothing to do for disk quota accounting here.
+>  		 */
+> @@ -4108,11 +4109,11 @@ xfs_bmapi_reserve_delalloc(
+>  	indlen = (xfs_extlen_t)xfs_bmap_worst_indlen(ip, alen);
+>  	ASSERT(indlen > 0);
+>  
+> -	error = xfs_mod_fdblocks(mp, -((int64_t)alen), false);
+> +	error = xfs_dec_fdblocks(mp, alen, false);
+>  	if (error)
+>  		goto out_unreserve_quota;
+>  
+> -	error = xfs_mod_fdblocks(mp, -((int64_t)indlen), false);
+> +	error = xfs_dec_fdblocks(mp, indlen, false);
+>  	if (error)
+>  		goto out_unreserve_blocks;
+>  
+> @@ -4140,7 +4141,7 @@ xfs_bmapi_reserve_delalloc(
+>  	return 0;
+>  
+>  out_unreserve_blocks:
+> -	xfs_mod_fdblocks(mp, alen, false);
+> +	xfs_add_fdblocks(mp, alen);
+>  out_unreserve_quota:
+>  	if (XFS_IS_QUOTA_ON(mp))
+>  		xfs_quota_unreserve_blkres(ip, alen);
+> @@ -4926,7 +4927,7 @@ xfs_bmap_del_extent_delay(
+>  	ASSERT(got_endoff >= del_endoff);
+>  
+>  	if (isrt)
+> -		xfs_mod_frextents(mp, xfs_rtb_to_rtx(mp, del->br_blockcount));
+> +		xfs_add_frextents(mp, xfs_rtb_to_rtx(mp, del->br_blockcount));
+>  
+>  	/*
+>  	 * Update the inode delalloc counter now and wait to update the
+> @@ -5013,7 +5014,7 @@ xfs_bmap_del_extent_delay(
+>  	if (!isrt)
+>  		da_diff += del->br_blockcount;
+>  	if (da_diff) {
+> -		xfs_mod_fdblocks(mp, da_diff, false);
+> +		xfs_add_fdblocks(mp, da_diff);
+>  		xfs_mod_delalloc(mp, -da_diff);
+>  	}
+>  	return error;
+> diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
+> index d310737c882367..6f465373aa2027 100644
+> --- a/fs/xfs/scrub/fscounters.c
+> +++ b/fs/xfs/scrub/fscounters.c
+> @@ -517,7 +517,7 @@ xchk_fscounters(
+>  
+>  	/*
+>  	 * If the filesystem is not frozen, the counter summation calls above
+> -	 * can race with xfs_mod_freecounter, which subtracts a requested space
+> +	 * can race with xfs_dec_freecounter, which subtracts a requested space
+>  	 * reservation from the counter and undoes the subtraction if that made
+>  	 * the counter go negative.  Therefore, it's possible to see negative
+>  	 * values here, and we should only flag that as a corruption if we
+> diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
+> index f43dce771cdd26..6123e6c7ac7d67 100644
+> --- a/fs/xfs/scrub/repair.c
+> +++ b/fs/xfs/scrub/repair.c
+> @@ -963,9 +963,7 @@ xrep_reset_perag_resv(
+>  	ASSERT(sc->tp);
+>  
+>  	sc->flags &= ~XREP_RESET_PERAG_RESV;
+> -	error = xfs_ag_resv_free(sc->sa.pag);
+> -	if (error)
+> -		goto out;
+> +	xfs_ag_resv_free(sc->sa.pag);
+>  	error = xfs_ag_resv_init(sc->sa.pag, sc->tp);
+>  	if (error == -ENOSPC) {
+>  		xfs_err(sc->mp,
+> @@ -974,7 +972,6 @@ xrep_reset_perag_resv(
+>  		error = 0;
+>  	}
+>  
+> -out:
+>  	return error;
+>  }
+>  
+> diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+> index 83f708f62ed9f2..c211ea2b63c4dd 100644
+> --- a/fs/xfs/xfs_fsops.c
+> +++ b/fs/xfs/xfs_fsops.c
+> @@ -213,10 +213,8 @@ xfs_growfs_data_private(
+>  			struct xfs_perag	*pag;
+>  
+>  			pag = xfs_perag_get(mp, id.agno);
+> -			error = xfs_ag_resv_free(pag);
+> +			xfs_ag_resv_free(pag);
+>  			xfs_perag_put(pag);
+> -			if (error)
+> -				return error;
+>  		}
+>  		/*
+>  		 * Reserve AG metadata blocks. ENOSPC here does not mean there
+> @@ -385,14 +383,14 @@ xfs_reserve_blocks(
+>  	 */
+>  	if (mp->m_resblks > request) {
+>  		lcounter = mp->m_resblks_avail - request;
+> -		if (lcounter  > 0) {		/* release unused blocks */
+> +		if (lcounter > 0) {		/* release unused blocks */
+>  			fdblks_delta = lcounter;
+>  			mp->m_resblks_avail -= lcounter;
+>  		}
+>  		mp->m_resblks = request;
+>  		if (fdblks_delta) {
+>  			spin_unlock(&mp->m_sb_lock);
+> -			error = xfs_mod_fdblocks(mp, fdblks_delta, 0);
+> +			xfs_add_fdblocks(mp, fdblks_delta);
+>  			spin_lock(&mp->m_sb_lock);
+>  		}
+>  
+> @@ -428,9 +426,9 @@ xfs_reserve_blocks(
+>  		 */
+>  		fdblks_delta = min(free, delta);
+>  		spin_unlock(&mp->m_sb_lock);
+> -		error = xfs_mod_fdblocks(mp, -fdblks_delta, 0);
+> +		error = xfs_dec_fdblocks(mp, fdblks_delta, 0);
+>  		if (!error)
+> -			xfs_mod_fdblocks(mp, fdblks_delta, 0);
+> +			xfs_add_fdblocks(mp, fdblks_delta);
+>  		spin_lock(&mp->m_sb_lock);
+>  	}
+>  out:
+> @@ -556,24 +554,13 @@ xfs_fs_reserve_ag_blocks(
+>  /*
+>   * Free space reserved for per-AG metadata.
+>   */
+> -int
+> +void
+>  xfs_fs_unreserve_ag_blocks(
+>  	struct xfs_mount	*mp)
+>  {
+>  	xfs_agnumber_t		agno;
+>  	struct xfs_perag	*pag;
+> -	int			error = 0;
+> -	int			err2;
+>  
+> -	for_each_perag(mp, agno, pag) {
+> -		err2 = xfs_ag_resv_free(pag);
+> -		if (err2 && !error)
+> -			error = err2;
+> -	}
+> -
+> -	if (error)
+> -		xfs_warn(mp,
+> -	"Error %d freeing per-AG metadata reserve pool.", error);
+> -
+> -	return error;
+> +	for_each_perag(mp, agno, pag)
+> +		xfs_ag_resv_free(pag);
+>  }
+> diff --git a/fs/xfs/xfs_fsops.h b/fs/xfs/xfs_fsops.h
+> index 44457b0a059376..3e2f73bcf8314b 100644
+> --- a/fs/xfs/xfs_fsops.h
+> +++ b/fs/xfs/xfs_fsops.h
+> @@ -12,6 +12,6 @@ int xfs_reserve_blocks(struct xfs_mount *mp, uint64_t request);
+>  int xfs_fs_goingdown(struct xfs_mount *mp, uint32_t inflags);
+>  
+>  int xfs_fs_reserve_ag_blocks(struct xfs_mount *mp);
+> -int xfs_fs_unreserve_ag_blocks(struct xfs_mount *mp);
+> +void xfs_fs_unreserve_ag_blocks(struct xfs_mount *mp);
+>  
+>  #endif	/* __XFS_FSOPS_H__ */
+> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> index 7328034d42ed8d..575a3b98cdb514 100644
+> --- a/fs/xfs/xfs_mount.c
+> +++ b/fs/xfs/xfs_mount.c
+> @@ -1129,16 +1129,44 @@ xfs_fs_writable(
+>  	return true;
+>  }
+>  
+> -/* Adjust m_fdblocks or m_frextents. */
+> +void
+> +xfs_add_freecounter(
+> +	struct xfs_mount	*mp,
+> +	struct percpu_counter	*counter,
+> +	uint64_t		delta)
+> +{
+> +	bool			has_resv_pool = (counter == &mp->m_fdblocks);
+> +	uint64_t		res_used;
+> +
+> +	/*
+> +	 * If the reserve pool is depleted, put blocks back into it first.
+> +	 * Most of the time the pool is full.
+> +	 */
+> +	if (!has_resv_pool || mp->m_resblks == mp->m_resblks_avail) {
+> +		percpu_counter_add(counter, delta);
+> +		return;
+> +	}
+> +
+> +	spin_lock(&mp->m_sb_lock);
+> +	res_used = mp->m_resblks - mp->m_resblks_avail;
+> +	if (res_used > delta) {
+> +		mp->m_resblks_avail += delta;
+> +	} else {
+> +		delta -= res_used;
+> +		mp->m_resblks_avail = mp->m_resblks;
+> +		percpu_counter_add(counter, delta);
+> +	}
+> +	spin_unlock(&mp->m_sb_lock);
+> +}
+> +
+>  int
+> -xfs_mod_freecounter(
+> +xfs_dec_freecounter(
+>  	struct xfs_mount	*mp,
+>  	struct percpu_counter	*counter,
+> -	int64_t			delta,
+> +	uint64_t		delta,
+>  	bool			rsvd)
+>  {
+>  	int64_t			lcounter;
+> -	long long		res_used;
+>  	uint64_t		set_aside = 0;
+>  	s32			batch;
+>  	bool			has_resv_pool;
+> @@ -1148,31 +1176,6 @@ xfs_mod_freecounter(
+>  	if (rsvd)
+>  		ASSERT(has_resv_pool);
+>  
+> -	if (delta > 0) {
+> -		/*
+> -		 * If the reserve pool is depleted, put blocks back into it
+> -		 * first. Most of the time the pool is full.
+> -		 */
+> -		if (likely(!has_resv_pool ||
+> -			   mp->m_resblks == mp->m_resblks_avail)) {
+> -			percpu_counter_add(counter, delta);
+> -			return 0;
+> -		}
+> -
+> -		spin_lock(&mp->m_sb_lock);
+> -		res_used = (long long)(mp->m_resblks - mp->m_resblks_avail);
+> -
+> -		if (res_used > delta) {
+> -			mp->m_resblks_avail += delta;
+> -		} else {
+> -			delta -= res_used;
+> -			mp->m_resblks_avail = mp->m_resblks;
+> -			percpu_counter_add(counter, delta);
+> -		}
+> -		spin_unlock(&mp->m_sb_lock);
+> -		return 0;
+> -	}
+> -
+>  	/*
+>  	 * Taking blocks away, need to be more accurate the closer we
+>  	 * are to zero.
+> @@ -1200,7 +1203,7 @@ xfs_mod_freecounter(
+>  	 */
+>  	if (has_resv_pool)
+>  		set_aside = xfs_fdblocks_unavailable(mp);
+> -	percpu_counter_add_batch(counter, delta, batch);
+> +	percpu_counter_add_batch(counter, -((int64_t)delta), batch);
+>  	if (__percpu_counter_compare(counter, set_aside,
+>  				     XFS_FDBLOCKS_BATCH) >= 0) {
+>  		/* we had space! */
+> @@ -1212,11 +1215,11 @@ xfs_mod_freecounter(
+>  	 * that took us to ENOSPC.
+>  	 */
+>  	spin_lock(&mp->m_sb_lock);
+> -	percpu_counter_add(counter, -delta);
+> +	percpu_counter_add(counter, delta);
+>  	if (!has_resv_pool || !rsvd)
+>  		goto fdblocks_enospc;
+>  
+> -	lcounter = (long long)mp->m_resblks_avail + delta;
+> +	lcounter = (long long)mp->m_resblks_avail - delta;
+>  	if (lcounter >= 0) {
+>  		mp->m_resblks_avail = lcounter;
+>  		spin_unlock(&mp->m_sb_lock);
+> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> index e880aa48de68bb..d941437a0c7369 100644
+> --- a/fs/xfs/xfs_mount.h
+> +++ b/fs/xfs/xfs_mount.h
+> @@ -534,19 +534,30 @@ xfs_fdblocks_unavailable(
+>  	return mp->m_alloc_set_aside + atomic64_read(&mp->m_allocbt_blks);
+>  }
+>  
+> -int xfs_mod_freecounter(struct xfs_mount *mp, struct percpu_counter *counter,
+> -		int64_t delta, bool rsvd);
+> +int xfs_dec_freecounter(struct xfs_mount *mp, struct percpu_counter *counter,
+> +		uint64_t delta, bool rsvd);
+> +void xfs_add_freecounter(struct xfs_mount *mp, struct percpu_counter *counter,
+> +		uint64_t delta);
+>  
+> -static inline int
+> -xfs_mod_fdblocks(struct xfs_mount *mp, int64_t delta, bool reserved)
+> +static inline int xfs_dec_fdblocks(struct xfs_mount *mp, uint64_t delta,
+> +		bool reserved)
+>  {
+> -	return xfs_mod_freecounter(mp, &mp->m_fdblocks, delta, reserved);
+> +	return xfs_dec_freecounter(mp, &mp->m_fdblocks, delta, reserved);
+>  }
+>  
+> -static inline int
+> -xfs_mod_frextents(struct xfs_mount *mp, int64_t delta)
+> +static inline void xfs_add_fdblocks(struct xfs_mount *mp, uint64_t delta)
+>  {
+> -	return xfs_mod_freecounter(mp, &mp->m_frextents, delta, false);
+> +	xfs_add_freecounter(mp, &mp->m_fdblocks, delta);
+> +}
+> +
+> +static inline int xfs_dec_frextents(struct xfs_mount *mp, uint64_t delta)
+> +{
+> +	return xfs_dec_freecounter(mp, &mp->m_frextents, delta, false);
+> +}
+> +
+> +static inline void xfs_add_frextents(struct xfs_mount *mp, uint64_t delta)
+> +{
+> +	xfs_add_freecounter(mp, &mp->m_frextents, delta);
+>  }
+>  
+>  extern int	xfs_readsb(xfs_mount_t *, int);
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 6828c48b15e9bd..0afcb005a28fc1 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -1874,11 +1874,7 @@ xfs_remount_ro(
+>  	xfs_inodegc_stop(mp);
+>  
+>  	/* Free the per-AG metadata reservation pool. */
+> -	error = xfs_fs_unreserve_ag_blocks(mp);
+> -	if (error) {
+> -		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+> -		return error;
+> -	}
+> +	xfs_fs_unreserve_ag_blocks(mp);
+>  
+>  	/*
+>  	 * Before we sync the metadata, we need to free up the reserve block
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index aea97fc074f8de..1c5753f91c388e 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -3062,7 +3062,6 @@ DEFINE_AG_RESV_EVENT(xfs_ag_resv_free_extent);
+>  DEFINE_AG_RESV_EVENT(xfs_ag_resv_critical);
+>  DEFINE_AG_RESV_EVENT(xfs_ag_resv_needed);
+>  
+> -DEFINE_AG_ERROR_EVENT(xfs_ag_resv_free_error);
+>  DEFINE_AG_ERROR_EVENT(xfs_ag_resv_init_error);
+>  
+>  /* refcount tracepoint classes */
+> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+> index 924b460229e951..b18d478e2c9e85 100644
+> --- a/fs/xfs/xfs_trans.c
+> +++ b/fs/xfs/xfs_trans.c
+> @@ -163,7 +163,7 @@ xfs_trans_reserve(
+>  	 * fail if the count would go below zero.
+>  	 */
+>  	if (blocks > 0) {
+> -		error = xfs_mod_fdblocks(mp, -((int64_t)blocks), rsvd);
+> +		error = xfs_dec_fdblocks(mp, blocks, rsvd);
+>  		if (error != 0)
+>  			return -ENOSPC;
+>  		tp->t_blk_res += blocks;
+> @@ -210,7 +210,7 @@ xfs_trans_reserve(
+>  	 * fail if the count would go below zero.
+>  	 */
+>  	if (rtextents > 0) {
+> -		error = xfs_mod_frextents(mp, -((int64_t)rtextents));
+> +		error = xfs_dec_frextents(mp, rtextents);
+>  		if (error) {
+>  			error = -ENOSPC;
+>  			goto undo_log;
+> @@ -234,7 +234,7 @@ xfs_trans_reserve(
+>  
+>  undo_blocks:
+>  	if (blocks > 0) {
+> -		xfs_mod_fdblocks(mp, (int64_t)blocks, rsvd);
+> +		xfs_add_fdblocks(mp, blocks);
+>  		tp->t_blk_res = 0;
+>  	}
+>  	return error;
+> @@ -593,12 +593,10 @@ xfs_trans_unreserve_and_mod_sb(
+>  	struct xfs_trans	*tp)
+>  {
+>  	struct xfs_mount	*mp = tp->t_mountp;
+> -	bool			rsvd = (tp->t_flags & XFS_TRANS_RESERVE) != 0;
+>  	int64_t			blkdelta = tp->t_blk_res;
+>  	int64_t			rtxdelta = tp->t_rtx_res;
+>  	int64_t			idelta = 0;
+>  	int64_t			ifreedelta = 0;
+> -	int			error;
+>  
+>  	/*
+>  	 * Calculate the deltas.
+> @@ -631,10 +629,8 @@ xfs_trans_unreserve_and_mod_sb(
+>  	}
+>  
+>  	/* apply the per-cpu counters */
+> -	if (blkdelta) {
+> -		error = xfs_mod_fdblocks(mp, blkdelta, rsvd);
+> -		ASSERT(!error);
+> -	}
+> +	if (blkdelta)
+> +		xfs_add_fdblocks(mp, blkdelta);
+>  
+>  	if (idelta)
+>  		percpu_counter_add_batch(&mp->m_icount, idelta,
+> @@ -643,10 +639,8 @@ xfs_trans_unreserve_and_mod_sb(
+>  	if (ifreedelta)
+>  		percpu_counter_add(&mp->m_ifree, ifreedelta);
+>  
+> -	if (rtxdelta) {
+> -		error = xfs_mod_frextents(mp, rtxdelta);
+> -		ASSERT(!error);
+> -	}
+> +	if (rtxdelta)
+> +		xfs_add_frextents(mp, rtxdelta);
+>  
+>  	if (!(tp->t_flags & XFS_TRANS_SB_DIRTY))
+>  		return;
+> @@ -682,7 +676,6 @@ xfs_trans_unreserve_and_mod_sb(
+>  	 */
+>  	ASSERT(mp->m_sb.sb_imax_pct >= 0);
+>  	ASSERT(mp->m_sb.sb_rextslog >= 0);
+> -	return;
+>  }
+>  
+>  /* Add the given log item to the transaction's list of log items. */
+> @@ -1301,9 +1294,9 @@ xfs_trans_reserve_more_inode(
+>  		return 0;
+>  
+>  	/* Quota failed, give back the new reservation. */
+> -	xfs_mod_fdblocks(mp, dblocks, tp->t_flags & XFS_TRANS_RESERVE);
+> +	xfs_add_fdblocks(mp, dblocks);
+>  	tp->t_blk_res -= dblocks;
+> -	xfs_mod_frextents(mp, rtx);
+> +	xfs_add_frextents(mp, rtx);
+>  	tp->t_rtx_res -= rtx;
+>  	return error;
+>  }
+> -- 
+> 2.39.2
+> 
 
