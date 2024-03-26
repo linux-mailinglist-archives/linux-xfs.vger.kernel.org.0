@@ -1,114 +1,156 @@
-Return-Path: <linux-xfs+bounces-5803-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5801-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 448F988C68C
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 16:15:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D34188C660
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 16:10:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F397C307689
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 15:15:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF06E1F65827
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 15:10:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FDF113C90D;
-	Tue, 26 Mar 2024 15:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D7902233A;
+	Tue, 26 Mar 2024 15:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="Z1dniA31"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FG1H7JqS"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBB913CC46;
-	Tue, 26 Mar 2024 15:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FED13C67E
+	for <linux-xfs@vger.kernel.org>; Tue, 26 Mar 2024 15:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711466017; cv=none; b=FTM4uJ1vItrCT6z1Wk5YvcCZ1rpa24eR9sp3wvM8XuIjDMMbTlZFziTpOVvvz+BaemUBqN8O6fhDsyxzwQ7yz22aDMGsBwuj6CnYlKPTEOd8dnWP0GzwnkZbWy4ykAuIRdkjwxi8ZkRQ8j8aACDphiHB9PyQDTUhh4APySBSTYQ=
+	t=1711465827; cv=none; b=rDGvY5lW6eois3itTIwKR4ZEtE1ueHoIwTH3431xgXavKz+afrwzR42+Le5Gxi7gP/QfS0AGD3NVMtUbXVAaQJ7nslFQoRICHIkfd8Sel+ku8y9uUplgfr7fsex0e20Vgam1LpCOmZI4FWYFjpKqL0drXyTSWIXw+O5CpcHW3tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711466017; c=relaxed/simple;
-	bh=eI4IyOhFaJQIAiifFI9TCY/+heTJv1Nh7hTCSX/BhKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qQNieL2bRj2fsKGFz7q96dIb8ARDTHS/Zx8cS9rRzIx9zUMXPA7bX4L6ZNpSFPCEs8an5+Rg85JFaWuAbqNpPf1Na8Yp4904T1/39GhrBo/EaImuouvA1BY9xyrn8/XCl+nmRrYxBC9sHfIFzrTF5LGXa+vvpa61VEaGDN76JYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=Z1dniA31; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4V3tRP2bGRz9sp7;
-	Tue, 26 Mar 2024 16:06:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1711465569;
+	s=arc-20240116; t=1711465827; c=relaxed/simple;
+	bh=xXOb+BG25Vxf3ovjBUjCL7KjeaTIPO/ZI5N7H7ORD3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n78jVn3poxuCAnMUB+v4WIdZRHfbeprMHVM0oR7dpYj3BlgoGyoiRNboxiqbWz2J5xfMfLrh6nW3t2KnyR0cxjJHxHQAeFA5F4oK6zK6LJOF1y4ZdAGvXuZz7Z6PRBCkQxPlyXGkNXP2Mmy78fWcbBtEhxpEC8LFj0rBSS/zYlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FG1H7JqS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711465824;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=b+6K4b9S76Ab2/ngd1mwoc6s0B1aFx0F1dzGraTAPTo=;
-	b=Z1dniA31y8YJOkfxRBC/wzJxbGe3+dlDsJzHmNtsHPD9XoCv00T3xKLOTp5Amc00d0HCPd
-	DhEP8NmzCSEjd5SJcG5i27AzDDXVCMLkeLhxt/KuFHbsixMk1sHXmFz4arVxvqRtSle0gF
-	00LVx0BNQYJLokqADG41AaT0NnCWAXdFc6Lh0zQIYXPb8a9WaNZEU0+BooPjrxV5RrLYvN
-	7EUKVlI9Fek3Naga9sYuZR1InqWPxiDz3Gq5p9mqn+UxfZE/DN6+B2gPyHSgPDlNq2jw49
-	pQ9wpBlRyXsoygLRXNCUTUtc+uv2uNBIROhm67MepXW5gYfsHzsG9PLh/ilhZA==
-Message-ID: <1b99068c-ac1b-4121-93f4-23ba4863b8b0@pankajraghav.com>
-Date: Tue, 26 Mar 2024 16:06:02 +0100
+	bh=DxdV7cOquI5Q3fFWTr9Rp0HS+bVOMASvKCj8swk/RK0=;
+	b=FG1H7JqSGI9L92L7S1Vw6JbtLZcZeQkuw2DxA3XUNh1fzgreAuBxko+ZEJLJWr5ZCTCIf+
+	PYCmVOt2jnPllslmHV4gzlvPWpkFuSsjwXsh+73uq/mokhRPXBV669XUQHOOAHa3WUPUJT
+	R1JvsoT4BDQNss/jLJ27gwh1G+Ijs/I=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-237-KOfZBxDyPU6TW2CtDHzVdA-1; Tue, 26 Mar 2024 11:10:21 -0400
+X-MC-Unique: KOfZBxDyPU6TW2CtDHzVdA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a462e4d8c44so261954066b.1
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Mar 2024 08:10:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711465820; x=1712070620;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DxdV7cOquI5Q3fFWTr9Rp0HS+bVOMASvKCj8swk/RK0=;
+        b=CGhY5QIFmyUeMpX/Sq5bCkrXX17vEXXC8EnjSXmg5qoDPfDgaMSoFjSrjDZXB8sy2W
+         H8LRgjx+4pvKggpsbhUH6rlepofGMsqVk8YzgtwtaIwt5KSd+XOIP4yrc5JYQHk0OadA
+         s2DJS5ugYGbyZZIaUabbeaxX/UXqvoH4CccR9Xj5FQhDFkThUXIQ0EXv60mLbjFiXUJ+
+         zdUF+lzqqdPA+xh1k1L61H/42s3TUnecuMFXoTGDcm/SlaL/O9GqdjJtG9gLuV24ZeIk
+         FOzpC7Qk0kOQNTLee6T2acEo9SI2pdHDCYE3ws9y9sDPjtXKS1fv1EqPm0my/RQlHLAe
+         GibQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWH8HVUpFieJDAmjN4yWMmQ6Jf4IAwIIJ7TQX2efcYVZN9BMV0M1QyYXaT9a0fu9FJizgh2otOigoieU2XDDvEoIvv/5mQV7/sr
+X-Gm-Message-State: AOJu0YwBDBt7d0eKKSvhbkYfNVC9Y79oX/ZomnxzqYzgxdtZEivy6qKw
+	YIp4B/EwPmEkcT3GEaob77ia6rWR0Q6m7J9n6tG2v0hGsy0g7wz5TSz6plVfPUu2LFraDxNgBS6
+	DvQzkjs2NPLuKIhx0Izp0TzgExOXF8zcFZ0x24QywYY6oQd8G+2DmKr1P
+X-Received: by 2002:a17:907:f84:b0:a48:7cbd:8b24 with SMTP id kb4-20020a1709070f8400b00a487cbd8b24mr4609922ejc.17.1711465819985;
+        Tue, 26 Mar 2024 08:10:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGVYr2DynbfCAra0NeiwDGEse4TeSxrOQRUZazVPyl2v3IXwcp4SpWFoy/KtQRMC2IEi/kf7Q==
+X-Received: by 2002:a17:907:f84:b0:a48:7cbd:8b24 with SMTP id kb4-20020a1709070f8400b00a487cbd8b24mr4609889ejc.17.1711465819182;
+        Tue, 26 Mar 2024 08:10:19 -0700 (PDT)
+Received: from thinky ([109.183.6.197])
+        by smtp.gmail.com with ESMTPSA id u13-20020a17090626cd00b00a45200fe2b5sm4291883ejc.224.2024.03.26.08.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 08:10:18 -0700 (PDT)
+Date: Tue, 26 Mar 2024 16:10:18 +0100
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: Chandan Babu R <chandanbabu@kernel.org>
+Cc: dchinner@redhat.com, djwong@kernel.org, hch@lst.de, 
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org, mark.tinguely@oracle.com
+Subject: Re: [ANNOUNCE] xfs-linux: for-next updated to f2e812c1522d
+Message-ID: <dlmrrqswfhspcjn6ai7jfh54t4mwrgus2ex3b4klpcbszq72zw@cizkdcybodfs>
+References: <874jcte2jm.fsf@debian-BULLSEYE-live-builder-AMD64>
+ <wdc2qsq3pzo6pxsvjptbmfre7firhgomac7lxu72qe6ard54ax@fmg5qinif62f>
+ <s2kxdz3ztpuptn3o2znqpsbskra5yqxqnjhisfjxyc3cqw33ct@k6bvhr2il2sn>
+ <87r0fxgmmj.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 00/11] enable bs > ps in XFS
-Content-Language: en-US
-To: Hannes Reinecke <hare@suse.de>, Matthew Wilcox <willy@infradead.org>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- gost.dev@samsung.com, chandan.babu@oracle.com, mcgrof@kernel.org,
- djwong@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- david@fromorbit.com, akpm@linux-foundation.org,
- Pankaj Raghav <p.raghav@samsung.com>
-References: <20240313170253.2324812-1-kernel@pankajraghav.com>
- <ZgHOK9T2K9HKkju1@casper.infradead.org>
- <2508c03b-c26c-42ce-872d-3c5107a4d8a0@suse.de>
-From: Pankaj Raghav <kernel@pankajraghav.com>
-In-Reply-To: <2508c03b-c26c-42ce-872d-3c5107a4d8a0@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4V3tRP2bGRz9sp7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r0fxgmmj.fsf@debian-BULLSEYE-live-builder-AMD64>
 
-On 26/03/2024 10:53, Hannes Reinecke wrote:
-> On 3/25/24 20:19, Matthew Wilcox wrote:
->> On Wed, Mar 13, 2024 at 06:02:42PM +0100, Pankaj Raghav (Samsung) wrote:
->>> This is the third version of the series that enables block size > page size
->>> (Large Block Size) in XFS. The context and motivation can be seen in cover
->>> letter of the RFC v1[1]. We also recorded a talk about this effort at LPC [3],
->>> if someone would like more context on this effort.
->>
->> Thank you.  This is a lot better.
->>
->> I'm still trying to understand your opinion on the contents of the
->> file_ra_state.  Is it supposed to be properly aligned at all times, or
->> do we work with it in the terms of "desired number of pages" and then
->> force it to conform to the minimum-block-size reality right at the end?
->> Because you seem to be doing both at various points.
+On 2024-03-26 18:42:47, Chandan Babu R wrote:
+> On Tue, Mar 26, 2024 at 12:14:07 PM +0100, Andrey Albershteyn wrote:
+> > On 2024-03-26 12:10:53, Andrey Albershteyn wrote:
+> >> On 2024-03-26 15:28:01, Chandan Babu R wrote:
+> >> > Hi folks,
+> >> > 
+> >> > The for-next branch of the xfs-linux repository at:
+> >> > 
+> >> > 	https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+> >> > 
+> >> > has just been updated.
+> >> > 
+> >> > Patches often get missed, so please check if your outstanding patches
+> >> > were in this update. If they have not been in this update, please
+> >> > resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+> >> > the next update.
+> >> > 
+> >> > The new head of the for-next branch is commit:
+> >> > 
+> >> > f2e812c1522d xfs: don't use current->journal_info
+> >> > 
+> >> > 2 new commits:
+> >> > 
+> >> > Dave Chinner (2):
+> >> >       [15922f5dbf51] xfs: allow sunit mount option to repair bad primary sb stripe values
+> >> >       [f2e812c1522d] xfs: don't use current->journal_info
+> >> > 
+> >> > Code Diffstat:
+> >> > 
+> >> >  fs/xfs/libxfs/xfs_sb.c | 40 +++++++++++++++++++++++++++--------
+> >> >  fs/xfs/libxfs/xfs_sb.h |  5 +++--
+> >> >  fs/xfs/scrub/common.c  |  4 +---
+> >> >  fs/xfs/xfs_aops.c      |  7 ------
+> >> >  fs/xfs/xfs_icache.c    |  8 ++++---
+> >> >  fs/xfs/xfs_trans.h     |  9 +-------
+> >> >  6 files changed, 41 insertions(+), 32 deletions(-)
+> >> > 
+> >> 
+> >> I think [1] is missing
+> >> 
+> >> [1]: https://lore.kernel.org/linux-xfs/20240314170700.352845-3-aalbersh@redhat.com/
 > 
-> Guess what, that's what I had been pondering, too.
-> Each way has its benefits, I guess.
+> I am sorry to have missed that patch.
 > 
-> Question really is do we keep the readahead iterator in units of pages,
-> and convert the result, or do we modify the readahead iterator to work
-> on folios, and convert the inputs.
+> >
+> > Should I resend it?
 > 
-> Doesn't really matter much, but we need to decide. The former is probably easier on the caller, and
-> the latter is easier on the consumer.
-> Take your pick; I really don't mind.
+> You don't have to resend it.
 > 
-> But we should document the result :-)
+> I will include the above patch in 6.9-rc3 fixes queue.
+> 
+> -- 
+> Chandan
 > 
 
-Having experimented both approaches, I prefer the latter as it looks more consistent and
-contain the changes to few functions.
+Thanks!
 
-> Cheers,
-> 
-> Hannes
-> 
+-- 
+- Andrey
+
 
