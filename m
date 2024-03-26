@@ -1,53 +1,52 @@
-Return-Path: <linux-xfs+bounces-5487-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-5489-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0FCA88B5E1
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 01:15:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6623788B790
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 03:45:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B0BD2E7BA2
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 00:15:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9869C1C34A7B
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Mar 2024 02:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 668F636D;
-	Tue, 26 Mar 2024 00:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52690128378;
+	Tue, 26 Mar 2024 02:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjIPxP81"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNBby6TG"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2597B366
-	for <linux-xfs@vger.kernel.org>; Tue, 26 Mar 2024 00:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B3A127B5C
+	for <linux-xfs@vger.kernel.org>; Tue, 26 Mar 2024 02:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711412116; cv=none; b=Ql8ujfgQ1d4yTgyKS7tuZIoq4N/ZWHepBtEiOqL/0cASa0m0UxkUiDQ3h0ycCr3SfKNR9k9E/i6RLIVNr3ofKuhjYLiORLxJ1mZLc2BXSMIpFEHFNkE0vZG+YvWKn/g2SttstRMgCfXp6IBdS9FgHU9OaxrlJYUc0lNrsEu6BVk=
+	t=1711421151; cv=none; b=D3WfvkHorlFuIkCO7PCVlrt6A08WZwjb6wo0QZw5KkwFGMHxZYKkPDMgCjnMwFC/uzd5EWtyVyb+d4k38SWDkMh39jIwsXT3fJJJyXEJ9vccp91h0z8wKWeQLkyLNo0kZFQzVgBzFNeHq64jdb5BPYHz52nqRpZ2op3uV3ydzaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711412116; c=relaxed/simple;
-	bh=gURvE797QnZrqh66mYPXVCubuukjQ+ByPkXPaAgRfMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eULjIh+1+GyG+Ebr9RZOppV2u5bfvKLYnvtAbziNObVaCN2KyHFCaqEnOuDePp6kyhPX7KS9WUUFR/Q74eCXAIGTJvV2jTxaeigGGI9rqL+2VSh3pQlEi1kP4fUkpmi0V5pHBDz8AyYlt+ozj0lHto+0tXBnSea0SLHrJP1wMIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjIPxP81; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97032C433F1;
-	Tue, 26 Mar 2024 00:15:15 +0000 (UTC)
+	s=arc-20240116; t=1711421151; c=relaxed/simple;
+	bh=3lo4W4Zq1yX6g4wMBryx0YPgGIiN1zSUQsvlgqM7uTk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DbGdxjERAx4SIAb1WLjYgv9Uyxz1VcnchIzsvrcP6+LCFwNkyhG6lFpdI1kj8yQNZRCZyAYb4QK7q3NyPpxuq2n39souMvUIe4rB/8yaOwaYfso83MqgugQTDL2UMaA+XL6mEC+QP1ooUXBTYTsFhF3jBU03XNsTnk01zsiDFrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNBby6TG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 783BBC433C7;
+	Tue, 26 Mar 2024 02:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711412115;
-	bh=gURvE797QnZrqh66mYPXVCubuukjQ+ByPkXPaAgRfMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QjIPxP81t44TtUKD5ljhFuhIti188fNE2QwENweOT+LZK7cUKaQJKmRaPXWGdQfVM
-	 1P+OvUnJImI+7ablFY0Z2OxA7FkpAP7BtD/j86AmxElQgzwHwLONDwSMctYgILBrne
-	 zSaDbPPcOTX+n/N6/ZeEVqCm2F/IpK1lRt8a9bkWXswE0Kk2eS5lz6YZg0oHH9Gqbw
-	 KqgBrNswPCGHWVcwUhZQwZI/ScqCDh50LyL2N4zifXVHAIp2Qnxm7L28rIfRiVg0ue
-	 1tEgW1cXVN40z3/Y4k01LlTXcJ4OWIZE143nIpTQwj5OC0CA+HSHeC3KoNgMIXI/F3
-	 2kDI/J4zvcizw==
-Date: Mon, 25 Mar 2024 17:15:15 -0700
+	s=k20201202; t=1711421150;
+	bh=3lo4W4Zq1yX6g4wMBryx0YPgGIiN1zSUQsvlgqM7uTk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tNBby6TGpdW8/rTN0+rV0nksBqZPEbify6p7AEUwUxwmawEIQ+yRA5Q+BN6eEePkw
+	 XrJFUL5eufNVbF1RRH6WbR1zl0mpDn2rDzvW/yhJDBD73vok3dXW4fEsKfPVyOIpD+
+	 1HLKfx2uAcfrcd3Xz2cljRC9TbLsHRHjmjZfpXSAc0a0Y94deoECYWisxMNLouz79v
+	 pJ6kQDemMSU3fCyUbEzALJ24+QRVYNZAWLTEE3o/9ihhJvdWVuqCUoaP6hvtzm0L80
+	 RJ+tacV5bRtkmDlayOsTdGc9pa3zXlmVR8orddwTBWiZfHXTNCiUWElisnW0b5VKO6
+	 yY7o1PNY9Uuvw==
+Date: Mon, 25 Mar 2024 19:45:49 -0700
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] include libgen.h for basename API prototype
-Message-ID: <20240326001515.GD6390@frogsfrogsfrogs>
-References: <20240325170941.3279129-1-raj.khem@gmail.com>
+To: Carlos Maiolino <cmaiolino@redhat.com>
+Cc: xfs <linux-xfs@vger.kernel.org>
+Subject: [PATCHBOMB v2] xfsprogs: everything headed towards 6.9
+Message-ID: <20240326024549.GE6390@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -56,53 +55,16 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240325170941.3279129-1-raj.khem@gmail.com>
 
-On Mon, Mar 25, 2024 at 10:09:41AM -0700, Khem Raj wrote:
-> basename prototype has been removed from string.h from latest musl [1]
-> compilers e.g. clang-18 flags the absense of prototype as error. therefore
-> include libgen.h for providing it.
-> 
-> [1] https://git.musl-libc.org/cgit/musl/commit/?id=725e17ed6dff4d0cd22487bb64470881e86a92e7
+Hi Carlos,
 
-The basename(3) manpage makes reference to glibc's POSIX implementation
-modifying the string argument passed in.  Is that going to cause
-problems with the existing callsites in xfsdump?
+Now that 6.9-rc1 is out, here's v2 of my earlier patchbomb to help us
+get xfsprogs caught up to 6.8.  There are four new bugfixes for a 6.8
+release, and I've added my libxfs-6.9-sync branch + all the 6.9 changes
+that I've queued up so far.
+
+Sorry about the giant patchset tho. :(
 
 --D
 
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ---
->  common/main.c    | 1 +
->  invutil/invidx.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/common/main.c b/common/main.c
-> index 1db07d4..ca3b7d4 100644
-> --- a/common/main.c
-> +++ b/common/main.c
-> @@ -16,6 +16,7 @@
->   * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
->   */
->  
-> +#include <libgen.h>
->  #include <stdio.h>
->  #include <unistd.h>
->  #include <stdlib.h>
-> diff --git a/invutil/invidx.c b/invutil/invidx.c
-> index 5874e8d..c4e2e21 100644
-> --- a/invutil/invidx.c
-> +++ b/invutil/invidx.c
-> @@ -19,6 +19,7 @@
->  #include <xfs/xfs.h>
->  #include <xfs/jdm.h>
->  
-> +#include <libgen.h>
->  #include <stdio.h>
->  #include <fcntl.h>
->  #include <unistd.h>
-> -- 
-> 2.44.0
-> 
-> 
 
