@@ -1,55 +1,56 @@
-Return-Path: <linux-xfs+bounces-6136-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-6142-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18CE1894223
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Apr 2024 18:49:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 082CE89425D
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Apr 2024 18:52:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D3CDB20A84
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Apr 2024 16:49:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2F1C1F2547A
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Apr 2024 16:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0786F3BBC3;
-	Mon,  1 Apr 2024 16:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7F8A495F0;
+	Mon,  1 Apr 2024 16:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2lBcjAYl"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qoz/b9tf"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B529E1C0DE7;
-	Mon,  1 Apr 2024 16:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9387D41232;
+	Mon,  1 Apr 2024 16:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711990180; cv=none; b=mfvwactLU8w7AHIWdQ0YEnp3xZT5OIC2riqd6oz740IKNUpeZYRLtEpvE3ZICqzBwWggDHptyspqULbJXEpZMrISW+5AyIxiVkjT4kzlMAB/tkaRV1LBgM5IsYeD4n3FtNx5Uvi3g7FFyegYNd+tMjOLLNxznUiTWo1PzdnrUGk=
+	t=1711990303; cv=none; b=ZYISnV2I6M5IKaf/n3fA96lwS0BhPK8qWTc+fvu/Ywu63bYn5fMYXUmtkD2zVlht8wUBRzWfG3xhKm8pAfuiwbRrwzaAcgnZZcN1myX3Dm9KK0KxxWfDDgaMEUUe2fS9yZ3FZa+zIIZTUUmBKQVscb4dv0FoZk4MQ4mS748O4Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711990180; c=relaxed/simple;
-	bh=JnbtSbRfTw+puw4aFKCZx+WGdj4K2GzwRu+hnWg8BPk=;
+	s=arc-20240116; t=1711990303; c=relaxed/simple;
+	bh=e603Jd+vGH25Sg0SJewTyCinvPDkr+H6C74rbQkHoRc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BA71vcEs1nMZUF10jrlZGWwrbix8Mbhew0VV0g1kS7tShZUbDF6orJtvJKvs/cyeWE+iM3ZFpHZKfw+fu2dA2hT15j1/tGE+4zIFwoWfyy1R0CiDsFxGLNrWG/1SErOGmfKHBWwvlazr2JMerctsLyuUq/ibo7cXe8Ybo62BnE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2lBcjAYl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24116C433C7;
-	Mon,  1 Apr 2024 16:49:39 +0000 (UTC)
+	 MIME-Version; b=WWlCO3ewOMQyApMJMyWM/sRymc9urk/4Zcp49m5NfCiaPTpcZlIN5Q1aP/ekuRzzcPTiZ4OrAC9r0QOPGFHC4JaUDI6q2Yi91MvQTy5nBconxaOe4SxTAljpEvqdng5Y7suCnyjOK17IlUOI9as9VKR0sjREN1EsBhkHh/WrR6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qoz/b9tf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A308C433F1;
+	Mon,  1 Apr 2024 16:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1711990180;
-	bh=JnbtSbRfTw+puw4aFKCZx+WGdj4K2GzwRu+hnWg8BPk=;
+	s=korg; t=1711990303;
+	bh=e603Jd+vGH25Sg0SJewTyCinvPDkr+H6C74rbQkHoRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=2lBcjAYlEPNt/pcD26ckfM03DeEoMN8bLyeuOysv0hHVNjSwq5Rg2vd/X3EkW0+/e
-	 7iobFeihYTFCnBTx9UY++vxMTNYFbPwBvWMCc8Fco/Y+O38KEInYO2exNUMCRs5ylW
-	 SLBeErxdtaaJfnlhHCNl5UR0UPIXOux09LrXRJ/U=
+	b=qoz/b9tf4JUZvpVsgnCqhMnXxzZqZ7F5Ijgmb1IryMfe/2xhpYO7T0dfmHKniPFTK
+	 roSjlxNitlSW0BMAmVelWk8TxrPwArOXZeHKf1+mkAl6p9dgrE/TYB3grC5E/XVUmn
+	 FaPT6NpokMW3QljTg9Aisihv/lJ7dsHg/Q7OrG0w=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	patches@lists.linux.dev,
 	linux-xfs@vger.kernel.org,
-	Eric Sandeen <sandeen@redhat.com>,
+	Long Li <leo.lilong@huawei.com>,
+	Christoph Hellwig <hch@lst.de>,
 	"Darrick J. Wong" <djwong@kernel.org>,
 	Chandan Babu R <chandanbabu@kernel.org>,
 	Catherine Hoang <catherine.hoang@oracle.com>
-Subject: [PATCH 6.6 270/396] xfs: short circuit xfs_growfs_data_private() if delta is zero
-Date: Mon,  1 Apr 2024 17:45:19 +0200
-Message-ID: <20240401152555.962560699@linuxfoundation.org>
+Subject: [PATCH 6.6 271/396] xfs: add lock protection when remove perag from radix tree
+Date: Mon,  1 Apr 2024 17:45:20 +0200
+Message-ID: <20240401152555.992420168@linuxfoundation.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240401152547.867452742@linuxfoundation.org>
 References: <20240401152547.867452742@linuxfoundation.org>
@@ -68,49 +69,62 @@ Content-Transfer-Encoding: 8bit
 
 ------------------
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Long Li <leo.lilong@huawei.com>
 
-commit 84712492e6dab803bf595fb8494d11098b74a652 upstream.
+commit 07afd3173d0c6d24a47441839a835955ec6cf0d4 upstream.
 
-Although xfs_growfs_data() doesn't call xfs_growfs_data_private()
-if in->newblocks == mp->m_sb.sb_dblocks, xfs_growfs_data_private()
-further massages the new block count so that we don't i.e. try
-to create a too-small new AG.
+Take mp->m_perag_lock for deletions from the perag radix tree in
+xfs_initialize_perag to prevent racing with tagging operations.
+Lookups are fine - they are RCU protected so already deal with the
+tree changing shape underneath the lookup - but tagging operations
+require the tree to be stable while the tags are propagated back up
+to the root.
 
-This may lead to a delta of "0" in xfs_growfs_data_private(), so
-we end up in the shrink case and emit the EXPERIMENTAL warning
-even if we're not changing anything at all.
+Right now there's nothing stopping radix tree tagging from operating
+while a growfs operation is progress and adding/removing new entries
+into the radix tree.
 
-Fix this by returning straightaway if the block delta is zero.
+Hence we can have traversals that require a stable tree occurring at
+the same time we are removing unused entries from the radix tree which
+causes the shape of the tree to change.
 
-(nb: in older kernels, the result of entering the shrink case
-with delta == 0 may actually let an -ENOSPC escape to userspace,
-which is confusing for users.)
+Likely this hasn't caused a problem in the past because we are only
+doing append addition and removal so the active AG part of the tree
+is not changing shape, but that doesn't mean it is safe. Just making
+the radix tree modifications serialise against each other is obviously
+correct.
 
-Fixes: fb2fc1720185 ("xfs: support shrinking unused space in the last AG")
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Signed-off-by: Long Li <leo.lilong@huawei.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
 Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
 Acked-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/xfs/xfs_fsops.c |    4 ++++
+ fs/xfs/libxfs/xfs_ag.c |    4 ++++
  1 file changed, 4 insertions(+)
 
---- a/fs/xfs/xfs_fsops.c
-+++ b/fs/xfs/xfs_fsops.c
-@@ -134,6 +134,10 @@ xfs_growfs_data_private(
- 	if (delta < 0 && nagcount < 2)
- 		return -EINVAL;
+--- a/fs/xfs/libxfs/xfs_ag.c
++++ b/fs/xfs/libxfs/xfs_ag.c
+@@ -424,13 +424,17 @@ xfs_initialize_perag(
  
-+	/* No work to do */
-+	if (delta == 0)
-+		return 0;
-+
- 	oagcount = mp->m_sb.sb_agcount;
- 	/* allocate the new per-ag structures */
- 	if (nagcount > oagcount) {
+ out_remove_pag:
+ 	xfs_defer_drain_free(&pag->pag_intents_drain);
++	spin_lock(&mp->m_perag_lock);
+ 	radix_tree_delete(&mp->m_perag_tree, index);
++	spin_unlock(&mp->m_perag_lock);
+ out_free_pag:
+ 	kmem_free(pag);
+ out_unwind_new_pags:
+ 	/* unwind any prior newly initialized pags */
+ 	for (index = first_initialised; index < agcount; index++) {
++		spin_lock(&mp->m_perag_lock);
+ 		pag = radix_tree_delete(&mp->m_perag_tree, index);
++		spin_unlock(&mp->m_perag_lock);
+ 		if (!pag)
+ 			break;
+ 		xfs_buf_hash_destroy(pag);
 
 
 
