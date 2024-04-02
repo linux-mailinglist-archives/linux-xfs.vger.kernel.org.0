@@ -1,87 +1,87 @@
-Return-Path: <linux-xfs+bounces-6180-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-6183-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A636895F62
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Apr 2024 00:11:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B950895F65
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Apr 2024 00:11:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC4DB2874A3
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 22:11:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 035851F26FAA
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 22:11:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 213D615ECC4;
-	Tue,  2 Apr 2024 22:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09C2F15ECD1;
+	Tue,  2 Apr 2024 22:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="Gx+BVp7u"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="kjrCdPdq"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A4715E80B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B8115E816
 	for <linux-xfs@vger.kernel.org>; Tue,  2 Apr 2024 22:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712095894; cv=none; b=qav2rRpsXzDvmJxrwuE8r/LB++GqDXOjInpKvL8P7Q1VK5XXceQXEw2NBg3mUd+wtdDEKxmgONRdRFM/pGDVqVTprcobIaOD/4glaEl8ilwQBGujI09XmbX+ezQqla+wcnpl/PSW0qR1CQFBUPkYjSkfFIh+rmut4OH7uwpwdNc=
+	t=1712095895; cv=none; b=SLYizTREbTW7vUrvCj2p9YEqy9nuR5aTUtOFnew3CAsUq3sTInexHykwXJ8rtCLuJZH79zwXoSAxqilFbADmSGY6dHB8cCD/+c0qHF0LpC0oMpCXfBRgTcDHUVdY2is5EkVCLhAFgfUH7LS7fYRNfS70eeewlqaafyLevP1NX2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712095894; c=relaxed/simple;
-	bh=EqJjJX9UfGIB8O2/Dj2VOE18skNN2nB9AQdXxhVBCto=;
+	s=arc-20240116; t=1712095895; c=relaxed/simple;
+	bh=shBkRx7pA11aQ3YnojI25UdbPvE+X+SpEt8ONzOKls8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GkmFioNgzKUOueUAEC57AqXi/b0dKO1yzxshxAjv4dSfuqbniSVAowoM63a6ZsAqZtvLva24kdnWlWOslyGS9ThSjKob80PEozYSuAd4b6mTFh6nqxmIJma/woiZfzp/9XBmINFEaTUPnGTojhxX0SEP4TbI6bNKKpfBhCDIA5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=Gx+BVp7u; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=hptcvSJ5jkL5p5xOxbuYQ78xsibmOS6Cz9vnJj6/IUizuRnuZeY6GeeS02TGfnr/QNVoHTXavf6dz9qvJ7BRXTvy3CGD6fn0jXGfo2f4m5AF52d4a3x1RRcFuYneRY8qjnozPfvwGFZOPzbzwaYmRrG4rYlKKMiED5BKWqAJzf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=kjrCdPdq; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e220e40998so32269475ad.1
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e7425a6714so4716547b3a.0
         for <linux-xfs@vger.kernel.org>; Tue, 02 Apr 2024 15:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1712095893; x=1712700693; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RU0F6Y0uA0zkAo5HNIG566sm1NWcWPQzQQ03PIGHd1Q=;
-        b=Gx+BVp7uEE3O/J+XZ19KkVtlrk1yWYyZL3X27lTXBHNA1aVwjLKaff9x0oNhMyCIHP
-         aCFAO7VPBr0xvleDh02unS9G8oU4vdk7Ag2BCyeb9JQasyi6aoWaOY7ngI2N3ZuxU0uk
-         sOr/gCwXdyo8YoGoaJcwBrVl3Vdfm62UKhWvnfXLzfu1N+W12s0lxK3dqWdmiznnVKXr
-         K8+QglQkFIB2r+k/MLfLvutxC8fh0BKqwlXDXRI9e517L+/SgyOErOPHsnDzD2jU3Inq
-         OFzRDbxn+LAcxEjd4asu47ggGaLa+z+Em25zWoHL/zbx+ph6vycbI+RLMsn07FR1dmE1
-         gGiA==
+        bh=nv9qAfAy8Ba24HZcFcvtbURJLwcQQ+oY2ruUtgCN9oo=;
+        b=kjrCdPdqJ0khGZFZu2mLkX/fHpSMvCtF8sfdtKQMjmW9UOLrAFpCirc0AUZqbTLlCT
+         5RNDtuq855IbmHpVD7tHqSdKjv/PMObpwJvex/aw/Ijd7eeIANvE1vCl0veiOcDqb3L5
+         TK/uaBDvm0vVYmrq502VXUTX2fPGr7uPsOIqjJ5LrkgN2TTZ/+amtTQiR8mRkI8fZ6in
+         aHADjtKq3RDlJpN3QvSpuR+UUmoXjhgVgcSduNzox8REwYm824jWvgqwSDS+2EWOujiU
+         u5GEBcuwOU9LJYuDejcpfEMemN4Zhv2Ta+iIUKYuRb4rAQMB02iwIkKMul49vSu8v6yA
+         QkNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712095893; x=1712700693;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RU0F6Y0uA0zkAo5HNIG566sm1NWcWPQzQQ03PIGHd1Q=;
-        b=YtxjdPrpHncE7d8W9JyFfrzoQxD+l3OrpcdejK6ODqNF/9vUKpA+xLX0jbiZZkP4uD
-         VPNjGZuQnp0ySIexWDySeY0YO8T8jDyUkMVAhvsiMTFr/OJbuKkIKynFnOUtrvh2vsCQ
-         wGcSVczFadESFqqzikOvTslEniUy1uBx2v8trMyrtJoZpFwcWz9IVsQPkCvErG8jsHm7
-         5V4tTSbEGUZfudz9p793zkpk0LDEbkxhN+p4cWK8UfMBqc0nKXKs29apsKpkI5Hy3TL2
-         EPsgEgNsaBwuPzG8bVrSX1eQ1V5vfi7aJ9Y5r9FE2gpz4deyeJYNYjclc+wkVFD5DUsg
-         l8Ew==
-X-Gm-Message-State: AOJu0Yx+HBQ4FgpVYp9Ks4LN9vW0jxLY0z3us0LnUi+jV6ZV02L4OpUG
-	QHH7QAjvk5JLGcIbVE5AWZO5hx3RqJcYjrEetb8ySzGe/KaXN6sfz0I0NdUp/79kB1EeKHsd3dz
-	0
-X-Google-Smtp-Source: AGHT+IFOYb19i2KHydrOcxWjLbztdbqZPORTlM2kdna1RUUNBYSmnU64udRxynl/gJdAQdi/wGsDaQ==
-X-Received: by 2002:a17:902:ecd1:b0:1e2:7c3a:835d with SMTP id a17-20020a170902ecd100b001e27c3a835dmr1137179plh.8.1712095892446;
-        Tue, 02 Apr 2024 15:11:32 -0700 (PDT)
+        bh=nv9qAfAy8Ba24HZcFcvtbURJLwcQQ+oY2ruUtgCN9oo=;
+        b=CaXCgIU4Ax2JURkFqYXhIeYf+9nXndH/YB5KH0POmw9voBt59TThLIVv6HSAoN8tXV
+         XOlJdCDbh2KZSy6/YkYlrkSYTubBpLgobH0pwjd9CUFUYCLWL25IkwWu1ws5JAruKbTY
+         WtXziUVpoSNHU0LlR44ZLX/dwPgMbgFQaQjx6dlvZ9I7YJm218S4GH9MrSe6wY+sHYXi
+         GHWQFG7HvaMZ9z6EGBR9C5mQO2z+t0uv29haMJFVv99pAK5lZD3myNqHQU3scOCj+B88
+         8icPGK5NeTW9dA8voILUo06vhLQGnAmLnioXsqugVBNaDsOkBasbo6QB7HPll9NG1WHV
+         6ihg==
+X-Gm-Message-State: AOJu0YxDXNgcBz1y670AosFG3zYxi0nXgitaW5/ej2SHIktVcLKp0UKl
+	O8vIJVoXfJDs7qkQ8LgsbkA0+lPOzAvlj8vArjMsnFmhTGFKpanEdge4IBM/kTlhpfGNpG7N9ta
+	f
+X-Google-Smtp-Source: AGHT+IF9OBCoyxMr4ZgNTst9LeJ79EwBtxzwALljqrxRqqr0vHOOctdufaU69Zj0vhYxv1QuOHEUiw==
+X-Received: by 2002:a05:6a00:2d1c:b0:6e5:ea19:bbcb with SMTP id fa28-20020a056a002d1c00b006e5ea19bbcbmr14698488pfb.5.1712095893165;
+        Tue, 02 Apr 2024 15:11:33 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id kg4-20020a170903060400b001e01c3dd1c3sm11644633plb.66.2024.04.02.15.11.31
+        by smtp.gmail.com with ESMTPSA id w4-20020aa78584000000b006eafbf6f1e8sm6640150pfn.17.2024.04.02.15.11.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 02 Apr 2024 15:11:31 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
 	by dread.disaster.area with esmtp (Exim 4.96)
 	(envelope-from <dave@fromorbit.com>)
-	id 1rrmLq-001osL-05;
+	id 1rrmLq-001osP-0B;
 	Wed, 03 Apr 2024 09:11:29 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.97)
 	(envelope-from <dave@devoid.disaster.area>)
-	id 1rrmLp-000000052qw-2GP6;
+	id 1rrmLp-000000052r0-2Ooz;
 	Wed, 03 Apr 2024 09:11:29 +1100
 From: Dave Chinner <david@fromorbit.com>
 To: linux-xfs@vger.kernel.org
 Cc: chandanbabu@kernel.org
-Subject: [PATCH 2/4] xfs: xfs_alloc_file_space() fails to detect ENOSPC
-Date: Wed,  3 Apr 2024 08:38:17 +1100
-Message-ID: <20240402221127.1200501-3-david@fromorbit.com>
+Subject: [PATCH 3/4] xfs: handle allocation failure in xfs_dquot_disk_alloc()
+Date: Wed,  3 Apr 2024 08:38:18 +1100
+Message-ID: <20240402221127.1200501-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240402221127.1200501-1-david@fromorbit.com>
 References: <20240402221127.1200501-1-david@fromorbit.com>
@@ -95,57 +95,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Dave Chinner <dchinner@redhat.com>
 
-xfs_alloc_file_space ends up in an endless loop when
-xfs_bmapi_write() returns nimaps == 0 at ENOSPC. The process is
-unkillable, and so just runs around in a tight circle burning CPU
-until the system is rebooted.
+If free space accounting is screwed up, then dquot allocation may go
+ahead when there is no space available. xfs_dquot_disk_alloc() does
+not handle allocation failure - it expects that it will not get
+called when there isn't space available to allocate dquots.
 
-This is a regression introduced by commit 35dc55b9e80c ("xfs: handle
-nimaps=0 from xfs_bmapi_write in xfs_alloc_file_space") which
-specifically removed ENOSPC detection from xfs_alloc_file_space()
-and replaces it with an endless loop. This attempts to fix an issue
-converting a delalloc extent when not enough contiguous free space
-is available to convert the entire delalloc extent.
+Because fuzzers have been screwing up the free space accounting, we
+are seeing failures in dquot allocation, and they aren't being
+caught on produciton kernels. Debug kernels will assert fail in this
+case, so turn that assert fail into more robust error handling to
+avoid these issues in future.
 
-Right now just revert the change as it only manifested on code under
-development and isn't currently a real-world problem.
-
-Fixes: 35dc55b9e80c ("xfs: handle nimaps=0 from xfs_bmapi_write in xfs_alloc_file_space")
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_bmap_util.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_dquot.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 19e11d1da660..262557735d4d 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -735,19 +735,13 @@ xfs_alloc_file_space(
- 		if (error)
- 			break;
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index c98cb468c357..a2652e3d5164 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -356,6 +356,23 @@ xfs_dquot_disk_alloc(
+ 	if (error)
+ 		goto err_cancel;
  
--		/*
--		 * If the allocator cannot find a single free extent large
--		 * enough to cover the start block of the requested range,
--		 * xfs_bmapi_write will return 0 but leave *nimaps set to 0.
--		 *
--		 * In that case we simply need to keep looping with the same
--		 * startoffset_fsb so that one of the following allocations
--		 * will eventually reach the requested range.
--		 */
--		if (nimaps) {
--			startoffset_fsb += imapp->br_blockcount;
--			allocatesize_fsb -= imapp->br_blockcount;
-+		if (nimaps == 0) {
-+			error = ENOSPC;
-+			break;
- 		}
++	if (nmaps == 0) {
++		/*
++		 * Unexpected ENOSPC - the transaction reservation should have
++		 * guaranteed that this allocation will succeed. We don't know
++		 * why this happened, so just back out gracefully.
++		 *
++		 * We commit the transaction instead of cancelling it as it may
++		 * be dirty due to extent count upgrade. This avoids a potential
++		 * filesystem shutdown when this happens. We ignore any error
++		 * from the transaction commit - we always return -ENOSPC to the
++		 * caller here so we really don't care if the commit fails for
++		 * some unknown reason...
++		 */
++		xfs_trans_commit(tp);
++		return -ENOSPC;
++	}
 +
-+		startoffset_fsb += imapp->br_blockcount;
-+		allocatesize_fsb -= imapp->br_blockcount;
- 	}
- 
- 	return error;
+ 	ASSERT(map.br_blockcount == XFS_DQUOT_CLUSTER_SIZE_FSB);
+ 	ASSERT(nmaps == 1);
+ 	ASSERT((map.br_startblock != DELAYSTARTBLOCK) &&
 -- 
 2.43.0
 
