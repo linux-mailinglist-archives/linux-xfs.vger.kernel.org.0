@@ -1,254 +1,221 @@
-Return-Path: <linux-xfs+bounces-6147-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-6149-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9905F894AFB
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 07:58:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F341E894CE1
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 09:49:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BAD4F1C21E96
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 05:58:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6A87CB22532
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 07:49:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA3F1805E;
-	Tue,  2 Apr 2024 05:58:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB8F3BBE3;
+	Tue,  2 Apr 2024 07:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="fSiK9k4r"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ab1xDDUp";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="eOLEognj"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1290C323D
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Apr 2024 05:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712037489; cv=none; b=TCmoHVP7d8q6+QP9FrK0w9CNU6cvfYq26bcWWulCy2+Ypyj2JMRSdpN8BVvIXh4l3ycOZIeMAEB7UG8q6+YOT8VFvMG6S0nutKTf+rmax7CFICw29w1nyZaTV0BEaGNMYOD98/jAgQd97iitEWyUev7hQeKoHX9/I97EinXh04k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712037489; c=relaxed/simple;
-	bh=uiYq7kShrPfh00kz5/Bj39PvwZrxIRsf1hfvwcHFhiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQaqofXh7mcnRZpS1EyouERtm9wMWf+ewl7oz/YdnlTSUQrrxRIN6KonfLNmi9R/tUjgfyV1nTwIR8Rqj3D2z+kYLXg+BIx/1/Uh9EvvJ/BuCaNwxy7/PUNK1d88pY0X0nAwCtLMAcdUMhCzY+nsGb/wfFvsPj5Bcf+7IRFjFUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=fSiK9k4r; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5e4613f2b56so3319638a12.1
-        for <linux-xfs@vger.kernel.org>; Mon, 01 Apr 2024 22:58:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3DE3C478
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Apr 2024 07:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712044170; cv=fail; b=dbCWfb7zeXghjT0eGkVNh0usgZvZH369EetpFoqw7lXUC0VUggRkgkdE719P92lZnTHj8i6QbYPg79/KIEISKRfGnMFizxOagsyFI9pNpnFfxt/UCLPy3gWFJLfA3B61DspkmhjxEzn1DntZqCj7OPVxA3rLSMRwDA4+o6PalZI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712044170; c=relaxed/simple;
+	bh=kvrGWrB9vSnTqgvl9YYDsc6O3Hor6yW9oUmyk6uObZU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DZ2m0dL4EU0h4SzOBcrxWoAp+xDFGtMNMdFy0d3lALKpb43JBXIzyRcKLzHVimdLJJmfvX+6z6TJ8VwjyWAJLsU/SJ/pI2152qUIcTqEYbjWPbZhhaC4YZQhFfe1/pDxy24kgchT8+nMH6WIvhFSaXPtZTlojj9zVMuvl9UgRCo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ab1xDDUp; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=eOLEognj; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4327hoxp014522;
+	Tue, 2 Apr 2024 07:49:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=Ttz1TRKPs/v/OYY4KSf2fmw1MHxB+H1Niv6YrD7O4vk=;
+ b=Ab1xDDUpIq5nFOlpIvIQzXbZQBbyZ8FzKoa6OhgjuKls87/ns1VZzfv15ToZZX5WxWu+
+ DbM/dFF5719P9AZHqLPWM+ww/uQqaUV7h4vBdF5rRc4EuLRZZJrN0QEtGT1tFjfV9zGE
+ VNX34X/kHKTEN8gFDwgQsjDRnaAkRG3mlvMF9qeSaCsvnU15fIyeP1Bn2q4UTLBL9D7y
+ dkKVP5wdlYYHpIVhltZXfWRXu7g4i4Bn3a5qR0Enkfp6n3efuS0j+YbUpPW/R1qcntWQ
+ UyR9F6wKaBW4hgLNj7FvDgpWYOnnJ9D5fkGD6IQ7O4zTgfutpvLy0OiBX73KhYhgGC6H Ag== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x69h4m0sc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 02 Apr 2024 07:49:17 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4325nTIJ018554;
+	Tue, 2 Apr 2024 07:49:16 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x696cpfar-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 02 Apr 2024 07:49:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G06RzGMg32gTYExv90rWoaM9KQ45+BMq7k/GiBUWQjFkpFnG61Ujpifx8NIK/h6vjqi4h0/gzTlnDTSQYqoZfy/4tqc3FZgkzzJ7ANMYgyNh2GS5hUs1yCwaMhlefNW+7qOP9JlO9J44tLuYrG3WLvB8zHR5WKckQW7YM+17YULlyqMrsgCrcEFny7XBmEhnRuX1/nwsVe7HJ/SWIbzXQWQa7zWOHj9/nUmIrAs0q5jbI7NXSSL6eCFekbtevDEqagiB5cGnHe+6fGD6DYDUU/mHg3aco+0ZoB/gBVX7c/ujDfRc7MOVEY4I3gJIEcdgwWyJ4XbPfvbJcDizmc2Gtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ttz1TRKPs/v/OYY4KSf2fmw1MHxB+H1Niv6YrD7O4vk=;
+ b=WFntWH6bWLmQAgO53szGUO27j6XfLm2N0qAYdOr1VgdZcozGarB+VTfZdpWCoatIB5/U2xYiFFIaQFKkLgOJIvEPeYfUucD44D5ifyW9ta/NAKHrFzo4p0WEF/xpjY+J7TamVImuEO6IXvMhjFjUPEKr80SISn3eguB/IUD+7LLj5owhSmlzPN0JB5bi6tnhujYHN10iUhXPVVYEtqUCYa1UvkI+DmbigurTVomPTqT8xnypguLaGgSN6thzkrhac356NVcfMhLWSUwpz2a/J0vtLg2FQXuU3KYdM/D9ggBi7HklN6hF4/e7D07AQGGi61GBtmhPT49xDxlIAGcUNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1712037486; x=1712642286; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8xoykoQrY5BXFrEZcxyFmhK9D7PYlPVs1HAhWWoKVQ=;
-        b=fSiK9k4rDw+smQz5zzZ/AMFMugi8UIy8N05URYeOtCyvLFLCOVyEAAbq5E15ENvNNG
-         K9gAmiTfFP0Re5fn2gFEaGBsxn2bTOrepiMkz3daFhA3YiLlNxbgVxkctOg+yKh4aKK1
-         z1blzYDW9eJ6gau4p+w7Rbn9lYlGMNlHWSnFDh+b7RAlEHBNc234n4dbenNb4U6LKGyA
-         AXiZBB4yB3XgG9FLdE/RMjMh8yC5EkqxduvXfrsJ4BeCKPVww05dd1wX7ocoPZAnRlkG
-         Uwxi4o69UblqG1a+5NiBou8AYtpGmELIwuLwS2qPOLec+o0JWzlHv4jvizOkDoRc3HQk
-         bjCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712037486; x=1712642286;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z8xoykoQrY5BXFrEZcxyFmhK9D7PYlPVs1HAhWWoKVQ=;
-        b=qC6S5bBwlzjcBZGabcAc9hbJaYDrIDs138leAUOBFehoPLLBFo7p10zPgrur3PPH72
-         TI0ISGycLUlIfCWN5UeseOFyE3sTjoUPT0mFaHk8pW1tPzFoTW1y+44/DsNH5GfH4rxo
-         PY2P60BpdZwS4WmioW52Na+5SIEhnc6zqetxPQpBhIta8HdATOZPuQMwf/steaIizl9P
-         jQZpE+HjpekYtOZubdBwoWoIlMzXYq6T6BpTjb7bu6Cd50m+2IYhRjOo8Nl368tofUCo
-         y4UXbYzEuhBY4IP6Z4Pk7gfA01EV+U3v7xW1OFwyg/AFNqugt6z6QR0ZNkqw/0FNbqss
-         agjg==
-X-Gm-Message-State: AOJu0Yz0hlSnAgV/I2yswUjgdgeIbWR96uXdAx6QR8fFvv87WDYJdkS7
-	Mg3Y02vVRd7paKUFirJeNxaTpBHUNJZ0qmlaFyEXK/e8b6/8uYfEywoTTnrBRlA=
-X-Google-Smtp-Source: AGHT+IFJBA04C3U/zAaytJIRAGdkgKfvfUYvVwSEw21b2zwMGG1sbj9RMZxZBbUP2saw0i2xQ4eGBg==
-X-Received: by 2002:a05:6a20:2152:b0:1a3:4a1d:1092 with SMTP id z18-20020a056a20215200b001a34a1d1092mr9315463pzz.35.1712037486020;
-        Mon, 01 Apr 2024 22:58:06 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id n16-20020a17090ac69000b002a06260ac96sm8912122pjt.16.2024.04.01.22.58.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 22:58:05 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rrX9m-0011dg-31;
-	Tue, 02 Apr 2024 16:58:02 +1100
-Date: Tue, 2 Apr 2024 16:58:02 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: linux-xfs@vger.kernel.org, ojaswin@linux.ibm.com, ritesh.list@gmail.com
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ttz1TRKPs/v/OYY4KSf2fmw1MHxB+H1Niv6YrD7O4vk=;
+ b=eOLEognj17N+HtQlKitp83y65ghKwHyzf/AGIboCfjTYRrd5JIlO1pGNdZoKGZmTf740hdGYO6m+j5X+VSyGdkfp/QCgpf0D7C/X+XLtue8HEvkjtOIRiEga3lbvTfNQqqRzladqEaY/XK0g5WwKaJ6Hs1xc4uW1h96x11WF/Ho=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SA2PR10MB4796.namprd10.prod.outlook.com (2603:10b6:806:115::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
+ 2024 07:49:13 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ae68:7d51:133f:324]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ae68:7d51:133f:324%4]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
+ 07:49:13 +0000
+Message-ID: <11ba4fca-2c89-406a-83e3-cb8d20f72044@oracle.com>
+Date: Tue, 2 Apr 2024 08:49:09 +0100
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/3] xfs: simplify extent allocation alignment
-Message-ID: <ZgueamvcnndUUwYd@dread.disaster.area>
+To: Dave Chinner <david@fromorbit.com>
+Cc: linux-xfs@vger.kernel.org, ojaswin@linux.ibm.com, ritesh.list@gmail.com
 References: <ZeeaKrmVEkcXYjbK@dread.disaster.area>
  <20240306053048.1656747-1-david@fromorbit.com>
  <20240306053048.1656747-2-david@fromorbit.com>
  <9f511c42-c269-4a19-b1a5-21fe904bcdfb@oracle.com>
  <ZfpnfXBU9a6RkR50@dread.disaster.area>
  <9cc5d4da-c1cd-41d3-95d9-0373990c2007@oracle.com>
+ <ZgueamvcnndUUwYd@dread.disaster.area>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <ZgueamvcnndUUwYd@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM4PR0302CA0027.eurprd03.prod.outlook.com
+ (2603:10a6:205:2::40) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9cc5d4da-c1cd-41d3-95d9-0373990c2007@oracle.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA2PR10MB4796:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	9/WZgu7wQqWt6Eb8smiTs51Nx1VSmYI92Xy3SCpDhRdSBktNJp/dxhuxs7ikAUoRDh0ZJYFFuztSsE+Bmah1gDPatOZVIY/iO6jd3usbV6UzCPWoDRQa06k+zWjLgg4FEE8SVIPch+pUJ9vGcvgtq7V0xmmjJJyHLy/GWmldDjxcwSKh/o5G66YRY5GQZ5163agf/X4Bqz+HbOEso3SCNnzIATcrDLK0LHr9E4fbao/Hyaat+EKN7Nx1GgaZpTL3BE65SxJwiBQzsOK/r1tFCxQGRe5xObXcKBVXZ6nO+hrlEWUVZ6qPAJmeERJyfLlBsBLGRcQrXh2AWdB+PLpB/i0eariuZoDdytWVvC3b2e/tZRKfof3rhxXTYEJoXvomqcnRcHXU+TO68nDvOitvvcAgxphtCxI46HOPk/gnHnmn1qR11lWbZ8rGznY66XZrXw4xR+fQqbOIDNwTOqY2JMY5BKtzIAbkwLaGRukLQMrklrCflSTk/rux4dwfAQqHGmSgz+DkAdBqA6K9gRwg1nF+9HdJ7r+8fVgCYesx0x/KyBy4jqO3bPe6/ige2zvCE8HqKgPNPYezvYPhGcCcr5F72VF8q+xwyIg8lxr0PoGt+d5GmRyGrGihKnu57I0MheUbfxgTzvod5K53yjU5IiTaTTDiRMb5YSGcxdFSDaM=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?eVhxYnROY0RyL1NNOTVuUmJ3cnN2eHFmbWdsL0l1QVBUbUZPY2xaV2MxOTAx?=
+ =?utf-8?B?Sm9JSEFJZ1ZBNEFWQWc4QlVFaTlUVmVBMFFTb0tqdDFsaytmRSsxMCtOaDla?=
+ =?utf-8?B?aU5ZY1dYdHduRy9ySXRXbkxMN2JlbTZpczIwWElJOHpuak1zZkhaUlhmTHN6?=
+ =?utf-8?B?bnZ1alJkVVZ0cEVuTEcvbmhEZzNPR0VGVVZobGxybVJya3dDT1B1cmhaeHdX?=
+ =?utf-8?B?eXFqaXNGN0FsSjhPZWNJN01MWUtTRm9EeVJJVTZLZWFWMjl4dkRaRjdCZG51?=
+ =?utf-8?B?NExkV1d4c1docGVVb2JwdC9BZW0vUjhITFBCV2dQcTZoVkF1UXNKUWVlU1l4?=
+ =?utf-8?B?ZS8yOU1DZFJnWThIV3NMdmpXbjhmeVBLV3R5UWpDMU9zQTNZSVJ4RjdacGMr?=
+ =?utf-8?B?clY5R3hQMUtTRENMMnNyNTBaYWJXNUs3OWdNdjRMT0hLaE9zYzN6R0NpRmhW?=
+ =?utf-8?B?Zk5pd0hxSUpHNWtMOWRuTVY4bGhTbElpUDBTaUMzYXdMNFlVQ2VEVUVEaTZW?=
+ =?utf-8?B?Zis1MmlweUdjcVJDUUZMWEdPS0dCekZ3QnRFRlBDNzdndGM5cjVZd3pNWkVU?=
+ =?utf-8?B?L3FDVmtXVU91NXZlRHI1U2hFZFJISW51V1VNVU5DYlMwMGtyVWxxcEZ1TURl?=
+ =?utf-8?B?OWhIZ3FCZGlaR0lYdHpyVDBUK09HMzNUdnFSb0szMXpxeGR5ODlDeUFtRFdI?=
+ =?utf-8?B?aWxzVUI5dWVVcUo2WEZxcEpUSDV6TzU2T1RxeWx6MGM2TVA2dmdUNXpNNi83?=
+ =?utf-8?B?eS9KSldENVh0Z1BaK1Z4cG1UTTJWSkZGTE0vMlJTSStkVXRMQ0l0YTczazA2?=
+ =?utf-8?B?SUFCcUJRL1o0bDRrVDE0cGxkOXZ5UEZGcFBhZHRrZEFoWDNlT0ZpV0dvSVNH?=
+ =?utf-8?B?UlBUeCsxcmNYcWZLNUlYdGg4NG5BK1lWQ1NiaisvMXcvM2JPdkRBelI4b1A1?=
+ =?utf-8?B?Z3Yxb3lsVzViMWhOc3ZTUUgzYUhqajFURmpIZXBid0kwc2FqdmE4ZDV5ODJP?=
+ =?utf-8?B?cmVBNmt6cEcxMy9tRWZSeWNVemRyZDh3eldTQi9maDJrVEh1RFBWYmV3dXFu?=
+ =?utf-8?B?aTJsUXhDb3ByOEdmSWdrZFd1RmFxTGw4QVJkcjE4YzR3d0FyL0tKS2trd3dM?=
+ =?utf-8?B?OVdwSEZRS3lUdDA0Yyt0R0VrWjFqUnE4R3pDcGorcmw5K1NnbnhkN1NPcTl3?=
+ =?utf-8?B?bGt2Z2E2M1NWTUxYczdPT3JESnB5TjYzRnRpTzVZRkNVSktOc3hPUGExQndy?=
+ =?utf-8?B?UzNTWFNIQ2hEMDYybVE3dk9ScGJ5ZGdMZUV0MjdteG85MFg2ZnNJNStYM3dx?=
+ =?utf-8?B?dmlRelpmSE04dFhyOTg1YUZ3dE9PbkdVZ3VCR2tUMlQzRHJMRER2YkZwSUdL?=
+ =?utf-8?B?VThySWYvZXUzaVlROVVFbVk1NHp4OWZEcStNb2pobDBXSjFvZVVBajl2M3Np?=
+ =?utf-8?B?ZXNXYldyVm9lbkhZUEhJOGhUTVJFM1ArQ2pFNjBKTktaaExTMzhOekNEbEdU?=
+ =?utf-8?B?Z1huQ1RTM2FQcTJIMkdwOVNBc08rN2QvSS9RSTZCREpOUHpNOXYwWXdQWTk4?=
+ =?utf-8?B?Z1pYcXgrRmJEOFVrb1pJVkZTVytDMElaT3FKbFNZWS9sWURFcllGVXBZRFBS?=
+ =?utf-8?B?RU9HY1pZWStlZjZhS09uZi9BL0xMc2FvWFhkOFF6L0xxTyt1Ky9vSjJHQlNE?=
+ =?utf-8?B?eXprSXJXYzFoSWJqOUhPa2plNkFyalNvdExYRUIwTk5uV2ViV0o0N0hSU1cr?=
+ =?utf-8?B?WVR3WGM2WTdvdElnTW1lVkF1MW0yMTdGUHFTTEY3Y3dEUXdyWUphVHZhKzRG?=
+ =?utf-8?B?bG9NSXVwc2FtR29YZGc0aW93SCsveitVTmI2VDNrVkhWckVucWxyMm14WE9E?=
+ =?utf-8?B?MTQwMERyY3RsR3k4Q2tXeGxBMVh4VnVHa3drbEdaZHFQbTFBQUNZRHU5ZDFB?=
+ =?utf-8?B?SGJnd2JEeW9vN3I0VUdvd3BubmVTakI2azhqR3FhSXlhRWQvOTgzbmJrV1du?=
+ =?utf-8?B?WE9yYkRiaDN3UlFXOC9rVnh2VE1qTUk3MjFoSkVmaTNkSytRWDJOT1JKcm11?=
+ =?utf-8?B?RHZ2TUtsK0ptM25RVE5iRWJIL0V6aFJWeWRoQVpNL1ZoT20yRmVBcHppWWJN?=
+ =?utf-8?Q?5w13fnPQGRIvdPRBv4Mkgptdh?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	mWSw7KDhEYcZ+Q7WqKpvovGSA2LN9cuQ7bO1x+eGUnJXkVT4CTbc9hq6lWRedueB2nMHerTGwCsQDEWWEW/i0XCKlRD3ttjyY9Es3TgkLZzaZbOLR5ISzDOFec0895pQQ+ym1Yvfq0dWrc1CZem+Z4syxqQxYeBQcCJ0n0/bSOiSUGZhtMR4/QUCo37VQzrFcwztP4KuI5DKvVH14HoX/7kByEb7rbnqCwkyt6FlOInFimMCQcVnmkY99EH9zKo0aQR34K86ClOd8Ah6vnZI7aA0B5Oeueju1Sl0KsY9qMuR/S08gwrMSOZP4ltsY9ov+LlMIC3gyvhTaCBa+4VcZtgDkq84CItGi6YE4apnp0MCwTQ70S77hq4To+zq96PHV2Jl07ULUv7vQm6sc0tjPf0VtIiBCbIUqamZ01W2qmwROQXR0/C5T6GpvQq7woLUoYJkwxaCs0R6wUZ6cHRMbPigopYcCx32/A/gIzYRNrRXgxLerwpCWQLc6mG9WEMnZPoAyfUT3HNFkcn5I2ZI/WD0TtHGUkAZTVX6o3J6lMa5CRDd79uubI+ErQtseifvbfXLY98PmeIMTx/z16QoKRrgpA9M5HrFXuW0ajSB/l4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0400aa0-54b1-40cb-0829-08dc52e963a7
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 07:49:13.4633
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IBWS6ETRV2hyeMFJku2V/wX3mMH11WqhClhdxR3UORz6EZE/+0nBP7fGjDNKaiy3ip0zdg7V49x+Rd+igLrQiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4796
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-02_02,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2404020054
+X-Proofpoint-ORIG-GUID: qSq6fZj-gMhLNfvK7UfI7pplGIfaLIES
+X-Proofpoint-GUID: qSq6fZj-gMhLNfvK7UfI7pplGIfaLIES
 
-On Tue, Mar 26, 2024 at 04:08:04PM +0000, John Garry wrote:
-> On 20/03/2024 04:35, Dave Chinner wrote:
+
+>>> the problem should go away and the
+>>> extent gets trimmed to 76 blocks.
+>> ..if so, then, yes, it does. We end up with this:
+>>
+>>     0: [0..14079]:      42432..56511      0 (42432..56511)   14080
+>>     1: [14080..14687]:  177344..177951    0 (177344..177951)   608
+>>     2: [14688..14719]:  350720..350751    1 (171520..171551)    32
+> Good, that's how it should work. 🙂
 > 
-> For some reason I never received this mail. I just noticed it on
-> lore.kernel.org today by chance.
-> 
-> > On Wed, Mar 13, 2024 at 11:03:18AM +0000, John Garry wrote:
-> > > On 06/03/2024 05:20, Dave Chinner wrote:
-> > > >    		return false;
-> > > > diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-> > > > index 0b956f8b9d5a..aa2c103d98f0 100644
-> > > > --- a/fs/xfs/libxfs/xfs_alloc.h
-> > > > +++ b/fs/xfs/libxfs/xfs_alloc.h
-> > > > @@ -46,7 +46,7 @@ typedef struct xfs_alloc_arg {
-> > > >    	xfs_extlen_t	minleft;	/* min blocks must be left after us */
-> > > >    	xfs_extlen_t	total;		/* total blocks needed in xaction */
-> > > >    	xfs_extlen_t	alignment;	/* align answer to multiple of this */
-> > > > -	xfs_extlen_t	minalignslop;	/* slop for minlen+alignment calcs */
-> > > > +	xfs_extlen_t	alignslop;	/* slop for alignment calcs */
-> > > >    	xfs_agblock_t	min_agbno;	/* set an agbno range for NEAR allocs */
-> > > >    	xfs_agblock_t	max_agbno;	/* ... */
-> > > >    	xfs_extlen_t	len;		/* output: actual size of extent */
-> > > > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-> > > > index 656c95a22f2e..d56c82c07505 100644
-> > > > --- a/fs/xfs/libxfs/xfs_bmap.c
-> > > > +++ b/fs/xfs/libxfs/xfs_bmap.c
-> > > > @@ -3295,6 +3295,10 @@ xfs_bmap_select_minlen(
-> > > >    	xfs_extlen_t		blen)
-> > > 
-> > > Hi Dave,
-> > > 
-> > > >    {
-> > > > +	/* Adjust best length for extent start alignment. */
-> > > > +	if (blen > args->alignment)
-> > > > +		blen -= args->alignment;
-> > > > +
-> > > 
-> > > This change seems to be causing or exposing some issue, in that I find that
-> > > I am being allocated an extent which is aligned to but not a multiple of
-> > > args->alignment.
-> > 
-> > Entirely possible the logic isn't correct ;)
-> 
-> Out of curiosity, how do you guys normally test all this sort of logic?
+> I'll update the patchset I have with these fixes.
 
-With difficulty.
+ok, thanks
 
-Exercising all the weird corner cases is really hard because the
-combinatory explosion that occurs when you have 20 control
-parameters, up to 5 different failure fallback strategies,
-behavioural variations with delayed allocation, ENOSPC and AGFL
-refilling accounting variations, etc, means it's basically
-impossible to enumerate and iterate the behaviour space fully.
-And then we have filesystem geometry and application concurrency
-to consider, too.
+Update:
+So I have some more patches from trying to support both truncate and 
+fallocate + punch/insert/collapse for forcealign.
 
-All of the behaviours up to this point in time are best effort - we
-don't guarantee allocation policy is followed when there is not
-enough free space to execute the preferred policy - we slowly fall
-back to mechanisms that are further from the policy but more likely
-to succeed. i.e. as we approach ENOSPC, the allocation policies get
-"looser" - they are less restrictive and more variable and don't
-give as good results as when there is plenty of free space for the
-allocation policy to make good decisions from.
+I seem to have at least 2x problems:
+- unexpected -ENOSPC in some case
+- sometimes misaligned extents from ordered combo of punch, truncate, write
 
-As such, I only check that macro-level behaviour when there is lots
-of free space is largely correct. e.g. by doing something like
-copying a kernel tree onto a new filesystem, then checking inode
-locality follows directories, block locality follows inodes, large
-files are stripe aligned, extent size hint based inodes appear to
-have the correct extent sizes, etc.
+I don't know if it is a good use of time for me to try to debug, as I 
+guess you could spot problems in the changes almost immediately.
 
-I then rely on the ENOSPC tests in fstests to find regressions that
-might occur when the filesystem is stressed with little free space
-available. These are a whole lot better than they used to be; root
-cause analysis of ENOSPC corner case bugs has consumed months of my
-working life over the past 20 years....
+Next steps:
+I would like to send out a new series for XFS support for atomic writes 
+soon, which so far included forcealign support.
 
-> I found this issue with the small program which I wrote to generate traffic.
-> I could not find anything similar.
+Please advise on your preference for what I should do, like wait for 
+your forcealign update and then combine into the XFS support for atomic 
+write series. Or just post the doubtful patches now, as above, and go 
+from there?
 
-That's because it's largely impossible to write a test that is
-deterministic and works on all possible test configurations. Even
-changing the size of the filesystem even slightly can result in
-vastly different but still 100% correct allocation
-behaviour....
+Thanks,
+John
 
-> > > Firstly, in this same scenario, in xfs_alloc_space_available() we calculate
-> > > alloc_len = args->minlen + (args->alignment - 1) + args->alignslop = 76 + (4
-> > > - 1) + 0 = 79, and then args->maxlen = 79.
-> > 
-> > That seems OK, we're doing aligned allocation and this is an ENOSPC
-> > corner case so the aligned allocation should get rounded down in
-> > xfs_alloc_fix_len() or rejected.
-> > 
-> > One thought I just had is that the args->maxlen adjustment shouldn't
-> > be to "available space" - it should probably be set to args->minlen
-> > because that's the aligned 'alloc_len' we checked available space
-> > against. That would fix this, because then we'd have args->minlen =
-> > args->maxlen = 76.
-> > 
-> > However, that only addresses this specific case, not the general
-> > case of xfs_alloc_fix_len() failing to tail align the allocated
-> > extent.
-> > 
-> > > Then xfs_alloc_fix_len() allows
-> > > this as args->len == args->maxlen (=79), even though args->prod, mod = 4, 0.
-> > 
-> > Yeah, that smells wrong.
-> 
-> Would it be worth adding a debug assert for prod and mod being honoured from
-> the allocator? xfs_alloc_fix_len() does have an assert later on and it does
-> not help here.
 
-I don't see any value in that because it's not actually a "fatal"
-issue. See above about trading off policy strictness for allocation
-success.
 
-Again, this force alignment stuff is a fundamental change in this
-behaviour - it wants "hard failure" rather than "trade off" and so
-there isn't a general case for asserting that allocation must be
-mod/prod aligned. Extent size hints are a -hint-, not a requirement,
-and I don't want random assert failures in test systems because
-debug kernels start treating hints as "must not fail" requirements.
 
-> > I'd suggest that we've never noticed this until now because we
-> > have never guaranteed extent alignment. Hence the occasional
-> > short/unaligned extent being allocated in dark ENOSPC corners was
-> > never an issue for anyone.
-> > 
-> > However, introducing a new alignment guarantee turns these sorts of
-> > latent non-issues into bugs that need to be fixed. i.e. This is
-> > exactly the sort of rare corner case behaviour I expected to be
-> > flushed out by guaranteeing and then extensively testing allocation
-> > alignments.
-> > 
-> > If you drop the rlen == args->maxlen check from
-> > xfs_alloc_space_available(),
-> 
-> I assume that you mean xfs_alloc_fix_len()
-
-Yes.
-
-> > the problem should go away and the
-> > extent gets trimmed to 76 blocks.
-> 
-> ..if so, then, yes, it does. We end up with this:
-> 
->    0: [0..14079]:      42432..56511      0 (42432..56511)   14080
->    1: [14080..14687]:  177344..177951    0 (177344..177951)   608
->    2: [14688..14719]:  350720..350751    1 (171520..171551)    32
-
-Good, that's how it should work. :) 
-
-I'll update the patchset I have with these fixes.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
 
