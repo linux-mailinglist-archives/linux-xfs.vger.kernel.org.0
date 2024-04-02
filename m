@@ -1,89 +1,89 @@
-Return-Path: <linux-xfs+bounces-6175-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-6177-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2F67895EC3
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 23:35:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BD1A895EC4
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 23:36:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 426ECB24BD0
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 21:35:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6EBF1F267B5
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 21:35:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 708D315E7F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3B0015E5D9;
 	Tue,  2 Apr 2024 21:35:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="JEEUNs0W"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="NXzQZRzH"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46E115E5D5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C9115E5DC
 	for <linux-xfs@vger.kernel.org>; Tue,  2 Apr 2024 21:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712093749; cv=none; b=S2J4C1zSLoD1qD7HUd702CSnPItRlaPzWsHKygm2maM+3ddPZ19PWLwLdzOLr3z2bajzXdeapUy3TYdbfDp6mO0wvJLsfWH4cxAPiYpZi1UQ97XB5koOMibDKlKpmwKTDyxwkbYoPSRPqF9vWcGH8ibinZSelUmNDVi7vSL72OY=
+	t=1712093749; cv=none; b=RzrG3aUMYO415exn1I6SGQYGo5Xc1tpzArx+m3OYk2g5TIe815564NQkg6fx31CVudmKpDb4gXv9bJmo+RrXjItdhkTabUhKbgJbnHBpGnJuBXRXW8rP7SMXGHrhRyVHRAsUnlFZ21KxDBsg4VC/rmu0fVyBxQOHWE7O5MaQ7Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712093749; c=relaxed/simple;
-	bh=keM1ljnnPeIAbQ0bORlCquMqcu2A3JvF81NTWSeARB8=;
+	bh=lztd+BvvC/tgLjagG/Lp2VpLta0TLp3t8MrR6gBNz0o=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kjatdqEcxqBWiF32LGMc7V+jsaE3SLKjmnMrIiZl9VI0dwJpKvQsAez34dRhFs5sn+uz+PmW3lDdQYGoH+o6+cqUgqyPNYMLEBPM+n7XpT5GsiYHeMU2UktIZg41rKjvB/Fsri0/RHJqx+9MtiGXfHF3a8bYZFnanxN9E4jzOvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=JEEUNs0W; arc=none smtp.client-ip=209.85.215.182
+	 MIME-Version; b=AgaL5VywlOWqhU2liFje55oIEvQpktrdjxIinxyc8Bq+X5o04e8TsKoyi/KItS9am714ZIjY3E1TXsOk+SLl1WnsuVIIvuvDDHe8jBMcZR4kQzpzegpWJYhaoOQK7U8gler7Sd6/Pnn7MTjW/n1ZxBCA/aWra1JWlk+WSNE8z4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=NXzQZRzH; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so4338358a12.1
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e0d82d441bso51165555ad.3
         for <linux-xfs@vger.kernel.org>; Tue, 02 Apr 2024 14:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1712093747; x=1712698547; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=TPxyqSpZNKM8dOHMT3TpHef2/D/uXnXA//lmszRzxHc=;
-        b=JEEUNs0WOWLdH2NjtHZTSKvmZyVECAGjh80DEldSujhaEOvKktHMa665RgUvdO4YGb
-         Zt5Th++23Pa/qT9NGzVIompLqdYmUGR1+ru4c/C4xLqEsxry+hyxlx9NN/CoNTG9tbSW
-         hEB4lC6Twfgc2bj8gyXq5dyGl6K2R9zQRlXDXSe7vxOWeaaI0t3q49EcyA1bntDrXYXp
-         zE4bAFF2ykXAlSMSDhuHgHGQkWHudyNItcBJg1jyra+zGgZZrqT5rHFyt85pDblrXVOS
-         8RXn09hYOXMZRCDzGuaAnI36e81sf7FluA98LEFSKxneiLjeU9KNax4qXtHbOGPTdwUP
-         7vHg==
+        bh=tOw+VF89Und/L8z1kB7MLa5I0o0oJqetO+bP0JEvy/U=;
+        b=NXzQZRzHCMMtlJuXLShLxFwFknVBpkhB9L214Ua2f5zXFC9aoaXkTuYQljOPF9j7IA
+         Hz08lh+omfqBWX488gdGii5sJWhuBe9EiiCaa725DbihnsktE2kN+BAPGxIHrbErThFN
+         LU8u+LOpZERhw+oQ4dgTHXwJmtphCGFQgQUMo7FPELPqjt6656P+TXZse/pUZG+qyc+r
+         QflcheA12RuMqfPNMPLwOh72AuNuoJkAReKi5+aMs2vW3UVXtshgYKtEtSUynl5GPNq3
+         s7cvjyemWHMRH294OplDAie26ZdYHUd6YatYR3WiunnX2xJbu8jXNCYB/tbZQe2eCOk0
+         Onaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712093747; x=1712698547;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TPxyqSpZNKM8dOHMT3TpHef2/D/uXnXA//lmszRzxHc=;
-        b=MfyqhMPSuFlIT1xq/SR37uUHM4cD9BtVxduvxh9OcS3qwox39Gv+iAp6RvbCeuekHB
-         aZelRMJ9Yy9OywSMjdN9S6iH/uN0UVCI7yzwmH6FUXFxFV4h0YRec9tdp1z4U8fhyhUt
-         6BJzkiIWKczZTqw2erhQ4kVdOLhSsNvAcBj+K4j/Cc23h6JefYXwiFJ8CwA8SyZEJExg
-         sk4uLYI0kKrRYGE7TqoWq55P47WCEaZ2vlP7gCAIbCyknexZ8frgncITHpx9Q5B+OzFP
-         6jvzRmEEpNVYEr/iuwA51YqzhCaGZxsj3wg5rtH18SGwFaIOE7bk/keN+Nim0ZICOPgO
-         e64A==
-X-Gm-Message-State: AOJu0Ywi1PlRBo4o5Doj8UeUWJRD7R1yOts6Qt+dgR6yyo0DdY3sm62U
-	aE7b5yFqF7n9bohUhU/TiBZxDl5snhatlwQLfzQQ9BlTYmRsPInDLkxpONhBttm+2XAk/QE2Vfi
-	R
-X-Google-Smtp-Source: AGHT+IGLp7lvzOPTORGgzg+6weQ88RHwDTJXqg4JT4fQeDXUWBccTu73SWug8Q+xty/NLqXF/EcYjQ==
-X-Received: by 2002:a17:90a:4216:b0:2a0:33c2:997e with SMTP id o22-20020a17090a421600b002a033c2997emr11700401pjg.41.1712093746935;
-        Tue, 02 Apr 2024 14:35:46 -0700 (PDT)
+        bh=tOw+VF89Und/L8z1kB7MLa5I0o0oJqetO+bP0JEvy/U=;
+        b=NqiVuL2FM8KccKQ4RFBWjl0Aaf3oHmwe4Elbeqa3pbZB8qvGix07qW0UT0hH3h34mn
+         y3P76UfzciiK32fVEPgw2apQK5s290DxFf1e5ZWpXnZPKJNUB6VN/WNT1mdiuEFKQs4N
+         43sp7Lk77mZa1yIwPeM4qxPOi3EFGcgp77dH2dw6QVx98uDpr7lYCq4cdFhKa/+D+8G6
+         iB7671fTT18iroMM3fjyjuBrXeCGPUOGlkhcDna6OaiYIZxIScDpgK37nlAiTfVF8xAQ
+         ZY0Sj7g7NUNTVp1dnSCd2WKur4edMHIM7HW3lMebs5HM7q6+zRnEUjZU8b5qTdyGguOd
+         9d5Q==
+X-Gm-Message-State: AOJu0YxWrnCa0OHAbmDF39hn84BzfNZD4konfShX8ubzA6xGzjOIj00P
+	UI9ZaY53cLIYJALEPcPmIUAglLIhRjw0mKNApmvTEI66rJEdmrqA1DeE9ACrdJGv7a5LkHWjqzg
+	S
+X-Google-Smtp-Source: AGHT+IHn0q1zs2l7SEybokM5u0U2y5B/279zux9CDdtmcH3BlJrxigp8H4BDjuYExthcz13yHElTDg==
+X-Received: by 2002:a17:902:c40f:b0:1df:f859:91bd with SMTP id k15-20020a170902c40f00b001dff85991bdmr877949plk.4.1712093747223;
+        Tue, 02 Apr 2024 14:35:47 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id j23-20020a17090a841700b0029c5ed2c9b3sm10263086pjn.21.2024.04.02.14.35.46
+        by smtp.gmail.com with ESMTPSA id s2-20020a170902b18200b001ddb505d50asm11643331plr.244.2024.04.02.14.35.46
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 02 Apr 2024 14:35:46 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
 	by dread.disaster.area with esmtp (Exim 4.96)
 	(envelope-from <dave@fromorbit.com>)
-	id 1rrlnE-001n73-0G
+	id 1rrlnE-001n76-0Q
 	for linux-xfs@vger.kernel.org;
 	Wed, 03 Apr 2024 08:35:43 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.97)
 	(envelope-from <dave@devoid.disaster.area>)
-	id 1rrlnD-000000052FS-2UvG
+	id 1rrlnD-000000052FW-2ctf
 	for linux-xfs@vger.kernel.org;
 	Wed, 03 Apr 2024 08:35:43 +1100
 From: Dave Chinner <david@fromorbit.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 1/5] xfs: fix CIL sparse lock context warnings
-Date: Wed,  3 Apr 2024 08:28:28 +1100
-Message-ID: <20240402213541.1199959-2-david@fromorbit.com>
+Subject: [PATCH 2/5] xfs: fix sparse warning in xfs_extent_busy_clear
+Date: Wed,  3 Apr 2024 08:28:29 +1100
+Message-ID: <20240402213541.1199959-3-david@fromorbit.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240402213541.1199959-1-david@fromorbit.com>
 References: <20240402213541.1199959-1-david@fromorbit.com>
@@ -99,52 +99,90 @@ From: Dave Chinner <dchinner@redhat.com>
 
 Sparse reports:
 
-fs/xfs/xfs_log_cil.c:1127:1: warning: context imbalance in 'xlog_cil_push_work' - different lock contexts for basic block
-fs/xfs/xfs_log_cil.c:1380:1: warning: context imbalance in 'xlog_cil_push_background' - wrong count at exit
-fs/xfs/xfs_log_cil.c:1623:9: warning: context imbalance in 'xlog_cil_commit' - unexpected unlock
+fs/xfs/xfs_extent_busy.c:588:17: warning: context imbalance in 'xfs_extent_busy_clear' - unexpected unlock
 
-xlog_cil_push_background() has a locking annotations for an rw_sem.
-Sparse does not track lock contexts for rw_sems, so the
-annotation generates false warnings. Remove the annotation.
+But there is no locking bug here. Sparse simply doesn't understand
+the logic and locking in the busy extent processing loop.
+xfs_extent_busy_put_pag() has an annotation to suppresses an
+unexpected unlock warning, but that isn't sufficient.
 
-xlog_wait_on_iclog() drops the log->l_ic_loglock. The function has a
-sparse annotation, but the prototype in xfs_log_priv.h does not.
-Hence the warning from xlog_cil_push_work() which calls
-xlog_wait_on_iclog(). Add the missing annotation.
+If we move the pag existence check into xfs_extent_busy_put_pag() and
+annotate that with a __release() so that this function always
+appears to release the pag->pagb_lock, sparse now thinks the loop
+locking is balanced (one unlock, one lock per loop) but still throws
+an unexpected unlock warning after loop cleanup.
+
+i.e. it does not understand that we enter the loop without any locks
+held and exit it with the last lock still held. Whilst the locking
+within the loop is inow balanced, we need to add an __acquire() to
+xfs_extent_busy_clear() to set the initial lock context needed to
+avoid false warnings.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log_cil.c  | 2 +-
- fs/xfs/xfs_log_priv.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_extent_busy.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 73f5b7f628f4..f51cbc6405c1 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -1378,7 +1378,7 @@ xlog_cil_push_work(
-  */
- static void
- xlog_cil_push_background(
--	struct xlog	*log) __releases(cil->xc_ctx_lock)
-+	struct xlog	*log)
- {
- 	struct xfs_cil	*cil = log->l_cilp;
- 	int		space_used = atomic_read(&cil->xc_ctx->space_used);
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index e30c06ec20e3..c39956c41374 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -623,7 +623,8 @@ xlog_wait(
- 	remove_wait_queue(wq, &wait);
+diff --git a/fs/xfs/xfs_extent_busy.c b/fs/xfs/xfs_extent_busy.c
+index 56cfa1498571..686b67372030 100644
+--- a/fs/xfs/xfs_extent_busy.c
++++ b/fs/xfs/xfs_extent_busy.c
+@@ -534,12 +534,24 @@ xfs_extent_busy_clear_one(
+ 	kfree(busyp);
  }
  
--int xlog_wait_on_iclog(struct xlog_in_core *iclog);
-+int xlog_wait_on_iclog(struct xlog_in_core *iclog)
-+		__releases(iclog->ic_log->l_icloglock);
++/*
++ * Sparse has real trouble with the structure of xfs_extent_busy_clear() and it
++ * is impossible to annotate it correctly if we leave the 'if (pag)' conditional
++ * in xfs_extent_busy_clear(). Hence we always "release" the lock in
++ * xfs_extent_busy_put_pag() so sparse only ever sees one possible path to
++ * drop the lock.
++ */
+ static void
+ xfs_extent_busy_put_pag(
+ 	struct xfs_perag	*pag,
+ 	bool			wakeup)
+ 		__releases(pag->pagb_lock)
+ {
++	if (!pag) {
++		__release(pag->pagb_lock);
++		return;
++	}
++
+ 	if (wakeup) {
+ 		pag->pagb_gen++;
+ 		wake_up_all(&pag->pagb_wait);
+@@ -565,10 +577,18 @@ xfs_extent_busy_clear(
+ 	xfs_agnumber_t		agno = NULLAGNUMBER;
+ 	bool			wakeup = false;
+ 
++	/*
++	 * Sparse thinks the locking in the loop below is balanced (one unlock,
++	 * one lock per loop iteration) and doesn't understand that we enter
++	 * with no lock held and exit with a lock held. Hence we need to
++	 * "acquire" the lock to create the correct initial condition for the
++	 * cleanup after loop termination to avoid an unexpected unlock warning.
++	 */
++	__acquire(pag->pagb_lock);
++
+ 	list_for_each_entry_safe(busyp, n, list, list) {
+ 		if (busyp->agno != agno) {
+-			if (pag)
+-				xfs_extent_busy_put_pag(pag, wakeup);
++			xfs_extent_busy_put_pag(pag, wakeup);
+ 			agno = busyp->agno;
+ 			pag = xfs_perag_get(mp, agno);
+ 			spin_lock(&pag->pagb_lock);
+@@ -584,8 +604,7 @@ xfs_extent_busy_clear(
+ 		}
+ 	}
+ 
+-	if (pag)
+-		xfs_extent_busy_put_pag(pag, wakeup);
++	xfs_extent_busy_put_pag(pag, wakeup);
+ }
  
  /*
-  * The LSN is valid so long as it is behind the current LSN. If it isn't, this
 -- 
 2.43.0
 
