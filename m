@@ -1,137 +1,166 @@
-Return-Path: <linux-xfs+bounces-6181-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-6185-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1355895F64
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Apr 2024 00:11:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50939895FD4
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Apr 2024 00:52:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 90879B24632
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 22:11:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7FB6C1C23743
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Apr 2024 22:52:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4672F15ECCA;
-	Tue,  2 Apr 2024 22:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEAF829410;
+	Tue,  2 Apr 2024 22:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="rtven9yv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+Rb195/"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A8A15E80C
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Apr 2024 22:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF511D6AE;
+	Tue,  2 Apr 2024 22:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712095895; cv=none; b=F89ZEEwbwGlHFEvpmsrt5kzIkU5EJTI6e7jrbr+S72SKGu6bd9NznXeaK1qoNIFp9t5YiFAkI9sV40JnqeB9b9Oa9BrLj1+8pKzX3/y3wkfx87fQxx9C1936fZqdzRyjjk9a29+HNoAVyPMGSEN+DtTFaQAXjFoQfsSGEZ+xQMA=
+	t=1712098337; cv=none; b=lizRcw9jixiutD6WqsDlzH4uPLvsmqKHa8FIeP+GZZu7Z6BpEp18aTtwXvl5LHkEX1uxragaQTZfpLWrrGd26nO6dbek5pTyraGYlzAXnTNMwedj8vu+jIcrvigwDGvicTgOE0r1RAZ+TXzK7NSJsmAtCG45OjX+n2/AUrNjNOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712095895; c=relaxed/simple;
-	bh=xn+oTNDH/WzVR3FJqoy+C9vcPNbTs7GhI9Bgwm0uvYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O+s+sW0vVzTXt3hS5zytINe+b8ZWJ7O5kbCyuuI70NIuXnKCFmMHWoue19ndfWCmRUBIYR3vUepxliYKbxMF4o+kuZdebKF6j6NMWFBaKYonv+m4lBowIehSH7tHgJfHdS1rugObAXEMy77B/48KX+aeMQyx0fTK6zp/yYCS7d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=rtven9yv; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e0878b76f3so2936635ad.0
-        for <linux-xfs@vger.kernel.org>; Tue, 02 Apr 2024 15:11:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1712095893; x=1712700693; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YwBiuU1vbtwyp06BnjtnbYmBHFnX0UcMvJRm7jqM20Y=;
-        b=rtven9yv4TgUxSD1kWyUv715eLWwHtp6O+c/dog4nBEWbDCizjcBnPKVf754hS4qts
-         hp52XO0VkKDaZYvnJBefMRupEcXtjTq6PQRA/meLsv0cOabX+jAyIQQmEZfbQ9zNs2xY
-         ar5415avwPX2WC8CJ+h0P5YSaoi1Mewv4yaoCOI6Uf79TI4VWsJK2SRZGLTMDlsy8sBA
-         b0VS2qBoFwSv1x2lJafE+B33WKDXHbOBbPMhBMPGY1v+/wYLT83xHriVvjUDNu1lGPBG
-         z1A4CvbG5DwOAmXErycilWtHnFIKg7xssdzsHanWDOLnQA3ACcSfq9xveLR6LOYPMlKg
-         1VPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712095893; x=1712700693;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YwBiuU1vbtwyp06BnjtnbYmBHFnX0UcMvJRm7jqM20Y=;
-        b=NdbDEM/Snmccgx5ppTXTj9Fczq5upVRXg/KfJhBrqN9wUSRxS//bAxjKyuuQkikih5
-         lHuUUXlCKQlHFaxdnOQJ/FMuftTnJmri3nE/LXD8Z9YpsCZtTTL639H1TiuKhbpsAdWw
-         DJdH0jV5Nvg3E7RP6+KK7ds75uNrpPkzmEObFhM8WZb5sAqlfs4guAwxqjUMmtnZl3P7
-         DUsZN9UI73O5+OHT2/NxCEzcgpf62ObytFYx1QX8pageQJ7PYw2bcNFScM1edWhOuvS6
-         TckUnOe1rQT/a+6b69DrI9bt8Na4OHrq5smA+JufOyeV7jttQcOWP/HkhXGjNVUeFEv0
-         bI9Q==
-X-Gm-Message-State: AOJu0YxOiHLBJRX8KcGYAtByLwbyYh6crc/vw/3pcx3bUaupbIf07PpI
-	XpCk6NoEdJFd8clWykWINmYdXNMxnKUpX2Z7c6kQAu2sYK3WGyaj76nmpC39el7PLOmncrvtMVM
-	K
-X-Google-Smtp-Source: AGHT+IFrLJ5UtbYuK39D5QR3+h6jyfYpq6j1Xve0EWLdUCHLufpSdz9kjDyPn/RjWIbJGpdFejaGCQ==
-X-Received: by 2002:a17:902:fa84:b0:1e0:a2cf:62e8 with SMTP id lc4-20020a170902fa8400b001e0a2cf62e8mr814090plb.10.1712095892666;
-        Tue, 02 Apr 2024 15:11:32 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
-        by smtp.gmail.com with ESMTPSA id u10-20020a17090341ca00b001e21ddacb20sm11162160ple.297.2024.04.02.15.11.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 15:11:31 -0700 (PDT)
-Received: from [192.168.253.23] (helo=devoid.disaster.area)
-	by dread.disaster.area with esmtp (Exim 4.96)
-	(envelope-from <dave@fromorbit.com>)
-	id 1rrmLq-001osS-0E;
-	Wed, 03 Apr 2024 09:11:29 +1100
-Received: from dave by devoid.disaster.area with local (Exim 4.97)
-	(envelope-from <dave@devoid.disaster.area>)
-	id 1rrmLp-000000052r4-2Xau;
-	Wed, 03 Apr 2024 09:11:29 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: linux-xfs@vger.kernel.org
-Cc: chandanbabu@kernel.org
-Subject: [PATCH 4/4] xfs: validate block count for XFS_IOC_SET_RESBLKS
-Date: Wed,  3 Apr 2024 08:38:19 +1100
-Message-ID: <20240402221127.1200501-5-david@fromorbit.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240402221127.1200501-1-david@fromorbit.com>
-References: <20240402221127.1200501-1-david@fromorbit.com>
+	s=arc-20240116; t=1712098337; c=relaxed/simple;
+	bh=JCUX01z4imv3ohaGJcNNxza8lnFq8bCI2iYQo+Q8KyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KHOKGAkmZOI7edPVD0mdXbmjyysnf6dkwVRkSZcqgAwZ+QJakRUr9yE9DPQjjUqQQkawcAaWap4laV4mH2MJGhGKRmSWepmNkLUR3E3bOWaxvmXDf+j9uDmOs0GY4TY6Tp7wkcP5/49at3sL4Wyk+Ii28aa2eKZa7kRMnWKlSrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+Rb195/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3858C433C7;
+	Tue,  2 Apr 2024 22:52:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712098336;
+	bh=JCUX01z4imv3ohaGJcNNxza8lnFq8bCI2iYQo+Q8KyM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d+Rb195/3tMPL+2xn3xsfYWgYwB5vpbIMaaBppUtggwt8lZH3uhcy3a/vOr59P1tI
+	 pc4lnQtV/7JLof4BOrv0XyWtdVYZL15oVG6eyn6mGWOSlTBMa11UCTgoaRM2BxSFK1
+	 egKEZSNleAdO3YoTqXaVZ8QC1risSSqzrDXgvG+PZ27MK5zMBz6Ia1+oP8cR5V1tJO
+	 thqPtu2HQzPDXbTpx7FOXxUoOjgxFEx55OuMvI4VbzmTWqRMTkhLOkVvFNKQk7wz7r
+	 jMnjF9gUMmAA1aSlV49Szfr7GDDvzefjuGNM4g/AbP7T1ChNJqoqmOVG3uGkrbKFgU
+	 TDShKNv8sqAaw==
+Date: Tue, 2 Apr 2024 15:52:16 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Colin Walters <walters@verbum.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, aalbersh@redhat.com,
+	xfs <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+	fsverity@lists.linux.dev
+Subject: Re: [PATCH 28/29] xfs: allow verity files to be opened even if the
+ fsverity metadata is damaged
+Message-ID: <20240402225216.GW6414@frogsfrogsfrogs>
+References: <171175868489.1988170.9803938936906955260.stgit@frogsfrogsfrogs>
+ <171175869022.1988170.16501260874882118498.stgit@frogsfrogsfrogs>
+ <2afcf2b2-992d-4678-bf68-d70dce0a2289@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2afcf2b2-992d-4678-bf68-d70dce0a2289@app.fastmail.com>
 
-From: Dave Chinner <dchinner@redhat.com>
+On Tue, Apr 02, 2024 at 04:00:06PM -0400, Colin Walters wrote:
+> 
+> 
+> On Fri, Mar 29, 2024, at 8:43 PM, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> >
+> > There are more things that one can do with an open file descriptor on
+> > XFS -- query extended attributes, scan for metadata damage, repair
+> > metadata, etc.  None of this is possible if the fsverity metadata are
+> > damaged, because that prevents the file from being opened.
+> >
+> > Ignore a selective set of error codes that we know fsverity_file_open to
+> > return if the verity descriptor is nonsense.
+> >
+> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > ---
+> >  fs/iomap/buffered-io.c |    8 ++++++++
+> >  fs/xfs/xfs_file.c      |   19 ++++++++++++++++++-
+> >  2 files changed, 26 insertions(+), 1 deletion(-)
+> >
+> >
+> > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> > index 9f9d929dfeebc..e68a15b72dbdd 100644
+> > --- a/fs/iomap/buffered-io.c
+> > +++ b/fs/iomap/buffered-io.c
+> > @@ -487,6 +487,14 @@ static loff_t iomap_readpage_iter(const struct 
+> > iomap_iter *iter,
+> >  	size_t poff, plen;
+> >  	sector_t sector;
+> > 
+> > +	/*
+> > +	 * If this verity file hasn't been activated, fail read attempts.  This
+> > +	 * can happen if the calling filesystem allows files to be opened even
+> > +	 * with damaged verity metadata.
+> > +	 */
+> > +	if (IS_VERITY(iter->inode) && !fsverity_active(iter->inode))
+> > +		return -EIO;
+> > +
+> >  	if (iomap->type == IOMAP_INLINE)
+> >  		return iomap_read_inline_data(iter, folio);
+> > 
+> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > index c0b3e8146b753..36034eaefbf55 100644
+> > --- a/fs/xfs/xfs_file.c
+> > +++ b/fs/xfs/xfs_file.c
+> > @@ -1431,8 +1431,25 @@ xfs_file_open(
+> >  			FMODE_DIO_PARALLEL_WRITE | FMODE_CAN_ODIRECT;
+> > 
+> >  	error = fsverity_file_open(inode, file);
+> > -	if (error)
+> > +	switch (error) {
+> > +	case -EFBIG:
+> > +	case -EINVAL:
+> > +	case -EMSGSIZE:
+> > +	case -EFSCORRUPTED:
+> > +		/*
+> > +		 * Be selective about which fsverity errors we propagate to
+> > +		 * userspace; we still want to be able to open this file even
+> > +		 * if reads don't work.  Someone might want to perform an
+> > +		 * online repair.
+> > +		 */
+> > +		if (has_capability_noaudit(current, CAP_SYS_ADMIN))
+> > +			break;
+> 
+> As I understand it, fsverity (and dm-verity) are desirable in
+> high-safety and integrity requirement cases where the goal is for the
+> system to "fail closed" if errors in general are detected; anything
+> that would have the system be in an ill-defined state.
 
-Userspace can pass anything it wants in the reserved block count
-and we simply pass that to the reservation code. If a value that is
-far too large is passed, we can overflow the free space counter
-and df reports things like:
+Is "open() fails if verity metadata are trashed" a hard requirement?
 
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       14M  -27Z   27Z    - /home/dave/bugs/file0
+Reads will still fail due to (iomap) readahead returning EIO for a file
+that is IS_VERITY() && !fsverity_active().  This is (afaict) the state
+you end up with when the fsverity open fails.  ext4/f2fs don't do that,
+but they also don't have online fsck so once a file's dead it's dead.
 
-As reserving space requires CAP_SYS_ADMIN, this is not a problem
-that will ever been seen in production systems. However, fuzzers are
-running with CAP_SYS_ADMIN, and so they able to run filesystem code
-with out-of-band free space accounting.
+> A lot of ambient processes are going to have CAP_SYS_ADMIN and this
+> will just swallow these errors for those (will things the EFSCORRUPTED
+> path at least have been logged by a lower level function?)...whereas
+> this is only needed just for a very few tools.
+> 
+> At least for composefs the quoted cases of "query extended attributes,
+> scan for metadata damage, repair metadata" are all things that
+> canonically live in the composefs metadata (EROFS) blob, so in theory
+> there's a lot less of a need to query/inspect it for those use cases.
+> (Maybe for composefs we should force canonicalize all the underlying
+> files to have mode 0400 and no xattrs or something and add that to its
+> repair).
 
-Stop the fuzzers ifrom being able to do this by validating that the
-count is within the bounds of the filesystem size and reject
-anything outside those bounds as invalid.
+<shrug> I don't know if regular (i.e. non-verity) xattrs are one of the
+things that get frozen by verity?  Storing fsverity metadata in private
+namespace xattrs is unique to xfs.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_ioctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+> I hesitate to say it but maybe there should be some ioctl for online
+> repair use cases only, or perhaps a new O_NOVERITY special flag to
+> openat2()?
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d0e2cec6210d..18a225d884dd 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1892,6 +1892,9 @@ xfs_ioctl_getset_resblocks(
- 		if (copy_from_user(&fsop, arg, sizeof(fsop)))
- 			return -EFAULT;
- 
-+		if (fsop.resblks >= mp->m_sb.sb_dblocks)
-+			return -EINVAL;
-+
- 		error = mnt_want_write_file(filp);
- 		if (error)
- 			return error;
--- 
-2.43.0
+"openat2 but without meddling from the VFS"?  Tempting... ;)
 
+--D
 
