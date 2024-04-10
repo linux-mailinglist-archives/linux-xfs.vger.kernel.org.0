@@ -1,56 +1,56 @@
-Return-Path: <linux-xfs+bounces-6585-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-6586-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4FB58A0331
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Apr 2024 00:19:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EE938A03E0
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Apr 2024 01:07:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A28C1F2277E
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Apr 2024 22:19:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 803C81C21569
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Apr 2024 23:07:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B68991836F7;
-	Wed, 10 Apr 2024 22:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75CF910A11;
+	Wed, 10 Apr 2024 23:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7Xy2jnK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnHijWTS"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BD4181CE4
-	for <linux-xfs@vger.kernel.org>; Wed, 10 Apr 2024 22:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3353F138E
+	for <linux-xfs@vger.kernel.org>; Wed, 10 Apr 2024 23:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712787554; cv=none; b=kUH5Kg4GLy3NMJVDICaWQsp22bDeftW4yZc5MPS/yWRlmhB4Ha7Iih4YZVhfoYr1wOFKXWPjVEtf1lsWehyBPXuUB3K5Z4qea7t9TmSQWLq+6yX4dN9jfkn1bgi6ykNJmfwrvGy6Y+tSx1f+HWtqC9QeBownHIRJIw4kYgVQIZ4=
+	t=1712790445; cv=none; b=rYqOl7I5qkWZhT/cnnnWITq0U+7Z+c9Am5eaPpzk5bYPkWYY94nZAd7o15eDgbU1x5N9LbRkOMtJpOBz/vqupEjYeL85DD9xPgpu6KmexWOT1O/cAodHPc9tQX50/T/studPxzo0KTy2usnO7q2gKIr7r3NDaXdKSuy8CSFm8aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712787554; c=relaxed/simple;
-	bh=5M2y3BnWXyTWWnWdN2PQGi5Q7tpMME06sSosRNUlX3Q=;
+	s=arc-20240116; t=1712790445; c=relaxed/simple;
+	bh=ajv4I4mEyaE74sgnUbDP2V2C1H+iG6Prer1C17WJkm0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJ/aQAIFt4NDkBhz1kWG7QAX2NeLNg8z7hU4B/RsDbEDnQpEylkWcQ6xBb0PClfeii7f5Iuqv5YqDL4TWT4SUaTQpwm0IACk7YndXCMXO9JVa0DgbTGjNdfHTKCbYhNtZ1KuecttXvdWV2tIdkEyT6xrTNhD7pmW7A0NznLYRi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7Xy2jnK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B72C433C7;
-	Wed, 10 Apr 2024 22:19:13 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=d/2qLVjXCLUErLFckeufMT+FvwwPhcZg5rT1ZAsQdKCbSogajINXEfjzxSOtMQ2mhJ6BI4R6wPnpW1gjXSAvzV0yHbruvFLfLZ4N8btYo0fT7hX8pEDb+U4vNTFRmnHxGCCCjiLFvJXjeyjbrduAV1VB0t4MWb0+Rv5ak4xC2qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnHijWTS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9327C433F1;
+	Wed, 10 Apr 2024 23:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712787553;
-	bh=5M2y3BnWXyTWWnWdN2PQGi5Q7tpMME06sSosRNUlX3Q=;
+	s=k20201202; t=1712790444;
+	bh=ajv4I4mEyaE74sgnUbDP2V2C1H+iG6Prer1C17WJkm0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o7Xy2jnK78WNVzch2RsgbsehkHT8zC4Lzvq8g1lb6Tt4jdrbmjeTOFNErKe7jt2rD
-	 Xao7EMpbP9MKfRepp8WW6YQu8tvwTuAKah1f+opfz7OEVIe/uJbyCiHQVC7o5GOxpL
-	 yJWLYUouMysV7wexhwSWngxXvkeic6sDq7OOLmsEgNlHCMv27YI5w+J4AaTtTLx6k4
-	 U1j1VakQI+XuEMoJZVejWhnes+zLhfiecXQsqlBqUhD7Krbp36F3eg9R4RPBmZvfdD
-	 NM4t5SINrb7cGKdQIU/bcN3Em1ZQOKDSTtfwiuITSDtw+/ucZZiu3Vlr/vct11s6AW
-	 KSQur01O+rB1Q==
-Date: Wed, 10 Apr 2024 15:19:13 -0700
+	b=ZnHijWTStGu/PXVg8TJRya1robygeiJS066jO7ZBXvIJM06S2zC5BpA9qbgElc5Xt
+	 E4Z1jP8v/2Nnrh2iWD9JlGM8jJDNfR6mRxvOhNeZX+LwN5yjKSQnvXHACuGzW21u97
+	 bWLBhuIu6N8hUl53ZjuEVN8BwdVaNFPnjD/LTLuCtfsvMyWgB8hFsg4Mg49rRaaY/8
+	 NbEYiUzTPy2AjGl0YPRPtGctRqi64hFVRuf9awrBaA7kM7n1qS673VkbAj1sRG3bVS
+	 ot9alVdeZHP8AX1IismEkundh1FJuY9VXSjH/DQ0OZs1VsvfsSY6x2MGFC7SiVXKKF
+	 KJwXzh5iBVziw==
+Date: Wed, 10 Apr 2024 16:07:24 -0700
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: Christoph Hellwig <hch@infradead.org>
-Cc: hch@lst.de, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] xfs: reduce the rate of cond_resched calls inside
- scrub
-Message-ID: <20240410221913.GM6390@frogsfrogsfrogs>
-References: <171270972010.3634974.14825641209464509177.stgit@frogsfrogsfrogs>
- <171270972034.3634974.9974180590154996582.stgit@frogsfrogsfrogs>
- <ZhaoZ3NefVUXXx0b@infradead.org>
+Cc: Allison Henderson <allison.henderson@oracle.com>,
+	catherine.hoang@oracle.com, hch@lst.de, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 11/32] xfs: log parent pointer xattr replace operations
+Message-ID: <20240410230724.GN6390@frogsfrogsfrogs>
+References: <171270969477.3631889.12488500941186994317.stgit@frogsfrogsfrogs>
+ <171270969740.3631889.12974902040083725812.stgit@frogsfrogsfrogs>
+ <ZhYi73ThMtCUVrF5@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -59,24 +59,86 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZhaoZ3NefVUXXx0b@infradead.org>
+In-Reply-To: <ZhYi73ThMtCUVrF5@infradead.org>
 
-On Wed, Apr 10, 2024 at 07:55:35AM -0700, Christoph Hellwig wrote:
-> On Tue, Apr 09, 2024 at 06:08:38PM -0700, Darrick J. Wong wrote:
-> > Surprisingly, this reduces scrub-only fstests runtime by about 2%.  I
-> > used the bmapinflate xfs_db command to produce a billion-extent file and
-> > this stupid gadget reduced the scrub runtime by about 4%.
+On Tue, Apr 09, 2024 at 10:26:07PM -0700, Christoph Hellwig wrote:
+> On Tue, Apr 09, 2024 at 05:56:22PM -0700, Darrick J. Wong wrote:
+> > From: Allison Henderson <allison.henderson@oracle.com>
+> > 
+> > The parent pointer code needs to do a deferred parent pointer replace
+> > operation with the xattr log intent code.  Declare a new logged xattr
+> > opcode and push it through the log.
+> > 
+> > (Formerly titled "xfs: Add new name to attri/d" and described as
+> > follows:
 > 
-> I wish the scheduler maintainers would just finish sorting out the
-> preemption models mess and kill cond_resched() and we wouldn't need this.
+> I don't think this history is very important.  The being said,
+> I suspect this and the previous two patches should be combined into
+> a single one adding the on-disk formats for parent pointers, and the
+> commit log could use a complete rewrite saying that it a
 
-Yeah, I heard that might not happen or ... something.
+I combined the three patches into this:
 
-> But until then:
+    xfs: create attr log item opcodes and formats for parent pointers
+
+    Make the necessary alterations to the extended attribute log intent item
+    ondisk format so that we can log parent pointer operations.  This
+    requires the creation of new opcodes specific to parent pointers, and a
+    new four-argument replace operation to handle renames.  At this point
+    this part of the patchset has changed so much from what Allison original
+    wrote that I no longer think her SoB applies.
+
+    Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+
+and about time, I was getting real irritated at having to iterate back
+and forth across those. ;)
+
+> > +			return false;
+> > +		if (attrp->alfi_old_name_len == 0 ||
+> > +		    attrp->alfi_old_name_len > XATTR_NAME_MAX)
+> > +			return false;
+> > +		if (attrp->alfi_new_name_len == 0 ||
+> > +		    attrp->alfi_new_name_len > XATTR_NAME_MAX)
+> > +			return false;
 > 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Given that we have four copies of this (arguably simple) check,
+> should we grow a helper for it?
 
-Thanks!
+static inline bool
+xfs_attri_validate_namelen(unsigned int namelen)
+{
+	return namelen > 0 && namelen <= XATTR_NAME_MAX;
+}
+
+Done.
+
+> > +		if (attrp->alfi_value_len == 0 ||
+> > +		    attrp->alfi_value_len > XATTR_SIZE_MAX)
+> > +			return false;
+> 
+> All parent pointer attrs must be sized for exactly the parent_rec,
+> so we should probably check for that explicitly?
+
+Done.
+
+> > +	if (xfs_attr_log_item_op(old_attrp) == XFS_ATTRI_OP_FLAGS_PPTR_REPLACE) {
+> 
+> Please avoid the overly long line here.
+
+I've turned that into a switch()
+
+> >  
+> > +	/* Validate the new attr name */
+> > +	if (new_name_len > 0) {
+> > +		if (item->ri_buf[i].i_len != xlog_calc_iovec_len(new_name_len)) {
+> 
+> .. and here.
+> 
+> And while we're at it, maybe factor the checking for valid xattr
+> name and value log iovecs into little helper instead of duplicating
+> them a few times?
+
+Ok, I'll add that as a prep patch.
 
 --D
 
