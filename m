@@ -1,87 +1,87 @@
-Return-Path: <linux-xfs+bounces-7022-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7024-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87EC08A8398
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 14:59:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2853C8A839A
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 14:59:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 43651285833
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 12:59:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ABA241F22024
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 12:59:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B600813D53D;
-	Wed, 17 Apr 2024 12:59:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1094713D265;
+	Wed, 17 Apr 2024 12:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K//KWyd4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KsdTjItD"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C38513D265
-	for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 12:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D4D13D60E
+	for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 12:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713358787; cv=none; b=Kj76vFf9HLL6h7ozcxSkp7vMW/mNlhBDtxT323gqFPDLCzrjV/LHmrCIxDfEl0a0ray+pO/geWHd3F/qm3Yv7nx3npkOgbvsDimX+zeFiPpj6+tD0vtN2yIzf9xcHjpLhursY9YQxBeNbgjyUBvBW8w70Ma92jH9O6rPd/OICsc=
+	t=1713358789; cv=none; b=GBMcO6yv+T/ibn9UnIG0T60o+iJ69J/A0RzmJZuK3ij8oHprqCrDAN5jXj+BeLGo4guJR7p0OG/7etur7raAz71OnSnwppsvKzwq9NWm/8pRZ2OojHZAY7FDvUm5HLIUz9k+OL674r6K1WvNVBEyY8FDKDGaM0V5XJ19FPkXxF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713358787; c=relaxed/simple;
-	bh=ZNVbwtxD85cCeqweuaKEK0b9mByz5cJu7n0S4ki4yX4=;
+	s=arc-20240116; t=1713358789; c=relaxed/simple;
+	bh=P/zr1bm4lHa79KAEZ5p+CDg+y9znvMI3untO6KB1ruQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oYM9AuISVE6OX28f9ZrGMVHohsFzCDiEnUYx7zECuxUgeSEuEpkoqnSI8x2/5u1a/oMarGOF1fk0RuXafJhxRZ/ebpr6ceX/c5wrlj1Nxudv11tyD5Mbgbj4LJnWgZU7sPj3eywahKuY6WzJ07SOrjptpD108JykX6LgGFZo/xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K//KWyd4; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Of4av7XqQ/nIWw26Zlr9pYNlnqhlrkRHWNjDjAHvH6Og9VD+3nmqjcSaewChtSKuAc+E7gSjKfqTCy/3/s+JZJjwQCtVxLDZppW24vpYxZSe9EfngopE8+1ot+eoiRy6QApjvdMcRJrFhGTDRkH0N1UmvuFz5rj4H2MsvFyQVlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KsdTjItD; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713358785;
+	s=mimecast20190719; t=1713358786;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=khb2u3O/il9uk77RiG+4Pil1DtPMbjmv6VNImXopwLc=;
-	b=K//KWyd4OfFonIDJCQxdT+4VoKMdt58/jMCPksEG3u+Qebst9S7FrffOgB5yeo4n1J3EdQ
-	4u6pZb5admxfggdLYpIiIAqb0pPhpDmwJyYaUhf9izphZcR6eiFTg6WrltWOXDz9Po/pNU
-	rIIyeu1IBdtotj1tOJHbbD4hT2RG7kw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=uEg4xBBqpeCcsMV92BDVzCp9dpU/ax645khbqXi1Yxw=;
+	b=KsdTjItDnVDfNqDDoC4mHNX1n2g79wdIA46B6E/K6D5EsRP+0eKkD1v3+ONJLNxxbtzo+E
+	C4tyumxA5jnirY205rv8kD5PdjdgLKYKlagFGu6GbIRenxXNTLcQNL0uNG/YPSnAmHJdjg
+	Htt8Yo+oYLC1O+QelXstvB7Ih6V8yRU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-246-NEwPBhpAOOC3YDCnp7VgmQ-1; Wed, 17 Apr 2024 08:59:44 -0400
-X-MC-Unique: NEwPBhpAOOC3YDCnp7VgmQ-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a51eb0c14c8so256709066b.0
-        for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 05:59:42 -0700 (PDT)
+ us-mta-562-Ha2nM-2QOMKnMPbS7xBtzA-1; Wed, 17 Apr 2024 08:59:44 -0400
+X-MC-Unique: Ha2nM-2QOMKnMPbS7xBtzA-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a51b00fc137so428321766b.0
+        for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 05:59:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713358782; x=1713963582;
+        d=1e100.net; s=20230601; t=1713358783; x=1713963583;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=khb2u3O/il9uk77RiG+4Pil1DtPMbjmv6VNImXopwLc=;
-        b=GH9qVUPozcEKBYzxVuRHvEYDJ0OzRqjE1HiBvN5dqKnq+dNb7fOyu4NhcGn6SpJbv2
-         zZyrom9yUHshZzj5VIWF3iP0uNyZENdFIzKAZCQHTJQM97U0N8Z55yIL0JR6f5BP9TSw
-         /sLLOfI3dIuE6mtRZEs3NdBX/KVI9+PV91O82bmfU+OcsYPxGCC/Z9aIJF+1UWGcIfVB
-         PFuLMnZ0l/e0jsGwOZTXMPweEAjwGpFrAlaPB4eP0IeL/6lGp5IKlyk33CfRckjPS0iI
-         g597uTSRBpxYGh8JG2pKCdr6oJPLtiZadQA9oqBqtbTWYy5kpuf6eDWRPSRXNdUpSQvu
-         3pDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyPLpIbwdePhYS3Y1c2v2Q9FeKxDGBu9oDKEUjdUS90XPdJL6ya0DLEett2vnocjEeJXBknWYErf6KmBYrKkf8HnLJ27AfDcro
-X-Gm-Message-State: AOJu0Yxr2f0xo/qGHRltB/9gY5TXUtTYexYTee+FuKaufgFJjnMwcYQI
-	+/pc4OWwQVoLCiMuE0IRifkURuBNUbcUmkFKXS49envCKSJvPwyzS7V2hpp1LPQ1G8Atw6+K8DU
-	s4KfLMHRhCb+ygaEgBfsL8Q9p+T/aab24dNciekbm4raYKWpSvS8kGoIc
-X-Received: by 2002:a17:906:f34c:b0:a55:5620:675c with SMTP id hg12-20020a170906f34c00b00a555620675cmr1226329ejb.34.1713358781801;
-        Wed, 17 Apr 2024 05:59:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYQ+GXDJoFqazMFkCVzQtRvB1kJ45xZBHiwO5JdZoDwoAPr7NkjlIPIwh/o/KgMxlNw5tzLQ==
-X-Received: by 2002:a17:906:f34c:b0:a55:5620:675c with SMTP id hg12-20020a170906f34c00b00a555620675cmr1226312ejb.34.1713358781237;
-        Wed, 17 Apr 2024 05:59:41 -0700 (PDT)
+        bh=uEg4xBBqpeCcsMV92BDVzCp9dpU/ax645khbqXi1Yxw=;
+        b=i+J1TD5waZD3MfudgaBZ9M06WbOpaUXpdPw5JYidnzj8v8XQf8POwu4IMWVdk6g5Ro
+         CTR93IA6kvdI3X98M0W/zVrer969f/02eJ3GwRg2AMAKDgBv+xRFcZlu8v/iun2kqOnU
+         KVG+JXJvnhA53c7zUJ6/62Xjyx1rHMAJNqliFuT7cYYJIV8UfwMLJZ4FRlFIV2U5YZLn
+         73cD0OaN6mJcVQQGfwOwHFuZ5Pa5+u+8LWGw/YmVUS9PoJW/nRzNsBN/5/Kj+kbpLpYu
+         kLH5xPU1advY03DIp3rOIuvn4Ss/p7IVY1/1ZqWSTq2ovWVeXuRE+v4SkAIhT4V8i5Eq
+         46hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXvNRrTmwYkNrBx/fNofQnwSaEinX9CQpTBC77QIKW0vvq5WpZclgINd56bsRiPWyFXZgdfzjNkF+VETQB2a9lWtgp6uBoBQEVD
+X-Gm-Message-State: AOJu0YxSNI1RpuAVVx6HHbUX/qonqckHvNLrqDltAAAs/HY4p8gVHo1Q
+	pYypNLKozDNYZbqz4/r06gjMJTWQOGNiOPQx60YEFMpzUfajh4N+MjJxViK7TzR6lvllnKDjg1q
+	slPGsskzXAk+JA71TpZ4cPNo1w+0TcutXYJV0NLpJCbQ59n0aIhpKwXdMppaPr3gp
+X-Received: by 2002:a17:906:37db:b0:a55:6453:67f with SMTP id o27-20020a17090637db00b00a556453067fmr402072ejc.40.1713358782874;
+        Wed, 17 Apr 2024 05:59:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF5S1OylbUGWpXjQtX59vw661MbsWOgfEFU2ojQWASsQdfV76QXgQ4/qn4ZSVfeGwONchs6Sg==
+X-Received: by 2002:a17:906:37db:b0:a55:6453:67f with SMTP id o27-20020a17090637db00b00a556453067fmr402055ejc.40.1713358782441;
+        Wed, 17 Apr 2024 05:59:42 -0700 (PDT)
 Received: from thinky.redhat.com ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id gc22-20020a170906c8d600b00a534000d525sm3330252ejb.158.2024.04.17.05.59.40
+        by smtp.gmail.com with ESMTPSA id gc22-20020a170906c8d600b00a534000d525sm3330252ejb.158.2024.04.17.05.59.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 05:59:40 -0700 (PDT)
+        Wed, 17 Apr 2024 05:59:41 -0700 (PDT)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 To: cem@kernel.org,
 	linux-xfs@vger.kernel.org
 Cc: djwong@kernel.org,
 	hch@infradead.org,
 	Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH v2 1/3] xfs_fsr: replace atoi() with strtol()
-Date: Wed, 17 Apr 2024 14:59:35 +0200
-Message-ID: <20240417125937.917910-2-aalbersh@redhat.com>
+Subject: [PATCH v2 2/3] xfs_db: add helper for flist_find_type for clearer field matching
+Date: Wed, 17 Apr 2024 14:59:36 +0200
+Message-ID: <20240417125937.917910-3-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240417125937.917910-1-aalbersh@redhat.com>
 References: <20240417125937.917910-1-aalbersh@redhat.com>
@@ -93,60 +93,97 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace atoi() which silently fails with strtol() and report the
-error.
+Make flist_find_type() more readable by unloading field type
+matching to the helper.
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- fsr/xfs_fsr.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ db/flist.c | 60 ++++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 38 insertions(+), 22 deletions(-)
 
-diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
-index 02d61ef9399a..cf764755288d 100644
---- a/fsr/xfs_fsr.c
-+++ b/fsr/xfs_fsr.c
-@@ -164,7 +164,13 @@ main(int argc, char **argv)
- 			usage(1);
- 			break;
- 		case 't':
--			howlong = atoi(optarg);
-+			errno = 0;
-+			howlong = strtol(optarg, NULL, 10);
-+			if (errno) {
-+				fprintf(stderr, _("%s: invalid interval: %s\n"),
-+					optarg, strerror(errno));
-+				exit(1);
-+			}
- 			if (howlong > INT_MAX) {
- 				fprintf(stderr,
- 				_("%s: the maximum runtime is %d seconds.\n"),
-@@ -179,10 +185,24 @@ main(int argc, char **argv)
- 			mtab = optarg;
- 			break;
- 		case 'b':
--			argv_blksz_dio = atoi(optarg);
-+			errno = 0;
-+			argv_blksz_dio = strtol(optarg, NULL, 10);
-+			if (errno) {
-+				fprintf(stderr,
-+					_("%s: invalid block size: %s\n"),
-+					optarg, strerror(errno));
-+				exit(1);
-+			}
- 			break;
- 		case 'p':
--			npasses = atoi(optarg);
-+			errno = 0;
-+			npasses = strtol(optarg, NULL, 10);
-+			if (errno) {
-+				fprintf(stderr,
-+					_("%s: invalid number of passes: %s\n"),
-+					optarg, strerror(errno));
-+				exit(1);
-+			}
- 			break;
- 		case 'C':
- 			/* Testing opt: coerses frag count in result */
+diff --git a/db/flist.c b/db/flist.c
+index 0a6cc5fcee43..ab0a0f133804 100644
+--- a/db/flist.c
++++ b/db/flist.c
+@@ -400,6 +400,40 @@ flist_split(
+ 	return v;
+ }
+ 
++static flist_t *
++flist_field_match(
++	const field_t		*field,
++	fldt_t			type,
++	void			*obj,
++	int			startoff)
++{
++	flist_t			*fl;
++	int			count;
++	const ftattr_t		*fa;
++	flist_t			*nfl;
++
++	fl = flist_make(field->name);
++	fl->fld = field;
++	if (field->ftyp == type)
++		return fl;
++	count = fcount(field, obj, startoff);
++	if (!count)
++		goto out;
++	fa = &ftattrtab[field->ftyp];
++	if (!fa->subfld)
++		goto out;
++
++	nfl = flist_find_ftyp(fa->subfld, type, obj, startoff);
++	if (nfl) {
++		fl->child = nfl;
++		return fl;
++	}
++
++out:
++	flist_free(fl);
++	return NULL;
++}
++
+ /*
+  * Given a set of fields, scan for a field of the given type.
+  * Return an flist leading to the first found field
+@@ -413,33 +447,15 @@ flist_find_ftyp(
+ 	void		*obj,
+ 	int		startoff)
+ {
+-	flist_t	*fl;
+ 	const field_t	*f;
+-	int		count;
+-	const ftattr_t  *fa;
++	flist_t		*fl;
+ 
+ 	for (f = fields; f->name; f++) {
+-		fl = flist_make(f->name);
+-		fl->fld = f;
+-		if (f->ftyp == type)
++		fl = flist_field_match(f, type, obj, startoff);
++		if (fl)
+ 			return fl;
+-		count = fcount(f, obj, startoff);
+-		if (!count) {
+-			flist_free(fl);
+-			continue;
+-		}
+-		fa = &ftattrtab[f->ftyp];
+-		if (fa->subfld) {
+-			flist_t *nfl;
+-
+-			nfl = flist_find_ftyp(fa->subfld, type, obj, startoff);
+-			if (nfl) {
+-				fl->child = nfl;
+-				return fl;
+-			}
+-		}
+-		flist_free(fl);
+ 	}
++
+ 	return NULL;
+ }
+ 
 -- 
 2.42.0
 
