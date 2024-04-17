@@ -1,87 +1,86 @@
-Return-Path: <linux-xfs+bounces-7044-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7046-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36DDA8A8835
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 17:54:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 350558A88A4
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 18:17:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B5131B25473
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 15:54:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C818D1F22D89
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 16:17:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2013D147C89;
-	Wed, 17 Apr 2024 15:54:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275E1148839;
+	Wed, 17 Apr 2024 16:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICIBVbOJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALJyDKyl"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CB5147C73;
-	Wed, 17 Apr 2024 15:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D48F1487F9
+	for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 16:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713369289; cv=none; b=BPb5dSn3ozKlzJ07mq0rBTdpdr+PQbFSljebzlT/Sx/ifwxbwAMTggUu7OMc0HpVdeJj4xRgbTq3CdZjtzp0Xw9zpkoDX3CFmYR4kik3EGSCMwEYXXpgWRpcdAL4XzvPVfDx4i4PT64edHj38rREme0ltSjW7Q0DHOrfT8bjv8U=
+	t=1713370621; cv=none; b=DUFLlOwHomp5pns/AH5mEv8O1U+2JBrTAlH7kU84bzPgeyWPLTPfwhz4FqOljgV3wfPa78rA1KH6/TPKNl913Ro85sBY+tU2k6PB2UY89d9tJdSMPrKfperxHkldrUhcdq6VCjzfw0qV8xREa7hx5JJTY6C5wXr0tebocGRkNQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713369289; c=relaxed/simple;
-	bh=/0c7qbugORSRDUT3Tao0AyZsP472TFg1XC0KOJ8XIKM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cFzAM4rGDSWpLxMC79Uy/lwl+ypDZejk9Ea7w9RL9KMXQQjY5o+lV1tKJD8tTY53w6VemoNDqC7fO/PI5dCfdIAHbDmAFhptGtJnPUW2u3MHUbXZ9/wXJ2hyOyALCXUmBZVBHdUahXMT8aQ2xXB5Tl6b5iErfrgugF18FMWkffs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICIBVbOJ; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed054f282aso4373131b3a.0;
-        Wed, 17 Apr 2024 08:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713369288; x=1713974088; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WPsrdMv31Rp+1MDJraOEnQqOhO3h8PTSfrt8iLohWrs=;
-        b=ICIBVbOJ+S8JrbS8oBDZEJjACLdd+aLKMFJM9wt4eCxAxndxNgRi4xSjc1PseVGLNI
-         3LQ5KsJ9JJ9zjznp9Pu3xknuUXD1kVVxyShd8BNNLXyymztD4lYaVqlKL2IksPcjeuk2
-         fh6hXlm9Btt1O7xkuFYU6n69eg6RbmJdT5xnZ3W3KF02VPt4lLXVMWLaKvXNZHtOvGb0
-         iu+WD5qryO723XcLC50bFY5mTbmsrMcFjQ9vqGiY1eG0uN+F8QLIZ5iR2YoXhN4v3r34
-         Ai29stj/EBXo4owEGc0Cgd3a3XyMjg0axHSzonfj2Ofu2d9BefPjT+3immFL8gKIdJuT
-         kUbw==
+	s=arc-20240116; t=1713370621; c=relaxed/simple;
+	bh=wY2tq1B//mZeOkq3xwVsr2uwJrRTR4TjXEKPh8qkRxA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NGYYRD0aW/P+YUAFg6qZF8Ue2VXFF+WlDGu3JNUQJK2DcI6vz5OD48z0tAp2Kltp7iNXKRtkar09IqxNbJH5nNRZa/q8Bn6yKH4pebeE38B+XFxp2gDDehmezfzUr1ve0/cwGkfrcMsuaurYGUzOKr5YVajdUemPCjZWNSsp9uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ALJyDKyl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713370619;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nRRLovry71cgv+BdKoEPqGQctfDDkV/IEeIQXMGow9I=;
+	b=ALJyDKylynQKXWXhfNU4rYlJl92bPH0jUS0zwbn87fecdOSsBALvK+DckVXu9jYOQ/B6Vp
+	aCuRGqZIXiwS3s7N+ssgG8WFRBmm/PbvMqh7tTbkJXsKQfbomuWx/0kVsJg70Jr1TwGnJp
+	Es1NmYAE0Szh32rgNhr+UNANKZGKtCM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-539-WSPBSTGxO1GQ-cwgg1L5uw-1; Wed, 17 Apr 2024 12:16:56 -0400
+X-MC-Unique: WSPBSTGxO1GQ-cwgg1L5uw-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a4488afb812so342803866b.3
+        for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 09:16:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713369288; x=1713974088;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WPsrdMv31Rp+1MDJraOEnQqOhO3h8PTSfrt8iLohWrs=;
-        b=Ie7gq5fS9EriBal8UfrPn9uXjFd9VYzTab3Ow1ELkyB5vuo5QhlGlws02YNP7bOeLd
-         QY0OTTk1hBEbP/h4JCZpoM6VVTiuuBMLTkIMTGRw38pdEmCSJoMJFlmM3uQV897GxF1P
-         elg2uushJ7SGNAEboq7hQ/MYzebdIK4dO9iXuyhKxSSlnvDUtSp7clomBYnlWcAha4Qv
-         D/3BjUR4RI3RjDbvYpoXFIa3gnvw72zj/uQTBghApw8zP+7aVg9w6Aoz18dzR11ip7wq
-         8J+gtdnzNMMx+JS+vlNXz4qcikAb/HXbjcZLhnCjXbgyZLTelQWt3T+2D2UEDF0nFLTE
-         o1Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0VOECl3uIL/Tf0YmKukIz6NYf1CVKnwsnia/kIt70fwzNUDF6AF/iTtResVMtT6jdorCqw00Z/N1HUoe2armjRNb1Wbv1PY38tjCJ2cGYyY5muqEiMm/r9002jp/ToqZe1ccCWVCi
-X-Gm-Message-State: AOJu0YyZf+M4ln+TPXiXDK53JH3/jVqyBBOADFCh8Qd2hsmTTLop49xr
-	wqPF6w/HdbXMoM0AhECAZzuQ0IuWt/8kX/6zosg0jEN1dR0TFhw4
-X-Google-Smtp-Source: AGHT+IG/I5jJESiKZMbj3MkqKSp8f8GJod4j+iEFJdRMX8TKJjReIzCJfALi1V5JNp82LB9aSmhNsw==
-X-Received: by 2002:a05:6a20:7483:b0:1a9:da1f:1679 with SMTP id p3-20020a056a20748300b001a9da1f1679mr33140pzd.34.1713369287698;
-        Wed, 17 Apr 2024 08:54:47 -0700 (PDT)
-Received: from localhost.localdomain ([14.22.11.163])
-        by smtp.gmail.com with ESMTPSA id i15-20020a17090332cf00b001e555697361sm11600037plr.220.2024.04.17.08.54.45
+        d=1e100.net; s=20230601; t=1713370615; x=1713975415;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nRRLovry71cgv+BdKoEPqGQctfDDkV/IEeIQXMGow9I=;
+        b=LFU1QxNuXX8dFDGrT4LQN6uvwc2p8k3ONq3eYBgmt58ixuVrmqkH+Wh+i3LZeVo3lZ
+         /a1UrBDhxlQbGdX/MU02QkP1WlZlgb0jXBnNzYRqFvG88PCUVmipcH1j4dnwPt7JWDCI
+         PF+2K+DwZMYfs1ajvGHhOvEcz4+6N9pC2HxHvUyrumiucgAPMoVa2QYjQ4RrJN0u9lVG
+         Hd6bTy2No4LW01n/gAezUyBjpICAfsSQ/jgPjB2p7wtPghUQI1m4NGTm1/CmPKMo5XQc
+         7OLVRlkTEiJERgL1o5gqfKJwEJikMkeEj1RpIGVoofaYw72aeiAHOM/QHAg3tg8VPzqc
+         /BDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmeP6OtJQ2LtWxmoSypOVVEDKNXdQJ5YJAJC5qS5N11nQ46Vav22j3NSmbFkrgLvg8u0R0k+YUEvMVUSXJXbM/PhaIntP+UqZo
+X-Gm-Message-State: AOJu0YzhnIsKLIVgX8YLB9wTNzCkNEdBkdOgusteFFS+urK07zcKJZ6M
+	lqcTEQqHsshO0u9aGdJiPO5ZL0FEwQ/NdNM/U5oRBFpbpsaAPYZ3aN6l7XgVHUr1NVUq5qhlYdA
+	LtX+wxqgPo3y67Y9nIoqz9lJ7CP0n8o57N55/OqFGNJvPRjRv1kPGk4dq
+X-Received: by 2002:a17:906:f34c:b0:a55:5620:675c with SMTP id hg12-20020a170906f34c00b00a555620675cmr1604313ejb.34.1713370615217;
+        Wed, 17 Apr 2024 09:16:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFXuF92fdhm3lXDkXPLq3GUBPEhEiBualh4Y+mXv+WXVJ4G0M8BbgsrGOxIVu9AZz3uy1nPOA==
+X-Received: by 2002:a17:906:f34c:b0:a55:5620:675c with SMTP id hg12-20020a170906f34c00b00a555620675cmr1604293ejb.34.1713370614550;
+        Wed, 17 Apr 2024 09:16:54 -0700 (PDT)
+Received: from thinky.redhat.com ([109.183.6.197])
+        by smtp.gmail.com with ESMTPSA id p4-20020a17090635c400b00a4a33cfe593sm8272427ejb.39.2024.04.17.09.16.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 08:54:47 -0700 (PDT)
-From: Jinliang Zheng <alexjlzheng@gmail.com>
-X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
-To: djwong@kernel.org
-Cc: alexjlzheng@gmail.com,
-	alexjlzheng@tencent.com,
-	chandan.babu@oracle.com,
-	david@fromorbit.com,
-	linux-kernel@vger.kernel.org,
+        Wed, 17 Apr 2024 09:16:54 -0700 (PDT)
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: cem@kernel.org,
 	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v3 RESEND] xfs: remove redundant batch variables for serialization
-Date: Wed, 17 Apr 2024 23:54:38 +0800
-Message-Id: <20240417155438.1060996-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240417152713.GX11948@frogsfrogsfrogs>
-References: <20240417152713.GX11948@frogsfrogsfrogs>
+Cc: djwong@kernel.org,
+	hch@infradead.org,
+	Andrey Albershteyn <aalbersh@redhat.com>
+Subject: [PATCH v4 0/4] xfsprogs random fixes found by Coverity scan
+Date: Wed, 17 Apr 2024 18:16:42 +0200
+Message-ID: <20240417161646.963612-1-aalbersh@redhat.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -90,54 +89,44 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 17 Apr 2024 08:27:13 -0700, djwong@kernel.org wrote:
-> On Wed, Apr 17, 2024 at 08:07:35PM +0800, alexjlzheng@gmail.com wrote:
-> > From: Jinliang Zheng <alexjlzheng@tencent.com>
-> > 
-> > Historically, when generic percpu counters were introduced in xfs for
-> > free block counters by commit 0d485ada404b ("xfs: use generic percpu
-> > counters for free block counter"), the counters used a custom batch
-> > size. In xfs_mod_freecounter(), originally named xfs_mod_fdblocks(),
-> > this patch attempted to serialize the program using a smaller batch size
-> > as parameter to the addition function as the counter approaches 0.
-> > 
-> > Commit 8c1903d3081a ("xfs: inode and free block counters need to use
-> > __percpu_counter_compare") pointed out the error in commit 0d485ada404b
-> > ("xfs: use generic percpu counters for free block counter") mentioned
-> > above and said that "Because the counters use a custom batch size, the
-> > comparison functions need to be aware of that batch size otherwise the
-> > comparison does not work correctly". Then percpu_counter_compare() was
-> > replaced with __percpu_counter_compare() with parameter
-> > XFS_FDBLOCKS_BATCH.
-> > 
-> > After commit 8c1903d3081a ("xfs: inode and free block counters need to
-> > use __percpu_counter_compare"), the existence of the batch variable is
-> > no longer necessary, so this patch is proposed to simplify the code by
-> > removing it.
-> > 
-> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-> > ---
-> > Changelog:
-> > 
-> > v3: Resend for the second time 
-> > 
-> > v2: https://lore.kernel.org/linux-xfs/20230918043344.890817-1-alexjlzheng@tencent.com/
-> > 
-> > v1: https://lore.kernel.org/linux-xfs/20230908235713.GP28202@frogsfrogsfrogs/T/#t
-> 
-> ...you still haven't answered my question from V1: What problem are you
-> solving with this patch?
+Hi all,
 
-Hi, thank you for your reply. :)
+This is bunch of random fixes found by Coverity scan, there's memory
+leak, truncation of time_t to int, access overflow, and freeing of
+uninitialized struct.
 
-I'm trying to simplify the code. When percpu_counter_add_batch() and
-__percpu_counter_compare() use the same batch size, percpu_counter can count
-correctly, so there is no need to reduce the batch size to 1, which will cause
-unnecessary serialization.
+v4:
+- remove parentheses and conversion in another expression; add
+  spaces for operators
+v3:
+- better error message
+v2:
+- remove parentheses
+- drop count initialization patch as this code goes away with parent
+  pointers
+- rename unload: label
+- howlong limit
 
-Best regards,
-Jinliang Zheng
+--
+Andrey
 
-> 
-> --D
+Andrey Albershteyn (4):
+  xfs_db: fix leak in flist_find_ftyp()
+  xfs_repair: make duration take time_t
+  xfs_scrub: don't call phase_end if phase_rusage was not initialized
+  xfs_fsr: convert fsrallfs to use time_t instead of int
+
+ db/flist.c          |  4 +++-
+ fsr/xfs_fsr.c       | 10 ++++++++--
+ repair/globals.c    |  2 +-
+ repair/globals.h    |  2 +-
+ repair/progress.c   |  7 ++++---
+ repair/progress.h   |  2 +-
+ repair/xfs_repair.c |  2 +-
+ scrub/xfs_scrub.c   |  3 ++-
+ 8 files changed, 21 insertions(+), 11 deletions(-)
+
+-- 
+2.42.0
+
 
