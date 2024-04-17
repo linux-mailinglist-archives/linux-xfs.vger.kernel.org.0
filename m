@@ -1,90 +1,65 @@
-Return-Path: <linux-xfs+bounces-7023-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7025-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A59C98A8399
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 14:59:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 130538A8601
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 16:35:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C8A621C21EB3
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 12:59:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB0C51F21B55
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Apr 2024 14:35:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81700132803;
-	Wed, 17 Apr 2024 12:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E664132807;
+	Wed, 17 Apr 2024 14:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PxQDi30T"
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="v6adRhdk"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF14613D602
-	for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 12:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260FE84FDF
+	for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 14:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713358789; cv=none; b=uSAu0EfqTQKHiIcdLaWk1Y+/R+DaDBsvVt5yWgYRxVZamZnG3vM4nmhn7zkXc65xmCqBCr2S6I9NGHZtGDD1w6GDDUHM/rSy5+hGkZ5nuZ8K6ZmyyQtFYB7wNo7JRqgZLJ0uI5jzIM4VWKMmsYsgAe16UXI09UM0Tmd/HTlY4zE=
+	t=1713364530; cv=none; b=Hmv8z/JiLmoPKPOT7WNt9hKu0xcgUhFsU8+qj1iwZryjf3Z081tIY6ceVI1ra43VoNK6LoxnQ+XRJ1uXMUMA6M4D4ZT3UrncaOZUHtBY6pGSEGT7ywtZvUm2ltrTAHSktZSPyrNB0MZQdKq+jdupsCfRnef25/oA2RoUr0kpw0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713358789; c=relaxed/simple;
-	bh=JOFYvRABO6y0jTqmTScSEQKsVA2GsLtTANrcIjwmc9g=;
+	s=arc-20240116; t=1713364530; c=relaxed/simple;
+	bh=2KVFFAp5qbVMxuxzS5DtwIqV6na5EHaYON0Sb5QKZA4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=luWMCqUQ1qyMhhgC7QubirEan3pYRe/lZxzJbXyfdHEcYe1emZwLu4JaYJHlZTBNhG6LFztsuYfG5Kh3+KnKOUq4XdqdVdOZ3/FW9ZTfcQIIATxVDFjmwadPUgRyqsaeiaz00xHA0rl8pl4aKzNCOjX9Mk1Lv+e4qG4j8wxUYr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PxQDi30T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713358786;
+	 MIME-Version; b=nwxdU+f3KN5HmPGQHswX0Y4M1hK2WPtoOyvih4bRv1BHaA6jaQpvoCeyLX8XYy9s4bI2RM4/KGPdYMH7fLDkBi2UZNsIGkRfYysPbX1GOFui2QLe5Dpy6L6bYlBBpd0EYq0XLFZukgLpuy7DbFs+RUZu6+OyOEIoXcyiWCyz2zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=v6adRhdk; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VKNjg0B5mz9smh;
+	Wed, 17 Apr 2024 16:35:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1713364519;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4jLs7WDQvsc/TaTgXelU4d709GzBrXvlSBJrj50QPvU=;
-	b=PxQDi30TZ9zlxyUHL+A6HUXktV8RHN/O0h/zvON5CARqoeKtM0qZNRn9SDE3N9ljff5FDC
-	/I2+XRPizvU2NbkqSomKGaUGS0ubWoUwrULbw2cwLTYYNkEURSge8PgI6iNGujBhX7zkaF
-	W3llWPoTi8hAakjPxJODPTFhoQRxc7w=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-AUN7_w0rMuKWikUNJULe5Q-1; Wed, 17 Apr 2024 08:59:45 -0400
-X-MC-Unique: AUN7_w0rMuKWikUNJULe5Q-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a450265c7b6so286877466b.0
-        for <linux-xfs@vger.kernel.org>; Wed, 17 Apr 2024 05:59:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713358784; x=1713963584;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4jLs7WDQvsc/TaTgXelU4d709GzBrXvlSBJrj50QPvU=;
-        b=t4eLfFTf0nibqOnXvXYIMA+XHxSXsOX2id28MqEcQB8dK59tefvg9fekEiTKa0xnvp
-         uRcBaRiJhQb2XlEjgnGR6lWThOAof+mwVPLctOHYlbTw9ig5Ub/NpJZhYgaTg0erdhV4
-         5jVufAXeRfuh4Vh+2Sdgy6eqedRYVCXmqPdm3vK95To/HuurRaSPiuMPRrQtPXUtnoSi
-         f+wdpNXG0pA7TIcMyCpt0UfDt64wqyblbDSIz0eYOI/M91Rv7wUE+ZnmpCE/OgsdWGhl
-         9w9qZk+oAmpru6U8aSz5GH8aUWd+/ell3Pa60JXAUaUq/gtmIe9v2fkrO5KyNjhmiNWJ
-         j6wg==
-X-Forwarded-Encrypted: i=1; AJvYcCWG4H5aFBP9JbImDmu/KlMkTLNxzEFbZZ6p8jnx/wfxqYPjbIe+k9+G321UsddUpbX0i92OQ575ivVWgepH/if5adxEM+Az3GyJ
-X-Gm-Message-State: AOJu0YypbmuT/2OBDSQLwtZxgylUXUlDp3egCOo50bx6gWB4VBVGpkwC
-	dn5ddmKBDQYUU/LGQskCTRvFcdwZnDVNaMwDwm9ImKDtoHhNMNkQTK3j9G90VswG9Jd8Yaeyp0L
-	lakOvM5xsNg3sJEvRFhQ5GHjY1kEkb307Z2ypDBWdUb2k9o+/9icUT++y
-X-Received: by 2002:a17:907:d8a:b0:a55:38e2:75a3 with SMTP id go10-20020a1709070d8a00b00a5538e275a3mr4397717ejc.16.1713358783951;
-        Wed, 17 Apr 2024 05:59:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEY+0XWSJZRMX0HHncDewPebPkLcIQZEX58jLoEdzfTsDXLmRCGUid0WNqG1mfuPAcC+XmjXg==
-X-Received: by 2002:a17:907:d8a:b0:a55:38e2:75a3 with SMTP id go10-20020a1709070d8a00b00a5538e275a3mr4397688ejc.16.1713358783316;
-        Wed, 17 Apr 2024 05:59:43 -0700 (PDT)
-Received: from thinky.redhat.com ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id gc22-20020a170906c8d600b00a534000d525sm3330252ejb.158.2024.04.17.05.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Apr 2024 05:59:42 -0700 (PDT)
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: cem@kernel.org,
-	linux-xfs@vger.kernel.org
-Cc: djwong@kernel.org,
-	hch@infradead.org,
-	Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH v2 3/3] xfs_repair: catch strtol() errors
-Date: Wed, 17 Apr 2024 14:59:37 +0200
-Message-ID: <20240417125937.917910-4-aalbersh@redhat.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240417125937.917910-1-aalbersh@redhat.com>
-References: <20240417125937.917910-1-aalbersh@redhat.com>
+	bh=dam89vm9YUE3bUwzA6z9BOfQlHgn8Hsthodqm55cmBM=;
+	b=v6adRhdkKJjdanq1hk1mJWIXcAXLhpOZNY8qguUECSKnhbVAieaQNf0W3UKbhvQzyC64/Z
+	+k/bNtcevY1G87Kl8PFk8QfPgl99lbX9UmcIB208eftDXxJkGbXNBvzKuyv6kr4ZHFtstF
+	jO0/PtvSbTU63x9qyZ5HfVEnjoaGLqHTS20mf/TGssjtB/ITkaSlJxwALSUyn6BtsLm+Pc
+	I4Em8MGbnHCqWBXx88SjQk32RHDFbwE2UUDh/H+QKiOzJC7nzLnGoQVt6PzujbsXXVixPv
+	Xa7eV6d21n+jCdBUGvi2NWBfprGVXjgJUF059kPPPPOBqTLtQRzhkf9E4FCIow==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: david@fromorbit.com
+Cc: chandanbabu@kernel.org,
+	linux-xfs@vger.kernel.org,
+	mcgrof@kernel.org,
+	p.raghav@samsung.com
+Subject: Re: [PATCH 1/4] xfs: use kvmalloc for xattr buffers
+Date: Wed, 17 Apr 2024 16:35:02 +0200
+Message-ID: <20240417143502.1888116-1-kernel@pankajraghav.com>
+In-Reply-To: <20240402221127.1200501-2-david@fromorbit.com>
+References: <20240402221127.1200501-2-david@fromorbit.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -93,126 +68,49 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-strtol() sets errno if string parsing. Abort and tell user which
-parameter is wrong.
+> Pankaj Raghav reported that when filesystem block size is larger
+> than page size, the xattr code can use kmalloc() for high order
+> allocations. This triggers a useless warning in the allocator as it
+> is a __GFP_NOFAIL allocation here:
+> 
+> static inline
+> struct page *rmqueue(struct zone *preferred_zone,
+>                         struct zone *zone, unsigned int order,
+>                         gfp_t gfp_flags, unsigned int alloc_flags,
+>                         int migratetype)
+> {
+>         struct page *page;
+> 
+>         /*
+>          * We most definitely don't want callers attempting to
+>          * allocate greater than order-1 page units with __GFP_NOFAIL.
+>          */
+> >>>>    WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+> ...
+> 
+> Fix this by changing all these call sites to use kvmalloc(), which
+> will strip the NOFAIL from the kmalloc attempt and if that fails
+> will do a __GFP_NOFAIL vmalloc().
+> 
+> This is not an issue that productions systems will see as
+> filesystems with block size > page size cannot be mounted by the
+> kernel; Pankaj is developing this functionality right now.
+> 
+> Reported-by: Pankaj Raghav <kernel@pankajraghav.com>
+> Fixes: f078d4ea8276 ("xfs: convert kmem_alloc() to kmalloc()")
+> Signed-off-be: Dave Chinner <dchinner@redhat.com>
 
-Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
----
- repair/xfs_repair.c | 40 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+Thanks. I tested this patch in my LBS branch and it fixes the warning.
 
-diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-index 2ceea87dc57d..2fc89dac345d 100644
---- a/repair/xfs_repair.c
-+++ b/repair/xfs_repair.c
-@@ -252,14 +252,22 @@ process_args(int argc, char **argv)
- 					if (!val)
- 						do_abort(
- 		_("-o bhash requires a parameter\n"));
-+					errno = 0;
- 					libxfs_bhash_size = (int)strtol(val, NULL, 0);
-+					if (errno)
-+						do_abort(
-+		_("-o bhash invalid parameter: %s\n"), strerror(errno));
- 					bhash_option_used = 1;
- 					break;
- 				case AG_STRIDE:
- 					if (!val)
- 						do_abort(
- 		_("-o ag_stride requires a parameter\n"));
-+					errno = 0;
- 					ag_stride = (int)strtol(val, NULL, 0);
-+					if (errno)
-+						do_abort(
-+		_("-o ag_stride invalid parameter: %s\n"), strerror(errno));
- 					break;
- 				case FORCE_GEO:
- 					if (val)
-@@ -272,19 +280,31 @@ process_args(int argc, char **argv)
- 					if (!val)
- 						do_abort(
- 		_("-o phase2_threads requires a parameter\n"));
-+					errno = 0;
- 					phase2_threads = (int)strtol(val, NULL, 0);
-+					if (errno)
-+						do_abort(
-+		_("-o phase2_threads invalid parameter: %s\n"), strerror(errno));
- 					break;
- 				case BLOAD_LEAF_SLACK:
- 					if (!val)
- 						do_abort(
- 		_("-o debug_bload_leaf_slack requires a parameter\n"));
-+					errno = 0;
- 					bload_leaf_slack = (int)strtol(val, NULL, 0);
-+					if (errno)
-+						do_abort(
-+		_("-o debug_bload_leaf_slack invalid parameter: %s\n"), strerror(errno));
- 					break;
- 				case BLOAD_NODE_SLACK:
- 					if (!val)
- 						do_abort(
- 		_("-o debug_bload_node_slack requires a parameter\n"));
-+					errno = 0;
- 					bload_node_slack = (int)strtol(val, NULL, 0);
-+					if (errno)
-+						do_abort(
-+		_("-o debug_bload_node_slack invalid parameter: %s\n"), strerror(errno));
- 					break;
- 				case NOQUOTA:
- 					quotacheck_skip();
-@@ -305,7 +325,11 @@ process_args(int argc, char **argv)
- 					if (!val)
- 						do_abort(
- 		_("-c lazycount requires a parameter\n"));
-+					errno = 0;
- 					lazy_count = (int)strtol(val, NULL, 0);
-+					if (errno)
-+						do_abort(
-+		_("-o lazycount invalid parameter: %s\n"), strerror(errno));
- 					convert_lazy_count = 1;
- 					break;
- 				case CONVERT_INOBTCOUNT:
-@@ -356,7 +380,11 @@ process_args(int argc, char **argv)
- 			if (bhash_option_used)
- 				do_abort(_("-m option cannot be used with "
- 						"-o bhash option\n"));
-+			errno = 0;
- 			max_mem_specified = strtol(optarg, NULL, 0);
-+			if (errno)
-+				do_abort(
-+		_("%s: invalid memory amount: %s\n"), optarg, strerror(errno));
- 			break;
- 		case 'L':
- 			zap_log = 1;
-@@ -377,7 +405,11 @@ process_args(int argc, char **argv)
- 			do_prefetch = 0;
- 			break;
- 		case 't':
-+			errno = 0;
- 			report_interval = strtol(optarg, NULL, 0);
-+			if (errno)
-+				do_abort(
-+		_("%s: invalid interval: %s\n"), optarg, strerror(errno));
- 			break;
- 		case 'e':
- 			report_corrected = true;
-@@ -397,8 +429,14 @@ process_args(int argc, char **argv)
- 		usage();
- 
- 	p = getenv("XFS_REPAIR_FAIL_AFTER_PHASE");
--	if (p)
-+	if (p) {
-+		errno = 0;
- 		fail_after_phase = (int)strtol(p, NULL, 0);
-+		if (errno)
-+			do_abort(
-+		_("%s: invalid phase in XFS_REPAIR_FAIL_AFTER_PHASE: %s\n"),
-+				p, strerror(errno));
-+	}
- }
- 
- void __attribute__((noreturn))
--- 
-2.42.0
+Reviewed-by: Pankaj Raghav <p.raghav@samsung.com>
 
+For now, I will add it to my LBS branch as I don't see it yet land on
+6.9-rcs.
+
+> ---
+>  fs/xfs/libxfs/xfs_attr_leaf.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+
+--
+Pankaj
 
