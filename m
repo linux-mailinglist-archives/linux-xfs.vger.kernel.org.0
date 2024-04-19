@@ -1,94 +1,74 @@
-Return-Path: <linux-xfs+bounces-7250-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7253-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4090B8AA846
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Apr 2024 08:10:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F4518AA862
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Apr 2024 08:22:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F24FC2833D3
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Apr 2024 06:10:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AE1E281BA7
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Apr 2024 06:22:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223E0C144;
-	Fri, 19 Apr 2024 06:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMTqoaDs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F723168A9;
+	Fri, 19 Apr 2024 06:22:13 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD971B667;
-	Fri, 19 Apr 2024 06:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA284D515;
+	Fri, 19 Apr 2024 06:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713507051; cv=none; b=VTflJqbwBIVSHG8j6mqN4WW6LC1Z76wL8WqinXhisDqLZxjvkGWIkudRMZ+4iCsigxA+dbp/nVwNKopt5Lj4+JuTEaKDaSjs0cd3fqjTPif41OaCmbUI2tpCPyyumsNl2eu312a//Ko12YjojM3op+tIUWGlAkb/Snttw7YKnZw=
+	t=1713507732; cv=none; b=bVOtLATh29SBy3CiDtePkHjfJN7eonkkiwY4N6TVvlHGB7eQ6/OCbH+oCU7ZPGCNOUA3RkVDGt9QOvNN+ZfL9Y6WYoBUkQVhCuBvEJztS55kLtc9HuvRVfvuKS8fVp7iCtcU9x7KUAODbI6BBsJSRRnITa5Hiw8AV6Maczam1+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713507051; c=relaxed/simple;
-	bh=gTKwXvsblCudz6DySMG8Bzhl47r0kTOoiMzPOa8wdcs=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=AMVikubDwpvQ43lLTYDDHF57vkMhli0O9MiRbNTQisdAlUMe1WwQj01IjkE3EaWVO/xKK1zJVMjcocebxaryBamCZrJ3mcGvUjRWXtGhYGdykzqy1i4+BbeIbKDpfmpDeKpUf83kSDeMImiLAFDYYP1SXs5q2eIHG2Oki8My+kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMTqoaDs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA297C072AA;
-	Fri, 19 Apr 2024 06:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713507051;
-	bh=gTKwXvsblCudz6DySMG8Bzhl47r0kTOoiMzPOa8wdcs=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-	b=LMTqoaDsdGEUNpHPHgjHLNdg/bkiD4jzjz8qAbwZd2rRa9qLx/iBqUH/bDhhsIk8Y
-	 JdHn3gj03z9+Y1RWfIXrBfMDAC19ytGvBZYy20Qd2JFZ28QPeC08f/NblRa2rPBelB
-	 wYjO/QzLFh2qbh65J1uVqLX2qhqvwLIW0pxA+orqN4kVQM8C9nomOngRhrgip0tHLi
-	 II41zb+bRmfmfQiPzetFruOWShCv+0ZATa+rnTb6mxX72Qtx8yuEqM6qLAjqzxnLTg
-	 i0VpwiV2/wIFV5a1kGGpjk6lUJPTlmDBELcXDfUq3a7I6Acqql/HjQ44bo2FC7oWdN
-	 fw229PrhpEyCQ==
-References: <20240320110548.2200662-1-yi.zhang@huaweicloud.com>
- <20240320110548.2200662-7-yi.zhang@huaweicloud.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Chandan Babu R <chandanbabu@kernel.org>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, djwong@kernel.org, hch@infradead.org,
- brauner@kernel.org, david@fromorbit.com, tytso@mit.edu, jack@suse.cz,
- yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
-Subject: Re: [PATCH v4 6/9] iomap: don't increase i_size if it's not a write
- operation
-Date: Fri, 19 Apr 2024 11:37:51 +0530
-In-reply-to: <20240320110548.2200662-7-yi.zhang@huaweicloud.com>
-Message-ID: <87edb13ms8.fsf@debian-BULLSEYE-live-builder-AMD64>
+	s=arc-20240116; t=1713507732; c=relaxed/simple;
+	bh=gw642tX2UMxYZ0kju62sZCES2c1hxstbaHoRke+U3yo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DsYsmDKAoh+Q8P38+90fE3oSWBZjZ4t0U5SAUPzE3zx0zsdRor8dk8Wt8yvHhqetg2d6o/XZ75DnXMhiPqf0YNfZpxmdQDhMgzhbc/5Z43WsLwgr8bwCGW9rIcrCrcDAdwgngtWw5ej2R1OFE4S4Qj9SmZIcULeUOCVCYuojT0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VLPc52dwRzwSwh;
+	Fri, 19 Apr 2024 14:19:01 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 695E318006D;
+	Fri, 19 Apr 2024 14:22:06 +0800 (CST)
+Received: from huawei.com (10.175.101.107) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 19 Apr
+ 2024 14:22:05 +0800
+From: Ye Bin <yebin10@huawei.com>
+To: <djwong@kernel.org>, <linux-xfs@vger.kernel.org>,
+	<chandan.babu@oracle.com>, <dchinner@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
+Subject: [PATCH RFC 0/2] xfs: fix potential create file failed
+Date: Fri, 19 Apr 2024 14:18:46 +0800
+Message-ID: <20240419061848.1032366-1-yebin10@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-On Wed, Mar 20, 2024 at 07:05:45 PM +0800, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
->
-> Increase i_size in iomap_zero_range() and iomap_unshare_iter() is not
-> needed, the caller should handle it. Especially, when truncate partial
-> block, we should not increase i_size beyond the new EOF here. It doesn't
-> affect xfs and gfs2 now because they set the new file size after zero
-> out, it doesn't matter that a transient increase in i_size, but it will
-> affect ext4 because it set file size before truncate. So move the i_size
-> updating logic to iomap_write_iter().
->
+This patch set fixes two potential issues that could cause failure to
+create files.
 
-This patch causes generic/522 to consistently fail when using the following
-fstest configuration,
+Ye Bin (2):
+  xfs: fix potential create file failed
+  xfs: avoid potenial alloc inode failed
 
-TEST_DEV=/dev/loop16
-TEST_LOGDEV=/dev/loop13
-SCRATCH_DEV_POOL="/dev/loop5 /dev/loop6 /dev/loop7 /dev/loop8 /dev/loop9 /dev/loop10 /dev/loop11 /dev/loop12"
-MKFS_OPTIONS='-f -m reflink=1,rmapbt=1, -i sparse=1, -lsize=1g'
-MOUNT_OPTIONS='-o usrquota,grpquota,prjquota'
-TEST_FS_MOUNT_OPTS="$TEST_FS_MOUNT_OPTS -o usrquota,grpquota,prjquota"
-TEST_FS_MOUNT_OPTS="-o logdev=/dev/loop13"
-SCRATCH_LOGDEV=/dev/loop15
-USE_EXTERNAL=yes
-LOGWRITES_DEV=/dev/loop15
+ fs/xfs/libxfs/xfs_alloc.c  | 32 ++++++++++----------------------
+ fs/xfs/libxfs/xfs_ialloc.c | 13 ++-----------
+ 2 files changed, 12 insertions(+), 33 deletions(-)
 
 -- 
-Chandan
+2.34.1
+
 
