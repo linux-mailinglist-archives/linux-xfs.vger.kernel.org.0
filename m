@@ -1,112 +1,107 @@
-Return-Path: <linux-xfs+bounces-7371-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7379-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10D898ADC3E
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Apr 2024 05:25:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B49B8ADF2E
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Apr 2024 10:03:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1AB81F229B7
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Apr 2024 03:25:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58640286AE0
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Apr 2024 08:03:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B7D32230F;
-	Tue, 23 Apr 2024 03:24:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60A0F54901;
+	Tue, 23 Apr 2024 08:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jki9UAGi"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qrpXb4E7"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE221B299
-	for <linux-xfs@vger.kernel.org>; Tue, 23 Apr 2024 03:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06F04AEE5;
+	Tue, 23 Apr 2024 08:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713842673; cv=none; b=JoSSrU3P2EVOwfPsIG7Ham8ls/xDVKIwlwnZLfA7KjNl3sOQkUT8lMR7rEH3Ibpts592PIZoszQznfDljtyS+B0mSXOhzCfhsW868b0cXmrLpvCVnMbg60VCZW0QK8EGqbnfpQ+zhw+4Djv34/ihtCK+EU4wK0uHbtXm0GHyWcw=
+	t=1713859391; cv=none; b=F6e0NVcB6qJfzuP2CdugL0KSEycYzhJVS4HEs8NCFSH6Z7spEtmpY52tE79ueYdCA8qufVpAj3u/UH8aP7rIkJF8E8T+qwNlT9cT5K6vVIIqIvEMB0KCDnBbamiR2O/gUICi7p5jVo5rT5Od8etXanTqWv2GTgxZRY7X6ORwAyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713842673; c=relaxed/simple;
-	bh=uz3sO02YWwgZDT03fveGkyuGF/c5d2u3uHtlKe3+/lE=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=CPq/bAroHtVXxZsn3SWUK8dSPuhZEvHet/4TnM3rhAFdcLRD7fMyjUU5KVAZQ/WjL6hb5+A28BWhnsibc7tKyrxoLpW6IPrdRHvBwfBWstmzo8269/PnEVk49h7iyxrAvquDgc3UrOmqZfsa2XEVt5iUsRgf3p7EUA/cEZDab2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jki9UAGi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DC6DEC32781
-	for <linux-xfs@vger.kernel.org>; Tue, 23 Apr 2024 03:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713842672;
-	bh=uz3sO02YWwgZDT03fveGkyuGF/c5d2u3uHtlKe3+/lE=;
-	h=From:To:Subject:Date:From;
-	b=jki9UAGiUomPp50LeeEaV/uECgJEL5XwBWvprjpBZL9cszSE4LuLfAL93QsesLHmh
-	 MGxqlzxgtpbDaB+2jc2lx+Mw7VJc9R23gie+PWvMAYydG6SV1v5vaSPk338K3OMJEe
-	 c0/b5q87IhzQhfUWXGm06pxbfVefpwHSf55sAuocJbWmIuB5sBtT6cO/np6sRpnNWw
-	 KEPDXUot37jOf9qiAn+LMVWWIzwe/zA4QVeHjDrzVEYY53CZo+er/1N6jpCpBjDsbk
-	 T9a5un4/ZAAq+U1lWJU0zbFrw3odYD+O7Ms8AD8ZaX1lhFLtTHwkLeNgQOjYXHNV44
-	 sIu/lmjkJaITA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id D54A7C433E2; Tue, 23 Apr 2024 03:24:32 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: linux-xfs@vger.kernel.org
-Subject: [Bug 218764] New: xfs_scrub_all.in: NameError: name 'path' is not
- defined
-Date: Tue, 23 Apr 2024 03:24:32 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: 60510scott@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
- op_sys bug_status bug_severity priority component assigned_to reporter
- cf_regression attachments.created
-Message-ID: <bug-218764-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=arc-20240116; t=1713859391; c=relaxed/simple;
+	bh=1pR6m5Wi5iIO9mWeE7uFEYPdE/xPU01dcPav6FtcGgk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Cca0u2AmH4ujtyEII/oDASdmm8aguXi6O+lOoom0ZXq206Wh2bYbqU78OMoNHTwZd1C+IiBIpQAD0jL6nzulEYWD9TCRu+B6ztkWTv9qHBKnulXEu6T+TQZhfl3cAtl4J0m6EG+g4YzslVu0Ta+ZW0i5vK+MpymWj3ywLF+Ao7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qrpXb4E7; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1713858962;
+	bh=1pR6m5Wi5iIO9mWeE7uFEYPdE/xPU01dcPav6FtcGgk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=qrpXb4E7M7hSiZ8Cf2INubIQwovOxf8rtiST2nTdYG56P/i02vaGe83f+9bvQprvq
+	 VgpcOsvaoWCndC7LXwkbN21msJ81t9jqvLggR4K6+dWl6vt6tbFaQ5B1IFnTi+I3Mw
+	 H0IMGkDPx1RTLLHkm4qk51fTBM34bIyN02uPPn08=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Tue, 23 Apr 2024 09:54:37 +0200
+Subject: [PATCH v3 02/11] cgroup: bpf: constify ctl_table arguments and
+ fields
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240423-sysctl-const-handler-v3-2-e0beccb836e2@weissschuh.net>
+References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+In-Reply-To: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+To: Luis Chamberlain <mcgrof@kernel.org>, 
+ Joel Granados <j.granados@samsung.com>, Kees Cook <keescook@chromium.org>
+Cc: Eric Dumazet <edumazet@google.com>, Dave Chinner <david@fromorbit.com>, 
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+ bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, kexec@lists.infradead.org, 
+ linux-hardening@vger.kernel.org, bridge@lists.linux.dev, 
+ lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1713858961; l=686;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=1pR6m5Wi5iIO9mWeE7uFEYPdE/xPU01dcPav6FtcGgk=;
+ b=pcm/jJjouDKJ7dKkXuplkCwgN4lakaTVY5yViah+TEyJb0kgB/5JxKSM28vhTdxT/a0KzPrgc
+ T5MafpuEka/DMwunsovOVuekoxGTF4FJjqwg/mb6qFtEZR2YOr2vquk
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218764
+In a future commit the sysctl core will only use
+"const struct ctl_table". As a preparation for that adapt the cgroup-bpf
+code.
 
-            Bug ID: 218764
-           Summary: xfs_scrub_all.in: NameError: name 'path' is not
-                    defined
-           Product: File System
-           Version: 2.5
-          Hardware: All
-                OS: Linux
-            Status: NEW
-          Severity: normal
-          Priority: P3
-         Component: XFS
-          Assignee: filesystem_xfs@kernel-bugs.kernel.org
-          Reporter: 60510scott@gmail.com
-        Regression: No
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ include/linux/filter.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Created attachment 306198
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D306198&action=3Dedit
-journalctl -b -u xfs_scrub_all.service
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 7a27f19bf44d..4eada55a2df8 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -1404,7 +1404,7 @@ struct bpf_sock_ops_kern {
+ 
+ struct bpf_sysctl_kern {
+ 	struct ctl_table_header *head;
+-	struct ctl_table *table;
++	const struct ctl_table *table;
+ 	void *cur_val;
+ 	size_t cur_len;
+ 	void *new_val;
 
-`path` variable is not defined in
-https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git/tree/scrub/xfs_scrub=
-_all.in#n166
+-- 
+2.44.0
 
-
-Attached is the error log of `xfs_scrub_all.service`
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
 
