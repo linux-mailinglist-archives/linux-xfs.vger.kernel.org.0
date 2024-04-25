@@ -1,64 +1,57 @@
-Return-Path: <linux-xfs+bounces-7600-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7586-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EC848B2290
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 15:25:23 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 677498B225E
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 15:17:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F9BF1F2786A
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 13:25:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6153CB2138E
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 13:17:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7059B14BF8D;
-	Thu, 25 Apr 2024 13:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84CE4149C43;
+	Thu, 25 Apr 2024 13:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ufYZlQlw"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E7E14A614;
-	Thu, 25 Apr 2024 13:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DDE1494B4
+	for <linux-xfs@vger.kernel.org>; Thu, 25 Apr 2024 13:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714051392; cv=none; b=aBkN7WKflfE6WU4j8eOEQUrh8fjLJRBDoB2CMeusP/9iOFn2DTHYMJKuu0+1JSEFyPbDo29inyaKgYngx8vNTdkcZGikmLAQHAVoFXHuLbLFa07qFdSkhbnM+Xd1U8CXrd943Rq3URjw3qV6WtdxGjX+dhmRktv0gHGDAn2SlGc=
+	t=1714051029; cv=none; b=r79CwQrOwNLdgGNnL+2XGCJ+VlYK/LMUZKqL1mZPPcwSXZqQXr2UenC+vv4EsDIxWHf+SOslBYjZY43cjvDAzl4S3YiLXP7GNcHmnCZRuYwe25oHFcNTVugBFY8+VRhvRz7dd6mmS99B3YYBY3rumU6UHXswAz5rIdVZzvtmIao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714051392; c=relaxed/simple;
-	bh=3EKUU7VAvYU4nPbBt7h9Nh4luL9rsU127qF3CpGr1m4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GlLqDrnxt4jRFE1QNbFIMKm5iU2yNAqddVHiIdk8JBLjulSH7MV5sQEVx5/428fL37cK3wYR7nzntbQRBMmkStKy5lE2R3Spxhz/gNn3bfkWbaMjOzFb9ufyuOQmFPTDywfe0T1TG2nuMTfTlZXRz3KXBCsN2e8bM+KL1AZDZoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VQGkX39Qjz4f3kjM;
-	Thu, 25 Apr 2024 21:23:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 04D9D1A0F87;
-	Thu, 25 Apr 2024 21:23:08 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBEqWSpmHu+2Kw--.61462S13;
-	Thu, 25 Apr 2024 21:23:07 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	chandanbabu@kernel.org,
-	tytso@mit.edu,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v5 9/9] iomap: do some small logical cleanup in buffered write
-Date: Thu, 25 Apr 2024 21:13:35 +0800
-Message-Id: <20240425131335.878454-10-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1714051029; c=relaxed/simple;
+	bh=N+0vJG+WP0A/I9OEw+M8qK2PuvvA4Y2DncnRASgiGwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JyiAfwYE0ZNnkH02wPFwH/PjNZfLvj2ayrrTn9ZzpRaIF5m1DbPLL8j+Ahf9+XlMN48+a9AgeRI9SOGvn2b0YJgECllV9+U8grtaw/NkLibiHnuYR66SFIf/FvWryzBId0mOkHvG2qExe3xI54VOhcEGpovfpF+QJXgEpHsKYf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ufYZlQlw; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=U8LI8UHMu6OEXjPUjgugQMZ14ZpzLD/nWshcZOoeG84=; b=ufYZlQlwAymPQKrmWOXOV32foh
+	zvtJCTw5urcWchz4unv24478Wc+fMtZYMFuXM5zpqtDCxu/Igq8Ol7QLJ3mlOGR/7UTmUKzETyX5v
+	/l4pWYlGL/pWk13TmPGq7ITMFcvF4pqJ2swqOCdwcYo1chZNbpXGKWl4hlebrrhrX4+2qfcfHI0L6
+	ba45VjMjVkQpEUkwGIxLVCQ0t6X9+XRWT+Y5f3veiqLpgO5K/PiNZ2gD+S9Rc1Ys60RYg+3SOFmZk
+	1y9KueVmwjJ9BqjgXAGC39ZDDt58x0NJ0d+01VuwTvqV0DEkR+clk2pLJ1mQmiF765Ojgl9ggURGI
+	+jvLoVfw==;
+Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rzyyI-00000008RZp-2N9o;
+	Thu, 25 Apr 2024 13:17:06 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org
+Subject: add higher level directory operations helpers
+Date: Thu, 25 Apr 2024 15:16:58 +0200
+Message-Id: <20240425131703.928936-1-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
-References: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -66,66 +59,29 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBEqWSpmHu+2Kw--.61462S13
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrykWry8urWrAFW5Kr18Grg_yoW8GrWkpF
-	nxKaykurW0qwsruF1kAFnruFWqya93Gry7GrW8Gw45urs8ArWYgFy0gayj9a48Jr93CryS
-	vr4qy348J3W5Ar7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ
-	SdkUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Zhang Yi <yi.zhang@huawei.com>
+Hi all,
 
-Since iomap_write_end() can never return a partial write length, the
-comparison between written, copied and bytes becomes useless, just
-merge them with the unwritten branch.
+with the scrub and online repair code we now duplicate the switching
+between the directory format for directory operations in at least two
+places for each operation, with the metadir code adding even more for
+some of these operations.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/iomap/buffered-io.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+This series adds _args helpers to consolidate this code, and then
+refactors the checking for the directory format into a single well-defined
+helper.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 176a9ea502ba..0926d216a5af 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -975,11 +975,6 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 
- 		if (old_size < pos)
- 			pagecache_isize_extended(iter->inode, old_size, pos);
--		if (written < bytes)
--			iomap_write_failed(iter->inode, pos + written,
--					   bytes - written);
--		if (unlikely(copied != written))
--			iov_iter_revert(i, copied - written);
- 
- 		cond_resched();
- 		if (unlikely(written == 0)) {
-@@ -989,6 +984,9 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 			 * halfway through, might be a race with munmap,
- 			 * might be severe memory pressure.
- 			 */
-+			iomap_write_failed(iter->inode, pos, bytes);
-+			iov_iter_revert(i, copied);
-+
- 			if (chunk > PAGE_SIZE)
- 				chunk /= 2;
- 			if (copied) {
--- 
-2.39.2
+It is based on the online repair patchbombs that Darrick submitted
+yesterday.
 
+Diffstat:
+ libxfs/xfs_dir2.c     |  274 +++++++++++++++++++++++---------------------------
+ libxfs/xfs_dir2.h     |   17 ++-
+ libxfs/xfs_exchmaps.c |    9 -
+ scrub/dir.c           |    3 
+ scrub/dir_repair.c    |   58 ----------
+ scrub/readdir.c       |   59 +---------
+ xfs_dir2_readdir.c    |   19 +--
+ 7 files changed, 168 insertions(+), 271 deletions(-)
 
