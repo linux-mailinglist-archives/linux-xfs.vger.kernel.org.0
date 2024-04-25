@@ -1,114 +1,147 @@
-Return-Path: <linux-xfs+bounces-7585-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7592-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C68658B2248
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 15:12:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D3B0C8B2275
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 15:23:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D713B1C20FAA
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 13:12:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 112FE1C20F18
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Apr 2024 13:23:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC73149C4B;
-	Thu, 25 Apr 2024 13:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bVlE6mk2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70606149DEA;
+	Thu, 25 Apr 2024 13:23:08 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23AC3717F;
-	Thu, 25 Apr 2024 13:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DE8149C66;
+	Thu, 25 Apr 2024 13:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714050746; cv=none; b=Vw4TnVRkUnQ3tS1wHyoYYal55e3z757YO/rueFMS8627NZTLRH9UaLSFrhBWI0+To+LvKxRqY2E068dSdyMXSBhNdAMWTMOON0JBJk9JDR1SY+1ROMbGyaQZWxjD8zi6FgQJBzSnpP75pce49Dmmwhqdw7DbWDBTigRhWEnkMlk=
+	t=1714051388; cv=none; b=kjrw+60Q9sOpmyxCkMPWt4v0yu6C9GjK3WckABiW29WFnAy4Y77EmlDu9FL1snfS2IhNXCoV2++c1qleO/A9dOMYS019x+64Tk2Pdw1GAN9tDjeHXyXm9niXjmFm0SRVUgzxzQhbnvTQZlpYm1SOoUfEGodrozj7rvlgMgv8aa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714050746; c=relaxed/simple;
-	bh=jwu57ioxDHFHYb2H4BekzE6s7a/+kDgLmSQBk4z/Wck=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fcrPVJU12Nif/H4byTWezmGIDTwOmY2d6N4lbz6QyPSfmc3Plz1KqYhnUtew++ZNCfXq01Nc9P3To3s2oAJfT3mX+usp6OyJgR88h8laZqOLoCv4uuhULFipwm31SP1+jlxBjU1BtdsGgz6+WbTsTjadJxxKHinhLHOauVvHHmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bVlE6mk2; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JX9qBQ7VAepgiukLD5OGQzhQEBGgQLKoeCn+uha43Z8=; b=bVlE6mk2ULmgnXAbrNSirOX6s7
-	8jWxcb68KZ0Epcq+T/k3psD6jBs6Dp1obTwaN62VEd+b06EQ8LOLdnt90YRpyKZ6U0jbJKG1+u3qd
-	06SPJ7dH3hNAumGTwYfWgNkn9uVcU2nLaFspepLaxh6TvotJpyVwvCBehu77jrVAMK7iQRNin+mzJ
-	ms6zkzArJ/PaddwRCCmN+TW6lQT+fjMFx405s4d9yGmoBoafHEw5xXTTx/t2tZoKSYFMVcqH7VUWo
-	4foZ3ZDHJxOCv628Jqxh/ILFUbLZLKdf3yIInJyUeELPVVWDld/Y7mqp9wsivxbiJpF5NXW/jieS2
-	j6FICUxg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzytj-00000008QCX-3z5k;
-	Thu, 25 Apr 2024 13:12:23 +0000
-Date: Thu, 25 Apr 2024 06:12:23 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	djwong@kernel.org, chandan.babu@oracle.com,
-	syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com,
-	Brian Foster <bfoster@redhat.com>
-Subject: Re: [Linux kernel bug] KASAN: slab-out-of-bounds Read in xlog_cksum
-Message-ID: <ZipWt03PhXs2Yc84@infradead.org>
-References: <CAEkJfYO++C-pxyqzfoXFKEvmMQEnrgkQ2QcG6radAWJMqdXQCQ@mail.gmail.com>
+	s=arc-20240116; t=1714051388; c=relaxed/simple;
+	bh=YIeyc2rs/L/mmWn560rSiI949EjkmDH3k+JZWsMuzTY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NmhQSlnVTzNkYqbvqYNCwUfef9t22MasNDsMMUOVhzyeJ3zsoVdRWZr113aJ+RQ8Osh3p/B/4pDOcjVTvO1h4SSJ0nadJuH3hYplypPm+5O0OpDQYQL9qrSs3WTtdvKYEXnRJYumHLZMHchrWhRtKY6+X/SCsk0LmYwudFaRe5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VQGkR4fsxz4f3khT;
+	Thu, 25 Apr 2024 21:22:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 3FF741A016E;
+	Thu, 25 Apr 2024 21:23:03 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBEqWSpmHu+2Kw--.61462S4;
+	Thu, 25 Apr 2024 21:23:01 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	chandanbabu@kernel.org,
+	tytso@mit.edu,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH v5 0/9] xfs/iomap: fix non-atomic clone operation and don't update size when zeroing range post eof
+Date: Thu, 25 Apr 2024 21:13:26 +0800
+Message-Id: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEkJfYO++C-pxyqzfoXFKEvmMQEnrgkQ2QcG6radAWJMqdXQCQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCXaBEqWSpmHu+2Kw--.61462S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGrW5WF47AF17XF1rurWxJFb_yoW5Xw45pF
+	ZxKwsxKrs5Kr1fZrnayF45Xw1rK3Z3Gr4UCr1xJws3Z3y5ZF1xZa1IgF1F9rWUAr93W3Wj
+	qF4jyF97Cr1DAa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	fUoOJ5UUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-This triggers the workaround for really old xfsprogs putting in a
-bogus h_size:
+Changes since v4:
+ - For zeroing range in xfs, move the delalloc check to before searching
+   the COW fork when zeroing range. Only modify patch 04, please see it
+   for details, not modify other patches.
 
-[   12.101992] XFS (loop0): invalid iclog size (0 bytes), using lsunit (65536 bytes)
+Changes since v3:
+ - Improve some git message comments and do some minor code cleanup, no
+   logic changes.
 
-but then calculates the log recovery buffer size based on the actual
-on-disk h_size value.  The patch below open codes xlog_logrec_hblks and
-fixes this particular reproducer.  But I wonder if we should limit the
-workaround.  Brian, you don't happpen to remember how old xfsprogs had
-to be to require your workaround (commit a70f9fe52daa8)?
+Changes since v2:
+ - Merge the patch for dropping of xfs_convert_blocks() and the patch
+   for modifying xfs_bmapi_convert_delalloc().
+ - Reword the commit message of the second patch.
 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index b445e8ce4a7d21..b3ea546508dc93 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2999,7 +2999,7 @@ xlog_do_recovery_pass(
- 	int			error = 0, h_size, h_len;
- 	int			error2 = 0;
- 	int			bblks, split_bblks;
--	int			hblks, split_hblks, wrapped_hblks;
-+	int			hblks = 1, split_hblks, wrapped_hblks;
- 	int			i;
- 	struct hlist_head	rhash[XLOG_RHASH_SIZE];
- 	LIST_HEAD		(buffer_list);
-@@ -3055,14 +3055,16 @@ xlog_do_recovery_pass(
- 		if (error)
- 			goto bread_err1;
- 
--		hblks = xlog_logrec_hblks(log, rhead);
--		if (hblks != 1) {
--			kvfree(hbp);
--			hbp = xlog_alloc_buffer(log, hblks);
-+		if ((rhead->h_version & cpu_to_be32(XLOG_VERSION_2)) &&
-+		    h_size > XLOG_HEADER_CYCLE_SIZE) {
-+			hblks = DIV_ROUND_UP(h_size, XLOG_HEADER_CYCLE_SIZE);
-+			if (hblks > 1) {
-+				kvfree(hbp);
-+				hbp = xlog_alloc_buffer(log, hblks);
-+			}
- 		}
- 	} else {
- 		ASSERT(log->l_sectBBsize == 1);
--		hblks = 1;
- 		hbp = xlog_alloc_buffer(log, 1);
- 		h_size = XLOG_BIG_RECORD_BSIZE;
- 	}
+Changes since v1:
+ - Make xfs_bmapi_convert_delalloc() to allocate the target offset and
+   drop the writeback helper xfs_convert_blocks().
+ - Don't use xfs_iomap_write_direct() to convert delalloc blocks for
+   zeroing posteof case, use xfs_bmapi_convert_delalloc() instead.
+ - Fix two off-by-one issues when converting delalloc blocks.
+ - Add a separate patch to drop the buffered write failure handle in
+   zeroing and unsharing.
+ - Add a comments do emphasize updating i_size should under folio lock.
+ - Make iomap_write_end() to return a boolean, and do some cleanups in
+   buffered write begin path.
+
+This patch series fix a problem of exposing zeroed data on xfs since the
+non-atomic clone operation. This problem was found while I was
+developing ext4 buffered IO iomap conversion (ext4 is relying on this
+fix [1]), the root cause of this problem and the discussion about the
+solution please see [2]. After fix the problem, iomap_zero_range()
+doesn't need to update i_size so that ext4 can use it to zero partial
+block, e.g. truncate eof block [3].
+
+[1] https://lore.kernel.org/linux-ext4/20240127015825.1608160-1-yi.zhang@huaweicloud.com/
+[2] https://lore.kernel.org/linux-ext4/9b0040ef-3d9d-6246-4bdd-82b9a8f55fa2@huaweicloud.com/
+[3] https://lore.kernel.org/linux-ext4/9c9f1831-a772-299b-072b-1c8116c3fb35@huaweicloud.com/
+
+Thanks,
+Yi.
+
+Zhang Yi (9):
+  xfs: match lock mode in xfs_buffered_write_iomap_begin()
+  xfs: make the seq argument to xfs_bmapi_convert_delalloc() optional
+  xfs: make xfs_bmapi_convert_delalloc() to allocate the target offset
+  xfs: convert delayed extents to unwritten when zeroing post eof blocks
+  iomap: drop the write failure handles when unsharing and zeroing
+  iomap: don't increase i_size if it's not a write operation
+  iomap: use a new variable to handle the written bytes in
+    iomap_write_iter()
+  iomap: make iomap_write_end() return a boolean
+  iomap: do some small logical cleanup in buffered write
+
+ fs/iomap/buffered-io.c   | 105 ++++++++++++++++++++++-----------------
+ fs/xfs/libxfs/xfs_bmap.c |  40 +++++++++++++--
+ fs/xfs/xfs_aops.c        |  54 ++++++--------------
+ fs/xfs/xfs_iomap.c       |  39 +++++++++++++--
+ 4 files changed, 144 insertions(+), 94 deletions(-)
+
+-- 
+2.39.2
+
 
