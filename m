@@ -1,172 +1,132 @@
-Return-Path: <linux-xfs+bounces-7938-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7940-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 637FD8B69B1
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 07:04:42 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6EE58B6A02
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 07:46:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 875FE1C21BAB
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 05:04:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E370B20B62
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 05:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4FFF179A7;
-	Tue, 30 Apr 2024 05:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A35B917731;
+	Tue, 30 Apr 2024 05:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyhfMWmh"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="B1v7dDum"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5381798C
-	for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2024 05:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2CE1758C
+	for <linux-xfs@vger.kernel.org>; Tue, 30 Apr 2024 05:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714453471; cv=none; b=jZ8/tgdOHu3DN+FCpgb0pJi8rRnYvNFU4Pqwy6NoV3OfEE/fG+1tfYYtE3YU2nkZ+fVGnXnGF7+in8E2fg9OA4apMENpM+L5ghzxzLTISeiNj6swRfgSImBtpirLzn4K0yCAUw0waEWuB2p3JbDxiv2YLHtRl2peuvwaZZoHJdI=
+	t=1714455977; cv=none; b=Dc0q4PB0hnDWZtLeVGGT70v8f7cXYDNlOVrebWCY46BsbPlEo5yoJwFCU0sMciO6jkZe9GZoOUy0DSJYCry2gb9H3svFAqVx1DDaZ820eYcTWc+SdOjT5zai/JkT2ifg60R1hjeaROx0XlOnKZt3PuytW08ICZ7dvdZ5cJIUquI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714453471; c=relaxed/simple;
-	bh=Gyiqjdft3kwboe6j67hA6giwCdKgP/Tn9HzDIUpANlM=;
-	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=ALEFQ0I0LnDv3TNl8WNVy8Fn2Zay1UlWo/vIPQAHReQrRtwN2c9P4LYTMGk0PDGUKSgFgJQ2RnAkIqdZ8RzsM5KkLvboCBNAQcFT7p6bVnnbRWwEEUJN8K+Nogi0SnO3B3R7PwaPblSG7lytcBYICPC3C77sARFuJ9w4Q+2tnJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PyhfMWmh; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f043f9e6d7so5397630b3a.3
-        for <linux-xfs@vger.kernel.org>; Mon, 29 Apr 2024 22:04:29 -0700 (PDT)
+	s=arc-20240116; t=1714455977; c=relaxed/simple;
+	bh=5L+DbHHyg9/U1kdFGH+74R7K4u9DGBrF4s+3873+bY0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iWYtjII5PTf68VkQnEJl9WGeaGcsCWQFLL4/X4dlbSMW6iJYemmmWfLY6+B2d/jgEKHMr9GxAROUDrL9Gjdb6CfwouKjJlIE57cBh5cRCbHWqKjv/W4ZjgoIOeFJ0f/I1lI33vr2yDLivRxyFkroko5916b7ktO8lEFHcneuqPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=B1v7dDum; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2b2769f017aso367051a91.3
+        for <linux-xfs@vger.kernel.org>; Mon, 29 Apr 2024 22:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714453469; x=1715058269; darn=vger.kernel.org;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YZZb5mDEPlXVuhF8iIebB9q7qRC3qdn+tymXYKsgyfc=;
-        b=PyhfMWmhIh4CMHBpJ/4Up2wDuH+6RWBLwWWSTf8v1u0r1Qmv/OoexuEv+9ytEDnv4s
-         aGh/D8EH8ZCKXnvK64LluTBptt6vM9UUYqH5GiAKGb+6Azod+zC8AyfERzaEbAQDWnBJ
-         vDHp81MyZGAz0odEqVgO223lNCbQ5DfP7+LiiLwLcrmtA5uL69r4poTa5UHkpzeHvmgd
-         tQ0vn+fl/ncUA0G/NStX8DQEYb8vfHyScb2tabmdEYQR99CLsOoxPdWWsWftmjwP2k32
-         wYYkVU+Ypj1iTGee3/k+6dvsxXOdC4ch5UiYTJaly3eH8nefwAVMlke9I+pBv+t8sWKc
-         lVDg==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1714455975; x=1715060775; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5L+DbHHyg9/U1kdFGH+74R7K4u9DGBrF4s+3873+bY0=;
+        b=B1v7dDumqeHkjxijOGBC7I2qcpZ4A6VkicX9vf3dOkGMyS3rGsHTkj9gx+14GHItlb
+         pE+0z7J4RBafHiKk2wNOFeAK3y5VlG21xyDuFMvl+fKDptSPMZze4XvjXyB5dkFQFn0g
+         8AaE6aer8Q1oTXmCjxSt/Iy/H97+h6u+odnlLWuVeHnIozdK/mdX129F+Ptj3nnVSV3g
+         tu6H27dg6m1mBliflk0PjwE81W5y7lUW+2jd0/PwbT7em9BjhsuiYBHAwZy0O1tSQUYk
+         8XYgMFeJics+XVBnrNxfcRtt1hXCFLRqsEMjUqBXaijXvqtaS3AwRm5yCns0uy5AOK6N
+         OnzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714453469; x=1715058269;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YZZb5mDEPlXVuhF8iIebB9q7qRC3qdn+tymXYKsgyfc=;
-        b=E2/eUVkLWEUXIOwG3NA70GSGXRpIJPWoFdn4HdPLl4F2Mi3nRLzgYVDUF86/9QS7Zb
-         gWThxRNyJZIpAjWj9ClGo5gFPfyCgKHaprJcn9pZ6ELWs9jpcIJlPmZWJHu1wSpBl4d9
-         +KQgd9/9bKmQkHh9EBex8tSpQR652B8u1v56Qi582rHgL+c5Jkpazbsb8ZR0Onpw71yV
-         pvEhidPU94wEovtkQDi8lvUewWAn3o0xIVhGplnqCYsrAhAVO3tHnYr19mA59j25Yd71
-         O1/6UM/jvlOTBMeIOT1521qiIpGPy7IuoKslcnBxau6/k2vww2bwQE0pjIfD5LvaZvi/
-         aZFw==
-X-Gm-Message-State: AOJu0Yxi8RWJ5qiYWk9U6Ofk5gyL0a2A2P24E4KHeQNapJgy6sYSRyUO
-	iaMPxPOO3/rYm4C4u+q+pa2tcOn2PvHg84OcjO6nA198oZOHReQk
-X-Google-Smtp-Source: AGHT+IEFhTV8Uh6RgFSxtO2FMkHrg2H0KTdqPJerfxJWCvSbQ9Zz25z6KIFCGgxKXXQi0cHkrRvGyA==
-X-Received: by 2002:a05:6a00:2d8e:b0:6f3:1be8:ab68 with SMTP id fb14-20020a056a002d8e00b006f31be8ab68mr1560598pfb.32.1714453469276;
-        Mon, 29 Apr 2024 22:04:29 -0700 (PDT)
-Received: from dw-tp ([171.76.84.250])
-        by smtp.gmail.com with ESMTPSA id p25-20020aa78619000000b006e647716b6esm20901940pfn.149.2024.04.29.22.04.26
+        d=1e100.net; s=20230601; t=1714455975; x=1715060775;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5L+DbHHyg9/U1kdFGH+74R7K4u9DGBrF4s+3873+bY0=;
+        b=hvEliYBk1v5bfhQuqqdg3hhS9W0NiapbcSwuU7iz/pNQTEzX294hxCByRXhK0fqkDq
+         FeykiWD59+Byglco4mhe7ES2p0hdV7BHAAQdCFWRkTPWNloG4B9r89J0+B/ANO+383hJ
+         vBVGwW59d0BhO/hlXU6B7OE/MRXTvMB5wxHY9OEIWtTUvEmvMm8QC2f8cRgqJIJ40eRK
+         JxvEx5moRoafh/BmIEo0ZPQ0IE24nPUV5GqpeT4iCTswxN+NPLweqHL3dnurd+G20+oE
+         x+w/RQ6liNLXDu0GN+g4gyuXeCE9sC4bd4I0g87bhDGSP/Y6XRMNWMFRPGvMeEMWNUQ6
+         7I3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVW4DmU0+gyGoxZy5xDokIE2M59lYwqlmqNrCoHEaYKq1iA9k3BsqUKiOgyVyY8YkvLEb6YSXZfSc9ZPknohh3oIU7yPwrJqbMQ
+X-Gm-Message-State: AOJu0YzCRNOKgn7j1A0QdY2sGqw8oEoMjKkHYHWz/Bm6OCiVxAJsr+ig
+	VJfBXbI6zdtVFQr+hlEMu3PxHjkEEIMzO0izPa2X7aGkPhfZECj4VhT/vSSzYMs=
+X-Google-Smtp-Source: AGHT+IGk6XaLGpfuoUdDJFudtbrf8u4lswHLxBXGWN7TmyCvejeVLID4Xr999uOxMPq+1SjKPHPkVQ==
+X-Received: by 2002:a17:90a:b00b:b0:2ac:5a83:b8b7 with SMTP id x11-20020a17090ab00b00b002ac5a83b8b7mr9438434pjq.0.1714455975083;
+        Mon, 29 Apr 2024 22:46:15 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id r6-20020a17090a940600b002b2a7c89970sm252533pjo.35.2024.04.29.22.46.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Apr 2024 22:04:28 -0700 (PDT)
-Date: Tue, 30 Apr 2024 10:34:24 +0530
-Message-Id: <87le4vxwyv.fsf@gmail.com>
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Subject: Re: [PATCHv2 1/1] xfs: Add cond_resched in xfs_bunmapi_range loop
-In-Reply-To: <20240429151146.GU360919@frogsfrogsfrogs>
+        Mon, 29 Apr 2024 22:46:14 -0700 (PDT)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+	by dread.disaster.area with esmtp (Exim 4.96)
+	(envelope-from <dave@fromorbit.com>)
+	id 1s1gJg-00FsCB-1r;
+	Tue, 30 Apr 2024 15:46:12 +1000
+Received: from dave by devoid.disaster.area with local (Exim 4.97)
+	(envelope-from <dave@devoid.disaster.area>)
+	id 1s1gJg-0000000HUwm-02aA;
+	Tue, 30 Apr 2024 15:46:12 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	hch@lst.de,
+	osalvador@suse.de,
+	elver@google.com,
+	vbabka@suse.cz,
+	andreyknvl@gmail.com
+Subject: [PATCH 0/3] mm: fix nested allocation context filtering
+Date: Tue, 30 Apr 2024 15:28:22 +1000
+Message-ID: <20240430054604.4169568-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-"Darrick J. Wong" <djwong@kernel.org> writes:
+This patchset is the followup to the comment I made earlier today:
 
-> On Mon, Apr 29, 2024 at 02:14:46PM +0530, Ritesh Harjani wrote:
->> "Ritesh Harjani (IBM)" <ritesh.list@gmail.com> writes:
->> 
->> > An async dio write to a sparse file can generate a lot of extents
->> > and when we unlink this file (using rm), the kernel can be busy in umapping
->> > and freeing those extents as part of transaction processing.
->> > Add cond_resched() in xfs_bunmapi_range() to avoid soft lockups
->> > messages like these. Here is a call trace of such a soft lockup.
->> >
->> > watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [kworker/1:0:82435]
->> > CPU: 1 PID: 82435 Comm: kworker/1:0 Tainted: G S  L   6.9.0-rc5-0-default #1
->> > Workqueue: xfs-inodegc/sda2 xfs_inodegc_worker
->> > NIP [c000000000beea10] xfs_extent_busy_trim+0x100/0x290
->> > LR [c000000000bee958] xfs_extent_busy_trim+0x48/0x290
->> > Call Trace:
->> >   xfs_alloc_get_rec+0x54/0x1b0 (unreliable)
->> >   xfs_alloc_compute_aligned+0x5c/0x144
->> >   xfs_alloc_ag_vextent_size+0x238/0x8d4
->> >   xfs_alloc_fix_freelist+0x540/0x694
->> >   xfs_free_extent_fix_freelist+0x84/0xe0
->> >   __xfs_free_extent+0x74/0x1ec
->> >   xfs_extent_free_finish_item+0xcc/0x214
->> >   xfs_defer_finish_one+0x194/0x388
->> >   xfs_defer_finish_noroll+0x1b4/0x5c8
->> >   xfs_defer_finish+0x2c/0xc4
->> >   xfs_bunmapi_range+0xa4/0x100
->> >   xfs_itruncate_extents_flags+0x1b8/0x2f4
->> >   xfs_inactive_truncate+0xe0/0x124
->> >   xfs_inactive+0x30c/0x3e0
->> >   xfs_inodegc_worker+0x140/0x234
->> >   process_scheduled_works+0x240/0x57c
->> >   worker_thread+0x198/0x468
->> >   kthread+0x138/0x140
->> >   start_kernel_thread+0x14/0x18
->> >
->> 
->> My v1 patch had cond_resched() in xfs_defer_finish_noroll, since I was
->> suspecting that it's a common point where we loop for many other
->> operations. And initially Dave also suggested for the same [1].
->> But I was not totally convinced given the only problematic path I
->> had till now was in unmapping extents. So this patch keeps the
->> cond_resched() in xfs_bunmapi_range() loop.
->> 
->> [1]: https://lore.kernel.org/all/ZZ8OaNnp6b%2FPJzsb@dread.disaster.area/
->> 
->> However, I was able to reproduce a problem with reflink remapping path
->> both on Power (with 64k bs) and on x86 (with preempt=none and with KASAN
->> enabled). I actually noticed while I was doing regression testing of
->> some of the iomap changes with KASAN enabled. The issue was seen with
->> generic/175 for both on Power and x86.
->> 
->> Do you think we should keep the cond_resched() inside
->> xfs_defer_finish_noroll() loop like we had in v1 [2]. If yes, then I can rebase
->> v1 on the latest upstream tree and also update the commit msg with both
->> call stacks.
->
-> I think there ought to be one in xfs_defer_finish_noroll (or even
-> xfs_trans_roll) when we're between dirty transactions, since long
-> running transaction chains can indeed stall.  That'll hopefully solve
-> the problem for bunmapi and long running online repair operations.
->
-> But that said, the main FICLONE loop continually creates new transaction
-> chains, so you probably need one there too.
+https://lore.kernel.org/linux-xfs/ZjAyIWUzDipofHFJ@dread.disaster.area/
 
-We need not right, as long as we have one in xfs_defer_finish_noroll(),
-because we commit everything before returning from
-xfs_reflink_remap_extent(). And we do have XFS_TRANS_PERM_LOG_RES set,
-so xfs_defer_finish_noroll() should always be called. 
-(Apologies, if I am not making sense. I new to XFS code)
+Tl;dr: Memory allocations that are done inside the public memory
+allocation API need to obey the reclaim recursion constraints placed
+on the allocation by the original caller, including the "don't track
+recursion for this allocation" case defined by __GFP_NOLOCKDEP.
 
-I gave generic/175 an overnight run with cond_resched() call inside
-xfs_defer_finish_noroll() loop. I couldn't reproduce the soft lockup bug.
+These nested allocations are generally in debug code that is
+tracking something about the allocation (kmemleak, KASAN, etc) and
+so are allocating private kernel objects that only that debug system
+will use.
 
-So does it sound ok to have cond_resched() within
-xfs_defer_finish_noroll(). I can submit the new version then.
+Neither the page-owner code nor the stack depot code get this right.
+They also also clear GFP_ZONEMASK as a separate operation, which is
+completely redundant because the constraint filter applied
+immediately after guarantees that GFP_ZONEMASK bits are cleared.
 
-This should solve the soft lockup problems in both unmapping of extents
-causing large transaction chains and also reflink remapping path.
+kmemleak gets this filtering right. It preserves the allocation
+constraints for deadlock prevention and clears all other context
+flags whilst also ensuring that the nested allocation will fail
+quickly, silently and without depleting emergency kernel reserves if
+there is no memory available.
 
-> Hence the grumblings about cond_resched whackamole.
-> Thoughts?
+This can be made much more robust, immune to whack-a-mole games and
+the code greatly simplified by lifting gfp_kmemleak_mask() to
+include/linux/gfp.h and using that everywhere. Also document it so
+that there is no excuse for not knowing about it when writing new
+debug code that nests allocations.
 
-Yes, I agree that life will be easy if we don't have to play with the
-hacks of putting such calls within tight loops. But until we have such
-infrastructure ready, I was hoping we could find a correct fix for such
-problems for current upstream and old stable kernels.
+Tested with lockdep, KASAN + page_owner=on and kmemleak=on over
+multiple fstests runs with XFS.
 
-
-Thanks for the review and suggestions!
-
--ritesh
 
