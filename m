@@ -1,111 +1,85 @@
-Return-Path: <linux-xfs+bounces-7930-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7932-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 539D28B692D
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 05:42:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BB838B6934
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 05:48:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E67E281A79
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 03:42:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9BA9EB21102
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 03:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C956310A1F;
-	Tue, 30 Apr 2024 03:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D147A134BE;
+	Tue, 30 Apr 2024 03:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnsV80QO"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RGcuuWzG"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E778DDA6;
-	Tue, 30 Apr 2024 03:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4153F10965;
+	Tue, 30 Apr 2024 03:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714448542; cv=none; b=SGjUKPB8ZvivxFKtRizIuXuSbQinxqnpoTR/q7VQamMejHhlz4n8MuavAK5ixi/tSxz8yAe34dQsvifI0Bq/2AvYLSzPdJDhMOi1ixrRIj/wNtXEXfIqdJpGFFIfPkOTbmFodyKd7c/3EKrM3QbIDJsXY5e82WOiaAmo0sC+1nc=
+	t=1714448871; cv=none; b=gfs124IZjfY1n6M/5BVAB1m+ook9ERE2WZRoYFIkpbxVWsYPSTA8mnlueExrYXNJgfohgPZQ7NT7iirT6ZYREVgjjOgle3dHKrGUte1cdTN4JMxehCecwBwipz9zQeCdo+SiNVKht26xwvVs5iSvvrneCtEXSxZ/KWhe3V48EOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714448542; c=relaxed/simple;
-	bh=jbApkDvEWvvkWcdeshF4HBowOWeIkefxLeuhyJUzYvA=;
-	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sc9iHD98S70wljFjagyFGcCPAWxrZvPhAtNYAd+YTiV8sqtTqgNSyM5Fj3TVbiEoIg3U/kvYf9UN2yy783UPJmTIpRztf2ZU5orhqfih7COmKxvd5hhD5kR8cgeSerhzSDhcv1w1aL5/3i6XS85xNpPNaURN3FAmmXOtS3hdc8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnsV80QO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24874C116B1;
-	Tue, 30 Apr 2024 03:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714448542;
-	bh=jbApkDvEWvvkWcdeshF4HBowOWeIkefxLeuhyJUzYvA=;
-	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=FnsV80QOgYyl6gGrhdpVmULSAHxSHejT4TlWbMOjf1SsOrkmGJZ7GmUt/D7aY+IJf
-	 +Vi43sxd4SUygIVlrl9VVcqe0w8MtJCQKbEBh8uA30hD5YnMfgYb7bcfVcP21ezEre
-	 ggq4EO5G9dRo09OP9SNNiFquasY2qziGj9bo1mP24V5qco0lyVP6oV1NBHGofa2214
-	 VqoeD9x3+WXuEFI7j0MCCYBppCmqqkra15TImCKYFc33hqkvBFQ8WJ5mfAfRkF9P/P
-	 y9KnNE9sT32sG6kXrq3e7+1FK6yPakABl+WXUHNWQwRSe/ITCqB/PIFOfszTaVo6vj
-	 MlzG1xVZ2YUog==
-Date: Mon, 29 Apr 2024 20:42:21 -0700
-Subject: [PATCH 6/6] common/populate: add verity files to populate xfs images
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: aalbersh@redhat.com, zlang@redhat.com, ebiggers@kernel.org,
- djwong@kernel.org
-Cc: fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org, guan@eryu.me,
- linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <171444688070.962488.15915265664424203708.stgit@frogsfrogsfrogs>
-In-Reply-To: <171444687971.962488.18035230926224414854.stgit@frogsfrogsfrogs>
-References: <171444687971.962488.18035230926224414854.stgit@frogsfrogsfrogs>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1714448871; c=relaxed/simple;
+	bh=Mo0Pfq0A8u0WgoYsEWiaKzNz4YXl0RQNy5c1b2zgnWc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VpDhs0qPxRv9YmsJmqEoxU3o7a/JRK7446BIWqf6vNziEufihge09ArpceRqkYQoa8qXq1PmZdRJ/VEGy2V8eYHY8xo686dL52eCqHM2PcA7ynpjE2m+LBT92INU8uGe97GwVSfiEJv+X0SxBUhfLuSwiKRfanpBDOIQ+TOC1OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RGcuuWzG; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1714448859; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=6EoYFnnrRx9Ut/tDax0nPzU21beFw383jDxbtRqkCXk=;
+	b=RGcuuWzGo/a0jmR1dp9SALfywD/ZlehIMBZ9dBDN5DcSRyHikbjGRO0uDFIzDux5sIUr7HEXz1m2/Ga7pFH6jdKSlE0AuiMZRWO04N9y24vDqTUhiOLSReQrPhn0oLI3AkYfQSSg/gkTCdnPy42j1D5yWM/XvUpqZfoXF92PqHY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W5ayAjS_1714448850;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W5ayAjS_1714448850)
+          by smtp.aliyun-inc.com;
+          Tue, 30 Apr 2024 11:47:39 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: chandan.babu@oracle.com
+Cc: djwong@kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH 1/2] xfs: Remove duplicate xfs_da_format.h header
+Date: Tue, 30 Apr 2024 11:47:27 +0800
+Message-Id: <20240430034728.86811-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-From: Darrick J. Wong <djwong@kernel.org>
+./fs/xfs/libxfs/xfs_trans_resv.c: xfs_da_format.h is included more than once.
 
-If verity is enabled on a filesystem, we should create some sample
-verity files.
-
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8931
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- common/populate |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ fs/xfs/libxfs/xfs_trans_resv.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-diff --git a/common/populate b/common/populate
-index 35071f4210..ab9495e739 100644
---- a/common/populate
-+++ b/common/populate
-@@ -520,6 +520,30 @@ _scratch_xfs_populate() {
- 		done
- 	fi
+diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+index 6dbe6e7251e7..3dc8f785bf29 100644
+--- a/fs/xfs/libxfs/xfs_trans_resv.c
++++ b/fs/xfs/libxfs/xfs_trans_resv.c
+@@ -22,7 +22,6 @@
+ #include "xfs_rtbitmap.h"
+ #include "xfs_attr_item.h"
+ #include "xfs_log.h"
+-#include "xfs_da_format.h"
  
-+	# verity merkle trees
-+	is_verity="$(_xfs_has_feature "$SCRATCH_MNT" verity -v)"
-+	if [ $is_verity -gt 0 ]; then
-+		echo "+ fsverity"
-+
-+		# Create a biggish file with all zeroes, because metadump
-+		# won't preserve data blocks and we don't want the hashes to
-+		# stop working for our sample fs.
-+		for ((pos = 0, i = 88; pos < 23456789; pos += 234567, i++)); do
-+			$XFS_IO_PROG -f -c "pwrite -S 0 $pos 234567" "$SCRATCH_MNT/verity"
-+		done
-+
-+		fsverity enable "$SCRATCH_MNT/verity"
-+
-+		# Create a sparse file
-+		$XFS_IO_PROG -f -c "pwrite -S 0 0 3" -c "pwrite -S 0 23456789 3" "$SCRATCH_MNT/sparse_verity"
-+		fsverity enable "$SCRATCH_MNT/sparse_verity"
-+
-+		# Create a salted sparse file
-+		$XFS_IO_PROG -f -c "pwrite -S 0 0 3" -c "pwrite -S 0 23456789 3" "$SCRATCH_MNT/salted_verity"
-+		local salt="5846532066696e616c6c7920686173206461746120636865636b73756d732121"	# XFS finally has data checksums!!
-+		fsverity enable --salt="$salt" "$SCRATCH_MNT/salted_verity"
-+	fi
-+
- 	# Copy some real files (xfs tests, I guess...)
- 	echo "+ real files"
- 	test $fill -ne 0 && __populate_fill_fs "${SCRATCH_MNT}" 5
+ #define _ALLOC	true
+ #define _FREE	false
+-- 
+2.20.1.7.g153144c
 
 
