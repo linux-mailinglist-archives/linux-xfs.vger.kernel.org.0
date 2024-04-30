@@ -1,57 +1,56 @@
-Return-Path: <linux-xfs+bounces-7931-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-7933-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31C368B6932
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 05:47:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CF6C8B6949
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 06:04:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6950C1C21801
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 03:47:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3C341F224D5
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Apr 2024 04:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D93F10A1F;
-	Tue, 30 Apr 2024 03:47:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B181118C;
+	Tue, 30 Apr 2024 04:04:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IcbDiX5r"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ygYcon6u"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79B6DDA6;
-	Tue, 30 Apr 2024 03:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84D2101C5;
+	Tue, 30 Apr 2024 04:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714448869; cv=none; b=UoXOVPDp6qymc7Y4I3paZO+a2fyGSfXC88ObSZ93VMvvO4MEtRDpaQoUTGvXBS3BNtXlvZ1xv8tmo36dVCTqJ/11t5enIjNEQX7H2ECAtucRNONKiXoIiw9+SzvBEP4KDVGQg+X5ZpPa6VXZY7lwKlUBqmOqzO72wFqBNxEsVUA=
+	t=1714449854; cv=none; b=S1or4uFZt6B6Nb6txl3Z2mmyPHqdYYJK5FdDDFvQ+iKmC0ggyBVNwOP/pcd0htqCce/BnsRHWjLWfJQBuW3hEo65QDFapjwLYtBZlYVXat7Y/u1+MK6MWSctQV+6o1g760E/J58gviRieni2oY/aXlAeAQt7Nk77UwhCybJBzdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714448869; c=relaxed/simple;
-	bh=jUs9XgpaOa7DxLf3I0tsnTGWIU0jUYW5+Lq9rL+rIVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=knMznN7S4y07fEaSlQRYRdeChHKh6pzc0V6iwrrZT/9v+7NVV94HLaHYKH1KCP/EC2ocXBcd16zhHXRVEFlFTxOQ+++cR3ERpNI17PFXty9X7IJ/pz8xzRr/C7dW4UEz8izz9zLSr1DQc7sZjtnIotMHsM7D3/Qcjl6jEDodNis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IcbDiX5r; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1714448863; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=/CsF+Y2IP+3jZ5bkwA2pggt8f+Xx33IGI6tV8P3LBv8=;
-	b=IcbDiX5r/pAZCCT8flZ4BGElBcp1P2NEmX+6VBEVn6Xg/TEHLJKig38iqDn8wcB2falxxOl13o7OXoYwOAP6jMEJ53ttOwReUMNOWRr5tftBP5MofB5cNsomEaJlTyxysMCZYFDJXjpNM/DTcLdrDR99h1XUA0Jv+XXp7sEseU4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W5b.701_1714448859;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W5b.701_1714448859)
-          by smtp.aliyun-inc.com;
-          Tue, 30 Apr 2024 11:47:42 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: chandan.babu@oracle.com
-Cc: djwong@kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH 2/2] xfs: Remove duplicate xfs_da_btree.h header
-Date: Tue, 30 Apr 2024 11:47:28 +0800
-Message-Id: <20240430034728.86811-2-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
-In-Reply-To: <20240430034728.86811-1-jiapeng.chong@linux.alibaba.com>
+	s=arc-20240116; t=1714449854; c=relaxed/simple;
+	bh=xquYkdl9fpC+Wtb+uNSGETdm8v6yEqPydZ0+Pzg3qgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tq1VohRHK0EFAEEzJkt8rddurMzzSZ6zYd9rTUEKJ0iouCCkaUEF73I9Uc5PPkfbmjsf5RCpwW2Nbt68CWl/9t1/WZQeSuANwEauV4pCfM/BDpFGkTQ6VJIJDGTAlzGL6tVEivwqeRNjlpVoFlKc7apx41dgui3gA/1JGmqq5Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ygYcon6u; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Cc+/1xCquATq7FO6eqR8t3cu5To1zwP4PfeaYzwibME=; b=ygYcon6u+jC+Jl55WVeEYJm703
+	J1rriCyFT2G+/Pn2LZnU9UoMC8vwxFmABUJz74+YLijBxCsgIdBi8j+gAq867BDTjKUsIIuJU8245
+	TaDr1fqX9HlBLkUt91nrh73ciReXhJ1AnCQJNPlPOqTWfF4D6+rhceGAheF0JIaqhzwiBAXo6wtRK
+	2WB+fea1l1SgR4qQDrQUpJo5kcNmAiTlmapV+gNuSWn+HCW0RUp6juUrWOnTntDm22Au2KNHCJfi5
+	4QBULQfXtIeXXe8BkRWjKXdJWCDh87FBDqgQVmIdQRUMNCjNw/3aSFyGnvfJ/cJAMe1QPP9ISQK18
+	jOWXwLWg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s1eiw-00000004zYR-48Wf;
+	Tue, 30 Apr 2024 04:04:10 +0000
+Date: Mon, 29 Apr 2024 21:04:10 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: chandan.babu@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: [PATCH 1/2] xfs: Remove duplicate xfs_da_format.h header
+Message-ID: <ZjBtuvRX4vncJGMs@infradead.org>
 References: <20240430034728.86811-1-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -59,30 +58,21 @@ List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240430034728.86811-1-jiapeng.chong@linux.alibaba.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-./fs/xfs/xfs_handle.c: xfs_da_btree.h is included more than once.
+On Tue, Apr 30, 2024 at 11:47:27AM +0800, Jiapeng Chong wrote:
+> ./fs/xfs/libxfs/xfs_trans_resv.c: xfs_da_format.h is included more than once.
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8931
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8930
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- fs/xfs/xfs_handle.c | 1 -
- 1 file changed, 1 deletion(-)
+I don't think we do Closes for random bugzilla, never mind for trivial
+cleanups.
 
-diff --git a/fs/xfs/xfs_handle.c b/fs/xfs/xfs_handle.c
-index c8785ed59543..234b2c965fb6 100644
---- a/fs/xfs/xfs_handle.c
-+++ b/fs/xfs/xfs_handle.c
-@@ -21,7 +21,6 @@
- #include "xfs_attr.h"
- #include "xfs_ioctl.h"
- #include "xfs_parent.h"
--#include "xfs_da_btree.h"
- #include "xfs_handle.h"
- #include "xfs_health.h"
- #include "xfs_icache.h"
--- 
-2.20.1.7.g153144c
+The changes itself looks fine, though:
 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
