@@ -1,85 +1,83 @@
-Return-Path: <linux-xfs+bounces-8039-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8041-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 877448B8FB5
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2024 20:41:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF2358B8FBB
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2024 20:41:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB6DD1C213A0
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2024 18:41:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 404ABB2247E
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 May 2024 18:41:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745261607B4;
-	Wed,  1 May 2024 18:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61CCB16191E;
+	Wed,  1 May 2024 18:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GT8YZ4Cq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDKL+c3w"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4590155330;
-	Wed,  1 May 2024 18:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39561607B2;
+	Wed,  1 May 2024 18:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714588888; cv=none; b=qZu/MQ9ZmmGwT7DiB3d5ISWccn1VHbDcZjnZ7ovXv5OtWFVntbtRqq0GqEaos4Q1f19pWHjctVHOqJyNc+6H2obB4v0fHSUXNQypd3BcNOXe+Heod5Ynn5wqMajLREp1hwJNori/miy04i2wre87hSnyOvwWQY1IVXKu6jTP/80=
+	t=1714588889; cv=none; b=HDIp70nn3QUHqLebL/7P6XyKqpmrj3ubzMA0ilFwF8NGYiln+FMuQJ1pgrI0l8/25zyWAG88jdNSy6tTOV/S6XA5zdrh7P5il2hJZOBxaLaS0pvlOZo7tmzkxSOpLSktsXwQZeb7kPIPMKBijL1eUGBLmHkB/gy3wpIdhiTdz0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714588888; c=relaxed/simple;
-	bh=I4Yp+4XHnPd7PZl9zUVRdylTuYEh3FfWWTiDT5jhk2Q=;
+	s=arc-20240116; t=1714588889; c=relaxed/simple;
+	bh=ysNmjINyLBn0gNnQIQ3FJJZn9si3F/5xhKSd/jFuiWY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gAcBATF3Erel3aS1aFLypjaScccG3kQCaGHzX8UkmXqagUhcXyajRDwuuZDTFxwn46NM0qF051JIea/uaG4fe83CaLSyGJn7FqqE8lZZd3pau/V9JEsjRyeY3y494ShkcRERDO+TbSLOB3R5cEuPK3DWoq9BbCD0FFzUCXhKMS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GT8YZ4Cq; arc=none smtp.client-ip=209.85.210.172
+	 MIME-Version; b=cq9J06OUYn45WXo67Y8a+BT8hGvzHX3rTywTK/UTKSO69SDcwDSWEIMW8m6iBkAWy1D2ajQHRXUdMMvYlGBLz71htXvgyR3B6lrE702SSBuS+5L0St/KazYLclZPMfs9zPsi3VdAxbc5xNmafW24IiDSFh/6kfMP6qf8qGZ6/qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDKL+c3w; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so6413860b3a.0;
-        Wed, 01 May 2024 11:41:26 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed112c64beso6560973b3a.1;
+        Wed, 01 May 2024 11:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714588886; x=1715193686; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714588887; x=1715193687; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EBLeEVPALfZF73MVv9o2CMuCZBN5rHK7j5udd9TJd+U=;
-        b=GT8YZ4Cqst+l+8z/qkZZjVH/CA3yjMz1Hu1gaCf7EYBNFXeqOa1MNM4ehgVTNemjmt
-         xop0yDpF/xu3SAnNlOYbtdlr9sjOUsBOOWOGQuVeL0L/b+2DuQq5paO7DOFfIWQD2Ze3
-         7nPx6TnyYsDYKmsU2BDzoLvkbyHcpePAo+M36wDDJ29L3eYvYZVF1FV/TH5/xzOsO6YV
-         kC94VyDQHxH5+TX4L+bqedceAb7skiZK9rNaRyTs2Joi/a75T2cyDNUUYBb+3bKG6eex
-         XNYlVmDvRsVaDLKfig1rYTHDOLLfE2xAEflTLO/Eft+cFfeIpDRlcaer29X5Yn9qx4N7
-         mDxg==
+        bh=SoEF66zFbDm7CGOX39wytxdX/q2cnPexRd4aoa+aK2Q=;
+        b=iDKL+c3wbXMDl2tXutnFHQ0mMGbJ5iSyyt/B+3or4X8znEuacKtrEH8JHa6QWTNrkm
+         0QWbds6drKaH6zs6SiAKTVKymbG7P2lmkguUIyFgPHnO4Rg63iE3OWZLAdMxGcUOjinx
+         2/nvJNo5lG5qNgfDBobdmWZgrLPoKNDPViVzBMKBeFdJQ9qIeCrXfDI1HnRBB9ST7jUp
+         H2OcmUFsQn92oJrjw6qRI/m+6E9YTWWGoyMHlu7H34iP4YuuiOpHDIErFwNtbjg5reA0
+         IDhA8PamPK7LTAgjFl9wF6xH5bisj/pW9GHIjVWpDvz8FsWNy26XiDTuDbWYCwRoWfJV
+         KPCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714588886; x=1715193686;
+        d=1e100.net; s=20230601; t=1714588887; x=1715193687;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EBLeEVPALfZF73MVv9o2CMuCZBN5rHK7j5udd9TJd+U=;
-        b=ZglWUeVrZL2FUYx0tS2cNFzQ2ZgrF49wkteYvTDWXZerL6tbf83uAhU5u85PRssZ7W
-         639ct1YpZ3uLaFkmIgYGRe9w7fWEB3oD0s4QbqFu7MY4nklxYdoCKsOS6bDJCXmBvdgI
-         97bgUwTKe29RY6PL886jWVvYCwC/qS0s9KOW5DwsmPDdd1BwI5oXeibcAKp9bcQ4mAt7
-         oLczRkU1z1ncdsxs7Qr89QvfP/rRcf5MFXTIe1LHoTPYDSn8jCUSWNagg7XRTwFT1We2
-         AqRWAa6qv3nRU2D1DSWpeY60Olbbhv+M71rcZxbLIcckB82VXDRIIk+5z/06Cvsfm6ro
-         ELwQ==
-X-Gm-Message-State: AOJu0YxqPVoV3JkxSf1qv5gZwvdBAgMvg9/6C/liHd8JnlodFgNQ1zKj
-	nPz33Jwids421k7UrxOu7wYqMDtdlrqTWShVryoOUlpVCiCweYHVqLmYvUe6
-X-Google-Smtp-Source: AGHT+IHAS8IY1VKRNVItDxBx911qPgokamiDa0DOmEYPqmOfyV/lqci0PSgnv6S49T+5w0vpQt/zDQ==
-X-Received: by 2002:a05:6a00:4b0d:b0:6ed:332:ffbc with SMTP id kq13-20020a056a004b0d00b006ed0332ffbcmr4228437pfb.20.1714588885955;
-        Wed, 01 May 2024 11:41:25 -0700 (PDT)
+        bh=SoEF66zFbDm7CGOX39wytxdX/q2cnPexRd4aoa+aK2Q=;
+        b=WeNs5MwJRVKzbQeeyewBnARjfA43hKJvzlFBfji6wJoF5Ci6Y37vHm7DKJM46VGb6e
+         gXvTb+80F33hdDWLask9wQIxlQHn8CKl05BLfgdQnAeM42M47AvJdtVMPo5yJzM1LRKx
+         u+CNi5Kym4WD2oUnTL4O2oJHSIeEk4qkfk1GJs23Dvs/1YM4ImH68x7115uEDkx3k9/S
+         CBWk8IKNTOV0MXOfXSDZdIgGG6YAoKX+Dxhuhuu7j5JobLLyU6IyMuk9AnA5KAwY54j2
+         V0BGZ700vSRtF4ofOTgVKhDIE1KWVAwcBXgqOuSo1Ti1z2VlE4mRoYIz/jeyHM8WKs+C
+         Q5uA==
+X-Gm-Message-State: AOJu0YyTSDGmXEYMvsvqCz5VT9u/Fbu4Ez+AU/IxPp8BCqtz9zZz3Hue
+	oYveOAe8lS3SAGiUzFZ1DCFOOmAHf1uWFFwZCov6XEJ57+exNtVkJMb9QRta
+X-Google-Smtp-Source: AGHT+IEbWhg/LMJcCHBdd3Nx99BQIGHc7nZor1r7OhlY8CYgs6wbBCFgIznm6CQmbb6OXaLaVA1kNw==
+X-Received: by 2002:a05:6a20:f388:b0:1af:3a4b:db3e with SMTP id qr8-20020a056a20f38800b001af3a4bdb3emr3743117pzb.8.1714588887222;
+        Wed, 01 May 2024 11:41:27 -0700 (PDT)
 Received: from lrumancik.svl.corp.google.com ([2620:15c:2a3:200:9dbc:724d:6e88:fb08])
-        by smtp.gmail.com with ESMTPSA id j18-20020a62e912000000b006e681769ee0sm23687369pfh.145.2024.05.01.11.41.25
+        by smtp.gmail.com with ESMTPSA id j18-20020a62e912000000b006e681769ee0sm23687369pfh.145.2024.05.01.11.41.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 May 2024 11:41:25 -0700 (PDT)
+        Wed, 01 May 2024 11:41:26 -0700 (PDT)
 From: Leah Rumancik <leah.rumancik@gmail.com>
 To: stable@vger.kernel.org
 Cc: linux-xfs@vger.kernel.org,
 	amir73il@gmail.com,
 	chandan.babu@oracle.com,
 	fred@cloudflare.com,
-	Dave Chinner <dchinner@redhat.com>,
-	Pengfei Xu <pengfei.xu@intel.com>,
-	Brian Foster <bfoster@redhat.com>,
-	"Darrick J . Wong" <djwong@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Andrey Albershteyn <aalbersh@redhat.com>,
 	Leah Rumancik <leah.rumancik@gmail.com>
-Subject: [PATCH 6.1 10/24] xfs: fix off-by-one-block in xfs_discard_folio()
-Date: Wed,  1 May 2024 11:40:58 -0700
-Message-ID: <20240501184112.3799035-10-leah.rumancik@gmail.com>
+Subject: [PATCH 6.1 11/24] xfs: fix incorrect error-out in xfs_remove
+Date: Wed,  1 May 2024 11:40:59 -0700
+Message-ID: <20240501184112.3799035-11-leah.rumancik@gmail.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
 In-Reply-To: <20240501184112.3799035-1-leah.rumancik@gmail.com>
 References: <20240501184112.3799035-1-leah.rumancik@gmail.com>
@@ -91,82 +89,35 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Dave Chinner <dchinner@redhat.com>
+From: "Darrick J. Wong" <djwong@kernel.org>
 
-[ Upstream commit 8ac5b996bf5199f15b7687ceae989f8b2a410dda ]
+[ Upstream commit 2653d53345bda90604f673bb211dd060a5a5c232 ]
 
-The recent writeback corruption fixes changed the code in
-xfs_discard_folio() to calculate a byte range to for punching
-delalloc extents. A mistake was made in using round_up(pos) for the
-end offset, because when pos points at the first byte of a block, it
-does not get rounded up to point to the end byte of the block. hence
-the punch range is short, and this leads to unexpected behaviour in
-certain cases in xfs_bmap_punch_delalloc_range.
+Clean up resources if resetting the dotdot entry doesn't succeed.
+Observed through code inspection.
 
-e.g. pos = 0 means we call xfs_bmap_punch_delalloc_range(0,0), so
-there is no previous extent and it rounds up the punch to the end of
-the delalloc extent it found at offset 0, not the end of the range
-given to xfs_bmap_punch_delalloc_range().
-
-Fix this by handling the zero block offset case correctly.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=217030
-Link: https://lore.kernel.org/linux-xfs/Y+vOfaxIWX1c%2Fyy9@bfoster/
-Fixes: 7348b322332d ("xfs: xfs_bmap_punch_delalloc_range() should take a byte range")
-Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-Found-by: Brian Foster <bfoster@redhat.com>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Fixes: 5838d0356bb3 ("xfs: reset child dir '..' entry when unlinking child")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Andrey Albershteyn <aalbersh@redhat.com>
 Signed-off-by: Leah Rumancik <leah.rumancik@gmail.com>
 Acked-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_aops.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ fs/xfs/xfs_inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index a22d90af40c8..21c241e96d48 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -439,15 +439,17 @@ xfs_prepare_ioend(
- }
- 
- /*
-- * If the page has delalloc blocks on it, we need to punch them out before we
-- * invalidate the page.  If we don't, we leave a stale delalloc mapping on the
-- * inode that can trip up a later direct I/O read operation on the same region.
-+ * If the folio has delalloc blocks on it, the caller is asking us to punch them
-+ * out. If we don't, we can leave a stale delalloc mapping covered by a clean
-+ * page that needs to be dirtied again before the delalloc mapping can be
-+ * converted. This stale delalloc mapping can trip up a later direct I/O read
-+ * operation on the same region.
-  *
-- * We prevent this by truncating away the delalloc regions on the page.  Because
-+ * We prevent this by truncating away the delalloc regions on the folio. Because
-  * they are delalloc, we can do this without needing a transaction. Indeed - if
-  * we get ENOSPC errors, we have to be able to do this truncation without a
-- * transaction as there is no space left for block reservation (typically why we
-- * see a ENOSPC in writeback).
-+ * transaction as there is no space left for block reservation (typically why
-+ * we see a ENOSPC in writeback).
-  */
- static void
- xfs_discard_folio(
-@@ -465,8 +467,13 @@ xfs_discard_folio(
- 		"page discard on page "PTR_FMT", inode 0x%llx, pos %llu.",
- 			folio, ip->i_ino, pos);
- 
-+	/*
-+	 * The end of the punch range is always the offset of the the first
-+	 * byte of the next folio. Hence the end offset is only dependent on the
-+	 * folio itself and not the start offset that is passed in.
-+	 */
- 	error = xfs_bmap_punch_delalloc_range(ip, pos,
--			round_up(pos, folio_size(folio)));
-+				folio_pos(folio) + folio_size(folio));
- 
- 	if (error && !xfs_is_shutdown(mp))
- 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index aa303be11576..d354ea2b74f9 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -2479,7 +2479,7 @@ xfs_remove(
+ 			error = xfs_dir_replace(tp, ip, &xfs_name_dotdot,
+ 					tp->t_mountp->m_sb.sb_rootino, 0);
+ 			if (error)
+-				return error;
++				goto out_trans_cancel;
+ 		}
+ 	} else {
+ 		/*
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
