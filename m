@@ -1,232 +1,242 @@
-Return-Path: <linux-xfs+bounces-8138-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8140-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 437B78BAE67
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2024 16:04:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A95438BAE8F
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2024 16:10:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EEE87B21242
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2024 14:04:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 331A6282EE2
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 May 2024 14:09:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 491D415442B;
-	Fri,  3 May 2024 14:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7368C154C17;
+	Fri,  3 May 2024 14:09:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lc9x7Npk";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FuOckiQl"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="KM4XIarb"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846F7153817
-	for <linux-xfs@vger.kernel.org>; Fri,  3 May 2024 14:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714745049; cv=fail; b=ZN7Be7InKQtonqr7USzjCa5ZzlAyXLhbw8/zMEnB5el+w+9AdNC5VWA9yI/42tUts/+fm8PzowcC33Z++W8WQEq+QPlYbC42cC52PDVu8SOc3lPT/0zlHXgGkSvuzXmnt3dgVNTe838Cg9mHzspP/vgGDNb78Q4WbZogvH6mkUo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714745049; c=relaxed/simple;
-	bh=Fc2k24uCi+9FESQtdgzixlV+siWVzqyKOUKV5rYMSaw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QtCkjXPoYBUX/LqQDVk0whWGCuszuYozP+3BlAO1aoPtwkh4Av0pI5ECW/rjRNfuMxrZoNosDgs0mQuv9ElRZQMD0fC7LaG+EnfvBDHBxilsRm4DyAxEu6SKW1LKi7iqft9ES7w+Dfm+uzz26rwra/zmAmCDc1Cp502Vlc0N8Mg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Lc9x7Npk; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FuOckiQl; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 443C2Sta018602;
-	Fri, 3 May 2024 14:03:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2023-11-20; bh=apjpXI1FNs+BPn5EjTwW51Bsu1tKXsf1KXRebrBmD7g=;
- b=Lc9x7NpkfFXXCiZCrax32cpszIMmzkCW1ffe9yNNcnkcYHURI6ICPCAGgQAWtLTYLdA5
- 2zYbIykb36RgryE3MnjpPOJirPojT6qJRMY3th2qa7yKd/NAqXvMRaCyaCn2RyYruEu2
- Vq4zrC+OYEeah9bRugsNvBK333/ojD8ERyQPjdVEZVP0CKHwSU/wTEZpcPZSI93KoHBW
- js6OB+p1KA1H1B0peIGfE/mA/at02g7wzuhjfs+u/faMYxrvED4UND/sAgyvMqtENlyd
- HCbY1XJq8wxVIiIMqpZwGTyCb9McHLjj0MJyvqgB5uQ4/rhT/Y/cmC14KLZvCy2ewJHt Uw== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xrsww0c6v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 03 May 2024 14:03:58 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 443DUiS0006062;
-	Fri, 3 May 2024 14:03:57 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xrqtcbmeb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 03 May 2024 14:03:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IgPuMfNnA+6Snj6CBs3TnAztq+ym1kW3BrP2/qk/l/lgeSuVZG4OHI+Ttep3f2t9HvFUQYLMifLh2b5KDrKGnuXsoYhWl2jp1x7PPMoLnLmj9Oc8Z06KIC7cwpldSOhgl8sg1LDnC/aIeAo2ayQrXWXerwrJzG2/kKvRCxSWeJtAgiQoR90RqkU22jr9tfLLqU1NFVFOs0pO4raAIhEy9+2HhQJzUPUF7FpYKPvx0gTWS3plqAQp14VC2UmXS85MsERSOILIwigo5Nq829XPSANkZkFNJd4z+nEVMqrvPvtnmQ1FG0xucatGueJFa4BFwCM6mmNzimAzsQJojgHbBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=apjpXI1FNs+BPn5EjTwW51Bsu1tKXsf1KXRebrBmD7g=;
- b=bppfalm9HlnoJL/cJxcRf5MppJHwdF8+GOiyQ0PNeM8IRAOs4rW3Tqo7/MTwvYce9fS/teYhLpYFOLRtxnxzqEE/QxJVcXev0k531S5vW3wInXH+z5lSMHvuJyOpn0mpAQKSvKqIqOduGxI8KSBflURb/XWvhhS/+pfu3Q1Y7xqH/PqypG0B+uFxnCpB1oip2BVJ/alBYs65LuaoGK6TVCbVuviOVaQZmMz9YvN2x9eE09hsoTlMOqtD9IKG+5cjAKMZU1SLTkHw1SSIdTO8KSjMJHyjWNVFhrs29ouz/zrHK9/eZbvUybkocZeY/gNkuaRLdE1DyJ294F8G5VVcJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=apjpXI1FNs+BPn5EjTwW51Bsu1tKXsf1KXRebrBmD7g=;
- b=FuOckiQlfIv4LotG2nJunqOuesTAd+NufsErN+ctH3JfXKfg6Tr1OCc0UOIqLqTK20z6ue5t2rhBgKfGbI1+Wwp9xSqOshoX6MN3VO4SV3jnK2ttxlYnAZsPXwy0+HlHuwABRQM+oV1p5IpNZbxoxmFcGPkcW4zmfNAhx4LJuOU=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by BLAPR10MB5074.namprd10.prod.outlook.com (2603:10b6:208:30d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.34; Fri, 3 May
- 2024 14:03:53 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.7544.029; Fri, 3 May 2024
- 14:03:53 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: chandan.babu@oracle.com, dchinner@redhat.com, djwong@kernel.org,
-        hch@lst.de
-Cc: linux-xfs@vger.kernel.org, John Garry <john.g.garry@oracle.com>
-Subject: [PATCH RFC 2/2] xfs: Fix xfs_prepare_shift() range for RT
-Date: Fri,  3 May 2024 14:03:37 +0000
-Message-Id: <20240503140337.3426159-3-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240503140337.3426159-1-john.g.garry@oracle.com>
-References: <20240503140337.3426159-1-john.g.garry@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR08CA0041.namprd08.prod.outlook.com
- (2603:10b6:a03:117::18) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F1415444E;
+	Fri,  3 May 2024 14:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714745385; cv=none; b=mUVWfdVt0zYaR0o2/SbDplsl3eIToZqAKv+V/l2tox9igjNvNhu+YAjaf2+P4MUCwHgCM+BXRW1fvxmc2bckq1D2TW1uElLHlBiRqqtsP58W8hwu+a4nok4u5MmGUqCX33zQUrnNGkxMWqHUh7iJNJ2B2nvMqmI1lDR6LBR4Pxs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714745385; c=relaxed/simple;
+	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CCdPlKyCDCaJhJaOwA2p1JSxq4VuaZLqvkDZ1bf5bPxs0s+fVuu+J0ErRRJkTUSueX9Ozh8KROPOdICNpBkkA0BfOXwwJ1uBH/IrSLWigC6wpebd33UiFahRV/Z+4aHBbfG/UsiIoZw2Vs6tTQ0nRUb/EjIJuxDYXdq9/FKLSJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=KM4XIarb; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1714745381;
+	bh=+fi7fUfomErHHAmvDww2p/WTBqGy/yFZDfIKZxnytjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KM4XIarbWLiqP+rTdHhYP4ADp2FfBPZJESIvebE/x46r3wpaPNaKYYJ8DjRuiR4XK
+	 lgnUuJtE42KneR0ACxiqLQ5uJD/S7BK84VwhVwYe9egEdoAzvtQwKV4FeMNTpP6GjL
+	 22eK/o3npUywdzgLbvtpx7d4AZBFjdzVsbPnc49I=
+Date: Fri, 3 May 2024 16:09:40 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
+	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
+ of sysctl handlers
+Message-ID: <4cda5d2d-dd92-44ef-9e7b-7b780ec795ab@t-8ch.de>
+References: <CGME20240423075608eucas1p265e7c90f3efd6995cb240b3d2688b803@eucas1p2.samsung.com>
+ <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
+ <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|BLAPR10MB5074:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6fe66c7-7139-4e46-ca59-08dc6b79dd7d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?pnCXqyLXLwgCW7xAEzkBi/6ucSPG8ogF1HIhyT+NnUPgK8raaXD6c5n5lKgy?=
- =?us-ascii?Q?vZoJdA85tMDp1os7fud7S/r70/qIoYVf7gjnFmtsWDCKt6bdyIS2+bbGsHDY?=
- =?us-ascii?Q?yKhLEbxtkre4dKTNDJY/9wtTJAn7SMslGstA6TjeF4+Vr26pAeZeQGL4Cc0l?=
- =?us-ascii?Q?c4lTiqm8s1ksmFU7FpWPQFux+5kKCB9GabGtlUFVgpvtGH+dL5WtxSHFsP9p?=
- =?us-ascii?Q?u5HZRsj7FXVWp+9NhqPtFt8mzn+eWur1e7kVqZFxlny4q3KMahu2k2LG191Q?=
- =?us-ascii?Q?36hs8cuTw9Xykcu+nbNxQp8HogcmUZmx9Potrq16oHqTwFyNfnERGJp/1T9b?=
- =?us-ascii?Q?TxdRLLCYV2DCKsmzl+SG9A7XzUNYDBPZolgA3T54dj5ivqrEu0UWqPPvJRhI?=
- =?us-ascii?Q?xIokHM/oQKNo1uGCisKNacpgA6Z29o5RUKkxAVuMFPHuTbEBsxVAhZ82tH5O?=
- =?us-ascii?Q?sVhPipDM9dkWXSWDjyfai47w+nHt6c+Db3HiYadCfg/wbk/kwX5KRZVrT7o1?=
- =?us-ascii?Q?3BOpyY3522vcxG5Ka4TFGWp0DByGJgXuTWf9SNY9txTzCMWRh52dFbAWjCpr?=
- =?us-ascii?Q?KPWQei3/1L1VBoNKPzWm3SRmDsutGlYOjXAzJGR2bEhag8W17L47bQ7+f5pN?=
- =?us-ascii?Q?3T402AUvES/o2tDBAopiwJMJkWopVgsxlaeS6Sq1MuwkKKwe++Byqtr+fOCJ?=
- =?us-ascii?Q?/MA+kPKIWAXrqABmlf5XOsVIt/pk4hrsTYDsz/axhQZVuS9hjmotkB5PE9jW?=
- =?us-ascii?Q?OdQpyAsK2sItlEVKAckdma16920qkzTRJFGvSMDs8AGO8v6KLB83tsi7DMLa?=
- =?us-ascii?Q?zzrZvUTSLPOvwnn2Wicb1g6VAzDDAuVvWEszfECN2qi8x6vh6Ksg1bwKOaOy?=
- =?us-ascii?Q?Q9kmL1/tC4oL2MgJkHKqRzytQ3h/zbV+yEr+2C94QMTf+Bj9IZs2MqEajMFj?=
- =?us-ascii?Q?/aREbMbWUPwLgm7KMyud2fcBqM93lkQ6eIa70hpRhIJHWchmpn63gaHiSVq8?=
- =?us-ascii?Q?4D0c54qY1rNbDxDXcHrLtE8r10SwSts+r9cuUjpVFbZ02zNlNaRP5l33YxbW?=
- =?us-ascii?Q?ojftHuIaal1hHfz5BgzAu+0xwO8t2DCOUvjRSB9kXoUrlSRrPSgt/5jb3MXI?=
- =?us-ascii?Q?nzW8/sLe2cNqPrB5scXoGavN9w4KTtlxQ7sBf0lbzrPnmAM8yusKPcgvRnh6?=
- =?us-ascii?Q?UOukK+qS3nceYgE0sSKHWg3MnOzKLvi4zUZZmmLKZklQk+rKY1Gf1Pwx0NW3?=
- =?us-ascii?Q?C6v7fz9AnjuCOija27VENiJIcYDGsyjeZyCklIg0Eg=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?BfcAPvhNeCklXfpPEe/qDS43W9E88hDEJ7inDNi/Y87vooCxQmApMwpbSZ1s?=
- =?us-ascii?Q?zKDr2B08yTrR1ZsZwlWoAgIOXjPt3rpJzEOTyPY2KIOIBCtHj0PPyo2dgZAj?=
- =?us-ascii?Q?Dc5sclCyIYKoaURnxTk9z6UsksBU6IWqQKpUyaNfJCMQJFsLCMCjRUzD/bkF?=
- =?us-ascii?Q?Xu4e1WjXs6d4JdDhyoQ0ko5BHeUU/LVTCIWEx32heF1bk1rdYgL8qbSeNiCb?=
- =?us-ascii?Q?i/BjxG7H98/CueW83NpPP9b4e+y9Tuy24ApnaRcMhv1g4RMml7JkZtlIfzw1?=
- =?us-ascii?Q?MNiYYdUEjQvGA6eVz7N0IDlSb6TUrcSMOnRiT6OZpiBXNLcCw3becsfbuz0q?=
- =?us-ascii?Q?SxSX8dkCbLitqja2nTTNXekNotgXXEGo6CtdgQt1ZaTzss2OLPidE0xW0EDj?=
- =?us-ascii?Q?wj34EUu1aE8mtRHTNP6ZCyspeUUsJAXDpS+hzr4o4gqVWLO0Rl4626R0An+h?=
- =?us-ascii?Q?Opww1o2E2mxr02V6CGqbErmm8INNxqpSmaqaAiIqiQkqkeJ2H+HTc3hvxKC2?=
- =?us-ascii?Q?IRoBfxeWhDyIHNGCeAGyyHKS4lDW7kwzoYUKkCmnTgr/IjzejtMqC5xUXNwX?=
- =?us-ascii?Q?3L2tToZD64nmyws/jXUnm7/SYiuKBTrlbmfYJHWtetWpXvm0PrLB6F/Z36BT?=
- =?us-ascii?Q?j+bGUL/RPGFK/6pUNUVTbb26wlPpUILS1KZo2HJKQBT1l9+8vXpme+/Vd045?=
- =?us-ascii?Q?foVx2fpsVkBOSU8bV0WFoPcqrVixC7LiqzgxBLBQSXqRbV6tgRfCGTSWWvmk?=
- =?us-ascii?Q?EIuMpTHvourigTq1CIffJ4I8GF/N2fKX5K4ABwTgWsqtOjHV1rGXrjg6hNWn?=
- =?us-ascii?Q?5WAlwzviTLc7Y4hRYSwdJo90irl8iRAg3M4z9QepjLcS5BVTDVaIQgSWLkLq?=
- =?us-ascii?Q?RnoxfPJ2XWSummOhsDsAGdd6uyokS3JCUEgBbi41keR/U1FOhHEDDRJNdAb3?=
- =?us-ascii?Q?0RYf8AgBMfxWvTErkUEpJo5c0uccDplTLQCur43GNrGqke2PDO8CIjLbsL83?=
- =?us-ascii?Q?hgLeGQt9IV7DE89hprplEh5IIEgHWF423ha4gfEsq9aEscHWXXx/UcAg++lE?=
- =?us-ascii?Q?PhMJ8JEWIlXlcz6F7EfYOp2HzoT2YvxUVWVfvhkU5pgnw36lsdrZDbjcqsCz?=
- =?us-ascii?Q?mnQuvnCdtIcT2eJuD2D4yflOgOiQ1tTaPKAYWqKyvV9Lkp59wsm8Zr1u/VnT?=
- =?us-ascii?Q?15nOeTpVYnXqAkKPu4o+nuW7sRFYglO8PygBofCzJAJX/ZAGPOtdbawMfhxH?=
- =?us-ascii?Q?fEEKJzKELyB+5YqHCuoJjvxWRicjvX78RnGHljEprSiTss1ViQfUIdtfyVEr?=
- =?us-ascii?Q?NASs1TRJYocufF2el2fXu3nAhb3NOAqx3qPgSUvaV6hj92nmLGW+qL1WSgUQ?=
- =?us-ascii?Q?RwzrFraKDuhgvADnmfs82DReDrXqML2TsrfxjFHI2ogrRhS1T/Man+8KVWfI?=
- =?us-ascii?Q?7SokA9llhcbPiD45k1aChlPAheBTgMnSzcKpnUAwLOyUGZpw2n6MaD0K/KY8?=
- =?us-ascii?Q?iJIe2jC2Oe53AXdSndYWNXX8bq3U2LOXA/HRp17umm71wBUvMAFKbsJKkR4H?=
- =?us-ascii?Q?HL7oOeQ/AVVzgGCNJnzSdqpfXYO6QTCCdH02szg62Yi3HhzL6y2+PYWpAy3S?=
- =?us-ascii?Q?ig=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	cfo63ctQBvtU5EhVqRsvk5sDfxGtB1wBUIGyLrVdQY35wpj8WhLYVQp4mApmae3lCMsOmyi2ptuuflKBhpRcz/MZrUD//JgXrKleQ8hLoQe5JHchTWphdIkm7W0/gK355CorEr7td/UHLZFYqo1I92cjfT0ZS7J7YOVqSq3NCnFOD2Mdp4HpqNzjQOhMn6jFbQvjWFDiLS3k3nKQPg0qBeqjJ4rAQMqr7IcMcerLI5m3+WTZ0iAHGTBw1YPxrdUp0fjanergh5HhYvgSifo2s1vaLigCtmJ7bIInrvdkiafSgve1HAuCpSAnkiegqP+Bk/2Vw8876v9Tb+kHYO9tnJOuV6sZQldwwi93lq1rM0M61xdH2SlTi/2S7vZBdced01AFcr47lzWo2/+0An7o+QC7j6owO32RzNpZiGoRAag1HjEttzJAyXSk3Xyc35DXDTSBpr+EyGM8vhKw2OvUcvCr6O3zCg//gzwOMNN7fkALhrsGQ4sqYf56OunvIGFeXsOWCkNi+nBmVQ/1lc4bbp5Fy659e9pvvMVExWUbbVi/XEu7q8w+sqXuQd7kXmotKGqFoCVeJCviP7S7XQW2HwwWgLB9SedzMNMJziOIrSQ=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6fe66c7-7139-4e46-ca59-08dc6b79dd7d
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2024 14:03:53.2275
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hBLeUENniLdqGT+yT88k8UczTa3MRuguCCpiQxx3h4SL1SmIFaWpgLCPMlToO1Z8LGNZ4SjNA9EGw8qY3bqHpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5074
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-03_09,2024-05-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 mlxscore=0 suspectscore=0 phishscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405030101
-X-Proofpoint-GUID: BbzFOKmb_nI-HIZBG4PwGezZYNTKgk9z
-X-Proofpoint-ORIG-GUID: BbzFOKmb_nI-HIZBG4PwGezZYNTKgk9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240503090332.irkiwn73dgznjflz@joelS2.panther.com>
 
-The RT extent range must be considered in the xfs_flush_unmap_range() call
-to stabilize the boundary.
+Hey Joel,
 
-This code change is originally from Dave Chinner.
+On 2024-05-03 11:03:32+0000, Joel Granados wrote:
+> Here is my feedback for your outstanding constification patches [1] and [2].
 
-Signed-off-by: John Garry <john.g.garry@oracle.com>
----
- fs/xfs/xfs_bmap_util.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Thanks!
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index da67c52d5f94..2775bb32489e 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -896,8 +896,8 @@ xfs_prepare_shift(
- 	struct xfs_inode	*ip,
- 	loff_t			offset)
- {
--	struct xfs_mount	*mp = ip->i_mount;
- 	int			error;
-+	unsigned int		rounding;
- 
- 	/*
- 	 * Trim eofblocks to avoid shifting uninitialized post-eof preallocation
-@@ -914,11 +914,13 @@ xfs_prepare_shift(
- 	 * with the full range of the operation. If we don't, a COW writeback
- 	 * completion could race with an insert, front merge with the start
- 	 * extent (after split) during the shift and corrupt the file. Start
--	 * with the block just prior to the start to stabilize the boundary.
-+	 * with the aligned block just prior to the start to stabilize the
-+	 * boundary.
- 	 */
--	offset = round_down(offset, mp->m_sb.sb_blocksize);
-+	rounding = xfs_inode_alloc_unitsize(ip);
-+	offset = round_down(offset, rounding);
- 	if (offset)
--		offset -= mp->m_sb.sb_blocksize;
-+		offset -= rounding;
- 
- 	/*
- 	 * Writeback and invalidate cache for the remainder of the file as we're
--- 
-2.31.1
+> # You need to split the patch
+> The answer that you got from Jakub in the network subsystem is very clear and
+> baring a change of heart from the network folks, this will go in as but as a
+> split patchset. Please split it considering the following:
+> 1. Create a different patchset for drivers/,  fs/, kernel/, net, and a
+>    miscellaneous that includes whatever does not fit into the others.
+> 2. Consider that this might take several releases.
+> 3. Consider the following sufix for the interim function name "_const". Like in
+>    kfree_const. Please not "_new".
 
+Ack. "_new" was an intentionally unacceptable placeholder.
+
+> 4. Please publish the final result somewhere. This is important so someone can
+>    take over in case you need to stop.
+
+Will do. Both for each single series and a combination of all of them.
+
+> 5. Consistently mention the motivation in your cover letters. I specify more
+>    further down in "#Motivation".
+> 6. Also mention that this is part of a bigger effort (like you did in your
+>    original cover letters). I would include [3,4,5,6]
+> 7. Include a way to show what made it into .rodata. I specify more further down
+>    in "#Show the move".
+> 
+> # Motivation
+> As I read it, the motivation for these constification efforts are:
+> 1. It provides increased safety: Having things in .rodata section reduces the
+>    attack surface. This is especially relevant for structures that have function
+>    pointers (like ctl_table); having these in .rodata means that these pointers
+>    always point to the "intended" function and cannot be changed.
+> 2. Compiler optimizations: This was just a comment in the patchsets that I have
+>    mentioned ([3,4,5]). Do you know what optimizations specifically? Does it
+>    have to do with enhancing locality for the data in .rodata? Do you have other
+>    specific optimizations in mind?
+
+I don't know about anything that would make it faster.
+It's more about safety and transmission of intent to API users,
+especially callback implementers.
+
+> 3. Readability: because it is easier to know up-front that data is not supposed
+>    to change or its obvious that a function is re-entrant. Actually a lot of the
+>    readability reasons is about knowing things "up-front".
+> As we move forward with the constification in sysctl, please include a more
+> detailed motivation in all your cover letters. This helps maintainers (that
+> don't have the context) understand what you are trying to do. It does not need
+> to be my three points, but it should be more than just "put things into
+> .rodata". Please tell me if I have missed anything in the motivation.
+
+Will do.
+
+> # Show the move
+> I created [8] because there is no easy way to validate which objects made it
+> into .rodata. I ran [8] for your Dec 2nd patcheset [7] and there are less in
+> .rodata than I expected (the results are in [9]) Why is that? Is it something
+> that has not been posted to the lists yet? 
+
+Constifying the APIs only *allows* the actual table to be constified
+themselves.
+Then each table definition will have to be touched and "const" added.
+
+See patches 17 and 18 in [7] for two examples.
+
+Some tables in net/ are already "const" as the static definitions are
+never registered themselves but only their copies are.
+
+This seems to explain your findings.
+
+> Best
+
+Thanks!
+
+> [1] https://lore.kernel.org/all/20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net/
+> [2] https://lore.kernel.org/all/20240418-sysctl-const-table-arg-v2-1-4012abc31311@weissschuh.net
+> [3] [PATCH v2 00/14] ASoC: Constify local snd_sof_dsp_ops
+>     https://lore.kernel.org/all/20240426-n-const-ops-var-v2-0-e553fe67ae82@kernel.org
+> [4] [PATCH v2 00/19] backlight: Constify lcd_ops
+>     https://lore.kernel.org/all/20240424-video-backlight-lcd-ops-v2-0-1aaa82b07bc6@kernel.org
+> [5] [PATCH 1/4] iommu: constify pointer to bus_type
+>     https://lore.kernel.org/all/20240216144027.185959-1-krzysztof.kozlowski@linaro.org
+> [6] [PATCH 00/29] const xattr tables
+>     https://lore.kernel.org/all/20230930050033.41174-1-wedsonaf@gmail.com
+> [7] https://lore.kernel.org/all/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
+> 
+> [8]
+
+[snip]
+
+> [9]
+>     section: .rodata                obj_name : kern_table
+>     section: .rodata                obj_name : sysctl_mount_point
+>     section: .rodata                obj_name : addrconf_sysctl
+>     section: .rodata                obj_name : ax25_param_table
+>     section: .rodata                obj_name : mpls_table
+>     section: .rodata                obj_name : mpls_dev_table
+>     section: .data          obj_name : sld_sysctls
+>     section: .data          obj_name : kern_panic_table
+>     section: .data          obj_name : kern_exit_table
+>     section: .data          obj_name : vm_table
+>     section: .data          obj_name : signal_debug_table
+>     section: .data          obj_name : usermodehelper_table
+>     section: .data          obj_name : kern_reboot_table
+>     section: .data          obj_name : user_table
+>     section: .bss           obj_name : sched_core_sysctls
+>     section: .data          obj_name : sched_fair_sysctls
+>     section: .data          obj_name : sched_rt_sysctls
+>     section: .data          obj_name : sched_dl_sysctls
+>     section: .data          obj_name : printk_sysctls
+>     section: .data          obj_name : pid_ns_ctl_table_vm
+>     section: .data          obj_name : seccomp_sysctl_table
+>     section: .data          obj_name : uts_kern_table
+>     section: .data          obj_name : vm_oom_kill_table
+>     section: .data          obj_name : vm_page_writeback_sysctls
+>     section: .data          obj_name : page_alloc_sysctl_table
+>     section: .data          obj_name : hugetlb_table
+>     section: .data          obj_name : fs_stat_sysctls
+>     section: .data          obj_name : fs_exec_sysctls
+>     section: .data          obj_name : fs_pipe_sysctls
+>     section: .data          obj_name : namei_sysctls
+>     section: .data          obj_name : fs_dcache_sysctls
+>     section: .data          obj_name : inodes_sysctls
+>     section: .data          obj_name : fs_namespace_sysctls
+>     section: .data          obj_name : dnotify_sysctls
+>     section: .data          obj_name : inotify_table
+>     section: .data          obj_name : epoll_table
+>     section: .data          obj_name : aio_sysctls
+>     section: .data          obj_name : locks_sysctls
+>     section: .data          obj_name : coredump_sysctls
+>     section: .data          obj_name : fs_shared_sysctls
+>     section: .data          obj_name : fs_dqstats_table
+>     section: .data          obj_name : root_table
+>     section: .data          obj_name : pty_table
+>     section: .data          obj_name : xfs_table
+>     section: .data          obj_name : ipc_sysctls
+>     section: .data          obj_name : key_sysctls
+>     section: .data          obj_name : kernel_io_uring_disabled_table
+>     section: .data          obj_name : tty_table
+>     section: .data          obj_name : random_table
+>     section: .data          obj_name : scsi_table
+>     section: .data          obj_name : iwcm_ctl_table
+>     section: .data          obj_name : net_core_table
+>     section: .data          obj_name : netns_core_table
+>     section: .bss           obj_name : nf_log_sysctl_table
+>     section: .data          obj_name : nf_log_sysctl_ftable
+>     section: .data          obj_name : vs_vars
+>     section: .data          obj_name : vs_vars_table
+>     section: .data          obj_name : ipv4_route_netns_table
+>     section: .data          obj_name : ipv4_route_table
+>     section: .data          obj_name : ip4_frags_ns_ctl_table
+>     section: .data          obj_name : ip4_frags_ctl_table
+>     section: .data          obj_name : ctl_forward_entry
+>     section: .data          obj_name : ipv4_table
+>     section: .data          obj_name : ipv4_net_table
+>     section: .data          obj_name : unix_table
+>     section: .data          obj_name : ipv6_route_table_template
+>     section: .data          obj_name : ipv6_icmp_table_template
+>     section: .data          obj_name : ip6_frags_ns_ctl_table
+>     section: .data          obj_name : ip6_frags_ctl_table
+>     section: .data          obj_name : ipv6_table_template
+>     section: .data          obj_name : ipv6_rotable
+>     section: .data          obj_name : sctp_net_table
+>     section: .data          obj_name : sctp_table
+>     section: .data          obj_name : smc_table
+>     section: .data          obj_name : lowpan_frags_ns_ctl_table
+>     section: .data          obj_name : lowpan_frags_ctl_table
 
