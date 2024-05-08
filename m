@@ -1,81 +1,69 @@
-Return-Path: <linux-xfs+bounces-8200-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8202-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A03598BF97E
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 11:20:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 97DAD8BFBCC
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 13:20:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA2631C21240
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 09:20:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9E431C21C2E
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 11:20:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20778757F7;
-	Wed,  8 May 2024 09:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61A580BFF;
+	Wed,  8 May 2024 11:20:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ei3BqE/P"
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="kwhWSZcq"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4863974C0D
-	for <linux-xfs@vger.kernel.org>; Wed,  8 May 2024 09:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE642628B;
+	Wed,  8 May 2024 11:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715160029; cv=none; b=J1NgxQ3uR3hJaqD+52a7ssaidtq1fNDoWZ9n3iqEzNHIS0F4cFkGU4f4DeI7pNw2zGLu/NWqOhie3BBlE1yf5RHvvwW1UvcTyyAmt6QLuyURdroyOY1BbNXjAWCmHXb1Yj3w6VrhaEFw457pS071UZaZMAKQ9RZafxH14AZ4u0I=
+	t=1715167218; cv=none; b=dEg3PbAR0Id0V0ZTIQsC7l84fGuVuVSZ2ILgH+pM43ZcfpXGxwPnD1r7Wu/dPKw4qhzSwiED3+h2Xx0YqH/q1+Fb9i343MylgMUUpoVR5d9TqCNJVkZ2gLlKMHiQ9YagP2pIjzbq8t2IS9mCz3PyUARfyBMppw96Q1sQTJy8EBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715160029; c=relaxed/simple;
-	bh=yKfqWildDBpRn3j/aQLboejYqWIQhfdprrcdr7mLdr8=;
+	s=arc-20240116; t=1715167218; c=relaxed/simple;
+	bh=Nu6O2eMAVkIMziV3ZRSR/eCfiqPiKf6sn09cg0ygOoU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jY4LkBk6KNYJVjSEcpNIm1XFZ0HhwtsztYwczpCL+gb/JH+LtHKMGf3LT4N9qCBt37VPRMTo6pa6THsTlSayIWI1CkcObiDyTp4EItjLNVeeH1mC8KHTu0ThOrfDeQY+HGnu6Gajtu50ODEE9UaW1s3ZrslXs5hHR4w6wJ0HkMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ei3BqE/P; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59c448b44aso833548666b.2
-        for <linux-xfs@vger.kernel.org>; Wed, 08 May 2024 02:20:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715160026; x=1715764826; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3XvuGnMD1Ah+tuwTUGBWHswEEMKL2KFH48xBYXc+VM8=;
-        b=ei3BqE/PSo0Ze6nfudrXV+AGVhUpl5uCPNXWHQde5JTUkkhun9QoqF3bWU5z3tTOJA
-         LkBvJ7cp3DS/IE+ptDRw00V1wujbtMlDBoifZGlN0Kspce3DqMMgn4oODS3YpEhNPEIR
-         OdosdwD+D56YUhkWHovISFpkZoMikcDI3RcCGnt+SindLNWqqRROmZ2RBZ4QjbKwR09N
-         Axx1R5TJhMV22cMsoDi2URq62P5r+VjduU14jFL3IBQImhJ9GCJTBRZVaeAMudogCoG8
-         fTbQvqUp/E1wWJKBssDmDhb89/39CB0kr8dcl0HGD7pVPJM/vfQQjEV8Vesi0g+3yaVb
-         W90Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715160026; x=1715764826;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3XvuGnMD1Ah+tuwTUGBWHswEEMKL2KFH48xBYXc+VM8=;
-        b=BlQczqTfb8L19p+NsM59Dd5nid2meD09BKOBu6oJoExf+i7da+s++7xSyxWAp8meWV
-         O410s70/RD3YVa9YXexlxqxMzK+kRUzXjTPsq2C9+9xLAsTMs6s6kCWS0dq+isXzY0Tv
-         +6c+tWSMQJEldCslZpfkX2dzLJqTefP/kRWevlGv44q6TKSMmZ2iZ+dSU83GNidO8kgX
-         M53hUv60A1PhNZS95+oNaqlOG26nrrPtT3JNdOz+HXPW48fHcvQ5vCPttECPvs5J+qxc
-         j83omhUWl4/H2J7/5yYy2FKexnfSuCRpwxI0FVhh9ZMcixGZEDUQBvhCAJ7vA1hk7+I2
-         /lmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkEtv4DeeS76oel+0B7eBqHD1MhC0Vc7RhPCvSy0LA0oV15Hk+uHpCDGAuHrcFdVPUDegEwvdXqh5/x36H2jk5pNVh9ZPiSuW6
-X-Gm-Message-State: AOJu0Yx7cdvfkl5ZUaoMeu5rjozXEqaznruAPLAsZQxlxt8i/wCJCJJC
-	58OCetA80VVNwdBYUQpHVR8Aa5YJrqrI+P1eahCjbpc3Kw9GyYwqs3p7i6RQNQc=
-X-Google-Smtp-Source: AGHT+IHq2INOQdTZFtxvBQ4CNgUmxUKG/Y5YiCzni6VgE1Hb/kxqQiCsxPVeCX8iNNi6RQsuxFZCQw==
-X-Received: by 2002:a17:906:c444:b0:a59:c28a:7ec2 with SMTP id a640c23a62f3a-a59fb95dc67mr115208566b.41.1715160026392;
-        Wed, 08 May 2024 02:20:26 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id g3-20020a170906394300b00a599c1d46d5sm5967553eje.101.2024.05.08.02.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 02:20:25 -0700 (PDT)
-Date: Wed, 8 May 2024 12:20:22 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] xfs: check for negatives in xfs_exchange_range_checks()
-Message-ID: <20137ff5-76a7-4b3d-96d9-9c6c90cbb063@moroto.mountain>
-References: <0e7def98-1479-4f3a-a69a-5f4d09e12fa8@moroto.mountain>
- <ZjrVaynGeygNaDtQ@dread.disaster.area>
+	 Content-Type:Content-Disposition:In-Reply-To; b=k+ihHYbo1FvDTuMfW19UajF/5YpasZCNP+0cmdltDCHIHJZ3JPluzM4zWqhvHnVPBMxbFJBDz7ZC58XgGbyl5oyKJS0W9XBQPcPQuE/Xfe/DZjT5GQWDfmWF3IXCJ8icIFC4ncrnZNU/TGs/jFhRoPefiMoOIY5MJOSDodLopsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=kwhWSZcq; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4VZCNr6w5lz9sQg;
+	Wed,  8 May 2024 13:20:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1715167213;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y1un4/swOYqLsaMeeUpem8iiB/EUo0Jbdf4dJTwbApE=;
+	b=kwhWSZcqfxeUqy4w1ehrBrcL7c7QvNY6vH49D8wxGPTQs4HDilQDAovRKcID5Le1IApaTr
+	I1h2y6zMSnT83BwIhGl53JK2STiGOp5vW3tgBVnbl/xxLX3FwAi554PQUW+jvAlVhTJ8s7
+	PRRLTseJatMAldsJZbEkba59lcCay+0jzb9uQwi+e/mVEhkcxv14GmiFmrlb/7Y7Yo+Uaq
+	sDGXNl9aREvM4AXSmkm5Vv3Mxp/IgBTM/vo9Ly2W0zmwWNxinNQDIepQWvNdf/CIH9f/Rn
+	2L6oCVWyobMBGqG24+1bNOaZ9uQftwbST42yyRV3bzFqoFifLmTXnxxyUxk4Hg==
+Date: Wed, 8 May 2024 11:20:05 +0000
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, akpm@linux-foundation.org,
+	djwong@kernel.org, brauner@kernel.org, david@fromorbit.com,
+	chandan.babu@oracle.com, hare@suse.de, ritesh.list@gmail.com,
+	john.g.garry@oracle.com, ziy@nvidia.com,
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org, linux-block@vger.kernel.org,
+	gost.dev@samsung.com, p.raghav@samsung.com
+Subject: Re: [PATCH v5 07/11] iomap: fix iomap_dio_zero() for fs bs > system
+ page size
+Message-ID: <20240508112005.4zhxgcre73omr37s@quentin>
+References: <20240503095353.3798063-1-mcgrof@kernel.org>
+ <20240503095353.3798063-8-mcgrof@kernel.org>
+ <ZjpQHA1zcLhUZa_D@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -84,41 +72,55 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjrVaynGeygNaDtQ@dread.disaster.area>
+In-Reply-To: <ZjpQHA1zcLhUZa_D@casper.infradead.org>
 
-On Wed, May 08, 2024 at 11:29:15AM +1000, Dave Chinner wrote:
-> On Sat, May 04, 2024 at 02:27:36PM +0300, Dan Carpenter wrote:
-> > The fxr->file1_offset and fxr->file2_offset variables come from the user
-> > in xfs_ioc_exchange_range().  They are size loff_t which is an s64.
-> > Check the they aren't negative.
-> > 
-> > Fixes: 9a64d9b3109d ("xfs: introduce new file range exchange ioctl")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > From static analysis.  Untested.  Sorry!
-> > 
-> >  fs/xfs/xfs_exchrange.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/fs/xfs/xfs_exchrange.c b/fs/xfs/xfs_exchrange.c
-> > index c8a655c92c92..3465e152d928 100644
-> > --- a/fs/xfs/xfs_exchrange.c
-> > +++ b/fs/xfs/xfs_exchrange.c
-> > @@ -337,6 +337,9 @@ xfs_exchange_range_checks(
-> >  	if (IS_SWAPFILE(inode1) || IS_SWAPFILE(inode2))
-> >  		return -ETXTBSY;
+On Tue, May 07, 2024 at 05:00:28PM +0100, Matthew Wilcox wrote:
+> On Fri, May 03, 2024 at 02:53:49AM -0700, Luis Chamberlain wrote:
+> > +	bio = iomap_dio_alloc_bio(iter, dio, BIO_MAX_VECS,
+> > +				  REQ_OP_WRITE | REQ_SYNC | REQ_IDLE);
+> >  	fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
+> >  				  GFP_KERNEL);
+> > +
+> >  	bio->bi_iter.bi_sector = iomap_sector(&iter->iomap, pos);
+> >  	bio->bi_private = dio;
+> >  	bio->bi_end_io = iomap_dio_bio_end_io;
 > >  
-> > +	if (fxr->file1_offset < 0 || fxr->file2_offset < 0)
-> > +		return -EINVAL;
+> > -	__bio_add_page(bio, page, len, 0);
+> > +	while (len) {
+> > +		unsigned int io_len = min_t(unsigned int, len, PAGE_SIZE);
+> > +
+> > +		__bio_add_page(bio, page, io_len, 0);
+> > +		len -= io_len;
+> > +	}
+> >  	iomap_dio_submit_bio(iter, dio, bio, pos);
 > 
-> Aren't the operational offset/lengths already checked for underflow
-> and overflow via xfs_exchange_range_verify_area()?
+> If the len is more than PAGE_SIZE * BIO_MAX_VECS, __bio_add_page()
+> will fail silently.  I hate this interface.
 
-Ah right.  Smatch complains in the middle of the two calls to
-xfs_exchange_range_verify_area().  (It get's called in different places
-depending on if the XFS_EXCHANGE_RANGE_TO_EOF flag is set).
+I added a WARN_ON_ONCE() at the start of the function so that it does
+not silently fail:
+	WARN_ON_ONCE(len > (BIO_MAX_VECS * PAGE_SIZE));
 
-regards,
-dan carpenter
+This function is used to do only sub block zeroing, and I don't think we will
+cross 1MB block size in the forseeable future, and even if we do, we have
+this to warn us about so that it can be changed?
 
+> 
+> You should be doing something like ...
+> 
+> 	while (len) {
+> 		unsigned int io_len = min_t(unsigned int, len, PAGE_SIZE);
+> 
+> 		while (!bio || bio_add_page() < io_len) {
+> 			if (bio)
+> 				iomap_dio_submit_bio(iter, dio, bio, pos);
+> 			bio = iomap_dio_alloc_bio(iter, dio, BIO_MAX_VECS,
+> 					REQ_OP_WRITE | REQ_SYNC | REQ_IDLE);
+> 		 	fscrypt_set_bio_crypt_ctx(bio, inode,
+> 					pos >> inode->i_blkbits, GFP_KERNEL);
+> 		}
+> 	}
+
+-- 
+Pankaj Raghav
 
