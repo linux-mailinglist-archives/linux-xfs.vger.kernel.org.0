@@ -1,226 +1,161 @@
-Return-Path: <linux-xfs+bounces-8199-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8201-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E00B58BF66A
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 08:40:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 278138BF989
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 11:29:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C1111F239F9
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 06:40:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A371B22059
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 May 2024 09:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB9218651;
-	Wed,  8 May 2024 06:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A61A4757E7;
+	Wed,  8 May 2024 09:29:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RGvQEgez";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="zMqgdNiY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQzSwZSm"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30361427B
-	for <linux-xfs@vger.kernel.org>; Wed,  8 May 2024 06:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715150444; cv=fail; b=nX7BTHIsPw3hj9LI5W3dpfVbgjZspMLZ6hO/heTXf0Knhon9w5Py9ufFakQVFYbiu/oq2UrFEcSoJQzy/v3YIyVDHfQO8rJaRjeiIVC5taHMgi+vhuvEOUUt5OXMMO7xN6qwHiHSM8JJJciIedWbDjEmgldOMeJZAAGh5ZE19Qs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715150444; c=relaxed/simple;
-	bh=wEJWDqBF7HyA1iooqOmdp0Rpv+fmr9lws4Aq3vODDTI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dj2UHskfgM61FPgU+eShwzJ/Tq/CC1ezpmsTy/oH/dXVFvJ9VQBjTOqiv0Xj0AO/TkrpAkHgm2h24ZVTLamhV5EdH9RIA60AKCmmmFdOOQZWrf+x3JQQbWP3Rv3hF3UmlQyKiWLOjtxBjYdDqsNQHhvaFg2/mTLZx/jhJfgKWdM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RGvQEgez; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=zMqgdNiY; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4486ShwZ026054;
-	Wed, 8 May 2024 06:40:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=vB9eSdw8GnF6LZbNgDqmYYA1SXA7K7SkbXTkTfVQdMo=;
- b=RGvQEgezj4WKh5w08PYmClO92Zi9TrTIUwOS5Q89i9lPR/+OqDYwclnePSIcSy/pEVYY
- 2S/5i7mmub9aMipnmyug5DMh3BM5k+qLoqgIK0jwfepri6GZmne6a0gEO0YX9J5qDVz/
- HQCkCViIU3Jk6qMqRaIsSSLuAsGelB3iDQBEWow0kTuyv/d20+F1JNREHEHkjMc1N8hs
- +YucclGSO4YjRfFz18qLMdsO51kCvOaUwLxuGNReymRj3UyeUsqDXsVuOI6sglkravsQ
- qB4ca4snn6sE18CxKVpV1g6eHUZbriisHhAN7xP7b5Gm6OLHMwIkD/WnnZAbBn4w3eDA 2g== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xysfvgyyr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 08 May 2024 06:40:30 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44841HpD024509;
-	Wed, 8 May 2024 06:40:30 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2170.outbound.protection.outlook.com [104.47.58.170])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xysfmvfv7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 08 May 2024 06:40:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SC9jv61B8BxbIGJCDWl/WYVle0HTXavtnNElIdU1D06sPg6M5VohtlxL1yx9/ZDyM/ba/Kra0ttWsN6SeTc2kW15NFKLWJEQSRyXxrTx2oXPjDpkcVqlyFstzcYXigny9zo64fw0VgRSKbPzrmozT1ApQO4yeUAPXbmMdPHuqOPVUZXdKW1LHrouMqxAe3yV3bMNeY25zz/puNe0gs0sE7aFkFeS2c26akgB0yFMMXyf56uiuV+45PQIDRvKdkcVqpilpBJwqJHJHDtjf/cV/uHOEExLtF5LskLtJdI6yfs6ktLkway81NmJ4WZAd3UjraJp40CrjXUFgMXqvPuaeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vB9eSdw8GnF6LZbNgDqmYYA1SXA7K7SkbXTkTfVQdMo=;
- b=c5RAvCjMbcTy/dg0a+v+dSBCajocVGz5ykYuX9EhnTFxKHsrNmeYRTBH7TaRGTjzzkWlXp2Urbq4PwSVkoNW5tKnRBoSPrX+9anYXaUun6Hg9JjsRpy72/SaLm2AqbeZA0Z6q5gwvcWqukvoiMsMETnv/YLQ1eUS7T4/G91Dt0YX9QNoquQRT4JDRkzC0cKLgZ8DaVYSjn2o+cjOTRnDlBMXNWvG1FCMteo+lWKnheendVj7+o8IO0Zh3hLwO1ez+ZnY38Ve4qfqbAxvKWoraKcIzr277JQimeoqIuDJIRFhl8zFYM+JwGZnOloZTZgjbpTqSglwhAi5AKEKfi1YiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vB9eSdw8GnF6LZbNgDqmYYA1SXA7K7SkbXTkTfVQdMo=;
- b=zMqgdNiYWMVfCheUCX3GURXFqjRhervZjIweymm78RDNhpJLD/DzySQZSl++nxMVSiTFaqO6F2/llIxZdMEID+Xrfp/5kTLJRIxqneFJUOGz2UJL8A0hLMwDgKduiJvWagL4qwY9SDcwc/C8FCzJTKTdK8vL4eAq+Rp03DylP8w=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by MN2PR10MB4157.namprd10.prod.outlook.com (2603:10b6:208:1dc::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.43; Wed, 8 May
- 2024 06:40:28 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.7544.041; Wed, 8 May 2024
- 06:40:28 +0000
-Message-ID: <c59c5e87-7460-4ac7-8533-87d96d890b1f@oracle.com>
-Date: Wed, 8 May 2024 07:40:25 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/2] xfs: Fix xfs_flush_unmap_range() range for RT
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: chandan.babu@oracle.com, dchinner@redhat.com, hch@lst.de,
-        linux-xfs@vger.kernel.org
-References: <20240503140337.3426159-1-john.g.garry@oracle.com>
- <20240503140337.3426159-2-john.g.garry@oracle.com>
- <20240507205822.GR360919@frogsfrogsfrogs>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20240507205822.GR360919@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DB8PR06CA0035.eurprd06.prod.outlook.com
- (2603:10a6:10:100::48) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4D371753
+	for <linux-xfs@vger.kernel.org>; Wed,  8 May 2024 09:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715160583; cv=none; b=tvxiGb2UmoK0uyv/JF0q9M453IP5HdPBIvsRE0c5yUIUI5c2P8xYDRRr7WIR7xjZ1/IqUy079K7+Do/NagnUnFToYPCs50KV27P7628OUAwEycQ+khPGsMEULt8cpB1EP7ffpSt1GrrhiBnpP5UOLtQVrg9dVjybpdqUhbDj04k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715160583; c=relaxed/simple;
+	bh=IuOti/7FmMOJOFVe94VcG21BqvUHpmUZFYDAMuu2xow=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sj+PQi2g9KXTWbQS8FQO5HDsBHRAAMEZOLHBPfKUdQjQNZJ18DGVfzl97tzRHohZlOOP7mMpc0JW+ZfrwRjGiqRaS6Hs8iaqkRInyOeXDLUeMeR+CUk61lJ0BAewfoTkKeNtLS002DRZWsxHmurt3wR0K8IAOW2ottKmQnr0SRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQzSwZSm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B299FC113CC;
+	Wed,  8 May 2024 09:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715160581;
+	bh=IuOti/7FmMOJOFVe94VcG21BqvUHpmUZFYDAMuu2xow=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XQzSwZSm6oyYvM6nuSWPBSFU/SogxUizB8/Fh7VLCwmT1Kzc28OI3Y+VEfKPa/KBZ
+	 VCyevtuGFw9MPDULdLlkb4+dTHfmAY/pLmBJen5HHW3n5rNs9Ks78WFGUbcQUpIof0
+	 UdEEwT5CKS3+bu2VFKb7lcCbJW99AfSwKLRuMx2kEnJatcZn3qO39GtlyXqr/jC5WP
+	 ++IDxMfJAR22QjeFGmwlAasbRBk9hfswsp2zrhQ/+fxHLfsd51wcqp8WKNmi4QD886
+	 KMvkruJKjfFOmcY1S093GQj00eGp5OgNi5F3Atz3i05SOUgLSBfkRivBqAb+A2pSNI
+	 MSjIQ4u+U1/yw==
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Chandan Babu R <chandanbabu@kernel.org>
+To: yi.zhang@huawei.com
+Cc: brauner@kernel.org, Linux-XFS mailing list <linux-xfs@vger.kernel.org>
+Subject: [BUG REPORT] generic/561 fails when testing xfs on next-20240506
+ kernel
+Date: Wed, 08 May 2024 14:31:02 +0530
+Message-ID: <87ttj8ircu.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|MN2PR10MB4157:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2636211a-a8a3-4681-8fdd-08dc6f29bff6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?RUNUQlFQVFBvRHFaNTBhMmhuY3FueDJ2ZmFMYVlJRldJYWU3YkRmdXkyV2N1?=
- =?utf-8?B?bjIwZFlpSHVsY3RyMWNaT2N5UDE3MGpIalBXM1JkcmVnWkdwUjVHdE41SlZC?=
- =?utf-8?B?NENoT0F4SC9ZT1dBU0dpUU93eDQxbUZpc084alhIRHpEL2I0cDFUWDFCYnJI?=
- =?utf-8?B?SGdMdTEzOG9YVFNwOEpkYllNSVRjOFRBME9DQyt4NkhIM1d6b1J2bFkyVVRG?=
- =?utf-8?B?Y1BBS1M3elk1RWFCMWdvWlVCbFQ0Q0pIeERsOWtDTnNneEE0MGJaeW45S0VQ?=
- =?utf-8?B?YnF0QWV3T2lrTkVqbnFsT1FZZVRwZVpkMWRJSUZZL2hFSVlrdEJYRnlYSmpq?=
- =?utf-8?B?elhTRlRnQlBhcWJ3L1JmWGxGTit3dTVuVHJzV29xMmNJT21UMzNJODNQcW9Y?=
- =?utf-8?B?UExkL1gzRHZKQlRXUHo1VHgxZWhtUjFrUUxlUktXM09kd3QzOEczaHpoL1NK?=
- =?utf-8?B?dnVFVTJrUG0weXg2Z05HUzkzbVZHclNiQnNYN2VsY3NSU1R3NjRwZGNsaFI0?=
- =?utf-8?B?dnZMc2ZwSzYyeEpHNjFEaVdKdW9TUVFtR1huRnV4cEZ5QVJISXdNaUlVOUdX?=
- =?utf-8?B?MkhBSmxzU0RxYkFZRHFGUU1xWXNXaVBvZ2lVVkhTalpmRU1NUFltaVZuTC9L?=
- =?utf-8?B?NXQvdTAxTHV5Mmpqc3ZLdHB1ektGenFXMmlWWDAxejFncitXZFQ0Qi9tR2cy?=
- =?utf-8?B?RjMrMjVwd0o3ZXVRNStsaWdoUTlyMWNBZHRoSStYWTlFSXhoRUJmTDRDaXhl?=
- =?utf-8?B?Z095V083anR5eGF4ams1QXltY2RscUhyMkxiQXZ1azBlSm1NUDBadVowWXgr?=
- =?utf-8?B?RHIxTmtwQTRlNW9QSHFQb3V6RGNyc3AzRnhWQ3UzZ2c4Mkt2a1VsSTdQeFNl?=
- =?utf-8?B?dFgwaktLZXYrMlZiV3NIVzBmMU8zSWJrZHdmSkxCSWk2MUtQZEpwY3B3NnpI?=
- =?utf-8?B?Szl3SFl2OWJFeHVjWXRPT2FqYWY2Q1M3aWdENHBtWnR0RzZDMWIwUE94WWpu?=
- =?utf-8?B?aTVpbDRybmg5eGhHb3RaREo1NXpSYUxLOUJaTHdWVFBIR2tsSENmZkw2VWVH?=
- =?utf-8?B?RWt0L3VoSHhId0x2Y2Z2bHU4eDBDbURRSTl6aThjUEx3NlFkVFNoS1JYak9M?=
- =?utf-8?B?WmtGV09oajZMR2NqY21ocGhTdlBzcFdaMUt3aXlrVE0yMm1lUDZHVEp0aHZX?=
- =?utf-8?B?bmZxZHlmSFFkRFV0SGFPL2t1UnJ3clhKUVc5SExsbGpPOGhwQ0ZVMFNTOEFX?=
- =?utf-8?B?dGg0MDE5OEYrdFkxTDlUUXZCY1o5aGVYOUp0d1l0WnEzSmRQZjZoRlNNcjd1?=
- =?utf-8?B?Sm5XRXArL0FLWUQ1azhCSko4a3RBWXFJMm15N3RmNGRXN2NwWUFuZGRhdlFx?=
- =?utf-8?B?cXp6T3VMR3E0T0JqNUJjM0VkYmd0R1JLVkN2REVlSDEvNlJBSVNoY3hxWTdo?=
- =?utf-8?B?UmZaQ0hmUk1SYkJIZW90Ris0SXA4NlhQR29xaHBsZWJmWlJKODhnQjFNR1gr?=
- =?utf-8?B?TTd3alRDOVd0eDUzR3hyYS9BR3NPdnpDN3BFbVBjKzVwOEwrVmNUM1BjNnpa?=
- =?utf-8?B?QmRYR3phSHg3eHdzSFM0ejNha2lBQWx4aDZ1dWlOTlpzOU00NWVkeks5ejUr?=
- =?utf-8?B?T0lZN3YxSlh0S1RnZFFDQnBrWGF2TGVMdjR4L1orY3g0WVBsYzZKa00wVDZP?=
- =?utf-8?B?NDVxa0R1blVpQ3VydUN4Q2h4SlRyR1ZzZXo1SDZDVXRRTG40MjkzOTN3PT0=?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?Y1IrYzIvNGZQWXVkK2xKMThKYnlZRDlIUXo3citTa0ZWMVdUMzd2UXlBaHdI?=
- =?utf-8?B?U3pxZkxvOHlFU1k5WGMwNDhUZDhUZHE5aU0rdVR3aHJlUnNkKytJenFPODNT?=
- =?utf-8?B?bVZVSHBnRC9Dc0RRSnJneVZ0aGc5NU9TZURjbkRaSjl4UTFleWJvd2plV1ZF?=
- =?utf-8?B?OExsM29YSjZvYWNiUGZmN2tpL2x0clZMdjZXeExaNUhzcVUvSGMrSmxOU3BL?=
- =?utf-8?B?c1ZvRDdMcWZaVFpNbnEwcFRvTzBWRDRIT2NhazV0emV4ckdSbTN1QTh4V1Jn?=
- =?utf-8?B?ZjNDOFh4QStpWWF3TVdjQlErN1pkQTFva0VuUnpJVGF0OUdOcll1K2Jmditi?=
- =?utf-8?B?ZTFhb0ZNb0NiR21Vb0pHb1U5WlZuS281ai9XTmdSaDUzM2ZRd29EZ3Bnc0pi?=
- =?utf-8?B?Sm0rNWtVbXpWcU1aN1JlR21idzd1aVRFbThhYmhwaXBwOUNkSDBMWFpZNGVX?=
- =?utf-8?B?bGhEZ0FpUVV1cjV2M2NneStIMzZNRllVcTk1aEVJaWRjN0xuS1ZwZHZtZ013?=
- =?utf-8?B?VS8zU3cwYkx5ZGNndG15Y0RMVVcwSTJ3M0EvQ1hEcVZ1WEd2OWE4eWw3YmUw?=
- =?utf-8?B?N2g2M2FoUjhTSC9tMzg5VVZuY0J1bG1yOWNYQk4rVXU2NWNzYjltRXYzUGIz?=
- =?utf-8?B?RDIwUGxzaGVuMlZReGxXcURsMEwzZ3BEVkVlNStEc21RV215dE1PY09GSnJh?=
- =?utf-8?B?a1BIZ01LeFlQcGQ5c3FpOERjS0VWRzVxTGpUVkpQRkxGbDd5L1dUdDhmYXZn?=
- =?utf-8?B?SWJrZk1yVXI4cDZrMENRQnMwUzZoamhZVDlVU2NjaVdxSG1TaFlrMEVMWDd5?=
- =?utf-8?B?cU9NL1VTdGxlWkUrTFc4Ukd0OFVXVVQ0Z3RjRzM3TytEN0h0bEF5UWlIY0Zz?=
- =?utf-8?B?UktGQ3krZldjK0Jlci9ya0ptaGhJN3Q4MzV0dEJSb0hDWE90Wmxtcm05UVo4?=
- =?utf-8?B?dVhWdWYycDBmRUlHcE8xWHBVaGVSbjk4bUtKNHQzK2RQd3pPUmp6NGkxbDdu?=
- =?utf-8?B?MzVRWXUrMVprdXduaHZNWlhIVCtMZ2RkTVR5dGdBMVBYZWdZNTJkUWJXZVhB?=
- =?utf-8?B?WVBtSE0wYlQ5bnd4T2hFYU1hRGYwZGpvek12Q2oydVhTNE9Fa3ZSVEU4eHJX?=
- =?utf-8?B?ckVGTW1saFpPOVBKbE9CK1FFQU5UbWdrS1lpTFFyNithYk03bFhpUEswdEs0?=
- =?utf-8?B?a3ZmSWpYaHRwSTI1aVZIYUVCckJpQWprNFZuNzZKN1M0RG9QWkorZjZRN2hP?=
- =?utf-8?B?bERWMk5UQzJLS3lVV2lMMlVLUlpDMERXYlFENnpzN1VVZGxoWXhQdjF5MC9P?=
- =?utf-8?B?Ly9lL0ZpUEE1UEw4N09qRzhpbExVZDdmMDRINEhJVkNsU2ZmQkJweS9xVlNZ?=
- =?utf-8?B?OUsvZHJ2Vkd2SHE4SHpFNjBLa1MwejF3SVg5bnUyZU1TMkhFRzZ3bG1xUmth?=
- =?utf-8?B?K0FJMFdhM3YxWjZ3K2hyaVN0YnRNTVE3Z3BHNVN3MFdsSHViWGppeEVmTStn?=
- =?utf-8?B?SXdqMExXZGZ6UCtNWG1VaHgwSFh6dTRleVA2cTEyaFNjaHYzODNaMzNNWTda?=
- =?utf-8?B?ZmNFWnRpL0dNMFJ0dk1pakZNdEhmWHIvaVhQczBxNUlKWUxseDZETjg4Nklz?=
- =?utf-8?B?SXZ6NWVKajFBMDB6OUY1alZUU3R6WXNDU0h0WVJhNk1TVzdITGgrVVl1Vit6?=
- =?utf-8?B?K1E1VGl3WmxIallCTThOYXk0VUI3cXhERjhNeWlMZW5JVG5PWG82QjJsK1Vp?=
- =?utf-8?B?V2FEVGlhK2t2dmtvWHdJK0FpdVdJQ2gxbnFJb05GTEZ6V0gyUlA2ZGI3Z0V3?=
- =?utf-8?B?RGU2NWlwbUl0aUViVVhzSlc4UEo2ZmQwbmNkcVRYaUJKL0xWK0ZVY0YxblY4?=
- =?utf-8?B?ZlAwVEZHZkszcHRPc0ViRTJuOWxuaEZ6eHhORmhZRUNqWjdoNzlBZDFtbzFC?=
- =?utf-8?B?ZmlESzFmTm9ZRW1JQkU0SnowYUhnaXNCOG8wd1U4MUtTNjBhRHFEQmRkNXpS?=
- =?utf-8?B?OEZQdDZsS08zL1c4LzlPMFk5d253c3lrS2t3Q2hnK1NxTCtpd0ZqK2FjOUx4?=
- =?utf-8?B?WklHSjMrMVhjMmlqUzhUSlB5RTBZeDBrdmtUbmowc2tEc3FHckNXWGllaUE2?=
- =?utf-8?B?MURHa0hMWXhJYk51VVg0aEJvTnRCOG44SDlpVDlDbVNrRW5iWVNhdnZ1dUJn?=
- =?utf-8?B?UVE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	j2FJQxf1ZLSxDmHnEAcNdQ7dKW3AIF4ZRXtcb90Z5ApKed4EZhKOuy/AcyS1485BuV8N6vswcyaPKobvF412LthHYNLdPypv2lajwKchCW6VS/fUQnGgTzWTxTfKu2P4gNBoyfsuPi6MNc1SLCG/UbwTYlv8TgsHVRIBCS4V99CPoXVeyIlzSOwt+DByDUP4I9A3WO7EzX2iNUmP27zJzGATJN29gnx2EF29lw9y3Unw+ynFJKzx8a1Wrl2ORESSRhhNMBhuoIxdQSeGD5TZJ2hRFpoJc9CrLnIf4sSvFyxHcoY3Vmo1Z4JhBQlOdSYEbm7xkPspsqfNCFBsao8uD3333khAJpsbesNI5O7cT3npBCPJcPClVAU2gbFRzQ8v5oPJNTAQC6TYh3nGC7bCbPBmr865WE4+Ze9Dbn3ajcEeWrRcP/pU7D07SSj7JqFdZqeEPL56EJroWtbPo1yi0IvECPKIvdk4G3OO4StCt1ucb2H5VE3EsA+B/lrl8kToVfLs8rx8/kOpFeOtl8BBz/cHE/RlhjLm9fX7KRcMiGWoG7/NpTXKa5OQJEakVHJ4t21cUn/tZ9b69N2K+GTKM55+gE7tce7983ZFxiAi/o0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2636211a-a8a3-4681-8fdd-08dc6f29bff6
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 06:40:28.6465
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aiD+zxFPNHTqnCuZSg4gXdPrK2JgUmObF33noIZzj07Eoxic+p8LR3nFokvcwEsUlKgmBkSRuELv/QuCZr9RFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4157
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-08_02,2024-05-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2405080048
-X-Proofpoint-ORIG-GUID: ZwKr_peJLSme4OZsB5tBDzRmhBghbsEU
-X-Proofpoint-GUID: ZwKr_peJLSme4OZsB5tBDzRmhBghbsEU
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On 07/05/2024 21:58, Darrick J. Wong wrote:
->> -	rounding = max_t(xfs_off_t, mp->m_sb.sb_blocksize, PAGE_SIZE);
->> +	/*
->> +	 * Make sure we extend the flush out to extent alignment
->> +	 * boundaries so any extent range overlapping the start/end
->> +	 * of the modification we are about to do is clean and idle.
->> +	 */
->> +	rounding = max_t(xfs_off_t, xfs_inode_alloc_unitsize(ip), PAGE_SIZE);
->>   	start = round_down(offset, rounding);
-> round_down requires the divisor to be a power of two.
+Hi,
 
-well spotted, and so the round_up() call, below, also needs fixing.
+generic/561 fails when testing XFS on a next-20240506 kernel as shown below,
 
-> 
-> --D
-> 
->>   	end = round_up(offset + len, rounding) - 1;
+# ./check generic/561
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 xfs-crc-rtdev-extsize-28k 6.9.0-rc7-next-2024=
+0506+ #1 SMP PREEMPT_DYNAMIC Mon May  6 07:53:46 GMT 2024
+MKFS_OPTIONS  -- -f -rrtdev=3D/dev/loop14 -f -m reflink=3D0,rmapbt=3D0, -d =
+rtinherit=3D1 -r extsize=3D28k /dev/loop5
+MOUNT_OPTIONS -- -o context=3Dsystem_u:object_r:root_t:s0 -ortdev=3D/dev/lo=
+op14 /dev/loop5 /media/scratch
 
+generic/561       - output mismatch (see /var/lib/xfstests/results/xfs-crc-=
+rtdev-extsize-28k/6.9.0-rc7-next-20240506+/xfs_crc_rtdev_extsize_28k/generi=
+c/561.out.bad)
+    --- tests/generic/561.out   2024-05-06 08:18:09.681430366 +0000
+    +++ /var/lib/xfstests/results/xfs-crc-rtdev-extsize-28k/6.9.0-rc7-next-=
+20240506+/xfs_crc_rtdev_extsize_28k/generic/561.out.bad        2024-05-08 0=
+9:14:24.908010133 +0000
+    @@ -1,2 +1,5 @@
+     QA output created by 561
+    +/media/scratch/dir/p0/d0XXXXXXXXXXXXXXXXXXXXXXX/d486/d4bXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXX/d5bXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/d212XXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX/d11XXXXXXXXX/d54/de4/d158/d27f/d895/d1307XXX/d=
+8a4/d832XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/r112fXXXXXXXX=
+XXX: FAILED
+    +/media/scratch/dir/p0/d0XXXXXXXXXXXXXXXXXXXXXXX/d486/d4bXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXX/d5bXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/d212XXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXX/d11XXXXXXXXX/d54/de4/d158/d27f/d13a3XXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/d13c=
+0XXXXXXXX/d2301X/d222bXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/d1240XXXXXXXXXXXX=
+XXXXXXXXXXXX/d722XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/d1380XXXXXXXXXXXXXXXX/dc62XXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/r10d5: FAILED
+    +md5sum: WARNING: 2 computed checksums did NOT match
+     Silence is golden
+    ...
+    (Run 'diff -u /var/lib/xfstests/tests/generic/561.out /var/lib/xfstests=
+/results/xfs-crc-rtdev-extsize-28k/6.9.0-rc7-next-20240506+/xfs_crc_rtdev_e=
+xtsize_28k/generic/561.out.bad'  to see the entire diff)
+Ran: generic/561
+Failures: generic/561
+Failed 1 of 1 tests
+
+The following was the fstest configuration used for the test run,
+
+  FSTYP=3Dxfs
+  TEST_DIR=3D/media/test
+  SCRATCH_MNT=3D/media/scratch
+  TEST_DEV=3D/dev/loop16
+  TEST_LOGDEV=3D/dev/loop13
+  SCRATCH_DEV_POOL=3D"/dev/loop5 /dev/loop6 /dev/loop7 /dev/loop8 /dev/loop=
+9 /dev/loop10 /dev/loop11 /dev/loop12"
+  MKFS_OPTIONS=3D'-f -m crc=3D1,reflink=3D0,rmapbt=3D0, -i sparse=3D0 -lsiz=
+e=3D1g'
+  TEST_FS_MOUNT_OPTS=3D"-o logdev=3D/dev/loop13"
+  MOUNT_OPTIONS=3D'-o usrquota,grpquota,prjquota'
+  TEST_FS_MOUNT_OPTS=3D"$TEST_FS_MOUNT_OPTS -o usrquota,grpquota,prjquota"
+  SCRATCH_LOGDEV=3D/dev/loop15
+  USE_EXTERNAL=3Dyes
+  LOGWRITES_DEV=3D/dev/loop15
+
+Git bisect produced the following as the first bad commit,
+
+commit 943bc0882cebf482422640924062a7daac5a27ba
+Author: Zhang Yi <yi.zhang@huawei.com>
+Date:   Wed Mar 20 19:05:45 2024 +0800
+
+    iomap: don't increase i_size if it's not a write operation
+
+    Increase i_size in iomap_zero_range() and iomap_unshare_iter() is not
+    needed, the caller should handle it. Especially, when truncate partial
+    block, we should not increase i_size beyond the new EOF here. It doesn't
+    affect xfs and gfs2 now because they set the new file size after zero
+    out, it doesn't matter that a transient increase in i_size, but it will
+    affect ext4 because it set file size before truncate. So move the i_size
+    updating logic to iomap_write_iter().
+
+    Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+    Link: https://lore.kernel.org/r/20240320110548.2200662-7-yi.zhang@huawe=
+icloud.com
+    Reviewed-by: Christoph Hellwig <hch@lst.de>
+    Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+    Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+ fs/iomap/buffered-io.c | 50 +++++++++++++++++++++++++---------------------=
+----
+ 1 file changed, 25 insertions(+), 25 deletions(-)
+=20
+--=20
+Chandan
 
