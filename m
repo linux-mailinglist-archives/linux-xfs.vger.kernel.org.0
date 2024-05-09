@@ -1,88 +1,84 @@
-Return-Path: <linux-xfs+bounces-8254-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8256-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A56B28C11CB
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 17:15:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D5748C11D8
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 17:18:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F4172822C6
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 15:15:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 842D1B207CF
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 15:18:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE26415ECCF;
-	Thu,  9 May 2024 15:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135BE16D320;
+	Thu,  9 May 2024 15:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ND6fYyTI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyB8uodU"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3A815ECEF
-	for <linux-xfs@vger.kernel.org>; Thu,  9 May 2024 15:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361DE16C445
+	for <linux-xfs@vger.kernel.org>; Thu,  9 May 2024 15:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715267725; cv=none; b=Flfs+WPNjJ7p3wtlbD/N45OZZVcryTmDQxghYzG6ShC5HGPshFasiAT2WCI+8XScYe1xMUklYsDJwy1f3cGGwH4EO+249yuYn5tWSjz5+/TiJ4yhuWAhGlmLQBmEn11mxwX4Z59XrG1NC/OJ+io5kP+eM2fPXB1w9wp0LNs1d5U=
+	t=1715267888; cv=none; b=jeXtwUQ1P9UZyzqYcYSnqS7IBulV+I1DUlJ1Cd6t/Ubq4yWySAB1p61OcoGeP78wyxEJ+bnQ5aMNzNzATOiU8ZLihWbXUOmdTY7ar5FOES21d7WeL5AF0anMUn4/dXPwIDcyE398K93XDle8i4FVIgre7VCrO04mFVNDqiCfYtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715267725; c=relaxed/simple;
-	bh=B+MXNH6SjKJPDVfwlZCqff4StUEqeP2tU28dLpP82KU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HwnG6bxMjikmaTVnCs8u10GWChn98XxFnZvt4O1DrTJlezKIME2wedBP71+bCXPiV5nLIYvxmyejvZsAOrFQxxfssG05YKUpHWnZLaJDrETefCR0Xvr9OPaVVeexqgxJbTpHOmrNrPgFphfxN4uPcRCPTzd24NCdmUWV/BWViKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ND6fYyTI; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1715267888; c=relaxed/simple;
+	bh=6mV8A/myla9ZZkQcCIn2TvAbEodWU/m2x+V14X4P99w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1hhUiRJsc95vu3K1WT+MUcHcNioS7jiMhhVIMXYXKZA90e4mKXD+bVpMqzUU4N4BbgNYZwRAW/QJpkeuEyuuXFIddVDXe/cVne/CmLIHGLI9PNchEFCV9ogFBUZ7+I3/lnxDrlOyDQxeWNaQa3HsTSRGAC/46gHJWKtrn4AaKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FyB8uodU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715267720;
+	s=mimecast20190719; t=1715267886;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RY+ugPrDK83tQomk3xmQyphPy5GlvX952C2zVFWwL9A=;
-	b=ND6fYyTICvGbN78Gd2Ww33QMolE3etpDjiv7B/Gp7mdxbVSpKPQTF0/HZVnGdB+BU18N1F
-	0IcrgibP5lVOiijqqyMzHdTwB0DmNqc+WyFVnSdxoSviv6sonqIOjd7JGiWniJXf5yGfsc
-	Y1qPOXbldtc03nIO4Ol8CGAmLgi38kc=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2gYxaGmRqDtEFosgQHip4kQbPw7cWCu0+FSBYFkz7Hk=;
+	b=FyB8uodU1Tmznpd7ouWZ5q02+5KC+J3UVFJMZyDegK/DfyES9Q0jy+ufs587E3pInZ4WCP
+	85poQH8+IhY8w3GJr5zxK1o4OArzwP6h6vNinI5LbItM5DVr8zq4wMt2gKulXQYuLo+p6D
+	ISZaMuz7ydF19fIYZtIcIlJabivZNPI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-18-g8jaVV2EMSWgHft5EyZQJA-1; Thu, 09 May 2024 11:15:18 -0400
-X-MC-Unique: g8jaVV2EMSWgHft5EyZQJA-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a592c35ac06so104578066b.0
-        for <linux-xfs@vger.kernel.org>; Thu, 09 May 2024 08:15:18 -0700 (PDT)
+ us-mta-37-FvI2LAKFP1WWRf3Ty5cdyA-1; Thu, 09 May 2024 11:18:04 -0400
+X-MC-Unique: FvI2LAKFP1WWRf3Ty5cdyA-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-572f3859ff2so421706a12.3
+        for <linux-xfs@vger.kernel.org>; Thu, 09 May 2024 08:18:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715267717; x=1715872517;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RY+ugPrDK83tQomk3xmQyphPy5GlvX952C2zVFWwL9A=;
-        b=WzbbsQ8ET5yvXbixusuU6Uox3tFnpi1YqI9qkDCKmIWeS81MG399+pT+6tMHd+Pi2j
-         lysmmToS1NvWQu0cMJzZgluZhsPONhIv/jXJwXABWup5D3g6tSndCAv3xDVFEhnyWu8c
-         7xvDQy614solknN6YXju5S5o+V6xm5+xt0FD8P8woWWuJzpwnA5ad2VBx+ba1bxaU53C
-         l7Jt7VQDtPX5tXtvDmyCY0I2O8GqCXMPFLADD7ErxZbb3+S6fd8vSMjRzWU9ygU4B46O
-         89bfKY+liVfqG91WuR2AReIbp8gBpEDZY3vQ9yuaBeLTIa/JnELNB3msjVIK2HbtWxxt
-         e7/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXhnaC0p/oU+uXllhcXwXVhpl2zII2izTJq7ZMuMo/UC7tnJmVL8RvdYkcRCS8w2mkarjtHJV+27h6u9aJXnS9bXtMfxgcTip4v
-X-Gm-Message-State: AOJu0YzgCcEx9RuM75WxA5Ud0wXbqk5bs0M6wqpJfB1EPLXd2TLsnKN1
-	sj+n73hyPQagYmH6UUrRFu8xz6Um+jpVldlG3LszCbLYGCI9STvV2TspFNvYCLOAN7Y0DciaEeR
-	7FcNERHs11JzIpn0xRulJYcSVW8zFT3R+h1E+zUfCNJUYuhRI82jCYKWL
-X-Received: by 2002:a17:906:2a11:b0:a59:a85c:a5ca with SMTP id a640c23a62f3a-a5a2d18b04amr940666b.7.1715267717239;
-        Thu, 09 May 2024 08:15:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGSiXphLOfsmbMLx7yciNd95cjz6zMV0Vui4i9K4qSbDDKW3Q5leA26X5GzVYRPu8Dd9WV0Lw==
-X-Received: by 2002:a17:906:2a11:b0:a59:a85c:a5ca with SMTP id a640c23a62f3a-a5a2d18b04amr937766b.7.1715267716702;
-        Thu, 09 May 2024 08:15:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715267883; x=1715872683;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2gYxaGmRqDtEFosgQHip4kQbPw7cWCu0+FSBYFkz7Hk=;
+        b=D+MKV+bzdB8LNLEGhvilvrI+VZIGAeW2+V5ccL2Y5VTomGz8kvMTx4BXPEhvkcSx3I
+         r88jxkUjFvsRfouuPclObbkdwN4CyA+DCnqovNdidV4tF/ZcHnoVrEGg9MgnGcacnp3L
+         dfU8eYGf539tKQmM+kFmBUG4XTngAMOBxOlDn44uvnM1QQW1HC8Ryv7uJYuGf4FLhvxZ
+         YETtXLKCCxf2n08VbioTMNyhXqGv0+QikhtrnfShxD/FZSiwVh4Sw2wIzZf8/YSxHNxe
+         RrrlF9ouBYm6G3YzdxNL9c7rGK69RGF9LLjyNaSA7Xr/c6Jc53/VcSx+iGn5sGGp1HZG
+         eW/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX4oduQltmSVLxFSk1xjqeGCteW2nDQ3ggHUp1Q0Jwk7W7HUSJWg98uE6OpFKV1g/igD01N5/xi9blCP/Vgo+C8rSrG/CoQldIG
+X-Gm-Message-State: AOJu0YzyVtA9BnYi/rEYuKJytne1/6M0qppYEzZTV/+bOnOECEBnORy+
+	n0zJ4ftuucRgXTVfHVkYq/NEXaSlbdtGz8/tNzR/JHmigbzigKGlaVsHXuRSHw/RnzUdMDUEDHM
+	476S91NAfQfmFDf9///vbgzQoqdwAw6tbDwuZs09GrIJMX+xnabNHZu2N
+X-Received: by 2002:a50:a417:0:b0:570:5b70:d76d with SMTP id 4fb4d7f45d1cf-5734d67aacamr5165a12.28.1715267882620;
+        Thu, 09 May 2024 08:18:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEd4DXfhj51dYdObjVILgPRWz36eNMiJN0V5KfnUfNcjtyyQ8B4iGrxFXc0n7SekQEEVZoGLg==
+X-Received: by 2002:a50:a417:0:b0:570:5b70:d76d with SMTP id 4fb4d7f45d1cf-5734d67aacamr5133a12.28.1715267881682;
+        Thu, 09 May 2024 08:18:01 -0700 (PDT)
 Received: from thinky.redhat.com ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01785sm82035866b.164.2024.05.09.08.15.16
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-573409d7763sm609899a12.75.2024.05.09.08.18.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 08:15:16 -0700 (PDT)
+        Thu, 09 May 2024 08:18:01 -0700 (PDT)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 To: linux-fsdevel@vgre.kernel.org,
 	linux-xfs@vger.kernel.org
 Cc: Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH 4/4] xfs: add XFS_IOC_SETFSXATTRAT and XFS_IOC_GETFSXATTRAT
-Date: Thu,  9 May 2024 17:15:00 +0200
-Message-ID: <20240509151459.3622910-6-aalbersh@redhat.com>
+Subject: [PATCH] libxfs/quota: utilize XFS_IOC_SETFSXATTRAT to set prjid on special files
+Date: Thu,  9 May 2024 17:17:15 +0200
+Message-ID: <20240509151714.3623695-2-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240509151459.3622910-2-aalbersh@redhat.com>
-References: <20240509151459.3622910-2-aalbersh@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -91,32 +87,22 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-XFS has project quotas which could be attached to a directory. All
-new inodes in these directories inherit project ID.
-
-The project is created from userspace by opening and calling
-FS_IOC_FSSETXATTR on each inode. This is not possible for special
-files such as FIFO, SOCK, BLK etc. as opening them return special
-inode from VFS. Therefore, some inodes are left with empty project
-ID.
-
-This patch adds new XFS ioctl which allows userspace, such as
-xfs_quota, to set project ID on special files. This will let
-xfs_quota set ID on all inodes and also reset it when project is
-removed.
+Utilize new XFS ioctl to set project ID on special files.
+Previously, special files were skipped due to lack of the way to
+call FS_IOC_SETFSXATTR on them. The quota accounting was therefore
+missing a few inodes (special files created before project setup).
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- fs/xfs/libxfs/xfs_fs.h   | 11 +++++
- fs/xfs/xfs_ioctl.c       | 86 ++++++++++++++++++++++++++++++++++++++++
- include/linux/fileattr.h |  2 +-
- 3 files changed, 98 insertions(+), 1 deletion(-)
+ libxfs/xfs_fs.h |  11 ++++
+ quota/project.c | 139 +++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 144 insertions(+), 6 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 97996cb79aaa..f68e98005d4b 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -670,6 +670,15 @@ typedef struct xfs_swapext
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 6360073865db..1a560dfa7e15 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -662,6 +662,15 @@ typedef struct xfs_swapext
  	struct xfs_bstat sx_stat;	/* stat of target b4 copy */
  } xfs_swapext_t;
  
@@ -126,138 +112,227 @@ index 97996cb79aaa..f68e98005d4b 100644
 +struct xfs_xattrat_req {
 +	struct fsxattr	__user *fsx;		/* XATTR to get/set */
 +	__u32		dfd;			/* parent dir */
-+	const char	__user *path;
++	const char	__user *path;		/* NUL terminated path */
 +};
 +
  /*
   * Flags for going down operation
   */
-@@ -997,6 +1006,8 @@ struct xfs_getparents_by_handle {
+@@ -837,6 +846,8 @@ struct xfs_scrub_metadata {
+ #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom)
  #define XFS_IOC_BULKSTAT	     _IOR ('X', 127, struct xfs_bulkstat_req)
  #define XFS_IOC_INUMBERS	     _IOR ('X', 128, struct xfs_inumbers_req)
- #define XFS_IOC_EXCHANGE_RANGE	     _IOWR('X', 129, struct xfs_exchange_range)
 +#define XFS_IOC_GETFSXATTRAT	     _IOR ('X', 130, struct xfs_xattrat_req)
 +#define XFS_IOC_SETFSXATTRAT	     _IOW ('X', 131, struct xfs_xattrat_req)
  /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
  
  
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 515c9b4b862d..d54dba9128a0 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1408,6 +1408,74 @@ xfs_ioctl_fs_counts(
+diff --git a/quota/project.c b/quota/project.c
+index adb26945fa57..e6059db93a77 100644
+--- a/quota/project.c
++++ b/quota/project.c
+@@ -12,6 +12,8 @@
+ static cmdinfo_t project_cmd;
+ static prid_t prid;
+ static int recurse_depth = -1;
++static int dfd;
++static int dlen;
+ 
+ enum {
+ 	CHECK_PROJECT	= 0x1,
+@@ -78,6 +80,42 @@ project_help(void)
+ "\n"));
+ }
+ 
++static int
++check_special_file(
++	const char		*path,
++	const struct stat	*stat,
++	int			flag,
++	struct FTW		*data)
++{
++	int			error;
++	struct fsxattr		fa;
++	struct xfs_xattrat_req	xreq = {
++		.fsx = &fa,
++		.dfd = dfd,
++		.path = path + (data->level ? dlen + 1 : 0),
++	};
++
++	error = xfsctl(path, dfd, XFS_IOC_GETFSXATTRAT, &xreq);
++	if (error == -ENOTTY) {
++		fprintf(stderr, _("%s: skipping special file %s\n"), progname, path);
++		return 0;
++	}
++
++	if (error) {
++		exitcode = 1;
++		fprintf(stderr, _("%s: cannot get flags on %s: %s\n"),
++			progname, path, strerror(errno));
++		return 0;
++	}
++
++	if (xreq.fsx->fsx_projid != prid)
++		printf(_("%s - project identifier is not set"
++			 " (inode=%u, tree=%u)\n"),
++			path, xreq.fsx->fsx_projid, (unsigned int)prid);
++
++	return 0;
++}
++
+ static int
+ check_project(
+ 	const char		*path,
+@@ -97,8 +135,7 @@ check_project(
+ 		return 0;
+ 	}
+ 	if (EXCLUDED_FILE_TYPES(stat->st_mode)) {
+-		fprintf(stderr, _("%s: skipping special file %s\n"), progname, path);
+-		return 0;
++		return check_special_file(path, stat, flag, data);
+ 	}
+ 
+ 	if ((fd = open(path, O_RDONLY|O_NOCTTY)) == -1) {
+@@ -123,6 +160,48 @@ check_project(
  	return 0;
  }
  
 +static int
-+xfs_xattrat_get(
-+	struct file		*dir,
-+	const char __user	*pathname,
-+	struct xfs_xattrat_req	*xreq)
++clear_special_file(
++	const char		*path,
++	const struct stat	*stat,
++	int			flag,
++	struct FTW		*data)
 +{
-+	struct path		filepath;
-+	struct xfs_inode	*ip;
-+	struct fileattr		fa;
-+	int			error = -EBADF;
++	int			error;
++	struct fsxattr		fa;
++	struct xfs_xattrat_req	xreq = {
++		.fsx = &fa,
++		.dfd = dfd,
++		.path = path + (data->level ? dlen + 1 : 0),
++	};
 +
-+	memset(&fa, 0, sizeof(struct fileattr));
++	error = xfsctl(path, dfd, XFS_IOC_GETFSXATTRAT, &xreq);
++	if (error == -ENOTTY) {
++		fprintf(stderr, _("%s: skipping special file %s\n"),
++				progname, path);
++		return 0;
++	}
 +
-+	if (!S_ISDIR(file_inode(dir)->i_mode))
-+		return error;
-+
-+	error = user_path_at(xreq->dfd, pathname, 0, &filepath);
-+	if (error)
-+		return error;
-+
-+	ip = XFS_I(filepath.dentry->d_inode);
-+
-+	xfs_ilock(ip, XFS_ILOCK_SHARED);
-+	xfs_fill_fsxattr(ip, XFS_DATA_FORK, &fa);
-+	xfs_iunlock(ip, XFS_ILOCK_SHARED);
-+
-+	error = copy_fsxattr_to_user(&fa, xreq->fsx);
-+
-+	path_put(&filepath);
-+	return error;
-+}
-+
-+static int
-+xfs_xattrat_set(
-+	struct file		*dir,
-+	const char __user	*pathname,
-+	struct xfs_xattrat_req	*xreq)
-+{
-+	struct fileattr		fa;
-+	struct path		filepath;
-+	struct mnt_idmap	*idmap = file_mnt_idmap(dir);
-+	int			error = -EBADF;
-+
-+	if (!S_ISDIR(file_inode(dir)->i_mode))
-+		return error;
-+
-+	error = copy_fsxattr_from_user(&fa, xreq->fsx);
-+	if (error)
-+		return error;
-+
-+	error = user_path_at(xreq->dfd, pathname, 0, &filepath);
-+	if (error)
-+		return error;
-+
-+	error = mnt_want_write(filepath.mnt);
 +	if (error) {
-+		path_put(&filepath);
-+		return error;
++		exitcode = 1;
++		fprintf(stderr, _("%s: cannot get flags on %s: %s\n"),
++			progname, path, strerror(errno));
++		return 0;
 +	}
 +
-+	fa.fsx_valid = true;
-+	error = vfs_fileattr_set(idmap, filepath.dentry, &fa);
++	xreq.fsx->fsx_projid = 0;
++	xreq.fsx->fsx_xflags &= ~FS_XFLAG_PROJINHERIT;
++	error = xfsctl(path, dfd, XFS_IOC_SETFSXATTRAT, &xreq);
++	if (error) {
++		exitcode = 1;
++		fprintf(stderr, _("%s: cannot clear project on %s: %s\n"),
++			progname, path, strerror(errno));
++		return 0;
++	}
 +
-+	mnt_drop_write(filepath.mnt);
-+	path_put(&filepath);
-+	return error;
++	return 0;
 +}
 +
- /*
-  * These long-unused ioctls were removed from the official ioctl API in 5.17,
-  * but retain these definitions so that we can log warnings about them.
-@@ -1652,6 +1720,24 @@ xfs_file_ioctl(
- 		sb_end_write(mp->m_super);
- 		return error;
+ static int
+ clear_project(
+ 	const char		*path,
+@@ -142,8 +221,7 @@ clear_project(
+ 		return 0;
  	}
-+	case XFS_IOC_GETFSXATTRAT: {
-+		struct xfs_xattrat_req xreq;
+ 	if (EXCLUDED_FILE_TYPES(stat->st_mode)) {
+-		fprintf(stderr, _("%s: skipping special file %s\n"), progname, path);
+-		return 0;
++		return clear_special_file(path, stat, flag, data);
+ 	}
+ 
+ 	if ((fd = open(path, O_RDONLY|O_NOCTTY)) == -1) {
+@@ -170,6 +248,47 @@ clear_project(
+ 	return 0;
+ }
+ 
++static int
++setup_special_file(
++	const char		*path,
++	const struct stat	*stat,
++	int			flag,
++	struct FTW		*data)
++{
++	int			error;
++	struct fsxattr		fa;
++	struct xfs_xattrat_req	xreq = {
++		.fsx = &fa,
++		.dfd = dfd,
++		/* Cut path to parent - make it relative to the dfd */
++		.path = path + (data->level ? dlen + 1 : 0),
++	};
 +
-+		if (copy_from_user(&xreq, arg, sizeof(struct xfs_xattrat_req)))
-+			return -EFAULT;
++	error = xfsctl(path, dfd, XFS_IOC_GETFSXATTRAT, &xreq);
++	if (error == -ENOTTY) {
++                fprintf(stderr, _("%s: skipping special file %s\n"), progname, path);
++                return 0;
++        }
 +
-+		error = xfs_xattrat_get(filp, xreq.path, &xreq);
-+		return error;
++	if (error) {
++		exitcode = 1;
++		fprintf(stderr, _("%s: cannot get flags on %s: %s\n"),
++			progname, path, strerror(errno));
++		return 0;
 +	}
-+	case XFS_IOC_SETFSXATTRAT: {
-+		struct xfs_xattrat_req xreq;
-+
-+		if (copy_from_user(&xreq, arg, sizeof(struct xfs_xattrat_req)))
-+			return -EFAULT;
-+
-+		error = xfs_xattrat_set(filp, xreq.path, &xreq);
-+		return error;
++	xreq.fsx->fsx_projid = prid;
++	xreq.fsx->fsx_xflags |= FS_XFLAG_PROJINHERIT;
++	error = xfsctl(path, dfd, XFS_IOC_SETFSXATTRAT, &xreq);
++	if (error) {
++		exitcode = 1;
++		fprintf(stderr, _("%s: cannot set project on %s: %s\n"),
++			progname, path, strerror(errno));
++		return 0;
 +	}
++
++	return 0;
++}
++
+ static int
+ setup_project(
+ 	const char		*path,
+@@ -189,8 +308,7 @@ setup_project(
+ 		return 0;
+ 	}
+ 	if (EXCLUDED_FILE_TYPES(stat->st_mode)) {
+-		fprintf(stderr, _("%s: skipping special file %s\n"), progname, path);
+-		return 0;
++		return setup_special_file(path, stat, flag, data);
+ 	}
  
- 	case XFS_IOC_EXCHANGE_RANGE:
- 		return xfs_ioc_exchange_range(filp, arg);
-diff --git a/include/linux/fileattr.h b/include/linux/fileattr.h
-index 3c4f8c75abc0..8598e94b530b 100644
---- a/include/linux/fileattr.h
-+++ b/include/linux/fileattr.h
-@@ -34,7 +34,7 @@ struct fileattr {
- };
+ 	if ((fd = open(path, O_RDONLY|O_NOCTTY)) == -1) {
+@@ -223,6 +341,13 @@ project_operations(
+ 	char		*dir,
+ 	int		type)
+ {
++	if ((dfd = open(dir, O_RDONLY|O_NOCTTY)) == -1) {
++		printf(_("Error opening dir %s for project %s...\n"), dir,
++				project);
++		return;
++	}
++	dlen = strlen(dir);
++
+ 	switch (type) {
+ 	case CHECK_PROJECT:
+ 		printf(_("Checking project %s (path %s)...\n"), project, dir);
+@@ -237,6 +362,8 @@ project_operations(
+ 		nftw(dir, clear_project, 100, FTW_PHYS|FTW_MOUNT);
+ 		break;
+ 	}
++
++	close(dfd);
+ }
  
- int copy_fsxattr_to_user(const struct fileattr *fa, struct fsxattr __user *ufa);
--int copy_fsxattr_from_user(struct fileattr *fa, struct fsxattr __user *ufa)
-+int copy_fsxattr_from_user(struct fileattr *fa, struct fsxattr __user *ufa);
- 
- void fileattr_fill_xflags(struct fileattr *fa, u32 xflags);
- void fileattr_fill_flags(struct fileattr *fa, u32 flags);
+ static void
 -- 
 2.42.0
 
