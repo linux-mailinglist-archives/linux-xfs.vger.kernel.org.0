@@ -1,89 +1,117 @@
-Return-Path: <linux-xfs+bounces-8250-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8255-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18C7E8C11C4
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 17:13:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CD098C11CD
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 17:15:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C3FA31F24709
-	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 15:13:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6665B2111D
+	for <lists+linux-xfs@lfdr.de>; Thu,  9 May 2024 15:15:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13373158A21;
-	Thu,  9 May 2024 15:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1814615ECF1;
+	Thu,  9 May 2024 15:15:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cs39PB44"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dx4hVCJm"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DCC12FF9B;
-	Thu,  9 May 2024 15:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4CA15E811
+	for <linux-xfs@vger.kernel.org>; Thu,  9 May 2024 15:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715267630; cv=none; b=JDwckm/5u1aa/KGewjaAcHkEH/TogeMFMPMmIsZO/M1zSur1hWKcQ1owKKqEzSwhaY9Zu3mkq8rBaHo0vQas/vxN1bRXbzOYc7LvD2/pbRdVVVikSqF6nWjWZlKJUxObDyzhoRztPJ9JQTmJUbBBCL/IiFEu5vR16D0dA6t6ngU=
+	t=1715267725; cv=none; b=Pf+RYY712v+PjD4EpiGo5bfRmnoPlYDG9h2JXrjVX15gPmYf4G++PtNWL4rUasGvlmeBtZUggedXYNMBHjAglxS9iXW4z2TMRQj4tfyqu3f61jcb1ndj3mOpdP02lovT2xgi0q9mA3fAd2bGuumwysIevPZqNPOFg/S4EkZt4I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715267630; c=relaxed/simple;
-	bh=cnMzO2A+Ga6QE4ek+2uIiCB3gaEWsNraR5DEyjN8xHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bp9IHWxGZwk4iU7Nx/00TtHDmmJcsxyVsZktftDdG7U5odcvvWK7+ZtkR9E/a93lkc9qj6wmm2ZywtlsNX2ChW5R67ubzkZvFKcO9s+zY3M5xa+skevZ7TUe4qiqFy1tvCNE4B10XIMzX09J9YES72hmxC9+BbUIZmYmrgG425w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cs39PB44; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=2z0wT8gt7dkldW9YUB+LxHRPNABG7fCbmV5XzFY7UhE=; b=cs39PB44VIazzjmJTVgeh67P+S
-	2T1nrRDAxOdv3tuwEyVb836vQfuk0wiRYk4UPW2P+vrhN1ba6YvZiWNpGTS4/BPBaQEWv+h1kguwh
-	Bw5O/zVhcUdmt0VOwjfyP3RDgEs9xVCYGeNsoFDMhZCXM4AhUXYc7f5E9RGf7yz3RtBsdWRbF1GfJ
-	vGs5RgqRFae/e7F/WHpTf1YeM15d/tdLh6D9Nul9xzS6nox9Nt68V9+2oqED2Hx/kXsw2KW5m3z5S
-	5HSVD6P0KuS2imG37E4eZBX9jLdCQhau8Mxme8qxXBx5Wa1/2LkvTkRVHipNeCXYd8jarleesbRb6
-	aV0y2CMA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s55Su-00000001qhf-44sO;
-	Thu, 09 May 2024 15:13:48 +0000
-Date: Thu, 9 May 2024 08:13:48 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>, aalbersh@redhat.com,
-	linux-xfs@vger.kernel.org, alexl@redhat.com, walters@verbum.org,
-	fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 25/26] xfs: make it possible to disable fsverity
-Message-ID: <ZjzoLKev1WqnsBx-@infradead.org>
-References: <171444680291.957659.15782417454902691461.stgit@frogsfrogsfrogs>
- <171444680792.957659.14055056649560052839.stgit@frogsfrogsfrogs>
- <ZjHlventem1xkuuS@infradead.org>
- <20240501225007.GM360919@frogsfrogsfrogs>
- <20240502001501.GB1853833@google.com>
- <20240508203148.GE360919@frogsfrogsfrogs>
- <ZjxZRShZLTb7SS3d@infradead.org>
- <20240509144542.GJ360919@frogsfrogsfrogs>
- <Zjzmho9jm2wisUPj@infradead.org>
- <20240509150955.GL360919@frogsfrogsfrogs>
+	s=arc-20240116; t=1715267725; c=relaxed/simple;
+	bh=Sxcjn9B5kb2zt6rFh+EiuCUhN28uNMTcut9rDPMx8ro=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Od98mhIHR6PQl/yVVARRbcPY9VUDCm5GG7iyrleIgP9X/NxlTsLGRaJdugKCww3x+/f7eF8uOxbnCMjjN2EuD6SZd6mFw+BvhUlwDrBQAm/uv4DMLvcye1nM5rUP+TCVzDCCBhNZpGdoaj2yk8JRt2YlGdG6N9plamtL8PSWRgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dx4hVCJm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715267721;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lWGlgXZwmfAxFsMP5r5cWbf48pDCZ5BKktkdQK61AY0=;
+	b=dx4hVCJmNH0gShZVXZi7LndGO9Y0mx3dMnTlJxgnQ/fcmBo/sqtx5Q2Q/FKWhMMnmHtcDf
+	1ThyP/EEDx1sBLla6TDho2O/4nXEho7/IIBSywgW/1bSpIUKhDQotexX+O2QcsnSuPDa2a
+	DuSR1pjg9Gv2d/ZHNmold49iMwvJdp0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-186-vf8RKjANOUmuYrPcJFeqnw-1; Thu, 09 May 2024 11:15:15 -0400
+X-MC-Unique: vf8RKjANOUmuYrPcJFeqnw-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a59c3cf5f83so65526766b.2
+        for <linux-xfs@vger.kernel.org>; Thu, 09 May 2024 08:15:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715267714; x=1715872514;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lWGlgXZwmfAxFsMP5r5cWbf48pDCZ5BKktkdQK61AY0=;
+        b=SDSfFE59yEAo1XqLoUdZXyNlin5p9ldf2Hn9BV7h5q9IW4vEs076VLyHjymqE/Ke2z
+         fKjhIuDLopQ9lWHlY/l97uomP3mG0Df6zPTDwF3U6t/SeUrA8Cfn6b5tS3dlewSKwc7d
+         uWtEVYkP9FAHdKkyGwE0L0s/7+QCDScsqawKo9dS2A5nnSNDG9cR4sy2FD0q/DqXmDYo
+         MCzqF87ymQZXIM+D70/3urlzVTbiQQyyRue2akWl1TRMAw7Ol2+g7op5qx6g8QhOmtBi
+         scXPrGXOLsrKamR+Km7JmOjUD+Gp19jRfcAi6MLEKXwv0sFvJly3YbhYFdYkOYcMLKZ7
+         8Tnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZPj9CtEFTg/ouEFiDJ2uTeUL+oIaVMhV2uJH70e03KZZu4IO+w66vVe0iISm7m+r3x/h/eQX6zmJUBc76ncYoOiFrtrB9U3X5
+X-Gm-Message-State: AOJu0YwE+210QemA2btk7s1p07z3DIpz0rzUryQN5HN2WyfE04iwfjEy
+	0p45f21QlvWJTHdnpGxJ4YZlpz//NBhLj+AWe2UZ5zEtgj5AVV/N8t7SsmdFCyxw2Gwasp/AoQL
+	vw/dfYWfhtVQn5i9gRH7ISZJc9JopvIQ5t/aZ/yYYDLsrJ75e2R4V1JIB5ARK0ORk
+X-Received: by 2002:a17:906:6c92:b0:a59:aa68:99a0 with SMTP id a640c23a62f3a-a59fb941c53mr333106766b.18.1715267714245;
+        Thu, 09 May 2024 08:15:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFDawn/j+q0qMD07Y2Nj/5vzInindlqViBRbYF8HJ+vHS190v1r3BV02IEeYpT1/nN7IM/NWg==
+X-Received: by 2002:a17:906:6c92:b0:a59:aa68:99a0 with SMTP id a640c23a62f3a-a59fb941c53mr333104866b.18.1715267713668;
+        Thu, 09 May 2024 08:15:13 -0700 (PDT)
+Received: from thinky.redhat.com ([109.183.6.197])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01785sm82035866b.164.2024.05.09.08.15.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 08:15:13 -0700 (PDT)
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: linux-fsdevel@vgre.kernel.org,
+	linux-xfs@vger.kernel.org
+Cc: Andrey Albershteyn <aalbersh@redhat.com>
+Subject: [PATCH 0/4] Introduce XFS_IOC_SETFSXATTRAT/XFS_IOC_GETFSXATTRAT ioctls
+Date: Thu,  9 May 2024 17:14:56 +0200
+Message-ID: <20240509151459.3622910-2-aalbersh@redhat.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240509150955.GL360919@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 09, 2024 at 08:09:55AM -0700, Darrick J. Wong wrote:
-> xfs doesn't do data block checksums.
-> 
-> I already have a dumb python program that basically duplicates fsverity
-> style merkle trees but I was looking forward to sunsetting it... :P
+Hi all,
 
-Well, fsverity as-is is intended for use cases where you care about
-integrity of the file.  For that disabling it really doesn't make
-sense.  If we have other use cases we can probably add a variant
-of fsverity that clearly deals with non-integrity checksums.
-Although just disabling them if they mismatch still feels like a
-somewhat odd usage model.
+This patchset adds new ioctl for setting/getting inode extended
+attributes on special files. This roots from xfs_quota not being
+able to set project IDs on special files [1]. New XFS ioctl can be
+used directly on filesystem inodes to set project ID.
+
+Corresponding xfsprogs patch will follow.
+
+[1]: https://lore.kernel.org/linux-xfs/20240314170700.352845-3-aalbersh@redhat.com/
+
+Andrey Albershteyn (4):
+  fs: export copy_fsxattr_from_user()
+  xfs: allow renames of project-less inodes
+  xfs: allow setting xattrs on special files
+  xfs: add XFS_IOC_SETFSXATTRAT and XFS_IOC_GETFSXATTRAT
+
+ fs/ioctl.c               |  11 ++-
+ fs/xfs/libxfs/xfs_fs.h   |  11 +++
+ fs/xfs/xfs_inode.c       |  15 +++-
+ fs/xfs/xfs_ioctl.c       | 182 ++++++++++++++++++++++++++++++++++++++-
+ include/linux/fileattr.h |   1 +
+ 5 files changed, 212 insertions(+), 8 deletions(-)
+
+-- 
+2.42.0
+
 
