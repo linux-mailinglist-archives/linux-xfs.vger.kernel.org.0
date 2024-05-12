@@ -1,79 +1,109 @@
-Return-Path: <linux-xfs+bounces-8306-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8308-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B29A8C37C3
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 May 2024 19:26:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D29B8C37E1
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 May 2024 20:01:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38C522813B2
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 May 2024 17:26:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F57B1F21278
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 May 2024 18:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B554CB2E;
-	Sun, 12 May 2024 17:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b="DKQzV11A"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 492BF4F205;
+	Sun, 12 May 2024 18:01:08 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from muffat.debian.org (muffat.debian.org [209.87.16.33])
+Received: from mailsrv29.linznet.at (mailsrv29.linznet.at [80.66.43.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BEB46430
-	for <linux-xfs@vger.kernel.org>; Sun, 12 May 2024 17:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.87.16.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A524E1B3
+	for <linux-xfs@vger.kernel.org>; Sun, 12 May 2024 18:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.66.43.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715534773; cv=none; b=LkuGspyAxWvKW2+mfpcKmw28j3Hdt538VR8Lz3QieykfQFT3GjUWWuN10Nt5wuppW3Fua0S28PdqN/jnIjiy8sa7JxgJjkRgVQQqivtRAZUfw0tyh0i5wJ5Bk/SUnSo1RSNx1E00F1FIgVZc3hUKNRVaPnN1CWcA1bCw+U/Rf/o=
+	t=1715536868; cv=none; b=MPET0iKPKomc3m84R5gChEdwRdArpV0iiO87+mqISElfXNSeKKL/mf4FCD9aLcw+3Np7RhRtAku8v5arGJ0Q8I6wrfC61VrE/p+1ATzjenFVEwJ7wmDZH2PybTSW+0OEyA+GV9h9X+S7QvYpUcl/pQ2L8Ch8dsqkGnymQtAngYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715534773; c=relaxed/simple;
-	bh=ViDFkjsmNOIWa1lcJjsWldMiwbQbvCtZO348wQ8C+0U=;
-	h=To:From:Subject:Date:Message-Id; b=NK1xRK8iRPQpJJZ14MnCaCQRRiwC+2QUZD1BblfxCvdz0FTc0E6mD3AX6zckQpcQmHvDqN0jfqorZ1rGbAD8ak1rTIyQhIohrg+FpiIFfah8JALWn/q6DMYx+OSg69JROpdPTSWPuNua3eJIBZp84ztsIdAQBPJBtJJHAS7obP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org; spf=none smtp.mailfrom=ftp-master.debian.org; dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b=DKQzV11A; arc=none smtp.client-ip=209.87.16.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp-master.debian.org
-Received: from usper.debian.org ([2603:400a:ffff:bb8::801f:45]:59058)
-	from C=NA,ST=NA,L=Ankh Morpork,O=Debian SMTP,OU=Debian SMTP CA,CN=usper.debian.org,EMAIL=hostmaster@usper.debian.org (verified)
-	by muffat.debian.org with esmtps (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <ftpmaster@ftp-master.debian.org>)
-	id 1s6CxZ-006Pzp-VF
-	for linux-xfs@vger.kernel.org; Sun, 12 May 2024 17:26:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=ftp-master.debian.org; s=smtpauto.usper; h=Message-Id:Date:Subject:From:To:
-	Reply-To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=ZMZEVn/25364zOVsWmd813BAXTpoW6vjuQ2hjfNf0uM=; b=DKQzV11ADVM5lcBZceN0rLvOmZ
-	su3GZXEiKtF+Dk2pvBr7AxJj+wnl9Eka24NSchXuB7LeYS1p9ZBJgDQCNlUId+Z0DPZdKYZvFs1x8
-	OXQitFTXBVouX6ciSHf1tYPvnyq6tcUWUpgfyEHhGCM3PFciJ2Pg2O4QHw3g9rHwNZEs7t20ka2DB
-	++1sKL9WNg8JqfEDue4qQgvREyRN5gRua8YuPuGbuxc3Yimfv4eHH3fEBd0XvYs09YZRJlaGv9A2K
-	Kzq7pjdTcd5Ds4+6TBrkPOltX72JsSFsbUg/2Qv2RE37MDHETkOrqJhoOQTd9/kFd9b8BNZbOP113
-	x8DFkfFQ==;
-Received: from dak-unpriv by usper.debian.org with local (Exim 4.94.2)
-	(envelope-from <ftpmaster@ftp-master.debian.org>)
-	id 1s6CxW-006kFS-Uw
-	for linux-xfs@vger.kernel.org; Sun, 12 May 2024 17:26:02 +0000
+	s=arc-20240116; t=1715536868; c=relaxed/simple;
+	bh=UverqURZXDy6c4zKvWln00JkpijfVdClxADL1R9bW/g=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r7GCqML9ykoWm/ksl+UVX6CLf/X8nYaZ9uMR5UQI6h59eSeoMmPYraZvY9dr6KICsWOAb9T2ulrr0LLiN1iCqhAQB2J9tT7MuyMS/EBpcfXFL3UhpPoIGt5TnaLPWHSDO0YnM0E67Pm0L8P4MTgWt0spBk3CbOSswEaGNxhWbUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linznet.at; spf=pass smtp.mailfrom=linznet.at; arc=none smtp.client-ip=80.66.43.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linznet.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linznet.at
+Received: from mail.linznet.at (mail.linznet.at [80.66.39.75])
+	by mailsrv29.linznet.at (Postfix) with ESMTPS id A1DC97D299
+	for <linux-xfs@vger.kernel.org>; Sun, 12 May 2024 19:51:26 +0200 (CEST)
+Received: (qmail 793249 invoked from network); 12 May 2024 17:51:26 -0000
+Received: from unknown (HELO zeus.localnet) (a03096@linznet.at@91.142.26.35)
+  by mail.linznet.at with ESMTPA; 12 May 2024 17:51:26 -0000
+From: Alexander Puchmayr <alexander.puchmayr@linznet.at>
 To: linux-xfs@vger.kernel.org
-From: Debian FTP Masters <ftpmaster@ftp-master.debian.org>
-Subject: Processing of xfsprogs_6.7.0-3_source.changes
-Date: Sun, 12 May 2024 17:26:02 +0000
-X-Debian: DAK
-X-DAK: DAK
-Precedence: bulk
-Auto-Submitted: auto-generated
-X-Debian-Package: xfsprogs
-Message-Id: <E1s6CxW-006kFS-Uw@usper.debian.org>
+Subject: Re: how to restore a snapshot in XFS ?
+Date: Sun, 12 May 2024 19:51:25 +0200
+Message-ID: <5778721.DvuYhMxLoT@zeus>
+In-Reply-To:
+ <PR3PR04MB7340EFE53D742D347C9ACE58D6E12@PR3PR04MB7340.eurprd04.prod.outlook.com>
+References:
+ <PR3PR04MB7340EFE53D742D347C9ACE58D6E12@PR3PR04MB7340.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-xfsprogs_6.7.0-3_source.changes uploaded successfully to localhost
-along with the files:
-  xfsprogs_6.7.0-3.dsc
-  xfsprogs_6.7.0-3.debian.tar.xz
-  xfsprogs_6.7.0-3_source.buildinfo
+On Sonntag, 12. Mai 2024, 14:30:12 CEST Bernd Lentes wrote:
+> Hi,
+>=20
+> I just created a XFS Partition to store raw images of qemu domains on it.
+> I create snapshots of these files with cp --reflink.
+> Is that the correct way ?
+>=20
+> Now I want to go back to such a snapshot. How do I achieve this ?
+> Just copy the snapshot over the original ?
+>=20
+I'm following this strategy for several years now, in in case I need to=20
+restore from such a "backup", I use cp --reflink when copying the snapshot =
+over=20
+the original.=20
+Without the --reflink you'd get a completely new copy of your snapshot, and=
+=20
+when producing new snapshots they will not have anything in common with you=
+r=20
+previous snapshots --> more disc space.=20
 
-Greetings,
+Alex
 
-	Your Debian queue daemon (running on host usper.debian.org)
+
+
+> Thanks.
+>=20
+> Bernd
+>=20
+>=20
+> --
+>=20
+> Bernd Lentes
+> SystemAdministrator
+> Institute of Metabolism and Cell Death
+> Helmholtz Zentrum M=C3=BCnchen
+> Building 25 office 122
+> Bernd.lentes@helmholtz-munich.de
+> +49 89 3187 1241
+>=20
+> Helmholtz Zentrum M=C3=BCnchen =E2=80=93 Deutsches Forschungszentrum f=C3=
+=BCr Gesundheit und
+> Umwelt (GmbH)
+ Ingolst=C3=A4dter Landstra=C3=9Fe 1, D-85764 Neuherberg,
+> https://www.helmholtz-munich.de Gesch=C3=A4ftsf=C3=BChrung: Prof. Dr. med=
+=2E Dr. h.c.
+> Matthias H. Tsch=C3=B6p, Dr. Michael Frieser | Aufsichtsratsvorsitzende:
+> MinDir=E2=80=99in Prof. Dr. Veronika von Messling Registergericht: Amtsge=
+richt
+> M=C3=BCnchen HRB 6466 | USt-IdNr. DE 129521671
+
+
+
+
 
