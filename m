@@ -1,104 +1,72 @@
-Return-Path: <linux-xfs+bounces-8312-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8314-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC5F98C422C
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 May 2024 15:41:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 574AC8C427A
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 May 2024 15:49:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D3B51F22A13
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 May 2024 13:41:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAFF3286F19
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 May 2024 13:49:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7085153562;
-	Mon, 13 May 2024 13:41:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC7515350C;
+	Mon, 13 May 2024 13:49:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rrfKb7mY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YncoePQ/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rrfKb7mY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YncoePQ/"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="MH+6mWZC"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2E71534EE;
-	Mon, 13 May 2024 13:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70B31534F3
+	for <linux-xfs@vger.kernel.org>; Mon, 13 May 2024 13:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715607697; cv=none; b=W+xVWTeRnqpj0JmrkI/GqEjKFj1rqJ4ANphDZ+tZRWmvK/V5dWJDQAC+XQ2E58Ug3j6Ojm5CiI96Oo00PJ8zabk0aeRw+KHFroqQ8wT155jIHwq/S4jTL04kXknO1ev7AeOd4rGdZChaZvaOLavjQtGcsB9uPF+glFUaLUSTIgg=
+	t=1715608139; cv=none; b=K1aCHPUCh1JCvKv1naJTbR4JpKq1L8aNW0ZEGYAe/iGqEzkzhDIooeppckgdIz6axd6VuCR2AgDzTb3Lsu45KpmZjoYx3u1FQGx787RqHfN0ODDLy4bsaoLU3dz+hWFFzHfJdi6zIgOXQf4y6XutzDIQhK4xcNfazjV0l1Ct/u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715607697; c=relaxed/simple;
-	bh=pvbccIDrJ/qt8bECpJu+QcSi9YHWSa4jeVHsdHe/d70=;
+	s=arc-20240116; t=1715608139; c=relaxed/simple;
+	bh=g8z7UFTxX/7vUArj2ZXiBPeHN8OeRmFhtx+ZcqZTQ78=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MckIxcP25C4NUUZhwTamrMuDc+HeDG5VcCaAWUdrkCoslp+VKr8UqwSRGdWis/K6I0cNka5qHV6MoAxuvW1JqMNZSDjJ5CdzEaMgtNQn8lq41ma5cgt+12YIBEUzLgbiTbR7bgt7zVhKgWYkZ49C9E6Y3gnpAIZTGnmTuzfQ3tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rrfKb7mY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YncoePQ/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rrfKb7mY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YncoePQ/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 26E8E5C0CB;
-	Mon, 13 May 2024 13:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715607688; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nJPA7Ye27jAilXXvSKl033d5uNnOadT/aOkncjcjcGU=;
-	b=rrfKb7mYXpUuYGwYH0CmNquyPJLrRrOSPD5HjHJJuY64rU0FZoYyYYxVtRaeUdbDFQ4Peb
-	Ik6W41176KvO3c8hlI2ahkke6ge6FbTPJ6q0A1SgYK8SjP7Z5uAGeAU9PHxpS4uyv9T9B4
-	6yBt7++vBS4DxAP/fGx/U39Q3yn9cXE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715607688;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nJPA7Ye27jAilXXvSKl033d5uNnOadT/aOkncjcjcGU=;
-	b=YncoePQ/RccA3QF0eBYNSBu5oochiM/x6b7Ip96qI87SwoUdUojxHBYi6HloR06ZYEAKyu
-	McS7VwqNJgDEm7AA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=rrfKb7mY;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="YncoePQ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715607688; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nJPA7Ye27jAilXXvSKl033d5uNnOadT/aOkncjcjcGU=;
-	b=rrfKb7mYXpUuYGwYH0CmNquyPJLrRrOSPD5HjHJJuY64rU0FZoYyYYxVtRaeUdbDFQ4Peb
-	Ik6W41176KvO3c8hlI2ahkke6ge6FbTPJ6q0A1SgYK8SjP7Z5uAGeAU9PHxpS4uyv9T9B4
-	6yBt7++vBS4DxAP/fGx/U39Q3yn9cXE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715607688;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nJPA7Ye27jAilXXvSKl033d5uNnOadT/aOkncjcjcGU=;
-	b=YncoePQ/RccA3QF0eBYNSBu5oochiM/x6b7Ip96qI87SwoUdUojxHBYi6HloR06ZYEAKyu
-	McS7VwqNJgDEm7AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E1BF013A5C;
-	Mon, 13 May 2024 13:41:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RXWxNocYQmb/DgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 13 May 2024 13:41:27 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5C8B4A08FE; Sun, 12 May 2024 15:20:03 +0200 (CEST)
-Date: Sun, 12 May 2024 15:20:03 +0200
-From: Jan Kara <jack@suse.cz>
-To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-Cc: linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>, Jan Kara <jack@suse.cz>
-Subject: Re: [RFCv3 4/7] ext2: Implement seq counter for validating cached
- iomap
-Message-ID: <20240512132003.b6o4ghqk5yjsvkpy@quack3>
-References: <cover.1714046808.git.ritesh.list@gmail.com>
- <009d08646b77e0d774b4ce248675b86564bca9ee.1714046808.git.ritesh.list@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ig/2r3a/NTkYAXDtPUnc9BQIzfFxxWoGwfjGjsdekfreDMn7Zw6kzX1RfrlGtdlTI+qC4qdbMZRyA75s+cFWybIDI1iacXZZAPjBphP5DYcyW4D3kuY3feK0XitIpG3fttLXfxYy1dhKhjTWxwv4QsaaCLnTLYEQRgo22qGryGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=MH+6mWZC; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from macsyma.thunk.org ([50.204.89.32])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 44DDmH5r018950
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 May 2024 09:48:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1715608100; bh=xIZ7baSf22Boq6kXiuiRGM8wj+D8UzYJlxuD6mlLHcU=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=MH+6mWZCoHwx/5Zm/7taWE21mXRTUajxBKH8105lZg9fgpBxE7DtnGtqZ7sasqvey
+	 4w/nk/lp3CddpU9HfhqPBM+7IooMsFaJjK/0TOzsTys8dIqDikWqPyVqmPRK6tSjGa
+	 t66gFZXlZMjenUCUK/vtUWn23gMQwrRsh2gbAl/ykm8CR8ykEYL+FixV3dS5gX08lr
+	 1icMpKQf1aNDhQZijdPFEwxWNpWGCQI2je3nVvZ/eJQEDjAHt/0n05goTnI7DW1LQd
+	 iCBEk0sXDWQc6o0pGJyQ623AMNb1q8e03SgIkhutGKcYUKbrRuGjYai8qCQ2vtyTiU
+	 WForj97BDEz1w==
+Received: by macsyma.thunk.org (Postfix, from userid 15806)
+	id D5809340282; Mon, 13 May 2024 09:48:16 -0400 (EDT)
+Date: Mon, 13 May 2024 07:48:16 -0600
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        lsf-pc@lists.linux-foundation.org, xfs <linux-xfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Chandan Babu R <chandan.babu@oracle.com>, Jan Kara <jack@suse.cz>,
+        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+Subject: Re: [Lsf-pc] XFS BoF at LSFMM
+Message-ID: <20240513134816.GB520598@mit.edu>
+References: <CAB=NE6V_TqhQ0cqSdnDg7AZZQ5ZqzgBJHuHkjKBK0x_buKsgeQ@mail.gmail.com>
+ <CAOQ4uxj8qVpPv=YM5QiV5ryaCmFeCvArFt0Uqf29KodBdnbOaw@mail.gmail.com>
+ <ZjxZttSUzFTd_UWc@infradead.org>
+ <CAOQ4uxhpZ-+Fgrx_LDAO-K5wHaUghPfvGePLVpNaZZza1Wpvrg@mail.gmail.com>
+ <20240509155528.GN360919@frogsfrogsfrogs>
+ <CAOQ4uxiX=O8NhonBv2Yt6nu4ZiqTLBUZg+M5r0T-ZO5LC=a2dQ@mail.gmail.com>
+ <20240509174745.GO360919@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -107,173 +75,50 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <009d08646b77e0d774b4ce248675b86564bca9ee.1714046808.git.ritesh.list@gmail.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	DATE_IN_PAST(1.00)[24];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 26E8E5C0CB
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -1.51
+In-Reply-To: <20240509174745.GO360919@frogsfrogsfrogs>
 
-On Thu 25-04-24 18:58:48, Ritesh Harjani (IBM) wrote:
-> There is a possibility of following race with iomap during
-> writebck -
+On Thu, May 09, 2024 at 10:47:45AM -0700, Darrick J. Wong wrote:
+> > > Ritesh and Ted and Jan and I were chatting during the ext4 concall just
+> > > now.  Could we have a 30 minute iomap bof at 2:30pm followed by the XFS
+> > > bof after that?  That would give us some time to chat with hch about
+> > > iomap (and xfs) direction before he has to leave.
+> > >
+> > > Alternately, we could announce a lunchtime discussion group on Monday
+> > > following Ritesh's presentation about iomap.  That could fit everyone's
+> > > schedule better?  Also everyone's braincaches will likely be warmer.
+> > 
+> > Seems to me that there will be a wider interest in iomap BoF
+> > Not sure what you mean by lunchtime discussion.
 > 
-> write_cache_pages()
->   cache extent covering 0..1MB range
->   write page at offset 0k
-> 					truncate(file, 4k)
-> 					  drops all relevant pages
-> 					  frees fs blocks
-> 					pwrite(file, 4k, 4k)
-> 					  creates dirty page in the page cache
->   writes page at offset 4k to a stale block
+> Monday 90-minute lunch is posted as being in "Grand ballroom C", so I
+> would tell everyone to come find the table(s) I'm sitting at for a
+> discussion over lunch.  We can move out to a hallway after everyone's
+> done eating.
 > 
-> This race can happen because iomap_writepages() keeps a cached extent mapping
-> within struct iomap. While write_cache_pages() is going over each folio,
-> (can cache a large extent range), if a truncate happens in parallel on the
-> next folio followed by a buffered write to the same offset within the file,
-> this can change logical to physical offset of the cached iomap mapping.
-> That means, the cached iomap has now become stale.
+> > We can move Willy's GFP_NOFS talk to 15:30 and have the iomap BoF
+> > after Ritesh's session.
 > 
-> This patch implements the seq counter approach for revalidation of stale
-> iomap mappings. i_blkseq will get incremented for every block
-> allocation/free. Here is what we do -
-> 
-> For ext2 buffered-writes, the block allocation happens at the
-> ->write_iter time itself. So at writeback time,
-> 1. We first cache the i_blkseq.
-> 2. Call ext2_get_blocks(, create = 0) to get the no. of blocks
->    already allocated.
-> 3. Call ext2_get_blocks() the second time with length to be same as
->    the no. of blocks we know were already allocated.
-> 4. Till now it means, the cached i_blkseq remains valid as no block
->    allocation has happened yet.
-> This means the next call to ->map_blocks(), we can verify whether the
-> i_blkseq has raced with truncate or not. If not, then i_blkseq will
-> remain valid.
-> 
-> In case of a hole (could happen with mmaped writes), we only allocate
-> 1 block at a time anyways. So even if the i_blkseq value changes right
-> after, we anyway need to allocate the next block in subsequent
-> ->map_blocks() call.
-> 
-> Signed-off-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+> <shrug> If you like, though I don't think it's totally necessary.  But
+> you might have a better idea of what the venue is like than I do, so
+> I'll let you make that call. :)
 
-A few small comments below.
+How did we decide to resolve this?  If we have the iomap BOF at
+2:30pm, with a hard stop at 3:00pm, that would work for everyone
+including Cristoph.
 
-> @@ -698,6 +699,11 @@ static inline struct ext2_inode_info *EXT2_I(struct inode *inode)
->  	return container_of(inode, struct ext2_inode_info, vfs_inode);
->  }
->  
-> +static inline void ext2_inc_i_blkseq(struct ext2_inode_info *ei)
-> +{
-> +	WRITE_ONCE(ei->i_blkseq, READ_ONCE(ei->i_blkseq) + 1);
-> +}
-> +
+Or we can try to get all of the people interested in talking about
+iomap at lunch on Wednesday.
 
-Please add a comment here (and assertion as well) that updates of i_blkseq
-are protected by ei->i_truncate_mutex. Reads can race at any moment to
-that's the reason why WRITE_ONCE() is used. You can remove READ_ONCE() here
-as it is pointless (we are locked here).
+Or we could do something that requires a lot more juggling of slots,
+which I'll leave to the track leads.  :-)
 
->  static int ext2_write_map_blocks(struct iomap_writepage_ctx *wpc,
->  				 struct inode *inode, loff_t offset,
->  				 unsigned len)
->  {
-> -	if (offset >= wpc->iomap.offset &&
-> -	    offset < wpc->iomap.offset + wpc->iomap.length)
-> +	loff_t maxblocks = (loff_t)INT_MAX;
-> +	u8 blkbits = inode->i_blkbits;
-> +	u32 bno;
-> +	bool new, boundary;
-> +	int ret;
-> +
-> +	if (ext2_imap_valid(wpc, inode, offset))
->  		return 0;
->  
-> -	return ext2_iomap_begin(inode, offset, inode->i_sb->s_blocksize,
-> +	/*
-> +	 * For ext2 buffered-writes, the block allocation happens at the
-> +	 * ->write_iter time itself. So at writeback time -
-> +	 * 1. We first cache the i_blkseq.
-> +	 * 2. Call ext2_get_blocks(, create = 0) to get the no. of blocks
-> +	 *    already allocated.
-> +	 * 3. Call ext2_get_blocks() the second time with length to be same as
-> +	 *    the no. of blocks we know were already allocated.
-> +	 * 4. Till now it means, the cached i_blkseq remains valid as no block
-> +	 *    allocation has happened yet.
-> +	 * This means the next call to ->map_blocks(), we can verify whether the
-> +	 * i_blkseq has raced with truncate or not. If not, then i_blkseq will
-> +	 * remain valid.
-> +	 *
-> +	 * In case of a hole (could happen with mmaped writes), we only allocate
-> +	 * 1 block at a time anyways. So even if the i_blkseq value changes, we
-> +	 * anyway need to allocate the next block in subsequent ->map_blocks()
-> +	 * call.
-> +	 */
+All of these ideas work for me.
 
-I suspect it would be tidier to move this logic into ext2_get_blocks()
-itself but I guess it is ok as is for now.
 
-> +	wpc->iomap.validity_cookie = READ_ONCE(EXT2_I(inode)->i_blkseq);
-> +
-> +	ret = ext2_get_blocks(inode, offset >> blkbits, maxblocks << blkbits,
-> +			      &bno, &new, &boundary, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +	/*
-> +	 * ret can be 0 in case of a hole which is possible for mmaped writes.
-> +	 */
-> +	ret = ret ? ret : 1;
-> +	return ext2_iomap_begin(inode, offset, (loff_t)ret << blkbits,
->  				IOMAP_WRITE, &wpc->iomap, NULL);
->  }
->  
-> diff --git a/fs/ext2/super.c b/fs/ext2/super.c
-> index 37f7ce56adce..32f5386284d6 100644
-> --- a/fs/ext2/super.c
-> +++ b/fs/ext2/super.c
-> @@ -188,7 +188,7 @@ static struct inode *ext2_alloc_inode(struct super_block *sb)
->  #ifdef CONFIG_QUOTA
->  	memset(&ei->i_dquot, 0, sizeof(ei->i_dquot));
->  #endif
-> -
-> +	WRITE_ONCE(ei->i_blkseq, 0);
->  	return &ei->vfs_inode;
+As far as scheduling per-file system BOF's, I'd like to claim the slot
+immediately after XFS for an ext4 BOF, it that would be OK.
 
-No need for write once here. This cannot race with anything...
+Thanks,
 
-									Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+						- Ted
 
