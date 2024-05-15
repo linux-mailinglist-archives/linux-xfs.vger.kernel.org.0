@@ -1,84 +1,167 @@
-Return-Path: <linux-xfs+bounces-8322-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8327-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8536D8C5F1C
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 04:34:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91F568C5F52
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 05:10:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1F0991F222D3
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 02:34:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1262A1F22157
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 03:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 512AD2E651;
-	Wed, 15 May 2024 02:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AsAsoTRy"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E559381B8;
+	Wed, 15 May 2024 03:10:15 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056D917C96;
-	Wed, 15 May 2024 02:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDCA381A4
+	for <linux-xfs@vger.kernel.org>; Wed, 15 May 2024 03:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715740454; cv=none; b=DFnxE1BT70dOCz3PsCE+K8M44i6kRdWHz02O3tiiltjqfp+jRXD65L/SCReEPPl0rXSUk3OLl5BRxYiWsbK75Tp92dWfQbYH/FU+YkW5nQdNiYhUdduLU0qxiKbfbOrMjBuLzwHsGr3Dqvm+z/h9mrxNTvYhUNBTx5FrCwQKLec=
+	t=1715742615; cv=none; b=fMYaHTyMRT3EreEYLVnJ2GdtBH1NHQ2AdLF9J7wBt5PMT0NiuXqKwFp3xyUM9DCH+3ldeNViRmY3aZTT9CSy8FP1A1S5P0aXfWRJkaLL+H6K4YS6Vhy3nC6iFd4mkGMVRyOcKoC+u93uB+dDK/OFjOi9ODyHWDZBbKZtZnLZAzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715740454; c=relaxed/simple;
-	bh=0Py+mhpyh17Xg65Pwy3AgGKMlMnS9vSsEebG9ZJaFD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e6ZfZZfWsrC8f9SI1MJvN4CPfQJw5zVpPTuqX1oUYDs6TlKeT+rlosDIKm2lm3CEqgtT0JedA2fTneZZahAhLuQfZKLOtcXK0KLErrsKo/HMZ+m5QQWVm2KXFCuA7LGb6+Yx4jyGU3vm0sRkezAet6rVc4pinmqDqxmKPlGcUgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AsAsoTRy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE1DC2BD10;
-	Wed, 15 May 2024 02:34:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715740453;
-	bh=0Py+mhpyh17Xg65Pwy3AgGKMlMnS9vSsEebG9ZJaFD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AsAsoTRypuTTu9iaHHn2KZjbJ/9neXFQJTFwUXCDU+s7ruNnsRvASy0edAeFZE4Z8
-	 j9kUsw8UGriNRqZNG5wR/zf8gLLLIsPvHecCzRobMZ/X07hQgg9yqznIOm5HXI9VBY
-	 XnPoQStJZIryWkPphJEAC/giqR0vgcj1ia/zRfjJ+1JOem5el76/mI+vFVbHPqMOsa
-	 4L5FG8RXZ5XQodrhSBQqbUM1dgK2dqd5ggnjttYR7BpouOp7LyGxneTLhxHCdV91sj
-	 Q7T/kJtwg1Y+sik6O/xokLJcQlDVhKJbVPoL/m7ybDfpqiu8BRG0U0gcI3f1ffIjOT
-	 RbMBAtJuCxcog==
-Date: Tue, 14 May 2024 20:34:09 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, hch@lst.de,
-	mcgrof@kernel.org, akpm@linux-foundation.org, brauner@kernel.org,
-	chandan.babu@oracle.com, david@fromorbit.com, djwong@kernel.org,
-	gost.dev@samsung.com, hare@suse.de, john.g.garry@oracle.com,
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-xfs@vger.kernel.org, p.raghav@samsung.com,
-	ritesh.list@gmail.com, ziy@nvidia.com
-Subject: Re: [RFC] iomap: use huge zero folio in iomap_dio_zero
-Message-ID: <ZkQfId5IdKFRigy2@kbusch-mbp>
-References: <20240503095353.3798063-8-mcgrof@kernel.org>
- <20240507145811.52987-1-kernel@pankajraghav.com>
- <ZkQG7bdFStBLFv3g@casper.infradead.org>
+	s=arc-20240116; t=1715742615; c=relaxed/simple;
+	bh=FBMTnsK4lTDE5aVLMi9mJ+T7oHugiNoH4r25w3Ica+8=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=M1UvWgOgPwQh+KWXT063dLDnOc28QvLYB4oSFf6KyS2yYXVNA8fcbzeshmFSyMUNIdXRYbvJ+5K63qE13JZX1rmwoeL92CWD6fCuIXV5s0cSXiPaD51GOMgkIq34etMsfaMYQkATJ1dv0zEhjKlzLBgl0ck51guFAklc7ANbEZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VfJ683bs9zvYhn;
+	Wed, 15 May 2024 11:06:40 +0800 (CST)
+Received: from canpemm500005.china.huawei.com (unknown [7.192.104.229])
+	by mail.maildlp.com (Postfix) with ESMTPS id 319A71800CB;
+	Wed, 15 May 2024 11:10:09 +0800 (CST)
+Received: from [10.174.179.80] (10.174.179.80) by
+ canpemm500005.china.huawei.com (7.192.104.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 15 May 2024 11:10:08 +0800
+Subject: Re: [BUG REPORT] generic/561 fails when testing xfs on next-20240506
+ kernel
+To: Chandan Babu R <chandanbabu@kernel.org>
+CC: <brauner@kernel.org>, Linux-XFS mailing list <linux-xfs@vger.kernel.org>
+References: <87ttj8ircu.fsf@debian-BULLSEYE-live-builder-AMD64>
+From: Zhang Yi <yi.zhang@huawei.com>
+Message-ID: <1d23fa70-3eb4-5a5d-b401-bdb218e3736e@huawei.com>
+Date: Wed, 15 May 2024 11:10:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZkQG7bdFStBLFv3g@casper.infradead.org>
+In-Reply-To: <87ttj8ircu.fsf@debian-BULLSEYE-live-builder-AMD64>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: base64
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500005.china.huawei.com (7.192.104.229)
 
-On Wed, May 15, 2024 at 01:50:53AM +0100, Matthew Wilcox wrote:
-> On Tue, May 07, 2024 at 04:58:12PM +0200, Pankaj Raghav (Samsung) wrote:
-> > Instead of looping with ZERO_PAGE, use a huge zero folio to zero pad the
-> > block. Fallback to ZERO_PAGE if mm_get_huge_zero_folio() fails.
-> 
-> So the block people say we're doing this all wrong.  We should be
-> issuing a REQ_OP_WRITE_ZEROES bio, and the block layer will take care of
-> using the ZERO_PAGE if the hardware doesn't natively support
-> WRITE_ZEROES or a DISCARD that zeroes or ...
-
-Wait a second, I think you've gone too far if you're setting the bio op
-to REQ_OP_WRITE_ZEROES. The block layer handles the difference only
-through the blkdev_issue_zeroout() helper. If you actually submit a bio
-with that op to a block device that doesn't support it, you'll just get
-a BLK_STS_NOTSUPP error from submit_bio_noacct().
+T24gMjAyNC81LzggMTc6MDEsIENoYW5kYW4gQmFidSBSIHdyb3RlOg0KPiBIaSwNCj4gDQo+
+IGdlbmVyaWMvNTYxIGZhaWxzIHdoZW4gdGVzdGluZyBYRlMgb24gYSBuZXh0LTIwMjQwNTA2
+IGtlcm5lbCBhcyBzaG93biBiZWxvdywNCg0KSGVsbG8sDQoNCkkndmUgc2VuZCBvdXQgdGhl
+IGZpeCBbMV0gYmFzZWQgb24gdGhlIHNvbHV0aW9uIGRpc2N1c3NlZCB3aXRoIERhdmUsIGFu
+ZA0KSSd2ZSB0ZXN0ZWQgaXQgb24gZ2VuZXJpYy81NjEgc2V2ZXJhbCB0aW1lcyBhbmQgLWcg
+YXV0byB3aXRoIGJlbG93IDQgdHlwZXMNCm9mIGNvbmZpZywgbm8gbmV3IGZhaWx1cmVzLiBJ
+IGhvcGUgSSd2ZSBjb3ZlcmVkIGFsbCB0aGUgY29ybmVyIGNhc2VzIGFib3V0DQp6ZXJvIHJh
+bmdlIG9uIHhmcywgcGxlYXNlIHRha2UgYSBsb29rIGF0IHRoYXQgc2VyaWVzLg0KDQotIERl
+ZmF1bHQgY29uZmlnDQotIE1LRlNfT1BUSU9OUz0iLWYgLW0gcmVmbGluaz0wIg0KLSBNT1VO
+VF9PUFRJT05TPSctbyBkYXgnDQotIFVTRV9FWFRFUk5BTD15ZXMNCiAgU0NSQVRDSF9SVERF
+Vj0vZGV2L252bWUwbjENCiAgTUtGU19PUFRJT05TPSItZiAtbSByZWZsaW5rPTAscm1hcGJ0
+PTAsIC1kIHJ0aW5oZXJpdD0xIC1yIGV4dHNpemU9MjhrIg0KDQpbMV0gaHR0cHM6Ly9sb3Jl
+Lmtlcm5lbC5vcmcvbGludXgteGZzLzIwMjQwNTE1MDIyODI5LjI0NTU1NTQtMS15aS56aGFu
+Z0BodWF3ZWljbG91ZC5jb20vDQoNClRoYW5rcywNCllpLg0KDQo+IA0KPiAjIC4vY2hlY2sg
+Z2VuZXJpYy81NjENCj4gRlNUWVAgICAgICAgICAtLSB4ZnMgKGRlYnVnKQ0KPiBQTEFURk9S
+TSAgICAgIC0tIExpbnV4L3g4Nl82NCB4ZnMtY3JjLXJ0ZGV2LWV4dHNpemUtMjhrIDYuOS4w
+LXJjNy1uZXh0LTIwMjQwNTA2KyAjMSBTTVAgUFJFRU1QVF9EWU5BTUlDIE1vbiBNYXkgIDYg
+MDc6NTM6NDYgR01UIDIwMjQNCj4gTUtGU19PUFRJT05TICAtLSAtZiAtcnJ0ZGV2PS9kZXYv
+bG9vcDE0IC1mIC1tIHJlZmxpbms9MCxybWFwYnQ9MCwgLWQgcnRpbmhlcml0PTEgLXIgZXh0
+c2l6ZT0yOGsgL2Rldi9sb29wNQ0KPiBNT1VOVF9PUFRJT05TIC0tIC1vIGNvbnRleHQ9c3lz
+dGVtX3U6b2JqZWN0X3I6cm9vdF90OnMwIC1vcnRkZXY9L2Rldi9sb29wMTQgL2Rldi9sb29w
+NSAvbWVkaWEvc2NyYXRjaA0KPiANCj4gZ2VuZXJpYy81NjEgICAgICAgLSBvdXRwdXQgbWlz
+bWF0Y2ggKHNlZSAvdmFyL2xpYi94ZnN0ZXN0cy9yZXN1bHRzL3hmcy1jcmMtcnRkZXYtZXh0
+c2l6ZS0yOGsvNi45LjAtcmM3LW5leHQtMjAyNDA1MDYrL3hmc19jcmNfcnRkZXZfZXh0c2l6
+ZV8yOGsvZ2VuZXJpYy81NjEub3V0LmJhZCkNCj4gICAgIC0tLSB0ZXN0cy9nZW5lcmljLzU2
+MS5vdXQgICAyMDI0LTA1LTA2IDA4OjE4OjA5LjY4MTQzMDM2NiArMDAwMA0KPiAgICAgKysr
+IC92YXIvbGliL3hmc3Rlc3RzL3Jlc3VsdHMveGZzLWNyYy1ydGRldi1leHRzaXplLTI4ay82
+LjkuMC1yYzctbmV4dC0yMDI0MDUwNisveGZzX2NyY19ydGRldl9leHRzaXplXzI4ay9nZW5l
+cmljLzU2MS5vdXQuYmFkICAgICAgICAyMDI0LTA1LTA4IDA5OjE0OjI0LjkwODAxMDEzMyAr
+MDAwMA0KPiAgICAgQEAgLTEsMiArMSw1IEBADQo+ICAgICAgUUEgb3V0cHV0IGNyZWF0ZWQg
+YnkgNTYxDQo+ICAgICArL21lZGlhL3NjcmF0Y2gvZGlyL3AwL2QwWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFgvZDQ4Ni9kNGJYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWC9kNWJYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFgvZDIxMlhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFgvZDExWFhYWFhYWFhYL2Q1NC9k
+ZTQvZDE1OC9kMjdmL2Q4OTUvZDEzMDdYWFgvZDhhNC9kODMyWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFgvcjExMmZYWFhYWFhYWFhYWDog
+RkFJTEVEDQo+ICAgICArL21lZGlhL3NjcmF0Y2gvZGlyL3AwL2QwWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFgvZDQ4Ni9kNGJYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWC9kNWJYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFgvZDIxMlhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFgvZDExWFhYWFhYWFhYL2Q1NC9k
+ZTQvZDE1OC9kMjdmL2QxM2EzWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFgvZDEzYzBYWFhYWFhYWC9kMjMwMVgv
+ZDIyMmJYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWC9kMTI0MFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWC9kNzIyWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWC9kMTM4MFhYWFhYWFhYWFhYWFhYWFgvZGM2MlhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY
+WFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYL3IxMGQ1OiBG
+QUlMRUQNCj4gICAgICttZDVzdW06IFdBUk5JTkc6IDIgY29tcHV0ZWQgY2hlY2tzdW1zIGRp
+ZCBOT1QgbWF0Y2gNCj4gICAgICBTaWxlbmNlIGlzIGdvbGRlbg0KPiAgICAgLi4uDQo+ICAg
+ICAoUnVuICdkaWZmIC11IC92YXIvbGliL3hmc3Rlc3RzL3Rlc3RzL2dlbmVyaWMvNTYxLm91
+dCAvdmFyL2xpYi94ZnN0ZXN0cy9yZXN1bHRzL3hmcy1jcmMtcnRkZXYtZXh0c2l6ZS0yOGsv
+Ni45LjAtcmM3LW5leHQtMjAyNDA1MDYrL3hmc19jcmNfcnRkZXZfZXh0c2l6ZV8yOGsvZ2Vu
+ZXJpYy81NjEub3V0LmJhZCcgIHRvIHNlZSB0aGUgZW50aXJlIGRpZmYpDQo+IFJhbjogZ2Vu
+ZXJpYy81NjENCj4gRmFpbHVyZXM6IGdlbmVyaWMvNTYxDQo+IEZhaWxlZCAxIG9mIDEgdGVz
+dHMNCj4gDQo+IFRoZSBmb2xsb3dpbmcgd2FzIHRoZSBmc3Rlc3QgY29uZmlndXJhdGlvbiB1
+c2VkIGZvciB0aGUgdGVzdCBydW4sDQo+IA0KPiAgIEZTVFlQPXhmcw0KPiAgIFRFU1RfRElS
+PS9tZWRpYS90ZXN0DQo+ICAgU0NSQVRDSF9NTlQ9L21lZGlhL3NjcmF0Y2gNCj4gICBURVNU
+X0RFVj0vZGV2L2xvb3AxNg0KPiAgIFRFU1RfTE9HREVWPS9kZXYvbG9vcDEzDQo+ICAgU0NS
+QVRDSF9ERVZfUE9PTD0iL2Rldi9sb29wNSAvZGV2L2xvb3A2IC9kZXYvbG9vcDcgL2Rldi9s
+b29wOCAvZGV2L2xvb3A5IC9kZXYvbG9vcDEwIC9kZXYvbG9vcDExIC9kZXYvbG9vcDEyIg0K
+PiAgIE1LRlNfT1BUSU9OUz0nLWYgLW0gY3JjPTEscmVmbGluaz0wLHJtYXBidD0wLCAtaSBz
+cGFyc2U9MCAtbHNpemU9MWcnDQo+ICAgVEVTVF9GU19NT1VOVF9PUFRTPSItbyBsb2dkZXY9
+L2Rldi9sb29wMTMiDQo+ICAgTU9VTlRfT1BUSU9OUz0nLW8gdXNycXVvdGEsZ3JwcXVvdGEs
+cHJqcXVvdGEnDQo+ICAgVEVTVF9GU19NT1VOVF9PUFRTPSIkVEVTVF9GU19NT1VOVF9PUFRT
+IC1vIHVzcnF1b3RhLGdycHF1b3RhLHByanF1b3RhIg0KPiAgIFNDUkFUQ0hfTE9HREVWPS9k
+ZXYvbG9vcDE1DQo+ICAgVVNFX0VYVEVSTkFMPXllcw0KPiAgIExPR1dSSVRFU19ERVY9L2Rl
+di9sb29wMTUNCj4gDQo+IEdpdCBiaXNlY3QgcHJvZHVjZWQgdGhlIGZvbGxvd2luZyBhcyB0
+aGUgZmlyc3QgYmFkIGNvbW1pdCwNCj4gDQo+IGNvbW1pdCA5NDNiYzA4ODJjZWJmNDgyNDIy
+NjQwOTI0MDYyYTdkYWFjNWEyN2JhDQo+IEF1dGhvcjogWmhhbmcgWWkgPHlpLnpoYW5nQGh1
+YXdlaS5jb20+DQo+IERhdGU6ICAgV2VkIE1hciAyMCAxOTowNTo0NSAyMDI0ICswODAwDQo+
+IA0KPiAgICAgaW9tYXA6IGRvbid0IGluY3JlYXNlIGlfc2l6ZSBpZiBpdCdzIG5vdCBhIHdy
+aXRlIG9wZXJhdGlvbg0KPiANCj4gICAgIEluY3JlYXNlIGlfc2l6ZSBpbiBpb21hcF96ZXJv
+X3JhbmdlKCkgYW5kIGlvbWFwX3Vuc2hhcmVfaXRlcigpIGlzIG5vdA0KPiAgICAgbmVlZGVk
+LCB0aGUgY2FsbGVyIHNob3VsZCBoYW5kbGUgaXQuIEVzcGVjaWFsbHksIHdoZW4gdHJ1bmNh
+dGUgcGFydGlhbA0KPiAgICAgYmxvY2ssIHdlIHNob3VsZCBub3QgaW5jcmVhc2UgaV9zaXpl
+IGJleW9uZCB0aGUgbmV3IEVPRiBoZXJlLiBJdCBkb2Vzbid0DQo+ICAgICBhZmZlY3QgeGZz
+IGFuZCBnZnMyIG5vdyBiZWNhdXNlIHRoZXkgc2V0IHRoZSBuZXcgZmlsZSBzaXplIGFmdGVy
+IHplcm8NCj4gICAgIG91dCwgaXQgZG9lc24ndCBtYXR0ZXIgdGhhdCBhIHRyYW5zaWVudCBp
+bmNyZWFzZSBpbiBpX3NpemUsIGJ1dCBpdCB3aWxsDQo+ICAgICBhZmZlY3QgZXh0NCBiZWNh
+dXNlIGl0IHNldCBmaWxlIHNpemUgYmVmb3JlIHRydW5jYXRlLiBTbyBtb3ZlIHRoZSBpX3Np
+emUNCj4gICAgIHVwZGF0aW5nIGxvZ2ljIHRvIGlvbWFwX3dyaXRlX2l0ZXIoKS4NCj4gDQo+
+ICAgICBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZaSA8eWkuemhhbmdAaHVhd2VpLmNvbT4NCj4g
+ICAgIExpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyNDAzMjAxMTA1NDguMjIw
+MDY2Mi03LXlpLnpoYW5nQGh1YXdlaWNsb3VkLmNvbQ0KPiAgICAgUmV2aWV3ZWQtYnk6IENo
+cmlzdG9waCBIZWxsd2lnIDxoY2hAbHN0LmRlPg0KPiAgICAgUmV2aWV3ZWQtYnk6IERhcnJp
+Y2sgSi4gV29uZyA8ZGp3b25nQGtlcm5lbC5vcmc+DQo+ICAgICBTaWduZWQtb2ZmLWJ5OiBD
+aHJpc3RpYW4gQnJhdW5lciA8YnJhdW5lckBrZXJuZWwub3JnPg0KPiANCj4gIGZzL2lvbWFw
+L2J1ZmZlcmVkLWlvLmMgfCA1MCArKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI1IGluc2VydGlvbnMoKyks
+IDI1IGRlbGV0aW9ucygtKQ0KPiAgDQo+IA0K
 
