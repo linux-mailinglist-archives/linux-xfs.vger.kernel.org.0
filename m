@@ -1,76 +1,76 @@
-Return-Path: <linux-xfs+bounces-8336-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8338-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E736C8C6068
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 07:59:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B98CB8C606E
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 08:00:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16D211C2107E
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 05:59:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7082628312C
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 May 2024 06:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED0EA4F213;
-	Wed, 15 May 2024 05:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0525405D8;
+	Wed, 15 May 2024 05:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XE0WeUZ4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U9Enp2W+"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11804AEDD
-	for <linux-xfs@vger.kernel.org>; Wed, 15 May 2024 05:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1BF4EB3C
+	for <linux-xfs@vger.kernel.org>; Wed, 15 May 2024 05:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715752660; cv=none; b=CUiAYS8Afq7Us2ytavfABIdlCNs7dopPURiFP8XxjqoNydhgmvUNugKf/RvdhYmoKP0BnOi9adJyniDT7LnbiWjauZFPxb902FvGDqbGB7TOXphvWXh1T9cW5pF+xt98gmuhyqKJp1bETmwu2AX9AGPd8LMuhgKaoHDsV928aTg=
+	t=1715752662; cv=none; b=qHLpDn8WQU/YvbB/na5BDY19memc0ElCJoIn0anPLzvjVeYVKZY0923Uzy2rfi+KsqPffvzbcPiRA1VW9dpp3fs0YC8cE0u2sefcUJ6zRzei9ihFx8+Eicm5V5CupLO/EaFCD7KkSxBE6nvU0YztH8a6H5gKNpx2f6tqqTIZFZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715752660; c=relaxed/simple;
-	bh=0RjdBokNWoS+vSi83hgJATS/2MIQWi5fahvmgWZkpmk=;
+	s=arc-20240116; t=1715752662; c=relaxed/simple;
+	bh=ysNTQu2FZmxm2DeMyyYooKIt081V6zV0r+ddDudM9pQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version:References; b=tavBd/wcTkGANEMyYDvywVzOXkW4hP55DPJtKEZY5EL6+bbNgEQPqbI9HGNbG/ix34km8Xm9QZ11AeOee/phoWlZ/xGd88NPIrUvyrSl4hAzvlqVj4yR7CZZXfowkXizsOmDLJRCDDZC2ecbGLZ8q7+/9HFyuoWotTTm5kmoCok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=XE0WeUZ4; arc=none smtp.client-ip=210.118.77.11
+	 MIME-Version:References; b=Oy+1d1R/h9RwyzqvaVvmYC9pyIMt66B6K/xlD2C8Q7jeB1ZhuQOTF/IngGsta5tbKaBE5WnhC599Lx7QUAnYbRkK12c0mmLwEQrgXJGoyX9u0spts07fC0I3vnDdeJhkyPijZ4gC3VtlxvvHS790abM7B7HiDWlVUj4WyQbqD5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=U9Enp2W+; arc=none smtp.client-ip=210.118.77.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240515055737euoutp01bb0dd00b00eb3dfee23706a812c60540~Pk-OZp7k91508115081euoutp01L
-	for <linux-xfs@vger.kernel.org>; Wed, 15 May 2024 05:57:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240515055737euoutp01bb0dd00b00eb3dfee23706a812c60540~Pk-OZp7k91508115081euoutp01L
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240515055739euoutp0283df8f5c448a2808fb2aeb7fdf6826b7~Pk-P6Xhp11566715667euoutp02A
+	for <linux-xfs@vger.kernel.org>; Wed, 15 May 2024 05:57:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240515055739euoutp0283df8f5c448a2808fb2aeb7fdf6826b7~Pk-P6Xhp11566715667euoutp02A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1715752657;
-	bh=KSFa/00drIrpTPTVaHKTJFLNN4vEYokk0j2qhn9ASTY=;
+	s=mail20170921; t=1715752659;
+	bh=YnJglILKqFkdTEiFzR72jsMog/cpgSZTzUSnpJww0Pw=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=XE0WeUZ4/fxHAxJkG/mIY/WGU0C4ZHUEw5qzBkuqT9YA+ux6u/VMvXpPQ5QfXZsCN
-	 RAdqw8x6EFSJ3Uy0xmtAXcHqL9FipFkZbQdC03MkUvzvsQe44ht0ez97k3oK7S9HbB
-	 ZKW8iyeunnHh5sOncAza29RBBZxrEoJLw6eIoNhE=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	b=U9Enp2W+Lk709O62hv/eifsGkq8F1T0sf+tU1Dy4hamOZKVWmPbcclBPJ+kNHSU0N
+	 2O5HlteJ/HiOo9ctcvkG9N5/pZXo9EH7pTbAZAN5SdB+2gXHGu7Yz2xNahommkyvfu
+	 uUR15N41Ab7XFV4FDD9ghctG+FI6p7gfoQCz81cI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
 	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240515055737eucas1p2687839099f1491893036e9edf50d6776~Pk-N8z2ap0810008100eucas1p2W;
-	Wed, 15 May 2024 05:57:37 +0000 (GMT)
+	20240515055738eucas1p2ee046cb2cbd220fc7d567cbe8c42157c~Pk-PmR0te1241412414eucas1p2E;
+	Wed, 15 May 2024 05:57:38 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 58.D8.09875.0DE44466; Wed, 15
-	May 2024 06:57:36 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id B3.97.09620.2DE44466; Wed, 15
+	May 2024 06:57:38 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240515055736eucas1p1bfa9549398e766532d143ba9314bee18~Pk-NPUDB_1859218592eucas1p1L;
-	Wed, 15 May 2024 05:57:36 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240515055736eusmtrp1cd38f7c68e33115cb0f700536a34b1e1~Pk-NOpRJH0411404114eusmtrp1C;
-	Wed, 15 May 2024 05:57:36 +0000 (GMT)
-X-AuditID: cbfec7f4-11bff70000002693-f1-66444ed03f5f
+	20240515055738eucas1p15335a32c790b731aa5857193bbddf92d~Pk-POZAf12872228722eucas1p1l;
+	Wed, 15 May 2024 05:57:38 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240515055738eusmtrp2b09bc45b45a944e66f031ac0931385d5~Pk-PNwuEc0256302563eusmtrp2U;
+	Wed, 15 May 2024 05:57:38 +0000 (GMT)
+X-AuditID: cbfec7f5-d31ff70000002594-cf-66444ed2cdbd
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 6D.F1.09010.0DE44466; Wed, 15
-	May 2024 06:57:36 +0100 (BST)
-Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id C4.26.08810.2DE44466; Wed, 15
+	May 2024 06:57:38 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
 	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240515055736eusmtip10c080390bd41a09baa29d247f828f893~Pk-NCedQq0562705627eusmtip1T;
-	Wed, 15 May 2024 05:57:36 +0000 (GMT)
+	20240515055738eusmtip13dda217c4b57766f5e88e5a9ca71a2c7~Pk-O_ejJe0562305623eusmtip1V;
+	Wed, 15 May 2024 05:57:38 +0000 (GMT)
 Received: from CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) by
-	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) with Microsoft SMTP
-	Server (TLS) id 15.0.1497.2; Wed, 15 May 2024 06:57:35 +0100
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) with Microsoft SMTP
+	Server (TLS) id 15.0.1497.2; Wed, 15 May 2024 06:57:37 +0100
 Received: from CAMSVWEXC02.scsc.local ([::1]) by CAMSVWEXC02.scsc.local
 	([fe80::3c08:6c51:fa0a:6384%13]) with mapi id 15.00.1497.012; Wed, 15 May
-	2024 06:57:35 +0100
+	2024 06:57:37 +0100
 From: Daniel Gomez <da.gomez@samsung.com>
 To: "hughd@google.com" <hughd@google.com>, "akpm@linux-foundation.org"
 	<akpm@linux-foundation.org>, "willy@infradead.org" <willy@infradead.org>,
@@ -86,11 +86,12 @@ CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-xfs@vger.kernel.org"
 	<chandan.babu@oracle.com>, "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>, "brauner@kernel.org" <brauner@kernel.org>,
 	Daniel Gomez <da.gomez@samsung.com>
-Subject: [PATCH 10/12] shmem: add order arg to shmem_alloc_folio()
-Thread-Topic: [PATCH 10/12] shmem: add order arg to shmem_alloc_folio()
-Thread-Index: AQHapozIzXRp8FIrX0Ow3XgDmWV32Q==
-Date: Wed, 15 May 2024 05:57:35 +0000
-Message-ID: <20240515055719.32577-11-da.gomez@samsung.com>
+Subject: [PATCH 11/12] shmem: add file length arg in shmem_get_folio() path
+Thread-Topic: [PATCH 11/12] shmem: add file length arg in shmem_get_folio()
+	path
+Thread-Index: AQHapozJF6Lbb0RRX0KKO162vQDDlA==
+Date: Wed, 15 May 2024 05:57:36 +0000
+Message-ID: <20240515055719.32577-12-da.gomez@samsung.com>
 In-Reply-To: <20240515055719.32577-1-da.gomez@samsung.com>
 Accept-Language: en-US, en-GB
 Content-Language: en-US
@@ -106,148 +107,317 @@ List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIKsWRmVeSWpSXmKPExsWy7djP87oX/FzSDHZ9srSYs34Nm8X/vccY
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEKsWRmVeSWpSXmKPExsWy7djP87qX/FzSDKbM0raYs34Nm8X/vccY
 	LV4f/sRocemonMXZvt9sFl/X/2K2uPyEz+Lppz4Wi9nTm5ksLu+aw2Zxb81/Votdf3awW+x7
 	vZfZ4saEp4wWB091sFv8/gGU3b4r0kHQY+esu+weCzaVemxeoeWxaVUnm8emT5PYPU7M+M3i
-	sfOhpcfkG8sZPT4+vcXi8X7fVTaPMwuOsHt83iQXwBPFZZOSmpNZllqkb5fAlTHv32L2gg3i
-	Ff9/bmJpYOwU7mLk5JAQMJHYOuUDaxcjF4eQwApGid2LZ7ODJIQEvjBKvH2cDJH4zCjx9f1W
-	dpiOWXcus0AkljNKzOxfyA5XtXDBaWYI5wyjxKO7kxghZq1klDjzUATEZhPQlNh3chNYh4jA
-	bUaJp6fOgDnMAidZJf5s3skCUiUs4CSx93wLM4gtIuAucfTWLBYIW0/i9MsZYFNZBFQlJqz7
-	AFbDK2AlsfTrObA4J5B9d/5XNhCbUUBW4tHKX2CHMwuIS9x6Mp8J4glBiUWz9zBD2GIS/3Y9
-	ZIOwdSTOXn/CCGEbSGxduo8FwlaWWP+ujQlijp7EjalT2CBsbYllC19D3SAocXLmE6j6nVwS
-	zTfrIGwXicPPzkADT1ji1fEtULaMxOnJPSwTGLVnITlvFpIVs5CsmIVkxQJGllWM4qmlxbnp
-	qcVGeanlesWJucWleel6yfm5mxiBqfL0v+NfdjAuf/VR7xAjEwfjIUYJDmYlEV6RNOc0Id6U
-	xMqq1KL8+KLSnNTiQ4zSHCxK4ryqKfKpQgLpiSWp2ampBalFMFkmDk6pBiZ968YM2RfC+/uW
-	qa32ejDZVVPRnO/thFTv1xU6D7ZdSzj7Oka3S+figs+OG55ppVx2SZ6pks0jdNV94fU1jS4+
-	9/b9qJke42Ip4Glue3TaJb/p6tfr2LK/roismOIwx7LPxfYdX1K/WjDXmYiSH6Hp3JtsC6I+
-	MyYtuxAd+9e8/dfS9Y43ZG2nHf/ZWvZLx+X269Z5NzUevt62KLT1o4XBg8dcV7vqXdkWnGGP
-	uuh7KjJns6JfyfPIgBehU54Vvr/Oyhep9vnD4lPv5ixrun5lznkH9eXWegf+bZlSf//Z9Lt7
-	rDzvdUSELf/Cc9PiekiKqFGqCMP8ZsGq30vKlRTs/qmEMv/K2Ffzab/xhh1KLMUZiYZazEXF
-	iQABqfQhBAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHKsWRmVeSWpSXmKPExsVy+t/xu7oX/FzSDH5u5rKYs34Nm8X/vccY
-	LV4f/sRocemonMXZvt9sFl/X/2K2uPyEz+Lppz4Wi9nTm5ksLu+aw2Zxb81/Votdf3awW+x7
-	vZfZ4saEp4wWB091sFv8/gGU3b4r0kHQY+esu+weCzaVemxeoeWxaVUnm8emT5PYPU7M+M3i
-	sfOhpcfkG8sZPT4+vcXi8X7fVTaPMwuOsHt83iQXwBOlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hp
-	oWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5eglzHv32L2gg3iFf9/bmJpYOwU7mLk5JAQMJGY
-	decySxcjF4eQwFJGiWuX+tkgEjISG79cZYWwhSX+XOtigyj6yCjx88ICKOcMo8Sktf/AOoQE
-	VjJK9LyNB7HZBDQl9p3cxA5SJCJwm1Hi6akzYA6zwElWiQOnP7ODVAkLOEnsPd/CDGKLCLhL
-	HL01iwXC1pM4/XIGI4jNIqAqMWHdB7AaXgEriaVfzzFCbLOUuPRqO5jNCRS/O/8r2BWMArIS
-	j1b+ApvPLCAucevJfCaIHwQkluw5zwxhi0q8fPwP6jcdibPXnzBC2AYSW5fuY4GwlSXWv2tj
-	gpijJ3Fj6hQ2CFtbYtnC11D3CEqcnPmEZQKj9Cwk62YhaZmFpGUWkpYFjCyrGEVSS4tz03OL
-	jfSKE3OLS/PS9ZLzczcxAhPetmM/t+xgXPnqo94hRiYOxkOMEhzMSiK8ImnOaUK8KYmVValF
-	+fFFpTmpxYcYTYFhNJFZSjQ5H5hy80riDc0MTA1NzCwNTC3NjJXEeT0LOhKFBNITS1KzU1ML
-	Uotg+pg4OKUamFgN7O6vOHnc/+p+pr9Ptq9pbzyg0zx7rvZNdukX8xz+sGyS/yXUdlXCLUG4
-	RkrP3k0sIeRWWpYbp7W6+swXmryvFv1ct23Rokmt35dM1/51cvc13v/SKidS/eqTelQ6bjI+
-	URAuN2Hnz2cKvxJ3SS3k8rTZgXsMYh8fPV67x6F5mtyMxX1dQW6nZq/iz/BW7C8NUJbcUZCm
-	cd5f3z2ornxusa1H1MfPUpG3J5qfbeUTO/vqgdPit1Wf+n2VN683NlI+lXLmFzPfA2uuM3Wb
-	RN26T/LqZJQ7Xdsp75R5I+DXvy2Kf9V/LLRl9HQS6FkyYVOQ/5cEt8SoGYFT1nilvJnKs9FW
-	P/vf0+B+vnM8SizFGYmGWsxFxYkAp8+SoAEEAAA=
-X-CMS-MailID: 20240515055736eucas1p1bfa9549398e766532d143ba9314bee18
+	sfOhpcfkG8sZPT4+vcXi8X7fVTaPMwuOsHt83iQXwBPFZZOSmpNZllqkb5fAlTH5YQd7QaNH
+	xY6POxkbGM9YdjFyckgImEj0nO5nArGFBFYwSvyaodrFyAVkf2GUeNt+jxHC+cwocfDlYUaY
+	jnPNn1kgEssZJT7N/M8MV9XxciMThHOGUaLxxy6ozEpGiVO/14H1swloSuw7uYkdJCEicJtR
+	4umpM2AOs8BJVok/m3eygFQJC3hLHD+3ixXEFhEIkrh84yRQNweQrSfxcrIsSJhFQFXizZ0z
+	zCA2r4CVxIfPX8FaOYHsu/O/soHYjAKyEo9W/mIHsZkFxCVuPZnPBPGEoMSi2XuYIWwxiX+7
+	HrJB2DoSZ68/gXrUQGLr0n0sELayxPp3bUwQc/QkbkydwgZha0ssW/ga6gZBiZMzn4ADRkJg
+	L5fElvZJUM0uEueOTIUaKizx6vgWdghbRuL/zvlMExi1ZyG5bxaSHbOQ7JiFZMcCRpZVjOKp
+	pcW56anFxnmp5XrFibnFpXnpesn5uZsYgcny9L/jX3cwrnj1Ue8QIxMH4yFGCQ5mJRFekTTn
+	NCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8qinyqUIC6YklqdmpqQWpRTBZJg5OqQYmacYDHDlq
+	ymanV8UdnnfZaqNc7+vHk47LTdW8/VNf1urzx6W/o/fVTzYXWi+zRLYpTVsv3f3c7bpjolsv
+	p6wznvTSxrtOI37Zt117IpRLDTRZef6onleod1dwPSr41Js3qDpY+uuvT7czsw1uKn3j0m38
+	491x6Pwk1hxXPnWd/20/fe21Lln4HYxc16x5UeBk2vkZH6WKKvhWbjZf1uhnmn3v6at1GSU9
+	MtfW2byePN2iY+r7e9rWTclK2bKhu3g9Nd4bp4b9aL7icH2jjo9Ci/y01Wret93vqqiZ20nt
+	f7v/7v83F9Urg475MmUYcUUfe37zUK5kRNJ66W2yKxyeLP0okD75Qu/8GRUeX6KUWIozEg21
+	mIuKEwHuP7eRBQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLKsWRmVeSWpSXmKPExsVy+t/xu7qX/FzSDFqe81vMWb+GzeL/3mOM
+	Fq8Pf2K0uHRUzuJs3282i6/rfzFbXH7CZ/H0Ux+LxezpzUwWl3fNYbO4t+Y/q8WuPzvYLfa9
+	3stscWPCU0aLg6c62C1+/wDKbt8V6SDosXPWXXaPBZtKPTav0PLYtKqTzWPTp0nsHidm/Gbx
+	2PnQ0mPyjeWMHh+f3mLxeL/vKpvHmQVH2D0+b5IL4InSsynKLy1JVcjILy6xVYo2tDDSM7S0
+	0DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy5j8sIO9oNGjYsfHnYwNjGcsuxg5OSQETCTO
+	NX9m6WLk4hASWMoosWPLazaIhIzExi9XWSFsYYk/17rYIIo+MkqcWfkSquMMo8Sutp/sEM5K
+	RomNC2eDtbMJaErsO7kJLCEicJtR4umpM2AOs8BJVokDpz+zg1QJC3hLHD+3C2gJB1BVkMSb
+	ZVwQpp7Ey8myIBUsAqoSb+6cYQaxeQWsJD58/soCYgsJWEpcerWdEcTmBIrfnf8VbC+jgKzE
+	o5W/wKYzC4hL3HoynwniBQGJJXvOM0PYohIvH/+Dek1H4uz1J4wQtoHE1qX7WCBsZYn179qY
+	IOboSdyYOoUNwtaWWLbwNdQ9ghInZz5hmcAoPQvJullIWmYhaZmFpGUBI8sqRpHU0uLc9Nxi
+	Q73ixNzi0rx0veT83E2MwHS37djPzTsY5736qHeIkYmD8RCjBAezkgivSJpzmhBvSmJlVWpR
+	fnxRaU5q8SFGU2AYTWSWEk3OBybcvJJ4QzMDU0MTM0sDU0szYyVxXs+CjkQhgfTEktTs1NSC
+	1CKYPiYOTqkGJm3xhav3XuXjOtuTN9NX5kfootTNXQks34OZbrbM/y6zfd+FoM0OE2t2LZdo
+	2DlppdhB9oPXZpp1C78vuOOqql2TdkP52CmrOx1HRV1n7+Rc9TVDSkvjqELZ4RPONmueKQb1
+	i8ZtPtz/6ufRfxxZHe7N+7JSn1Uc3tqa7m6iEvpYcd4+/dCGtb9iq/g9lhkeWT97/3yHv+yv
+	Nk5lLLs1b9KzRTGHd2qdTrqx+oXxvZQf/7ZtP75n4kdvhe99Uwv2LTvZtHryu+uGy+Q/+79+
+	+f6s30/b+4rn1OuUHXRE7+oLcrvKf9VkvfuW44EF80UtXfNLPbskZgrZnstMe3VlY86cf99P
+	6v26GbnStP9iqguHEktxRqKhFnNRcSIAJzOFFgAEAAA=
+X-CMS-MailID: 20240515055738eucas1p15335a32c790b731aa5857193bbddf92d
 X-Msg-Generator: CA
-X-RootMTR: 20240515055736eucas1p1bfa9549398e766532d143ba9314bee18
+X-RootMTR: 20240515055738eucas1p15335a32c790b731aa5857193bbddf92d
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20240515055736eucas1p1bfa9549398e766532d143ba9314bee18
+X-CMS-RootMailID: 20240515055738eucas1p15335a32c790b731aa5857193bbddf92d
 References: <20240515055719.32577-1-da.gomez@samsung.com>
-	<CGME20240515055736eucas1p1bfa9549398e766532d143ba9314bee18@eucas1p1.samsung.com>
+	<CGME20240515055738eucas1p15335a32c790b731aa5857193bbddf92d@eucas1p1.samsung.com>
 
-Add folio order argument to the shmem_alloc_folio(). Return will make
-use of the new page_rmappable_folio() where order-0 and high order
-folios are both supported.
+In preparation for large folio in the write and fallocate paths, add
+file length argument in shmem_get_folio() path to be able to calculate
+the folio order based on the file size. Use of order-0 (PAGE_SIZE) for
+read, page cache read, and vm fault.
 
-As the order requested may not match the order returned when allocating
-high order folios, make sure pages are calculated after getting the
-folio.
+This enables high order folios in the write and fallocate path once the
+folio order is calculated based on the length.
 
 Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
 ---
- mm/shmem.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ fs/xfs/scrub/xfile.c     |  6 +++---
+ fs/xfs/xfs_buf_mem.c     |  3 ++-
+ include/linux/shmem_fs.h |  2 +-
+ mm/khugepaged.c          |  3 ++-
+ mm/shmem.c               | 35 ++++++++++++++++++++---------------
+ mm/userfaultfd.c         |  2 +-
+ 6 files changed, 29 insertions(+), 22 deletions(-)
 
+diff --git a/fs/xfs/scrub/xfile.c b/fs/xfs/scrub/xfile.c
+index 8cdd863db585..4905f5e4cb5d 100644
+--- a/fs/xfs/scrub/xfile.c
++++ b/fs/xfs/scrub/xfile.c
+@@ -127,7 +127,7 @@ xfile_load(
+ 		unsigned int	offset;
+=20
+ 		if (shmem_get_folio(inode, pos >> PAGE_SHIFT, &folio,
+-				SGP_READ) < 0)
++				SGP_READ, PAGE_SIZE) < 0)
+ 			break;
+ 		if (!folio) {
+ 			/*
+@@ -197,7 +197,7 @@ xfile_store(
+ 		unsigned int	offset;
+=20
+ 		if (shmem_get_folio(inode, pos >> PAGE_SHIFT, &folio,
+-				SGP_CACHE) < 0)
++				SGP_CACHE, PAGE_SIZE) < 0)
+ 			break;
+ 		if (filemap_check_wb_err(inode->i_mapping, 0)) {
+ 			folio_unlock(folio);
+@@ -268,7 +268,7 @@ xfile_get_folio(
+=20
+ 	pflags =3D memalloc_nofs_save();
+ 	error =3D shmem_get_folio(inode, pos >> PAGE_SHIFT, &folio,
+-			(flags & XFILE_ALLOC) ? SGP_CACHE : SGP_READ);
++			(flags & XFILE_ALLOC) ? SGP_CACHE : SGP_READ, PAGE_SIZE);
+ 	memalloc_nofs_restore(pflags);
+ 	if (error)
+ 		return ERR_PTR(error);
+diff --git a/fs/xfs/xfs_buf_mem.c b/fs/xfs/xfs_buf_mem.c
+index 9bb2d24de709..784c81d35a1f 100644
+--- a/fs/xfs/xfs_buf_mem.c
++++ b/fs/xfs/xfs_buf_mem.c
+@@ -149,7 +149,8 @@ xmbuf_map_page(
+ 		return -ENOMEM;
+ 	}
+=20
+-	error =3D shmem_get_folio(inode, pos >> PAGE_SHIFT, &folio, SGP_CACHE);
++	error =3D shmem_get_folio(inode, pos >> PAGE_SHIFT, &folio, SGP_CACHE,
++				PAGE_SIZE);
+ 	if (error)
+ 		return error;
+=20
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index 3fb18f7eb73e..bc59b4a00228 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -142,7 +142,7 @@ enum sgp_type {
+ };
+=20
+ int shmem_get_folio(struct inode *inode, pgoff_t index, struct folio **fol=
+iop,
+-		enum sgp_type sgp);
++		enum sgp_type sgp, size_t len);
+ struct folio *shmem_read_folio_gfp(struct address_space *mapping,
+ 		pgoff_t index, gfp_t gfp);
+=20
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 38830174608f..947770ded68c 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1863,7 +1863,8 @@ static int collapse_file(struct mm_struct *mm, unsign=
+ed long addr,
+ 				xas_unlock_irq(&xas);
+ 				/* swap in or instantiate fallocated page */
+ 				if (shmem_get_folio(mapping->host, index,
+-						&folio, SGP_NOALLOC)) {
++						    &folio, SGP_NOALLOC,
++						    PAGE_SIZE)) {
+ 					result =3D SCAN_FAIL;
+ 					goto xa_unlocked;
+ 				}
 diff --git a/mm/shmem.c b/mm/shmem.c
-index 7a6ad678e2ff..d531018ffece 100644
+index d531018ffece..fcd2c9befe19 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -1828,18 +1828,18 @@ static struct folio *shmem_alloc_hugefolio(gfp_t gf=
-p,
- 	return page_rmappable_folio(page);
+@@ -1134,7 +1134,7 @@ static struct folio *shmem_get_partial_folio(struct i=
+node *inode, pgoff_t index)
+ 	 * (although in some cases this is just a waste of time).
+ 	 */
+ 	folio =3D NULL;
+-	shmem_get_folio(inode, index, &folio, SGP_READ);
++	shmem_get_folio(inode, index, &folio, SGP_READ, PAGE_SIZE);
+ 	return folio;
  }
 =20
--static struct folio *shmem_alloc_folio(gfp_t gfp,
--		struct shmem_inode_info *info, pgoff_t index)
-+static struct folio *shmem_alloc_folio(gfp_t gfp, struct shmem_inode_info =
-*info,
-+				       pgoff_t index, unsigned int order)
- {
- 	struct mempolicy *mpol;
- 	pgoff_t ilx;
- 	struct page *page;
-=20
--	mpol =3D shmem_get_pgoff_policy(info, index, 0, &ilx);
--	page =3D alloc_pages_mpol(gfp, 0, mpol, ilx, numa_node_id());
-+	mpol =3D shmem_get_pgoff_policy(info, index, order, &ilx);
-+	page =3D alloc_pages_mpol(gfp, order, mpol, ilx, numa_node_id());
- 	mpol_cond_put(mpol);
-=20
--	return (struct folio *)page;
-+	return page_rmappable_folio(page);
- }
+@@ -1844,7 +1844,7 @@ static struct folio *shmem_alloc_folio(gfp_t gfp, str=
+uct shmem_inode_info *info,
 =20
  static struct folio *shmem_alloc_and_add_folio(gfp_t gfp,
-@@ -1848,6 +1848,7 @@ static struct folio *shmem_alloc_and_add_folio(gfp_t =
-gfp,
+ 		struct inode *inode, pgoff_t index,
+-		struct mm_struct *fault_mm, bool huge)
++		struct mm_struct *fault_mm, bool huge, size_t len)
  {
  	struct address_space *mapping =3D inode->i_mapping;
  	struct shmem_inode_info *info =3D SHMEM_I(inode);
-+	unsigned int order =3D 0;
- 	struct folio *folio;
- 	long pages;
- 	int error;
-@@ -1856,7 +1857,6 @@ static struct folio *shmem_alloc_and_add_folio(gfp_t =
-gfp,
- 		huge =3D false;
-=20
- 	if (huge) {
--		pages =3D HPAGE_PMD_NR;
- 		index =3D round_down(index, HPAGE_PMD_NR);
-=20
- 		/*
-@@ -1875,12 +1875,13 @@ static struct folio *shmem_alloc_and_add_folio(gfp_=
-t gfp,
- 		if (!folio)
- 			count_vm_event(THP_FILE_FALLBACK);
- 	} else {
--		pages =3D 1;
--		folio =3D shmem_alloc_folio(gfp, info, index);
-+		folio =3D shmem_alloc_folio(gfp, info, index, order);
+@@ -2173,7 +2173,7 @@ static int shmem_swapin_folio(struct inode *inode, pg=
+off_t index,
+  */
+ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+ 		struct folio **foliop, enum sgp_type sgp, gfp_t gfp,
+-		struct vm_fault *vmf, vm_fault_t *fault_type)
++		struct vm_fault *vmf, vm_fault_t *fault_type, size_t len)
+ {
+ 	struct vm_area_struct *vma =3D vmf ? vmf->vma : NULL;
+ 	struct mm_struct *fault_mm;
+@@ -2258,7 +2258,7 @@ static int shmem_get_folio_gfp(struct inode *inode, p=
+goff_t index,
+ 		huge_gfp =3D vma_thp_gfp_mask(vma);
+ 		huge_gfp =3D limit_gfp_mask(huge_gfp, gfp);
+ 		folio =3D shmem_alloc_and_add_folio(huge_gfp,
+-				inode, index, fault_mm, true);
++				inode, index, fault_mm, true, len);
+ 		if (!IS_ERR(folio)) {
+ 			count_vm_event(THP_FILE_ALLOC);
+ 			goto alloced;
+@@ -2267,7 +2267,8 @@ static int shmem_get_folio_gfp(struct inode *inode, p=
+goff_t index,
+ 			goto repeat;
  	}
- 	if (!folio)
- 		return ERR_PTR(-ENOMEM);
 =20
-+	pages =3D folio_nr_pages(folio);
+-	folio =3D shmem_alloc_and_add_folio(gfp, inode, index, fault_mm, false);
++	folio =3D shmem_alloc_and_add_folio(gfp, inode, index, fault_mm, false,
++					  len);
+ 	if (IS_ERR(folio)) {
+ 		error =3D PTR_ERR(folio);
+ 		if (error =3D=3D -EEXIST)
+@@ -2377,10 +2378,10 @@ static int shmem_get_folio_gfp(struct inode *inode,=
+ pgoff_t index,
+  * Return: 0 if successful, else a negative error code.
+  */
+ int shmem_get_folio(struct inode *inode, pgoff_t index, struct folio **fol=
+iop,
+-		enum sgp_type sgp)
++		enum sgp_type sgp, size_t len)
+ {
+ 	return shmem_get_folio_gfp(inode, index, foliop, sgp,
+-			mapping_gfp_mask(inode->i_mapping), NULL, NULL);
++			mapping_gfp_mask(inode->i_mapping), NULL, NULL, len);
+ }
+ EXPORT_SYMBOL_GPL(shmem_get_folio);
+=20
+@@ -2475,7 +2476,7 @@ static vm_fault_t shmem_fault(struct vm_fault *vmf)
+=20
+ 	WARN_ON_ONCE(vmf->page !=3D NULL);
+ 	err =3D shmem_get_folio_gfp(inode, vmf->pgoff, &folio, SGP_CACHE,
+-				  gfp, vmf, &ret);
++				  gfp, vmf, &ret, PAGE_SIZE);
+ 	if (err)
+ 		return vmf_error(err);
+ 	if (folio) {
+@@ -2954,6 +2955,9 @@ shmem_write_begin(struct file *file, struct address_s=
+pace *mapping,
+ 	struct folio *folio;
+ 	int ret =3D 0;
+=20
++	if (!mapping_large_folio_support(mapping))
++		len =3D min_t(size_t, len, PAGE_SIZE - offset_in_page(pos));
 +
- 	__folio_set_locked(folio);
- 	__folio_set_swapbacked(folio);
+ 	/* i_rwsem is held by caller */
+ 	if (unlikely(info->seals & (F_SEAL_GROW |
+ 				   F_SEAL_WRITE | F_SEAL_FUTURE_WRITE))) {
+@@ -2963,7 +2967,7 @@ shmem_write_begin(struct file *file, struct address_s=
+pace *mapping,
+ 			return -EPERM;
+ 	}
 =20
-@@ -1976,7 +1977,7 @@ static int shmem_replace_folio(struct folio **foliop,=
- gfp_t gfp,
- 	 */
- 	gfp &=3D ~GFP_CONSTRAINT_MASK;
- 	VM_BUG_ON_FOLIO(folio_test_large(old), old);
--	new =3D shmem_alloc_folio(gfp, info, index);
-+	new =3D shmem_alloc_folio(gfp, info, index, folio_order(old));
- 	if (!new)
- 		return -ENOMEM;
+-	ret =3D shmem_get_folio(inode, index, &folio, SGP_WRITE);
++	ret =3D shmem_get_folio(inode, index, &folio, SGP_WRITE, len);
+ 	if (ret)
+ 		return ret;
 =20
-@@ -2855,7 +2856,7 @@ int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
+@@ -3083,7 +3087,7 @@ static ssize_t shmem_file_read_iter(struct kiocb *ioc=
+b, struct iov_iter *to)
+ 				break;
+ 		}
 =20
- 	if (!*foliop) {
- 		ret =3D -ENOMEM;
--		folio =3D shmem_alloc_folio(gfp, info, pgoff);
-+		folio =3D shmem_alloc_folio(gfp, info, pgoff, 0);
+-		error =3D shmem_get_folio(inode, index, &folio, SGP_READ);
++		error =3D shmem_get_folio(inode, index, &folio, SGP_READ, PAGE_SIZE);
+ 		if (error) {
+ 			if (error =3D=3D -EINVAL)
+ 				error =3D 0;
+@@ -3260,7 +3264,7 @@ static ssize_t shmem_file_splice_read(struct file *in=
+, loff_t *ppos,
+ 			break;
+=20
+ 		error =3D shmem_get_folio(inode, *ppos / PAGE_SIZE, &folio,
+-					SGP_READ);
++					SGP_READ, PAGE_SIZE);
+ 		if (error) {
+ 			if (error =3D=3D -EINVAL)
+ 				error =3D 0;
+@@ -3469,7 +3473,8 @@ static long shmem_fallocate(struct file *file, int mo=
+de, loff_t offset,
+ 			error =3D -ENOMEM;
+ 		else
+ 			error =3D shmem_get_folio(inode, index, &folio,
+-						SGP_FALLOC);
++						SGP_FALLOC,
++						(end - index) << PAGE_SHIFT);
+ 		if (error) {
+ 			info->fallocend =3D undo_fallocend;
+ 			/* Remove the !uptodate folios we added */
+@@ -3822,7 +3827,7 @@ static int shmem_symlink(struct mnt_idmap *idmap, str=
+uct inode *dir,
+ 	} else {
+ 		inode_nohighmem(inode);
+ 		inode->i_mapping->a_ops =3D &shmem_aops;
+-		error =3D shmem_get_folio(inode, 0, &folio, SGP_WRITE);
++		error =3D shmem_get_folio(inode, 0, &folio, SGP_WRITE, PAGE_SIZE);
+ 		if (error)
+ 			goto out_remove_offset;
+ 		inode->i_op =3D &shmem_symlink_inode_operations;
+@@ -3868,7 +3873,7 @@ static const char *shmem_get_link(struct dentry *dent=
+ry, struct inode *inode,
+ 			return ERR_PTR(-ECHILD);
+ 		}
+ 	} else {
+-		error =3D shmem_get_folio(inode, 0, &folio, SGP_READ);
++		error =3D shmem_get_folio(inode, 0, &folio, SGP_READ, PAGE_SIZE);
+ 		if (error)
+ 			return ERR_PTR(error);
  		if (!folio)
- 			goto out_unacct_blocks;
+@@ -5255,7 +5260,7 @@ struct folio *shmem_read_folio_gfp(struct address_spa=
+ce *mapping,
+ 	int error;
 =20
+ 	error =3D shmem_get_folio_gfp(inode, index, &folio, SGP_CACHE,
+-				    gfp, NULL, NULL);
++				    gfp, NULL, NULL, PAGE_SIZE);
+ 	if (error)
+ 		return ERR_PTR(error);
+=20
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 3c3539c573e7..540a0c2d4325 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -359,7 +359,7 @@ static int mfill_atomic_pte_continue(pmd_t *dst_pmd,
+ 	struct page *page;
+ 	int ret;
+=20
+-	ret =3D shmem_get_folio(inode, pgoff, &folio, SGP_NOALLOC);
++	ret =3D shmem_get_folio(inode, pgoff, &folio, SGP_NOALLOC, PAGE_SIZE);
+ 	/* Our caller expects us to return -EFAULT if we failed to find folio */
+ 	if (ret =3D=3D -ENOENT)
+ 		ret =3D -EFAULT;
 --=20
 2.43.0
 
