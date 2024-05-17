@@ -1,202 +1,117 @@
-Return-Path: <linux-xfs+bounces-8374-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-8376-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 135108C85E7
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2024 13:56:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FE118C861E
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2024 14:06:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C93D1F24DB3
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2024 11:56:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25D9B282A4A
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 May 2024 12:06:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF193FB89;
-	Fri, 17 May 2024 11:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E7913FBAE;
+	Fri, 17 May 2024 12:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qZ+tC0pT"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PVOXGhc9"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2040.outbound.protection.outlook.com [40.107.7.40])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2110.outbound.protection.outlook.com [40.107.20.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92883DBB3;
-	Fri, 17 May 2024 11:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB68168C4;
+	Fri, 17 May 2024 12:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.110
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715946985; cv=fail; b=SWLTVdL/vxNf7Elu3PlOgDyV0Gi/YDGi+50oFDqcrNIlDoICvpxg3qQ0RIbG9LBJvdyIKZ0z/6JnsrNuwl8abI9IrKSAix15+5RLlt74xw2Jf25HpmVBafRga8XncVKGhw9eNIj1p72SUbP9P+Sdzx8ZsgIbEShNuif6RXba5cc=
+	t=1715947576; cv=fail; b=HDRRMysZ5G3sH3nSrOU4vtx6BAPupN0dwlm0haKBXIrqBzk25J1mb0cN/ZwuW6gQ7TDO+JrqnRSW7+TsfK2az8GJfmuIpRO913Y3RSytoOJfv/BiZ5Xex6t1xvG9xbd/LvGWLwNeqW2tc7HtakuCD89CS6vHoC01MpFxRyvRjCM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715946985; c=relaxed/simple;
-	bh=wSZ+TJAJf6my7sO7HnDxfasZJ48RvuI2zdDVtcO08+s=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=hkyxog+7CzhZdExHzmYALBwsLDsP1BY3WckDfiMGPjJxggPvPHIYycFRue2TVmKbl7ZIjJJSP5MhJiOJxny5DteTi/v74ZQBaOx2Yj9Sk5rVoeziKTUK6c0YiqmJkrW4DmtcZGsk5SYx+biqZ+62pxSCjboBPAcDFlyfZRAWT88=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=qZ+tC0pT; arc=fail smtp.client-ip=40.107.7.40
+	s=arc-20240116; t=1715947576; c=relaxed/simple;
+	bh=OWE/0Kp46jlqUNIBdCJbV9+cXvx+fLBqB3fl39Q6XUc=;
+	h=From:Date:Subject:Message-Id:To:Cc:MIME-Version:Content-Type; b=GILGjnOirVb1AameHzY33lsw84xYHBKe+/0uGwH9A68/YYIGNpgEtYNqjVw7taOkSc11X22h3T7pwRFFdPYNDttwG4MYZ1v1mGVBDbzn8CzWXtS2MwNJwxY2/6XJ91J3ijjtIvcVn4SfYoEwCMwSl2yBro48FcIMUX7hIDDHFSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=PVOXGhc9; arc=fail smtp.client-ip=40.107.20.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VKAOSlB6ysRPO3zoiZyM/YVHWLKfIOgRh74bAAtJ6Iu9QNZzagCE1nWnyaLu2g9YmfA/OBuaGadFIzJxwsL4pD9Hfvi7KdrK6So2A6XWoaTE2PJ4qKV8LkJhhgLvXFvFNcCeBXB87Ck2+jafKHC1OA/ybtscNQeVeW4qJ8MrfhQ/kDQ2WlTXWeBd8dfGh4Cia6AySCZp+DuwwC1if4O1+UFMqxUf/PEV2E+CDGKm00qLSzYcv2YZ1NDXpGLkXRZtY1vtMDjzK7SE2YW6lzLcD2d8HlKUPeD0t6R58DHuLOOqzCsf4TZv2Ui2d7LIDFH70wD2Qc0HQqcfijOiva1ndg==
+ b=GkCvqornph2uwSTkMYVOR98ypLeaWItuBbnspA+e4vPY7qTXW6sxnEb1OUWzJiJEhrYQ1/gW2ZnZxevy3j/BhbRFcBkr6d/GgpBI1NQ5gPU4GkYYKXEWJkTZEaieCD9NY/di9+D9kxV2E4X9s6B66i6yhFpV0sJnaogi9s+gu044KeIGac8AZI43uydXEJOwbgkMohFPENH7gVmSM86K+aGS/OUUevmyH+4uxgi3j+HOpON2jwDcslkTJnUiMVw9fHkJEUXfem/cSm0wmwLgX+6bKTqnonIAQ7Xt7oGJySHBwAy80BzfcqIvwKt7zfJDQFXF89yJd3DT4MtreGmH1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JfrCk/kb3JzeC6qyeK76h/PziCXFxegdfQMNgeDOIe8=;
- b=Nz9DqnrMJ4LafmDGO8l1y5b15u/HmXrpfanzZw1FFSxoZknSgKFhutuAErji3ITjZ6L8IY3Ef8aymI6/XeaBeFqbTFX5a0/oFWhTBQWuQeKj7bTLC0Q2nE1HPysA68Kltzg+kK2cdQRSIUCaNxSwTB85Qe2s56tFRUOG8Bu6Rfiz3FkJVRJO0t5b50PgIyTU7DRUHAoPB3xbK1Jgw7wej1ElJVtfKlaH6lL7OKMN3l0thyefu7fYBMAS/qxpHenpT3P+ASnI/wH8/7P/oFAsSnx6Khr4YL7iCaXUKThD1g3+Uenolr4VhqtJ3gKGyXfq5QcVWokBakz89WxeVM0jYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
+ bh=OWE/0Kp46jlqUNIBdCJbV9+cXvx+fLBqB3fl39Q6XUc=;
+ b=APdAevKzbzTXWkxeV4d0q51dfALSFcvrrNv5ESBELpS0FhexXL04ICsHNDJsVIr1UMvlr+e++D0SYQPtv96vx4I3ao6jnSPI2m7bFUBmwEvetoc+SlTWob26wdwZLHJswBVayItPngTZg+69X1CwL78dJDUP6hP3LXDOo2/Usqq0C+Sr1w/ZUJmIxOKdIgvYtFY+ohPrnf82EqRYvqyIaObJgBCTvz6+8h/FPIcBeFNcNE0jUWLuYUSpXv7RWGbLcK1vLjekW1jTwckeHjvRm2ZHjR6QQlfAT2KXqslIJFO846wffCYYOhhj+Nft1BscqZL6Q5ODPsNjES0/XzsnGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JfrCk/kb3JzeC6qyeK76h/PziCXFxegdfQMNgeDOIe8=;
- b=qZ+tC0pTCWoIk2X/0WSE+WW7bfAVOvizwvTwn/UcEojWh7oZJNbZxpvFKy+EFiUOa4oEsLgZVhyFz1uaOT/YFouj7SKkAAJ33v2/0GC8Rs9e0YZIHmre+q4blQDAo2/85Xax4ndxTBNEhqnbLIt8QS7UFN4fvk8iP4xb6F+7LEM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by VI2PR04MB10883.eurprd04.prod.outlook.com (2603:10a6:800:27f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.45; Fri, 17 May
- 2024 11:56:20 +0000
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::8d2f:ac7e:966a:2f5f]) by DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::8d2f:ac7e:966a:2f5f%6]) with mapi id 15.20.7587.028; Fri, 17 May 2024
- 11:56:20 +0000
+ bh=OWE/0Kp46jlqUNIBdCJbV9+cXvx+fLBqB3fl39Q6XUc=;
+ b=PVOXGhc9bisnVvFjK24jL/5VTF4S7yHdOL2KAMQvjPexEQhJ2FQbrvsMTnNLaZmaPAylbFEXzLFn4AueljMut1A7MKrQhWy1zLzDaPi8fLpQ0DFBHj3GshZ87Hz2+MzO1VKBfFAnOzka8foBZadrhw54HxgO0xHNHAFKEnUp7Bg=
+Received: from substrate.office.com (2603:10a6:102:1ca::15) by
+ PAXPR04MB8285.eurprd04.prod.outlook.com with HTTP via
+ PA7P264CA0264.FRAP264.PROD.OUTLOOK.COM; Fri, 17 May 2024 12:06:12 +0000
 From: Xu Yang <xu.yang_2@nxp.com>
-To: brauner@kernel.org,
-	djwong@kernel.org,
-	willy@infradead.org,
-	hch@lst.de
-Cc: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	jun.li@nxp.com
-Subject: [PATCH] iomap: avoid redundant fault_in_iov_iter_readable() judgement when use larger chunks
-Date: Sat, 18 May 2024 04:04:20 +0800
-Message-Id: <20240517200420.2144011-1-xu.yang_2@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0216.apcprd04.prod.outlook.com
- (2603:1096:4:187::18) To DU2PR04MB8822.eurprd04.prod.outlook.com
- (2603:10a6:10:2e1::11)
+Date: Fri, 17 May 2024 12:06:12 +0000
+Subject: Recall: [PATCH] iomap: avoid redundant fault_in_iov_iter_readable()
+ judgement when use larger chunks
+Message-Id: <TN8WOD1U2NU4.OPKYOYERBNLP2@duzpr04mb9981>
+To: brauner@kernel.org, djwong@kernel.org, willy@infradead.org, hch@lst.de
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, jun.li@nxp.com
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|VI2PR04MB10883:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebea04e7-771f-497e-0942-08dc76685d83
+client-request-id: 9f7466ed-a623-db84-7d94-9177512e7338
+request-id: 9f7466ed-a623-db84-7d94-9177512e7338
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8285:EE_MessageRecallEmail
+X-MS-Exchange-RecallReportGenerated: true
+X-MS-Exchange-RecallReportCfmGenerated: true
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|1800799015|376005|52116005|38350700005;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Wfc4X/ty8htB5ZyzFzE9e9BygqNs3rRNIACAy8p4FUKPZVujSC6DV10PdKTn?=
- =?us-ascii?Q?UgqWSE/Dq/WlMfun35ckhDdwR3fywrmMPsCYScEDHkd9MTv9c7DKOdH8iijG?=
- =?us-ascii?Q?96vYgWoO/y/DLmNXYFy27ikUcsGzw/6CvOJwkfMHPg0qW/zwRlAURHJWvmlj?=
- =?us-ascii?Q?Fn2kszSaJ/OOxeBGgKjM6ek36ukmMnYAqPz7Yzo10eJnXoHCAHmBpGmMlcej?=
- =?us-ascii?Q?d1wy+HMaM+NAWjNiuZPq3l3gSbDWKHb9xvUd4cchdPUKWgsPs39N/1VIsg2E?=
- =?us-ascii?Q?gxVHPyj/NflpjyyJQ7kDa4uqs95e79nGJg5ccZqCQkX3w9hABDJ2eKdUAdv3?=
- =?us-ascii?Q?nIvSFonSpE8P3aLpp7bayjyots3eoQb1p+AegNOwKYEmcOPKx7R27ANJoLa5?=
- =?us-ascii?Q?gKSjPQQB6olILcb2jfME7qd3Hq9wnOsRRQlRXLvYvyBbtavihBFCQYxI9+PL?=
- =?us-ascii?Q?RcO5SzIrjnq2PWNMPieRpm8XE8Gm4/MY+7dQuyZ+FPfBojfe6p4AzfUSxt5T?=
- =?us-ascii?Q?xHDQnghQKeL+K0GbafD1A+6hP3qh6rhrWOaQ7REkP4Id1//nZgpoQSeZL2/I?=
- =?us-ascii?Q?Ky0bhrbsFwNaFPMDp/b2Gcz3CIV5PlMIO2RFZhlgVHqR82twwLVQkUD0zwcA?=
- =?us-ascii?Q?InYFy0MS2bp+jTe86zCO1t+OQXTbjMUGv5lz/UhHXhDwI0sBA6+jTy33KAhV?=
- =?us-ascii?Q?6gTBv9GeQVDgnFcqKAXfutUmY7+VxdpFGE4aOaOLN8QAEv2EIUFj/UAsCLuB?=
- =?us-ascii?Q?b4D4J54e0TT9D8jUaJ973dJQdsejPOd/JDMD7eZ/3AaGD30frnf1+NU2VsLU?=
- =?us-ascii?Q?fl0EMP7LdJm0+a72MAcGmE4MFMVwSBc/rXYaijbGnaA85LdCrRDhNHR4cv+Z?=
- =?us-ascii?Q?yraIrsqvp+BAW87chEKIbd0hCMnS+Og0jgwr6zhz4wus8hveZglsWdtT0jKu?=
- =?us-ascii?Q?MjzrQtB/NLfjPOEpAtOJEncmCeFEU8+f+QWQF4/fLmewvL3NkiySyebmPh/p?=
- =?us-ascii?Q?QlK9wzB3Rl7zQk26ux2SBkMPTTs+5OQdxt6ZTwnbRdEeSCDjssMrtC7yYoAT?=
- =?us-ascii?Q?jSbxp92af2D70x07+cfcVzOVU68k0hMJ3pf50ka6etBGCp9aYu13A41j8YTw?=
- =?us-ascii?Q?lGVbFUFjWbY8M2TCmPSc9n9M8TiCpLg62EmUzyB5TGrSCWfzbj43Xr7NLMpd?=
- =?us-ascii?Q?3o4YmT4rLjVfRT9foFLqyKQijIhgrHi/SlaU8ZfMxj/5pwk0Q41q0sXLiJBh?=
- =?us-ascii?Q?uGWxhj/nxD0kTroVK0rTSy4j8m+KgHBLqfvEBORvg8iT2GbjZiaSnIN08+Xc?=
- =?us-ascii?Q?V7ZwQ1TTTqaHhHCB3aLETse2L3Zg6WTnHBc4ijjQujQDWg=3D=3D?=
+	=?utf-8?B?Q0FXallPUDZyaUg3UHQ1TzBJV0hEbk1yV0Jzbk1Td2psT2lRL094U0hmK2NV?=
+ =?utf-8?B?ODJzZ1dVY1FKQjh2dWpaYTVSUXJJL01NU1JuRklyb2FyekhNQ3JRTUFuWWZ4?=
+ =?utf-8?B?K0FDamN6ckpJUGZkYzE0YTJkeERDdGxOTlJKZ3g5YkdadnR6NjBQUzdYK3d2?=
+ =?utf-8?B?Q0NCUTB5Q3p2VGgwaENOWTdpRXNZM2hCb2xGT3B3LzdWN0NPR1g0emswbnZP?=
+ =?utf-8?B?ZDh4Wm1pWUdxRkk3cUJaQzNBcGg0QmNhTFk5SWQ3dWtuZC9Ua00vUWJmOHNU?=
+ =?utf-8?B?RHhQbWJOR0I3Smc4N3NjbTI2UkNWWGhJeS9uTmt4NTR1Njdwblc2TjAraWlG?=
+ =?utf-8?B?ZDZZcHZ4TlZFdVY0YnlSTUV3ZXV3eDdvVmlUUHFXRkUrL21YdFNkVDl2ZGVE?=
+ =?utf-8?B?OTI3c3VONURGZ09ZYUdKK3pJWlUwL25KZC9aczlsaEVXOWFLNGh1anQrRm0v?=
+ =?utf-8?B?NUthY0I4L3phUmFpaFJiQU14TjExdUYvekRjRjRCUy9RYWpqU0hxZG1SU3U4?=
+ =?utf-8?B?ZHV2WlBKVU0wNHU1M041NWR2bzdDNEM2ZjFtTStqMDBOOU5pcFFYd3FNWCt3?=
+ =?utf-8?B?WC9MZm1wSXhXQzFWeGQzQlBmSm5ndWZwVDhmMXhUR3VMT2t4TzRZVWtOSTdG?=
+ =?utf-8?B?SHE0eGVST0RIUEdMQTgwbXNOYTdtK280anNWSEtqZnJhYVBQbjhHWGF5VFNF?=
+ =?utf-8?B?VHQ2UytrUmp3NTVvdUxnNXYwR3RvemhGTjdLMHM2SlVISVVlSEVWSkV4SWhx?=
+ =?utf-8?B?OHRHK2ZETTZtYU41T0JSY0xDWGdYYVh2aCtSK2lVL3lwcnhCVndIMnBvZGVy?=
+ =?utf-8?B?a3p5UTFHMGw4eThwc01RYUhVMnBSK2llRittcmhkZUxUQTFCTSsyQTdLcUFv?=
+ =?utf-8?B?NXI3emx2L05ERE9aTXlNK09zUmhiZG9YNlRPNTdlWml4NjFMRmxDaEdOUWw3?=
+ =?utf-8?B?ZVNrTi92WU8vVGVqV1VsWExRcDZGNWRDVFdTOFNrbHA0VDBubWJNZXJNajE4?=
+ =?utf-8?B?eU94Z3BiMzRLZXVGSnA0aXlPRzlmalRZSnRZV21XdGtPK1hUMFhkTkp2TFd4?=
+ =?utf-8?B?WGRTOCthVlkrTUEyRngvZGlLbmJudjQyTVJGNWx6YWZqTUwxbGV6V20yOWZM?=
+ =?utf-8?B?WXJaMlhPYTc5QmxraVpoNFBjRzB2L3NQUlVoNG80cVVGYlVablBUcmIzNDI4?=
+ =?utf-8?B?dGg2VmVRUlBtdjdtM28yTW94Y1NxWGhFTklOZm5GOGFQeHdOMEpaZDBLdGNC?=
+ =?utf-8?B?bFVUM3pXeDZXT0VOcFBjYjdNUVI2d1NHNVphaUNzMVVrR1VNZjdwVDB2ZlVu?=
+ =?utf-8?B?ME01T2VUR2ZRS0d1WEhheEFNdHpCd0pQYVl3WjJQY21TaDdjZzRzakVEVjJj?=
+ =?utf-8?B?VmtoNnZnekpkWE5meWtMemhwVU10Nk5RY3NQaDFDc3k2RHhwVTdkOXl2MlU5?=
+ =?utf-8?B?N3pXa3lSc2dNcU1zeHpGaUFtQkhtbGd4YitJMEVVVENYL1FYb2kzL3JEeWt3?=
+ =?utf-8?B?TDlLV3BrWWhkc2N6QVIwWnhyK09VTHNzR1BYYnVaSlliSlIzd3JBTTlCR1pP?=
+ =?utf-8?B?UkxJMHZDQjBBd1k5YW5OYlhEUU5GcTNZNTdTdk94VGplSGpHenZwR3RZb1lP?=
+ =?utf-8?B?ZEhaNVhIV20yUmxTK3RwTzk1WEZpVTE1eTFvUEpUOWlVRE92OTFORXZZT2pL?=
+ =?utf-8?B?eFp4UDRZeVJDdis2M3VkNmJHN2xjd0NWNWpKVkhRUnBxT09DNzl2Yml3PT0=?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(52116005)(38350700005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bW9EeupDjQMnFf4SXGFj4ECwpx83eo2IeIo1TPUsq+frVGVXrh7f49tnz0Pe?=
- =?us-ascii?Q?u+nW0FAWNe7TtBB+WR2FBGsCoUJslrcGby1pL7JqLOw8A+QeeLx4hG6Z0E96?=
- =?us-ascii?Q?hkxUe6qYw+RLZiUcbchlYQabIoknC3uh18VmgnG52kJOVABtJxghFo05v4Bk?=
- =?us-ascii?Q?0B+KfQ4dQwnEpf72l8vBajgX2nSx+jAHnCGWlw2IVCkFx1X6tFVM9wGKGB0P?=
- =?us-ascii?Q?8ut1+AB2PxKLdUVd8nzKv4xcBxXd+zw6EUfpfaEKxr8HdhVwRQPKLzLtdLYR?=
- =?us-ascii?Q?M3P1KEvVu/j12Mz5jh2s/jGiv0tESOJCKnt4Br43xqsz1qb+1LZH5/ZO116R?=
- =?us-ascii?Q?2Jt3Bh+FX+ftC5sRpm3GJExXkIgcDakO2PePNYWK9+9rz6sV17nXOVhT7eMS?=
- =?us-ascii?Q?uuAlzdxhKqptdrfec11tmeBcbs89xGBhZeLZpwzfGaycU3EC9g+A2JgsrVVC?=
- =?us-ascii?Q?S/uEdXBTikUCUDyPW8opbqB3FkuSzVrVP5wK/rXlTbdzaUT4gnnQBAwUOA25?=
- =?us-ascii?Q?nx804LXVWVvf0G7kU9WSraTKkpYIWNWy3HbVdBc9juqR0oLWWMfWSvQV3zK4?=
- =?us-ascii?Q?MhJHBFn3ulZdBx4ayhGWsaXNA6TEVSKwHnPvTEQdKn/v2Z5+FOEgdmudjvlP?=
- =?us-ascii?Q?pLsOVVqUF7NvB2hTL2U/LFoFrV+Qt0w2ZZ/8X+SPZrXAo5ynbwDFC2XsjYRu?=
- =?us-ascii?Q?q7Kod7V+y5+OEDDg+uJxNVrUN5XJ3Vlf+SrzOCGU3QzDq2jWwKMWveiSapLT?=
- =?us-ascii?Q?1WMLqsHserJtKbxGM7eawnivzGDBbWofCJjiesUSPNYzjdldUbvRmkFOpIp1?=
- =?us-ascii?Q?Oh6Y293jLv2vw8ojm2V4Im4dZSYBMwn0TUedFMT2dgdW5nIWyOk4ml1zpKns?=
- =?us-ascii?Q?WP9YvtjOZP9+/C1xyfHJDbdAfgazw9EFR+QhXcuDp7EhotyL4nuKncg5msYm?=
- =?us-ascii?Q?+isGK7JpySM2b06tPSS7Y6FUEKU/Y6B0Y/dDYIms87lTO+WSDpbZ0g0qDO9W?=
- =?us-ascii?Q?cKcNlexzKxTW14pMUTFmv+CkL0+2xVll8wTZlQGFNrB29N/rYkt7GZdRa25D?=
- =?us-ascii?Q?gYXVcMWf/KAcg/w/GeP32/+PFzhadf9ftsomdBG6WG0HjmIqWUosG8VXYIdd?=
- =?us-ascii?Q?Shs07Be5L0bSWvT6gCzW8kqdm76TFurLlorbwo9YAe5hT0A7dfZBFrBRhXXP?=
- =?us-ascii?Q?HriaDaLp6YeDksKLPYsbXYFY582CcS0B7dZC57aunzLDF/t0M0xCYRy0my5c?=
- =?us-ascii?Q?SrKH0QMXFay+Gfr9Qh1d6YvQbzsx3lZQ4+wgpPqi2OssRC0SAUGGfHgwDX16?=
- =?us-ascii?Q?3xhg5OFfqKu9dgkOCwOuk8SPvyU4GZEx/s5VObuclsf5/zXJXMQ5OdrMqavF?=
- =?us-ascii?Q?0sgjmxbusm6lwrumgnrpkO3KgmHxcpAyDUwhCmfFuTQLqYQp6CFHp8xZUSKy?=
- =?us-ascii?Q?1nCGmnYwgAevuimWbjzcl+XOU6BFJAMM9LbFqVfkr69vBPgcRRRwWN8BY5nq?=
- =?us-ascii?Q?EVlgc1GmjJDM7Y9h6FIAQn0ZI78Pr/I0SnGs61eUUmkmFs0F31h+0QOf9CKr?=
- =?us-ascii?Q?6fw+TzT2HNRPbNXooPnr45QYl6+ONqJq3BZsAvMM?=
+	9sNPGCmc3mdnNMTimZZ26vFoYlLh7DxrjCs/g2Y3My59KoGAI2aHlV0SEUTJj0LR8zLUc6oMzAF7OjU5cTPHnItcALVTZKwipXl7DyGYYzyIol3W65p6zrLNPMajzeGBClf+rc3AzOQMWolZYj3gH1sbkhnjOmuFagKcAT9QznuC0EAqosypmQzvn4XggZSMxxxSjbO1Aa1+14MrsMyvQS45dJElQfEW/WX2+dbVBKg+kb8VmioiAyNTPIyR+fwvdY3kVSepbw504NWn0SXuHmeebgyfVABoM11YN9xnQ4F9QA+Vshw4keMqA7ZmLWucGJoU2cyvoE+QJRoqtiwK9zCK/z6W8utoPhlkDerKJDTDVVAnJtUTpPfwlx2nU5N8itFratQCoaIrcm+elqVezFk8v7S1RdJMG1N5Vjhc5qA=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebea04e7-771f-497e-0942-08dc76685d83
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 11:56:20.0065
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-AuthSource: HttpSubmission-PAXPR04MB8285
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4IxICLRaAL6wP1VEUX67FCV/nQX1uisYIBYo4KFrMHVjVEaTEacGQhjhyb13olIEjFZVMaORSGw9A1JGX6aujg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10883
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2024 12:06:12.3778 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id:
+	e2b13e83-ef53-44b2-0004-08dc7669beca
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8285
 
-Since commit (5d8edfb900d5 "iomap: Copy larger chunks from userspace"),
-iomap will try to copy in larger chunks than PAGE_SIZE. However, if the
-mapping doesn't support large folio, only one page of maximum 4KB will
-be created and 4KB data will be writen to pagecache each time. Then,
-next 4KB will be handled in next iteration.
-
-If chunk is 2MB, total 512 pages need to be handled finally. During this
-period, fault_in_iov_iter_readable() is called to check iov_iter readable
-validity. Since only 4KB will be handled each time, below address space
-will be checked over and over again:
-
-pos         	len
--
-start,    	2MB
-start+4KB, 	2MB
-start+8KB, 	2MB
-...
-start+2044KB 	2MB
-
-Obviously the checking size is wrong since only 4KB will be handled each
-time. So this will get a correct bytes before fault_in_iov_iter_readable()
-to let iomap work well in non-large folio case.
-
-Fixes: 5d8edfb900d5 ("iomap: Copy larger chunks from userspace")
-Cc: stable@vger.kernel.org
-Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
----
- fs/iomap/buffered-io.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 41c8f0c68ef5..51ca31cd94ae 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -925,6 +925,9 @@ static loff_t iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 		if (bytes > length)
- 			bytes = length;
- 
-+		if (!mapping_large_folio_support(iter->inode->i_mapping))
-+			bytes = min_t(size_t, bytes, PAGE_SIZE - offset_in_page(pos));
-+
- 		/*
- 		 * Bring in the user page that we'll copy from _first_.
- 		 * Otherwise there's a nasty deadlock on copying from the
--- 
-2.34.1
-
+xu.yang_2@nxp.com would like to recall the message, "[PATCH] iomap: avoid redundant fault_in_iov_iter_readable() judgement when use larger chunks".
 
