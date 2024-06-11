@@ -1,115 +1,132 @@
-Return-Path: <linux-xfs+bounces-9191-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9193-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BAF090434D
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2024 20:16:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C93959043B6
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2024 20:33:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7956E1C224DC
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2024 18:16:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A5AD28B785
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Jun 2024 18:33:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89B2B6EB46;
-	Tue, 11 Jun 2024 18:15:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA8B79949;
+	Tue, 11 Jun 2024 18:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k86RAQaJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IO79M3JG"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14F0249E5;
-	Tue, 11 Jun 2024 18:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4211657CA7;
+	Tue, 11 Jun 2024 18:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718129756; cv=none; b=KAZZItJLRVUzFysXFpumllZ+GIaiH+LSYDBb9K6OiQSEogZSfghK1Y4bGUZHYHwzXPFNHjWJbwik9FVBK4uxlHKpfSgjR3raJePX5nIJiMwfgpi4qP/YzV0DoZ5/NODfQZd5am3mjB27+WCrAnCK1MnmvaLOaQW7hwgEPJ2iMd8=
+	t=1718130610; cv=none; b=h/CPjuDKGibT/nvmtvvwClVP4A6ywyjt5M3hqGDUtO1Qeuf3avDSNKvuDJy2QoZRZGSimKE21q2pPPHndeu1+iTlKbUZDXfL2PJaYBgfQOCAUA7ld27enZKHRQt6jOKRIpAPLOPKZCYXUh/F2zQ0ac1RMSt106MiOMzbUZ4D9bI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718129756; c=relaxed/simple;
-	bh=v46CDCGwGUeW+lfXszQlWf78g2fNI8PxH/dA9IlvNhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VtMx1N2Ux8hfdmz4nag8F0wECz8mb66YJGrZCbcLRZ5JzTdbBAGQTBZcxh/CMmrkS5YPsYV9KE3Ym8hU4GfaOut8VubCgZZniRT9vzN4DW0OR/4loKWqJVur9PTJLl8EkrH9f3PSHktB0dgZTZiIW1s4hB+ZusO9Q3qnohYPpZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=k86RAQaJ; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=we709GSrSi71LXBSzqvO1IMG9MEKMIAa8MQWGK8e8Rg=; b=k86RAQaJB2pO/3bH4b5xgLqG3O
-	m9XVNqyJEnWSDrNZxjEkMeafgLdxxuFtWk2l6aRqhG89GNqV9y50TJehG3bSG2REq/s01oLbqT41D
-	emhDRSIQQF7Vqys1AEgOzlWFYUvJQo+wbPVE5A9XGenYTz+fe1j7AweyTnE5x6iBNsQdrdVXEi2dn
-	rE3DEjsuD3/to1vdDILnLurdUn5ljJBUn8L+0KiswP5vNrPYb5ZKxgRYQ/KYYrtxjOKLmDpMUYpXL
-	fWomhalzcwK7yw1Va5svurPLM5IewVNdpx/n00AvCvy3tovDi8atK6smav4j7rCqLI/x10zdIWJ6t
-	PmdZrMUw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sH62C-00000009oHv-2dF3;
-	Tue, 11 Jun 2024 18:15:52 +0000
-Date: Tue, 11 Jun 2024 11:15:52 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: patches@lists.linux.dev, fstests@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
-	ziy@nvidia.com, vbabka@suse.cz, seanjc@google.com,
-	willy@infradead.org, david@redhat.com, hughd@google.com,
-	linmiaohe@huawei.com, muchun.song@linux.dev, osalvador@suse.de,
-	p.raghav@samsung.com, da.gomez@samsung.com, hare@suse.de,
-	john.g.garry@oracle.com
-Subject: Re: [PATCH 5/5] fstests: add stress truncation + writeback test
-Message-ID: <ZmiUWCPcmtFSdrBG@bombadil.infradead.org>
-References: <20240611030203.1719072-1-mcgrof@kernel.org>
- <20240611030203.1719072-6-mcgrof@kernel.org>
- <20240611144503.GI52977@frogsfrogsfrogs>
+	s=arc-20240116; t=1718130610; c=relaxed/simple;
+	bh=vJdx8v8sntfz3gfNWSEq8B5ZAdWB4ukm3vEn+UDhOS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZFzv+FxbbNJ39bSQrrniMyXEhNewDEwzXEE2tR9DrOHT6lIdRJvzlIPOPZabZE5R6GEzaIPxUK3TvUwaohXamrEinCUMN5aHXcUSOUANqQWtmgM+RDkw3LwfXA37UJQ2iRUjKFg3jSmGl+6mTxKVZFzKigrdPlGYjcx7F0r8ZeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IO79M3JG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC639C4AF1C;
+	Tue, 11 Jun 2024 18:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718130609;
+	bh=vJdx8v8sntfz3gfNWSEq8B5ZAdWB4ukm3vEn+UDhOS4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IO79M3JG8VsurNX2+G7/7uZJwTfKoKZuaPKjI4KKXXSvbX8f0uxeQvjmXAFauVXNu
+	 DzMtnfwHUBM7Gd/mqewVaTzo0WLySO/iOLopi/vX3kensUu5AjCDJvGo/HqHplLlkM
+	 /m9fv8/KcCrM6YLelCjS2vQYLA1QgS13QOXgMqK9AiUWtnFjB8OdcG/L1lKrVqK5HH
+	 sF6/N8/cAsWz02Gljp60ylcqYVQCSFKIOS1B+6qDPZ2iuqhQHuEfkGEyZuLcVWiLFe
+	 x1AXXFFh6TvURyzgxwwxzQ7o2bxE7ruDhPO/ptdLxu85CVa2xwlMTyWKZZd9lqrFfw
+	 POAn7ikxTOe4w==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-xfs@vger.kernel.org
+Cc: fstests@vger.kernel.org
+Subject: [xfsprogs PATCH] xfs_io: fix mread with length 1 mod page size
+Date: Tue, 11 Jun 2024 11:29:28 -0700
+Message-ID: <20240611182928.12813-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611144503.GI52977@frogsfrogsfrogs>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 11, 2024 at 07:45:03AM -0700, Darrick J. Wong wrote:
-> On Mon, Jun 10, 2024 at 08:02:02PM -0700, Luis Chamberlain wrote:
-> > +# Requires CONFIG_DEBUGFS and truncation knobs
-> > +_require_split_debugfs()
-> 
-> Er... I thought "split" referred to debugfs itself.
-> 
-> _require_split_huge_pages_knob?
+From: Eric Biggers <ebiggers@google.com>
 
-Much better, thanks.
+Fix a weird bug in mread where if you passed it a length that was 1
+modulo the page size, for example
 
-> > +# This aims at trying to reproduce a difficult to reproduce bug found with
-> > +# min order. The issue was root caused to an xarray bug when we split folios
-> > +# to another order other than 0. This functionality is used to support min
-> > +# order. The crash:
-> > +#
-> > +# https://gist.github.com/mcgrof/d12f586ec6ebe32b2472b5d634c397df
-> 
-> You might want to paste the stacktrace in here directly, in case the
-> gist ever goes away.
+        xfs_io -r file -c "mmap -r 0 8192" -c "mread -v 0 4097"
 
-Its not a simple crash trace, it is pretty enourmous considering I
-decoded it, and it has all locking candidates. Even including it after
-the "---" lines of the patch might make someone go: TLDR. Thoughts?
+... it never reset its pointer into the buffer into which it copies the
+data from the memory map.  This caused an out-of-bounds write, which
+depending on the length passed could be very large and reliably
+segfault.  Also nothing was printed, despite the use of -v option.
 
-> > +if grep -q thp_split_page /proc/vmstat; then
-> > +	split_count_after=$(grep ^thp_split_page /proc/vmstat | head -1 | awk '{print $2}')
-> > +	split_count_failed_after=$(grep ^thp_split_page_failed /proc/vmstat | head -1 | awk '{print $2}')
-> 
-> I think this ought to be a separate function for cleanliness?
-> 
-> _proc_vmstat()
-> {
-> 	awk -v name="$1" '{if ($1 ~ name) {print($2)}}' /proc/vmstat
-> }
+(I don't know if this case gets reached by any existing xfstest, but
+presumably not.  I noticed it while working on a patch to an xfstest.)
 
-> Otherwise this test looks fine to me.
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ io/mmap.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-Thanks!
+diff --git a/io/mmap.c b/io/mmap.c
+index 85087f57..4c03e3d5 100644
+--- a/io/mmap.c
++++ b/io/mmap.c
+@@ -469,38 +469,30 @@ mread_f(
+ 	dumplen = length % pagesize;
+ 	if (!dumplen)
+ 		dumplen = pagesize;
+ 
+ 	if (rflag) {
+-		for (tmp = length - 1, c = 0; tmp >= 0; tmp--, c = 1) {
+-			*bp = *(((char *)mapping->addr) + dumpoffset + tmp);
+-			cnt++;
+-			if (c && cnt == dumplen) {
++		for (tmp = length - 1; tmp >= 0; tmp--) {
++			bp[cnt++] = ((char *)mapping->addr)[dumpoffset + tmp];
++			if (cnt == dumplen) {
+ 				if (dump) {
+ 					dump_buffer(printoffset, dumplen);
+ 					printoffset += dumplen;
+ 				}
+-				bp = (char *)io_buffer;
+ 				dumplen = pagesize;
+ 				cnt = 0;
+-			} else {
+-				bp++;
+ 			}
+ 		}
+ 	} else {
+-		for (tmp = 0, c = 0; tmp < length; tmp++, c = 1) {
+-			*bp = *(((char *)mapping->addr) + dumpoffset + tmp);
+-			cnt++;
+-			if (c && cnt == dumplen) {
++		for (tmp = 0; tmp < length; tmp++) {
++			bp[cnt++] = ((char *)mapping->addr)[dumpoffset + tmp];
++			if (cnt == dumplen) {
+ 				if (dump)
+ 					dump_buffer(printoffset + tmp -
+ 						(dumplen - 1), dumplen);
+-				bp = (char *)io_buffer;
+ 				dumplen = pagesize;
+ 				cnt = 0;
+-			} else {
+-				bp++;
+ 			}
+ 		}
+ 	}
+ 	return 0;
+ }
 
-  Luis
+base-commit: df4bd2d27189a98711fd35965c18bee25a25a9ea
+-- 
+2.45.1
+
 
