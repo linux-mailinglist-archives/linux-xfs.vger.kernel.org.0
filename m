@@ -1,76 +1,107 @@
-Return-Path: <linux-xfs+bounces-9294-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9299-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD38F907CC4
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 21:39:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B083907DCB
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 23:04:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3CE71B26218
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 19:39:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 237D41C20EF1
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 21:04:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACBA14A4EA;
-	Thu, 13 Jun 2024 19:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A91E613B58A;
+	Thu, 13 Jun 2024 21:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gHN1FKo/"
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="aYRWyLvJ"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from slateblue.cherry.relay.mailchannels.net (slateblue.cherry.relay.mailchannels.net [23.83.223.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BF4134407;
-	Thu, 13 Jun 2024 19:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718307585; cv=none; b=SNXuk1ToW0MRQ36ooHIruuLhMR+2c5wllG5DeINUnBJEmGMB0eS2jzkZ/nvC0xw6k94Y3brbtlfpwi0T3KohrJLOfj/TBhL/tcs2qUwOQXAMzGwrbauR7hF32xV2ZIJ1N+tnmNIY5xk/3xjW6uU7EHGGbauJbMa0bFh2mR8VEKg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718307585; c=relaxed/simple;
-	bh=Xr1ZR0w4u2FAgkjvH5Mi9hxZ/0C28Zy328vRfJN5fEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=trwiVtIlSETbW0ZB0i1GG12Ghot+K7Zeynwg+JVpOE1lGWIUE0iAvWwzh5QEE1Go2SmghVRImHhPKgyz2js6wkJoh2EoAW4kiju4XXoRJxDeeryvFxCB7RYD+07bWsnzryFiXdoI0edeuv/du+/ieBPcwPzefJVBtGPvghY8DOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gHN1FKo/; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zszsi0/aB2A5gS3nj8dtgFtDV/ZCUUoBmBVvRLy5hi4=; b=gHN1FKo/gLkrKUqlWBHqnu5ICW
-	tW5aD/4ifvUlVBvAHVylwxXEpvpguH59nQIX5H6WkFRNAcj6aR6TGR85v0cTHzvT2KQLdtR+GK0qP
-	fRmgw6YLsUmThl/Kj9O8bJ9c9WkikVf2myaGQ0AC+cbud5Kas7Rt2Zk23eOZRFygikkg32gTOx+QJ
-	xDbOzuShVX9VaDl6R7wJcm7vk5BygjkwJ7F5F48D0/KBW0pW3PE4W5wJ0FDsLUXA3MMZrLGY+7OVE
-	bOYGVzvlISO1vrDkKgNhrnErMIfjOL9QiGpY9qESwtpkw4aFLKPBBohz8/DBdxlQdUoGyPo7c4OqL
-	8iHdTHtg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHqIG-00000000IvW-0Jyf;
-	Thu, 13 Jun 2024 19:39:32 +0000
-Date: Thu, 13 Jun 2024 12:39:32 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
-	yang@os.amperecomputing.com, linmiaohe@huawei.com,
-	muchun.song@linux.dev, osalvador@suse.de,
-	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
-	david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
-	brauner@kernel.org, akpm@linux-foundation.org, linux-mm@kvack.org,
-	hare@suse.de, linux-kernel@vger.kernel.org,
-	Zi Yan <zi.yan@sent.com>, linux-xfs@vger.kernel.org,
-	p.raghav@samsung.com, linux-fsdevel@vger.kernel.org, hch@lst.de,
-	gost.dev@samsung.com, cl@os.amperecomputing.com,
-	john.g.garry@oracle.com
-Subject: Re: [PATCH v7 06/11] filemap: cap PTE range to be created to allowed
- zero fill in folio_map_range()
-Message-ID: <ZmtK9NcsITV0aoL8@bombadil.infradead.org>
-References: <20240607145902.1137853-7-kernel@pankajraghav.com>
- <ZmnyH_ozCxr_NN_Z@casper.infradead.org>
- <ZmqmWrzmL5Wx2DoF@bombadil.infradead.org>
- <818f69fa-9dc7-4ca0-b3ab-a667cd1fb16d@redhat.com>
- <ZmqqIrv4Fms-Vi6E@bombadil.infradead.org>
- <b3fef638-4f4a-4688-8a39-8dfa4ae88836@redhat.com>
- <ZmsP36zmg2-hgtak@bombadil.infradead.org>
- <ZmsRC8YF-JEc_dQ0@casper.infradead.org>
- <ZmsSZzIGCfOXPKjj@bombadil.infradead.org>
- <ZmsS7JipzuBxJm92@casper.infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0460E139CE2
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 21:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718312681; cv=pass; b=kGkhnuxY52ATUvPbfav2QJw52zsBt8sSdHjoOSksg1C5Gqz5jSCVaE5ZwM+LlWHA+egxL+ntAAI2FaS56oDB3MtIz58I//ysGu5AsewdP2NVEnBXJAmiw8mkzmW8LEq4JNwNzUE+B5uJJPeR8RpQAk9FWk+Og/n1NWQPtCcKFsE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718312681; c=relaxed/simple;
+	bh=KKXfdBBnIPYmG1XO0GmAhqMNiG/SIlrzi1yHtXlxbJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aUNPfDr5PK46UJItK3zeRp57ubiDPhufRpwUzS3YmCBMZL3tCnjrgZrb0eWizD31z2NBuLL7qtXRRUkhgDZIje3jjwuxCRfukLj4KZ4H+dO534c1QpbNS3ogzgdITbNT+DOwSois8REvJOpfWvDoKsxn/ZFQDmDnMjUSF4HxWKU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=aYRWyLvJ; arc=pass smtp.client-ip=23.83.223.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0B9715035C4
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:27:20 +0000 (UTC)
+Received: from pdx1-sub0-mail-a231.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id EFC36501C93
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:27:18 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1718310439; a=rsa-sha256;
+	cv=none;
+	b=6PTtcsOiVRXCpP9MSacwmaPpZHGVC/96gJyYG2zH/VJjgAgcDF89ZSZpalYiwPuhaBQBCw
+	NLkD0PjOX5vkLTq+VzwIvhFwQ3lETFUXaHJq84UMHPBwN3t+/yf62MvC4uc6YPTrcOAq8Z
+	n6jmNVEtCwMnLBAPWOPRLJk9dO+S/T9y0doytB93Ap6eg4TQGZdMTUFWDh+73xFOtV9Usz
+	obaz0jYAhYZzEWFkeXGgcr1kX96fiaZMFtq2olZlnDgyJsfzaTOc/b9EIdDRHrMlcxfLdS
+	GuaZd2jAmW57PfWIpxoKfTTCr6Cb6nO8lZeQq+0gVctVygXHYA4ZmBVc+Ykv3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1718310438;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 dkim-signature; bh=3yF3i/E/30ehmXe9s/2FjETaseFYFWGcCxYD6rF2kdA=;
+	b=sdiDPuxFJUikeSD38QOJuYke6tKvXZdXsZ/Vrb83YCCc9UVKBZhjaE4DbF04mUWJZEtE63
+	HE12PzKArYdMwrQR8pZH20Sq9huX9fFfg4JPxB9cON2pbUrHycgd/rhJEPDWfDA5QAmSYU
+	BQ6tzXd1qFOmPZoPTRdnzll+7UgnPO8BhZvasvrErqnFC7nmeU8R8DPk0EtjUVCgXVMAdx
+	c1+00l+CJBPnLKXxDfMDiKt/nDR6BGdngmvWCx8YKhZ/c3RHWtqS2nbx1F6Rgiuv4I5EPc
+	9fPZXlkzD9e1RDpwndQnQAX8c6/6HvcfJg1OQFTWhkHh3JxLzD9V/ooY7Gbs1Q==
+ARC-Authentication-Results: i=1;
+	rspamd-79677bdb95-mv47m;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Suffer-Blushing: 2f2f17d90ae7e1ad_1718310439228_4272099224
+X-MC-Loop-Signature: 1718310439228:3775423568
+X-MC-Ingress-Time: 1718310439227
+Received: from pdx1-sub0-mail-a231.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.114.12.91 (trex/6.9.2);
+	Thu, 13 Jun 2024 20:27:19 +0000
+Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kjlx@templeofstupid.com)
+	by pdx1-sub0-mail-a231.dreamhost.com (Postfix) with ESMTPSA id 4W0YqV5MntzmL
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 13:27:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+	s=dreamhost; t=1718310438;
+	bh=3yF3i/E/30ehmXe9s/2FjETaseFYFWGcCxYD6rF2kdA=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=aYRWyLvJwTG7YCRwiacQ7jsU0qiYSJM8JzaYUYSZHEi38tAWrxbkakHc0LAgqcu7s
+	 DTiY8JmQ8/RNv7F/qwTi6q9k/AAGHt4z0YTE9wJq2FQjrXLyyJzjn07F0/o+AueM9+
+	 SuYh/+a64UIbW/OdiuRCCQkjpSR30wuOXSnW+twRj2VjwY8CYqDRN2lK6sIXkgnaRC
+	 yAF7XQWkHyXAl4jAZaxCnd5jwB/Iu756WOZ21AdgOpBIY79WKGPUezJgUjCciYXb3a
+	 kgzDYxeLFwLgdI8JSrTv0uY5t78pL39wqtQdkg+aP+mtEcZnzmtuuxYWtCuaGj16RP
+	 B4O33cr3a6Erw==
+Received: from johansen (uid 1000)
+	(envelope-from kjlx@templeofstupid.com)
+	id e006b
+	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
+	Thu, 13 Jun 2024 13:27:09 -0700
+Date: Thu, 13 Jun 2024 13:27:09 -0700
+From: Krister Johansen <kjlx@templeofstupid.com>
+To: Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Dave Chinner <dchinner@redhat.com>
+Cc: Gao Xiang <xiang@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [RFC PATCH 0/4] bringing back the AGFL reserve
+Message-ID: <cover.1718232004.git.kjlx@templeofstupid.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -79,37 +110,94 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZmsS7JipzuBxJm92@casper.infradead.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Thu, Jun 13, 2024 at 04:40:28PM +0100, Matthew Wilcox wrote:
-> On Thu, Jun 13, 2024 at 08:38:15AM -0700, Luis Chamberlain wrote:
-> > On Thu, Jun 13, 2024 at 04:32:27PM +0100, Matthew Wilcox wrote:
-> > > On Thu, Jun 13, 2024 at 08:27:27AM -0700, Luis Chamberlain wrote:
-> > > > The case I tested that failed the test was tmpfs with huge pages (not
-> > > > large folios). So should we then have this:
-> > > 
-> > > No.
-> > 
-> > OK so this does have a change for tmpfs with huge pages enabled, do we
-> > take the position then this is a fix for that?
-> 
-> You literally said it was a fix just a few messages up thread?
-> 
-> Besides, the behaviour changes (currently) depending on whether
-> you specify "within_size" or "always".  This patch makes it consistent.
+Hi,
+One of the teams that I work with hits WARNs in
+xfs_bmap_extents_to_btree() on a database workload of theirs.  The last
+time the subject came up on linux-xfs, it was suggested[1] to try
+building an AG reserve pool for the AGFL.
 
-The quoted mmap(2) text made me doubt it, and I was looking for
-clarification. It seems clear now based on feedback the text does
-not apply to tmpfs with huge pages, and so we'll just annotate it
-as a fix for tmpfs with huge pages.
+I managed to work out a reproducer for the problem.  Debugging that, the
+steps Gao outlined turned out to be essentially what was necessary to
+get the problem to happen repeatably.
 
-It makes sense to not apply, I mean, why *would* you assume you will
-have an extended range zeroed out range to muck around with beyond
-PAGE_SIZE just because huge pages were used when the rest of all other
-filesystem APIs count on the mmap(2) PAGE_SIZE boundary.
+1. Allocate almost all of the space in an AG
+2. Free and reallocate that space to fragement it so the freespace
+b-trees are just about to split.
+3. Allocate blocks in a file such that the next extent allocated for
+that file will cause its bmbt to get converted from an inline extent to
+a b-tree.
+4. Free space such that the free-space btrees have a contiguous extent
+with a busy portion on either end
+5. Allocate the portion in the middle, splitting the extent and
+triggering a b-tree split.
 
-Thanks!
+On older kernels this is all it takes.  After the AG-aware allocator
+changes I also need to start the allocation in the highest numbered AG
+available while inducing lock contention in the lower numbered AGs.
 
-  Luis
+In order to ensure that AGs have enough space to complete transactions
+with multiple allocations, I've taken a stab at implementing an AGFL
+reserve pool.
+
+This patchset passes fstests without any regressions and also does not
+trigger the reproducers I wrote for the case above.  I've also run those
+with tracing enabled to validate that it's got the accounting correct,
+is rejecting allocations when there's no space in the reserve, and is
+tapping the reserve when appropriate.
+
+The first patch is the plumbing that re-establishes the reserve for the
+AGFL.  I'm happy to break this into something smaller, if it's too
+large.  The remaining patches add additional pieces needed to check how
+much space the AGFL might need on a refill, and then to actually use the
+reserve to permit or deny allocation requests, as the case may be.
+
+I'm sending this as an RFC, since I still have a few outstanding
+questions and would appreciate feedback.
+
+Some of those questions are:
+
+Patch 1 includes all freespace that is not allocated to the rmapbt in
+its used / reserved accounting.  It also borrows the heuristics from
+rmapbt in terms of picking the initial size of the reservation.  The
+numbers I'm getting seem a bit large.  Any suggestions about how to
+improve this further?
+
+Patches 3 and 4 use the allocation args structure to attempt to decide
+whether an allocation is the first in a transaction, or if its a
+subsequent allocation.  Are there any recommendations about a better way
+to do this?
+
+Thanks,
+
+-K
+
+
+[1] https://lore.kernel.org/linux-xfs/20221116025106.GB3600936@dread.disaster.area/
+
+
+Krister Johansen (4):
+  xfs: resurrect the AGFL reservation
+  xfs: modify xfs_alloc_min_freelist to take an increment
+  xfs: let allocations tap the AGFL reserve
+  xfs: refuse allocations without agfl refill space
+
+ fs/xfs/libxfs/xfs_ag.h          |  2 +
+ fs/xfs/libxfs/xfs_ag_resv.c     | 54 ++++++++++++++-----
+ fs/xfs/libxfs/xfs_ag_resv.h     |  4 ++
+ fs/xfs/libxfs/xfs_alloc.c       | 94 +++++++++++++++++++++++++++++----
+ fs/xfs/libxfs/xfs_alloc.h       |  5 +-
+ fs/xfs/libxfs/xfs_alloc_btree.c | 59 +++++++++++++++++++++
+ fs/xfs/libxfs/xfs_alloc_btree.h |  5 ++
+ fs/xfs/libxfs/xfs_bmap.c        |  2 +-
+ fs/xfs/libxfs/xfs_ialloc.c      |  2 +-
+ fs/xfs/libxfs/xfs_rmap_btree.c  |  5 ++
+ fs/xfs/scrub/fscounters.c       |  1 +
+ 11 files changed, 207 insertions(+), 26 deletions(-)
+
+
+base-commit: 58f880711f2ba53fd5e959875aff5b3bf6d5c32e
+-- 
+2.25.1
+
 
