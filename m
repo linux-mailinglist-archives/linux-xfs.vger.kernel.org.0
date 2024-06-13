@@ -1,109 +1,108 @@
-Return-Path: <linux-xfs+bounces-9298-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9295-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18297907D94
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 22:43:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C470F907D74
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 22:28:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C513A284F37
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 20:43:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 459AC283559
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Jun 2024 20:28:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDE0A13B58E;
-	Thu, 13 Jun 2024 20:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8F3C6EB5B;
+	Thu, 13 Jun 2024 20:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="bR24r/lf"
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="YACJKUNm"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
+Received: from crocodile.elm.relay.mailchannels.net (crocodile.elm.relay.mailchannels.net [23.83.212.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387B513B58A
-	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92550824A4
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718311410; cv=pass; b=mhBjqTlKSMmszGv5AbhDJJIXXS/xGHcVBTTfr8CleeTRja3lsxoXRlpGAezQ5o5gTc/cpiVCMGZW5jdlERL1xJPUJ0cyF8MNYvW8D4qeMjIflJcP0CtRVQoBt1lpyBIEME0lrj4MouqC9P6PTxbCTQ+WqpHGaCoGOLC18qUJlJ0=
+	t=1718310482; cv=pass; b=UkEhZs3K89o0GX9cCKPL+eNaov8VUzp+rNhtRpXBbdk2CRH7IgMJcWT19/2N9E7UOQ/Cjdyok08Qutl1quA1G4P0Vli0AGffrxm652FCiz+7r5Qiwqxl1TRIaTr2igkrosk7ByRVO9SawVqNj+9FfiVluKyHildC6x3jMXIPOD4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718311410; c=relaxed/simple;
-	bh=RpBC65bdovXusXADyGwc238tThmOsMBqeOZ0Lg60lug=;
+	s=arc-20240116; t=1718310482; c=relaxed/simple;
+	bh=OIC76fgDHrWTJW3Oypu1DWfs0cQNJKRJE7Jw15MTfq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L5oLtc88cxRVYZf9LzM+XAPyRoGX66gzQxHSMhzKqT5Y6oHK2//Me+SuMmAqb+FsviwQcfKxwkbsiv0gERuVZxG9iktnLKy6bwNBX1IBkxgjFqGhI966XAW9Mk9IcyIyzv+HjZLvYVgX3gYYsVI77SBXgEOxxbd9UkxQO9UobJE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=bR24r/lf; arc=pass smtp.client-ip=23.83.223.141
+	 Content-Type:Content-Disposition:In-Reply-To; b=k5uz0/hsb94LWPrbusdotljsNDKLTAqChEJJYEuZEv4umzDRD/5hyULEDplXpNxJzORKsn/Ah034DvYH08IZQdr83aordMICdMjKhMdA/3Gkmh056RXQ1lMbduoQoeZlM6f2Wgr19XY99AvHayWhwC4vmi40wOXiMn1c0L/rEkw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=YACJKUNm; arc=pass smtp.client-ip=23.83.212.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id AE535901DFD
-	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:27:43 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id E4DAF424BF
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:27:57 +0000 (UTC)
 Received: from pdx1-sub0-mail-a231.dreamhost.com (unknown [127.0.0.6])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 585D4903876
-	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:27:43 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1718310463; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id 835A34043D
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 20:27:57 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1718310477; a=rsa-sha256;
 	cv=none;
-	b=1HjiGjhantU04IE4XSoEeTTtSnP66/7cODvJzWaoUNoGZaFc2ABxIYrOcUT58MoIXbc1T/
-	aNAzQdeB1pXkmr7/hndcKIaa/4aAghD33a3+sQ9LX0et7JBEaiIHh/CqH5GQxe3fhkhFsI
-	HFI8uJUAJNKDQAKqFyqRbAC0LaoRx+sIxLbg6sBek6mO1poX3Evx7UfXARJBLJ1auG9ni2
-	7blwYL4Q/0X1sQ6oCvspnDDzijw01Ztl9Z15niY34mIbTHwz+zDPpbhjsG0d2W6tjV1OVY
-	Yc5AszT+gAM5spHimTnPf0yvydeJ7ol96B89+Gj9ZNufYaE0I7L43ki3BWppbA==
+	b=3cVVfylclox1y8N04h6J97YiV4QJoOKv8KGeIFg8gV4AVS0EbhOrD7vJDCgYtV0YVnM6aA
+	j3/JlA/yTW7NdBDPsxYbdRfyfySub4s5NEDMTedIY1o0XscrwWdozF4QEH+TYswiwMiIzw
+	ZcoE+pHX9oZBQ6vP6D3gVIStjeK+YT6NjWP3WsqRF1b0ATnjtMVPAtBzDbHW798bT9fZtO
+	86XCBkEi6bcKhhY+nAmFCAATHDBn3xza/Hgr0oDyBRcFryAL7zIXJHTH8SJ8Bt18FVpZem
+	6YE9Uy7kNPZAeyFP5YVI8azUwgDQMnZe6Y9ZL1+FZCQ4mXhK4TeKB3loQygXCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1718310463;
+	s=arc-2022; t=1718310477;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=ZBs+17Ij2599xPvqLbg1BwkejzoMnVt6qu+0xtH1bYc=;
-	b=l/Usl0GHcim6Mavu6u1rdw6uO2Zk/s5F1UigNlKOLhu5GQemwKrCvoMZgeD+UrvB/79ZtZ
-	BsE1qIWV0Gi9UHTPr1LPbLUaW7UKHURMQ8C6TZsszD/1l+2wrUoYSvbY/i2d2K7AE+PDDW
-	LLGtD0BtFdZese/TWjZNVgq36dazgbmHPBmdp7rJkyl5A6iawkKGhhh6xhG66d7iXK9N7Z
-	knEriasIYOVuOUtCXLXSDMoHsK9B2NFVqFCoLi/DDf9VmWz+ctkbq09ocavrUgQiyouRHo
-	xCdBKyCP1oVWGEdlXDkKeAaWOw67wvGFPzXA/I8M8tKcHUeYwQMjdSl9BlUpEw==
+	bh=oEtRnV6fCVboF1vhEUchMRUKfle7ghdO8uBvJiwAi4A=;
+	b=9E5Xa/PEs6vuGa6inryi785OyeHJmdMRCinfL2f6KNY33F6SYKQhSvhi4aUaxIOP8CNaFQ
+	O9cgrQ6LwtM3PXc/p0bwh7Alb71uiFF+IhoaAUyvsqeNLty+S1jFyzf9OcRXWdd5codgA9
+	+PVaVCO3AI3nHTT8MAwOm63tzuZr3j2JMxvazy3M+n10XaeGkXqwwhfQNraB9QYtQkWup8
+	AeHNcrsHXvBKdfmQc2G5c4bUsqE3lgKI59qP7qgul99ikHVvpq1MeSdAxDbSKARD+TO1vG
+	iUO9fxqnyvq4J9vJyhoLCh1KafPgF5g+m21toPktXhRXalVe7yFrlZxginTF8A==
 ARC-Authentication-Results: i=1;
-	rspamd-79677bdb95-kt8wt;
+	rspamd-79677bdb95-mkdnm;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
 X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
 X-MailChannels-Auth-Id: dreamhost
-X-Wiry-Juvenile: 3dec3ad1287c27ae_1718310463606_2212892820
-X-MC-Loop-Signature: 1718310463606:3050848005
-X-MC-Ingress-Time: 1718310463606
+X-Cooing-Abaft: 20cb34f91f8faf37_1718310477795_1107781588
+X-MC-Loop-Signature: 1718310477795:3745807984
+X-MC-Ingress-Time: 1718310477795
 Received: from pdx1-sub0-mail-a231.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.117.83.163 (trex/6.9.2);
-	Thu, 13 Jun 2024 20:27:43 +0000
+	by 100.110.173.217 (trex/6.9.2);
+	Thu, 13 Jun 2024 20:27:57 +0000
 Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a231.dreamhost.com (Postfix) with ESMTPSA id 4W0Yqz0pw9z58
-	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 13:27:43 -0700 (PDT)
+	by pdx1-sub0-mail-a231.dreamhost.com (Postfix) with ESMTPSA id 4W0YrF25DtzHF
+	for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 13:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1718310463;
-	bh=ZBs+17Ij2599xPvqLbg1BwkejzoMnVt6qu+0xtH1bYc=;
+	s=dreamhost; t=1718310477;
+	bh=oEtRnV6fCVboF1vhEUchMRUKfle7ghdO8uBvJiwAi4A=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=bR24r/lf0sy8wcatMWHtgXya6xj4UuiRe6B4NWzbY4Dkz3xN/ARi9wogbNCEKWMGG
-	 a8MKHSwGeB/TXB222LCFH6tmkXcuGN7rGsifWmwum4nt+ruiU13dWH2E+8juxzyfHA
-	 zZV3pDbaLcxfKW/2fH3JztzpyaPf/2GCysg9+Tu18cQ3v2Ee+Is9cCXF17bnlIMQkW
-	 uC1Oi8YIKN9fXK6nonbcSrCAH0PMF29uLCsYOE3avf1i/8uQ9G4WBF7LdxluWz4kxl
-	 XN5Lh56qX2GHhSh2vJEhA54vwqQ7ht0hWDf4zOs4+1Uhqrb1TPflZuztJqj0K75y4D
-	 hXpYrT3roQ0tg==
+	b=YACJKUNm5+edaVdjs5/hI7RQVlmW6mKoXeah9Hx7yELFfuwtWyRe3HLN1rTcNJw5k
+	 j08KGKVtBOZjr3Va2eDiI92knLQj3A/YBZoyVxuCGvKRH1NA+4QMu66o2ukVwD5FkL
+	 p0fxdP7XZ+tTGfmaOYt/I+INT65v82+XyxwRjVHSmX+FOCxZIYgZx1m5fZkWAqX72E
+	 o5smOFoaD94nVBv6zgP0nhL/920lIMOgdDSLZXtLm80aep4WGhho7lqcBFOOg/Z25B
+	 r4/hspce+VBd4GTeTje0iSM6BUFUY+29F7Vbl7OJK9vClo2pHgGTKSkBYe1SHe3Mzi
+	 4loTM4Ug8dOfA==
 Received: from johansen (uid 1000)
 	(envelope-from kjlx@templeofstupid.com)
 	id e006b
 	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Thu, 13 Jun 2024 13:27:34 -0700
-Date: Thu, 13 Jun 2024 13:27:34 -0700
+	Thu, 13 Jun 2024 13:27:47 -0700
+Date: Thu, 13 Jun 2024 13:27:47 -0700
 From: Krister Johansen <kjlx@templeofstupid.com>
 To: Chandan Babu R <chandan.babu@oracle.com>,
 	"Darrick J. Wong" <djwong@kernel.org>,
 	Dave Chinner <dchinner@redhat.com>
 Cc: Gao Xiang <xiang@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [RFC PATCH 2/4] xfs: modify xfs_alloc_min_freelist to take an
- increment
-Message-ID: <36f4ac4967812331e275b8540859a9473e38153e.1718232004.git.kjlx@templeofstupid.com>
+Subject: [RFC PATCH 3/4] xfs: let allocations tap the AGFL reserve
+Message-ID: <ea3afc58fdf51c5edd86455bfea8d6a6fc448d1f.1718232004.git.kjlx@templeofstupid.com>
 References: <cover.1718232004.git.kjlx@templeofstupid.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -115,126 +114,52 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1718232004.git.kjlx@templeofstupid.com>
 
-xfs_alloc_min_freelist is used to determine the minimum size for the
-AGFL based upon the current height of the bnobt, cnobt, and rmapbt.
-
-In order to determine how much space needs to be in the AGFL reserve in
-order to permit a transacation that may perform multiple allocations, it
-is necessary to also know the minimum size of the AGFL after trees are
-split and the level has incremented.
-
-Let xfs_alloc_min_freelist take an increment so that callers may request
-the minimum AGFL size based upon current + N.
-
-This patch has no functional change.  A subsequent patch will bring new
-users.
+In the case where a transaction is making an allocation after its
+initial allocation, allow that transaction to tap the AGFL reserve.
+This is done in case a prior allocation depleted the freelists below
+their minimum fill and reserve space is needed to finish the
+transaction.  This is predicated on the earlier phases of the allocation
+enforcing that the AGFL reserve has sufficient space for the transaction
+to refill the AGFL.  That enforcement is in a separate commit.
 
 Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
 ---
- fs/xfs/libxfs/xfs_alloc.c  | 21 +++++++++++++--------
- fs/xfs/libxfs/xfs_alloc.h  |  2 +-
- fs/xfs/libxfs/xfs_bmap.c   |  2 +-
- fs/xfs/libxfs/xfs_ialloc.c |  2 +-
- 4 files changed, 16 insertions(+), 11 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index d70d027a8178..0b15414468cf 100644
+index 0b15414468cf..3fc8448e02d9 100644
 --- a/fs/xfs/libxfs/xfs_alloc.c
 +++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2325,17 +2325,22 @@ xfs_alloc_longest_free_extent(
- 
- /*
-  * Compute the minimum length of the AGFL in the given AG.  If @pag is NULL,
-- * return the largest possible minimum length.
-+ * return the largest possible minimum length. If @level_inc is greater than
-+ * zero, increment the level being computed by cur + level_inc.
-  */
- unsigned int
- xfs_alloc_min_freelist(
- 	struct xfs_mount	*mp,
--	struct xfs_perag	*pag)
-+	struct xfs_perag	*pag,
-+	unsigned int		level_inc)
+@@ -2389,6 +2389,7 @@ xfs_alloc_space_available(
+ 	int			flags)
  {
- 	/* AG btrees have at least 1 level. */
--	const unsigned int	bno_level = pag ? pag->pagf_bno_level : 1;
--	const unsigned int	cnt_level = pag ? pag->pagf_cnt_level : 1;
--	const unsigned int	rmap_level = pag ? pag->pagf_rmap_level : 1;
-+	const unsigned int	bno_level =
-+	    pag ? pag->pagf_bno_level + level_inc : 1;
-+	const unsigned int	cnt_level =
-+	    pag ? pag->pagf_cnt_level + level_inc : 1;
-+	const unsigned int	rmap_level =
-+	    pag ? pag->pagf_rmap_level + level_inc : 1;
- 	unsigned int		min_free;
+ 	struct xfs_perag	*pag = args->pag;
++	enum xfs_ag_resv_type	resv_type = args->resv;
+ 	xfs_extlen_t		alloc_len, longest;
+ 	xfs_extlen_t		reservation; /* blocks that are still reserved */
+ 	int			available;
+@@ -2397,7 +2398,19 @@ xfs_alloc_space_available(
+ 	if (flags & XFS_ALLOC_FLAG_FREEING)
+ 		return true;
  
- 	ASSERT(mp->m_alloc_maxlevels > 0);
-@@ -2803,7 +2808,7 @@ xfs_alloc_agfl_calc_reserves(
- 		return error;
+-	reservation = xfs_ag_resv_needed(pag, args->resv);
++	/*
++	 * If this allocation is a subsequent allocation in a transaction with
++	 * multiple allocations, allow it to tap the AGFL reserve in order to
++	 * ensure that it can refill its freelist if a prior transaction has
++	 * depleted it.  This is done to ensure that the available space checks
++	 * below don't stop an allocation that's up against the reservation
++	 * space limits when there is AGFL space still reserved and available.
++	 */
++	if (args->tp->t_highest_agno != NULLAGNUMBER &&
++	    args->resv == XFS_AG_RESV_NONE) {
++		resv_type = XFS_AG_RESV_AGFL;
++	}
++	reservation = xfs_ag_resv_needed(pag, resv_type);
  
- 	agf = agbp->b_addr;
--	agfl_blocks = xfs_alloc_min_freelist(mp, NULL);
-+	agfl_blocks = xfs_alloc_min_freelist(mp, NULL, 0);
- 	list_len = be32_to_cpu(agf->agf_flcount);
- 	xfs_trans_brelse(tp, agbp);
- 
-@@ -2861,7 +2866,7 @@ xfs_alloc_fix_freelist(
- 		goto out_agbp_relse;
- 	}
- 
--	need = xfs_alloc_min_freelist(mp, pag);
-+	need = xfs_alloc_min_freelist(mp, pag, 0);
- 	if (!xfs_alloc_space_available(args, need, alloc_flags |
- 			XFS_ALLOC_FLAG_CHECK))
- 		goto out_agbp_relse;
-@@ -2885,7 +2890,7 @@ xfs_alloc_fix_freelist(
- 		xfs_agfl_reset(tp, agbp, pag);
- 
- 	/* If there isn't enough total space or single-extent, reject it. */
--	need = xfs_alloc_min_freelist(mp, pag);
-+	need = xfs_alloc_min_freelist(mp, pag, 0);
- 	if (!xfs_alloc_space_available(args, need, alloc_flags))
- 		goto out_agbp_relse;
- 
-diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index 8cbdfb62ac14..77347d69f797 100644
---- a/fs/xfs/libxfs/xfs_alloc.h
-+++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -74,7 +74,7 @@ unsigned int xfs_alloc_ag_max_usable(struct xfs_mount *mp);
- xfs_extlen_t xfs_alloc_longest_free_extent(struct xfs_perag *pag,
- 		xfs_extlen_t need, xfs_extlen_t reserved);
- unsigned int xfs_alloc_min_freelist(struct xfs_mount *mp,
--		struct xfs_perag *pag);
-+		struct xfs_perag *pag, unsigned int level_inc);
- int xfs_alloc_get_freelist(struct xfs_perag *pag, struct xfs_trans *tp,
- 		struct xfs_buf *agfbp, xfs_agblock_t *bnop, int	 btreeblk);
- int xfs_alloc_put_freelist(struct xfs_perag *pag, struct xfs_trans *tp,
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index c101cf266bc4..742ec4142fb0 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -3270,7 +3270,7 @@ xfs_bmap_longest_free_extent(
- 	}
- 
- 	longest = xfs_alloc_longest_free_extent(pag,
--				xfs_alloc_min_freelist(pag->pag_mount, pag),
-+				xfs_alloc_min_freelist(pag->pag_mount, pag, 0),
- 				xfs_ag_resv_needed(pag, XFS_AG_RESV_NONE));
- 	if (*blen < longest)
- 		*blen = longest;
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 14c81f227c5b..30690b7965af 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -3047,7 +3047,7 @@ xfs_ialloc_calc_rootino(
- 	first_bno += 1;
- 
- 	/* ...the initial AGFL... */
--	first_bno += xfs_alloc_min_freelist(mp, NULL);
-+	first_bno += xfs_alloc_min_freelist(mp, NULL, 0);
- 
- 	/* ...the free inode btree root... */
- 	if (xfs_has_finobt(mp))
+ 	/* do we have enough contiguous free space for the allocation? */
+ 	alloc_len = args->minlen + (args->alignment - 1) + args->minalignslop;
 -- 
 2.25.1
 
