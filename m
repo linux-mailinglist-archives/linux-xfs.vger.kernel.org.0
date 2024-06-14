@@ -1,97 +1,97 @@
-Return-Path: <linux-xfs+bounces-9314-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9316-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DC37908115
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 03:50:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB852908117
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 03:50:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A02C1F22678
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 01:50:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D2FE1C218F4
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 01:50:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60B618307E;
-	Fri, 14 Jun 2024 01:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A6E818309B;
+	Fri, 14 Jun 2024 01:50:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X0odEcnj";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Nd3IOh5B"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oDNoZYuX";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="r7/uC72U"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2887D3211
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30053183094
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718329808; cv=fail; b=W85yUmR+c9f+AGiNe+cm1PguZjzasAVR22+N+Ym5AGuehTXSkVmtUiFs4BHPas30Qe0FFw50OfrlrWrgRYJ44dgqkQ0bPZNrCL5QReQ12K8b/Z6ZvQ/ozeMNGnLQdhty8Uk1FXWo2o4IAe8K5yrI3bZAhqAiONVYTDx9qi5w4pg=
+	t=1718329811; cv=fail; b=ZMRpYmLf0KeN3QeYd7Jh6N794oiE9L/i7a0QjWT3Zl8eyrW7PxQxA6Q5YN7PWr1VXh3cB+rDpRth7HhSW9bvy65npmxrcWxLCrE2rFy8qaSCjAmrkCLLEgm3b/a1Krma0OlrDKqC9NRTs6Sk5vSjJZ7OwlN4N1pHjexwgMYAOlg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718329808; c=relaxed/simple;
-	bh=nfoaLKzd/AvB1cVW5YKg13V1gt/GkV6hE04KVMfkPYQ=;
+	s=arc-20240116; t=1718329811; c=relaxed/simple;
+	bh=3/Whu5djeSVVuU2sxYhU5fUwPh7ZdzfRED4VPPG62PU=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Un+QTilChf19WsTUPGPVxTX15Pxm5rhPlfFCfZbTQQliWykgit9ME5ffK+msycusetuRa3BSJUKn/ceQDBYSluqOXZKl5nopi6Xs/ywlBwa4c4Alne4Tqkv/OlrctUNYAJq177cSFlwpyj5APqGUirWBdiNLrQlAD1fLOVNGz2s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=X0odEcnj; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Nd3IOh5B; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=jzbcZIQb6YUR1AzIK0LNOfaT5QQ6fS19ygXLFoMAebE7aOlJX5wZk9Gu/MK4MDM1JNvNmYa42trWzbsA9figXiQE881LQh0NI6uwlQw2/egfxznE7xjisIYUnd5jyix1QniJmtWupiMlm73CMiqTO3W2kVKj9jY/GWhnfYUydD8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=oDNoZYuX; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=r7/uC72U; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45E1fWN7006369
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:06 GMT
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45E1fpDq029945
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	from:to:subject:date:message-id:in-reply-to:references
 	:content-transfer-encoding:content-type:mime-version; s=
-	corp-2023-11-20; bh=qdluHNktMQI/+0oPHzcna72Ke0r0azmSgSieW9j1xCg=; b=
-	X0odEcnjymFH7iL6+8HmyPqP0HJwZvCn24cJ/8Ity063g6Bx3xKYVaNU7phtqVKF
-	v94oMaHcoRHimPyjjzAG4M8/cMjud58X0o2kg3ntWLw5i/l4K3R7+iXez1qWXUzg
-	yzYkl8fJemHIa38L7z7YKn1FxQjfhWoQB3gBxeZUBUmMqnWdMfNOmpFboO+1f/g/
-	fTgsfAM3l/cP9e5EfBWDKdSG05Ayoiyc45dXkqyXLI0siaasutYNgMRPP3iEiEP+
-	LUrNyCcV6CLtZvhO3+sFDlxWzxtP6f8+3ZMKAVhJa+QwvV2w1RhQudIxNRd3u4/U
-	5n3W3mMs2yIEg0hBo8Yl7w==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymhf1js9v-1
+	corp-2023-11-20; bh=5xgls130spLE51iyGYJRg6WubAZle7LHF/OhLQev2R8=; b=
+	oDNoZYuXefwcnS4S7YrePPql0prhwTUcazUgSAx1AbaAhWK1sgNcajgQZEM7uJM+
+	shMAHs8B1cgxaGD/VMeUpSO8Y/oQqNPFveuZ4kH0EXHAsd49OlGJSXUlWQ8Pa8Fe
+	I4gb2HKl4l4wosybt/t9vejb6LAIWk90Dy28qgFNZsZNWg7YPdOubNr7QIGf3m0+
+	Bqctv+Ev/3Juo0PoNCeTX4c0OLc5lsPcroyPHydXU0R0xsq825NLkG+n24fwHojb
+	D2hll2s2kJnZTgeWUbIp/foGV9MKBkjCzIQQ6LYKnBzu9qBSbegfqJd3XimERdKE
+	RhWn1XEfdE1Mkuym0eNC+g==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh3pangp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:06 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45E06JVL020455
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:04 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2172.outbound.protection.outlook.com [104.47.58.172])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yncayaune-1
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:08 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45DNDhaE012526
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:08 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2175.outbound.protection.outlook.com [104.47.58.175])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ynca1uw1k-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:04 +0000
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:08 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H8tqeHJfozLWLSHZqwL0b4uLDsB5zjFbYEG9QoIWeBC49U+9iqleardTjGX0REgI70AAdRYfti+OOz+aPEOD7UzLOE+jGgJJXBPSHXqjVCasOZr0kBT17xF3HvlRM76Qt/8KwxnnDXj81huPivF/SUgCeuJ7gJ7WvPzUAFBEDReW3j7IcTWeJpcqS3aeg41IVXc6cmTjGtRT260FkIgeP/rCe8DhaURNp67q+S2mOk7FV53LqKLWuDh8cDvgxP1fnyF93faiSa2BZp3jRmoj1hk1UfS0kEKXnQzQWCSLYSfAGXjrs3PfZeqGeJx//kF41iP5ZvtPOGdB9BsAdp+beA==
+ b=b7X04BBSw7TQ6zM16NJNHeAYqZ+xHBSwQeQ1sWMuIFTqFzsFC90dMiB0iBHqerJiHA2K97ovSvN9W+Pt7qmyhyfOwD5+nrtOe7edIF8FqgNCgOKsz8Pd1AC9+H551pPEivqHrd5PYI7pM70cH7gfVsvZtLaNmbTx+lYsmP+VFFcu8GGKp1cnMxwlrwvozipBtz5s/PDIeaxrGI+9ToUmLUDJ8mr6VeuCC+wTv1BjuPAo7Q02Jinr6gvAAyI4kSGHIyn36IfJAe6DVQOwdxkmNmoTeLUOkgYiweqH0knjtxl6MeMAVAJVSg1MJsiTKmgi+pHP1KrMhiaQAaP3LAM7SQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qdluHNktMQI/+0oPHzcna72Ke0r0azmSgSieW9j1xCg=;
- b=OjIqEBRyvZJSpnvhxYfdGMBrSEeutaXnp1hvMoYRfW8TqANcvRGSyH3gAk00424tz/C+lDbV5IajzfGqUhd+umumcwbgFhk9jCTyKxl/Po2nr75hwvQ3vQb7AomloOWwfSfEp3ZCkcGSq08b2n2oZPTUP9hrwh5adsVvRowrnYsYrybfJkIcfOr1NUgErSPhSWUMHaf2TRLiT/eQCMlQE9dS6oaR7QL3W32ogTIiLCCqBYHOWA3SNztV5KqSd/uqLOpp+UtSCPgKMaRjGjoogjO0gVTSQB2EMiXyLHn+uzL60y41HMCz6QiLMDTpxYAqk3m/HXvqwIWZXhDJ3cyUPw==
+ bh=5xgls130spLE51iyGYJRg6WubAZle7LHF/OhLQev2R8=;
+ b=hzjQhQ4MM84foL5JuF5qr7vSsjcjABSUtQG0DLdKHWlpFpC18IjjF/hPdPZ++u5nGnJqmaHPnplcbLOUTYxV980i7YXwIg/MdDTfLdJM40+zWrEVdw+9KKfSwL258Bl6d4aSaAxRE1IvO1QnnvH+pa0R2O7luR3uyxH/wHoRjMzuW1e0oKGGNhK0UN7E/wyy0USmgKMOWQ+Odk69GCYIkXJaPUkd5PDTsd5OKDYAEGKYfA2fRzMWDpgkW6ZfV8n1R+Vst0pJkvF6wsjNT1V9v1T525iuxmQ8VI9xzvRf2DJzvLDHpMu9n09vmeBTa4jrfmVO9g3NCIZ3vF3eTQDRIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qdluHNktMQI/+0oPHzcna72Ke0r0azmSgSieW9j1xCg=;
- b=Nd3IOh5BuaWQ7cmH8k7ocPyx4Dc1LAlW+grujSF/OBFTaQUDOgJymz4QQ0vN4fzCwN4THs5UMiati89Ku9+LK3ky3bS+Np/8FTnzKGcfMtWNo3kXPsuJryub++BLpyXS41HbWWfZ9KkJ7Dv4m4mswbHSjParHdg8q3kEEhCmTFw=
+ bh=5xgls130spLE51iyGYJRg6WubAZle7LHF/OhLQev2R8=;
+ b=r7/uC72UMNVlNm8uIakxl3lkLL2kqosszoB5UWodA9LQC9VW1ify2M4cnZ9/hiFtFJWkJo9WpSuvnleU3v6AUOTvip/ZVLGQ4nsyYfkXPFgHMeRvFfNkSgN/FOjsaImLJkVmzIIy+JcCv9PZ19WOL6JnS6K8qy6TxUsbj3qf/EY=
 Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
  by DM4PR10MB7475.namprd10.prod.outlook.com (2603:10b6:8:187::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.20; Fri, 14 Jun
- 2024 01:50:03 +0000
+ 2024 01:50:05 +0000
 Received: from BLAPR10MB5316.namprd10.prod.outlook.com
  ([fe80::a63b:c94b:7ed8:4142]) by BLAPR10MB5316.namprd10.prod.outlook.com
  ([fe80::a63b:c94b:7ed8:4142%5]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
- 01:50:03 +0000
+ 01:50:05 +0000
 From: Catherine Hoang <catherine.hoang@oracle.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 6.6 CANDIDATE 6/8] xfs: allow sunit mount option to repair bad primary sb stripe values
-Date: Thu, 13 Jun 2024 18:49:44 -0700
-Message-Id: <20240614014946.43237-7-catherine.hoang@oracle.com>
+Subject: [PATCH 6.6 CANDIDATE 7/8] xfs: don't use current->journal_info
+Date: Thu, 13 Jun 2024 18:49:45 -0700
+Message-Id: <20240614014946.43237-8-catherine.hoang@oracle.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20240614014946.43237-1-catherine.hoang@oracle.com>
 References: <20240614014946.43237-1-catherine.hoang@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0016.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::21) To BLAPR10MB5316.namprd10.prod.outlook.com
+X-ClientProxiedBy: SJ0PR13CA0010.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::15) To BLAPR10MB5316.namprd10.prod.outlook.com
  (2603:10b6:208:326::6)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -101,255 +101,257 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BLAPR10MB5316:EE_|DM4PR10MB7475:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9bdb58ed-484d-4459-57e8-08dc8c144ecc
+X-MS-Office365-Filtering-Correlation-Id: 3612999f-d5db-4132-cbed-08dc8c145009
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230035|1800799019|366011|376009;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?c4QRn2B9tg3LHuBzwzzzgx/UhBR+myu7/YM3xHxhSYUL3fnDWat1oeibN9Zh?=
- =?us-ascii?Q?oZeHzEIdhcO/xP0jn+43v9Bs6BZClEF77iNFZwzhz0kIJN3X3gBaiqWb/Lw+?=
- =?us-ascii?Q?Q6Y4YWjeU74oxsntGGAutyu0tGxQJXzZMaXZIezGLk5HdbgpqFynHM2zBExG?=
- =?us-ascii?Q?cNj2x1bMOTJCXtAyqMK+LhXtuOjAY2gfMfUZfDDCVNNQiOLX1dBOlXyFfDGU?=
- =?us-ascii?Q?9ALRr9OwSfVJUNNvwHVSSRweChYXcPbfW7Vq3lXJlfh0/n4XslB/TKnRokHX?=
- =?us-ascii?Q?SN67SwhhSGOW3aeOXXQA4cRy0RpxZn6ahUmIOfwwH4G1+6Fb3Bk5GoylrWCy?=
- =?us-ascii?Q?l0qdHZPZSh3NDTa3Qwynt710x+eOQd7rbr3b6gr4t/gzXe0Rqxa6dTMvpfRb?=
- =?us-ascii?Q?w0SNdRKWkuJDsRHXxJeWK//00+9BNinKiAF4Aiap8ua2WtO4cJcWqlvrkwsP?=
- =?us-ascii?Q?Sv2J0fFwO5+m7UIhYG9brLYijSk7cLgdxa4T2t7T9v+q09RZhO5XP0sUI7Vr?=
- =?us-ascii?Q?H+3Lxxchi65LyOlpQHKLeS4RtvvedsW0j8cRmTgWORQlDDsXqLNkcUER5adV?=
- =?us-ascii?Q?14rG8wctnaVS41ipSgrHK1/QJbLvrGUBocxLje59CDDzhiX5Gr8/3x/RTsK9?=
- =?us-ascii?Q?HxcUQH17T5vV8VP5T44zIlVmYp7HM5r+DtgBMwD+/Qaj1M0t+2abM2caTrOw?=
- =?us-ascii?Q?KhKzFnwmwG189h6GJrDayeSfYYc2IQbu4w41wQuDwL92YaaoaYFdfxOs+9oh?=
- =?us-ascii?Q?zfRcOtg+x0trya2sfYebDTArAq4L3zWsG3bkC0HEVtSXZAXztmnjo2i84pZj?=
- =?us-ascii?Q?rpBnnaKHE3MFSJLn89n+b9fvabdHjpd7KktmaB1vlapxqHNro3TwCeJKIbrm?=
- =?us-ascii?Q?013XXgX2+J/xNAknkkFil1p410lwCrpCRw/+KXkDo+8vjF5KpyKDtSn/MDBi?=
- =?us-ascii?Q?nHeehG2PyKifehVcfwKk7s9L7BKqvYYWHw/DO+8gOjG9Wt5wdng4R2cSvJyU?=
- =?us-ascii?Q?51ksIY83wQ5W4Id/lg4av7EhlvFLqpt6YgjOoXS3Ux1XufecRneXM6UYvpLd?=
- =?us-ascii?Q?VBWPwb2nlRoBrFtMiJaMx/P4nVVm8mOqMR6ZgTUEwxvWY+tOhEaeZj0l9/yg?=
- =?us-ascii?Q?P4YIgjvrD9hTfhZqRoMK52F5APQPkL7iI54jgVw5JX6BBAemJ8pYvWZCfkXX?=
- =?us-ascii?Q?VyjTyvrJYAZfbdkytt2mQTRxMOUA16wHr50rIzOJWYhW/hQ/BeBZQtyplG5O?=
- =?us-ascii?Q?G2U1Ixy+6H9L60QFCWqDZQRtrqkmsbd8XQasHSfo50RJWcAnsEfDwhbk0CDL?=
- =?us-ascii?Q?5TmWgK0XdFGJIoFCv1JGGfe4?=
+	=?us-ascii?Q?1n54AWagXwT6iubCERFehI43G5OakHea2NqovXzxn3OyYRJ/017mrp4GJ0ub?=
+ =?us-ascii?Q?dcd73JQ4eoH+9bjkRBz8Fw/qFna2EaLBCnJqnbCzixHitn4meUyxeIJPKv9B?=
+ =?us-ascii?Q?QgRi9sxpjL4JWHhxjg9+ivgxw6se2bfNNVaZLBdxVXi7aeQk2mebGTXpvs/X?=
+ =?us-ascii?Q?kM2RGyYRCGb99InjgnHvTe8ulvNgAwWRIj6iZ8lgeqf7MjPO1i709dlpurf9?=
+ =?us-ascii?Q?vnFyXBKJtkx77U0Hhv1ndb9tJg3jB/3bIc04a/avLB0hpKrNQ0aTrDrk2Q4L?=
+ =?us-ascii?Q?2V8MdzoA+4IVCJp9brT67gz0sDfzpNWsquI/P9JKtx+1W3qChHrtzpnDMUhw?=
+ =?us-ascii?Q?jijhQeQK9Un70ZnU9+p4gJruHUg5bQh64JEEhbnFcZrJ/bE3uIhMJdZrpA7j?=
+ =?us-ascii?Q?F/tnt5MBj3aQq6rW35zeG0XlfQrHZQjRd0BhBVOxkUTr3NrTiV5D+g9r5EUc?=
+ =?us-ascii?Q?xwEgxUwYklp2H90cfZb0pTXC2fZXuDROLIZt9lUhC8Y2C446iAQYx41xtWir?=
+ =?us-ascii?Q?aqdxZ+GuQd7ZMGzibSLi80xsxrpYeS45cYT4ldCFwqRK0Kwux4/D6cUINAeB?=
+ =?us-ascii?Q?xaQ0kyu8s081EtQqhKWgzUJZuJXxwFfcgMKt9ceGXSydXQA557ewaVcBPPb5?=
+ =?us-ascii?Q?ygjbhNQJi4HHEFPh2wQPJ9/R9vt9UbFtrTbEEx841tCeRViWofRQMRytSL5e?=
+ =?us-ascii?Q?0WpciRMKoO376yJD/F58VNxA1wOLnbhLyBnmX8RqNhMUW69sDbW/znKIOlIE?=
+ =?us-ascii?Q?gCjm7zCKyXGW/ApvlwNnPms5/T3OSsQYTyv1SaoW2whFQ8KV+jGIfgK3bGPU?=
+ =?us-ascii?Q?OGb6Y9O1KF68jUZwFu+hahjiQsjO1pkTkAvq0Eh25HCc3SXMLkE/z6ZVQq6R?=
+ =?us-ascii?Q?qZ0dKo3ZaDChrbUNike9IQrcb6dTaVHqH3II8lr2/13FvR9gASRcyc9Gzzw9?=
+ =?us-ascii?Q?9CL1CcOOVtYOplnS1DkYxUriT343QNMCseAfgsGQ35eacLJv3zcgcQTw8wzt?=
+ =?us-ascii?Q?wx4HKC0k65b0OhDV9R0BBoZrfnvsJ41Ip8CHMfoGAX2wOAYjBJ4YBSOGG/ch?=
+ =?us-ascii?Q?BrpIr38FYU1kArbUdWsQ8GsuxgfO8VhqXTCHGjwphWYmkMdPlY3bEBmRBMdc?=
+ =?us-ascii?Q?CoexMMDGrxrcXS5ae+XuBGxR+H5WYWApN57lM7nATsvfg0+MuP4N4Eyp8klq?=
+ =?us-ascii?Q?f7SfO8JqzeffVOCoxjD4l5lyqapD2cdrXxJ9GILQU9tOiUarNsppi7Y/6LpN?=
+ =?us-ascii?Q?AFutVn7ds2cKNRnd+CGYi+k9mghSGsuEdl8R0vdBLpsh2pUI8wTDnL4Rjy3m?=
+ =?us-ascii?Q?urA=3D?=
 X-Forefront-Antispam-Report: 
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230035)(1800799019)(366011)(376009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?0h/i83/L0VjNayhH6K/fy1HCtBofiwbHnKmUgPFL2EL0Jedv+6h92X1WkzKk?=
- =?us-ascii?Q?g/NJ2PQ+on9ojHm1hstz6Xt6mZlprvJesEkGsRn6UFNNL3HJCfJ71uKM9awC?=
- =?us-ascii?Q?OFRu4hvEbVpDUPMDGvXmS0qhyz8UVgsM7O1I/es31LMQ31qo9wXIdtLXuopJ?=
- =?us-ascii?Q?LgPuZ9ht0vsoSq+b7pQZloQkDYon8nE+bjRcEuIYgXzvYCK3J0ck0d8O3ZXp?=
- =?us-ascii?Q?0e4IXd1jEOuu/X4YxIAAVjG3kjxSs90/DVA4PPOqz35/Q/NJhMjU5XK+snfm?=
- =?us-ascii?Q?h3+l8UySdSgqhSYqvSza/5YdRfZNqsvRJQeV1CFllvKFU7rzv5erFm+mAZcs?=
- =?us-ascii?Q?1kelWraCWFCfPNSB4cVpnVkYFZCUw8hMOAl7wKLdB8UnjkGM040YmugX/cQ3?=
- =?us-ascii?Q?TH9yMbqDtrcTryvmNuCLb0NV/qqbsUkVvdsjSzNYKWov9I034tkoN4SGuJIE?=
- =?us-ascii?Q?n+kdIotuuOqiA62PcocBasRK5W4nhT2g2TQJjg0vNcB/YyrkLhY7jXX8P5kF?=
- =?us-ascii?Q?Fl3FOgw4izu3FMsJFvxAKQnVbZfSWSGqNQaNjLiamgiTnq/d1CvRF4il9KJl?=
- =?us-ascii?Q?Ez0sZ1K+7wE31KxdJmyE413QLcvoGR0WTr30CYgCcb5avM2lRov1dahwsCyG?=
- =?us-ascii?Q?8bIY3pKfdVhmyNxjoC8Ror/K/0SCUBTV4SwhLn7VmZ5V9IWpNbrwIXoYL8DH?=
- =?us-ascii?Q?Sn0v4lV+HvnnsEoCxQrKNf4lS01Era4Nk/81INd6LqqHHPk4kOwxxylKmzUd?=
- =?us-ascii?Q?N4eDG39oqzieG6f943PzNaOQx6xVJ5xPqptEQ91YBX/dfy5nE5ZxUZZ1Uhjj?=
- =?us-ascii?Q?p3SpOjj4OCxrgZnKhdELt/muTYXEXFWSQu+JaV5i+P26KFBcAB3sQN9J8hEz?=
- =?us-ascii?Q?nwjERzXgHy8yCWIPxnaDZPXlU0haTeqndjrFu8DBGJwFLQC0wlp6tXa23b49?=
- =?us-ascii?Q?sNKM0TcrwYnO9c9Ih+ep6uqBa6PT74Ic+OPhE91IOU2g3VyJX6WAYErpjFt4?=
- =?us-ascii?Q?TJUs0bNvkOrsc2K+ap0AJsslhx16YboHg+jlrdKrP/UmGyJTo4LFm93pSnv8?=
- =?us-ascii?Q?TpqfqgpIyPyRp3s2kx6M0hiqpo8eUsP/bWt5tnDFX/G+UWNRiEgt6gdDLVc1?=
- =?us-ascii?Q?xJeh2brSAEU7RI40S7KE1myM+brSx9/IoXGGz36WlX/4PxdLBeGfgrcuxeq4?=
- =?us-ascii?Q?upewBYamPuNVls+PUMqnJ5TyPwg4GquNBPw+/wBg+gEvFn0HlFMAv4+tBSDq?=
- =?us-ascii?Q?BESbpxhrJxJ7+ZleU5QJfek4UH7eHqbtJ68e24s7yNmtMKU8qP7FkgFyGkDZ?=
- =?us-ascii?Q?fEgk3LyLdLNnedL/pCutCkkUw3C+qow0I2XyeZ3aDm3PLuR0G5qnsKCitih3?=
- =?us-ascii?Q?gp1LtPi5kM5ajvtbtGMXpBvF2uWqcvVc6MjkommoxWBxy65Cnkza6U2Ssdk4?=
- =?us-ascii?Q?QJZQYWeiwa7Wn1s8hD7pPxJLI9OkHzQl3YJbU9DEnsjpNFoeoyfCPDTuW9kT?=
- =?us-ascii?Q?P0X6AlbiWBuiq7Kg1DbdZS2ZDfQC7C8rfIC99/fkJAAiz5CBTvbIUeLu1mFB?=
- =?us-ascii?Q?D7+38XNetSKynC0x1uh0S68jGHfFmqaKslr4rbNG37Avop+BaU+r7egvSOl8?=
- =?us-ascii?Q?9fS3QOvGIQTl7j4J2UFwb2940XZ/bI4OgeFBnneSmrEJTQPHhAqG+Te07rq1?=
- =?us-ascii?Q?stvwaw=3D=3D?=
+	=?us-ascii?Q?0IGfptyGhOiM/104lzRxaLnqQ2shngQlceZDhL0+Iz5MrYbi1bIPgD5K+pJf?=
+ =?us-ascii?Q?TE6SypvtEONbCTq+IDBDsopoC9LSAMOMUxDz6fVm/giIHCUp0x689Z1/2OfS?=
+ =?us-ascii?Q?DjQx49Bz1tThGWreDZqDrlAAATVfJ6qJPbXWxEqyGRDfJOhk+rnbrIRgw1Cr?=
+ =?us-ascii?Q?3KwaMxgLbh2ya/fCCrDmqVHYAMCoIJ1iMkQ7Xfstqk7yRau2ZxH2ue6sbO6H?=
+ =?us-ascii?Q?XnMGZfchGyfj/NuCfXNE+USPMi3iTHIwfueOygC7YDzxXnBNlV+MzMgjG38t?=
+ =?us-ascii?Q?hWon/FETuH6+T9Mzlpvk6hzYzYmH3YtAaR/UcDAXh0U7YJl52X/U65/cukix?=
+ =?us-ascii?Q?5mxUIUnC5q5a4keMlHvulWZL1dzZdMc+CGPwONPNYSRhiK7uBrsCe+bTt15x?=
+ =?us-ascii?Q?5uHBJyaJ9eiVAnjLPxep2Bmq3DQe7AVcOTEhLGw9eyDTsJ+nok7G5sJ88+O4?=
+ =?us-ascii?Q?pzxZoq9RKdCrtkT0OdyueSW8j2U4seH9w91tWOZEZjCbCxVGBOOdbzyCWCaZ?=
+ =?us-ascii?Q?BcMk+NLamQE2KESjER6CUoYags0W4uR76HUYxYFApOetx5B461l8WOCY+v2o?=
+ =?us-ascii?Q?YH5c3qfvwiy8NmLs3EwAYHjX6ra3I9UWNJpW6BOcNxg1dRc9VVKAsLnuPmAi?=
+ =?us-ascii?Q?ic6ejNcu68LEA8GwYi96walBdaS7zatcwoyv92m79DUOcXdJyHFOd+24aEca?=
+ =?us-ascii?Q?DM0kL5XNINBwgpq/BmW9pWp/Ublye2FKlugq2RvVm832syosV9dl+ZbfiBsU?=
+ =?us-ascii?Q?CfWLCaHaH5Z/ClXofYwA6Wy4PN6N8Mnu3suiPJejROZ+yxXUWRTtou73pMdP?=
+ =?us-ascii?Q?WmEnOfoZdOQri5EQVOlbvg39tVsi9W75ZaPz2c7aIQ+jzNQ828czc55MgF8B?=
+ =?us-ascii?Q?qrji8VOxuLdss+dVvZvKIPNW2QyoUo0HnVgXw9iM7MMO4B3qWpUOnge00uyh?=
+ =?us-ascii?Q?Tby+B0r2Hf2AT2tc+Mm6a/lLfvoqaKivVNcRD0boajC3Oeoijy0F9FvOzUgn?=
+ =?us-ascii?Q?MQSK25qeQaQQ+DRj+gWYrmjB4h4x/83xkEVVLOaUiQ5QINnz9j5LG6StDAEf?=
+ =?us-ascii?Q?gifwObF4cKRwZocKcJesuSIPRIWEFmfGV7iPlrAIii2H7/mF/hjEfAbtw70P?=
+ =?us-ascii?Q?TFbw8ZPidiJC/GL4AOoLCFKjAlBNbLLOEPOJGbTZkieOkOTDOHpa96Yyvm1E?=
+ =?us-ascii?Q?wsuclE3TeMufg02K6n/z+2vDyTIqRBV2H33PHuIYHCmYLoncAF4zt0V+2pgO?=
+ =?us-ascii?Q?nmVYvDkCqX0E8P9lZPiU7v38/XTmZFY+ZpFQbSctUGj+h1fwwoOEhvhMI9yd?=
+ =?us-ascii?Q?yhj3CGZU4jfqn4e304xkWpllQjJuEVUYvKgVSCDRfdDSQ+TnJB2/ZS8FFMZY?=
+ =?us-ascii?Q?Zy307sLjC9E+drisPWJN2uYypQvF+N8HiBMoVMP+80C1qtsAhxJE+aI+Bstl?=
+ =?us-ascii?Q?DKvOUs5pgSMrBQLh482DqKi1iMe7ekguSCQWJMWaDbM0yntvCdJyRjuTJN6G?=
+ =?us-ascii?Q?dpYYrlICPsG5XbFnMAC7EPZVnbS0qCAAT1ktwdY/ZnDtyPzYGNxN+/ZRIMZ/?=
+ =?us-ascii?Q?UY/9Ypm0RT3vCDhPUsF2+gGrAwglCPH2tE7qEy8gPPf58/3Z1bPdUw9lhJs1?=
+ =?us-ascii?Q?l/nNrmbhUn2Iz3OjQrXblNtmZo2LBROZi69pdGEImmJH6TEQhw8WEXOVH1Be?=
+ =?us-ascii?Q?VsOdwQ=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	759fZVstsgQO4bbU5HAhDYVXCjQpc++TSQ57yHoMYE2B3ES1p/VJBvS2RC5CfB68BU47lQZ6tYLWwcUMClyPQAmI7MSir7NVfmtwvkO84B15xb3BkcH7wPKl7gBFLiaOGsAwz9v+LOj3PucP4aUU0YbacdaI+ZE0Tb1Sin78CjU4NI/tOGKCwU0OUBsNfoYPRF7jXsz/VS3rTwCE4YhGS417/Bsm5CxkREXldqk/V9PuJHMoMRVvayMJp3H5CAzo3I3FtFb0vPpWyhw4vxCOrOK8316LoTgBFcuI/jq+XOdvqRSfK8FJE9N6/AZefkVqEfpmIg7hKcfEXh4q3wNYxRWzbysyAhDpJyNvci6EAnLc8UbmzMgerceFcGZo9wyd7d0BQxJKGPdM+8oY5QTj0C9xUlLDUqO4I3/1FJIYSCIDlXFc/INpoVGb8fdmNRBn4hIezQp12Fo6vA5zRYtn25EA4SSvV2iY+C3W/m00j7JhKwhZfMbclEgVksp5JTrijFCFrvNiQyNcnp8MmtJWP+fc2KzOfFCCEPOFFaWjG+Vej83Iz1D7gTljAhHlXGaqy5mrl75kZd2KUcBEda2jGt60PokvHfTuH7fZamAmW9k=
+	iorQs06CI7RJ0FEml+oZus1PzR2gLnYrarw1QDAgvZ73yPK2aIxLggQHZTGXVkNyDsmfKDArzqXwNXBD2hY7zkTjfplQojgB4Lhyzw+G/UPw5cAg26W2mdIu4TtEDlwKcQJ3sX3VW1jrhvmVMz6fwR1HG+q/ux4CylFZj8lpFCYCp1ziu4+y8B3QfZM6Pcz65h8fRvkTwSb2906hMzBVAtaxDiB389+f7CNFA/t9lTcC7flu9P2/8bPRvtBytqG8WNjYVPhQnrt5LgM2cf8K4z/lWaICMviQHiDF/JBdk6/zYFWtfiMBziYPJaNcKXyPaEPANkwNIUXHHpajbWDcDWO2Bi9bypMgTWnM3/d2kPk8RiZ6XA4upRMJmtvc6BjwmU2GnKV5PFX8c5djwW4BzAiZwOy6z9SfT7DTIlXDVdbL22Z3N9mut+dK2bJ1HMnYTiV0lQAB9Z8ytpInvrW+W5kutVbRfslgFiLkYsAZI0GRCr5+EjO9gRhVUqOioPY4vjh8hMjQoV9Po6o0Bjp/Y2QChYToKdYU+ceSKqi1Bg8cNrI2C1etbJV5Nhbs0JVTSq/ioF1ktsWvvpoG63qGHMcyD70xIGl8Q2Ut3pKFHPo=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9bdb58ed-484d-4459-57e8-08dc8c144ecc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3612999f-d5db-4132-cbed-08dc8c145009
 X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 01:50:03.0549
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 01:50:05.1552
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kbCLGCcdt6SgUFxBsuW5/aBonHst+2RRh1xYxCvFjEpdkke0R2TypbJQQ/PIAS9EXFX9cUU5vOrt2aMz3APVApq7jnXXVCp2R1nnb5F67M8=
+X-MS-Exchange-CrossTenant-UserPrincipalName: EDsm7IdyN/iuxhaq016m1+rznyTd0NCYHGp8l+61NqFdw4YFPHsMwy/FdZBqP2ASpJ5RM/AHsCpGyycLP4miDZg6dtUSOcx8fGEoJC2fCYs=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7475
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-13_15,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 mlxscore=0 phishscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2405010000 definitions=main-2406140009
-X-Proofpoint-ORIG-GUID: YrR4f9b4kiHYI-cSPxl_qtkecrs6KDRh
-X-Proofpoint-GUID: YrR4f9b4kiHYI-cSPxl_qtkecrs6KDRh
+X-Proofpoint-GUID: JmPaoyfbcNQMAeWFTaPlAur_rGGnlLhl
+X-Proofpoint-ORIG-GUID: JmPaoyfbcNQMAeWFTaPlAur_rGGnlLhl
 
 From: Dave Chinner <dchinner@redhat.com>
 
-commit 15922f5dbf51dad334cde888ce6835d377678dc9 upstream.
+commit f2e812c1522dab847912309b00abcc762dd696da upstream.
 
-If a filesystem has a busted stripe alignment configuration on disk
-(e.g. because broken RAID firmware told mkfs that swidth was smaller
-than sunit), then the filesystem will refuse to mount due to the
-stripe validation failing. This failure is triggering during distro
-upgrades from old kernels lacking this check to newer kernels with
-this check, and currently the only way to fix it is with offline
-xfs_db surgery.
+syzbot reported an ext4 panic during a page fault where found a
+journal handle when it didn't expect to find one. The structure
+it tripped over had a value of 'TRAN' in the first entry in the
+structure, and that indicates it tripped over a struct xfs_trans
+instead of a jbd2 handle.
 
-This runtime validity checking occurs when we read the superblock
-for the first time and causes the mount to fail immediately. This
-prevents the rewrite of stripe unit/width via
-mount options that occurs later in the mount process. Hence there is
-no way to recover this situation without resorting to offline xfs_db
-rewrite of the values.
+The reason for this is that the page fault was taken during a
+copy-out to a user buffer from an xfs bulkstat operation. XFS uses
+an "empty" transaction context for bulkstat to do automated metadata
+buffer cleanup, and so the transaction context is valid across the
+copyout of the bulkstat info into the user buffer.
 
-However, we parse the mount options long before we read the
-superblock, and we know if the mount has been asked to re-write the
-stripe alignment configuration when we are reading the superblock
-and verifying it for the first time. Hence we can conditionally
-ignore stripe verification failures if the mount options specified
-will correct the issue.
+We are using empty transaction contexts like this in XFS to reduce
+the risk of failing to release objects we reference during the
+operation, especially during error handling. Hence we really need to
+ensure that we can take page faults from these contexts without
+leaving landmines for the code processing the page fault to trip
+over.
 
-We validate that the new stripe unit/width are valid before we
-overwrite the superblock values, so we can ignore the invalid config
-at verification and fail the mount later if the new values are not
-valid. This, at least, gives users the chance of correcting the
-issue after a kernel upgrade without having to resort to xfs-db
-hacks.
+However, this same behaviour could happen from any other filesystem
+that triggers a page fault or any other exception that is handled
+on-stack from within a task context that has current->journal_info
+set.  Having a page fault from some other filesystem bounce into XFS
+where we have to run a transaction isn't a bug at all, but the usage
+of current->journal_info means that this could result corruption of
+the outer task's journal_info structure.
 
+The problem is purely that we now have two different contexts that
+now think they own current->journal_info. IOWs, no filesystem can
+allow page faults or on-stack exceptions while current->journal_info
+is set by the filesystem because the exception processing might use
+current->journal_info itself.
+
+If we end up with nested XFS transactions whilst holding an empty
+transaction, then it isn't an issue as the outer transaction does
+not hold a log reservation. If we ignore the current->journal_info
+usage, then the only problem that might occur is a deadlock if the
+exception tries to take the same locks the upper context holds.
+That, however, is not a problem that setting current->journal_info
+would solve, so it's largely an irrelevant concern here.
+
+IOWs, we really only use current->journal_info for a warning check
+in xfs_vm_writepages() to ensure we aren't doing writeback from a
+transaction context. Writeback might need to do allocation, so it
+can need to run transactions itself. Hence it's a debug check to
+warn us that we've done something silly, and largely it is not all
+that useful.
+
+So let's just remove all the use of current->journal_info in XFS and
+get rid of all the potential issues from nested contexts where
+current->journal_info might get misused by another filesystem
+context.
+
+Reported-by: syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Reviewed-by: Mark Tinguely <mark.tinguely@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
 Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
 ---
- fs/xfs/libxfs/xfs_sb.c | 40 +++++++++++++++++++++++++++++++---------
- fs/xfs/libxfs/xfs_sb.h |  5 +++--
- 2 files changed, 34 insertions(+), 11 deletions(-)
+ fs/xfs/scrub/common.c | 4 +---
+ fs/xfs/xfs_aops.c     | 7 -------
+ fs/xfs/xfs_icache.c   | 8 +++++---
+ fs/xfs/xfs_trans.h    | 9 +--------
+ 4 files changed, 7 insertions(+), 21 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index 571bb2a770ac..59c4804e4d79 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -530,7 +530,8 @@ xfs_validate_sb_common(
- 	}
- 
- 	if (!xfs_validate_stripe_geometry(mp, XFS_FSB_TO_B(mp, sbp->sb_unit),
--			XFS_FSB_TO_B(mp, sbp->sb_width), 0, false))
-+			XFS_FSB_TO_B(mp, sbp->sb_width), 0,
-+			xfs_buf_daddr(bp) == XFS_SB_DADDR, false))
- 		return -EFSCORRUPTED;
- 
- 	/*
-@@ -1319,8 +1320,10 @@ xfs_sb_get_secondary(
- }
- 
- /*
-- * sunit, swidth, sectorsize(optional with 0) should be all in bytes,
-- * so users won't be confused by values in error messages.
-+ * sunit, swidth, sectorsize(optional with 0) should be all in bytes, so users
-+ * won't be confused by values in error messages.  This function returns false
-+ * if the stripe geometry is invalid and the caller is unable to repair the
-+ * stripe configuration later in the mount process.
-  */
- bool
- xfs_validate_stripe_geometry(
-@@ -1328,20 +1331,21 @@ xfs_validate_stripe_geometry(
- 	__s64			sunit,
- 	__s64			swidth,
- 	int			sectorsize,
-+	bool			may_repair,
- 	bool			silent)
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 23944fcc1a6c..08e292485268 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -978,9 +978,7 @@ xchk_irele(
+ 	struct xfs_scrub	*sc,
+ 	struct xfs_inode	*ip)
  {
- 	if (swidth > INT_MAX) {
- 		if (!silent)
- 			xfs_notice(mp,
- "stripe width (%lld) is too large", swidth);
--		return false;
-+		goto check_override;
- 	}
+-	if (current->journal_info != NULL) {
+-		ASSERT(current->journal_info == sc->tp);
+-
++	if (sc->tp) {
+ 		/*
+ 		 * If we are in a transaction, we /cannot/ drop the inode
+ 		 * ourselves, because the VFS will trigger writeback, which
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index 465d7630bb21..e74097e58097 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -502,13 +502,6 @@ xfs_vm_writepages(
+ {
+ 	struct xfs_writepage_ctx wpc = { };
  
- 	if (sunit > swidth) {
- 		if (!silent)
- 			xfs_notice(mp,
- "stripe unit (%lld) is larger than the stripe width (%lld)", sunit, swidth);
--		return false;
-+		goto check_override;
- 	}
+-	/*
+-	 * Writing back data in a transaction context can result in recursive
+-	 * transactions. This is bad, so issue a warning and get out of here.
+-	 */
+-	if (WARN_ON_ONCE(current->journal_info))
+-		return 0;
+-
+ 	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
+ 	return iomap_writepages(mapping, wbc, &wpc.ctx, &xfs_writeback_ops);
+ }
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 3c210ac83713..db88f41c94c6 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -2031,8 +2031,10 @@ xfs_inodegc_want_queue_work(
+  *  - Memory shrinkers queued the inactivation worker and it hasn't finished.
+  *  - The queue depth exceeds the maximum allowable percpu backlog.
+  *
+- * Note: If the current thread is running a transaction, we don't ever want to
+- * wait for other transactions because that could introduce a deadlock.
++ * Note: If we are in a NOFS context here (e.g. current thread is running a
++ * transaction) the we don't want to block here as inodegc progress may require
++ * filesystem resources we hold to make progress and that could result in a
++ * deadlock. Hence we skip out of here if we are in a scoped NOFS context.
+  */
+ static inline bool
+ xfs_inodegc_want_flush_work(
+@@ -2040,7 +2042,7 @@ xfs_inodegc_want_flush_work(
+ 	unsigned int		items,
+ 	unsigned int		shrinker_hits)
+ {
+-	if (current->journal_info)
++	if (current->flags & PF_MEMALLOC_NOFS)
+ 		return false;
  
- 	if (sectorsize && (int)sunit % sectorsize) {
-@@ -1349,21 +1353,21 @@ xfs_validate_stripe_geometry(
- 			xfs_notice(mp,
- "stripe unit (%lld) must be a multiple of the sector size (%d)",
- 				   sunit, sectorsize);
--		return false;
-+		goto check_override;
- 	}
- 
- 	if (sunit && !swidth) {
- 		if (!silent)
- 			xfs_notice(mp,
- "invalid stripe unit (%lld) and stripe width of 0", sunit);
--		return false;
-+		goto check_override;
- 	}
- 
- 	if (!sunit && swidth) {
- 		if (!silent)
- 			xfs_notice(mp,
- "invalid stripe width (%lld) and stripe unit of 0", swidth);
--		return false;
-+		goto check_override;
- 	}
- 
- 	if (sunit && (int)swidth % (int)sunit) {
-@@ -1371,9 +1375,27 @@ xfs_validate_stripe_geometry(
- 			xfs_notice(mp,
- "stripe width (%lld) must be a multiple of the stripe unit (%lld)",
- 				   swidth, sunit);
--		return false;
-+		goto check_override;
- 	}
- 	return true;
-+
-+check_override:
-+	if (!may_repair)
-+		return false;
-+	/*
-+	 * During mount, mp->m_dalign will not be set unless the sunit mount
-+	 * option was set. If it was set, ignore the bad stripe alignment values
-+	 * and allow the validation and overwrite later in the mount process to
-+	 * attempt to overwrite the bad stripe alignment values with the values
-+	 * supplied by mount options.
-+	 */
-+	if (!mp->m_dalign)
-+		return false;
-+	if (!silent)
-+		xfs_notice(mp,
-+"Will try to correct with specified mount options sunit (%d) and swidth (%d)",
-+			BBTOB(mp->m_dalign), BBTOB(mp->m_swidth));
-+	return true;
+ 	if (shrinker_hits > 0)
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index 4e38357237c3..ead65f5f8dc3 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -277,19 +277,14 @@ static inline void
+ xfs_trans_set_context(
+ 	struct xfs_trans	*tp)
+ {
+-	ASSERT(current->journal_info == NULL);
+ 	tp->t_pflags = memalloc_nofs_save();
+-	current->journal_info = tp;
  }
  
- /*
-diff --git a/fs/xfs/libxfs/xfs_sb.h b/fs/xfs/libxfs/xfs_sb.h
-index 2e8e8d63d4eb..37b1ed1bc209 100644
---- a/fs/xfs/libxfs/xfs_sb.h
-+++ b/fs/xfs/libxfs/xfs_sb.h
-@@ -35,8 +35,9 @@ extern int	xfs_sb_get_secondary(struct xfs_mount *mp,
- 				struct xfs_trans *tp, xfs_agnumber_t agno,
- 				struct xfs_buf **bpp);
+ static inline void
+ xfs_trans_clear_context(
+ 	struct xfs_trans	*tp)
+ {
+-	if (current->journal_info == tp) {
+-		memalloc_nofs_restore(tp->t_pflags);
+-		current->journal_info = NULL;
+-	}
++	memalloc_nofs_restore(tp->t_pflags);
+ }
  
--extern bool	xfs_validate_stripe_geometry(struct xfs_mount *mp,
--		__s64 sunit, __s64 swidth, int sectorsize, bool silent);
-+bool	xfs_validate_stripe_geometry(struct xfs_mount *mp,
-+		__s64 sunit, __s64 swidth, int sectorsize, bool may_repair,
-+		bool silent);
+ static inline void
+@@ -297,10 +292,8 @@ xfs_trans_switch_context(
+ 	struct xfs_trans	*old_tp,
+ 	struct xfs_trans	*new_tp)
+ {
+-	ASSERT(current->journal_info == old_tp);
+ 	new_tp->t_pflags = old_tp->t_pflags;
+ 	old_tp->t_pflags = 0;
+-	current->journal_info = new_tp;
+ }
  
- uint8_t xfs_compute_rextslog(xfs_rtbxlen_t rtextents);
- 
+ #endif	/* __XFS_TRANS_H__ */
 -- 
 2.39.3
 
