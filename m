@@ -1,55 +1,54 @@
-Return-Path: <linux-xfs+bounces-9321-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9322-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA8DE9082AF
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 05:50:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C90619082C8
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 05:55:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2F1242837E6
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 03:50:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F0F61F26A2F
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 03:55:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 231B1146A8E;
-	Fri, 14 Jun 2024 03:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004E7146A86;
+	Fri, 14 Jun 2024 03:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVMfPKYH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="siIzNu4K"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A8B3D64
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 03:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B392312C7E3
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 03:54:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718337048; cv=none; b=LYXDNeQCXHLPLSYlJ3PQ4NNJcP4GNcfAK15MHBQGnUHAAD0rwpNqqtVn0HUMlxy5JSmscuW5FXNGaJY4wR4s6jIw1ERyt5L9ADSL47MtrgHI9tGG6ZVbIir+no3mq0Eu6IK+5dtbS7gxqUVGjazn6/ScLgHZwAxWjHq2yTi53Fo=
+	t=1718337249; cv=none; b=L05DSkMOxwwbgOdniy6k/cf0H67mwuQA7HemR4L8hfqfmYpJ4AS54wEz87XqYKQlvSbPPBPL4YHmIEU/vvy87V74n1vA0RKRcNc9gCDyUtYFi3C+78nbfndu4cqJ+ifOZ4MvESF1SMtpieugN9K5/NzlNpDWkoe6s63kpqjn55k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718337048; c=relaxed/simple;
-	bh=BPRtno/f0W4qzXDzGFal2XHJyNsNdMRVQaeFsH2gJmQ=;
+	s=arc-20240116; t=1718337249; c=relaxed/simple;
+	bh=XjSLf6rc2KiGX6nHiVJ0x6OtfBWyJvEQ7gEPM+FH6pM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMEyDkaz9bFd4gWjEmlxG8b7mcMVwFGWkMZ0JMsqqN+5h3HBO2+53Jb0l0QtfarmJNrQu1+5c3jFAUhVjIQUpv684M2BC3xDKE4UgjMXlAuySeGouLX+SjBmw7mrRflbjZaNrd4EWdT7MqIJL+b0Cp1HIVPIU+7eyfUJgl7cQFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVMfPKYH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CF5C2BD10;
-	Fri, 14 Jun 2024 03:50:48 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=N86QDo5HOh6MW8DcsQKv36cnsyxui3boL2Kqj2UewZTzWExN2ahERFUdhyqjqalVjZ/g0AYJeSesmZXeOyxNXH80adAYQcLON3zx+09EYZZP3VqJD2TGd+D6MGBcSm9QW9DK0KOrcqvthx4xBAj8bIFxyKkBMnSFwwvJOZAw7hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=siIzNu4K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E871C2BD10;
+	Fri, 14 Jun 2024 03:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718337048;
-	bh=BPRtno/f0W4qzXDzGFal2XHJyNsNdMRVQaeFsH2gJmQ=;
+	s=k20201202; t=1718337249;
+	bh=XjSLf6rc2KiGX6nHiVJ0x6OtfBWyJvEQ7gEPM+FH6pM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WVMfPKYHGUgZsm9zsf0lvFwfXklE4TJSxA5WQKc3kU/9H3d54gkNVaCOzI9Rr3AN+
-	 UnmtsAN3Uxajwfz3aC0y6tzU1p3+SN37jeFXsclO+0NLS3VoIaTFMwJgZclu2rUKN9
-	 dGo2GvtMEiyo62Ri669RGvw+0nuXujuoCDrCJAiOr/GfCBi1r85vrurFJpw6WkDGwN
-	 0NIWdq8lBMqZqNlrwCa77b7pIjw4N8BczU83Ff8p+pmhL2j18Iu+W7isLdJ15Vvfsx
-	 O4vbT7OEbHs/5iqSwuUE8vUnX74tbv0oXdicSrc+bWhgqSeX4rPQPaA753/lphEc7u
-	 uC4WGT8eU2LZA==
-Date: Thu, 13 Jun 2024 20:50:47 -0700
+	b=siIzNu4K7nZC/BYrqCAjVGCNHXoIswmeUOHftP1ivmsg4P7I17iRueDyvgUbWphf/
+	 SnXCtLVODP2K9hIwQ9+1a6IQGMEGF7552aEtyS1Z1UEkiG4OltCgiOTmdjv0XDmhof
+	 iYJqM22JiJlsiPpNqD/URY+Bsg2M3P2epSxxs1zi8djl4yN2jYAgA10jUwNAVB4Z8l
+	 zjRRCYEVA9qNZ6Ra6kIXpfAwv97hJoU/BRkEaeWZJXbIzw8hk/XQRMRCgKFLFRcXxZ
+	 2ohwwpR2nJeShsf27fOU8mtUfP32Dss2h3eMSI1BMZoWEbU1zQD370IM1WJx5fOMAp
+	 lgFm6Hw6hj4Yg==
+Date: Thu, 13 Jun 2024 20:54:08 -0700
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: Bill O'Donnell <bodonnel@redhat.com>
 Cc: linux-xfs@vger.kernel.org, cmaiolino@redhat.com
-Subject: Re: [PATCH v2 2/4] xfs_db: fix unitialized automatic struct ifake to
- 0.
-Message-ID: <20240614035047.GC6125@frogsfrogsfrogs>
+Subject: Re: [PATCH v2 3/4] xfs_fsr: correct type in fsrprintf() call
+Message-ID: <20240614035408.GD6125@frogsfrogsfrogs>
 References: <20240613211933.1169581-1-bodonnel@redhat.com>
- <20240613211933.1169581-3-bodonnel@redhat.com>
+ <20240613211933.1169581-4-bodonnel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -58,46 +57,41 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240613211933.1169581-3-bodonnel@redhat.com>
+In-Reply-To: <20240613211933.1169581-4-bodonnel@redhat.com>
 
-On Thu, Jun 13, 2024 at 04:09:16PM -0500, Bill O'Donnell wrote:
-> Ensure automatic struct ifake is properly initialized.
+On Thu, Jun 13, 2024 at 04:09:17PM -0500, Bill O'Donnell wrote:
+> Use %ld instead of %d for howlong variable.
 > 
-> Coverity-id: 1596600, 1596597
+> Coverity-id: 1596598
 > 
 > Signed-off-by: Bill O'Donnell <bodonnel@redhat.com>
+> ---
+>  fsr/xfs_fsr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
+> index fdd37756..d204e3a4 100644
+> --- a/fsr/xfs_fsr.c
+> +++ b/fsr/xfs_fsr.c
+> @@ -426,7 +426,7 @@ fsrallfs(char *mtab, time_t howlong, char *leftofffile)
+>  	fsdesc_t *fsp;
+>  	struct stat sb, sb2;
+>  
+> -	fsrprintf("xfs_fsr -m %s -t %d -f %s ...\n", mtab, howlong, leftofffile);
+> +	fsrprintf("xfs_fsr -m %s -t %ld -f %s ...\n", mtab, howlong, leftofffile);
 
-Looks good now,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+The exact definition of time_t varies by platform and architecture.
+I'd paste that is, but in libc it's a twisty mess of indirection that
+eventually ends at 'signed long int' or 'long long int'.
+
+Either way, some linter is likely to balk at this, so you might as well
+cast howlong to (long long) and use %lld here.
 
 --D
 
-> ---
->  db/bmap_inflate.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/db/bmap_inflate.c b/db/bmap_inflate.c
-> index 33b0c954..219f9bbf 100644
-> --- a/db/bmap_inflate.c
-> +++ b/db/bmap_inflate.c
-> @@ -340,7 +340,7 @@ build_new_datafork(
->  	const struct xfs_bmbt_irec	*irec,
->  	xfs_extnum_t			nextents)
->  {
-> -	struct xbtree_ifakeroot		ifake;
-> +	struct xbtree_ifakeroot		ifake = {};
->  	struct xfs_btree_cur		*bmap_cur;
->  	int				error;
 >  
-> @@ -394,7 +394,7 @@ estimate_size(
->  		.leaf_slack		= 1,
->  		.node_slack		= 1,
->  	};
-> -	struct xbtree_ifakeroot		ifake;
-> +	struct xbtree_ifakeroot		ifake = {};
->  	struct xfs_btree_cur		*bmap_cur;
->  	int				error;
->  
+>  	endtime = starttime + howlong;
+>  	fs = fsbase;
 > -- 
 > 2.45.2
 > 
