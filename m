@@ -1,257 +1,200 @@
-Return-Path: <linux-xfs+bounces-9315-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9317-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 413ED908116
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 03:50:58 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3257590818C
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 04:23:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B959C1F235EF
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 01:50:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B34BB20D2C
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 02:23:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE5C183095;
-	Fri, 14 Jun 2024 01:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 817ED811E0;
+	Fri, 14 Jun 2024 02:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iEPc7MJb";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NTbjXWgU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICvSdb5C"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B64183090
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718329811; cv=fail; b=QvjHSVUmf0v7zH/RrXA2JDAunlMgCOIG23NVzkXdyrDkYvwenPacslzm8gosQrJQrAHSDtYM00eJ4XW0PjCpvC0XXgvS4pYLeh9OKerq+P5VFHWrkf6eAUjKBEM0OlHGGjXTC5YdoR5sA+gdoSkVj/ALBX7uT/CbcEQJ77TLo1Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718329811; c=relaxed/simple;
-	bh=/orzX7XLPrxEoS3qndmy+k+sDZvyVrozlQWNR0pDNMU=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Oa0XEgPZaRMXpupuW3GXy5GgluXHAetptApOFs4XzVovn+rEvY6QQUq8a260jAZURqPde0dL6jOXPVQSGsv9/nPWR3vPpl0aG7EgsRSBoGgecHTsgEdL9TdgKcIDEjH65blQMeLP392bZYghU8DCfauejWhaPIH7bUvluxYxe7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=iEPc7MJb; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NTbjXWgU; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45E1goZs023646
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:subject:date:message-id:in-reply-to:references
-	:content-transfer-encoding:content-type:mime-version; s=
-	corp-2023-11-20; bh=aikzMMpciFRBSI9in0ivglFdYBjN67UIqzirxX0NUKY=; b=
-	iEPc7MJbTD+KADeBG8fLiWb7TczeeVyJ3DFfh0/gV8b9wIhRRVluPUcSoGtVq27G
-	/bjHlWCrlZc2ZZWo7d4veHBr/IkGy7zI7mYctJHWrtboGdLK3AXkPbr2kfrOlsRN
-	r/EEwYEfnZGUhOA67LpXxmxXQmii9DD7Bf10x3Leg0HNPq7+9z58Dvo13uskAxAw
-	Lsy2KzIBE2mTQQvCu/DOrDnEFXgnusbI/6tDK3pVZskwWymXGnJQNvZd+WTLVLUw
-	YOmK+r/4NBBQm2Mo1ja3ktVH72R2JSwbDtkUuiTfT0nPU4dnv3KvIhuJYzsFKGzJ
-	Yj8jih8HfS0aG5RiXlGWAg==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh7dtser-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:09 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45DNDhaF012526
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:08 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2175.outbound.protection.outlook.com [104.47.58.175])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ynca1uw1k-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 01:50:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A/Bh4WPk15BkCilZ7sA9b0pN8Z/IW4cuLWUkxhn5G8bZ7nktu1xr7FsG5z/fIb9CXUrvVI4hfhoKJKu1y3B63hf22hm6/mGErLpDMKgRMFeXOghlUreZpiuIFzlexuPoyrqIZKpeZ4j3iQ2/PldBC2Ubuyx0CReItiLzh5poF4j0i4AKvffUHG/r8ehrHBKI4Q8ODanlzpCTd9Ha5FRe0gLYeKFeZDaajYHyPORof8fho85zlg6ZKOqOCjjdk8p9gwU9Q8+UhIaLQ/PXrHm+kYzwzefTcnHSvCiLMlLxL8ji9Ib9sARyeemHs2N6Fy6k1YeySgpHoVPTHdee6RAg+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aikzMMpciFRBSI9in0ivglFdYBjN67UIqzirxX0NUKY=;
- b=j6vizkR1psb4SApbIlYuDGbkVztxUZD/eZ1b4qKZGYkNPtdiPdHdzQ3fUybqUNVq7OtB7s5rrhM8XG/gxJUgY0boN1aGtv6R36lJSCMRLWNxUhJFd7h6AIy7IVzhk9m5LCsG5ZmxbH5xS2TACc3BYuHkfKl//9zuBIFigyU0T8IvQPUSpDfFl/STpadRrPrCt+sQ0yFQE6RT9AT6zvuOSak+JfrP7mVSAZMRHp5PAHZoFgUbkXJaw/Qw3UzH7VM91r3nQAfEovopJx48ytKp3nUe9xUSm+lPgRV07gcDqTO+LuaiodC6ubCeRN4XT+DwXu/xf8b7YhGeiSPTusogUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD962836A
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Jun 2024 02:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718331799; cv=none; b=U2hSRyTnfIuyLPoLieKBj0b4DcL50kTo8Yf4/ukq24MzD2SwEPonc+s6Fsuu3FeZv9hLMRlxsYhIC59JlOVng3Zyr8+si76a4/kKz0HER7PZQBqgsk//fgxuMu/WItKkJ76E5iY+BI9VURDri0o/OLfgWVwgA1YkhWUQarZowxs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718331799; c=relaxed/simple;
+	bh=W+0uRBuRb6AVEdDU27rhpcxVpQVsqCPY86G7GDDepag=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q3JbtORCUMTLtUchnICNuOTV/cqePaWNj9mNNu+99mLiw9m4nm0iQ/RHcqLV85SVQRpjro4jHrqneVUVRzIglx0EXeJuj0dMROtkInD4fHDch9ETVd62T36SRVCFdb3tDAUAIsEsjwNwKBELnfSZjH03ytkc2yBAWCnd16w9jJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICvSdb5C; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6c53a315c6eso1268380a12.3
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Jun 2024 19:23:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aikzMMpciFRBSI9in0ivglFdYBjN67UIqzirxX0NUKY=;
- b=NTbjXWgUT0+phfoYUsFoE7s59NRI2xNjitNQsRsLJFeDiKj2N+i9xinUn1Jq+D/C6Qv9BLXe+PG2IhyYEutc9dSpO/Adwxky7nuOixhU54aO0Blkkhi/yzZXKK34PIKBKJHiK8bxeMc2HXIEhsVl3tmAg9aDx1OBP2b1q8mdDeU=
-Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
- by DM4PR10MB7475.namprd10.prod.outlook.com (2603:10b6:8:187::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.20; Fri, 14 Jun
- 2024 01:50:06 +0000
-Received: from BLAPR10MB5316.namprd10.prod.outlook.com
- ([fe80::a63b:c94b:7ed8:4142]) by BLAPR10MB5316.namprd10.prod.outlook.com
- ([fe80::a63b:c94b:7ed8:4142%5]) with mapi id 15.20.7677.024; Fri, 14 Jun 2024
- 01:50:06 +0000
-From: Catherine Hoang <catherine.hoang@oracle.com>
+        d=gmail.com; s=20230601; t=1718331797; x=1718936597; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nb3u5lena1PmsLa5qh4KtcocCo0zwHfXXscTPy9jHs0=;
+        b=ICvSdb5CcL0EDjC+u7eg4tzY6nInr7WdvMj9MumdHVfo2bOvekHG+L9pCC7BakoLIf
+         Zagkl/ulx1BLCc62UGklOC7tbj+21bwam9g9bzyhqNNjZD8yx7Ye2y2O4ahEJwZk0g9K
+         fQG8eY124oRlAMeHYgJbI4WBG92DPLFZOnXofPCx1awW/NDgtIDrBZVtf9xkw9UvQVm5
+         MbggQEq8Iq6QgCQAZ9FdaUyBcE9KtCT19bMcWlTTRfmYRoKCQldSqGh5BGUrVo1Ajjut
+         1VSapOfYkDjrYXvqSaqAZUL/SMiq2vDY/mYC8P1qPOLRuJUL8X61a9jABOGwfLln/68c
+         Dryw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718331797; x=1718936597;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nb3u5lena1PmsLa5qh4KtcocCo0zwHfXXscTPy9jHs0=;
+        b=SXjQZz8gZY2QABlTIUXIeD5EhVFvC1sl6Xn/1bsJaX5ks0ENCw8yfRaIukse5DNU9w
+         pyJr4DOsu6AbRMS7CjydMfIBrOzksFgi3d/2E8MyrbdidgCC3iLQAnSPx4nJwAk73Zqk
+         kM8P/gelvEghLwIS2vaPJ+iBQ2s9Y+3UbPk90Yb4oZ9V6qneKoZXe6WFOUzVGNpeJHsn
+         3fWanLSi+zwGI344Iy8P4FaZFVedrWTo+Ys6xyuBjKP0eKymrMaziAWnV5S/ktLOYHvF
+         WOgff0J7UCqJdjPlMROfVEuab1ebGDN8N5YDWIYsqPkOMaLGDz1ysGnMeYXaW10yNOuM
+         PnbA==
+X-Gm-Message-State: AOJu0YzRiWtb2sP4c6Ps2X5HI2seFCGjtj6zbxaqVgGIFk9diTyEGXw6
+	jq+goK+4sV6iL4WS6KIhcio0nHnrO+f5YCQh8iHPGO4pRuJ6gLd/o0YjctP2M1A=
+X-Google-Smtp-Source: AGHT+IG3m5O2sd6pqUgv0H+Fvx0/fZ4YdS8l0HBm3Z4f8TLSGic+H/7h4J+50wEIUjPugi9hsXHs5w==
+X-Received: by 2002:a17:90a:a797:b0:2ae:7f27:82cd with SMTP id 98e67ed59e1d1-2c4db132d0amr1494678a91.7.1718331796857;
+        Thu, 13 Jun 2024 19:23:16 -0700 (PDT)
+Received: from localhost.localdomain ([47.238.252.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4a7603163sm4862512a91.25.2024.06.13.19.23.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jun 2024 19:23:16 -0700 (PDT)
+From: lei lu <llfamsec@gmail.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 6.6 CANDIDATE 8/8] xfs: allow cross-linking special files without project quota
-Date: Thu, 13 Jun 2024 18:49:46 -0700
-Message-Id: <20240614014946.43237-9-catherine.hoang@oracle.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240614014946.43237-1-catherine.hoang@oracle.com>
-References: <20240614014946.43237-1-catherine.hoang@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0387.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::32) To BLAPR10MB5316.namprd10.prod.outlook.com
- (2603:10b6:208:326::6)
+Cc: djwong@kernel.org
+Subject: [PATCH v5] xfs: don't walk off the end of a directory data block
+Date: Fri, 14 Jun 2024 10:22:53 +0800
+Message-Id: <20240614022253.130814-1-llfamsec@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BLAPR10MB5316:EE_|DM4PR10MB7475:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55bf3a98-7392-4844-42af-08dc8c1450fb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230035|1800799019|366011|376009;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?tzA3deZEH0iSGdbisuSShT2ZpDkGwZFmfrC4ikFP1e8A6XaCfh8PnjeADIaw?=
- =?us-ascii?Q?2M/7XjCeWP9+ySqJCyqCR9kCZ3aQhhsToLIwFeYyYFynszlWOHpG7AsVSIlU?=
- =?us-ascii?Q?Vlj0RlDkEs2BS5kaAcLdQRN2CdhTNv+w26h8Z539vxCdWq3doXvVhrTWEbms?=
- =?us-ascii?Q?7P8tN6wLo1ZTaHHqWC9SBe9ZmNo5dVtf1yjzquWcJnjHexZpUcCcfU+kWV5T?=
- =?us-ascii?Q?eJ1rAM3d30zqR8WeFlKlQAVvqtDqvih6Cf+cfrRC8yDwHO7KFL0Ykiq505JP?=
- =?us-ascii?Q?ExvSC2+DzV9ql3nsnw2shV41JoJla8NmX3aPl2mFfejNgHi/EMoomP6Fp8Iy?=
- =?us-ascii?Q?sxhKupItD43V0COPg5/DnByU7342XQRuhF9ean0bYzQMrmVqkhiG/5FWMMGd?=
- =?us-ascii?Q?To7B8af4T/zYuwKPrQqZ6SRx81e8MfZXnuzR1ZVXpT0irfgqmhknbVr5/qc8?=
- =?us-ascii?Q?3IkwINYbdUSPdT+kLMwtb1Ws7nZoDV4txmR8hmBny6yINTfhUbyAfIfevcSJ?=
- =?us-ascii?Q?lUDmpAiougyhihcroyoK+8uIN64/NMjmRSUh+Wis4GWhSKPZIT6vTTb6aCvm?=
- =?us-ascii?Q?/P3ee2LfnG7bS0iXV+3V/W/e+3yJJvJtTg87rJS7M6xMFvh9vD5ceECBcABY?=
- =?us-ascii?Q?asavGBSJtrNe7D7gZl01A910luV2JwgzRj2wSCLNpR8DOgpnBmyJEeV4WQjP?=
- =?us-ascii?Q?4W33FWs5S0Iout9dNzN79NP30N53y6UV0VY1wPI9KHWNyKMgF022Nw35blvJ?=
- =?us-ascii?Q?jrB65VVLgqWOBiofj0AJRTmLFRtC6shxn05s/3IvSqtq7A84/pWmTLYKK98h?=
- =?us-ascii?Q?kWcO0RJlkJBRoOrpJgAiIKVDSwTIMBuek2N0/ubQuVKCb3M32HL/htW8jyHo?=
- =?us-ascii?Q?HUbRJKlMZe1KyPWeC3nTtQUykubckK8WLQeV1n++Fur5wBfKUJTLCmiMZJWP?=
- =?us-ascii?Q?gmYkmjKM4R5iSBx8OuPygjT7OxmxJSB0EBF85DmrzeKxT+bdh02dspwyDgWv?=
- =?us-ascii?Q?BZrwrKK3G87wqjGgNf1cXBX1+1GGcawLCi8zmwZXnx3EROHoeIcQ0hjWqN+b?=
- =?us-ascii?Q?BBB5nMg3TetlIRUTwk5sPt1LgAqdHD3sk5kNPmPK2Uoud19+xO5qET5otz6F?=
- =?us-ascii?Q?WfJf4pdqqyzqBygDBaCiWL6L8yjt9VimiwIe9dOGna21nN7BPSY/mw1JUmlk?=
- =?us-ascii?Q?EzQXb4MM2M7gJALVHJ/2je1qeQdu4rbDswQ8MzV40UiwT8ayfFlTrnfUJQaC?=
- =?us-ascii?Q?lN4KhasKhPlQFX2FLgkcP9FiT8GVSu3sx92xAxzeZsva5A8vvZEcJ4R9LtoS?=
- =?us-ascii?Q?3fOkmc8cO6Bwj9JZ6gnjfR48?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230035)(1800799019)(366011)(376009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?nRGEBDblws7gOk13iykfmXgSMtsGuCPJFU/WrUj13kDnxXusx+ZbSz/h0ThV?=
- =?us-ascii?Q?/FjPF+MAvVlMwVyk9GQeMQLkG/Po8kFJweVNZubuO4iuo56ZuacEv3JHxs40?=
- =?us-ascii?Q?Pp4YHkS2CpRHrDSMO8GhpuBX/4GpR5cPVceqS3u3xCOy0fBdaF6jqvlJJT6p?=
- =?us-ascii?Q?jNsCfPlQTXcAOIu2R8QJD8mggISeRhB2pzo7yhWOQg7f/A2n6mcdOAZqMx2x?=
- =?us-ascii?Q?m5IZMjIqTrn6/BU9EIg3Bjgel2UVwgc0ZUwh1YkyPY4UlAbmjtklOXw4QHMh?=
- =?us-ascii?Q?96IEyLXICknzjWZmWGP4M0BfeiB68fGx2iOMSnuedkDESXfIvq8CFdUKMjkF?=
- =?us-ascii?Q?UNOqqAbKHHrXjbKm6aJ8SAVmHNZUHisaDyg18NbjDdSzJsNNjOwszKvqdHST?=
- =?us-ascii?Q?w/+uGQpyqK96IAU7TGoMClfMja+N2er8W5HNbwpI++FtP1UPoiNeKPqji5BQ?=
- =?us-ascii?Q?Slc5dTA2LeJfqAJchOoecH9RajQiLSkM+W4TdCKkeBalJW+hUvFsrk+LCI9u?=
- =?us-ascii?Q?awBsAb5oXyObBFoDCA4peZG1B6uzCGJ5oXf9iDeG6Dhu2PqSBG3r21Hf5dNb?=
- =?us-ascii?Q?hgV/AqvcjwieWPvuMxgmj8KAlv3X0ztLOR6Aom7xZVBVpVbgpSLYDO36aJW7?=
- =?us-ascii?Q?Mm1Nz5xIfKr5GPz/Wbo7U2KTsriHLp/8Aiwk597MwvgRSzBsLps9Wn4j3V2y?=
- =?us-ascii?Q?us+XU09zogVumEVSsMsPGQ8PIT3tv9MsaenCY/IOlylLxNT6qanJjOHvoGX4?=
- =?us-ascii?Q?/8rDYnemp766nYh/fEs+u2rObqwWlwQxnE/N5MebDLCSUzHjWWi8DSMRnGpC?=
- =?us-ascii?Q?EpFRvxzaHOcjd7uUlID0lm1l/Scbjm/XLvnc9zHW6B52sTXwxzNduZa5N0Fo?=
- =?us-ascii?Q?RX613CvjX4gRjT8V8C5E3/vzGXFb8TXYxGa3kjRnGyCYpg1CaHTQN5V4eVPf?=
- =?us-ascii?Q?Y1Xttjfab6mYHgCBOCF/MSFD4y1Na1Z6ByrSiizQNYWD4CLJaHMKQ/24Smik?=
- =?us-ascii?Q?0Qf+tTFmvcadPWwiQO4bvy/7IUYdXGRnWMWd6Jl3hhZ5S7DhJLFk31tYs61C?=
- =?us-ascii?Q?iekQozKff2xURfTFMyg8hflCRXDwcbxtY0Qx6auo9f4UMO7mBuVjRRBElzRe?=
- =?us-ascii?Q?Fr50gXuQtE3SzAfnfZ3otcbNdd5fBnZhb3qx/H13lIApXm95M9PTZxF/5q7O?=
- =?us-ascii?Q?L+wMi+50jPEZgjfZm9GlNHCdT06Nsz8+m7dijl7mIPQFm566x2ru2x7qQTMt?=
- =?us-ascii?Q?4L/gFU3rG0S3PhDdI28wUzCYHb6IJD8n39phWH95efsHQGbFjtkHSnL2rHjr?=
- =?us-ascii?Q?JZ64LQwe5pK/wfyHO3Ffwept6H5IJG4Hv2Ao8PbXp/33MReC9V9CRqacoOP5?=
- =?us-ascii?Q?bQ9OYDypoMFPzDsPmQdLIhKZlcuTZwWyjS+CmON01UbvBwbEhMUgJEZOxa2/?=
- =?us-ascii?Q?NVx3cdbK/qjgt/CH3czjlaczbP2xb6afbycA2KcWvL3R7YspioygSuq9WJHr?=
- =?us-ascii?Q?XBYl6fP2M8tZLKiNUXrmGugzaXyy4LGl/hwn36SINOhPS4ENRzA7j3EQ0D78?=
- =?us-ascii?Q?hLftXwQ0MdaJGl1wp/b3vH+wl1kt6U1VtOTWmt2kGvB/FBRKM+Vv4CWI2Au3?=
- =?us-ascii?Q?90tU7lXCLg8GcBpbFKCvVOdKMcI12nrrrfLaVCrUnhkTwrZDZ5jDJMkjEQ7+?=
- =?us-ascii?Q?VmfdjA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	IDWKOY1/0rpt6C4NFk+HdFdPw683K7E2D0q0rKqb6+lXiOo9+EuQR5UNR1ZLtypGoimC8hN0YpsLctXIyWVSgCF9zbRW+dBCezYP633afUzh/9KKZ9l4zB6DKhl/spD5thS+dx+gkP1ox1nHtMksYy23mZm3J4/8VW/rKujSMpFwepYnuLobJeb+QlizaKw9WXFoxe6VKJLIUWdo0TT7ZGnsBa+cTP1QClVW/e6x6K0Nn6Dcrz/zdHf6O8V5xiyFlc+Jp80KjAO6Ws++LoRKri4GAdux7PAO0N/g3fcs6y8QzISjnsfsNOHJwNIpO2AqcM9KbCB8QCXSv/q/rNe5dTbZMAc+qY2Mzp8PxCaKF41ATlLcG/hDkiARSW1tCK44WU8z6PJ8vear7HM8RznG3F6paoZ+Qfl2vDfMEWdRemCuynQBhQH0lQwS7KHx1MHc5VylzZuB9uJDqeKbaAVKpd4owR78e38rSBwj4rTY/ET6iw8DWz0zvdLGBZRDU56liUOaXkpWxVAD9MCibUXNnsTnDaccNm3+mgxrvMKRduZTnUzc1bd9NBXDjFSkpWhxhpdA67g4xEbDQzriW955sLKxZw2wLxnVXqwWcoVCJI8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55bf3a98-7392-4844-42af-08dc8c1450fb
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2024 01:50:06.7119
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XbK4B5GdQcb3fZPrPi1CJMQ0Zn8KonSl6cEX12S25IrZvEEmd/oB18WVodOF2DJDTkHRON1gr6HfEHCz3d1rXpPIHv+WniPol2lXQkoD5cc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7475
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-13_15,2024-06-13_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406140009
-X-Proofpoint-GUID: UChlaab6HWW7jCqasiESVForSEKwp-Fh
-X-Proofpoint-ORIG-GUID: UChlaab6HWW7jCqasiESVForSEKwp-Fh
+Content-Transfer-Encoding: 8bit
 
-From: Andrey Albershteyn <aalbersh@redhat.com>
+This adds sanity checks for xfs_dir2_data_unused and xfs_dir2_data_entry
+to make sure don't stray beyond valid memory region. Before patching, the
+loop simply checks that the start offset of the dup and dep is within the
+range. So in a crafted image, if last entry is xfs_dir2_data_unused, we
+can change dup->length to dup->length-1 and leave 1 byte of space. In the
+next traversal, this space will be considered as dup or dep. We may
+encounter an out of bound read when accessing the fixed members.
 
-commit e23d7e82b707d1d0a627e334fb46370e4f772c11 upstream.
+In the patch, we make sure that the remaining bytes large enough to hold
+an unused entry before accessing xfs_dir2_data_unused and
+xfs_dir2_data_unused is XFS_DIR2_DATA_ALIGN byte aligned. We also make
+sure that the remaining bytes large enough to hold a dirent with a
+single-byte name before accessing xfs_dir2_data_entry.
 
-There's an issue that if special files is created before quota
-project is enabled, then it's not possible to link this file. This
-works fine for normal files. This happens because xfs_quota skips
-special files (no ioctls to set necessary flags). The check for
-having the same project ID for source and destination then fails as
-source file doesn't have any ID.
-
-mkfs.xfs -f /dev/sda
-mount -o prjquota /dev/sda /mnt/test
-
-mkdir /mnt/test/foo
-mkfifo /mnt/test/foo/fifo1
-
-xfs_quota -xc "project -sp /mnt/test/foo 9" /mnt/test
-> Setting up project 9 (path /mnt/test/foo)...
-> xfs_quota: skipping special file /mnt/test/foo/fifo1
-> Processed 1 (/etc/projects and cmdline) paths for project 9 with recursion depth infinite (-1).
-
-ln /mnt/test/foo/fifo1 /mnt/test/foo/fifo1_link
-> ln: failed to create hard link '/mnt/test/testdir/fifo1_link' => '/mnt/test/testdir/fifo1': Invalid cross-device link
-
-mkfifo /mnt/test/foo/fifo2
-ln /mnt/test/foo/fifo2 /mnt/test/foo/fifo2_link
-
-Fix this by allowing linking of special files to the project quota
-if special files doesn't have any ID set (ID = 0).
-
-Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
-Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
+Signed-off-by: lei lu <llfamsec@gmail.com>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_inode.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_dir2_data.c | 31 ++++++++++++++++++++++++++-----
+ fs/xfs/libxfs/xfs_dir2_priv.h |  7 +++++++
+ 2 files changed, 33 insertions(+), 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index f9d29acd72b9..efb6b8f35617 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1239,8 +1239,19 @@ xfs_link(
- 	 */
- 	if (unlikely((tdp->i_diflags & XFS_DIFLAG_PROJINHERIT) &&
- 		     tdp->i_projid != sip->i_projid)) {
--		error = -EXDEV;
--		goto error_return;
+diff --git a/fs/xfs/libxfs/xfs_dir2_data.c b/fs/xfs/libxfs/xfs_dir2_data.c
+index dbcf58979a59..e1d5da6d8d4a 100644
+--- a/fs/xfs/libxfs/xfs_dir2_data.c
++++ b/fs/xfs/libxfs/xfs_dir2_data.c
+@@ -177,6 +177,14 @@ __xfs_dir3_data_check(
+ 	while (offset < end) {
+ 		struct xfs_dir2_data_unused	*dup = bp->b_addr + offset;
+ 		struct xfs_dir2_data_entry	*dep = bp->b_addr + offset;
++		unsigned int	reclen;
++
 +		/*
-+		 * Project quota setup skips special files which can
-+		 * leave inodes in a PROJINHERIT directory without a
-+		 * project ID set. We need to allow links to be made
-+		 * to these "project-less" inodes because userspace
-+		 * expects them to succeed after project ID setup,
-+		 * but everything else should be rejected.
++		 * Are the remaining bytes large enough to hold an
++		 * unused entry?
 +		 */
-+		if (!special_file(VFS_I(sip)->i_mode) ||
-+		    sip->i_projid != 0) {
-+			error = -EXDEV;
-+			goto error_return;
-+		}
- 	}
++		if (offset > end - xfs_dir2_data_unusedsize(1))
++			return __this_address;
  
- 	if (!resblks) {
+ 		/*
+ 		 * If it's unused, look for the space in the bestfree table.
+@@ -186,9 +194,13 @@ __xfs_dir3_data_check(
+ 		if (be16_to_cpu(dup->freetag) == XFS_DIR2_DATA_FREE_TAG) {
+ 			xfs_failaddr_t	fa;
+ 
++			reclen = xfs_dir2_data_unusedsize(
++					be16_to_cpu(dup->length));
+ 			if (lastfree != 0)
+ 				return __this_address;
+-			if (offset + be16_to_cpu(dup->length) > end)
++			if (be16_to_cpu(dup->length) != reclen)
++				return __this_address;
++			if (offset + reclen > end)
+ 				return __this_address;
+ 			if (be16_to_cpu(*xfs_dir2_data_unused_tag_p(dup)) !=
+ 			    offset)
+@@ -206,10 +218,18 @@ __xfs_dir3_data_check(
+ 				    be16_to_cpu(bf[2].length))
+ 					return __this_address;
+ 			}
+-			offset += be16_to_cpu(dup->length);
++			offset += reclen;
+ 			lastfree = 1;
+ 			continue;
+ 		}
++
++		/*
++		 * This is not an unused entry. Are the remaining bytes
++		 * large enough for a dirent with a single-byte name?
++		 */
++		if (offset > end - xfs_dir2_data_entsize(mp, 1))
++			return __this_address;
++
+ 		/*
+ 		 * It's a real entry.  Validate the fields.
+ 		 * If this is a block directory then make sure it's
+@@ -218,9 +238,10 @@ __xfs_dir3_data_check(
+ 		 */
+ 		if (dep->namelen == 0)
+ 			return __this_address;
+-		if (!xfs_verify_dir_ino(mp, be64_to_cpu(dep->inumber)))
++		reclen = xfs_dir2_data_entsize(mp, dep->namelen);
++		if (offset + reclen > end)
+ 			return __this_address;
+-		if (offset + xfs_dir2_data_entsize(mp, dep->namelen) > end)
++		if (!xfs_verify_dir_ino(mp, be64_to_cpu(dep->inumber)))
+ 			return __this_address;
+ 		if (be16_to_cpu(*xfs_dir2_data_entry_tag_p(mp, dep)) != offset)
+ 			return __this_address;
+@@ -244,7 +265,7 @@ __xfs_dir3_data_check(
+ 			if (i >= be32_to_cpu(btp->count))
+ 				return __this_address;
+ 		}
+-		offset += xfs_dir2_data_entsize(mp, dep->namelen);
++		offset += reclen;
+ 	}
+ 	/*
+ 	 * Need to have seen all the entries and all the bestfree slots.
+diff --git a/fs/xfs/libxfs/xfs_dir2_priv.h b/fs/xfs/libxfs/xfs_dir2_priv.h
+index 1db2e60ba827..263f77bc4cf8 100644
+--- a/fs/xfs/libxfs/xfs_dir2_priv.h
++++ b/fs/xfs/libxfs/xfs_dir2_priv.h
+@@ -188,6 +188,13 @@ void xfs_dir2_sf_put_ftype(struct xfs_mount *mp,
+ extern int xfs_readdir(struct xfs_trans *tp, struct xfs_inode *dp,
+ 		       struct dir_context *ctx, size_t bufsize);
+ 
++static inline unsigned int
++xfs_dir2_data_unusedsize(
++	unsigned int	len)
++{
++	return round_up(len, XFS_DIR2_DATA_ALIGN);
++}
++
+ static inline unsigned int
+ xfs_dir2_data_entsize(
+ 	struct xfs_mount	*mp,
 -- 
-2.39.3
+2.34.1
 
 
