@@ -1,173 +1,149 @@
-Return-Path: <linux-xfs+bounces-9354-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9360-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06A289093C6
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 23:47:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AD65909513
+	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2024 02:30:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EC7B28162A
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Jun 2024 21:47:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31BD3282949
+	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2024 00:30:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78E73148833;
-	Fri, 14 Jun 2024 21:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95720CA64;
+	Sat, 15 Jun 2024 00:29:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYkTGNFk"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bixN2wSh"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304D22032A;
-	Fri, 14 Jun 2024 21:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB45B1361;
+	Sat, 15 Jun 2024 00:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718401671; cv=none; b=lRB3q71fuWRv3/eUCfm/eWbZxSLt1nSQrvJVqGgYy+kgKvoCGJNDAfxQ98xw1c2QbD/rg5yE5KjaIxO2Mjx6sQrlNaN2vTwphp+vIkw3fkQNQtwdiPlr7BLHlkndnqNcJwDwTsj038homuH0xH7AS+Z0/uBIOdz6Fh1DagNfhfw=
+	t=1718411382; cv=none; b=EYAX0yd0KfC94YdXyeJfaNhISXMbDXktWRCDBDSmeq/Hp0YCuHsgEfX8YEvNDiqIIuLNfRlUMQpK52SwZCbzeLXlN6TGM6+qLhiS8tXoikdKWfozFzqBBqySSHym7jPSotgSKwniCFspyeBENfxXuQ2As8C5mdkLFyy9RKb4FY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718401671; c=relaxed/simple;
-	bh=QzLUVCGd/IwfRy9XRwM8Zt5WYb9nFWEzZiraamlAO9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dVJrrQehpsfJggkF8AJV47oDY/l+xSBUjBelMI9PwA1SfgiJ0DwN/6ohHR1cP9F4ytQcofGSLIJcP8kO/GNvajLldF7OeA4xATjfcnO4WF0CPYxS2ejYG7SHJtFXPCNZ8t2x5YDKhkOW1I+1BsXKl+rygpMOu0LaW18S7cO/Zn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYkTGNFk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A183DC2BD10;
-	Fri, 14 Jun 2024 21:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718401670;
-	bh=QzLUVCGd/IwfRy9XRwM8Zt5WYb9nFWEzZiraamlAO9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rYkTGNFkD36aJM7RCXZB1yQmhEZeUAH58YooPQKwPT3DfWasaEbVzniv/3VQdUOHw
-	 yi0bd04n+gHUWTvdrlcPv3BJZ9JeNM7InpuMAzWpJTgf3bTGLD+gmv0MRzgy+nU/XC
-	 A1iu0ebyXR8NR79bVQrTQHXHl5XFT/5OlKG61UdM8LjTVpDdQ4bJPSHnC7/c+mFdN7
-	 od5ZZdZEhuB7+ydTK9NzQM2O6smJPIdjA8QtcPPffcUlXfLhz/1Gj5et9HVb4WEf9t
-	 LTrmZlMnSU3exqAfFkgR7devvkb9NUH4vbQSLvDBGqwhDtDprJmy0xrYygd9Dxt+4z
-	 9gVyz3X0KPwkw==
-Date: Fri, 14 Jun 2024 14:47:50 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-Cc: linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>, Jan Kara <jack@suse.cz>,
-	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [TEXT 3/3] porting iomap
-Message-ID: <20240614214750.GN6125@frogsfrogsfrogs>
-References: <20240614214347.GK6125@frogsfrogsfrogs>
+	s=arc-20240116; t=1718411382; c=relaxed/simple;
+	bh=vtz42luEAJn0VhLOUkv2/QP5NNZipfjnEVBsxy/fZy0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ueDgwav9MN9ObFoh28PiD097ywH7hFdfrrli9xfwdOEXsJ0mvNbAI3FmcslFeV+m3oQNY4K7lVvoVsmjsnT/3N37yeaScLAbw6MDPKVVC0zSRtDQsbLilfUIssmX3k95G4R4FkIPwRPgAr+vRuXnzCgSc1TXbKq1/ivUzzcePkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bixN2wSh; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=KMlKjNaY/F8QL3qECnT8EKms3WZs5CznUIuEAKsL0wI=; b=bixN2wShYjRMBjSUYnaQovwNZk
+	EEqsZMmtJGDJBNqorl/0WokkuKb8uhDH+ctYRXT2Cxc2cx32L98paVDX2qpolK0cPMIPcz6Ilpymb
+	KD6FYBQFvNwNhpsl5fdtdvw1CKziq78+ykStUytje7gPA2Xqm5WQvPA8HfCTUt8tQ5bnrO1QpJ4TV
+	JHCU1kWSzBgrxKujcf2nydpnuTEy6geOcIr7UynmlkCtTQ4gfJ+zz6gI5vRvYpGsVSFY1wZCySEfr
+	GDb4cToeKC+23QpY9TGiqK85ZZNvJkLf7bxx6XIoelh7dIJvmEVtqbq/4uSF/zM/i2F4OJ3hFe81g
+	sluCwWBw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sIHIV-00000004KkG-3N4C;
+	Sat, 15 Jun 2024 00:29:35 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: patches@lists.linux.dev,
+	fstests@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	ziy@nvidia.com,
+	vbabka@suse.cz,
+	seanjc@google.com,
+	willy@infradead.org,
+	david@redhat.com,
+	hughd@google.com,
+	linmiaohe@huawei.com,
+	muchun.song@linux.dev,
+	osalvador@suse.de,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	hare@suse.de,
+	john.g.garry@oracle.com,
+	mcgrof@kernel.org
+Subject: [PATCH v2 0/5] fstests: add some new LBS inspired tests
+Date: Fri, 14 Jun 2024 17:29:29 -0700
+Message-ID: <20240615002935.1033031-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240614214347.GK6125@frogsfrogsfrogs>
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-And the final part is the porting guide.
-https://djwong.org/docs/iomap/porting.html
+While working on LBS we've come accross some existing issues, some of them deal
+existing kernels without LBS, while the only new corner case specific to LBS is
+the xarray bug Willy fixed to help with truncation to larger order folios and
+races with writeback.                                                                                                                                                                         
+                                                                                                                                                                                              
+This adds 3 new tests to help reproduce these issues right away. One test
+reproduces an otherwise extremely difficult to reproduce deadlock, we have one
+patch fix already merged to help with that deadlock, however the test also
+also gives us more homework todo, as more deadlocks are still possible with that
+test even on v6.10-rc2.
 
---D
+The 3 tests are:
 
-                        Porting Your Filesystem
+1) mmap():
 
-   Table of Contents
+The mmap page boundary test let's us discover that a patch on the LBS series
+fixes the mmap page boundary restriction when huge pages are enabled on tmpfs
+with a 4k base page size system (x86). This is a corner case POSIX semantic
+issue, so likley not critical to most users.
 
-     * Why Convert?
-     * How Do I Convert a Filesystem?
+2) fsstress + compaction
 
-                              Why Convert?
+The fsstress + compaction test reproduces a really difficult to reproduce hang
+which is possible without some recent fixes. However the test reveals there is
+yet more work is left to do to fix all posssible deadlocks. To be clear these
+issues are reproducible without LBS, on a plain 4k block size XFS filesystem.
 
-   There are several reasons to convert a filesystem to iomap:
+3) stress truncation + writeback                                                                                                                                                                                              
+The stress truncation + writeback test is the only test in this series specific
+to LBS, but likely will be useful later for other future uses in the kernel.
 
-      1. The classic Linux I/O path is not terribly efficient.
-         Pagecache operations lock a single base page at a time and
-         then call into the filesystem to return a mapping for only
-         that page. Direct I/O operations build I/O requests a single
-         file block at a time. This worked well enough for
-         direct/indirect-mapped filesystems such as ext2, but is very
-         inefficient for extent-based filesystems such as XFS.
-      2. Large folios are only supported via iomap; there are no
-         plans to convert the old buffer_head path to use them.
-      3. Direct access to storage on memory-like devices (fsdax) is
-         only supported via iomap.
-      4. Lower maintenance overhead for individual filesystem
-         maintainers. iomap handles common pagecache related
-         operations itself, such as allocating, instantiating,
-         locking, and unlocking of folios. No ->write_begin(),
-         ->write_end() or direct_IO address_space_operations are
-         required to be implemented by filesystem using iomap.
+Changes on this v2:
 
-                     How Do I Convert a Filesystem?
+- Few cleanups suggested
+- Renamed routines as suggested
+- Used helpers for proc vmstat as suggested
+- Made the mmap() test continue so we can just count the number of failures
+  of the test
+- Made the fio test ignore out of space issues, we care to just blast
+  the page cache, and detect write errors or crashes. This test now goes also
+  tested with tmpfs.
+- Minor commit log enhancements
 
-   First, add #include <linux/iomap.h> from your source code and add
-   select FS_IOMAP to your filesystem's Kconfig option. Build the
-   kernel, run fstests with the -g all option across a wide variety
-   of your filesystem's supported configurations to build a baseline
-   of which tests pass and which ones fail.
+Luis Chamberlain (5):
+  common: move mread() to generic helper _mread()
+  fstests: add mmap page boundary tests
+  fstests: add fsstress + compaction test
+  _require_debugfs(): simplify and fix for debian
+  fstests: add stress truncation + writeback test
 
-   The recommended approach is first to implement ->iomap_begin (and
-   ->iomap_end if necessary) to allow iomap to obtain a read-only
-   mapping of a file range. In most cases, this is a relatively
-   trivial conversion of the existing get_block() function for
-   read-only mappings. FS_IOC_FIEMAP is a good first target because
-   it is trivial to implement support for it and then to determine
-   that the extent map iteration is correct from userspace. If FIEMAP
-   is returning the correct information, it's a good sign that other
-   read-only mapping operations will do the right thing.
+ common/rc             |  54 ++++++++-
+ tests/generic/574     |  36 +-----
+ tests/generic/749     | 256 ++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/749.out |   2 +
+ tests/generic/750     |  63 +++++++++++
+ tests/generic/750.out |   2 +
+ tests/generic/751     | 170 ++++++++++++++++++++++++++++
+ tests/generic/751.out |   2 +
+ 8 files changed, 552 insertions(+), 33 deletions(-)
+ create mode 100755 tests/generic/749
+ create mode 100644 tests/generic/749.out
+ create mode 100755 tests/generic/750
+ create mode 100644 tests/generic/750.out
+ create mode 100755 tests/generic/751
+ create mode 100644 tests/generic/751.out
 
-   Next, modify the filesystem's get_block(create = false)
-   implementation to use the new ->iomap_begin implementation to map
-   file space for selected read operations. Hide behind a debugging
-   knob the ability to switch on the iomap mapping functions for
-   selected call paths. It is necessary to write some code to fill
-   out the bufferhead-based mapping information from the iomap
-   structure, but the new functions can be tested without needing to
-   implement any iomap APIs.
+-- 
+2.43.0
 
-   Once the read-only functions are working like this, convert each
-   high level file operation one by one to use iomap native APIs
-   instead of going through get_block(). Done one at a time,
-   regressions should be self evident. You do have a regression test
-   baseline for fstests, right? It is suggested to convert swap file
-   activation, SEEK_DATA, and SEEK_HOLE before tackling the I/O
-   paths. A likely complexity at this point will be converting the
-   buffered read I/O path because of bufferheads. The buffered read
-   I/O paths doesn't need to be converted yet, though the direct I/O
-   read path should be converted in this phase.
-
-   At this point, you should look over your ->iomap_begin function.
-   If it switches between large blocks of code based on dispatching
-   of the flags argument, you should consider breaking it up into
-   per-operation iomap ops with smaller, more cohesive functions. XFS
-   is a good example of this.
-
-   The next thing to do is implement get_blocks(create == true)
-   functionality in the ->iomap_begin/->iomap_end methods. It is
-   strongly recommended to create separate mapping functions and
-   iomap ops for write operations. Then convert the direct I/O write
-   path to iomap, and start running fsx w/ DIO enabled in earnest on
-   filesystem. This will flush out lots of data integrity corner case
-   bugs that the new write mapping implementation introduces.
-
-   Now, convert any remaining file operations to call the iomap
-   functions. This will get the entire filesystem using the new
-   mapping functions, and they should largely be debugged and working
-   correctly after this step.
-
-   Most likely at this point, the buffered read and write paths will
-   still need to be converted. The mapping functions should all work
-   correctly, so all that needs to be done is rewriting all the code
-   that interfaces with bufferheads to interface with iomap and
-   folios. It is much easier first to get regular file I/O (without
-   any fancy features like fscrypt, fsverity, compression, or
-   data=journaling) converted to use iomap. Some of those fancy
-   features (fscrypt and compression) aren't implemented yet in
-   iomap. For unjournalled filesystems that use the pagecache for
-   symbolic links and directories, you might also try converting
-   their handling to iomap.
-
-   The rest is left as an exercise for the reader, as it will be
-   different for every filesystem. If you encounter problems, email
-   the people and lists in get_maintainers.pl for help.
 
