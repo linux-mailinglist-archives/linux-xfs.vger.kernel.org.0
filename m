@@ -1,323 +1,141 @@
-Return-Path: <linux-xfs+bounces-9356-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9361-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4533B90950B
-	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2024 02:29:51 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF4D39097FE
+	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2024 13:44:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D04E1282536
-	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2024 00:29:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52829283E46
+	for <lists+linux-xfs@lfdr.de>; Sat, 15 Jun 2024 11:44:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3E046BA;
-	Sat, 15 Jun 2024 00:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3MSpdLBr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA7D3D0A9;
+	Sat, 15 Jun 2024 11:44:36 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4881373;
-	Sat, 15 Jun 2024 00:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BDC374F1;
+	Sat, 15 Jun 2024 11:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718411381; cv=none; b=kRg8yOGoOrJwWH2sqfcUjL+9i/2RJ1EF54n4dz4lgPIgZh5dk79/WNsnJcvxfE6y1r/ocMHyf16kD0iWjV5tthI5B3bxFqPmBbcqFCDS5Z7eWcb2DRafbvVGZ1+7LMhorYN2cYmLg+0hJu+Oju55XvjXWv/6kFm3aor2GnVYo14=
+	t=1718451876; cv=none; b=nTkRSe8IX9lwaSu7gdtfqxYsMrC5UWli73P57r6Ln0Km3bZyG0kzpJ5Z1DFKUTr1eU+pj8+Fz9ZQRQ16SEeP8+DqJvqd2V0dheZCw+g/atY6PseB8Tfg/ukdlIJBYMssdP+Jh8WxduvN2NT7XZ3fUScfKFpfV7gt1TcFHvWRZBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718411381; c=relaxed/simple;
-	bh=23OppSH4VJiPTS/LZgMcxF4fCbkMgH0Eq6plozU+DX8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tfhaa45FE6CN++x2HjnZezdl0BWKMS4k2vRanjaVibN+sv1b0AYAtoceMO6TAZzV6mt33nCJ+b0H/m8quVrcE9bOLEHzEkrZLM8qSQgoLqKZJaE/Z14l2KtiD0AOr0oNLk/MpUoc87FmklnJWMEbd0bRknyQmcgZ5w8OFzFeNEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3MSpdLBr; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=u7sKH/EoTHoAcleZsYCTpUg3LOCTJBFwB5grFo4U/wA=; b=3MSpdLBrKBSHiTPDCXi8f3roPV
-	rMKOIAC1AbLX0GSwAMQwn3Akw+Q44loSSfHgW/L4yWuNky8v+D1IxdAth/0968Yzq+VbfhT5pO9zL
-	IlRtULLdknMEePWE7q5IRloeWWTZS8Onnmjlbxqviv3QpBMnXe1TLdbgHSUnFkUESyKE/s6B6+7O4
-	xyN5ZhJfgp9C0+DRRIghzAO9AqJx0DhmigdYXAS/0vmzK028AZAQnC5E4GwfcL8/YSX0b0LnacBw6
-	csYmtAhmyj1c6E19zZKIq/Mokm/2M0l1lLMyx/N6JRRp2pwnKuwHQdH6xB9l6AT0tZnHTXt1JZ6Ll
-	qS+UXReg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sIHIW-00000004KkQ-0DrD;
-	Sat, 15 Jun 2024 00:29:36 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: patches@lists.linux.dev,
-	fstests@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	ziy@nvidia.com,
-	vbabka@suse.cz,
-	seanjc@google.com,
-	willy@infradead.org,
-	david@redhat.com,
-	hughd@google.com,
-	linmiaohe@huawei.com,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	p.raghav@samsung.com,
-	da.gomez@samsung.com,
-	hare@suse.de,
-	john.g.garry@oracle.com,
-	mcgrof@kernel.org
-Subject: [PATCH v2 5/5] fstests: add stress truncation + writeback test
-Date: Fri, 14 Jun 2024 17:29:34 -0700
-Message-ID: <20240615002935.1033031-6-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240615002935.1033031-1-mcgrof@kernel.org>
-References: <20240615002935.1033031-1-mcgrof@kernel.org>
+	s=arc-20240116; t=1718451876; c=relaxed/simple;
+	bh=68lts4Ju0T7CR+5pmBNYENZcBYUucTr+vBM8YPISqOI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YBebKmPcmPLnrzYRNQZQUgiOYjTgjoLB7pMSi71qenblQ6A9shyu6zU3mwwgEPGETp76cFHelOGILsIfRzHKRnEHTGQcrfbdJwsp6cJXH7NEQb80JkYhTPBa3ElwQO6m4KtkWJyt3A6j6Ht5YbR+5SAWEKjmao9Yv2nMrHeUi7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4W1Z713vqfz4f3jdr;
+	Sat, 15 Jun 2024 19:44:13 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id B7FFB1A0568;
+	Sat, 15 Jun 2024 19:44:23 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP1 (Coremail) with SMTP id cCh0CgBnGw2Vfm1m91gAAA--.148S3;
+	Sat, 15 Jun 2024 19:44:23 +0800 (CST)
+Subject: Re: [PATCH -next v5 7/8] xfs: speed up truncating down a big realtime
+ inode
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, djwong@kernel.org, brauner@kernel.org,
+ david@fromorbit.com, chandanbabu@kernel.org, jack@suse.cz,
+ yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
+ John Garry <john.g.garry@oracle.com>
+References: <20240613090033.2246907-1-yi.zhang@huaweicloud.com>
+ <20240613090033.2246907-8-yi.zhang@huaweicloud.com>
+ <ZmveZolfY0Q0--1k@infradead.org>
+ <399680eb-cd60-4c27-ef2b-2704e470d228@huaweicloud.com>
+ <ZmwJuiMHQ8qgkJDS@infradead.org>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <ecd7a5cf-4939-947a-edd4-0739dc73870b@huaweicloud.com>
+Date: Sat, 15 Jun 2024 19:44:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <ZmwJuiMHQ8qgkJDS@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-CM-TRANSID:cCh0CgBnGw2Vfm1m91gAAA--.148S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr15KF1xJr1kJFWxGF4kJFb_yoW8Zr47pr
+	W5ua4DAr9Yq345C3srA3Z7Xa4Fkw1Fka18XF15Zr4UAF9xWFy3CFnaqa15Xa1ku3y8uFW0
+	vF4qqF9xGr17AFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Stress test folio splits by using the new debugfs interface to a target
-a new smaller folio order while triggering writeback at the same time.
+On 2024/6/14 17:13, Christoph Hellwig wrote:
+> On Fri, Jun 14, 2024 at 03:18:07PM +0800, Zhang Yi wrote:
+>> Thanks for your suggestion.
+>>
+>> Yeah, we could fix the realtime inode problem by just drop this part, but
+>> for the upcoming forcealign feature and atomic feature by John, IIUC, we
+>> couldn't split and convert the tail extent like RT inode does, we should
+>> zero out the entire tail force aligned extent, if not, atomic write could
+>> be broken by submitting unaligned bios.
+> 
+> Let's worry about that if/when those actually land.
 
-This is known to only creates a crash with min order enabled, so for example
-with a 16k block sized XFS test profile, an xarray fix for that is merged
-already. This issue is fixed by kernel commit 2a0774c2886d ("XArray: set the
-marks correctly when splitting an entry").
+OK, if we don't consider the upcoming forcealign feature and atomic feature,
+I think only path 6 is needed to fix the issue.
 
-If inspecting more closely, you'll want to enable on your kernel boot:
+> I also see no
+> rason why those couldn't just use partially convert to unwritten path
+> offhand (but without having looked into the details).
+> 
 
-	dyndbg='file mm/huge_memory.c +p'
+The reason why atomic feature can't split and convert the tail extent on truncate
+down now is the dio write iter loop will split an atomic dio which covers the
+whole allocation unit(extsize) since there are two extents in on allocation unit.
 
-Since we want to race large folio splits we also augment the full test
-output log $seqres.full with the test specific number of successful
-splits from vmstat thp_split_page and thp_split_page_failed. The larger
-the vmstat thp_split_page the more we stress test this path.
+Please see this code:
+__iomap_dio_rw()
+{
+	...
+	while ((ret = iomap_iter(&iomi, ops)) > 0) {
+		iomi.processed = iomap_dio_iter(&iomi, dio);
+	...
+}
 
-This test reproduces a really hard to reproduce crash immediately.
+The first loop find and submit the frist extent and the second loop submit the
+second extent, this breaks the atomic property.
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- common/rc             |  14 ++++
- tests/generic/751     | 170 ++++++++++++++++++++++++++++++++++++++++++
- tests/generic/751.out |   2 +
- 3 files changed, 186 insertions(+)
- create mode 100755 tests/generic/751
- create mode 100644 tests/generic/751.out
+For example, we have a file with only one extszie length，if we truncate down
+and split the extent, the file becomes below,
 
-diff --git a/common/rc b/common/rc
-index 30beef4e5c02..31ad30276ca6 100644
---- a/common/rc
-+++ b/common/rc
-@@ -158,6 +158,20 @@ _require_vm_compaction()
- 	    _notrun "Need compaction enabled CONFIG_COMPACTION=y"
- 	fi
- }
-+
-+# Requires CONFIG_DEBUGFS and truncation knobs
-+_require_split_huge_pages_knob()
-+{
-+       if [ ! -f $DEBUGFS_MNT/split_huge_pages ]; then
-+           _notrun "Needs CONFIG_DEBUGFS and split_huge_pages"
-+       fi
-+}
-+
-+_split_huge_pages_all()
-+{
-+	echo 1 > $DEBUGFS_MNT/split_huge_pages
-+}
-+
- # Get hugepagesize in bytes
- _get_hugepagesize()
- {
-diff --git a/tests/generic/751 b/tests/generic/751
-new file mode 100755
-index 000000000000..ac0ca2f07443
---- /dev/null
-+++ b/tests/generic/751
-@@ -0,0 +1,170 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2024 Luis Chamberlain. All Rights Reserved.
-+#
-+# FS QA Test No. 751
-+#
-+# stress page cache truncation + writeback
-+#
-+# This aims at trying to reproduce a difficult to reproduce bug found with
-+# min order. The issue was root caused to an xarray bug when we split folios
-+# to another order other than 0. This functionality is used to support min
-+# order. The crash:
-+#
-+# https://gist.github.com/mcgrof/d12f586ec6ebe32b2472b5d634c397df
-+# Crash excerpt is as follows:
-+#
-+# BUG: kernel NULL pointer dereference, address: 0000000000000036
-+# #PF: supervisor read access in kernel mode
-+# #PF: error_code(0x0000) - not-present page
-+# PGD 0 P4D 0
-+# Oops: 0000 [#1] PREEMPT SMP NOPTI
-+# CPU: 7 PID: 2190 Comm: kworker/u38:5 Not tainted 6.9.0-rc5+ #14
-+# Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-+# Workqueue: writeback wb_workfn (flush-7:5)
-+# RIP: 0010:filemap_get_folios_tag+0xa9/0x200
-+# Call Trace:
-+#  <TASK>
-+#   writeback_iter+0x17d/0x310
-+#  write_cache_pages+0x42/0xa0
-+#  iomap_writepages+0x33/0x50
-+#  xfs_vm_writepages+0x63/0x90 [xfs]
-+#  do_writepages+0xcc/0x260
-+#  __writeback_single_inode+0x3d/0x340
-+#  writeback_sb_inodes+0x1ed/0x4b0
-+#  __writeback_inodes_wb+0x4c/0xe0
-+#  wb_writeback+0x267/0x2d0
-+#  wb_workfn+0x2a4/0x440
-+#  process_one_work+0x189/0x3b0
-+#  worker_thread+0x273/0x390
-+#  kthread+0xda/0x110
-+#  ret_from_fork+0x2d/0x50
-+#  ret_from_fork_asm+0x1a/0x30
-+#  </TASK>
-+#
-+# This may also find future truncation bugs in the future, as truncating any
-+# mapped file through the collateral of using echo 1 > split_huge_pages will
-+# always respect the min order. Truncating to a larger order then is excercised
-+# when this test is run against any filesystem LBS profile or an LBS device.
-+#
-+# If you're enabling this and want to check underneath the hood you may want to
-+# enable:
-+#
-+# dyndbg='file mm/huge_memory.c +p'
-+#
-+# This tests aims at increasing the rate of successful truncations so we want
-+# to increase the value of thp_split_page in $seqres.full. Using echo 1 >
-+# split_huge_pages is extremely aggressive, and even accounts for anonymous
-+# memory on a system, however we accept that tradeoff for the efficiency of
-+# doing the work in-kernel for any mapped file too. Our general goal here is to
-+# race with folio truncation + writeback.
-+
-+. ./common/preamble
-+
-+_begin_fstest auto long_rw stress soak smoketest
-+
-+# Override the default cleanup function.
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+	rm -f $runfile
-+	kill -9 $split_huge_pages_files_pid > /dev/null 2>&1
-+}
-+
-+fio_config=$tmp.fio
-+fio_out=$tmp.fio.out
-+fio_err=$tmp.fio.err
-+
-+# real QA test starts here
-+_supported_fs generic
-+_require_test
-+_require_scratch
-+_require_debugfs
-+_require_split_huge_pages_knob
-+_require_command "$KILLALL_PROG" "killall"
-+_fixed_by_git_commit kernel 2a0774c2886d \
-+	"XArray: set the marks correctly when splitting an entry"
-+
-+proc_vmstat()
-+{
-+	awk -v name="$1" '{if ($1 ~ name) {print($2)}}' /proc/vmstat | head -1
-+}
-+
-+# we need buffered IO to force truncation races with writeback in the
-+# page cache
-+cat >$fio_config <<EOF
-+[force_large_large_folio_parallel_writes]
-+ignore_error=ENOSPC
-+nrfiles=10
-+direct=0
-+bs=4M
-+group_reporting=1
-+filesize=1GiB
-+readwrite=write
-+fallocate=none
-+numjobs=$(nproc)
-+directory=$SCRATCH_MNT
-+runtime=100*${TIME_FACTOR}
-+time_based
-+EOF
-+
-+_require_fio $fio_config
-+
-+echo "Silence is golden"
-+
-+_scratch_mkfs >>$seqres.full 2>&1
-+_scratch_mount >> $seqres.full 2>&1
-+
-+# used to let our loops know when to stop
-+runfile="$tmp.keep.running.loop"
-+touch $runfile
-+
-+# The background ops are out of bounds, the goal is to race with fsstress.
-+
-+# Force folio split if possible, this seems to be screaming for MADV_NOHUGEPAGE
-+# for large folios.
-+while [ -e $runfile ]; do
-+	_split_huge_pages_all >/dev/null 2>&1
-+done &
-+split_huge_pages_files_pid=$!
-+
-+split_count_before=0
-+split_count_failed_before=0
-+
-+if grep -q thp_split_page /proc/vmstat; then
-+	split_count_before=$(proc_vmstat thp_split_page)
-+	split_count_failed_before=$(proc_vmstat thp_split_page_failed)
-+else
-+	echo "no thp_split_page in /proc/vmstat" >> $seqres.full
-+fi
-+
-+# we blast away with large writes to force large folio writes when
-+# possible.
-+echo -e "Running fio with config:\n" >> $seqres.full
-+cat $fio_config >> $seqres.full
-+$FIO_PROG $fio_config --alloc-size=$(( $(nproc) * 8192 )) \
-+	--output=$fio_out 2> $fio_err
-+FIO_ERR=$?
-+
-+rm -f $runfile
-+
-+wait > /dev/null 2>&1
-+
-+if grep -q thp_split_page /proc/vmstat; then
-+	split_count_after=$(proc_vmstat thp_split_page)
-+	split_count_failed_after=$(proc_vmstat thp_split_page_failed)
-+	thp_split_page=$((split_count_after - split_count_before))
-+	thp_split_page_failed=$((split_count_failed_after - split_count_failed_before))
-+
-+	echo "vmstat thp_split_page: $thp_split_page" >> $seqres.full
-+	echo "vmstat thp_split_page_failed: $thp_split_page_failed" >> $seqres.full
-+fi
-+
-+# exitall_on_error=ENOSPC does not work as it should, so we need this eyesore
-+if [[ $FIO_ERR -ne 0 ]] && ! grep -q "No space left on device" $fio_err; then
-+	_fail "fio failed with err: $FIO_ERR"
-+fi
-+
-+status=0
-+exit
-diff --git a/tests/generic/751.out b/tests/generic/751.out
-new file mode 100644
-index 000000000000..6479fa6f1404
---- /dev/null
-+++ b/tests/generic/751.out
-@@ -0,0 +1,2 @@
-+QA output created by 751
-+Silence is golden
--- 
-2.43.0
+  |   forced extsize (one atomic IO unit)  |
+  wwwwwwwwwwwwww+uuuuuuuuuuuuuuuuuuuuuuuuuuu
+                ^new size A                ^old size B
+
+Then if we submit a DIO from 0 to B, xfs should submit it in one bio, but it
+will submit to two bios, since there are two extents. So, unless we find
+another way to guarantee submit one bio even we have two extents in one atomic
+write unit (I guess it may complicated), we have to zero out the whole unit
+when truncate down(I'd prefer this solution), we need consider this in the near
+future.
+
+Thanks,
+Yi.
 
 
