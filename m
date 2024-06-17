@@ -1,89 +1,87 @@
-Return-Path: <linux-xfs+bounces-9394-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9396-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 885B190BFC8
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2024 01:28:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8889990BFF0
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2024 01:54:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F7FDB213FD
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2024 23:28:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25E201F23A93
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2024 23:54:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC20199E91;
-	Mon, 17 Jun 2024 23:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C47A19925A;
+	Mon, 17 Jun 2024 23:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="MuTiZTp6"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="pkbmxDwe"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728B5199E87
-	for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 23:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9534288BD
+	for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 23:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718666905; cv=none; b=pBXtUKFCOagpWMYs1hlpLfoHJG2ygqhMjvDmABX05/aCvE5pdcVY2SdXqIUMIqyok+JI9n3Obzo3qjYJ90sKH7xJow9rY+dOiEexEi0oRAvjY7gjRTBXOTz5KcPRmKR/ERZPTiWLPgddHqydp4Rz+T+oU7Oj7Yj2Xvt8QegmiTg=
+	t=1718668487; cv=none; b=h2ByrdgAoo60mP2p6am5sXzl7JHw8BHH5ENk+n7X9Ix8D/hjQ4EgjE1hRy5PULHDYjQ1bGeqVz9Ht/gu+1ingYWcRmG4N5WvleWFqBakaRJMUYJXw1D4hUa8Rx0LxVXBgtvcYZUIjvjcnliypuZ+EazQI/McK/t9MJLAN1PycOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718666905; c=relaxed/simple;
-	bh=VO3y6sGKqj0ntUGZI5OAQl92r9uQBZrMMCBu+LXu+x4=;
+	s=arc-20240116; t=1718668487; c=relaxed/simple;
+	bh=iretq1DlZekDvuoyVZO98rxEMQeJMnjYtrzh9wbiak0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dX3pePpPBuEb94/HI4s0NXk89AszNEDt1jYuRnhKWLAmILfNa7hiZaxtkleAKzwnLQRwY8YY9zLyvIlokj+uQbmgt6Ikk0mopo6DEQ+4N44X+rFgYmTH1DeSCNLOZDpZrAHDnHAVDTFYJlxL/peOiud98dP2wdX1SLoc4yOnF18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=MuTiZTp6; arc=none smtp.client-ip=209.85.214.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=q20LMZ3NSfdSJTb1nLgRKiJGgmUf7jnLgKJN/bVs2R97ibU4sbhjtLsSD7eVjm3laDYFDjtz9By6z9gpDY5zyWR1jTy1vFOGG3gxY+BU4AcIADkjoLH3Qwcyd7M3s96EXd6suxqtsZrmu7swutfQj/vthB/KImfsfqP+Hn13PKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=pkbmxDwe; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f44b594deeso45594625ad.2
-        for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 16:28:24 -0700 (PDT)
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3748ebe7e53so22226195ab.1
+        for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 16:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1718666904; x=1719271704; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1718668485; x=1719273285; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UXC4uD49vw07uIuiQdsFqqowBM54LdRDc7FVAblEGxQ=;
-        b=MuTiZTp6lb0XtUqV7oRmxE1a2EP2FjI2ZZRQ15fuOs76h20SjPV5fNz6F4Ynugl7ko
-         4STCWerwNmmHKqR3zXCiwfAC3Vo0IRhRg5Ct8uZvMlfubjRVdFxgvn83FitmciKbjDNW
-         VVMKzWd84JOKZAgzcXXjU1qgBOhXqQElegnlBAHGI5FD+6wZ/g2EbVaz1U8Yi50cjdVV
-         0xUCWyOTv4oh6qkX50J1F/xH6urIHHU/LDVYCLefah+fVWon/Kxn0t40NvG5of2jW0fn
-         wtXZpYJdXfBadBIMiOoOSsMyuGclrwGtiNntG4hoO8LQTTTi5fPYjG7gU6rYKm7/q5Oh
-         C3kw==
+        bh=8Hn7Uw1Pm65VhzySE2qfIsVBg9n7H6rZMeI5/fbUyBk=;
+        b=pkbmxDwe6bvXWlXtvLmXd8CtsXWmJGp8C7RdmdSjy1vIqlNW7daq/5K1s8x1IENcGM
+         uqCMjKrq/EEk8U32vAi9ltpLr68VF6NxyyRTLwVN+PDTJefr0r221B1MSD6BzXHKfD2t
+         85SCY67r8og1kTq344dfuTexGZuih9FLnH+EA9BcyeLuSryYcJLnuouUFCZg7aqDZitu
+         Y5HuEz731PIJqrixdU157hdNCDpQs25lx+Ep8AsxVqwOk5MqHr9S86vK7aNJbgxAmo7l
+         N1W/FnoQqRv2iJJUFr5DXgSBLSeRIxEpbsd3cxJKPT5aRUQej7hSY2cvmGlvN67Kpj0u
+         jE5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718666904; x=1719271704;
+        d=1e100.net; s=20230601; t=1718668485; x=1719273285;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UXC4uD49vw07uIuiQdsFqqowBM54LdRDc7FVAblEGxQ=;
-        b=ELqJKXIJAJbrz4oDfq5QDNhHs7IBAsIVZfwI2j83HjMyT7ib7ZJQa5vS8Pg+4BAZ7/
-         ptTuFZeGrIKqaHR0T4bziWPZfbp7KNqJitgMUB37+vE8kkJkn3O2tpr+jKX/B2gJB5BN
-         l25/CUVz//lmzNSSMa8PWKsLmjwZvkY5edXMJ/zoHxx0vrSCLqwXjy0L0r7brukWQo91
-         M3P8Bp/PhLzoSAf8eJUzYPqK5qSvmAn/pOu8fUiM6KL9X4oG9pJDWFsF7MLt3vKf+LEA
-         zInFk6+/8J/LFbVgZFGo3k+a8ALrm+JO6VUOvMOV3ZCK7ozOKT/2FnYQrYuZOa1PQGkc
-         7Hfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyaKOxoEc/poQ6+egZom76CJdyjH2/he1A20gYo1LBWEpJHbMtXble3Y8/osR98uPFzUOVn1oQsI2r4MRwlqKxYRTaoXv5StBA
-X-Gm-Message-State: AOJu0YwPhntWplebm5539N+TL17OqoRwpQKni11SRRHIq/MbbiRzHN/c
-	jWW/07nPpMSxK74kdlgjHdHTYuM+lJEFAhJr1H5W0XonqGkbiL/miGwRFaOF1OI=
-X-Google-Smtp-Source: AGHT+IGn73LJfl79d/dz+Ai4ZcS/7+Cgx4CpWMuf/4xsCO1VzCLRdOvOy/f2KLKyA6kM/5+q7iMqXA==
-X-Received: by 2002:a17:902:ed11:b0:1f4:5ad1:b65e with SMTP id d9443c01a7336-1f8627cd514mr69647575ad.34.1718666903516;
-        Mon, 17 Jun 2024 16:28:23 -0700 (PDT)
+        bh=8Hn7Uw1Pm65VhzySE2qfIsVBg9n7H6rZMeI5/fbUyBk=;
+        b=huqFN7CvWjizH91Kdn61lw7g//fI95SBvE/NOuv4JycRcLmEWL6//OuvXMCp148ojs
+         04fRILrhXW3TeKcq/XgMxrTzvHEk0L0bnbLztEOBzaHYa5NKIqZVlUfQ7bHObLWnYQMR
+         nm30DiowapQ/RU1TjEhspKH4DAkB/adxFFnt3ekFISF4veEHaRbCPNmAokKzfKswlBXX
+         Bf/r69M9kF/BgrbcVqOpV6X/EDtAVoYyTQjUIImmxfzDn2fJS8/oABv1ueLzO/Kwc6Da
+         NYz2ueHHFg58Bxaa2BfmcNPMmxeam6VL2KhwjWdXpy73b19CFF82aCF91bbn2mc8N0KN
+         msYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdjgOb32blRYJauZKfzRO1k+1gI84AgWlO9FKSJgQia4c4wIQcNq7vkp/QAYTr/99beBm7SfVmI6QLF77mZP+0fcHJNqdIQgGT
+X-Gm-Message-State: AOJu0YyzYrvDOWRisEKjBTcsq7ZJxxMFeo8Jc7INHMKLoum6jKedaX3h
+	RIIaoDFtoGZT5/Pt1Y0341OTS9B4h03/8zKOEklEVdtIjMjl+5qkSzcogDodFmc=
+X-Google-Smtp-Source: AGHT+IEWjrUuc9kHPZwYN9kZ1hLtNVkKYEjKvkBrtj/wQnQ8J4hmedDMBn9Fhq7VmrM8vAdM0Cg8Sw==
+X-Received: by 2002:a05:6e02:1a86:b0:375:a202:2535 with SMTP id e9e14a558f8ab-375e1094965mr119882725ab.30.1718668484518;
+        Mon, 17 Jun 2024 16:54:44 -0700 (PDT)
 Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e5613esm84637365ad.15.2024.06.17.16.28.23
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6fee3c9f7b9sm7130690a12.86.2024.06.17.16.54.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jun 2024 16:28:23 -0700 (PDT)
+        Mon, 17 Jun 2024 16:54:44 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.96)
 	(envelope-from <david@fromorbit.com>)
-	id 1sJLls-0026Ia-2I;
-	Tue, 18 Jun 2024 09:28:20 +1000
-Date: Tue, 18 Jun 2024 09:28:20 +1000
+	id 1sJMBN-0027So-1Z;
+	Tue, 18 Jun 2024 09:54:41 +1000
+Date: Tue, 18 Jun 2024 09:54:41 +1000
 From: Dave Chinner <david@fromorbit.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, chandanbabu@kernel.org,
+To: Krister Johansen <kjlx@templeofstupid.com>
+Cc: Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Dave Chinner <dchinner@redhat.com>, Gao Xiang <xiang@kernel.org>,
 	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/5] xfs: don't treat append-only files as having
- preallocations
-Message-ID: <ZnDGlHwBxi2pBNv8@dread.disaster.area>
-References: <171821431745.3202459.12391135011047294097.stgit@frogsfrogsfrogs>
- <171821431777.3202459.4876836906447539030.stgit@frogsfrogsfrogs>
- <ZmqLyfdH5KGzSYDY@dread.disaster.area>
- <20240613082855.GA22403@lst.de>
- <Zm/DoN5npLCd+Y/n@dread.disaster.area>
- <20240617064603.GA18484@lst.de>
+Subject: Re: [RFC PATCH 0/4] bringing back the AGFL reserve
+Message-ID: <ZnDMwennkO+zGfzq@dread.disaster.area>
+References: <cover.1718232004.git.kjlx@templeofstupid.com>
+ <ZmuSsYn/ma9ejCoP@dread.disaster.area>
+ <20240617222527.GA2044@templeofstupid.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -92,45 +90,113 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240617064603.GA18484@lst.de>
+In-Reply-To: <20240617222527.GA2044@templeofstupid.com>
 
-On Mon, Jun 17, 2024 at 08:46:03AM +0200, Christoph Hellwig wrote:
-> On Mon, Jun 17, 2024 at 03:03:28PM +1000, Dave Chinner wrote:
-> > > That case should be covered by the XFS_IDIRTY_RELEASE, at least
-> > > except for O_SYNC workloads. 
+On Mon, Jun 17, 2024 at 03:25:27PM -0700, Krister Johansen wrote:
+> On Fri, Jun 14, 2024 at 10:45:37AM +1000, Dave Chinner wrote:
+> > On Thu, Jun 13, 2024 at 01:27:09PM -0700, Krister Johansen wrote:
+> > > I managed to work out a reproducer for the problem.  Debugging that, the
+> > > steps Gao outlined turned out to be essentially what was necessary to
+> > > get the problem to happen repeatably.
+> > > 
+> > > 1. Allocate almost all of the space in an AG
+> > > 2. Free and reallocate that space to fragement it so the freespace
+> > > b-trees are just about to split.
+> > > 3. Allocate blocks in a file such that the next extent allocated for
+> > > that file will cause its bmbt to get converted from an inline extent to
+> > > a b-tree.
+> > > 4. Free space such that the free-space btrees have a contiguous extent
+> > > with a busy portion on either end
+> > > 5. Allocate the portion in the middle, splitting the extent and
+> > > triggering a b-tree split.
 > > 
-> > Ah, so I fixed the problem independently 7 or 8 years later to fix
-> > Linux NFS server performance issues. Ok, that makes removing the
-> > flag less bad, but I still don't see the harm in keeping it there
-> > given that behaviour has existed for the past 20 years....
+> > Do you have a script that sets up this precondition reliably?
+> > It sounds like it can be done from a known filesystem config. If you
+> > do have a script, can you share it? Or maybe even better, turn it
+> > into an fstest?
 > 
-> I'm really kinda worried about these unaccounted preallocations lingering
-> around basically forever.
+> I do have a script that reproduces the problem.  At the moment it is in
+> a pretty embarrasing state.  I'm happy to clean it up a bit and share
+> it, or try to turn it into a fstest, or both.  The script currently
+> creates small loop devices to generate a filesystem layout that's a
+> little easier to work with.  Is it considered acceptable to have a
+> fstest create a filesystem with a particular geometry?
 
-How are they "unaccounted"? They are accounted to the inode, they
-are visible in statx and so du reports them.
+Absolutely.
 
-Maybe you meant "unreclaimable"?
+We do that quite a bit in fstests - if you just need one filesystem
+for this, then _scratch_mkfs_sized() can be used to make a
+filesystem of a specific size, or you can use _scratch_mkfs and pass
+the options you want directly to it. An example of this is xfs/227.
 
-But that's not true, either, because a truncate to the same size or
-a hole punch from EOF to -1 will remove the post-EOF blocks. But
-that's what the blockgc ioctls are supposed to be doing for these
-files, so....
+Otherwise you can create loop devices and use _mkfs_dev() to create
+the filesystems you need on them. An example of this is xfs/074.
 
-> Note that in current mainline there actually
-> is a path removing them more or less accidentally when there are
-> delalloc blocks in a can_free_eofblocks path with force == true,
-> but that's going away with the next patch.
+> (And would you
+> consider taking a patch to let mkfs.xfs --unsupported take both size and
+> agsize arguments so the overall filesystem size and the per-ag size
+> could be set by a test?)
 
-... fix the blockgc walk to ignore DIFLAG_APPEND when doing it's
-passes. The files are not marked with DIFLAG_PREALLOC, so blockgc
-should trim them, just like it does with all other files that have
-had post-eof prealloc that is currently unused.
+We can already do that, but it's been placed behind a strong
+environmental guard to restrict such configurations to the fstests
+environment:
 
-In short: Don't remove the optimisation that prevents worst case
-fragmentation in known workloads. Instead, fix the garbage
-collection to do the right thing when space is low and we are
-optimising for allocation success rather than optimal file layout.
+# TEST_DIR=foo TEST_DEV=foo QA_CHECK_FS=foo mkfs.xfs -dagcount=2,size=32m,file,name=foo
+
+will bypass the "300MB minimum size" checks and allow you to make a
+filesystem image with 2x16MB AGs (i.e. a 32MB filesystem) ready to
+have a loop device created over it. If this is run inside a fstest,
+then you don't need the env variables because they are already set.
+
+> > > On older kernels this is all it takes.  After the AG-aware allocator
+> > > changes I also need to start the allocation in the highest numbered AG
+> > > available while inducing lock contention in the lower numbered AGs.
+> > 
+> > Ah, so you have to perform a DOS on the lower AGFs so that the
+> > attempts made by the xfs_alloc_vextent_start_ag() to trylock the
+> > lower AGFs once it finds it cannot allocate in the highest AG
+> > anymore also fail.
+> > 
+> > That was one of the changes made in the perag aware allocator
+> > rework; it added full-range AG iteration when XFS_ALLOC_FLAG_TRYLOCK
+> > is set because we can't deadlock on reverse order AGF locking when
+> > using trylocks.
+> > 
+> > However, if the trylock iteration fails, it then sets the restart AG
+> > to the minimum AG be can wait for without deadlocking, removes the
+> > trylock and restarts the iteration. Hence you've had to create AGF
+> > lock contention to force the allocator back to being restricted by
+> > the AGF locking orders.
+> 
+> The other thing that I really appreciated here is that the patchset
+> cleaned up a bunch of the different allocation functions and made
+> everything easier to read and follow.  Thanks for that as well.
+> 
+> > Is this new behaviour sufficient to mitigate the problem being seen
+> > with this database workload? Has it been tested with kernels that
+> > have those changes, and if so did it have any impact on the
+> > frequency of the issue occurring?
+> 
+> I don't have a good answer for this yet.  The team is planning to start
+> migrating later in the year and this will probably run through to next
+> year.  I'll have that information eventually and will share it when I
+> do, but don't know yet. 
+
+OK, that's fine. We still need to fix the issue, I just wanted to
+get an idea of the urgency of the situation.
+
+> Aside from the script, other synethtic
+> load-tests have not been successful in reproducing the problemr.  That
+> may be the result of the databases that are spun up for load testing not
+> having filesystems that as full and fragmented as the production ones.
+
+Yeah, that's typical when triaging these sorts of issues. We've had
+issues like this in the past with scyallaDB w.r.t.  extent size hint
+based allocation occasionally failing at ~70% filesystem capacity.
+Situations like this require a very particular free space pattern to
+trigger, and it tends to be rare that they are hit in either test or
+production systems. Having a synthetic reproducer for such an issue
+is like finding gold. :)
 
 -Dave.
 -- 
