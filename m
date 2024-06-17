@@ -1,204 +1,224 @@
-Return-Path: <linux-xfs+bounces-9395-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9384-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C4B790BFE1
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2024 01:45:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 343B290BF61
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Jun 2024 01:04:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9606A1C21080
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2024 23:45:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89133B20E59
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jun 2024 23:04:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C19F19048B;
-	Mon, 17 Jun 2024 23:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EFB5196455;
+	Mon, 17 Jun 2024 23:04:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="C1TNdwE0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T1Psw16B";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="SwDdDk/3"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CB8288BD
-	for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 23:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BD7176AB9;
+	Mon, 17 Jun 2024 23:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718667921; cv=pass; b=hE1TcLNll/S7lejCnGuEwAlKPC96N08HnKXSPQ9hl6B+kQfZsWeqH3yWEQkhKtxUEy+arW3LFDsh8rY++SqBTJ3d2yd/6PGlDYCs/6PFoNFJANzyzwQk3pW4MjnSKpdO9kX0U0FrTMq87hzfjH8ilW7th9u2N28YRu68+mZ3cNU=
+	t=1718665443; cv=fail; b=Cb/tgpMLDg+MlM1CspWrHc0xntByyTOIVpN9z5+r+oHYnwA1WQrz+3W42rroErrsZug5IFTdC3IeVAThvx4gGEBUaS2l2s3SDVGLL8eJXO/fLmPsxI42bl3bRUBIGsIMD1A3jcIKvsuJF/WXdF/XyRGDELezCNe68ivVcJacIwE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718667921; c=relaxed/simple;
-	bh=Thd6FDZURDPISy81LFnjhwP7nZrWmVK9yR1rrBWOvtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u9s27dPEmP6MLskW0zGqAOneekiD0EV3VV/FyDKfJ5b7S3zvGxwOxvqYs3ORpmRCyolAORsyDfx47aznHXKHDp27XFYb5C00LcM3IIDGuOO4BGQDc654RVMYTIfSXiwq21nCliS7qHBlBU3cXVUU/ysSbqiDtLEgeWXbZSWgX38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=C1TNdwE0; arc=pass smtp.client-ip=23.83.218.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 7E9A4903574
-	for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 23:45:06 +0000 (UTC)
-Received: from pdx1-sub0-mail-a203.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 453DE903604
-	for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 23:45:05 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1718667905; a=rsa-sha256;
-	cv=none;
-	b=F8SzoYHyaMVtnYrXEJP5cGK/4YAGIRx5LW0gy/Tc0z3Qd7E2VYgE7desRx+ouunAgBgHku
-	V2Ew0pOjbFoHTxw6dhX2p5UKQG/uTM/GFs0kIaro/O8FUxNBkrle5Jm8NkFgvdAbcF88kY
-	BTIsDd3/lfpk44fH6w1YyYo5bp2BCzupTdpqyOW8NECt8dGZ+bD2JmkyNHknfU5sNF7R3M
-	GiTtweybG+4ZtqUXHlJKwhgnYGZq60aO557nKe5arzm6MJKliZHim+RSgVNOhunbA8eihI
-	tTS0dRdrd0Pey7BhpHYwRgJZjHE1V79ojhUIXxWPt6F+M11rrFMInVPnPBWPOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1718667905;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 resent-to:resent-from:resent-message-id:in-reply-to:in-reply-to:
-	 references:references:dkim-signature;
-	bh=7E1nFxCvR83LR0BmDx0IxQdh/SW12G1wVJarjGPZZyQ=;
-	b=wTp9YW45afPa5F+nf8zpc4A+jLyUw2FWkYgtBCoUQlu1UaK7b7D/4+5+yhT79NEPZdi8bI
-	pbzdzsgJav2rHKzPvBtadQpm+yW7ODyfkklSfUeWLcvxcKus63IouKDNnD6a9yk2vWQxxS
-	aSx5/fyLARUdd3RypfEKAPOD7hyh3xublyXqXyo9PI0QznupkYIs05mzQ0V9neHKITGYJ5
-	uankM3eYjDTT7JvS/L/sImnURGF+2XM8ZbPpycFY5zz2BPb6MAw04FcL70mBrz7S33yg3q
-	HoxMaYJEAgkNQ6KQExR4ZWxNGC8mfiDVBqqGrg48NhHoUo0FLG8NFWVyVAA7VQ==
-ARC-Authentication-Results: i=1;
-	rspamd-79677bdb95-thq6d;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=johansen@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Share-Harbor: 686c20f43a07b01c_1718667905505_3164876893
-X-MC-Loop-Signature: 1718667905504:3941097618
-X-MC-Ingress-Time: 1718667905504
-Received: from pdx1-sub0-mail-a203.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.121.42.83 (trex/6.9.2);
-	Mon, 17 Jun 2024 23:45:05 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a203.dreamhost.com (Postfix) with ESMTPSA id 4W361s0FtQz80
-	for <linux-xfs@vger.kernel.org>; Mon, 17 Jun 2024 16:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1718667905;
-	bh=7E1nFxCvR83LR0BmDx0IxQdh/SW12G1wVJarjGPZZyQ=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=C1TNdwE093S/r3DX+ddZlpL+7bBqikIK3wKUrW2bme2c5b24JvbY7FbwdKKMY0J50
-	 3Q19BfTVxnU+yWqTax6EKpnCd4REG97zXi5XbHyg7O8HFDrUHxfMPxKGA6ua/U/MkC
-	 bIVlu2d0W8j3dplQATCN2xI90De/dKjKGIuP/2DR0vkwKxPZ07/c+8/e+Z6hfqkp4V
-	 6ER0tjWJe7eZkmavd1fFhfEVNpOAxohfOxsrS/c/FRrKxst0sUbD9he1KsGM9am7qt
-	 7un7hiNPa1BfBfrGgcNlJNNA/vm4VicVuLnxQVvc6zRB5PFES81OIWlswOfwA4lMc5
-	 bmnva69YcUTzQ==
-Received: from johansen (uid 1000)
-	(envelope-from johansen@templeofstupid.com)
-	id e002c
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Mon, 17 Jun 2024 16:44:28 -0700
-Resent-From: Krister Johansen <johansen@templeofstupid.com>
-Resent-Date: Mon, 17 Jun 2024 16:44:28 -0700
-Resent-Message-ID: <20240617234428.GB2044@templeofstupid.com>
-Resent-To: linux-xfs@vger.kernel.org
-Date: Mon, 17 Jun 2024 15:25:27 -0700
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Dave Chinner <dchinner@redhat.com>, Gao Xiang <xiang@kernel.org>,
-	linux-xfs@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] bringing back the AGFL reserve
-Message-ID: <20240617222527.GA2044@templeofstupid.com>
-References: <cover.1718232004.git.kjlx@templeofstupid.com>
- <ZmuSsYn/ma9ejCoP@dread.disaster.area>
+	s=arc-20240116; t=1718665443; c=relaxed/simple;
+	bh=0R7BOmsr/qMyFRnsZK/VXdhrCJnjUxjIQHudJfxzFL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=I1y0hEk9kiDXNnJqQFjJzLewqtsDYtjli3I36IWLCDlEfIdodg+KDcTGmXKFR043Wd5QaIGA0wv/ewZe3uVfzFr3moXVLihRdRR0/uZF/Zn5kG+sQbwiCCkJZZpXfXDr4N+VT3kyUrX4B+A8jLzj3LQ3qy/Tv6896ZSCIQhcxfU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=T1Psw16B; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=SwDdDk/3; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HMXS7P010504;
+	Mon, 17 Jun 2024 23:04:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	from:to:cc:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=corp-2023-11-20; bh=Hr5v6WhKuXJDns
+	KerHNBVktZgzDcwQfT4b3RubkdrYc=; b=T1Psw16BRMDqjn4/zg1UGKpU6qXqyQ
+	PGIvZK5yoNrx48de/Dv2YiqU1nr2Of74JnvuzbFicjCX1s33awFCeaqziCRIce02
+	ortfkw6b6AfKwEHgPeyndBzsAWOSUexLiD30YWUjnrzZaSQKyW2kF2cQtXaLV/HU
+	QBN5TrKljJNj2/y1lnH/MKAxE5Ma4dqjpGaHozZ1gR1tVZRHMSi4aNTcFml+EhiL
+	bXy2QPLb3+hn0DDYG5NPuZA6xDa7c8JUQrW+aiU5ct+B7loj0C6s8/6+7gS6OVZX
+	4bo05qKz+rf6p9WOJNUdwE6Bh4vDKaSGImBtYVxoQA4YM1lG8nE+RhSQ==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ys2u8kpye-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Jun 2024 23:04:00 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45HLjQmB034465;
+	Mon, 17 Jun 2024 23:03:59 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ys1ddks66-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Jun 2024 23:03:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GVnKWnH8NKLPJt3lua7891wq1bFKVYjYJ0+CiAh8LMLzJBno07M3JBVl7yw57DEDC0SvFA7ntpb2hX3DB4aD5s50oUC3czYgwSyiqBEjGBSFalVWvniIY44KXte1aAHhFpwOvuWGPsHElEIbqtW+4XCn7LXpdGD5RRn4QxlKsDvNlk0x5NoFiAekoDSzgsE3JHYOM7FOWMEBRRr3HsxtUtOclwPhXazsCrBAbZJSMKgou8U05GW99hd5BMnJQGJIJV+9hPPYBpldXXqeYHIy1p3N2TWnaxxJJC/QX/DX673siiD9OoiyA4r4v2xqGOKQ6bxaWasmY1aG5S3s1rYmFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Hr5v6WhKuXJDnsKerHNBVktZgzDcwQfT4b3RubkdrYc=;
+ b=AEm0/krgeBRXQ3rQAO0QDPRHmvTRXzWcJh4IgsE26bGjf8M7nHTVqPCmhdU3ndi14A4FUrBeaBH7nKsiKTUt09iaJc1vkWywBk5DsgdApqEXtOXbnufmXpWv3nHkyyBG4HGLIPa1PnmBe/Sm5FlTG7WObZyjGvAoz9ECuOfWwg8Z34Sv/FuWN6kCJi9J3prUdYR7Y8VI5OZGZ+rhQyDJJGIXSG8ZEX505HotgqwxjomjYsfFOwb+Wj113G6Bot6DM+M9WVtKhFq+W6j0SluoiUUtLFl+v0Su3SDu7ANd1hRFYXBW2uMTFhgAvsCupOOqEsAFt/ZNwtiupcnn1u2OaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hr5v6WhKuXJDnsKerHNBVktZgzDcwQfT4b3RubkdrYc=;
+ b=SwDdDk/3unVvNl4mxy+l5inOtaUQWlwlQmCoW2tiLWfnyTa4RTBdHCWczKVXGlA0IxKyIVHhQuoVvuCaZv2pymlo2VsA9uvUdcPpht4U+pKlcUlNfKxqzOMqPOJksv3ZnpdUol6uGdt+CQ9wzU9d/Tp/H6KTHoqJ/zbrLkQ46rs=
+Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
+ by DS0PR10MB7398.namprd10.prod.outlook.com (2603:10b6:8:135::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.30; Mon, 17 Jun
+ 2024 23:03:57 +0000
+Received: from BLAPR10MB5316.namprd10.prod.outlook.com
+ ([fe80::a63b:c94b:7ed8:4142]) by BLAPR10MB5316.namprd10.prod.outlook.com
+ ([fe80::a63b:c94b:7ed8:4142%5]) with mapi id 15.20.7677.030; Mon, 17 Jun 2024
+ 23:03:57 +0000
+From: Catherine Hoang <catherine.hoang@oracle.com>
+To: stable@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Subject: [PATCH 6.6 0/8] xfs backports for 6.6.y (from 6.9)
+Date: Mon, 17 Jun 2024 16:03:47 -0700
+Message-Id: <20240617230355.77091-1-catherine.hoang@oracle.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0343.namprd03.prod.outlook.com
+ (2603:10b6:a03:39c::18) To BLAPR10MB5316.namprd10.prod.outlook.com
+ (2603:10b6:208:326::6)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmuSsYn/ma9ejCoP@dread.disaster.area>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5316:EE_|DS0PR10MB7398:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44422826-e41e-4ed7-6212-08dc8f21c483
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|366013|1800799021|376011;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?Kd+bTndyq2E1w5TTdwqLTVOfiGoiNpM0G1TKjABKEWJdSuB54vmZQC7t+BG3?=
+ =?us-ascii?Q?la73OkxoCCY+zlhCBnff0/3AwIF9y5XpBl+91W2svoOZ7ys5pkn5IKnf798z?=
+ =?us-ascii?Q?MdFXPOMzDnBQPAwxBMPUKTw6IxGPAVa3yD/vEFCzTgBPr+Qyd5ekweNSOM58?=
+ =?us-ascii?Q?D+KAR3Aq2euabg5Q1FrtPhk73wBnFWyPSU7f2UzwIRXZYxEGM8gOX6LI4et4?=
+ =?us-ascii?Q?LAiCsFBCm//rQm55TtM+oE93Y9cZYuF+Z77QxRCFvSe9byaRGMhrG62uVLWr?=
+ =?us-ascii?Q?A4RuiTBwzflNCCkvzl/8f4oDyLUvJ0ZPI+mQcps60efKLELdZIqAupx35NVD?=
+ =?us-ascii?Q?kzwLXwoSL28T8lrNynCJACtP7AjcPP2x1pLISp5BLrbfehp9sfEEbZAuVaIn?=
+ =?us-ascii?Q?5BBhYbgUNdv5TuUKZ5EFwfstC+vKFlbfYnoSHyYnEv5GuHPNU3hydfRUaZ1w?=
+ =?us-ascii?Q?Wt3Y2xmPCkLWHUXBQ/oIVUqhtWjBAN71QwVVSm3eav7nz5P/j/x59fyiVnUV?=
+ =?us-ascii?Q?ny0zXBfQ4sGfYtOfy/fWwYQqF+cBon4EiRQe+QBbV/AYwOWY6uQOVnFBqucw?=
+ =?us-ascii?Q?eGgtDNBS/+ZeWWXkfEWgNSXh1u0mJgw4V5Y1Ppvuh4exIWX4WiOp5cxi/ShA?=
+ =?us-ascii?Q?vviBPr0/9UIFV4F1owZ6V2xDQN5BgEqqDBm6Dm5416w//DZsdhR4uikBSG0T?=
+ =?us-ascii?Q?4B5u8WlvdA5PmcKJbgVmV4NA/pIdwtZmTtSG4mJRxymBhZjtuCm5az96+qb/?=
+ =?us-ascii?Q?bKXdamS6d8/7PQ/4O0KiH8mufDmtQga+lgGRnLiN8/F/T3Zu8jU/Jcdg/NOh?=
+ =?us-ascii?Q?wQ9GhjseyKna2+c8plw/Y4tJYIjqLCRrm+oaRcRu6DnJTBaKXtTbUyX+rvw6?=
+ =?us-ascii?Q?LFN3YUATlUxNCZ2cJVk/fjSH/4qmrjdqv218b/Dh0PpY3WE3+dqU3ThvWH4N?=
+ =?us-ascii?Q?MkptKXXAdo5bOJ+7yKhTsd5vwuhAYykJd/KLtgvB4m/WIh0z3g7GFjt4jRGt?=
+ =?us-ascii?Q?0falKNt4vo6mgY+6O+UzhfJTh4oGA3ma68GAzTEEhnksIyLinnTVFT2IN7W+?=
+ =?us-ascii?Q?lFLCc2PtaoKUjA5t6jEYMXbzABetZOh26+DPfQvZGva3XY4E1UuBNiqjVXq/?=
+ =?us-ascii?Q?D4bvgmmSXxccGpap84AeCHpIeFYoShK2kGLFazyZ0YSX1Ko4nbJY/y2vL3ox?=
+ =?us-ascii?Q?LmEQAdIasFt6UTG1AO+OXFcKw6b+89lR5Dr/8iP2oYQznWcJVZxTB5GOaSnS?=
+ =?us-ascii?Q?U9taZ+dpiJtWzj5Zmaiz46zCTSX50WSEw96WbQ4aMfpbe6AmVzD5HsNcE7nq?=
+ =?us-ascii?Q?9qCRBNDx4l5JVv/sGJLJP3GE?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(366013)(1800799021)(376011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?o4tlTWtCP5mbc1f+Q47r2XGsDIDJZ/ey3UaUSVEOFOs1hIH8EFoRX+CyAQpq?=
+ =?us-ascii?Q?jKikiyApCRTRuj0/SVmt+hdbRkpBR1SkUjQ+a502ROox9qoztSmWf14G2C8e?=
+ =?us-ascii?Q?pPTs1rrAZ/AhxL/1Kj94tE85uqTxDQDDmHJEY+/tvvYSfl74yjKjpDzacR2i?=
+ =?us-ascii?Q?4NVDIS+Yi5l7P/01xMSO8GqCX9QcQXHlRjGgf3og9f4+jYpKUfDi5+h5ER6a?=
+ =?us-ascii?Q?WviakYjeoMhlTkhIiMdkptvM7koV/yfvyypfMPFDOE+5UrlL+VXe6Dw+r+IP?=
+ =?us-ascii?Q?9pw1RDeLAHVcnfwwLsNB3V1d+il+Ccv9fW069eY3WflEbXCnCHr25sVmZogN?=
+ =?us-ascii?Q?ZEDt0wy1xPUGlv52iMRBHSJzOW0d9x0fgG5g9dnmcZAN5n516JQPzzOIbS2X?=
+ =?us-ascii?Q?JIuDifw0LF0RYSvGtxNZHyBs4q/xdizxn2YcgwbbebGJUBjdRhMbaJdw4umv?=
+ =?us-ascii?Q?6oOaN5ukSatDN27LecNHMJPthGQP1dXSKtV5XqSeZnq7MPrnC4/gJZtbdXnr?=
+ =?us-ascii?Q?Cb0Ph6F3w8Ig+WhEDwtE6x/D7XSUEJ/GrecIBDGqf9IAC0tWVRSSqsjF4TTi?=
+ =?us-ascii?Q?IZkTNMLkJSL0Cv4EfnhbeYo0ktEx8I1JXhq7PiNNW65bS3teMzFIi4WhzyhP?=
+ =?us-ascii?Q?RpJ/nWRbtDvnVZ/8igDMuQ3of95IGrzy5dqXhpYqENRhHmdpYpV/kYsvGfTa?=
+ =?us-ascii?Q?4JSB93xSLN6pFT3jguC+HGDg+pIaeGHxYTmFiqjkcX8A1D50/JWghDqTC/MF?=
+ =?us-ascii?Q?58ee5gPLrsVMqEr8Y9Hh4+mpJ52ZhWT0TwPRecYsRMCRqQJ6HKnucpy8RPaJ?=
+ =?us-ascii?Q?zg1/xiD3Jz3dw1JBjUoGCo78jEW+T8HNo8FWrtv2P+lg4wr5l33zKqu2UiPd?=
+ =?us-ascii?Q?MF6y22xIb+mkYgh8kWA5ZsxahWVJabpioH1d4g/QZv6jGHPQCrtRCrGzh7S+?=
+ =?us-ascii?Q?C0LDkyaYsAMpRMWwLXhThnxef99iZ6DqzT6B5m9y7cFDudz0jBTPfOLz4+Mr?=
+ =?us-ascii?Q?ge/4z1Y2Znr2uPuljF/E/F0iRTeJEAXdAlG3Qo2InjrkbhCzyC6Fq4JeErFf?=
+ =?us-ascii?Q?TJECfaYNjgMkvJtXWRy8GA65VPAiymirPj/zKnratEpo+R0WBGX0fXABP6g3?=
+ =?us-ascii?Q?JlUy4BsJXken6A0BOy+lBp5qnao5QEmvPYOprCBokwdbdXCN2nk4CF1/lImx?=
+ =?us-ascii?Q?h5jvTgp+xNGs02H00cRtDas6l+SK5KBLeCc97jI2e6SNDM36S8QRHY646lGe?=
+ =?us-ascii?Q?Z+bbSfCvesta3iiew99yC9x7LzpRgywsCiUPVchCP8Q10BtUinCsqROosBR4?=
+ =?us-ascii?Q?t+K5DcRf50r5HxHzHM3qjPcJKGdlUVKYJqcAmUzQ4nanzofXUVY/+eO/m067?=
+ =?us-ascii?Q?OHf5bh3R1m9cKOSvkFG5urFrQpWxf6aZYRQfXxjpgZhDyw3ir58S4lIe8yLz?=
+ =?us-ascii?Q?qOjL/l8jqiK6l2HLXHH8RJEj3T1JeTG258eFTEBoeY98dqxQExb2ax+kkq3r?=
+ =?us-ascii?Q?HWmGY+jlG2aIgnfvHRFouJo4uIgc5wDWw/t8eqX1OnUVTxcNmqUlvlLhUVDj?=
+ =?us-ascii?Q?CcIKga/4dXUOPxyBXdteQG9Lfk1meUBSljpd75P0gry0BV+N/U0HgXDUCoyi?=
+ =?us-ascii?Q?2sskOnPK96Gf/b2Mvz+Z0SQNp+Hsrabrivkx3M9TmhqiTB0j9+Ros6aQWeVm?=
+ =?us-ascii?Q?K+y88g=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	lceUngLAuJfq8mb8q3kCYPzdQXi+kkvoMCBtGzK+jshHb/ZEpjR+GaOImP0yrQDxeGCpkjJq6575SM7nEfB7Mv79hWFTjZLmzAypdZXdXQWJfNEBBQ4tn29zZjzaI3kuWKq+mzzZ3yJytnbWIvNqNExjpMQBp8i3OxpmeZJQ+iqPuh26INR8+XKqOG7Pza6PYSNDCuT3O2Kr0HaVMC7FR8yLZ5Hb8FFnfbB5oCMQFLU2GOKYTgvg1at4hbFSHMvpUU3dqzfiSOGrtpAljBWf/dsmA/PDdp+p4RJzvH88u0XVBgPh2Xq0XW0GY7tHsOZH4b2xHbH/kN7nXMhYGpTk1NV9haaYi2/9ZZDVqn2yfchCd5DAxTqtxgG3XobWhrECkQJxz+sveqP001lQaJHLlIc2cdXHSj70aemsoY87dPkPDGpRmUW12U17iUBmgTOWBTam+m40paEA0WcI087zZSoanectTlTvq34EPYdYsibvWZlCILEM0EyY5iW0rIjNh8kPOPuqqok5OpDn8FBt0Qf+yOabhpikYxlU1Kr/vPiv4zKMWtdxBZGtLA+AVdX3SAGS97Slq9lC8oY9K82mQAICEejBWTuBa6Jts30KSH4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44422826-e41e-4ed7-6212-08dc8f21c483
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2024 23:03:57.4042
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qrt+j5FRsVihu1/W+CFHe35NFVoTB7X6y1Ugj9vYQUHFU5H/ivJ+g1LsfIM76R0WmCJ1V4pAK1eLjWJp71yqAkxr+t530a7gmzp0jJngvX4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7398
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406170179
+X-Proofpoint-GUID: J_Z2YJp6fjPsec9VRTBOF6UhSu8Ibu15
+X-Proofpoint-ORIG-GUID: J_Z2YJp6fjPsec9VRTBOF6UhSu8Ibu15
 
-On Fri, Jun 14, 2024 at 10:45:37AM +1000, Dave Chinner wrote:
-> On Thu, Jun 13, 2024 at 01:27:09PM -0700, Krister Johansen wrote:
-> > I managed to work out a reproducer for the problem.  Debugging that, the
-> > steps Gao outlined turned out to be essentially what was necessary to
-> > get the problem to happen repeatably.
-> > 
-> > 1. Allocate almost all of the space in an AG
-> > 2. Free and reallocate that space to fragement it so the freespace
-> > b-trees are just about to split.
-> > 3. Allocate blocks in a file such that the next extent allocated for
-> > that file will cause its bmbt to get converted from an inline extent to
-> > a b-tree.
-> > 4. Free space such that the free-space btrees have a contiguous extent
-> > with a busy portion on either end
-> > 5. Allocate the portion in the middle, splitting the extent and
-> > triggering a b-tree split.
-> 
-> Do you have a script that sets up this precondition reliably?
-> It sounds like it can be done from a known filesystem config. If you
-> do have a script, can you share it? Or maybe even better, turn it
-> into an fstest?
+Hello,
 
-I do have a script that reproduces the problem.  At the moment it is in
-a pretty embarrasing state.  I'm happy to clean it up a bit and share
-it, or try to turn it into a fstest, or both.  The script currently
-creates small loop devices to generate a filesystem layout that's a
-little easier to work with.  Is it considered acceptable to have a
-fstest create a filesystem with a particular geometry?  (And would you
-consider taking a patch to let mkfs.xfs --unsupported take both size and
-agsize arguments so the overall filesystem size and the per-ag size
-could be set by a test?)
+This series contains backports for 6.6 from the 6.9 release. This patchset
+has gone through xfs testing and review.
 
-> > On older kernels this is all it takes.  After the AG-aware allocator
-> > changes I also need to start the allocation in the highest numbered AG
-> > available while inducing lock contention in the lower numbered AGs.
-> 
-> Ah, so you have to perform a DOS on the lower AGFs so that the
-> attempts made by the xfs_alloc_vextent_start_ag() to trylock the
-> lower AGFs once it finds it cannot allocate in the highest AG
-> anymore also fail.
-> 
-> That was one of the changes made in the perag aware allocator
-> rework; it added full-range AG iteration when XFS_ALLOC_FLAG_TRYLOCK
-> is set because we can't deadlock on reverse order AGF locking when
-> using trylocks.
-> 
-> However, if the trylock iteration fails, it then sets the restart AG
-> to the minimum AG be can wait for without deadlocking, removes the
-> trylock and restarts the iteration. Hence you've had to create AGF
-> lock contention to force the allocator back to being restricted by
-> the AGF locking orders.
+Andrey Albershteyn (1):
+  xfs: allow cross-linking special files without project quota
 
-The other thing that I really appreciated here is that the patchset
-cleaned up a bunch of the different allocation functions and made
-everything easier to read and follow.  Thanks for that as well.
+Darrick J. Wong (2):
+  xfs: fix imprecise logic in xchk_btree_check_block_owner
+  xfs: fix scrub stats file permissions
 
-> Is this new behaviour sufficient to mitigate the problem being seen
-> with this database workload? Has it been tested with kernels that
-> have those changes, and if so did it have any impact on the
-> frequency of the issue occurring?
+Dave Chinner (4):
+  xfs: fix SEEK_HOLE/DATA for regions with active COW extents
+  xfs: shrink failure needs to hold AGI buffer
+  xfs: allow sunit mount option to repair bad primary sb stripe values
+  xfs: don't use current->journal_info
 
-I don't have a good answer for this yet.  The team is planning to start
-migrating later in the year and this will probably run through to next
-year.  I'll have that information eventually and will share it when I
-do, but don't know yet.  Aside from the script, other synethtic
-load-tests have not been successful in reproducing the problemr.  That
-may be the result of the databases that are spun up for load testing not
-having filesystems that as full and fragmented as the production ones.
+Long Li (1):
+  xfs: ensure submit buffers on LSN boundaries in error handlers
 
-> > In order to ensure that AGs have enough space to complete transactions
-> > with multiple allocations, I've taken a stab at implementing an AGFL
-> > reserve pool.
-> 
-> OK. I'll comment directly on the code from here, hopefully I'll
-> address your other questions in those comments.
+ fs/xfs/libxfs/xfs_ag.c   | 11 ++++++++++-
+ fs/xfs/libxfs/xfs_sb.c   | 40 +++++++++++++++++++++++++++++++---------
+ fs/xfs/libxfs/xfs_sb.h   |  5 +++--
+ fs/xfs/scrub/btree.c     |  7 ++++++-
+ fs/xfs/scrub/common.c    |  4 +---
+ fs/xfs/scrub/stats.c     |  4 ++--
+ fs/xfs/xfs_aops.c        |  7 -------
+ fs/xfs/xfs_icache.c      |  8 +++++---
+ fs/xfs/xfs_inode.c       | 15 +++++++++++++--
+ fs/xfs/xfs_iomap.c       |  4 ++--
+ fs/xfs/xfs_log_recover.c | 23 ++++++++++++++++++++---
+ fs/xfs/xfs_trans.h       |  9 +--------
+ 12 files changed, 94 insertions(+), 43 deletions(-)
 
-Thanks, Dave.  I appreciate you spending the time to review and provide
-feedback.
+-- 
+2.39.3
 
--K
 
