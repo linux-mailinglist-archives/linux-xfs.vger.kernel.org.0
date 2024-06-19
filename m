@@ -1,121 +1,173 @@
-Return-Path: <linux-xfs+bounces-9460-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9462-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A91490E121
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 03:06:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D11B890E16B
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 03:53:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38AB02865FE
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 01:06:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63ADB283347
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 01:53:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE47B65D;
-	Wed, 19 Jun 2024 01:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6jaHdXf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4C28200DB;
+	Wed, 19 Jun 2024 01:53:01 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54C3B653
-	for <linux-xfs@vger.kernel.org>; Wed, 19 Jun 2024 01:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B638B18E20;
+	Wed, 19 Jun 2024 01:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718759183; cv=none; b=QkzUmTgutBsOsTNrCXjbTZrkZ3oO/wlJJDCRcIDJI7kctGNU2XNHKUdUwXQLEmqhDG1+2t9pdk7I8JqWxzzoZOsmxNgJTxUUaxxlgYXSq0cwyiM1ev6x65FtIrRFj5CIe6xa7eJkV7jH6dXNBOO2hTHw5d8Dew2nEkbS4Y7z5V0=
+	t=1718761981; cv=none; b=O5lPUbpoYMD1EGiFu3Ies5oBjgL21KFo4vBCoMGlT93Kel2OXAREkVR7CqBrovCmDRrEU8Ba9MO8UTXB+lZe20NSJBCzk5s0kgmDiMDyu288WC0ZgsUhpTGzWBx6/RChYYqRtgZB4ftdqg/QFwdsHs3tdP0FcD/YAV0C+mIjdHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718759183; c=relaxed/simple;
-	bh=YKCle4kpNCxUw1jp2zG55YAZUvsHqBwJ6dDWBhrurgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mxpgn5i6yNWIgKR/M19Mh1tk7KQZn5zVf16wWQI4C2UhYsWQuYgDViD/1xTW9Ibg0glnGgmAb0nTjLFYrTpjTUKwdGs48NWRLGUZCrx60ch7oLP8DhC+0XwShR191SKHtawX766ORhEssw8UBZTqwCZKxUc7ywuvblOWIX7MarA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6jaHdXf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D74CC3277B;
-	Wed, 19 Jun 2024 01:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718759183;
-	bh=YKCle4kpNCxUw1jp2zG55YAZUvsHqBwJ6dDWBhrurgA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z6jaHdXfzbbrhvqDBUrJNl7r4Dp5Zr44wbZTU0K1ReCpOH0RHTW7SjKZC1GzEebQX
-	 MZJ3strAjkl+GUKrA2b/jkjasLw71KON8bEq/1avFawYo2VejJWo/5FTtHWGf1JpOw
-	 DEcgBTEX0WhHhfjAcQBoGYca/jPNEbGXNLH0g7FDDNRb1tbUiUFTy7hGCKT/Vk3Epa
-	 2Cb4uxO2XJrLxvTfAOWftxIlCFBkeggeMWiVWuWXTNzsO65JvsJVaxvlzwBZWOXsHn
-	 KyFSbo00TTk99mhNpoEa3lyuhhPzpIYTJfuXXwPQFj0tnF+/EE2QB9kgKms1/i89jO
-	 TIL+3XZ1F3A6g==
-Date: Tue, 18 Jun 2024 18:06:22 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>,
-	Chandan Babu R <chandanbabu@kernel.org>
-Cc: xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] xfs: honor init_xattrs in xfs_init_new_inode for !attr
- && attr2 fs
-Message-ID: <20240619010622.GI103034@frogsfrogsfrogs>
-References: <20240618232112.GF103034@frogsfrogsfrogs>
+	s=arc-20240116; t=1718761981; c=relaxed/simple;
+	bh=QmPk0UzntBJOKP+gtREakJzVLTpxJSG6l9MVP35N/+8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=E197t/HJKtmzFjaRybC30sfrNHGnuPhpJXOprYoNFCsPlYfHg8TOlHpIdKwVEiZFNRteCrn6g4fld8EIqgVfL7pO1s4Dj51xkLfsDRpWySKH5Z1BqwxLm8V/3T5Adf7OPlYanqcdXVzG1HYJzHIlApdd3euV7c2ZxUR5B9NW2pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4W3mpb3yNVz4f3jd0;
+	Wed, 19 Jun 2024 09:52:39 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E89531A0572;
+	Wed, 19 Jun 2024 09:52:49 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgCnDw3uOXJmtDtWAQ--.53627S3;
+	Wed, 19 Jun 2024 09:52:47 +0800 (CST)
+Subject: Re: [PATCH -next v6 0/2] iomap/xfs: fix stale data exposure when
+ truncating realtime inodes
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
+ david@fromorbit.com, chandanbabu@kernel.org, jack@suse.cz,
+ yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+References: <20240618142112.1315279-1-yi.zhang@huaweicloud.com>
+ <20240619002444.GH103034@frogsfrogsfrogs>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <2aec8c89-b09b-c173-de4e-6a6c1547d600@huaweicloud.com>
+Date: Wed, 19 Jun 2024 09:52:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618232112.GF103034@frogsfrogsfrogs>
+In-Reply-To: <20240619002444.GH103034@frogsfrogsfrogs>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgCnDw3uOXJmtDtWAQ--.53627S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw4DKr47uF4xJr1UKFyfZwb_yoWrGF17pF
+	Z3KayYkF4Ut34fArZ7ZF1UXr1Yyan7Cr4UGFy5Kr4fuF15Zr1Iqr1vgF4F9FWqk3s7urs0
+	vr4Fva4fCrn0yFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Tue, Jun 18, 2024 at 04:21:12PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On 2024/6/19 8:24, Darrick J. Wong wrote:
+> On Tue, Jun 18, 2024 at 10:21:10PM +0800, Zhang Yi wrote:
+>> Changes since v5:
+>>  - Drop all the code about zeroing out the whole allocation unitsize
+>>    on truncate down in xfs_setattr_size() as Christoph suggested, let's
+>>    just fix this issue for RT file by converting tail blocks to
+>>    unwritten now, and we could think about forced aligned extent and
+>>    atomic write later until it needs, so only pick patch 6 and 8 in
+>>    previous version, do some minor git log changes.
 > 
-> xfs_init_new_inode ignores the init_xattrs parameter for filesystems
-> that have ATTR2 enabled but not ATTR.  As a result, the first file to be
-> created by the kernel will not have an attr fork created to store acls.
-> Storing that first acl will add ATTR to the superblock flags, so chances
-> are nobody has noticed this previously.
+> This mostly makes sense, let's see how it fares with overnight fstests.
+> For now, this is a provisional
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 > 
-> However, this is disastrous on a filesystem with parent pointers because
-> it requires that a new linkable file /must/ have a pre-existing attr
-> fork.  The preproduction version of mkfs.xfs have always set this, but
-> as xfs_sb.c doesn't validate that pptrs filesystems have ATTR set, we
-> must catch this case.
-> 
-> Note that the sb verifier /does/ require ATTR2 for V5 filesystems, so we
-> can fix both problems by amending xfs_init_new_inode to set up the attr
-> fork for either ATTR or ATTR2.
-> 
-> Fixes: 2442ee15bb1e ("xfs: eager inode attr fork init needs attr feature awareness")
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  fs/xfs/xfs_inode.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index b699fa6ee3b64..b2aab91a86d30 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -870,7 +870,7 @@ xfs_init_new_inode(
->  	 * this saves us from needing to run a separate transaction to set the
->  	 * fork offset in the immediate future.
->  	 */
-> -	if (init_xattrs && xfs_has_attr(mp)) {
-> +	if (init_xattrs && (xfs_has_attr(mp) || xfs_has_attr2(mp))) {
 
-NAK, this patch is still not correct -- if we add an attr fork here, we
-also have to xfs_add_attr().  ATTR protects attr forks in general,
-whereas ATTR2 only protects dynamic fork sizes.
+Thanks for the review. BTW, what kind of fstests configs do you usually run?
+I always run kvm-xfstests -g auto[1] before I submitting ext4 patches, I'd
+also like to run full tests and hope to find regressions before submitting
+xfs patches.
 
-	if (init_xattrs && (xfs_has_attr(mp) || xfs_has_attr2(mp))) {
-		ip->i_forkoff = xfs_default_attroffset(ip) >> 3;
-		xfs_ifork_init_attr(ip, XFS_DINODE_FMT_EXTENTS, 0);
+[1] https://github.com/tytso/xfstests-bld
 
-		if (!xfs_has_attr(mp)) {
-			spin_lock(&mp->m_sb_lock);
-			xfs_add_attr2(mp);
-			spin_unlock(&mp->m_sb_lock);
-			xfs_log_sb(tp);
-		}
-	}
+Thanks,
+Yi.
 
---D
-
->  		ip->i_forkoff = xfs_default_attroffset(ip) >> 3;
->  		xfs_ifork_init_attr(ip, XFS_DINODE_FMT_EXTENTS, 0);
->  	}
 > 
+> 
+>> Changes since v4:
+>>  - Drop the first patch in v4 "iomap: zeroing needs to be pagecache
+>>    aware" since this series is not strongly depends on it, that patch
+>>    still needs furtuer analyse and also should add to handle the case of
+>>    a pending COW extent that extends over a data fork hole. This is a
+>>    big job, so let's fix the exposure stale data issue and brings back
+>>    the changes in iomap_write_end() first, don't block the ext4 buffered
+>>    iomap conversion.
+>>  - In patch 1, drop the 'ifndef rem_u64'.
+>>  - In patch 4, factor out a helper xfs_setattr_truncate_data() to handle
+>>    the zero out, update i_size, write back and drop pagecache on
+>>    truncate.
+>>  - In patch 5, switch to use xfs_inode_alloc_unitsize() in
+>>    xfs_itruncate_extents_flags().
+>>  - In patch 6, changes to reserve blocks for rtextsize > 1 realtime
+>>    inodes on truncate down.
+>>  - In patch 7, drop the unwritten convert threshold, always convert tail
+>>    blocks to unwritten on truncate down realtime inodes.
+>>  - Add patch 8 to bring back 'commit 943bc0882ceb ("iomap: don't
+>>    increase i_size if it's not a write operation")'.
+>>
+>> Changes since v3:
+>>  - Factor out a new helper to get the remainder in math64.h as Darrick
+>>    suggested.
+>>  - Adjust the truncating order to prevent too much redundant blocking
+>>    writes as Dave suggested.
+>>  - Improve to convert the tail extent to unwritten when truncating down
+>>    an inode with large rtextsize as Darrick and Dave suggested.
+>>
+>> Since 'commit 943bc0882ceb ("iomap: don't increase i_size if it's not a
+>> write operation")' merged, Chandan reported a stale data exposure issue
+>> when running fstests generic/561 on xfs with realtime device [1]. This
+>> issue has been fix in 6.10 by revert this commit through commit
+>> '0841ea4a3b41 ("iomap: keep on increasing i_size in iomap_write_end()")',
+>> but the real problem is xfs_setattr_size() doesn't zero out enough range
+>> when truncate down a realtime inode. So this series fix this problem by
+>> just converting the tail blocks to unwritten when truncate down realtime
+>> inodes, then we could bring commit 943bc0882ceb back.
+>>
+>> I've tested this series on fstests (1) with reflink=0, (2) with
+>> reflink=1, (3) with 28K RT device, no new failures detected, and it
+>> passed generic/561 on RT device over 300+ rounds, please let me know if
+>> we need any other test.
+>>
+>> [1] https://lore.kernel.org/linux-xfs/87ttj8ircu.fsf@debian-BULLSEYE-live-builder-AMD64/
+>>
+>> Thanks,
+>> Yi.
+>>
+>> Zhang Yi (2):
+>>   xfs: reserve blocks for truncating large realtime inode
+>>   iomap: don't increase i_size in iomap_write_end()
+>>
+>>  fs/iomap/buffered-io.c | 53 +++++++++++++++++++++++-------------------
+>>  fs/xfs/xfs_iops.c      | 15 +++++++++++-
+>>  2 files changed, 43 insertions(+), 25 deletions(-)
+>>
+>> -- 
+>> 2.39.2
+>>
+>>
+
 
