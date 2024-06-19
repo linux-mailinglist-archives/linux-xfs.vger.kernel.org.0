@@ -1,58 +1,57 @@
-Return-Path: <linux-xfs+bounces-9523-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9524-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34B3490F4AC
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 19:03:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0708990F4F2
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 19:23:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF4431F223E6
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 17:03:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6A361F22DF1
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Jun 2024 17:23:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73CC1155386;
-	Wed, 19 Jun 2024 17:03:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83C28155A23;
+	Wed, 19 Jun 2024 17:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6g9lRUX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbwNB2Yj"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30762155336;
-	Wed, 19 Jun 2024 17:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3791C14EC56;
+	Wed, 19 Jun 2024 17:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718816583; cv=none; b=fFMtLdcGHz8KcdazblkinOdVMDhLqPgq2DTcqooY9o2LBITyWfEmH0IK6yHS2EUO0cKJOvo55VONc3ybdw3iPZ4TA+8CdYRx5ZU96fVpG2Ymu3to/Xw4f+w5LdPMQU7Dpp0at3JVBGKpxu7Z/Jiv6L0FQtfzglhGLPDazZPP86k=
+	t=1718817799; cv=none; b=R/WIraHmEoTfbnzz7DN3jjbEEm0UyvUDZfXqrShHOUbW/4azi/YCDg7o6IPbSUydKH1fBQ/rcKl+CWIz4FOV1F1iBc2OTZRlvLTLj1AQp9rvhPH3xMZP5X6h4xUdZfWD7KrCPwWTHwgBA4c3Vy7NbqHm/m65s4IwDu4XoUUv6rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718816583; c=relaxed/simple;
-	bh=UeW+EMiSNiNKsYJecQMNhbdOcrLdfbZorFRxTbWaQAg=;
+	s=arc-20240116; t=1718817799; c=relaxed/simple;
+	bh=24OO11kCs4iWV3l659s0X0GmUwj8OnizkIjHce/ueOM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=huRhMMoQK4zDYNwcN9TOCzO1WpOQM1I1ep1vFPw/V9ZMUxzrqSNfSQXrAtAy0fnuftCds5NRSrx08yFvjxNjZ8kt0zkisuL6ERCXRCI6FAcz9qCi5rfkDezE3WV0/n/Jh0G4yaGR7fA7ZOAi3OdxJLVthpHcBPIPb13fZklP8Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6g9lRUX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB5C5C2BBFC;
-	Wed, 19 Jun 2024 17:03:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GnfumpPLRYi2An8WdaW5KvBY6uXJa9gcLVpBwQkLjPOOYzC4uE35Bu8TW3oogiuV2v/HDwDRlmY8gnH+35NdSMglWOraSWJ8M4GWBgn3a7nx9KXsSs2qoQ3F27837OHOHW+FaaZSe+aN/6dN3P+/esDKEH2QDiUctuX3n4xZcwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbwNB2Yj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4CF9C2BBFC;
+	Wed, 19 Jun 2024 17:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718816582;
-	bh=UeW+EMiSNiNKsYJecQMNhbdOcrLdfbZorFRxTbWaQAg=;
+	s=k20201202; t=1718817798;
+	bh=24OO11kCs4iWV3l659s0X0GmUwj8OnizkIjHce/ueOM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R6g9lRUXzGaHyZyxKnZrAPBUhdKg6KmMjDK7/aVzq1Jmx49nDGltV6tm9Y1TArS/n
-	 UelSFefU9iAnPDy2VI76L5SgUvNq+MV+SeNIjMhDZ721CbI8bqXh+MYdF4FbT1lTmv
-	 p/eIc/vE1ftMUg1Mkr9BijvPj96tAnQPQpOHQ43pcDjXc/ifLmIQUd/TrDf8jXJM9p
-	 tRX1spYOHd8CFBflUpJDPDb/vLSbRNANbUjkFxCKrqT0O6F/k+yaP8dtxaM6YbFCzR
-	 /JBGQO3NimLhvkl8l95HxfHtqFhJQTJ/feSw2hxta0Ghs2w6aewPpsZUBKy+PLAVFL
-	 H2Ymz0evcYUcQ==
-Date: Wed, 19 Jun 2024 10:03:02 -0700
+	b=nbwNB2YjnS+o4bcBT4CoxWiROUA7LD4M6OFGeOSfloysqk5u1qCWe12DME5M/yraW
+	 jZN2G3L/CGc/mS6hBSSkYStuTh6Fij5A313m/YhYW3jZ5kmvjMxWUW/2+bc6INqwjt
+	 J2o+0n7Xhvrb+/J+WrVJeF5D1nGCB7TSjMbO8YDEI4DMD/Tg5wlKMrhz5n7FZpxdL7
+	 zi+w++VHy/g6Gs7dclr7O1GAPOcQbtuqQpkYE+b0FQQfWrRB514eRAAS8M9EpMlx1M
+	 Az+utl0lV5gvdWkF2jQ4dknZYGMHZf6rgEwpd4Oj0wvB8pLQ5KJZYqCOacSU8/skIV
+	 vr37NRK9mZDYw==
+Date: Wed, 19 Jun 2024 10:23:18 -0700
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: Christoph Hellwig <hch@infradead.org>
 Cc: zlang@redhat.com, fstests@vger.kernel.org, guan@eryu.me,
-	linux-xfs@vger.kernel.org, allison.henderson@oracle.com,
-	catherine.hoang@oracle.com
-Subject: Re: [PATCH 06/11] xfs/{018,191,288}: disable parent pointers for
- this test
-Message-ID: <20240619170302.GQ103034@frogsfrogsfrogs>
-References: <171867145793.793846.15869014995794244448.stgit@frogsfrogsfrogs>
- <171867145899.793846.9319639235704732288.stgit@frogsfrogsfrogs>
- <ZnJ3jnD3E--H4sJ3@infradead.org>
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 03/10] generic/710: repurpose this for exchangerange vs.
+ quota testing
+Message-ID: <20240619172318.GR103034@frogsfrogsfrogs>
+References: <171867145284.793463.16426642605476089750.stgit@frogsfrogsfrogs>
+ <171867145344.793463.2045134533110555641.stgit@frogsfrogsfrogs>
+ <ZnJ15ZG1nWsCkxiG@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -61,26 +60,23 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZnJ3jnD3E--H4sJ3@infradead.org>
+In-Reply-To: <ZnJ15ZG1nWsCkxiG@infradead.org>
 
-On Tue, Jun 18, 2024 at 11:15:42PM -0700, Christoph Hellwig wrote:
-> s/this test/these tests/ ?
+On Tue, Jun 18, 2024 at 11:08:37PM -0700, Christoph Hellwig wrote:
+> On Mon, Jun 17, 2024 at 05:47:32PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > The exchange-range implementation is now completely separate from the
+> > old swapext ioctl.  We're deprecating the old swapext ioctl, so let's
+> > move this test to use exchangerange.
 > 
-> > +	if echo "$MKFS_OPTIONS" | grep -q 'parent='; then
-> > +		MKFS_OPTIONS="$(echo "$MKFS_OPTIONS" | sed -e 's/parent=[01]/parent=0/g')"
-> 
-> Split the line?  I also wonder if a generic helper to remove mkfs
-> options might be useful.
+> Do we really want to lost the swapext test coverage?  Even if it is
+> deprecated, it will be with us for a long time.  My vote for copy and
+> pasting this into a new test for exchrange.
 
-Maybe when we get to the next caller?
-
-I'll split the line too.
-
-> Otherwise looks good:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-
-Thanks!
+Yeah, you're right that we should retain this test for the old swapext
+ioctl.  I'll fork the test into two -- one for swapext, another for
+exchangerange.
 
 --D
 
