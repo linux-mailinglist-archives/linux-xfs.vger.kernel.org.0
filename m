@@ -1,55 +1,54 @@
-Return-Path: <linux-xfs+bounces-9581-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9582-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25EC99113BB
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2024 22:53:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BECDB9113BE
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2024 22:53:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D40A0285414
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2024 20:53:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77E1E285303
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Jun 2024 20:53:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141876BB58;
-	Thu, 20 Jun 2024 20:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BF585F874;
+	Thu, 20 Jun 2024 20:53:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ik32ijop"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZM/pr5Y"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32C62BAF3;
-	Thu, 20 Jun 2024 20:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491632BAF3;
+	Thu, 20 Jun 2024 20:53:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718916781; cv=none; b=aRxexEmn4ixdKMUsFhVZw/R9xopkwqAYLhvlTRDD3WTa5D97R0jVoqFUzVA48yfobQzg8MSsyVzxQeseSryw6LxTC6rEr+Z5V3kONEPhgWL7uwy5FsXNUxbtG3Ho2/zre1l7AYn/YZz/qovTZseKzt3bXowZMI3ZfjQys6LULfg=
+	t=1718916797; cv=none; b=k0OvkzNDQ1Dad2QLYDq6sS21W0oGDDADSe9xV2K8JMgGAp0v4jeGpb/tB2Yds0snOyv6TnohrEkB4ufQ1dkT+nWJYC4oTuiv8pYVTZw9lK39lvpgTegLaA/GjrXKOO250P7chXipZFNvwRVtZN8P3jN72wQhMM/dwwHqTxNk7sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718916781; c=relaxed/simple;
-	bh=r9lm1+2e+kfy1IjXBgbW103WzQYuVX7KxS0VP8w7X6I=;
+	s=arc-20240116; t=1718916797; c=relaxed/simple;
+	bh=GCZfA3vEJ+r0WBbg3uboUbqsMjzI/+q4AaCFm3i3TBE=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WxDY+B3V+dQD0hUf2eqCkHTejSVng1zHBIJ9gK/9DkpxO7PCHQYMJY1Kr8FD+tLG7BQOiX7m1XhoWTwje6dpH4MC4je6bng8YDnYmq7AJQxtI3lTPgxgIf+ejypqC5gqto4rZ1SJlrpJisEneJ9jMqs4Iq28OcsuERkG8Xh42/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ik32ijop; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6115CC2BD10;
-	Thu, 20 Jun 2024 20:53:01 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Yd/D/m/csDD3ic/cwoY5uyu8iV9SKTUG3dcjhc9BoTC2hKLpeRYsjGAVi+PlxAGCtqhw0kLL7ZWBb2VMuN4z3H66OHqbKInlEhFsIxS3okjORr2bBJV4HD6Xb7HBxNj2B8QBlFe31Vrf9/w6zAVLJhe2kvKv6DmN/lA0WGVyQyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZM/pr5Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D09C2BD10;
+	Thu, 20 Jun 2024 20:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718916781;
-	bh=r9lm1+2e+kfy1IjXBgbW103WzQYuVX7KxS0VP8w7X6I=;
+	s=k20201202; t=1718916797;
+	bh=GCZfA3vEJ+r0WBbg3uboUbqsMjzI/+q4AaCFm3i3TBE=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Ik32ijopJtpUhJjhqcy/cNED9Vs+f9znfWRwTn8DCf3rkVn1R+FRy+NpS5KJnMDRT
-	 8Mlx/153GmoFihPR807Obj1NjQXu3vY75cwLshm/vJZKotx8a3IODh3nEJnIFwc6I7
-	 uw1TWCKVzoysFeqVxwLZdS6ZSp2zyKxnakTlq+tL2qtNd+uVasWw65UfcXg6ZMqjjM
-	 zfOXgQdqw7QVvEVTBGmIyywwulJBgnGKz5xEdspMvV9yeYDKKRxLm9C1qs6xC8Whjh
-	 WXa5vLRy0SEJRYdDSr+9KQCd7/Sjn75MEEZemP5s/crnnRI0vqCJCgq7g7yXE22htV
-	 oDgWLP6DUnn4Q==
-Date: Thu, 20 Jun 2024 13:53:00 -0700
-Subject: [PATCHSET v13.6 3/6] fstests: adjust tests for xfs parent pointers
+	b=JZM/pr5YTNU+9FQt+5VCzCRzf999DshJioPX6c0+75tRaFy7yXmVteK0DCyUqctg3
+	 do8SkOFuSgQ3eeuKxwqYjzkB1NF80y8Vwxuvwxtc2SOeLbRJTgAqdQLh0lfNMTXK8b
+	 5L9qPjeH8DBSQ8C//S/Kvuo8hGqJ785iVlvRIu7iZOpbhUvb6RosrIFx6EAxEvEouT
+	 ghMd/qVgb4O10orsqkTbm21dAmodfq0YEQjSjoj+j0S6r7FObyAHAB14cGprLvDrk0
+	 NXFB6icCudRnfqvN1DvICvl6wg3BlzJ/FRn3IBABKJ8UH6cb6buhBY7vFQJxdnZpOK
+	 ZdKOxkXGPMBTw==
+Date: Thu, 20 Jun 2024 13:53:16 -0700
+Subject: [PATCHSET v30.7 4/6] xfs: detect and correct directory tree
+ structures
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, zlang@redhat.com
-Cc: Allison Henderson <allison.henderson@oracle.com>,
- Christoph Hellwig <hch@lst.de>, Catherine Hoang <catherine.hoang@oracle.com>,
- fstests@vger.kernel.org, allison.henderson@oracle.com,
- catherine.hoang@oracle.com, linux-xfs@vger.kernel.org
-Message-ID: <171891669626.3035255.15795876594098866722.stgit@frogsfrogsfrogs>
+Cc: Christoph Hellwig <hch@lst.de>, fstests@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Message-ID: <171891670149.3035670.17847103061665110343.stgit@frogsfrogsfrogs>
 In-Reply-To: <20240620205017.GC103020@frogsfrogsfrogs>
 References: <20240620205017.GC103020@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -64,14 +63,22 @@ Content-Transfer-Encoding: 7bit
 
 Hi all,
 
-These are the test adjustments that are required for parent pointers.
-There's also a few new tests to ensure that the GETPARENTS ioctl (and
- file extent can cross an rtgroup boundary.
+Historically, checking the tree-ness of the directory tree structure has
+not been complete.  Cycles of subdirectories break the tree properties,
+as do subdirectories with multiple parents.  It's easy enough for DFS to
+detect problems as long as one of the participants is reachable from the
+root, but this technique cannot find unconnected cycles.
 
-The best advantage for rtgroups will become evident later when we get to
-adding rmap and reflink to the realtime volume, since the geometry
-constraints are the same for rt groups and AGs.  Hence we can reuse all
-that code directly.
+Directory parent pointers change that, because we can discover all of
+these problems from a simple walk from a subdirectory towards the root.
+For each child we start with, if the walk terminates without reaching
+the root, we know the path is disconnected and ought to be attached to
+the lost and found.  If we find ourselves, we know this is a cycle and
+can delete an incoming edge.  If we find multiple paths to the root, we
+know to delete an incoming edge.
+
+Even better, once we've finished walking paths, we've identified the
+good ones and know which other path(s) to remove.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -82,66 +89,50 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=pptrs
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-directory-tree
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=pptrs
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-directory-tree
 
 fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=pptrs
-
-xfsdocs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-documentation.git/log/?h=pptrs
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=scrub-directory-tree
 ---
 Commits in this patchset:
- * generic: test recovery of extended attribute updates
- * xfs/206: filter out the parent= status from mkfs
- * xfs/122: update for parent pointers
- * populate: create hardlinks for parent pointers
- * xfs/021: adapt golden output files for parent pointers
- * xfs/{018,191,288}: disable parent pointers for these tests
- * xfs/306: fix formatting failures with parent pointers
- * common: add helpers for parent pointer tests
- * xfs: add parent pointer test
- * xfs: add multi link parent pointer test
- * xfs: add parent pointer inject test
+ * common/fuzzy: stress directory tree modifications with the dirtree tester
+ * scrub: test correction of directory tree corruptions
 ---
- common/parent             |  209 +++++++++
- common/populate           |   42 ++
- common/rc                 |    7 
- common/xfs                |   28 +
- doc/group-names.txt       |    1 
- src/popdir.pl             |   11 
- tests/generic/1834        |   93 ++++
- tests/generic/1834.out    |    2 
- tests/xfs/018             |    4 
- tests/xfs/021             |   15 +
- tests/xfs/021.cfg         |    1 
- tests/xfs/021.out.default |    0 
- tests/xfs/021.out.parent  |   64 +++
- tests/xfs/122.out         |    4 
- tests/xfs/1851            |  116 +++++
- tests/xfs/1851.out        |   69 +++
- tests/xfs/1852            |   69 +++
- tests/xfs/1852.out        | 1002 +++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1853            |   85 ++++
- tests/xfs/1853.out        |   14 +
- tests/xfs/191             |    3 
- tests/xfs/206             |    1 
- tests/xfs/288             |    4 
- tests/xfs/306             |    9 
- 24 files changed, 1846 insertions(+), 7 deletions(-)
- create mode 100644 common/parent
- create mode 100755 tests/generic/1834
- create mode 100644 tests/generic/1834.out
- create mode 100644 tests/xfs/021.cfg
- rename tests/xfs/{021.out => 021.out.default} (100%)
- create mode 100644 tests/xfs/021.out.parent
- create mode 100755 tests/xfs/1851
- create mode 100644 tests/xfs/1851.out
- create mode 100755 tests/xfs/1852
- create mode 100644 tests/xfs/1852.out
- create mode 100755 tests/xfs/1853
- create mode 100644 tests/xfs/1853.out
+ tests/xfs/1864     |   38 +++++++++++++
+ tests/xfs/1864.out |    2 +
+ tests/xfs/1865     |   38 +++++++++++++
+ tests/xfs/1865.out |    2 +
+ tests/xfs/1866     |  122 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1866.out |   19 ++++++
+ tests/xfs/1867     |  133 ++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1867.out |   25 ++++++++
+ tests/xfs/1868     |  121 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1868.out |   21 +++++++
+ tests/xfs/1869     |  157 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1869.out |   32 +++++++++++
+ tests/xfs/1870     |  146 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1870.out |   30 ++++++++++
+ tests/xfs/1871     |   78 ++++++++++++++++++++++++++
+ tests/xfs/1871.out |    2 +
+ 16 files changed, 966 insertions(+)
+ create mode 100755 tests/xfs/1864
+ create mode 100644 tests/xfs/1864.out
+ create mode 100755 tests/xfs/1865
+ create mode 100644 tests/xfs/1865.out
+ create mode 100755 tests/xfs/1866
+ create mode 100644 tests/xfs/1866.out
+ create mode 100755 tests/xfs/1867
+ create mode 100644 tests/xfs/1867.out
+ create mode 100755 tests/xfs/1868
+ create mode 100644 tests/xfs/1868.out
+ create mode 100755 tests/xfs/1869
+ create mode 100644 tests/xfs/1869.out
+ create mode 100755 tests/xfs/1870
+ create mode 100644 tests/xfs/1870.out
+ create mode 100755 tests/xfs/1871
+ create mode 100644 tests/xfs/1871.out
 
 
