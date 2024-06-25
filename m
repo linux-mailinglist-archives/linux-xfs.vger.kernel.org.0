@@ -1,206 +1,120 @@
-Return-Path: <linux-xfs+bounces-9880-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-9883-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F11A6916683
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2024 13:47:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD5F89169BA
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2024 16:01:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7AE9728446C
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2024 11:47:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97145289FA5
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Jun 2024 14:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF7A14E2D6;
-	Tue, 25 Jun 2024 11:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="JUEjC0St"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 536A616EBEB;
+	Tue, 25 Jun 2024 13:59:03 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9927114AD38;
-	Tue, 25 Jun 2024 11:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A362E16DEB8
+	for <linux-xfs@vger.kernel.org>; Tue, 25 Jun 2024 13:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719315910; cv=none; b=gZ3p5a3+P3mIkaxiDlr1MTn2xu5w5o1OhdUc6fzeKtCTrFHP3R6RzVtIxnMj7sRnCVLAUTfH8mF5EzemMrenjkdJ72tX3kfjepFMCLjVuTHN/YSgWcSSRlRgawDqZXWhqS5TORLhoTNhUjDhdowN8Q/MgsTwMtzxoEplR/cwWN0=
+	t=1719323943; cv=none; b=lwMl8GSCUSZOsycdYJJdEmnMj9gCfbsZqmZ3F7bMssvOyt4UY/klyP/MMr+56TSNUo6N/9yyoK+lVniuL13xwQ+WjJKDr30LqWeclr18uSwq8U2tULTTE2kZUACZIb/56MHfnKLk+/nz2x6nv2iDCHrHGjOfozXFph8sFIKAlIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719315910; c=relaxed/simple;
-	bh=O0/2LUKfYiFUblD3u9m7Y13StU5ozfkcPwrLPBl3W0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AGHYDSeqPaFwelrIymKB42ReuVOIhoAsxHTc/eMLV7ve7QiuuF5T5p2S73pq6gqFVd+cJ70coLeDK7iakaSIThlzope4t2Vvec3uXdpP/1CUWhy8RLj+lSNd2wusgvuaJHj0QVnw4zLFP92xW2tslLCUk2P6tXrzBldcRDBOfVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=JUEjC0St; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4W7jgN6pNYz9spK;
-	Tue, 25 Jun 2024 13:45:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1719315905;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fyS4GVf4PvByyE0IUbrr3l1s3P7v70XANt/sXrYXYDk=;
-	b=JUEjC0StwOgXBgGlDaXdgJYKqaINIckvwir1VzS6vaPsaIuGOoRoH4bIEBnAPSiFaBTsij
-	Wg2CeEeSf29wU8MOtLW7DEWlkJx7/q2myVSyUGY5xc9IZvT+AKXe2l99KwhqW1jGBua1DY
-	PO4ofn3aJAnp4NBPB0RiKD2wMATzgAVn0gOz1gYoxGohcI4Odo85hvIEI/JYspGsH/3XKh
-	bgJrG01RH+pzSMq8l41ho4jHg0lItICn8DvmfnmldRRQAMKy7e/U573JD1xzBsoh4GFzkh
-	Pii6SUSGTYeX37Tx0bkk7i3xlrnBQ5+9hkU5tj7xhJ8HJ/fGXAPpPx5/7kqEzA==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: david@fromorbit.com,
-	willy@infradead.org,
-	chandan.babu@oracle.com,
-	djwong@kernel.org,
-	brauner@kernel.org,
-	akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	yang@os.amperecomputing.com,
-	linux-mm@kvack.org,
-	john.g.garry@oracle.com,
-	linux-fsdevel@vger.kernel.org,
-	hare@suse.de,
-	p.raghav@samsung.com,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	cl@os.amperecomputing.com,
-	linux-xfs@vger.kernel.org,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Zi Yan <zi.yan@sent.com>
-Subject: [PATCH v8 10/10] xfs: enable block size larger than page size support
-Date: Tue, 25 Jun 2024 11:44:20 +0000
-Message-ID: <20240625114420.719014-11-kernel@pankajraghav.com>
-In-Reply-To: <20240625114420.719014-1-kernel@pankajraghav.com>
-References: <20240625114420.719014-1-kernel@pankajraghav.com>
+	s=arc-20240116; t=1719323943; c=relaxed/simple;
+	bh=Ub8lGMTV/5+jycOvPUfmD9QGMF72G9xiQIUZFWScg5g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gGaPWad42+XSksLjWP2Ln4TGTuPVg4KVKyN3oGe7L+N5kxb/v0zucqAEQCtIvDvhICeMmpZwkiJaRgHf3zNsOnNmoEo84y0MDb9C0jclsp7ANBBcjfrisYVpQdDP2HSlJr66Ikn8lzI+QmDgG/HClObHWFLFkm3gJ6CCNjjn8lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W7mXw50DdzxTb2;
+	Tue, 25 Jun 2024 21:54:40 +0800 (CST)
+Received: from kwepemi500009.china.huawei.com (unknown [7.221.188.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 86EBA18006C;
+	Tue, 25 Jun 2024 21:58:59 +0800 (CST)
+Received: from localhost (10.175.127.227) by kwepemi500009.china.huawei.com
+ (7.221.188.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 25 Jun
+ 2024 21:58:58 +0800
+Date: Tue, 25 Jun 2024 22:10:26 +0800
+From: Long Li <leo.lilong@huawei.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+CC: <chandanbabu@kernel.org>, <linux-xfs@vger.kernel.org>,
+	<david@fromorbit.com>, <yi.zhang@huawei.com>, <houtao1@huawei.com>,
+	<yangerkun@huawei.com>
+Subject: Re: [PATCH] xfs: eliminate lockdep false positives in
+ xfs_attr_shortform_list
+Message-ID: <20240625141026.GA986685@ceph-admin>
+References: <20240622082631.2661148-1-leo.lilong@huawei.com>
+ <20240624160342.GP3058325@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20240624160342.GP3058325@frogsfrogsfrogs>
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500009.china.huawei.com (7.221.188.199)
 
-From: Pankaj Raghav <p.raghav@samsung.com>
+On Mon, Jun 24, 2024 at 09:03:42AM -0700, Darrick J. Wong wrote:
+> On Sat, Jun 22, 2024 at 04:26:31PM +0800, Long Li wrote:
+> > xfs_attr_shortform_list() only called from a non-transactional context, it
+> > hold ilock before alloc memory and maybe trapped in memory reclaim. Since
+> > commit 204fae32d5f7("xfs: clean up remaining GFP_NOFS users") removed
+> > GFP_NOFS flag, lockdep warning will be report as [1]. Eliminate lockdep
+> > false positives by use __GFP_NOLOCKDEP to alloc memory
+> > in xfs_attr_shortform_list().
+> > 
+> > [1] https://lore.kernel.org/linux-xfs/000000000000e33add0616358204@google.com/
+> > Reported-by: syzbot+4248e91deb3db78358a2@syzkaller.appspotmail.com
+> > Signed-off-by: Long Li <leo.lilong@huawei.com>
+> > ---
+> >  fs/xfs/xfs_attr_list.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+> > index 5c947e5ce8b8..8cd6088e6190 100644
+> > --- a/fs/xfs/xfs_attr_list.c
+> > +++ b/fs/xfs/xfs_attr_list.c
+> > @@ -114,7 +114,8 @@ xfs_attr_shortform_list(
+> >  	 * It didn't all fit, so we have to sort everything on hashval.
+> >  	 */
+> >  	sbsize = sf->count * sizeof(*sbuf);
+> > -	sbp = sbuf = kmalloc(sbsize, GFP_KERNEL | __GFP_NOFAIL);
+> > +	sbp = sbuf = kmalloc(sbsize,
+> > +			GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_NOFAIL);
+> 
+> Why wouldn't we memalloc_nofs_save any time we take an ILOCK when we're
+> not in transaction context?  Surely you'd want to NOFS /any/ allocation
+> when the ILOCK is held, right?
+> 
+> --D
+> 
+> 
 
-Page cache now has the ability to have a minimum order when allocating
-a folio which is a prerequisite to add support for block size > page
-size.
+I believe using memalloc_nofs_save could solve the problem, sometimes it may be 
+more effective than using the __GFP_NOLOCKDEP flag. However, looking at similar
+functions, for example xfs_btree_alloc_cursor, it uses __GFP_NOLOCKDEP to prevent
+ABBA deadlock false positive warnings.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
-@hch and @Dave I have retained the min_folio_order to be in the inode
-struct as the discussion about moving this to xfs_mount is still open.
+xfs_attr_list_ilocked
+  xfs_iread_extents
+    xfs_bmbt_init_cursor
+      xfs_btree_alloc_cursor
+        kmem_cache_zalloc(cache, GFP_KERNEL | __GFP_NOLOCKDEP | __GFP_NOFAIL)
 
- fs/xfs/libxfs/xfs_ialloc.c |  5 +++++
- fs/xfs/libxfs/xfs_shared.h |  3 +++
- fs/xfs/xfs_icache.c        |  6 ++++--
- fs/xfs/xfs_mount.c         |  1 -
- fs/xfs/xfs_super.c         | 18 ++++++++++--------
- 5 files changed, 22 insertions(+), 11 deletions(-)
+After thinking a little more, I found out that just using __GFP_NOLOCKDEP may
+not be enough, AA deadlock false positive warnings [1] still exist in the
+mainline kernel if my understanding is correct.
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 14c81f227c5b..1e76431d75a4 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -3019,6 +3019,11 @@ xfs_ialloc_setup_geometry(
- 		igeo->ialloc_align = mp->m_dalign;
- 	else
- 		igeo->ialloc_align = 0;
-+
-+	if (mp->m_sb.sb_blocksize > PAGE_SIZE)
-+		igeo->min_folio_order = mp->m_sb.sb_blocklog - PAGE_SHIFT;
-+	else
-+		igeo->min_folio_order = 0;
- }
- 
- /* Compute the location of the root directory inode that is laid out by mkfs. */
-diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-index 34f104ed372c..e67a1c7cc0b0 100644
---- a/fs/xfs/libxfs/xfs_shared.h
-+++ b/fs/xfs/libxfs/xfs_shared.h
-@@ -231,6 +231,9 @@ struct xfs_ino_geometry {
- 	/* precomputed value for di_flags2 */
- 	uint64_t	new_diflags2;
- 
-+	/* minimum folio order of a page cache allocation */
-+	unsigned int	min_folio_order;
-+
- };
- 
- #endif /* __XFS_SHARED_H__ */
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 088ac200b026..e0f911f326e6 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -88,7 +88,8 @@ xfs_inode_alloc(
- 
- 	/* VFS doesn't initialise i_mode! */
- 	VFS_I(ip)->i_mode = 0;
--	mapping_set_large_folios(VFS_I(ip)->i_mapping);
-+	mapping_set_folio_min_order(VFS_I(ip)->i_mapping,
-+				    M_IGEO(mp)->min_folio_order);
- 
- 	XFS_STATS_INC(mp, vn_active);
- 	ASSERT(atomic_read(&ip->i_pincount) == 0);
-@@ -325,7 +326,8 @@ xfs_reinit_inode(
- 	inode->i_uid = uid;
- 	inode->i_gid = gid;
- 	inode->i_state = state;
--	mapping_set_large_folios(inode->i_mapping);
-+	mapping_set_folio_min_order(inode->i_mapping,
-+				    M_IGEO(mp)->min_folio_order);
- 	return error;
- }
- 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 3949f720b535..c6933440f806 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -134,7 +134,6 @@ xfs_sb_validate_fsb_count(
- {
- 	uint64_t		max_bytes;
- 
--	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
- 	ASSERT(sbp->sb_blocklog >= BBSHIFT);
- 
- 	if (check_shl_overflow(nblocks, sbp->sb_blocklog, &max_bytes))
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 27e9f749c4c7..b8a93a8f35ca 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1638,16 +1638,18 @@ xfs_fs_fill_super(
- 		goto out_free_sb;
- 	}
- 
--	/*
--	 * Until this is fixed only page-sized or smaller data blocks work.
--	 */
- 	if (mp->m_sb.sb_blocksize > PAGE_SIZE) {
--		xfs_warn(mp,
--		"File system with blocksize %d bytes. "
--		"Only pagesize (%ld) or less will currently work.",
-+		if (!xfs_has_crc(mp)) {
-+			xfs_warn(mp,
-+"V4 Filesystem with blocksize %d bytes. Only pagesize (%ld) or less is supported.",
- 				mp->m_sb.sb_blocksize, PAGE_SIZE);
--		error = -ENOSYS;
--		goto out_free_sb;
-+			error = -ENOSYS;
-+			goto out_free_sb;
-+		}
-+
-+		xfs_warn(mp,
-+"EXPERIMENTAL: V5 Filesystem with Large Block Size (%d bytes) enabled.",
-+			mp->m_sb.sb_blocksize);
- 	}
- 
- 	/* Ensure this filesystem fits in the page cache limits */
--- 
-2.44.1
+[1] https://lore.kernel.org/linux-xfs/20240622094411.GA830005@ceph-admin/T/#m6f7ab8438bf82f0dc44c6d42d183ae08c07dcd5f
 
+thanks,
+Long Li
 
