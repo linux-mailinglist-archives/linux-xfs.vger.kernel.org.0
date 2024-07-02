@@ -1,43 +1,44 @@
-Return-Path: <linux-xfs+bounces-10175-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10176-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C25991EE48
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:27:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2889E91EE49
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:27:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD455B21A4B
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:27:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1DFA1F2255B
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:27:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79237374F5;
-	Tue,  2 Jul 2024 05:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D8EC374F5;
+	Tue,  2 Jul 2024 05:27:33 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FAC2A1D7
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25882A1D7
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:27:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719898040; cv=none; b=gsy8NSFjMWBDpTclk9S3trCYKkwAC+rnnLPSW2rmyTeabZFbnCfJutShK0xV9+JY8O8x+BRHQojIf5Ci2AK1FLim2x16j29M6h+P9HCUn+Pvsz4KzSaPzC5nyJnOPNIhbhwQXK3wyWfFlJj3zS3GibSGEtNUUPaXXZ4GoXq8ot4=
+	t=1719898052; cv=none; b=iZ1KJAdBevY9MOjdpkNEHGyjdnNexanGiPZjp1xrTNQVU8nFL7Q7KOe8k4i14386JBLgP4EWMD0p7InxybDywLfwYpi213Sjg498xIGT2sL5HU/XX+ounhHl4TausVa/jedP7ZqeLRQu2gJfFEuGk814zX+BBdwIja7YfM00ZqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719898040; c=relaxed/simple;
+	s=arc-20240116; t=1719898052; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ijle+foZOdWgbX+wfNFlZDb6Jh1XUsvwwyk+Y05Or+1atdc2W9H+4BW3ouVYW+mcCXNluroCKNvtzQh3KDuHDBo5cQQj/p8gGi7SkGh5S/3hjshZv5xyPeNffiKmJd5nPXDJptdhAMAJsVr/cAmtXfH2PZkeGXUzWgs4yACNnqw=
+	 Content-Type:Content-Disposition:In-Reply-To; b=t/I+5xYzD12VWMPZGPsoFbmxhfz814Xyzl6Id49QW0DXxevPQ44mhv9HAr7oGdUbf0BLo8RF6p7YTrZu4eHZ3Z7yQ1kxsQyHahdBq3pBh90AvxptKNJshEFoROemrZY6f85hWYxab6z19/cQmAQu3tmNwSWIQRhScEvDh/8YsNA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 7472C68B05; Tue,  2 Jul 2024 07:27:16 +0200 (CEST)
-Date: Tue, 2 Jul 2024 07:27:16 +0200
+	id E04C768B05; Tue,  2 Jul 2024 07:27:28 +0200 (CEST)
+Date: Tue, 2 Jul 2024 07:27:28 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, linux-xfs@vger.kernel.org, hch@lst.de
-Subject: Re: [PATCH 1/8] xfs_scrub: move FITRIM to phase 8
-Message-ID: <20240702052716.GA22804@lst.de>
-References: <171988118118.2007602.12196117098152792537.stgit@frogsfrogsfrogs> <171988118144.2007602.9357076180672124914.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 2/8] xfs_scrub: ignore phase 8 if the user disabled
+ fstrim
+Message-ID: <20240702052728.GB22804@lst.de>
+References: <171988118118.2007602.12196117098152792537.stgit@frogsfrogsfrogs> <171988118160.2007602.9433733356692574496.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -46,7 +47,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171988118144.2007602.9357076180672124914.stgit@frogsfrogsfrogs>
+In-Reply-To: <171988118160.2007602.9433733356692574496.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
