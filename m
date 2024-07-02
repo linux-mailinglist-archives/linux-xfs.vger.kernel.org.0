@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-10249-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10250-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 516FF91EF58
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 08:48:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 455C791EF5A
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 08:48:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 845B01C21E0A
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 06:48:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7F11B22B8C
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 06:48:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92CBF60BBE;
-	Tue,  2 Jul 2024 06:48:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2C787D405;
+	Tue,  2 Jul 2024 06:48:48 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41340BA37
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 06:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620CD60BBE
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 06:48:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719902911; cv=none; b=hruX0VR99n7L1Hhn8nr1dnmEMeffcK89hE5pkDWVWpXZFC+xc7jQfpA4yeHIjUwFtwm4NHZN7yj1baUgh1FDkPGO6HqZqTYjBaTKVIfFb83nyz27ucwp/ls5/LFRYSknOSxBr2KWhbb/pxj32+BV8N3GFMC0C7NuCuLuNc4Qotg=
+	t=1719902928; cv=none; b=HyLEKE8pBx8felDTb3iiKzReeUrwry0biGFA6jIH6tA5NEqoPFq46fykPeRsAW2YYXuK8joTjzE72frNte6h8J5L3jJd4TV99cs57lg6PXncHlncu0vkf6R8FOYImq13KyjgRSji5Get2VI8IEPeH2JoiT8LdHO0LgBs4WsKrbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719902911; c=relaxed/simple;
+	s=arc-20240116; t=1719902928; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A3S550Hws0TsjHM5uaFxpeszfx5AG6iS8Ut9FSAd5YJr2pDTkBKQdvbU34XWdeK7aAOIbWDPjbkkfoN5KVihh+/P/lNZTAuuaGTeyM4M7TYhKoazL/7NBiDD0rYzCr/tM5sQqYjsW8nX/TPpeIOfanUPBME3M5YkQv+RSNPkYgc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=ly+tbyIKaL+uAf14BsM8NX3dwnAn/iV6Rvl3a4/L9rnh/j5C/mwP3lYqcFUTvURjb9WmQZDcd0a4UstB49Bb6FYgeG/+ikPCrlZ2adiqiRtu+LIAUyXxgKNwZf6bwcv3osqpNui+CAAqG1/FW5+COPVyGlrb/bE2QYqMkoFYiHE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 96B9168B05; Tue,  2 Jul 2024 08:48:27 +0200 (CEST)
-Date: Tue, 2 Jul 2024 08:48:27 +0200
+	id 80E3E68B05; Tue,  2 Jul 2024 08:48:44 +0200 (CEST)
+Date: Tue, 2 Jul 2024 08:48:44 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, linux-xfs@vger.kernel.org, hch@lst.de
-Subject: Re: [PATCH 1/5] libfrog: add directory tree structure scrubber to
- scrub library
-Message-ID: <20240702064827.GA25817@lst.de>
-References: <171988122691.2012320.13207835630113271818.stgit@frogsfrogsfrogs> <171988122711.2012320.2904107384951874903.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 2/5] xfs_spaceman: report directory tree corruption in
+ the health information
+Message-ID: <20240702064844.GB25817@lst.de>
+References: <171988122691.2012320.13207835630113271818.stgit@frogsfrogsfrogs> <171988122726.2012320.799724181764249157.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,7 +47,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171988122711.2012320.2904107384951874903.stgit@frogsfrogsfrogs>
+In-Reply-To: <171988122726.2012320.799724181764249157.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
