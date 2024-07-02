@@ -1,125 +1,134 @@
-Return-Path: <linux-xfs+bounces-10292-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10294-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0582C923F68
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 15:48:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 44A24923F7F
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 15:50:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9A4AB20B7F
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 13:47:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 302B5B227EF
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 13:50:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 527641A38DB;
-	Tue,  2 Jul 2024 13:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3xZmkLP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E70D91B4C5C;
+	Tue,  2 Jul 2024 13:50:39 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F20D38F83;
-	Tue,  2 Jul 2024 13:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90AC38F83
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 13:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719928072; cv=none; b=kPTlhllrjlSSYSoRt2UcJQbqUwajfMV/JSdUnRNh7dacEBOSihDx55hVswMglOHVqmYPjltwP7OVA/e0TuOdwrVsiwCuNrtijZVt6GrM4kzfPfTs1os14ezxM/DgBYFSI69pFo1z1qQUGAff94snArQzaZnoaC8YsG33ni+z/Mw=
+	t=1719928239; cv=none; b=dYTxkw9/WiJbTqwiOgfv3ZY4pakfzcPiwrUvBriDhosOir0BNPPi5YHZLggoBSJEMuB8FWVNZM5wwgvHMsRRaKj9sHPKpKT9svQSk8Q399Ky0hq9IBkWV6GwZcSeoL79pZxOMYxH+gvB7jqZXTpmr3fH72kOzmaJ4m9c4bM/pZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719928072; c=relaxed/simple;
-	bh=wTAGGPz5RZwwOrDI5MiT8Qlab3A7rVI4fdnHkNtqt+k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eAjl8ubzpkreyFYe0ulGRENJpNRGXfqZ2pWm+tTrDcc2hSjLeK6Ii+D6uGPwAM19/qH1t/zSEWMfSjd6/oFaQwGurHcQ3gGu4tK3pyDZBs2o/W9f/ECm72x0SqaICU8LVnkrBp6cZlTRYnf8clZBDhYnqJ6dmv/uedrrTrFqEYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3xZmkLP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E538C116B1;
-	Tue,  2 Jul 2024 13:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719928071;
-	bh=wTAGGPz5RZwwOrDI5MiT8Qlab3A7rVI4fdnHkNtqt+k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X3xZmkLPtLvQZTk7vM6AQznn+4LFam3xDpSzHKw0e1bwGxES2LixXIq2Vn66f4nHF
-	 ck6Ls11PXT3lDzNNU0397TrTzbYmxdfcCsXd9UlRaM79ZerIczGEOmmiIXmR/2GypS
-	 M38afacAV6x27r1gtlPPVMuchzKHTbBX+wLFFLqedGKn/+vpW5S8NnHfOgxhfjdBho
-	 OiD6npM9IMLJZAOdg/Vsoi05NbPodY5krZZNoeyOXKpO8esDwh1rww7RCDBPHclPIT
-	 WA3x6NBxNt726ERYKkVj1DR960Hdazx0n6xEc96RwYSTGA75OZtPUTXnP3iEOvP4f8
-	 xKGCIS2aoP73Q==
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Chandan Babu R <chandanbabu@kernel.org>
-To: chandanbabu@kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, 4@web.codeaurora.org,
-	cdlscpmv@gmail.com, dchinner@redhat.com, djwong@kernel.org,
-	haowenchao22@gmail.com, hch@lst.de, hsiangkao@linux.alibaba.com,
-	john.g.garry@oracle.com, linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, llfamsec@gmail.com
-Subject: [ANNOUNCE] xfs-linux: for-next updated to 3ba3ab1f6719
-Date: Tue, 02 Jul 2024 19:16:47 +0530
-Message-ID: <8734orc3cr.fsf@debian-BULLSEYE-live-builder-AMD64>
+	s=arc-20240116; t=1719928239; c=relaxed/simple;
+	bh=r1XH6WaXJ2tVDrvGyc16H0EoAUJqoMtLXhduEQbg7tc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QEtlsZmORpyCtMY5sdBCSaYuftEtShRpcSv9A3CTsw7+4yY10cpDF9c//Cy/YcGlh2jN5XSUEQyMnnZ1LjiLL3ruiVE6vAS7djtaNBOlKc1fcYjBtSXuLPmqp4SKmAK0Tp57WddeB+MfBAoavoEeFiyOnas1ShZR10lOat9J4/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WD46f1MNLznYqw;
+	Tue,  2 Jul 2024 21:50:18 +0800 (CST)
+Received: from kwepemi500009.china.huawei.com (unknown [7.221.188.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id B4AE318007E;
+	Tue,  2 Jul 2024 21:50:33 +0800 (CST)
+Received: from localhost.localdomain (10.175.104.67) by
+ kwepemi500009.china.huawei.com (7.221.188.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 2 Jul 2024 21:50:32 +0800
+From: Long Li <leo.lilong@huawei.com>
+To: <djwong@kernel.org>, <chandanbabu@kernel.org>
+CC: <linux-xfs@vger.kernel.org>, <david@fromorbit.com>, <yi.zhang@huawei.com>,
+	<houtao1@huawei.com>, <leo.lilong@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH] xfs: get rid of xfs_ag_resv_rmapbt_alloc
+Date: Tue, 2 Jul 2024 21:48:51 +0800
+Message-ID: <20240702134851.2654558-1-leo.lilong@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500009.china.huawei.com (7.221.188.199)
 
-Hi folks,
+The pag in xfs_ag_resv_rmapbt_alloc() is already held when the struct
+xfs_btree_cur is initialized in xfs_rmapbt_init_cursor(), so there is no
+need to get pag again.
 
-The for-next branch of the xfs-linux repository at:
+On the other hand, in xfs_rmapbt_free_block(), the similar function
+xfs_ag_resv_rmapbt_free() was removed in commit 92a005448f6f ("xfs: get
+rid of unnecessary xfs_perag_{get,put} pairs"), xfs_ag_resv_rmapbt_alloc()
+was left because scrub used it, but now scrub has removed it. Therefore,
+we could get rid of xfs_ag_resv_rmapbt_alloc() just like the rmap free
+block, make the code cleaner.
 
-	https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+Signed-off-by: Long Li <leo.lilong@huawei.com>
+---
+ fs/xfs/libxfs/xfs_ag_resv.h    | 19 -------------------
+ fs/xfs/libxfs/xfs_rmap_btree.c |  8 +++++++-
+ 2 files changed, 7 insertions(+), 20 deletions(-)
 
-has just been updated.
+diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+index ff20ed93de77..f247eeff7358 100644
+--- a/fs/xfs/libxfs/xfs_ag_resv.h
++++ b/fs/xfs/libxfs/xfs_ag_resv.h
+@@ -33,23 +33,4 @@ xfs_perag_resv(
+ 	}
+ }
+ 
+-/*
+- * RMAPBT reservation accounting wrappers. Since rmapbt blocks are sourced from
+- * the AGFL, they are allocated one at a time and the reservation updates don't
+- * require a transaction.
+- */
+-static inline void
+-xfs_ag_resv_rmapbt_alloc(
+-	struct xfs_mount	*mp,
+-	xfs_agnumber_t		agno)
+-{
+-	struct xfs_alloc_arg	args = { NULL };
+-	struct xfs_perag	*pag;
+-
+-	args.len = 1;
+-	pag = xfs_perag_get(mp, agno);
+-	xfs_ag_resv_alloc_extent(pag, XFS_AG_RESV_RMAPBT, &args);
+-	xfs_perag_put(pag);
+-}
+-
+ #endif	/* __XFS_AG_RESV_H__ */
+diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
+index 9e759efa81cc..aa1d29814b74 100644
+--- a/fs/xfs/libxfs/xfs_rmap_btree.c
++++ b/fs/xfs/libxfs/xfs_rmap_btree.c
+@@ -88,6 +88,7 @@ xfs_rmapbt_alloc_block(
+ 	struct xfs_buf		*agbp = cur->bc_ag.agbp;
+ 	struct xfs_agf		*agf = agbp->b_addr;
+ 	struct xfs_perag	*pag = cur->bc_ag.pag;
++	struct xfs_alloc_arg    args = { NULL };
+ 	int			error;
+ 	xfs_agblock_t		bno;
+ 
+@@ -107,7 +108,12 @@ xfs_rmapbt_alloc_block(
+ 	be32_add_cpu(&agf->agf_rmap_blocks, 1);
+ 	xfs_alloc_log_agf(cur->bc_tp, agbp, XFS_AGF_RMAP_BLOCKS);
+ 
+-	xfs_ag_resv_rmapbt_alloc(cur->bc_mp, pag->pag_agno);
++	/*
++	 * Since rmapbt blocks are sourced from the AGFL, they are allocated one
++	 * at a time and the reservation updates don't require a transaction.
++	 */
++	args.len = 1;
++	xfs_ag_resv_alloc_extent(pag, XFS_AG_RESV_RMAPBT, &args);
+ 
+ 	*stat = 1;
+ 	return 0;
+-- 
+2.39.2
 
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.
-
-The new head of the for-next branch is commit:
-
-3ba3ab1f6719 xfs: enable FITRIM on the realtime device
-
-13 new commits:
-
-Christoph Hellwig (6):
-      [8626b67acfa4] xfs: move the dio write relocking out of xfs_ilock_for_iomap
-      [29bc0dd0a2f6] xfs: cleanup xfs_ilock_iocb_for_write
-      [9092b1de35a4] xfs: simplify xfs_dax_fault
-      [6a39ec1d3944] xfs: refactor __xfs_filemap_fault
-      [4e82fa11fbbc] xfs: always take XFS_MMAPLOCK shared in xfs_dax_read_fault
-      [4818fd60db5f] xfs: fold xfs_ilock_for_write_fault into xfs_write_fault
-
-Darrick J. Wong (1):
-      [3ba3ab1f6719] xfs: enable FITRIM on the realtime device
-
-Gao Xiang (1):
-      [d40c2865bdbb] xfs: avoid redundant AGFL buffer invalidation
-
-John Garry (2):
-      [d3b689d7c711] xfs: Fix xfs_flush_unmap_range() range for RT
-      [f23660f05947] xfs: Fix xfs_prepare_shift() range for RT
-
-Wenchao Hao (1):
-      [a330cae8a714] xfs: Remove header files which are included more than once
-
-lei lu (2):
-      [fb63435b7c7d] xfs: add bounds checking to xlog_recover_process_data
-      [0c7fcdb6d06c] xfs: don't walk off the end of a directory data block
-
-Code Diffstat:
-
- fs/xfs/libxfs/xfs_alloc.c      |  28 +--------
- fs/xfs/libxfs/xfs_alloc.h      |   6 +-
- fs/xfs/libxfs/xfs_dir2_data.c  |  31 ++++++++--
- fs/xfs/libxfs/xfs_dir2_priv.h  |   7 +++
- fs/xfs/libxfs/xfs_trans_resv.c |   1 -
- fs/xfs/scrub/quota_repair.c    |   1 -
- fs/xfs/xfs_bmap_util.c         |  22 ++++---
- fs/xfs/xfs_discard.c           | 303 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
- fs/xfs/xfs_extfree_item.c      |   4 +-
- fs/xfs/xfs_file.c              | 141 ++++++++++++++++++++++++--------------------
- fs/xfs/xfs_handle.c            |   1 -
- fs/xfs/xfs_iomap.c             |  71 +++++++++++-----------
- fs/xfs/xfs_log_recover.c       |   5 +-
- fs/xfs/xfs_qm_bhv.c            |   1 -
- fs/xfs/xfs_trace.c             |   1 -
- fs/xfs/xfs_trace.h             |  29 +++++++++
- 16 files changed, 476 insertions(+), 176 deletions(-)
 
