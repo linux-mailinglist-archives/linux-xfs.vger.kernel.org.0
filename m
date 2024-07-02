@@ -1,44 +1,43 @@
-Return-Path: <linux-xfs+bounces-10155-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10156-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 171BD91EE2F
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:15:23 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B03891EE34
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:15:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F607B22553
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:15:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96A461C20F17
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30C1F4EB55;
-	Tue,  2 Jul 2024 05:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B8414CDF9;
+	Tue,  2 Jul 2024 05:15:35 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EB929A2
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4323F6BB33
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719897315; cv=none; b=iv/S/pMI163p12/ItwPoZBiMHNofeHDZhVFuGWviJ5eH2q3Ea+pxyEFzkhKYYd0tx4yloo+QmPRV6CEWfwpWMJbNCXtMgzS0z52lpRziALjdQrcMw4/LvkHssF0UyTofbfCuP+zVUXb+2ig/Eaca7dW/pdOg4Dx9Inj3D8RJ+Jg=
+	t=1719897335; cv=none; b=BOU275AZWjmgZVI8VZmvI2aeAfS7yMy103FS9JvmUpbhUIN8V48CS3V2hMzOWAByu5TxfXJ1hzZY/8Bvc9bvwAkVT/wNd/MTEPUIXiOoqQ6VkrmdIL+vioVpvd+54JlZdZNzlediNZ2kuojDgeuAErYPvOJX8thn5riG1kxNj/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719897315; c=relaxed/simple;
-	bh=Rr2XZUvCJlVC2eFlzoQdq2Y5Ymops0K7e8+QfURIwCk=;
+	s=arc-20240116; t=1719897335; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSlSfHq+1FB8TxsCPc4mj2WkaVcUw7eWah5XwGJanZz+aAS0/Y03mIqKiNt0DjvFouclzHu00/uoAH35ucdrfHhdDcjfbjI3jZDVWRKj1tRWYfRhXLdK62XpT3irluDsSP8H01FzQOH5IvJfGyFfk8lJMGnXtNnAkSA4lnuvamo=
+	 Content-Type:Content-Disposition:In-Reply-To; b=sRsdjVSZLFuZt98TSClzcJd1Tgal8W2JW9ONNWFIQX01WUVN9DsnoW7oxgOoR7pNs1VCfRA9yZuJ+54ehjVYmmEOS6hxanGw76hxDuAzQ+aJBijWbHCymHE+VaqoYigxDoklLaLfZyCaFaoUS0AKOVWt/6WGFJO6BI9Z6qAAGGQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id E25DD68B05; Tue,  2 Jul 2024 07:15:10 +0200 (CEST)
-Date: Tue, 2 Jul 2024 07:15:10 +0200
+	id 61D6B68B05; Tue,  2 Jul 2024 07:15:31 +0200 (CEST)
+Date: Tue, 2 Jul 2024 07:15:31 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, linux-xfs@vger.kernel.org, hch@lst.de
-Subject: Re: [PATCH 09/12] xfs_io: create exchangerange command to test
- file range exchange ioctl
-Message-ID: <20240702051510.GI22284@lst.de>
-References: <171988116691.2006519.4962618271620440482.stgit@frogsfrogsfrogs> <171988116847.2006519.4476289388418471452.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 10/12] libfrog: advertise exchange-range support
+Message-ID: <20240702051531.GJ22284@lst.de>
+References: <171988116691.2006519.4962618271620440482.stgit@frogsfrogsfrogs> <171988116862.2006519.2459746611478539000.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,21 +46,10 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171988116847.2006519.4476289388418471452.stgit@frogsfrogsfrogs>
+In-Reply-To: <171988116862.2006519.2459746611478539000.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Jul 01, 2024 at 05:55:49PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Create a new xfs_Io command to make raw calls to the
-
-s/xfs_Io/xfs_io/ ?
-
-> +extern void		exchangerange_init(void);
-
-No need for the extern.
-
-Otherwise looks good:
+Looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 
