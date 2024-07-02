@@ -1,43 +1,43 @@
-Return-Path: <linux-xfs+bounces-10200-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10201-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B5B291EE77
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:42:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 730A791EE78
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:42:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D3171C210ED
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:42:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACC831C2113B
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:42:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98232339B1;
-	Tue,  2 Jul 2024 05:42:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00B8339B1;
+	Tue,  2 Jul 2024 05:42:25 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2160C2B9D8
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B732B9D8
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719898930; cv=none; b=nzJNtWRxx3wxjutV7KU66q3li7wsTN930hnGQB+6UKZSy0c4NAcpAAG7PiRfDNMEWzmEn/AhadVStYYJ7UEuVnxiwH9L8jZ0mTWqC00LNSvjp/SPK23wT/vC7SAsO6PuV38epVQzCw0jsyGVuTTLSHZgUUKPkRKlg+PfoEybjO0=
+	t=1719898945; cv=none; b=BYhacyDnmW4cTXzcp4uBVoVZMNgk3CsEyLCHhy7btZIOlfpPzLz+qi1BaLrYou2p3rBWllQCvr5Y3A03xU5J/lUFNduyMKgfrImKdKwEbPxKP4zKKpZV6A0N9eCSki3pf8Qxue7cMDWJkSBrTmGR26R+i6THk2sdAf0Hs5pbfkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719898930; c=relaxed/simple;
+	s=arc-20240116; t=1719898945; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HoWa3yYBFGvPDbKBmFKl1L5YhwLwiDUxo3MUwX5i1Hr1WkPgVAH8ZnCTOfcizkP7wJEPdTlmel4BVQyCIw5lTzyO2HFgoY5st4rFVuluSfejBI3UWiIS9jRVKe1Ozn4fH83G9T7niovIG5eM1qVQlkPr+tdu2u6eCR08YhR7Nrs=
+	 Content-Type:Content-Disposition:In-Reply-To; b=KuUje+bzOeG+gtcCpyOXaIrEhvvVre/l5MR0Qj/sn5XncSeNLach2isWp6adl6bjVboklaBvpIoS0xVgEq4cT8EIUs1w2YQoEcFSlgFAtZ7Q39DpxeNBzov6Ysl67uz+CYOv8ljINS7HsnOA0it4QEjwtKrglXhdgugw6KHHXk0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 33BBC68B05; Tue,  2 Jul 2024 07:42:06 +0200 (CEST)
-Date: Tue, 2 Jul 2024 07:42:06 +0200
+	id 7A48768B05; Tue,  2 Jul 2024 07:42:21 +0200 (CEST)
+Date: Tue, 2 Jul 2024 07:42:21 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, linux-xfs@vger.kernel.org, hch@lst.de
-Subject: Re: [PATCH 3/5] xfs_scrub_all: add CLI option for easier debugging
-Message-ID: <20240702054206.GC23338@lst.de>
-References: <171988119806.2008718.11057954097670233571.stgit@frogsfrogsfrogs> <171988119860.2008718.3789689429042344225.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 4/5] xfs_scrub_all: convert systemctl calls to dbus
+Message-ID: <20240702054221.GD23338@lst.de>
+References: <171988119806.2008718.11057954097670233571.stgit@frogsfrogsfrogs> <171988119875.2008718.8969308689929459520.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -46,11 +46,10 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171988119860.2008718.3789689429042344225.stgit@frogsfrogsfrogs>
+In-Reply-To: <171988119875.2008718.8969308689929459520.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-
 
