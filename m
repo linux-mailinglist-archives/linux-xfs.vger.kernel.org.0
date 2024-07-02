@@ -1,44 +1,43 @@
-Return-Path: <linux-xfs+bounces-10192-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10193-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67AAE91EE6A
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:38:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE13891EE6B
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 07:38:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23490282B17
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:38:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 60CF91F21A9A
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 05:38:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF2323EA9A;
-	Tue,  2 Jul 2024 05:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF2A339B1;
+	Tue,  2 Jul 2024 05:38:48 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354302B9D8
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527752B9D8
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 05:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719898713; cv=none; b=W1bpAWL3nV8PaPXzYjAJ9W4k5COTdQBbwEoeYcFr0GnjA1e+cUjfaB/f+xLJrIXgYBN4RNFnIyHEhl4vbe7ckXJGpPsxNTVkuZyJdkahZmk7V8M2iK0JN0fjQrXv/PD3x+B7LKnrA111qqLlVuV1iiC5VrUCUnHHZy0ZTTx1Mr4=
+	t=1719898728; cv=none; b=HV3T+xbLicfPPesRdRJgGX6cZARUJXBP22C22cw0u1Io0hQ23PMq3+eo8BwzShAmNR21qh2CxA/7wKQKi8BJKelB5ZluCW5qO8C+lD+kKpysNnV8BNtTJfqofPdpu6V0renCPOl2BibFZrw8D3NoPykU6U47pA9nJ8bzHBMWWi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719898713; c=relaxed/simple;
+	s=arc-20240116; t=1719898728; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fy/sBfc8jafin+cL+QJoICq/qsdjID9m3HsFdtz0rD0+vofmA8fS8UbG8VFjKIlvWUT7jLGOrCAckcCct/qGrUO4JgtSM7V0IPvrBFf85Lx3BSp0bLL1MvGrFvC3f6vRJ0BCGrTW6EcwWC88K7CWBy3uB7waC9qyvCUWR/0KK0A=
+	 Content-Type:Content-Disposition:In-Reply-To; b=dtOzLkyG6haGfeggL0yoYr/RBC1xdv4y92J4YeReUJ+Im95A0/5vkLz5o7iPO6y8WDihPHjSUJC8L8PR7ew/9JJIUWNe9qKyUpbimwuWyu1Jm/ha9NyF90Kaz34e87ZkZa1tf6R4I1uU/GPicw8Ztrmodk/Vmu9r+/GYINilwK0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 649E168B05; Tue,  2 Jul 2024 07:38:29 +0200 (CEST)
-Date: Tue, 2 Jul 2024 07:38:29 +0200
+	id 8577868B05; Tue,  2 Jul 2024 07:38:43 +0200 (CEST)
+Date: Tue, 2 Jul 2024 07:38:43 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, linux-xfs@vger.kernel.org, hch@lst.de
-Subject: Re: [PATCH 1/6] xfs_scrub_all: only use the xfs_scrub@ systemd
- services in service mode
-Message-ID: <20240702053829.GD23155@lst.de>
-References: <171988119402.2008463.10432604765226555660.stgit@frogsfrogsfrogs> <171988119423.2008463.11698354867151927273.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 2/6] xfs_scrub_all: remove journalctl background process
+Message-ID: <20240702053843.GE23155@lst.de>
+References: <171988119402.2008463.10432604765226555660.stgit@frogsfrogsfrogs> <171988119439.2008463.11717166273939123673.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,7 +46,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171988119423.2008463.11698354867151927273.stgit@frogsfrogsfrogs>
+In-Reply-To: <171988119439.2008463.11717166273939123673.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
