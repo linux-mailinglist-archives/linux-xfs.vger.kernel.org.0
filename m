@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-10243-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10244-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9122791EF50
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 08:45:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B33391EF52
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 08:46:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49501287352
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 06:45:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07AD228752E
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Jul 2024 06:46:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F9CA5C5F3;
-	Tue,  2 Jul 2024 06:45:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3399A82C67;
+	Tue,  2 Jul 2024 06:46:12 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0FFBA37
-	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 06:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5A53A8D0
+	for <linux-xfs@vger.kernel.org>; Tue,  2 Jul 2024 06:46:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719902749; cv=none; b=pgyvts+F3iWD6avCc5gtFvjFrcsavcH5G9Cwl8+JcRySSgKdUqrt1B/D4Yk/zp/9jsxEBFzbID+8xQSdoKiuFSPD0ZCIqV5vNI3Y9crmsLlnxy+V/14higOPKbn1COS7mEZnwrvEEZwYiA4gyF2maEa++EyX88wE/VyH47wLems=
+	t=1719902772; cv=none; b=u/h9SSXuyTHC/nn+kbv2rjfLj37uWGa25GwPtWli2dPCqo+JLZXj77K9xgTFoh5h4sBhZLCAnGTaeXSZ4dse3zYKxD1jht2B79W9/UgXxIa+5r30pGp2PIu85mA7smnn7u/ZJ4q2LcS66OpcHprnyJCleBPPktLsmw640KW7XAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719902749; c=relaxed/simple;
+	s=arc-20240116; t=1719902772; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WuXFndhKRa/Ns8v2NdIWDgHGuN/rfgkYoRK1gq9PUNA0Q8ZI5pQLVhUiuj+kDMcTyOG5RrglhUGWMVwecVWyXYrQ2DggbN4JlnW2v+JHtWtUMAKgwDeC3xTenJnlLmHPNP7cJuwPU5pt7EO9uxp90fPwxvL70NbSNco68scxtFY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=q3l7f03sCkQ2ihEvy2Gr04V2tVjR6lPT2GlqzWRh/T+SVJhv4NJ+VEMln4DpqjDe7qce9Vptp7jR9DrNgIv81B/by+Re3TuxduiaHwVay5LtjJ8zokq/LH1eVD41NId66/l6HaP/POWZFMTQmggph8v//x+psAEHWForMhKKw74=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id C749668B05; Tue,  2 Jul 2024 08:45:45 +0200 (CEST)
-Date: Tue, 2 Jul 2024 08:45:45 +0200
+	id 0A9EA68B05; Tue,  2 Jul 2024 08:46:08 +0200 (CEST)
+Date: Tue, 2 Jul 2024 08:46:07 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, catherine.hoang@oracle.com, linux-xfs@vger.kernel.org,
 	allison.henderson@oracle.com, hch@lst.de
-Subject: Re: [PATCH 07/12] xfs_repair: move the global dirent name store to
- a separate object
-Message-ID: <20240702064545.GB25370@lst.de>
-References: <171988122147.2010218.8997075209577453030.stgit@frogsfrogsfrogs> <171988122273.2010218.9308056457503800032.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 08/12] xfs_repair: deduplicate strings stored in string
+ blob
+Message-ID: <20240702064607.GC25370@lst.de>
+References: <171988122147.2010218.8997075209577453030.stgit@frogsfrogsfrogs> <171988122289.2010218.15312017622674815172.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171988122273.2010218.9308056457503800032.stgit@frogsfrogsfrogs>
+In-Reply-To: <171988122289.2010218.15312017622674815172.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
