@@ -1,72 +1,72 @@
-Return-Path: <linux-xfs+bounces-10505-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10507-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50E9192C3B8
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 21:10:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F68292C3BC
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 21:10:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73DD81C22197
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 19:10:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E1D1BB21291
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 19:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2921F182A56;
-	Tue,  9 Jul 2024 19:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D51182A5E;
+	Tue,  9 Jul 2024 19:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aIr+ef1Q"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AuzBObVX"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493451DFCF
-	for <linux-xfs@vger.kernel.org>; Tue,  9 Jul 2024 19:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFD5182A52
+	for <linux-xfs@vger.kernel.org>; Tue,  9 Jul 2024 19:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720552235; cv=none; b=l7r87H5bhVwGjlXsBf7KvSIWrKCDTPiNoMkBzpMtafScvxTvytn08mdNF4eD5V3AjSzymDo1kpaQMnhWrH1eiBbfRSz39kZUMdJptMv5Pn57JeyVESkrUkQFzjb0d4tqhGKDihLyylFfTVNsx5DyE85sJamFiLpCvwPYu/XH9mM=
+	t=1720552237; cv=none; b=p8wBaNo8ySTnxqTvMBteRG2wSIH2rruYEYOjvAjCsnlUBUFgqPBFscxqZ7R9GTPaF5BoZSRagmSQuryXaj7mysR6Z4ggD/h0MW8nbzJ3Sgn4iXb0IB9guVtd2cp9b8CcQtCcjbvlzKlBMyg4W7v+OpetlZzg2JaI/bDmchgL4eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720552235; c=relaxed/simple;
-	bh=uDOe3pHBc4dIq3zZa0zgN2Tr3LLI8iFh8Boxai9CXMc=;
+	s=arc-20240116; t=1720552237; c=relaxed/simple;
+	bh=wI2N9OsGHsVBdcHzXzgUW+61rIclaKvyk+yYkgRUTuM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e3eSXu2x9kPKnauMSa4JBtSM62OGQwMqUHV79vLKojZBAbuwvTgk53kW3LduWECb6lGdV4M/PRRkl7MsBLTfuOZU4l4mmmajW7Nbk4AT/hScUcczdMnb+jqyoOMJI9clDjLtNDyzvYe/wC2svoiTEpKGp9JyB9mwF8Q3KuKeA0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aIr+ef1Q; arc=none smtp.client-ip=205.220.165.32
+	 MIME-Version; b=QOGzzkfhpGDV2dDs2BfInHdsTIkpo7OY7qsNLCU1jR+IWOhEfbb2v4caI/PaiLUBdlkGA+s4rayRZaLCxzdGYXz5Js2q09mC3iC7r5ACQSPrHkuREvWtxe1IcBFO1gXjxMAJcJOAUsEoO+DKcYaD4tidl7vu0kGBGjZ/I20rCFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AuzBObVX; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469Ftaaa031069
-	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:33 GMT
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469FtbwW031087
+	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=p
-	VMPjBAdGgZWYKviwKIl5YJCE63y5stLsGOKs90PX/I=; b=aIr+ef1Qh2uTr6kdz
-	G3EuKhajG8HKddVKGvVdxKNDjjWMe03URVxiJi7voTjs7MpafjgFecRy44SDWAEf
-	vcyj53eXWfwanaR+IMK2DXFhBaS2J46Cvxy01NL0yK8WSxPL8oQRut1hb4zXhUPN
-	pwVGaO2VcIfW7ulLyXoZnL+o4KOzPmh2omU5bErGmgpK8zT4AQjO4rV2ca/8OLcB
-	k1eSZMYxtVhSaLcY5P54lrNgSIPy6Gn8+9mJfwGwYo5MdE6b0Lxdce0WQu10+sMi
-	lpdLzHj0WLj2r0PXjB+Ec4wHXRArfRlFsvFQ70UqNg6UUfKoEtH3vRQbDV+4oO2k
-	FCANQ==
+	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=o
+	TOfKYbgdWEFJfJu+uP4fTM2V4QNGrtqZwhzGOHmJMk=; b=AuzBObVXdYQBagSnI
+	7H6ijuw5bQcAMz02KEEO7hZ47OTrsMX8pImaQRmmyTMpfzZH0b7RPDybgU36iP2e
+	PahfqlzXC8w0GmWaSI1rbXs5bSx3Z7bkEiFMOS8/Jsi/n+oB5bqVCtxzEOkm78Y+
+	nYYpGVuxXtKESjupDPjgaZlYuu7N0B64S4w8gRqxj1Tbdca/I7AYWsz7L+d7/qI1
+	0+445uXuy+jDHOeqx3Pt3BjstOZtThfdl5wio3hwPOKvOxmlgYXnto4dUg/azvj5
+	F6mMh4/jOUmJNfgRi2fBQigwI3P2r8hQZmasQ5rfbExzHYHtAdeq56gGtpjx6VB2
+	KdvnA==
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wky5tme-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wky5tmf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Tue, 09 Jul 2024 19:10:33 +0000 (GMT)
+	for <linux-xfs@vger.kernel.org>; Tue, 09 Jul 2024 19:10:34 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 469IDmWH014129
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 469IjXJh014344
 	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:32 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 407txhepnf-1
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 407txhepp5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
 	for <linux-xfs@vger.kernel.org>; Tue, 09 Jul 2024 19:10:32 +0000
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 469JAUPS024440
-	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:31 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 469JAUPU024440
+	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:32 GMT
 Received: from wwg-mac.us.oracle.com (dhcp-10-159-146-188.vpn.oracle.com [10.159.146.188])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 407txhepkm-3;
-	Tue, 09 Jul 2024 19:10:31 +0000
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 407txhepkm-4;
+	Tue, 09 Jul 2024 19:10:32 +0000
 From: Wengang Wang <wen.gang.wang@oracle.com>
 To: linux-xfs@vger.kernel.org
 Cc: wen.gang.wang@oracle.com
-Subject: [PATCH 2/9] spaceman/defrag: pick up segments from target file
-Date: Tue,  9 Jul 2024 12:10:21 -0700
-Message-Id: <20240709191028.2329-3-wen.gang.wang@oracle.com>
+Subject: [PATCH 3/9] spaceman/defrag: defrag segments
+Date: Tue,  9 Jul 2024 12:10:22 -0700
+Message-Id: <20240709191028.2329-4-wen.gang.wang@oracle.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20240709191028.2329-1-wen.gang.wang@oracle.com>
 References: <20240709191028.2329-1-wen.gang.wang@oracle.com>
@@ -84,258 +84,175 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phis
  suspectscore=0 malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2406180000 definitions=main-2407090129
-X-Proofpoint-ORIG-GUID: mrbkXX6LXIGMx7B_fCzXOhADIEVqkyi3
-X-Proofpoint-GUID: mrbkXX6LXIGMx7B_fCzXOhADIEVqkyi3
+X-Proofpoint-ORIG-GUID: k50HGC8-K1Wvg25fVYCVeEnNyXYYi6nu
+X-Proofpoint-GUID: k50HGC8-K1Wvg25fVYCVeEnNyXYYi6nu
 
-segments are the smallest unit to defragment.
+For each segment, the following steps are done trying to defrag it:
 
-A segment
-1. Can't exceed size limit
-2. contains some extents
-3. the contained extents can't be "unwritten"
-4. the contained extents must be contigous in file blocks
+1. share the segment with a temporary file
+2. unshare the segment in the target file. kernel simulates Cow on the whole
+   segment complete the unshare (defrag).
+3. release blocks from the tempoary file.
 
 Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
 ---
- spaceman/defrag.c | 204 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 204 insertions(+)
+ spaceman/defrag.c | 114 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 114 insertions(+)
 
 diff --git a/spaceman/defrag.c b/spaceman/defrag.c
-index c9732984..175cf461 100644
+index 175cf461..9f11e36b 100644
 --- a/spaceman/defrag.c
 +++ b/spaceman/defrag.c
-@@ -14,6 +14,32 @@
- #include "space.h"
- #include "input.h"
- 
-+#define MAPSIZE 512
-+/* used to fetch bmap */
-+struct getbmapx	g_mapx[MAPSIZE];
-+/* current offset of the file in units of 512 bytes, used to fetch bmap */
-+static long long 	g_offset = 0;
-+/* index to indentify next extent, used to get next extent */
-+static int		g_ext_next_idx = -1;
-+
-+/*
-+ * segment, the smallest unit to defrag
-+ * it includes some contiguous extents.
-+ * no holes included,
-+ * no unwritten extents included
-+ * the size is limited by g_segment_size_lmt
-+ */
-+struct defrag_segment {
-+	/* segment offset in units of 512 bytes */
-+	long long	ds_offset;
-+	/* length of segment in units of 512 bytes */
-+	long long	ds_length;
-+	/* number of extents in this segment */
-+	int		ds_nr;
-+	/* flag indicating if segment contains shared blocks */
-+	bool		ds_shared;
-+};
-+
- /* defrag segment size limit in units of 512 bytes */
- #define MIN_SEGMENT_SIZE_LIMIT 8192 /* 4MiB */
- #define DEFAULT_SEGMENT_SIZE_LIMIT 32768 /* 16MiB */
-@@ -78,6 +104,165 @@ defrag_check_file(char *path)
- 	return true;
+@@ -263,6 +263,40 @@ add_ext:
+ 	return ret;
  }
  
 +/*
-+ * get next extent in the file.
-+ * Note: next call will get the same extent unless move_next_extent() is called.
-+ * returns:
-+ * -1:	error happened.
-+ * 0:	extent returned
-+ * 1:	no more extent left
++ * check if the segment exceeds EoF.
++ * fix up the clone range and return true if EoF happens,
++ * return false otherwise.
 + */
-+static int
-+defrag_get_next_extent(int fd, struct getbmapx *map_out)
++static bool
++defrag_clone_eof(struct file_clone_range *clone)
 +{
-+	int err = 0, i;
++	off_t delta;
 +
-+	/* when no extents are cached in g_mapx, fetch from kernel */
-+	if (g_ext_next_idx == -1) {
-+		g_mapx[0].bmv_offset = g_offset;
-+		g_mapx[0].bmv_length = -1LL;
-+		g_mapx[0].bmv_count = MAPSIZE;
-+		g_mapx[0].bmv_iflags = BMV_IF_NO_HOLES | BMV_IF_PREALLOC;
-+		err = ioctl(fd, XFS_IOC_GETBMAPX, g_mapx);
-+		if (err == -1) {
-+			perror("XFS_IOC_GETBMAPX failed");
-+			goto out;
-+		}
-+		/* for stats */
-+		g_ext_stats.nr_ext_total += g_mapx[0].bmv_entries;
-+
-+		/* no more extents */
-+		if (g_mapx[0].bmv_entries == 0) {
-+			err = 1;
-+			goto out;
-+		}
-+
-+		/* for stats */
-+		for (i = 1; i <= g_mapx[0].bmv_entries; i++) {
-+			if (g_mapx[i].bmv_oflags & BMV_OF_PREALLOC)
-+				g_ext_stats.nr_ext_unwritten++;
-+			if (g_mapx[i].bmv_oflags & BMV_OF_SHARED)
-+				g_ext_stats.nr_ext_shared++;
-+		}
-+
-+		g_ext_next_idx = 1;
-+		g_offset = g_mapx[g_mapx[0].bmv_entries].bmv_offset +
-+				g_mapx[g_mapx[0].bmv_entries].bmv_length;
++	delta = clone->src_offset + clone->src_length - g_defrag_file_size;
++	if (delta > 0) {
++		clone->src_length = 0; // to the end
++		return true;
 +	}
-+
-+	map_out->bmv_offset = g_mapx[g_ext_next_idx].bmv_offset;
-+	map_out->bmv_length = g_mapx[g_ext_next_idx].bmv_length;
-+	map_out->bmv_oflags = g_mapx[g_ext_next_idx].bmv_oflags;
-+out:
-+	return err;
++	return false;
 +}
 +
 +/*
-+ * move to next extent
++ * get the time delta since pre_time in ms.
++ * pre_time should contains values fetched by gettimeofday()
++ * cur_time is used to store current time by gettimeofday()
 + */
-+static void
-+defrag_move_next_extent()
++static long long
++get_time_delta_us(struct timeval *pre_time, struct timeval *cur_time)
 +{
-+	if (g_ext_next_idx == g_mapx[0].bmv_entries)
-+		g_ext_next_idx = -1;
-+	else
-+		g_ext_next_idx += 1;
-+}
++	long long us;
 +
-+/*
-+ * check if the given extent is a defrag target.
-+ * no need to check for holes as we are using BMV_IF_NO_HOLES
-+ */
-+static bool
-+defrag_is_target(struct getbmapx *mapx)
-+{
-+	/* unwritten */
-+	if (mapx->bmv_oflags & BMV_OF_PREALLOC)
-+		return false;
-+	return mapx->bmv_length < g_segment_size_lmt;
-+}
-+
-+static bool
-+defrag_is_extent_shared(struct getbmapx *mapx)
-+{
-+	return !!(mapx->bmv_oflags & BMV_OF_SHARED);
-+}
-+
-+/*
-+ * get next segment to defragment.
-+ * returns:
-+ * -1	error happened.
-+ * 0	segment returned.
-+ * 1	no more segments to return
-+ */
-+static int
-+defrag_get_next_segment(int fd, struct defrag_segment *out)
-+{
-+	struct getbmapx mapx;
-+	int	ret;
-+
-+	out->ds_offset = 0;
-+	out->ds_length = 0;
-+	out->ds_nr = 0;
-+	out->ds_shared = false;
-+
-+	do {
-+		ret = defrag_get_next_extent(fd, &mapx);
-+		if (ret != 0) {
-+			/*
-+			 * no more extetns, return current segment if its not
-+			 * empty
-+			*/
-+			if (ret == 1 && out->ds_nr > 0)
-+				ret = 0;
-+			/* otherwise, error heppened, stop */
-+			break;
-+		}
-+
-+		/*
-+		 * If the extent is not a defrag target, skip it.
-+		 * go to next extent if the segment is empty;
-+		 * otherwise return the segment.
-+		 */
-+		if (!defrag_is_target(&mapx)) {
-+			defrag_move_next_extent();
-+			if (out->ds_nr == 0)
-+				continue;
-+			else
-+				break;
-+		}
-+
-+		/* check for segment size limitation */
-+		if (out->ds_length + mapx.bmv_length > g_segment_size_lmt)
-+			break;
-+
-+		/* the segment is empty now, add this extent to it for sure */
-+		if (out->ds_nr == 0) {
-+			out->ds_offset = mapx.bmv_offset;
-+			goto add_ext;
-+		}
-+
-+		/*
-+		 * the segment is not empty, check for hole since the last exent
-+		 * if a hole exist before this extent, this extent can't be
-+		 * added to the segment. return the segment
-+		 */
-+		if (out->ds_offset + out->ds_length != mapx.bmv_offset)
-+			break;
-+
-+add_ext:
-+		if (defrag_is_extent_shared(&mapx))
-+			out->ds_shared = true;
-+
-+		out->ds_length += mapx.bmv_length;
-+		out->ds_nr += 1;
-+		defrag_move_next_extent();
-+
-+	} while (true);
-+
-+	return ret;
++	gettimeofday(cur_time, NULL);
++	us = (cur_time->tv_sec - pre_time->tv_sec) * 1000000;
++	us += (cur_time->tv_usec - pre_time->tv_usec);
++	return us;
 +}
 +
  /*
   * defragment a file
   * return 0 if successfully done, 1 otherwise
-@@ -92,6 +277,9 @@ defrag_xfs_defrag(char *file_path) {
+@@ -273,6 +307,7 @@ defrag_xfs_defrag(char *file_path) {
+ 	long	nr_seg_defrag = 0, nr_ext_defrag = 0;
+ 	int	scratch_fd = -1, defrag_fd = -1;
+ 	char	tmp_file_path[PATH_MAX+1];
++	struct file_clone_range clone;
+ 	char	*defrag_dir;
  	struct fsxattr	fsx;
  	int	ret = 0;
- 
-+	g_offset = 0;
-+	g_ext_next_idx = -1;
-+
- 	fsx.fsx_nextents = 0;
- 	memset(&g_ext_stats, 0, sizeof(g_ext_stats));
- 
-@@ -119,6 +307,22 @@ defrag_xfs_defrag(char *file_path) {
- 		ret = 1;
+@@ -296,6 +331,8 @@ defrag_xfs_defrag(char *file_path) {
  		goto out;
  	}
+ 
++	clone.src_fd = defrag_fd;
 +
-+	do {
-+		struct defrag_segment segment;
+ 	defrag_dir = dirname(file_path);
+ 	snprintf(tmp_file_path, PATH_MAX, "%s/.xfsdefrag_%d", defrag_dir,
+ 		getpid());
+@@ -309,7 +346,11 @@ defrag_xfs_defrag(char *file_path) {
+ 	}
+ 
+ 	do {
++		struct timeval t_clone, t_unshare, t_punch_hole;
+ 		struct defrag_segment segment;
++		long long seg_size, seg_off;
++		int time_delta;
++		bool stop;
+ 
+ 		ret = defrag_get_next_segment(defrag_fd, &segment);
+ 		/* no more segments, we are done */
+@@ -322,6 +363,79 @@ defrag_xfs_defrag(char *file_path) {
+ 			ret = 1;
+ 			break;
+ 		}
 +
-+		ret = defrag_get_next_segment(defrag_fd, &segment);
-+		/* no more segments, we are done */
-+		if (ret == 1) {
-+			ret = 0;
++		/* we are done if the segment contains only 1 extent */
++		if (segment.ds_nr < 2)
++			continue;
++
++		/* to bytes */
++		seg_off = segment.ds_offset * 512;
++		seg_size = segment.ds_length * 512;
++
++		clone.src_offset = seg_off;
++		clone.src_length = seg_size;
++		clone.dest_offset = seg_off;
++
++		/* checks for EoF and fix up clone */
++		stop = defrag_clone_eof(&clone);
++		gettimeofday(&t_clone, NULL);
++		ret = ioctl(scratch_fd, FICLONERANGE, &clone);
++		if (ret != 0) {
++			fprintf(stderr, "FICLONERANGE failed %s\n",
++				strerror(errno));
 +			break;
 +		}
-+		/* error happened when reading bmap, stop here */
-+		if (ret == -1) {
-+			ret = 1;
++
++		/* for time stats */
++		time_delta = get_time_delta_us(&t_clone, &t_unshare);
++		if (time_delta > max_clone_us)
++			max_clone_us = time_delta;
++
++		/* for defrag stats */
++		nr_ext_defrag += segment.ds_nr;
++
++		/*
++		 * For the shared range to be unshared via a copy-on-write
++		 * operation in the file to be defragged. This causes the
++		 * file needing to be defragged to have new extents allocated
++		 * and the data to be copied over and written out.
++		 */
++		ret = fallocate(defrag_fd, FALLOC_FL_UNSHARE_RANGE, seg_off,
++				seg_size);
++		if (ret != 0) {
++			fprintf(stderr, "UNSHARE_RANGE failed %s\n",
++				strerror(errno));
 +			break;
 +		}
-+	} while (true);
++
++		/* for time stats */
++		time_delta = get_time_delta_us(&t_unshare, &t_punch_hole);
++		if (time_delta > max_unshare_us)
++			max_unshare_us = time_delta;
++
++		/*
++		 * Punch out the original extents we shared to the
++		 * scratch file so they are returned to free space.
++		 */
++		ret = fallocate(scratch_fd,
++			FALLOC_FL_PUNCH_HOLE|FALLOC_FL_KEEP_SIZE, seg_off,
++			seg_size);
++		if (ret != 0) {
++			fprintf(stderr, "PUNCH_HOLE failed %s\n",
++				strerror(errno));
++			break;
++		}
++
++		/* for defrag stats */
++		nr_seg_defrag += 1;
++
++		/* for time stats */
++		time_delta = get_time_delta_us(&t_punch_hole, &t_clone);
++		if (time_delta > max_punch_us)
++			max_punch_us = time_delta;
++
++		if (stop)
++			break;
+ 	} while (true);
  out:
  	if (scratch_fd != -1) {
- 		close(scratch_fd);
 -- 
 2.39.3 (Apple Git-146)
 
