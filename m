@@ -1,72 +1,72 @@
-Return-Path: <linux-xfs+bounces-10506-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10508-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA80092C3BA
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 21:10:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E512392C3BB
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 21:10:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E8851F2202C
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 19:10:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 14D471C21732
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Jul 2024 19:10:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67CB1182A5D;
-	Tue,  9 Jul 2024 19:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3665182A64;
+	Tue,  9 Jul 2024 19:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CSw1+kTl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ot6u4eYd"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59D3182A4F
-	for <linux-xfs@vger.kernel.org>; Tue,  9 Jul 2024 19:10:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60491DFCF
+	for <linux-xfs@vger.kernel.org>; Tue,  9 Jul 2024 19:10:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720552237; cv=none; b=Kwp3MxqagB1FGurQOdfuzMmBlQkLjxgWi+DHhTU+nn4aHOk/U19aB2QUdMAVUyHYfSBzDP/V8UbLQRN2eHZdjjnxpvjGQLrIb35vel5U1e9xKzYqLAw/2GoU2SHw9TRtshPSNx5wilkiWGIM0XRXRB9pPXp7O64A9zl2XZyZXvo=
+	t=1720552238; cv=none; b=ZCCJRatysIhwtX4b4KlxabsVrrTClmFP0oh266S1XYvT8TnJhRnsgCjsHLqaYMJpSOPYrsXGYWhziTa6orWNPv4aMs+UXQ12qvTJB7CxIuUROcbRlt3viFQQzYYPOTgkUmYoQ96xzf4YUhOlYWFMO2u5JEWlM4hB1k3++07UwRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720552237; c=relaxed/simple;
-	bh=FNzmH1f5m/6EBRbYEzn81FQYR4LBtc7MLcFXBYilf5s=;
+	s=arc-20240116; t=1720552238; c=relaxed/simple;
+	bh=I6q0X+FkzCRRcGbSML6QjVbmtow8kfix+hIZpgsNF84=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QtEI4vpEY8h5Av2OwMHWWH26iwfnoER1ufcE6h8QQ55SdbcGUwoUqYKG4ibov6kipr4ygWZEFoiwjT64eKzLffB1G91J3NBJEu+fgl1DcUz5mfPpDaiY3V+dO5GpRIIqqgb3PPI56o+YvknsEGcg3qLOr2nfdF7FvjC3ocLlZzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CSw1+kTl; arc=none smtp.client-ip=205.220.165.32
+	 MIME-Version; b=GyYIaKJ2/cydz6YdxcDSBgeyxkDTRXteRruLuhK3T01IG2ebgD9S2XFrWKRmgJLCbgqAwVYg/5rvqvkXIjatVq9otUaYBvD7MHr4ZYuEPGGzd/4OEDfYyh+4Y0HI5n9dxHQ/H5UXnyLJKEujEcEVBSZaATM2n7c5BpzMi/tIxYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ot6u4eYd; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469FtaRI014970
-	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:35 GMT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 469FtXdx007676
+	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=f
-	QmaLNv8ODP5SlOT32W+TB7caAFosKkm11a4RV196gw=; b=CSw1+kTlCTlMKCraj
-	VH/eVN1APFt0LovZMG+7CYUDxAeYbNXXTZSqkcKiqfU9otLbHLmqbSN2rNmC41Dk
-	ySLt7Lw2Bbid9ZOD1j14CGZkpoA1MSnBOA0B9d3+hOhICAvhFNYRRBgA+n08KQzn
-	rAdVAdYt2+yKU5US9qy7g7ZejMm78/N9Sno9q689I4pOt2NLlL1g0pMjvBjxsOuv
-	uAE8d7XJod0JwFp9V9RskHjQT+unVMJWsDwVMz13yvPtjGRe18pSh2Qo6SVUyNsp
-	BeJrEQ3N7pypIKD+ZYhFPSx3QWJD4qJH4cscLwuUCNHrEhVaWBB5CqAbT23tyG+W
-	LlOlA==
+	:mime-version:content-transfer-encoding; s=corp-2023-11-20; bh=9
+	jSEX+0XdpBeyyiD1IqAqe6jqB3Xfd7ggL7jODDEOwk=; b=ot6u4eYdytAiN1YXX
+	EIUizTQC8OgmJO1D0FE74FYyj+3D5Spo+3ZRlblmGNFlLwNXD1E+SHBaFghwhrPP
+	8CQSnKGHNOqrEe2p+o0WZjOCA40naKCO/SEogJ7N2oPj0TFPNXIGVa7JyBPtsErO
+	tkTXecQcxoAkav4HXWde4u1QVKR2241WrWL+c3zN88nYVid+Q+HqBGVzZpLZiIOn
+	ciz+el3q+Q3NPFDN/n2aGrLd5Z2tXS0UatXtfMfERakppLRaboxslN7cv1PFAWba
+	SNEymrIuG5Y7AJubUq8XLPlQ4t8iPaFIwys+uLdLqGubFlXen+ErsZ+MjjyeP9Va
+	J34Tw==
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wt8dq2j-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 406wgpwsrq-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Tue, 09 Jul 2024 19:10:34 +0000 (GMT)
+	for <linux-xfs@vger.kernel.org>; Tue, 09 Jul 2024 19:10:36 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 469IDmWJ014129
-	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:33 GMT
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 469IbRn7013648
+	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:34 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 407txhepph-1
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 407txhepqb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-xfs@vger.kernel.org>; Tue, 09 Jul 2024 19:10:33 +0000
+	for <linux-xfs@vger.kernel.org>; Tue, 09 Jul 2024 19:10:34 +0000
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 469JAUPW024440
-	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:33 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 469JAUPY024440
+	for <linux-xfs@vger.kernel.org>; Tue, 9 Jul 2024 19:10:34 GMT
 Received: from wwg-mac.us.oracle.com (dhcp-10-159-146-188.vpn.oracle.com [10.159.146.188])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 407txhepkm-5;
-	Tue, 09 Jul 2024 19:10:32 +0000
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 407txhepkm-6;
+	Tue, 09 Jul 2024 19:10:34 +0000
 From: Wengang Wang <wen.gang.wang@oracle.com>
 To: linux-xfs@vger.kernel.org
 Cc: wen.gang.wang@oracle.com
-Subject: [PATCH 4/9] spaceman/defrag: ctrl-c handler
-Date: Tue,  9 Jul 2024 12:10:23 -0700
-Message-Id: <20240709191028.2329-5-wen.gang.wang@oracle.com>
+Subject: [PATCH 5/9] spaceman/defrag: exclude shared segments on low free space
+Date: Tue,  9 Jul 2024 12:10:24 -0700
+Message-Id: <20240709191028.2329-6-wen.gang.wang@oracle.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20240709191028.2329-1-wen.gang.wang@oracle.com>
 References: <20240709191028.2329-1-wen.gang.wang@oracle.com>
@@ -84,54 +84,111 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phis
  suspectscore=0 malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2406180000 definitions=main-2407090129
-X-Proofpoint-GUID: GPyls3ljBARhBd3FVKM4tu0tgydYOYf8
-X-Proofpoint-ORIG-GUID: GPyls3ljBARhBd3FVKM4tu0tgydYOYf8
+X-Proofpoint-ORIG-GUID: B_LsGquCZCiDTAMU2uCgYITbb5ec8d87
+X-Proofpoint-GUID: B_LsGquCZCiDTAMU2uCgYITbb5ec8d87
 
-Add this handler to break the defrag better, so it has
-1. the stats reporting
-2. remove the temporary file
+On some XFS, free blocks are over-committed to reflink copies.
+And those free blocks are not enough if CoW happens to all the shared blocks.
+
+This defrag tool would exclude shared segments when free space is under shrethold.
 
 Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
 ---
- spaceman/defrag.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ spaceman/defrag.c | 46 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 3 deletions(-)
 
 diff --git a/spaceman/defrag.c b/spaceman/defrag.c
-index 9f11e36b..61e47a43 100644
+index 61e47a43..f8e6713c 100644
 --- a/spaceman/defrag.c
 +++ b/spaceman/defrag.c
-@@ -297,6 +297,13 @@ get_time_delta_us(struct timeval *pre_time, struct timeval *cur_time)
- 	return us;
- }
+@@ -304,6 +304,29 @@ void defrag_sigint_handler(int dummy)
+ 	printf("Please wait until current segment is defragmented\n");
+ };
  
-+static volatile bool usedKilled = false;
-+void defrag_sigint_handler(int dummy)
++/*
++ * limitation of filesystem free space in bytes.
++ * when filesystem has less free space than this number, segments which contain
++ * shared extents are skipped. 1GiB by default
++ */
++static long	g_limit_free_bytes = 1024 * 1024 * 1024;
++
++/*
++ * check if the free space in the FS is less than the _limit_
++ * return true if so, false otherwise
++ */
++static bool
++defrag_fs_limit_hit(int fd)
 +{
-+	usedKilled = true;
-+	printf("Please wait until current segment is defragmented\n");
-+};
++	struct statfs statfs_s;
++
++	if (g_limit_free_bytes <= 0)
++		return false;
++
++	fstatfs(fd, &statfs_s);
++	return statfs_s.f_bsize * statfs_s.f_bavail < g_limit_free_bytes;
++}
 +
  /*
   * defragment a file
   * return 0 if successfully done, 1 otherwise
-@@ -345,6 +352,8 @@ defrag_xfs_defrag(char *file_path) {
- 		goto out;
- 	}
+@@ -377,6 +400,15 @@ defrag_xfs_defrag(char *file_path) {
+ 		if (segment.ds_nr < 2)
+ 			continue;
  
-+	signal(SIGINT, defrag_sigint_handler);
++		/*
++		 * When the segment is (partially) shared, defrag would
++		 * consume free blocks. We check the limit of FS free blocks
++		 * and skip defragmenting this segment in case the limit is
++		 * reached.
++		 */
++		if (segment.ds_shared && defrag_fs_limit_hit(defrag_fd))
++			continue;
 +
- 	do {
- 		struct timeval t_clone, t_unshare, t_punch_hole;
- 		struct defrag_segment segment;
-@@ -434,7 +443,7 @@ defrag_xfs_defrag(char *file_path) {
- 		if (time_delta > max_punch_us)
- 			max_punch_us = time_delta;
+ 		/* to bytes */
+ 		seg_off = segment.ds_offset * 512;
+ 		seg_size = segment.ds_length * 512;
+@@ -478,7 +510,11 @@ static void defrag_help(void)
+ "can be served durning the defragmentations.\n"
+ "\n"
+ " -s segment_size    -- specify the segment size in MiB, minmum value is 4 \n"
+-"                       default is 16\n"));
++"                       default is 16\n"
++" -f free_space      -- specify shrethod of the XFS free space in MiB, when\n"
++"                       XFS free space is lower than that, shared segments \n"
++"                       are excluded from defragmentation, 1024 by default\n"
++	));
+ }
  
--		if (stop)
-+		if (stop || usedKilled)
+ static cmdinfo_t defrag_cmd;
+@@ -489,7 +525,7 @@ defrag_f(int argc, char **argv)
+ 	int	i;
+ 	int	c;
+ 
+-	while ((c = getopt(argc, argv, "s:")) != EOF) {
++	while ((c = getopt(argc, argv, "s:f:")) != EOF) {
+ 		switch(c) {
+ 		case 's':
+ 			g_segment_size_lmt = atoi(optarg) * 1024 * 1024 / 512;
+@@ -499,6 +535,10 @@ defrag_f(int argc, char **argv)
+ 					g_segment_size_lmt);
+ 			}
  			break;
- 	} while (true);
- out:
++		case 'f':
++			g_limit_free_bytes = atol(optarg) * 1024 * 1024;
++			break;
++
+ 		default:
+ 			command_usage(&defrag_cmd);
+ 			return 1;
+@@ -516,7 +556,7 @@ void defrag_init(void)
+ 	defrag_cmd.cfunc	= defrag_f;
+ 	defrag_cmd.argmin	= 0;
+ 	defrag_cmd.argmax	= 4;
+-	defrag_cmd.args		= "[-s segment_size]";
++	defrag_cmd.args		= "[-s segment_size] [-f free_space]";
+ 	defrag_cmd.flags	= CMD_FLAG_ONESHOT;
+ 	defrag_cmd.oneline	= _("Defragment XFS files");
+ 	defrag_cmd.help		= defrag_help;
 -- 
 2.39.3 (Apple Git-146)
 
