@@ -1,149 +1,232 @@
-Return-Path: <linux-xfs+bounces-10566-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10568-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF8A392E737
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2024 13:41:18 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18BC292E7C3
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2024 13:58:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB00D2816D7
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2024 11:41:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2853CB293AB
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Jul 2024 11:57:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F783155CAC;
-	Thu, 11 Jul 2024 11:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2517C15FA68;
+	Thu, 11 Jul 2024 11:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="XcVgRhxj"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24A11494B9;
-	Thu, 11 Jul 2024 11:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6222515F3FF
+	for <linux-xfs@vger.kernel.org>; Thu, 11 Jul 2024 11:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720698073; cv=none; b=mXpcRW4r/+x3TSSYctwRus7ktbozeNy3KhTRlY+dL9c2k9QYbMOBfDirRe6d4rI4wCNrOZkpsiPFNVlGHJ4zxiYeVQeTA7wYp9/OlHM96Qx0x7ye8IM8MNTrd3M7NCp7EHBleleL6394mDguktJ47i8Mx7X2nBX/FzpPxaIitoQ=
+	t=1720698907; cv=none; b=YKM3Lu3Yx0oeS0jSoi/KNm37MIRieLwVB8QWWExgAZig8j3ZsTFxTP+ngqGwfA2/eKM8+b3tS3t4WUD2mcxcQcZNXZ8CXXB6eQCwpc8BKD/F7wslNA11Xe+oajsgG5OeEyEfh+Ha2MvOZl/RKV+wGSezXgykJUgfX1pEcXDt6Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720698073; c=relaxed/simple;
-	bh=Ua/nLDs+KP1dLarJx6TLx34B/y1nRj1lVYVsmctE1WM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hqkfacLLUm33DfojF8wnPnIjlIVTZzZ1BahD6uoTrO56fTO67lWr6B5raU184lJDONaq5D2VgP4FwE3KdOrJILQNisYdWQg6poz6o1nFk+um0VGTM6tLYpyZFDgbYUk7FsbsGhg5CjZzy3cU28KJD8Bi8ymusdI/u8TSDxidJws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WKXk22hMHzxVwc;
-	Thu, 11 Jul 2024 19:36:26 +0800 (CST)
-Received: from kwepemi500009.china.huawei.com (unknown [7.221.188.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id AB96C140123;
-	Thu, 11 Jul 2024 19:41:02 +0800 (CST)
-Received: from localhost (10.175.127.227) by kwepemi500009.china.huawei.com
- (7.221.188.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 11 Jul
- 2024 19:41:02 +0800
-Date: Thu, 11 Jul 2024 19:52:07 +0800
-From: Long Li <leo.lilong@huawei.com>
-To: Dave Chinner <david@fromorbit.com>, Luis Chamberlain <mcgrof@kernel.org>
-CC: <kdevops@lists.linux.dev>, <linux-xfs@vger.kernel.org>,
-	<fstests@vger.kernel.org>, <zlang@redhat.com>
-Subject: Re: [PATCH kdevops] xfs: add xfs/242 as failing on xfs_reflink_2k
-Message-ID: <20240711115207.GA3638@ceph-admin>
-References: <20240416235108.3391394-1-mcgrof@kernel.org>
- <Zh9UkHEesvrpSQ7J@dread.disaster.area>
+	s=arc-20240116; t=1720698907; c=relaxed/simple;
+	bh=IjKBQypoiYpezQuDfjEMCysU4UpG4sxhNzaYrDgsDjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbEgA86BM4phcEk5l3UQqLkhGjl7noKeYysKuNtfn3p7CR6lPh4w4BQsgZLOT8UZWu7x3W0ABgvq7n9yg3vVFwxdBlj7+o+VchuDyfwFmXV334ZFrMYBs5XnmaLx2cplZxoIw5EdJPDShp3hVS5wAOKHPmY/MiVKjYGCmQ8XCpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=XcVgRhxj; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fb1c69e936so4648425ad.3
+        for <linux-xfs@vger.kernel.org>; Thu, 11 Jul 2024 04:55:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1720698905; x=1721303705; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjYWpoT4u/Zq2mIe8pqxx1BxwM6H3Jj1huw4voUKaZg=;
+        b=XcVgRhxjMCFJcMwD6HhIVmFgm9XBeXGn+wcClOHpgvqNnlt7u/jZzHCeLAOVEA0xO5
+         6ZgVMXX4HeNnVYdRi/SJ+qIzGAQ5eKzkeQanKJLOvDtEuwPGvx5rJtXB5wgQYV8h2CAR
+         KTyp6D2Bt1ape2i8sVeQvYG+4z2yWaYbv2jL+y876G//CcmYRY1jYsY8nW2jdeLvNGjv
+         5xnIOTxaUrIU+w2N91s1x3JejsHcX84gnOJE5k2MFV8eyIQyZqDHToxXte/J0OpT/EMZ
+         KTW6zLifKO14gvxfLxQAXzcl77m2oVNrIM/pTTqyzKiY8TqqF7PoDI6ssNt7mP3gA9P1
+         QP8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720698905; x=1721303705;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZjYWpoT4u/Zq2mIe8pqxx1BxwM6H3Jj1huw4voUKaZg=;
+        b=gh5sgWHCv6giuaml3EhQI0aAvUswhz8E4UJaWdPslR0LfCpGp1Fl26TbcoTi/oAtPU
+         8BlhM78ezJqeLEsZSvFc/kjKOuthwtWXSrNl06eVbiEcRvyCT7int3+VJa/3rrohqqV6
+         CaI5ko6iuEgqyGOJ+dZA+XjA2vMHZKvmWyolay594weDWw8/or9BqTvlTy5Tbw8+WoP5
+         Cjao+exPKwz4FfNFl+raoBqng8dHRRKbZ6vlUsBdy1mGmLg4WWr0tYsFFcqU3ozT6zmh
+         6kE9lTTAsyrfOqvQ6LVsb2c6MFSfWr9rxzb4/octB7rGUt9KJZRnZIZeYlTxCKGvPMZ3
+         U/tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmzG7mwOy1Tu1r3FiiRzu/MxZytyQXEqQUMFDR2Mposn9gLvwjdr1ZNHo1yOh5L7VnzNrg4oURfuVG5WqOFOZWmFWvl9PB0a2W
+X-Gm-Message-State: AOJu0YypSJ4amY6anD4B9gkeZ+lxQ2n//yNbxlpM+Y1XR6XExG7+Glee
+	JxzVOBDXKxSJPKnMyghsBGawtPYW5aapPRK84o2r1S6Rnh57gMFl96UFrzwwp1FFCTsFx8ywSRk
+	o
+X-Google-Smtp-Source: AGHT+IHc/2NCtrqEJg+0Imf71rTjjn0FUGUhGEF9LXOZb1eutDkZEADYESdmeMrIbVmejDdivQbvVA==
+X-Received: by 2002:a17:902:ced2:b0:1fb:6ea1:4c with SMTP id d9443c01a7336-1fbb6d3d631mr73256845ad.23.1720698905482;
+        Thu, 11 Jul 2024 04:55:05 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6ab7d9csm48859965ad.157.2024.07.11.04.55.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jul 2024 04:55:04 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sRsO6-00C0GN-1Q;
+	Thu, 11 Jul 2024 21:55:02 +1000
+Date: Thu, 11 Jul 2024 21:55:02 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Mike Snitzer <snitzer@kernel.org>, linux-xfs@vger.kernel.org,
+	Brian Foster <bfoster@redhat.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] xfs: enable WQ_MEM_RECLAIM on m_sync_workqueue
+Message-ID: <Zo/IFjI9u2E+PSW2@dread.disaster.area>
+References: <>
+ <ZoVdAPusEMugHBl8@infradead.org>
+ <172056677808.15471.5200774043985229799@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zh9UkHEesvrpSQ7J@dread.disaster.area>
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500009.china.huawei.com (7.221.188.199)
+In-Reply-To: <172056677808.15471.5200774043985229799@noble.neil.brown.name>
 
-On Wed, Apr 17, 2024 at 02:48:16PM +1000, Dave Chinner wrote:
-> On Tue, Apr 16, 2024 at 04:51:08PM -0700, Luis Chamberlain wrote:
-> > This test is rather simple, and somehow we managed to capture a
-> > non-crash failure. The test was added to fstests via fstests commit
-> > 0c95fadc35c8e450 ("expand 252 with more corner case tests") which
-> > essentially does this:
+On Wed, Jul 10, 2024 at 09:12:58AM +1000, NeilBrown wrote:
+> On Thu, 04 Jul 2024, Christoph Hellwig wrote:
+> > On Wed, Jul 03, 2024 at 09:29:00PM +1000, NeilBrown wrote:
+> > > I know nothing of this stance.  Do you have a reference?
 > > 
-> > +       $XFS_IO_PROG $xfs_io_opt -f -c "truncate $block_size" \
-> > +               -c "pwrite 0 $block_size" $sync_cmd \
-> > +               -c "$zero_cmd 128 128" \
-> > +               -c "$map_cmd -v" $testfile | $filter_cmd
+> > No particular one.
 > > 
-> > The map_cmd in this case is: 'bmap -p'. So the test does:
+> > > I have put a modest amount of work into ensure NFS to a server on the
+> > > same machine works and last I checked it did - though I'm more
+> > > confident of NFSv3 than NFSv4 because of the state manager thread.
 > > 
-> > a) truncates data to the block size
-> > b) sync
-> > c) zero-fills the the blocksize
+> > How do you propagate the NOFS flag (and NOIO for a loop device) to
+> > the server an the workqueues run by the server and the file system
+> > call by it?  How do you ensure WQ_MEM_RECLAIM gets propagate to
+> > all workqueues that could be called by the file system on the
+> > server (the problem kicking off this discussion)?
 > > 
-> > The xfs_io bmap displays the block mapping for the current open file.
-> > Since our failed delta is:
-> > 
-> > -0: [0..7]: data
-> > +0: [0..7]: unwritten
 > 
-> That's most likely a _filter_bmap() issue, not a kernel code bug.
+> Do we need to propagate these?
 > 
-> i.e. 'bmap -vp' output looks like:
+> NOFS is for deadlock avoidance.  A filesystem "backend" (Dave's term - I
+> think for the parts of the fs that handle write-back) might allocate
+> memory, that might block waiting for memory reclaim, memory reclaim
+> might re-enter the filesystem backend and might block on a lock (or
+> similar) held while allocating memory.  NOFS breaks that deadlock.
+>
+> The important thing here isn't the NOFS flag, it is breaking any
+> possible deadlock.
+
+NOFS doesn't "break" any deadlocks. It simply prevents recursion
+from one filesystem context to another. We don't have to use
+NOFS if recursion is safe and won't deadlock.
+
+That is, it may be safe for a filesystem to use GFP_KERNEL
+allocations in it's writeback path. If the filesystem doesn't
+implement ->writepage (like most of the major filesystems these
+days) there is no way for memory reclaim to recurse back into the fs
+writeback path. Hence GFP_NOFS is not needed in writeback context to
+prevent reclaim recursion back into the filesystem writeback
+path....
+
+And the superblock shrinkers can't deadlock - they are non-blocking
+and only act on unreferenced inodes. Hence any code that has a
+locked inode is either evicting an unreferenced inode or holds a
+reference to the inode. If we are doing an allocation with eithe rof
+those sorts of inodes locked, there is no way that memory reclaim
+recursion can trip over the locked inode and deadlock.
+
+So between the removal of ->writepage, non-blocking shrinkers, and
+scoped NOIO context for loop devices, I'm not sure there are any
+generic reclaim recursion paths that can actually deadlock. i.e.
+GFP_NOFS really only needs to be used if the filesystem itself
+cannot safely recurse back into itself.
+
+> Layered filesystems introduce a new complexity.
+
+Nothing new about layered filesystems - we've been doing this for
+decades...
+
+> The backend for one
+> filesystem can call into the front end of another filesystem.  That
+> front-end is not required to use NOFS and even if we impose
+> PF_MEMALLOC_NOFS, the front-end might wait for some work-queue action
+> which doesn't inherit the NOFS flag.
 > 
-> EXT: FILE-OFFSET      BLOCK-RANGE            AG AG-OFFSET          TOTAL FLAGS
->    0: [0..231]:        2076367680..2076367911 18 (6251328..6251559)   232 000000
-> 
-> and _filter_bmap has two separate regex matches against different
-> fields that both trigger "unwritten" output. The first check is
-> against field 5 which is actually the AG-OFFSET in this output, not
-> field 7 which is the FLAGS field.
-> 
-> Hence if the ag offset matches '/0[01][01][01][01]/' the filter will
-> emit 'unwritten' regardless of what the flags say it actually is.
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
+> But this doesn't necessarily matter.  Calling into the filesystem is not
+> the problem - blocking waiting for a reply is the problem.  It is
+> blocking that creates deadlocks.  So if the backend of one filesystem
+> queues to a separate thread the work for the front end of the other
+> filesystem and doesn't wait for the work to complete, then a deadlock
+> cannot be introduced.
+>
+> /dev/loop uses the loop%d workqueue for this.  loop-back NFS hands the
+> front-end work over to nfsd.  The proposed localio implementation uses a
+> nfslocaliod workqueue for exactly the same task.  These remove the
+> possibility of deadlock and mean that there is no need to pass NOFS
+> through to the front-end of the backing filesystem.
 
-I got a similar failure in xfs/242 as follows. It can be easily reproduced
-when I run xfs/242 as a cyclic test. The root cause, as Dave pointed out, 
-is that _filter_bmap first matches the data in column 5, which may be 
-incorrect. On the other hand, _filter_bmap seems to be missing "next" to
-jump out when it matches "data" in the 5th column, otherwise it might
-print the result twice. The issue was introduced by commit 7d5d3f77154e
-("xfs/242: fix _filter_bmap for xfs_io bmap that does rt file properly").
-The failure disappeared when I retest xfs/242 by reverted commit 7d5d3f77154e.
+I think this logic is fundamentally flawed.
 
-The problem is not fixed yet. How about matching the 7th column first
-and then the 5th column in _filter_bmap? because the rtdev file only has
-5 columns in the `bmap -vp` output.
+Pushing IO submission to a separate
+thread context which runs them in GFP_KERNEL context does not help
+if the deadlock occurs during IO submission. With loop devices,
+there's a "global" lock in the lower filesystem on the loop device -
+the image file inode lock.
 
-Best Regards,
-Long Li
+The IO issued by the loop device will -always- hit the same inode
+and the same inode locks. Hence if we do memory allocation with an
+inode lock held exclusive in the lower filesystem (e.g. a page cache
+folio for a buffered write), we cannot allow memory reclaim during
+any allocation with the image file inode locked to recurse into the
+upper filesystem. If the upper filesystem then performs an operation
+that requires IO to be submitted and completed to make progress
+then we have a deadlock condition due to recursion from
+the lower to upper filesystem regardless of the fact that the
+lower IO submission is run from a different task.
 
-----------------------------------------------------------------------------
+Hence the loop device sets up the backing file mapping as:
 
-FSTYP -- xfs (debug)
-PLATFORM -- Linux/aarch64 localhost 6.6.0+ #84 SMP Tue Jul 9 23:35:56 CST 2024
-VMIP -- 192.168.250.78
-MKFS_OPTIONS -- -f -m crc=1,rmapbt=0,reflink=0 /dev/sdb
-MOUNT_OPTIONS -- /dev/sdb /tmp/scratch
+	lo->lo_backing_file = file;
+        lo->old_gfp_mask = mapping_gfp_mask(mapping);
+        mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
 
-xfs/242 1s ... - output mismatch (see /root/xfstests-dev/results//xfs/242.out.bad)
---- tests/xfs/242.out 2024-06-06 19:08:46.677638130 +0800
-+++ /root/xfstests-dev/results//xfs/242.out.bad 2024-07-11 02:24:35.337554580 +0800
-@@ -57,8 +57,7 @@
-1aca77e2188f52a62674fe8a873bdaba
-13. data -> unwritten -> data
-0: [0..127]: data
--1: [128..511]: unwritten
--2: [512..639]: data
-+1: [128..639]: unwritten
-0bcfc7652751f8fe46381240ccadd9d7
-...
-(Run 'diff -u /root/xfstests-dev/tests/xfs/242.out /root/xfstests-dev/results//xfs/242.out.bad' to see the entire diff)
-Ran: xfs/242
-Failures: xfs/242
-Failed 1 of 1 tests
+GFP_NOIO context. It also sets up worker task context as:
 
+	current->flags |= PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
+
+GFP_NOIO context. IOWs, all allocation in the IO submission path is
+explicitly GFP_NOIO to prevent any sort of reclaim recursion into
+filesysetms or the block layer. That's the only sane thing to do,
+because multi-filesystem deadlocks are an utter PITA to triage and
+solve...
+
+Keep in mind that PF_LOCAL_THROTTLE also prevents IO submission
+deadlocks in the lower filesystem.  If the lower filesystem IO
+submission dirties pages (i.e. buffered writes) it can get throttled
+on the dirty page threshold. If it get's throttled like this trying
+to clean dirty pages from the upper filesystem we have a deadlock.
+The localio submission task will need to prevent that deadlock,
+too.
+
+IOWs, just moving IO submission to another thread does not avoid
+the possibility of lower-to-upper filesystem recursion or lower
+filesystem dirty page throttling deadlocks.
+
+> Note that there is a separate question concerning pageout to a swap
+> file.  pageout needs more than just deadlock avoidance.  It needs
+> guaranteed progress in low memory conditions.   It needs PF_MEMALLOC (or
+> mempools) and that cannot be finessed using work queues.  I don't think
+> that Linux is able to support pageout through layered filesystems.
+
+I don't think we ever want to go there.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
