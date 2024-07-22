@@ -1,108 +1,70 @@
-Return-Path: <linux-xfs+bounces-10743-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10745-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83CE6938FB6
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 15:14:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C964939087
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 16:21:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F24B61F21A24
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 13:14:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA97828155F
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 14:21:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88F3516D4FE;
-	Mon, 22 Jul 2024 13:14:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E24C16DC05;
+	Mon, 22 Jul 2024 14:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DnrlcPpe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="k8V40oSO";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DnrlcPpe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="k8V40oSO"
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="PXuQRyta"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E8516A38B;
-	Mon, 22 Jul 2024 13:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2245A16D4EC;
+	Mon, 22 Jul 2024 14:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721654040; cv=none; b=FVEkexlv9qzpIHrkaLc7QpjBZBtgpiFgDnFbGRzrJMpQV3fRqdISMEqIMYMzRnh5RhChvHOD/Gu8toH+IEyObwEsonPXNtVA/kjgIatyZ7MswHYM0KI2opaO84OVWC6zTzEyjc+KYgtLMcrSiYJtVVSmkhn7UA+4R6h2UJsgQtg=
+	t=1721658099; cv=none; b=ctPLJtnkocIN3sZFAodWoJJV10dm+0AR6OFbVhZA+qhLENixvBl7k6EJJ8EjDqJzhp/BpUdLefslIDYPGqK06Zc466lgxPJciSgTT2jzMIXx5wdFrJUFHQPlUAgiHdWKSSnRu9rdgFtZvnntslL3JyZuc0jozo/Tt3AGLf46dBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721654040; c=relaxed/simple;
-	bh=E7rO4+raxSImGQ+Lcvo8Hj4gA2KG0L/pi5voylWaDJc=;
+	s=arc-20240116; t=1721658099; c=relaxed/simple;
+	bh=sl205zFYdqQiVyBmG5IrUVs0e9Z9VV8yMDF4pspuGXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bU3DxlBjasT2jpgJzLakyzzzCX7E1C3NLmvn9ZsZe+5Jny1ZPvLYCOJCtf1hO3pIuVPsDXxt19pYfuJhoxZgpmRxBT9csMdWdqZ0zx2VfnC2IJhTKBAqloE2CKFinN9gAm9Y5RGJqwmjuN5JfgvbhgCeSW2RYgihFC55/6QLUGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DnrlcPpe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=k8V40oSO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DnrlcPpe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=k8V40oSO; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPnmk9FdoF0IGtH2nj6cc847PQF3UTd32/jnbdGqWCvqdKHpJcdnLZERomOaLoiiu89BhBa3B+xuVDSTnSIRtwvHGU+d1DCkfoeiQR8XrBz03+lGih9LbiBoi0vkmESGV7FfwI806LO+u2KCwYHR3MBk8rWVfRVl5wHFQ84ufgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=PXuQRyta; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AE43121B49;
-	Mon, 22 Jul 2024 13:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1721654036;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4WSMfz5qRFz9stk;
+	Mon, 22 Jul 2024 16:12:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1721657547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eO+kWLDsrIeY9mjf6qkCfwNZXpmlrMP0lUZZv7XChsI=;
-	b=DnrlcPpe3Ryh2Ac3vewtY2k6bQM7+wu1YJX0CahKi3yE5N51G3zL9WEWenroKYneSNCzNd
-	w555qxHnXtiJZR9Afm1rRveVOyBW98iPQ+z45anB2ErQcKEV+4tW389x4eZWDYTEO3hNwh
-	BzHY/Tc2fETyKXkf98u+qG1+/CGek3w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1721654036;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eO+kWLDsrIeY9mjf6qkCfwNZXpmlrMP0lUZZv7XChsI=;
-	b=k8V40oSOrSysVQaDlq2nGICzlZsL88be1X8mCxHYWPSMTc2GVbatr7G9syghOi9DKL7AJT
-	9/FwoaozLW3hZbBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=DnrlcPpe;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=k8V40oSO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1721654036;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eO+kWLDsrIeY9mjf6qkCfwNZXpmlrMP0lUZZv7XChsI=;
-	b=DnrlcPpe3Ryh2Ac3vewtY2k6bQM7+wu1YJX0CahKi3yE5N51G3zL9WEWenroKYneSNCzNd
-	w555qxHnXtiJZR9Afm1rRveVOyBW98iPQ+z45anB2ErQcKEV+4tW389x4eZWDYTEO3hNwh
-	BzHY/Tc2fETyKXkf98u+qG1+/CGek3w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1721654036;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eO+kWLDsrIeY9mjf6qkCfwNZXpmlrMP0lUZZv7XChsI=;
-	b=k8V40oSOrSysVQaDlq2nGICzlZsL88be1X8mCxHYWPSMTc2GVbatr7G9syghOi9DKL7AJT
-	9/FwoaozLW3hZbBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6B3AB136A9;
-	Mon, 22 Jul 2024 13:13:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id DzdLGRRbnmZgMwAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Mon, 22 Jul 2024 13:13:56 +0000
-Date: Mon, 22 Jul 2024 15:13:54 +0200
-From: Petr Vorel <pvorel@suse.cz>
-To: Jan Kara <jack@suse.cz>
-Cc: ltp@lists.linux.it, linux-block@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-	fstests@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	David Sterba <dsterba@suse.com>, Filipe Manana <fdmanana@suse.com>,
-	Amir Goldstein <amir73il@gmail.com>, Cyril Hrubis <chrubis@suse.cz>,
-	Andrea Cervesato <andrea.cervesato@suse.com>,
-	Avinesh Kumar <akumar@suse.de>
-Subject: Re: [RFC] Slow down of LTP tests aiodio_sparse.c and dio_sparse.c in
- kernel 6.6
-Message-ID: <20240722131354.GA858324@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240719174325.GA775414@pevik>
- <20240722090012.mlvkaenuxar2x3vr@quack3>
+	bh=Y5Xo3wX+uawUJqw7uA4WLjrLhTEALsLM/1oRvrJDUlk=;
+	b=PXuQRytaUpGN7kf+yu98HpPlESNqnRQU/ex7u+sGLE06XGC9p8gwH1AoB3UQzjDxZYONAi
+	l4rjOuDXiUIv1rRzRPPCiqoFKcmL98MYAPtd4gD8FTo6FzhhvI/jG/RgPy9LK/CGaKupYK
+	Wu/52h6Y+pLTMg/iuyIL5CzGqEH6S6muUB/Y95kyFtw6UWygorgEyNidQjFJlOA0TYXn8G
+	FqYivrOu2AV4sBmnR4lf45MW5rTOYBhAoTcbWLJ4J10KQupuIYBSCo7/wwtCJzL44GpYrS
+	s1+ErgPmNvpenxQcvT3EARhkfVyZGNMBXPLrPBUdVXHTqQvK4Vyzky7ghMlEtQ==
+Date: Mon, 22 Jul 2024 14:12:20 +0000
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: david@fromorbit.com, willy@infradead.org, chandan.babu@oracle.com,
+	brauner@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
+	linux-mm@kvack.org, john.g.garry@oracle.com,
+	linux-fsdevel@vger.kernel.org, hare@suse.de, p.raghav@samsung.com,
+	mcgrof@kernel.org, gost.dev@samsung.com, cl@os.amperecomputing.com,
+	linux-xfs@vger.kernel.org, ryan.roberts@arm.com, hch@lst.de,
+	Zi Yan <ziy@nvidia.com>
+Subject: Re: [PATCH v10 10/10] xfs: enable block size larger than page size
+ support
+Message-ID: <20240722141220.yfxb7jder7mqwgod@quentin>
+References: <20240715094457.452836-1-kernel@pankajraghav.com>
+ <20240715094457.452836-11-kernel@pankajraghav.com>
+ <20240715164632.GV612460@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -111,72 +73,44 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240722090012.mlvkaenuxar2x3vr@quack3>
-X-Spam-Score: -3.51
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: AE43121B49
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[lists.linux.it,vger.kernel.org,kernel.dk,suse.com,gmail.com,suse.cz,suse.de];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:replyto];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	REPLYTO_EQ_FROM(0.00)[]
-X-Spam-Flag: NO
+In-Reply-To: <20240715164632.GV612460@frogsfrogsfrogs>
+X-Rspamd-Queue-Id: 4WSMfz5qRFz9stk
 
-Hi Jan, all,
+> > +
+> > +		if (mp->m_sb.sb_blocksize > max_folio_size) {
+> > +			xfs_warn(mp,
+> > +"block size (%u bytes) not supported; maximum folio size supported in "\
+> > +"the page cache is (%ld bytes). Check MAX_PAGECACHE_ORDER (%d)",
+> > +			mp->m_sb.sb_blocksize, max_folio_size,
+> > +			MAX_PAGECACHE_ORDER);
+> > +			error = -ENOSYS;
+> > +			goto out_free_sb;
+> 
+> Nit: Continuation lines should be indented, not lined up with the next
+> statement:
+> 
+> 			xfs_warn(mp,
+> "block size (%u bytes) not supported; maximum folio size supported in "\
+> "the page cache is (%ld bytes). Check MAX_PAGECACHE_ORDER (%d)",
+> 					mp->m_sb.sb_blocksize,
+> 					max_folio_size,
+> 					MAX_PAGECACHE_ORDER);
+> 			error = -ENOSYS;
+> 			goto out_free_sb;
 
-> Hi!
+@Darrick: As willy pointed out, the error message is a bit long here.
+Can we make as follows:
 
-> On Fri 19-07-24 19:43:25, Petr Vorel wrote:
-> > LTP AIO DIO tests aiodio_sparse.c [1] and dio_sparse.c [2] (using [3])
-> > slowed down on kernel 6.6 on Btrfs and XFS, when run with default
-> > parameters. These tests create 100 MB sparse file and write zeros (using
-> > libaio or O_DIRECT) while 16 other processes reads the buffer and check
-> > only zero is there.
+"block size (%u bytes) not supported; Only block size (%ld) or less is supported "\
+                                        mp->m_sb.sb_blocksize,
+                                        max_folio_size);
 
-> So the performance of this test is irrelevant because combining buffered
-> reads with direct IO writes was always in "better don't do it" territory.
-> Definitely not if you care about perfomance.
+This is similar to the previous error and it is more concise IMO.
 
-Thanks a lot for having a look, Jan!
-
-> > Runtime of this particular setup (i.e. 100 MB file) on Btrfs and XFS on the
-> > same system slowed down 9x (6.5: ~1 min 6.6: ~9 min). Ext4 is not affected.
-> > (Non default parameter creates much smaller file, thus the change is not that
-> > obvious).
-
-> But still it's kind of curious what caused the 9x slow down. So I'd be
-> curious to know the result of the bisection :). Thanks for report!
-
-I'm already working on it, report soon.
-
-Kind regards,
-Petr
-
-> 								Honza
+> 
+> With that fixed,
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> 
+> --D
+> 
 
