@@ -1,84 +1,104 @@
-Return-Path: <linux-xfs+bounces-10748-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10750-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 429DF939178
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 17:11:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A4299391CF
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 17:30:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2BA7281B8C
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 15:11:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D53EFB20B5F
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Jul 2024 15:30:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4747616DC1D;
-	Mon, 22 Jul 2024 15:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D96ED16E872;
+	Mon, 22 Jul 2024 15:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JtGxp0sp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Udibmumu"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02D21EB56
-	for <linux-xfs@vger.kernel.org>; Mon, 22 Jul 2024 15:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F58C2FD;
+	Mon, 22 Jul 2024 15:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721661105; cv=none; b=tONox1rsmuSMPDqN0f3D06puG7clDNdB4VcH8FIOckV5Ts6x4cJ05ytvg8nB9+ueqp/WDc8EIc/A2n+MUP6Aqz491QQZPy2WUp91XMc/P+0kDOeJX6LEUF26KLvSc8Bs+IRnf1GtKRlA7X6u99AVgvSEEaApqf+SQ54svpSuOx8=
+	t=1721662227; cv=none; b=p8FN06doOpvaxjdxpphp8fwlG6O/IxIkn/c6iJut3nFZAdgI6JLcbN31k7Y7LGuB9e6rGetoRLOOFZ0XA+fw6eYX1bBDGkh/GX/ogb1olU8GjJH3YxHTRAevCspNEA2rRXEY18BgZxJhq7SbdbAHc6uD7sDz4hvmwJMMhRjvHpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721661105; c=relaxed/simple;
-	bh=m+lRA/Dkb+NSHV1hDXGxt/3PlraFJyuw5DG55BU72Ho=;
+	s=arc-20240116; t=1721662227; c=relaxed/simple;
+	bh=qeOMl00DgHVITw+FjVR23dUDZQ0dZ2F3RbfRASJShYY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=siqQoV/vBPJBE84mNkFuezSAys5vSoKObjYxodNd3ztbsvlxT9KyVuBK2GoxczoxvZU9RgTetzG1fBhHlSL+9Aur99j/BWXEN9gn+ahCgPSfZmyKco9AEpCsKrH4PMz3XESVSwqD+4kBH5t1Hr7gyaCa8TPvI5ujOwCihjlS3RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JtGxp0sp; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=x7j9Gl+4paKPRNt3BijGnzgoUNPBybaKXBmB+tcHNZQ=; b=JtGxp0sp1yBBPqbhtqmC8pLGbd
-	nTOQN6kt2Z7eiKsYTi4vQKzarRMc4W59QB3na5gDctKbQdMJWcZPJt4VT3VOdj1lCu5JoqZlCBd4t
-	HrpXpxY0a4mt5xKMhe8UkvDE2J82y5KM7qQL7xmeFajdqDDHVF1JLO+amla02tmADnJj5iyXSCaAi
-	Nknky3wtk78gJWPjjda0NlKTUI4bN/du9v2ogMN+ny/h14Vao5YqN7D6VpIlumvFrNLpO2gy8BiYu
-	MHwdaqRDDRwKNk/dyHEJK5PeOWydA6uY7N6mOINI9zpSJreTLRj5Pc95GjWFw70bScUeFYw7u1vOa
-	arDuLp7g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sVuhT-00000009tj3-1xFv;
-	Mon, 22 Jul 2024 15:11:43 +0000
-Date: Mon, 22 Jul 2024 08:11:43 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Eric Sandeen <sandeen@sandeen.net>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Eric Sandeen <sandeen@redhat.com>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] xfs: allow SECURE namespace xattrs to use reserved pool
-Message-ID: <Zp52r8TBTQjJP-M-@infradead.org>
-References: <fa801180-0229-4ea7-b8eb-eb162935d348@redhat.com>
- <Zp5vq86RtodlF-d1@infradead.org>
- <da41c7f5-8542-4b8e-9e98-2c33a74ca1a9@sandeen.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjkMXh2+Ieay6zEP/Wtr7UfLo4dPHN+SxoK+rirZ2t1ex+JnC55HDr6cbUYB1+fi2PG5vJbSfoVOEjouIdw5x3auBu+UTCH4DCINZW0o3Q1rJEKmmzQmC68U8fmVKQwRIG23RtRnQS68NBQquvB2ECLv2EB5xaeWPedWaQ83mLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Udibmumu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F691C116B1;
+	Mon, 22 Jul 2024 15:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721662227;
+	bh=qeOMl00DgHVITw+FjVR23dUDZQ0dZ2F3RbfRASJShYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Udibmumu7SLzxEKxqIecKZDLnygO3K9IPmsYRL3I6hL5eYqNIVWX7mLjSpajAEdtJ
+	 +34Wwg7S23Sx/TsNHnSCLXzlaT8K9BzSvT0TpzDZp4qpSIexecgt4YBIFxTyDVKdR4
+	 zoGjpH6i7DCAVXe/q3qIV7BqGL/VhVJeejTJZQ5AjoBDa5DUQ2nz2ml/skzftzqSlC
+	 5qNp9evMwxpnZuVl0mgCMoNVIFBdte25OlWnbcPfa0aHZjnWFch12yFrsCVCKAOuGg
+	 mqnhjXYfz2YA35SyHO1xRH0Y7C6QIOmi+MTocaJsucU4+99bRjM3aqFDZEN/X/Fw9k
+	 bZ6cWyiYCD1kA==
+Date: Mon, 22 Jul 2024 17:30:17 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Chandan Babu R <chandan.babu@oracle.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Dave Chinner <david@fromorbit.com>, Andi Kleen <ak@linux.intel.com>, 
+	Christoph Hellwig <hch@infradead.org>, Uros Bizjak <ubizjak@gmail.com>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+	Randy Dunlap <rdunlap@infradead.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 0/9] fs: multigrain timestamp redux
+Message-ID: <20240722-festmachen-lehrstellen-f86d1bd28997@brauner>
+References: <20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org>
+ <20240716-zerlegen-haudegen-ba86a22f4322@brauner>
+ <60af7cff6b1cf00388e932804c81ed368fcc9f02.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <da41c7f5-8542-4b8e-9e98-2c33a74ca1a9@sandeen.net>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <60af7cff6b1cf00388e932804c81ed368fcc9f02.camel@kernel.org>
 
-On Mon, Jul 22, 2024 at 10:05:03AM -0500, Eric Sandeen wrote:
-> Ok, I thought the local var was a little prettier but *shrug* can do it
-> either way.
+On Tue, Jul 16, 2024 at 08:45:16AM GMT, Jeff Layton wrote:
+> On Tue, 2024-07-16 at 09:37 +0200, Christian Brauner wrote:
+> > On Mon, Jul 15, 2024 at 08:48:51AM GMT, Jeff Layton wrote:
+> > > I think this is pretty much ready for linux-next now. Since the latest
+> > > changes are pretty minimal, I've left the Reviewed-by's intact. It would
+> > > be nice to have acks or reviews from maintainers for ext4 and tmpfs too.
+> > > 
+> > > I did try to plumb this into bcachefs too, but the way it handles
+> > > timestamps makes that pretty difficult. It keeps the active copies in an
+> > > internal representation of the on-disk inode and periodically copies
+> > > them to struct inode. This is backward from the way most blockdev
+> > > filesystems do this.
+> > > 
+> > > Christian, would you be willing to pick these up  with an eye toward
+> > > v6.12 after the merge window settles?
+> > 
+> > Yup. About to queue it up. I'll try to find some time to go through it
+> > so I might have some replies later but that shouldn't hold up linux-next
+> > at all.
 > 
-> To be honest I'm not sure why it was done for ROOT; dchinnner mentioned
-> something about DMAPI requirements, long ago...
+> Great!
 > 
-> It seems reasonable, and it's been there forever but also not obviously
-> required, AFAICT.
-> 
-> What would your explanation be? ;) 
+> There is one minor update to the percpu counter patch to compile those
+> out when debugfs isn't enabled, so it may be best to pick the series
+> from the "mgtime" branch in my public git tree. Let me know if you'd
 
-Based on your explanation it's probably ACLs for the same reason it
-applies to the security attributes.
-
+I did that now and pushed to vfs.mgtime. Please take a look as I rebased
+onto current master and resolved conflicts in xfs and btrfs. Thanks!
 
