@@ -1,58 +1,58 @@
-Return-Path: <linux-xfs+bounces-10760-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10762-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CEE193973C
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2024 02:00:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1EF293973E
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2024 02:00:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B14A31F22326
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2024 00:00:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9203D1F22419
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Jul 2024 00:00:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E0F228E8;
-	Tue, 23 Jul 2024 00:00:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E160553AD;
+	Tue, 23 Jul 2024 00:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1ZHaCGSZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1GMvS9tO"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADAE632;
-	Tue, 23 Jul 2024 00:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFC32F5E;
+	Tue, 23 Jul 2024 00:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721692847; cv=none; b=gXifj1oNsLJUgu4DiwX3TB+AG0QE8PWlEXV/JGy0ln70Qjf4bHck4hAq0OA5ZJOz1Ccmvq2pA05F5BT82M3/oBz9pUWriZwOqGCIzfsdatAaC1F3B7+M13Gd2deHYpIB3SeqV2gx8rmjINsw4/H8O4zKEuWToDUC19VSOsk000k=
+	t=1721692848; cv=none; b=K2kWBaMwGh2EJeXFla/CAkNZFAKJbQrhNsFRFxHbSqnrhh0q9y4on9huaoF98ebMstOw91EILGdqet+xl48g950VZg8KuTIwQRn7KWnS4OvRB+RFmfCnpBB3KcrBlbeqYInWS+rq4BaIvFITiVBdh8v+6Qe+pZ8aSzE2WRLvQG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721692847; c=relaxed/simple;
-	bh=/Yko/ql4N1fsMBhF0kzrRIWWl1hlSzvU9/LkCUbe200=;
+	s=arc-20240116; t=1721692848; c=relaxed/simple;
+	bh=CgPjykVemZ/5skHMKNcua/H1ONOlYFTk99alXXnFkMs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WXFf3lpB/+vWXMr4DwRDcs3/PERUTXAnvqgZNteLcsoLI1aeYXkaqrCHSbEvJbegXC38XJkXgoMUt1XEeogImMWC4ENDeDoT+qLQ6XoUBduNywTuOwKVYJNWWUwbwshLzR6PMmkEbYoqvR/t7QsNurJopVhW76rrhed6f+j9kr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=1ZHaCGSZ; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=t8UvI4wPSL5FiCedwq0U6RisnbSKAyAUwamLaZLHisWYvvXvwFYFzT70LsnQJ+SRpDW233XRNoLrCjhh7jXgyOdcMcwvT+QyXcWyXi1Q5TBofr55AoU//em0EBMD2hz+7LkfyNACuyHULmuv+X+5KoWvn6vcaKX5cX5163Ay+AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=1GMvS9tO; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=GhUm3ZKmg75RN+A4QnHjLza+V7z3j21ecH6S3Qm30e4=; b=1ZHaCGSZfC9tKfdGQrLEkRjjTZ
-	zBfOnp34MizI4P6cZsR15ZENGuQSLIzNIVZbB6tip6Sr0oWMpQ2v3qnorcVwzmqu7WUDWO7LyZQZ6
-	KsgeNnnRgZZ/A502bWixIw+8N01N0050o6gIgP6ZQsy9PrJ/hSUVNYiAfNLnhZya8D0MgJmRnObBu
-	OVbc1xw6jICRfXPR5C3r5Q/CEU6rtGakrvOj+oboDwB/tSoF7p7E2lt4Z4nFvCgw1hfyAA7ZLhfMm
-	KAq5Tz4NOjoHFLtTJx5RTsMJV2vk1z/1ezCXIPt27UEIC716fwfzdymRcU9l5DVrwiI/RqQUabO1/
-	rxc6mdmw==;
+	bh=nUUOIzjvV4cpdMPwuKFToo02eWAKgxtg3olcW5f500M=; b=1GMvS9tO7jxIqyH2Y3Hn9v9C5J
+	fgZ95eu5alfrm7kkSdUzABPgDAJhLMvEXQ/fR2lwSe6aUzoedXK5/VQYhfmmt3HmL3uw3SB/E7/iE
+	UW3gYznxfcCedpm3iezOO0ITiv2r4ZYSFrvLK/P++V6WF14wmr6UHUZoP2OgKoo92GJZHU/WX8GI6
+	asJ+jQdlhMbifp+iBU8EW8NwtFO4NmjMgpth1ntq94XOofIlxKlOYs5KEPrCQcR6MVQ1sXDzB0bSk
+	GQHMPqQpdvjEK7IYhimU8T1In/ji8Acx/NKpXrtfEGW3Ims0FWaqEH469e++Rte3vBNkG/Ll0IOrM
+	cJx/8n4Q==;
 Received: from [64.141.80.140] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sW2xR-0000000Aums-0zmu;
-	Tue, 23 Jul 2024 00:00:45 +0000
+	id 1sW2xR-0000000Aumy-3l8x;
+	Tue, 23 Jul 2024 00:00:46 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Zorro Lang <zlang@kernel.org>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	fstests@vger.kernel.org,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 3/4] xfs/432: use _scratch_mkfs_xfs
-Date: Mon, 22 Jul 2024 17:00:34 -0700
-Message-ID: <20240723000042.240981-4-hch@lst.de>
+Subject: [PATCH 4/4] xfs/516: use _scratch_mkfs_xfs
+Date: Mon, 22 Jul 2024 17:00:35 -0700
+Message-ID: <20240723000042.240981-5-hch@lst.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240723000042.240981-1-hch@lst.de>
 References: <20240723000042.240981-1-hch@lst.de>
@@ -70,22 +70,40 @@ for unsupported option combinations.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- tests/xfs/432 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tests/xfs/516 | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tests/xfs/432 b/tests/xfs/432
-index 0e531e963..52aeecf2b 100755
---- a/tests/xfs/432
-+++ b/tests/xfs/432
-@@ -52,7 +52,7 @@ echo "Format and mount"
- # dablock.  33 dirblocks * 64k mean that we can expand a directory by
- # 2112k before we have to allocate another da btree block.
+diff --git a/tests/xfs/516 b/tests/xfs/516
+index e52779cf3..882ba48e8 100755
+--- a/tests/xfs/516
++++ b/tests/xfs/516
+@@ -72,7 +72,7 @@ __test_mount_opts()
+ test_sunit_opts()
+ {
+ 	echo "Format with 4k stripe unit; 1x stripe width" >> $seqres.full
+-	_scratch_mkfs -b size=4k -d sunit=8,swidth=8 >> $seqres.full 2>&1
++	_scratch_mkfs_xfs -b size=4k -d sunit=8,swidth=8 >> $seqres.full 2>&1
  
--_scratch_mkfs -b size=1k -n size=64k > "$seqres.full" 2>&1
-+_scratch_mkfs_xfs -b size=1k -n size=64k > "$seqres.full" 2>&1
- _scratch_mount >> "$seqres.full" 2>&1
+ 	__test_mount_opts "$@"
+ }
+@@ -82,7 +82,7 @@ test_su_opts()
+ 	local mounted=0
  
- testdir="$SCRATCH_MNT/test-$seq"
+ 	echo "Format with 256k stripe unit; 4x stripe width" >> $seqres.full
+-	_scratch_mkfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
++	_scratch_mkfs_xfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
+ 
+ 	__test_mount_opts "$@"
+ }
+@@ -92,7 +92,7 @@ test_repair_detection()
+ 	local mounted=0
+ 
+ 	echo "Format with 256k stripe unit; 4x stripe width" >> $seqres.full
+-	_scratch_mkfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
++	_scratch_mkfs_xfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
+ 
+ 	# Try to mount the fs with our test options.
+ 	_try_scratch_mount >> $seqres.full 2>&1 && mounted=1
 -- 
 2.43.0
 
