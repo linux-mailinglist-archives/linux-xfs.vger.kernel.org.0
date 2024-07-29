@@ -1,64 +1,102 @@
-Return-Path: <linux-xfs+bounces-10851-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10849-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E33EF93F835
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2024 16:36:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7542E93F771
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2024 16:20:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3ED62835B7
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2024 14:36:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 196C21F227C5
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Jul 2024 14:20:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C32DA18754D;
-	Mon, 29 Jul 2024 14:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12D7153838;
+	Mon, 29 Jul 2024 14:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xj1JwYL/"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E03C155382;
-	Mon, 29 Jul 2024 14:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BC21E4A2;
+	Mon, 29 Jul 2024 14:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722263237; cv=none; b=CzNsLdTh1sVRDqfQYEKrhJrIGVtOoFK9zDHxqlYunn9L1qu4Q5w3oqm4RfFIQyVDQ0UGuQWJfGeEl7FkuQogNYWXaLXyQniIIAE9xWAMUI434c9uuvl8XYFq6lig7SR0yHMPtWM/8/RGYuN2+cjkIhM2cMOlZoXt6l46BXl02Cs=
+	t=1722262829; cv=none; b=Gu6dSB5EblyYEPmCEE26IaQQ6DF6camCsE0bruq4TJEEfvP/xd8bVGvk69Q92BP1B4Cn+KqBRCbri2k+mHSLv/fEc0Ks032p0oVnd2Q8kgg6KOSEaVeGkooM/VFjXf/Lml8Vn30Do/W/819thcWo4dBzqS7RelhMdFkmkg7k+Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722263237; c=relaxed/simple;
-	bh=F5zQH4vukkVnbsCzOW+qqmN7RCwJ8bdVBNj5kk31YdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S8n5c+ZeXLgONRivHmRA0BCdadGbCJXXvU4Rm7Fx5eE7tdMSMq/rQZBXQWQQ8w/z6A3aMd3RpA4zDCL1WVvCZnMqri6O6ZhHqGBHQ9AY+E3+skG01ihxgO7plYqnFew4dwIu1KlvoYEG8CDvIlKeTXGEmFVlroACpbOolnFFo5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+	s=arc-20240116; t=1722262829; c=relaxed/simple;
+	bh=s3KPtMyfDHTQx4hSXpmLY0LZKHCfrkDAnOouDtljBTs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VwGP+eE3os5J7gNoK2XM94gkhzgjzKsBizjsCNoH0c8ru2sgRYxUcgERvT4c3eMZicWtzkailkiuq1UV0YdBnqG3TF6ZCpvfCKHwUyzCMsFSNU5Kp4gFhs+SNeq7gatuF07iWxJqA0fNW5WixORVzFhN6He8jlfI2ito1CyKNfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xj1JwYL/; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 9E99D68D07; Mon, 29 Jul 2024 16:17:31 +0200 (CEST)
-Date: Mon, 29 Jul 2024 16:17:31 +0200
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=RCTs1ZUJhgxFYl+QLJ2yGZxAvgUX3GFd+e0yDZfbn7o=; b=Xj1JwYL/LVFqiruNfKbTk5f5VH
+	F/Fc7BSEIdK9D7FVi0iE+jO0UQ/3gHyol3LC1kITuKeBWqmlGEEkzjBpyF2Fz6wNN6mMAQbM78tma
+	19aUtpTTjRgOkuVCK+oNtP88k0E6h2enE0B7HTKyUi2lYfpaxsVj6H7tzO2c/es/r5qtSEZtOYYsT
+	eN4JwLsgz4rbzlNqYVuHTg9hUvKCJ5wN9z0Zi3i+QiFUSWqESFreG/KE7iPDUULHVuOsRd2y99bJk
+	dvEoTNiudFAQe1tUFQiBx5/m0l0Wpi9PEC7n+RiPC3bGEu4ztMvpEOL+UI1i+9vsN7teOvflxPViH
+	9TI+Ylkg==;
+Received: from [4.28.11.157] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sYREh-0000000BXXh-47ea;
+	Mon, 29 Jul 2024 14:20:28 +0000
 From: Christoph Hellwig <hch@lst.de>
-To: Zorro Lang <zlang@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>, Zorro Lang <zlang@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>, fstests@vger.kernel.org,
+To: zlang@kernel.org
+Cc: djwong@kernel.org,
+	fstests@vger.kernel.org,
 	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/4] common: _notrun if _scratch_mkfs_xfs failed
-Message-ID: <20240729141731.GA28016@lst.de>
-References: <20240723000042.240981-1-hch@lst.de> <20240723000042.240981-3-hch@lst.de> <20240728145408.mu2hmmqmzxb2amrd@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+Subject: [PATCH 1/2] add more tests to the growfs group
+Date: Mon, 29 Jul 2024 07:20:26 -0700
+Message-ID: <20240729142027.430744-1-hch@lst.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240728145408.mu2hmmqmzxb2amrd@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Sun, Jul 28, 2024 at 10:54:08PM +0800, Zorro Lang wrote:
-> But this line blocks the merging process. I can't find "_scratch_xfs_force_no_metadir"
-> in xfs/178, and even the whole xfstests. Could you help to rebase this patchset on
-> offical xfstests for-next branch, then send it again? This patch is too big, It's hard
-> for me to merge it manually ( I'm glad to know if there's an easy way to deal with this
-> conflict manually :)
+xfs/127 xfs/233 exercises growfs behavior, add them to the growfs group.
 
-Sorry, I've been working off Darrick's queue to include the rt
-improvements once again.  I'll rebase it to your latest tree.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ tests/xfs/127 | 2 +-
+ tests/xfs/233 | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tests/xfs/127 b/tests/xfs/127
+index b690ab0d5..4f008efdb 100755
+--- a/tests/xfs/127
++++ b/tests/xfs/127
+@@ -7,7 +7,7 @@
+ # Tests xfs_growfs on a reflinked filesystem
+ #
+ . ./common/preamble
+-_begin_fstest auto quick clone
++_begin_fstest auto quick clone growfs
+ 
+ # Import common functions.
+ . ./common/filter
+diff --git a/tests/xfs/233 b/tests/xfs/233
+index 1f691e20f..5d2c10e7d 100755
+--- a/tests/xfs/233
++++ b/tests/xfs/233
+@@ -7,7 +7,7 @@
+ # Tests xfs_growfs on a rmapbt filesystem
+ #
+ . ./common/preamble
+-_begin_fstest auto quick rmap
++_begin_fstest auto quick rmap growfs
+ 
+ # Import common functions.
+ . ./common/filter
+-- 
+2.43.0
 
 
