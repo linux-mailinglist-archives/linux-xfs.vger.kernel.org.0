@@ -1,52 +1,53 @@
-Return-Path: <linux-xfs+bounces-10917-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-10918-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7EC494025A
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2024 02:32:00 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A1FC94025E
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2024 02:32:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEC7F1C227EE
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2024 00:31:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 623B8B220A6
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Jul 2024 00:32:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF2704A28;
-	Tue, 30 Jul 2024 00:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B4C48F6A;
+	Tue, 30 Jul 2024 00:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lT1K4y5k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ksoBP7mK"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA194A11
-	for <linux-xfs@vger.kernel.org>; Tue, 30 Jul 2024 00:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D90C8C1F
+	for <linux-xfs@vger.kernel.org>; Tue, 30 Jul 2024 00:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722299465; cv=none; b=DBHquw4I7VesGihzxrFlt0eggkdGixjh1CC3lDwD7sxyb0/KJppyY3bvofGrOHTDok1MgfGRUY8hu9dSqDIPIJEC82lluGHKTSTmEttH0z94huzwLT1iQiwS3eBSR6d3PJScOnRtAwSYoOPvUvAKP6mtFYVpBVfsqv2x8P6ZgWk=
+	t=1722299481; cv=none; b=KMv/888kgVQYeNjqMXqdzEnJJJpU6DllczXN9knHzbicUiAXBve7O0qCiu8B4A23da7bAAkjlq5VTV30WMZuYVIJoKPgvPxx0pbMdoKyiP+hq5lzXT6f6o0Wrc1BPvv5csCm92I9mQQFqqJ/OckinkUjrQY0mCsX2ksf+Bl348A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722299465; c=relaxed/simple;
-	bh=yoV+PaP3B4jPyUMnVMu8AfI0bewOWJOcuoG55CGezys=;
+	s=arc-20240116; t=1722299481; c=relaxed/simple;
+	bh=39IakTWi3zCEICDb52Uoee0r66UA2LI5mhjfhQ8T9RY=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=srA9VFx07XKyWarIuvqov5NemXTydwjMBmwzcKMm2yHlFxCErx/gWXqhjwgBOoPrYu3teYNu/CBaYPeXrvEJLNxNkovU79ve0O8z4pHgbjd91ctBSSKngPCoIQ5ZNGHkOwuEl+U23xVf9FhS2SKuj/2KFfpAEkAxmVDdDVFr++0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lT1K4y5k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B35C32786;
-	Tue, 30 Jul 2024 00:31:05 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Z+Imue81GNf64FIhiEpLzMAgfNiRr4ScOwaqZOrDKCe83iGa6Zlp6XRIkIe7Mrtttybxac5YtXOLiz1kSK4ogKscyBQSKskLHIf3FLJZU7wxLnc48+v9SxU1fTzlqS16gh1KNgsRR+1Syv3yPUrAL/QNpd3wEc+8cqnHvILKrkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ksoBP7mK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9329C4AF07;
+	Tue, 30 Jul 2024 00:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722299465;
-	bh=yoV+PaP3B4jPyUMnVMu8AfI0bewOWJOcuoG55CGezys=;
+	s=k20201202; t=1722299480;
+	bh=39IakTWi3zCEICDb52Uoee0r66UA2LI5mhjfhQ8T9RY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=lT1K4y5kLUyGwQISE5On8rO2Z2hV3enzAOI08pmzEqxgyGIBQscXHkpKOtTzQauS4
-	 3hjKJEVWzQWvCLNT+I3RpJfsL3kV9HCxZhHr+QNpYTM6bSy5TrDjA0Sh3XTpuAcr8u
-	 ie4w37gEfxWzNlHd6Xk8Ipc9sO+ZSF/2TZ3ILLonJZ7vFksU3SMo5jY1peEMBSoWd8
-	 HzBM2PHCpQ3nCGxBbk/9Pygxw/PcMeXEf3jtF0y3pUTMM6X/HPM3OmVTFiaQGVuNLL
-	 zhOQDGb5wgBcsPHpNc0FYmJx16flAK/pJHUDOSsELc9753VqwGJ6C8VtkO5jNSh7v/
-	 IcZxJsLw7Pf8g==
-Date: Mon, 29 Jul 2024 17:31:04 -0700
-Subject: [PATCH 028/115] xfs: try to avoid allocating from sick inode clusters
+	b=ksoBP7mKcI1ghOxk7hXOUt1//OKpxk6V/ap/CS84CQW/9vtj+7485nfbB+HY/V8Vc
+	 WdF0vGSl/hsrzFfSqA0lKK+lrEd19PTiV4fmK9bLncNy2rhUKyLeZrXnkZPd0aKvfb
+	 CagXRwXPn8lJ+0a+DjvAHgbx78676zmIE2uSmjIz4Iz9GLxk2+tuxl38vdyiIcANci
+	 5xk+dUkHQraEVw0wtcmwCJgnxnEC80+0/TOZkLKn8sHtjyNxU7lSpwCTWqbI54qkHO
+	 g6eGTUXIflR0lOJHzg4gqFHlNK0w9J0/wmNOC+/Cs/I9ekqI3QRPmDrHRmDoM1nPc+
+	 u0rKja3d2T4uA==
+Date: Mon, 29 Jul 2024 17:31:20 -0700
+Subject: [PATCH 029/115] xfs: pin inodes that would otherwise overflow link
+ count
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, cem@kernel.org
 Cc: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Message-ID: <172229842838.1338752.15052750263469564877.stgit@frogsfrogsfrogs>
+Message-ID: <172229842852.1338752.10880318687395849229.stgit@frogsfrogsfrogs>
 In-Reply-To: <172229842329.1338752.683513668861748171.stgit@frogsfrogsfrogs>
 References: <172229842329.1338752.683513668861748171.stgit@frogsfrogsfrogs>
 User-Agent: StGit/0.19
@@ -61,113 +62,45 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Source kernel commit: 2935213a6831a0087442d406301c2cdcc87b0f61
+Source kernel commit: 5f204051d998ec3d7306db0d749bddcbf4c97693
 
-I noticed that xfs/413 and xfs/375 occasionally failed while fuzzing
-core.mode of an inode.  The root cause of these problems is that the
-field we fuzzed (core.mode or core.magic, typically) causes the entire
-inode cluster buffer verification to fail, which affects several inodes
-at once.  The repair process tries to create either a /lost+found or a
-temporary repair file, but regrettably it picks the same inode cluster
-that we just corrupted, with the result that repair triggers the demise
-of the filesystem.
+The VFS inc_nlink function does not explicitly check for integer
+overflows in the i_nlink field.  Instead, it checks the link count
+against s_max_links in the vfs_{link,create,rename} functions.  XFS
+sets the maximum link count to 2.1 billion, so integer overflows should
+not be a problem.
 
-Try avoid this by making the inode allocation path detect when the perag
-health status indicates that someone has found bad inode cluster
-buffers, and try to read the inode cluster buffer.  If the cluster
-buffer fails the verifiers, try another AG.  This isn't foolproof and
-can result in premature ENOSPC, but that might be better than shutting
-down.
+However.  It's possible that online repair could find that a file has
+more than four billion links, particularly if the link count got
+corrupted while creating hardlinks to the file.  The di_nlinkv2 field is
+not large enough to store a value larger than 2^32, so we ought to
+define a magic pin value of ~0U which means that the inode never gets
+deleted.  This will prevent a UAF error if the repair finds this
+situation and users begin deleting links to the file.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- libxfs/util.c       |    6 ++++++
- libxfs/xfs_ialloc.c |   40 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 46 insertions(+)
+ libxfs/xfs_format.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
 
-diff --git a/libxfs/util.c b/libxfs/util.c
-index 841f4b963..2656c99a8 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -732,6 +732,12 @@ void xfs_fs_mark_sick(struct xfs_mount *mp, unsigned int mask) { }
- void xfs_agno_mark_sick(struct xfs_mount *mp, xfs_agnumber_t agno,
- 		unsigned int mask) { }
- void xfs_ag_mark_sick(struct xfs_perag *pag, unsigned int mask) { }
-+void xfs_ag_measure_sickness(struct xfs_perag *pag, unsigned int *sick,
-+		unsigned int *checked)
-+{
-+	*sick = 0;
-+	*checked = 0;
-+}
- void xfs_bmap_mark_sick(struct xfs_inode *ip, int whichfork) { }
- void xfs_btree_mark_sick(struct xfs_btree_cur *cur) { }
- void xfs_dirattr_mark_sick(struct xfs_inode *ip, int whichfork) { }
-diff --git a/libxfs/xfs_ialloc.c b/libxfs/xfs_ialloc.c
-index 992b8348a..d8697561e 100644
---- a/libxfs/xfs_ialloc.c
-+++ b/libxfs/xfs_ialloc.c
-@@ -1052,6 +1052,33 @@ xfs_inobt_first_free_inode(
- 	return xfs_lowbit64(realfree);
- }
+diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
+index 10153ce11..f1818c54a 100644
+--- a/libxfs/xfs_format.h
++++ b/libxfs/xfs_format.h
+@@ -899,6 +899,12 @@ static inline uint xfs_dinode_size(int version)
+  */
+ #define	XFS_MAXLINK		((1U << 31) - 1U)
  
 +/*
-+ * If this AG has corrupt inodes, check if allocating this inode would fail
-+ * with corruption errors.  Returns 0 if we're clear, or EAGAIN to try again
-+ * somewhere else.
++ * Any file that hits the maximum ondisk link count should be pinned to avoid
++ * a use-after-free situation.
 + */
-+static int
-+xfs_dialloc_check_ino(
-+	struct xfs_perag	*pag,
-+	struct xfs_trans	*tp,
-+	xfs_ino_t		ino)
-+{
-+	struct xfs_imap		imap;
-+	struct xfs_buf		*bp;
-+	int			error;
-+
-+	error = xfs_imap(pag, tp, ino, &imap, 0);
-+	if (error)
-+		return -EAGAIN;
-+
-+	error = xfs_imap_to_bp(pag->pag_mount, tp, &imap, &bp);
-+	if (error)
-+		return -EAGAIN;
-+
-+	xfs_trans_brelse(tp, bp);
-+	return 0;
-+}
++#define	XFS_NLINK_PINNED	(~0U)
 +
  /*
-  * Allocate an inode using the inobt-only algorithm.
-  */
-@@ -1304,6 +1331,13 @@ xfs_dialloc_ag_inobt(
- 	ASSERT((XFS_AGINO_TO_OFFSET(mp, rec.ir_startino) %
- 				   XFS_INODES_PER_CHUNK) == 0);
- 	ino = XFS_AGINO_TO_INO(mp, pag->pag_agno, rec.ir_startino + offset);
-+
-+	if (xfs_ag_has_sickness(pag, XFS_SICK_AG_INODES)) {
-+		error = xfs_dialloc_check_ino(pag, tp, ino);
-+		if (error)
-+			goto error0;
-+	}
-+
- 	rec.ir_free &= ~XFS_INOBT_MASK(offset);
- 	rec.ir_freecount--;
- 	error = xfs_inobt_update(cur, &rec);
-@@ -1579,6 +1613,12 @@ xfs_dialloc_ag(
- 				   XFS_INODES_PER_CHUNK) == 0);
- 	ino = XFS_AGINO_TO_INO(mp, pag->pag_agno, rec.ir_startino + offset);
- 
-+	if (xfs_ag_has_sickness(pag, XFS_SICK_AG_INODES)) {
-+		error = xfs_dialloc_check_ino(pag, tp, ino);
-+		if (error)
-+			goto error_cur;
-+	}
-+
- 	/*
- 	 * Modify or remove the finobt record.
- 	 */
+  * Values for di_format
+  *
 
 
