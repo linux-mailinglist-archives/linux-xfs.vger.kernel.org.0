@@ -1,137 +1,129 @@
-Return-Path: <linux-xfs+bounces-11226-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11233-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB1C19425C4
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 07:33:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5BF942A25
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 11:18:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2065A1C23591
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 05:33:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 496A31F2561C
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 09:18:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001542E403;
-	Wed, 31 Jul 2024 05:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMTlpjo5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 580181AE867;
+	Wed, 31 Jul 2024 09:16:41 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7451AA3EE;
-	Wed, 31 Jul 2024 05:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB911AC430;
+	Wed, 31 Jul 2024 09:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722404022; cv=none; b=j2C2oiYth0IihSAeHLvC5YQ/0PxZrALcOtMBfufR1tKB6a33DcGhbuEzyXTtCOM9gFHWHI6S0LZikjcwk1q90Xt31YWE9LwhsFBgOodJci+RhB9JIhM4gP9BWUP0G2EIvUWAnbKDX6xxWRF5YLGcRsTcVELtrVnuPQpYfgUFnh8=
+	t=1722417401; cv=none; b=hOqiCfAVoK+k1zKE47GPdCx/cuowwb6gs4dk+PgJ+HLUUqoXVxVaoih1NPA1fSTPBBv+Iptohr7q6CdL8ajHKpALQ9M+/i2EZs21Rx9HCeQO90feU/0EwQnics4Nn/KsACkelDHWM6G+3AVFAf8zAghtCELEFWdrF7bzrQSd/DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722404022; c=relaxed/simple;
-	bh=cIplJEtc1yp2C456R0mbwx1P4JkE7YIn1wl1j8Zp9P4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSc4Zp69kwXOVanQALSP+jWC4w0N+Wnm9PhnZpfwjQ6O+r5v+C834Ng3OgtxuTbqsJwSbWvlpWy1XImUnjq7hqxFsbGhyo9da12MmeaeergW0dtbDdu2BWw0L0ew+mlU0CjZeeG+TbAtueTL2vfTjTacrrGZTTXilXVw/ZLuAqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMTlpjo5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D2D7C116B1;
-	Wed, 31 Jul 2024 05:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722404022;
-	bh=cIplJEtc1yp2C456R0mbwx1P4JkE7YIn1wl1j8Zp9P4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DMTlpjo5g8eU1fdLX5KpER+hevXoRzUV2mOPY+eMW2xpaoXs/8S9MrI2Iathlid30
-	 ExvyF82GvFWt4S2Zp0NA8wQrL7C+U2V3pJgHKhfmfi9sCENu5yAXNxkTt5QT/THveO
-	 ADemdMoMOSybDx4pIwbVLGYKq3x4YrKkyY/tLDjRyGE3yEljVEBlhoafOk87pEzQG9
-	 K7PJtk3hBHhrru46h3tJvZ247bZ2cMqy58QWY7BgF+g7Sa7CUpJ70kQPVAu8/oOj4G
-	 UeuDVUtZton4JhkShnoRTujPTH4Qc+PQDvjBwPYedLMLmgoztcO+1M6tzqwC5ne16m
-	 lhWel/6nj6ezA==
-Date: Tue, 30 Jul 2024 22:33:41 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Chandan Babu R <chandanbabu@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	xfs <linux-xfs@vger.kernel.org>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>, x86@kernel.org,
-	tglx@linutronix.de
-Subject: Re: Are jump labels broken on 6.11-rc1?
-Message-ID: <20240731053341.GQ6352@frogsfrogsfrogs>
-References: <20240730033849.GH6352@frogsfrogsfrogs>
- <87o76f9vpj.fsf@debian-BULLSEYE-live-builder-AMD64>
- <20240730132626.GV26599@noisy.programming.kicks-ass.net>
- <20240731001950.GN6352@frogsfrogsfrogs>
- <20240731031033.GP6352@frogsfrogsfrogs>
+	s=arc-20240116; t=1722417401; c=relaxed/simple;
+	bh=dm4ngLb4nwvWfzDAaiHuPLMqupt+/B3kjkBU6nZ+3lo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XC3ppSE/zxX3f2tmKvbDaqPb4FCSrGRUckfU01dLptMXv6w/43MZtwHst2ml/hXBQAXUSPwjAn3GEJYqIojao7hjLZsQxgr7GYY2AEBLt/T7et+4tMu/HY49CW64GA25qNkqOoVsOaTEV0e3LY6S5UmIw9RZA2nV1xEmGS5bIHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WYmg74sK6z4f3jrx;
+	Wed, 31 Jul 2024 17:16:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 934271A0C12;
+	Wed, 31 Jul 2024 17:16:32 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgB37ILpAKpmm6FzAQ--.49647S4;
+	Wed, 31 Jul 2024 17:16:32 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH 0/6] iomap: some minor non-critical fixes and improvements when block size < folio size
+Date: Wed, 31 Jul 2024 17:12:59 +0800
+Message-Id: <20240731091305.2896873-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240731031033.GP6352@frogsfrogsfrogs>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB37ILpAKpmm6FzAQ--.49647S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cr13WF18KFy5Xr4fuFyrtFb_yoW8WrW7pF
+	W3Kr98Gr1DJr1ayF93WayUXrnYy34rKF45J34fGwn2vFnxCF1xXF10ga95ua40yryfCr4F
+	qr1jgFy7Wr4DC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfU5dgADUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Tue, Jul 30, 2024 at 08:10:33PM -0700, Darrick J. Wong wrote:
-> On Tue, Jul 30, 2024 at 05:19:50PM -0700, Darrick J. Wong wrote:
-> > On Tue, Jul 30, 2024 at 03:26:26PM +0200, Peter Zijlstra wrote:
-> > > On Tue, Jul 30, 2024 at 01:00:02PM +0530, Chandan Babu R wrote:
-> > > > On Mon, Jul 29, 2024 at 08:38:49 PM -0700, Darrick J. Wong wrote:
-> > > > > Hi everyone,
-> > > > >
-> > > > > I got the following splat on 6.11-rc1 when I tried to QA xfs online
-> > > > > fsck.  Does this ring a bell for anyone?  I'll try bisecting in the
-> > > > > morning to see if I can find the culprit.
-> > > > 
-> > > > xfs/566 on v6.11-rc1 would consistently cause the oops mentioned below.
-> > > > However, I was able to get xfs/566 to successfully execute for five times on a
-> > > > v6.11-rc1 kernel with the following commits reverted,
-> > > > 
-> > > > 83ab38ef0a0b2407d43af9575bb32333fdd74fb2
-> > > > 695ef796467ed228b60f1915995e390aea3d85c6
-> > > > 9bc2ff871f00437ad2f10c1eceff51aaa72b478f
-> > > > 
-> > > > Reinstating commit 83ab38ef0a0b2407d43af9575bb32333fdd74fb2 causes the kernel
-> > > > to oops once again.
-> > > 
-> > > Durr, does this help?
-> > 
-> > Yes, it does!  After ~8, a full fstests run completes without incident.
-> > 
-> > (vs. before where it would blow up within 2 minutes)
-> > 
-> > Thanks for the fix; you can add
-> > Tested-by: Darrick J. Wong <djwong@kernel.org>
-> 
-> Ofc as soon as this I push it to the whole fleet then things start
-> failing again. :(
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Sooooo... it turns out that somehow your patch got mismerged on the
-first go-round, and that worked.  The second time, there was no
-mismerge, which mean that the wrong atomic_cmpxchg() callsite was
-tested.
+This series contains some minor non-critical fixes and performance
+improvements on the filesystem with block size < folio size.
 
-Looking back at the mismerge, it actually changed
-__static_key_slow_dec_cpuslocked, which had in 6.10:
+The first 4 patches fix the handling of setting and clearing folio ifs
+dirty bits when mark the folio dirty and when invalidat the folio.
+Although none of these code mistakes caused a real problem now, it's
+still deserve a fix to correct the behavior.
 
-	if (atomic_dec_and_test(&key->enabled))
-		jump_label_update(key);
+The second 2 patches drop the unnecessary state_lock in ifs when setting
+and clearing dirty/uptodate bits in the buffered write path, it could
+improve some (~10% on my machine) buffer write performance. I tested it
+through UnixBench on my x86_64 (Xeon Gold 6151) and arm64 (Kunpeng-920)
+virtual machine with 50GB ramdisk and xfs filesystem, the results shows
+below.
 
-Decrement, then return true if the value was set to zero.  With the 6.11
-code, it looks like we want to exchange a 1 with a 0, and act only if
-the previous value had been 1.
+UnixBench test cmd:
+ ./Run -i 1 -c 1 fstime-w
 
-So perhaps we really want this change?  I'll send it out to the fleet
-and we'll see what it reports tomorrow morning.
+Before:
+x86    File Write 1024 bufsize 2000 maxblocks       524708.0 KBps
+arm64  File Write 1024 bufsize 2000 maxblocks       801965.0 KBps
 
---D
+After:
+x86    File Write 1024 bufsize 2000 maxblocks       571315.0 KBps
+arm64  File Write 1024 bufsize 2000 maxblocks       876077.0 KBps
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index 4ad5ed8adf96..5f80c128e90e 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -289,7 +289,7 @@ static void __static_key_slow_dec_cpuslocked(struct static_key *key)
- 		return;
- 
- 	guard(mutex)(&jump_label_mutex);
--	if (atomic_cmpxchg(&key->enabled, 1, 0))
-+	if (atomic_cmpxchg(&key->enabled, 1, 0) == 1)
- 		jump_label_update(key);
- 	else
- 		WARN_ON_ONCE(!static_key_slow_try_dec(key));
+Thanks,
+Yi.
+
+Zhang Yi (6):
+  iomap: correct the range of a partial dirty clear
+  iomap: support invalidating partial folios
+  iomap: advance the ifs allocation if we have more than one blocks per
+    folio
+  iomap: correct the dirty length in page mkwrite
+  iomap: drop unnecessary state_lock when setting ifs uptodate bits
+  iomap: drop unnecessary state_lock when changing ifs dirty bits
+
+ fs/iomap/buffered-io.c | 55 ++++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 21 deletions(-)
+
+-- 
+2.39.2
+
 
