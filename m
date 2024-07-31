@@ -1,133 +1,153 @@
-Return-Path: <linux-xfs+bounces-11232-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11234-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFC22942A24
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 11:18:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20C7D942C9C
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 12:56:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9731E1F22C11
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 09:18:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 53C761C20F49
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Jul 2024 10:56:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F48E1AE84A;
-	Wed, 31 Jul 2024 09:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C5F31AC441;
+	Wed, 31 Jul 2024 10:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h+CM5vcR"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35181AC43F;
-	Wed, 31 Jul 2024 09:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CF11AC42F;
+	Wed, 31 Jul 2024 10:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722417400; cv=none; b=tOmk8ig7ILq3RwDpW4FDykU2iAms1eKO0GfqnV05maUf7fnBvoT9KEYk7pz+1cs7wUp8Veo6THkggfaWp1+K8G2u5EB4bC/BgBfClsO8tfhKJfHcpSxLJ8+B/KYyFi/USR2XmuJgs6JtkzBs4IVjRfGI/VJBPBK2Z+SeeA0IgJY=
+	t=1722423369; cv=none; b=IGwlQHl1sTNeLNsMohra/BcZcEWqqSNjQQQ0YhCed2ceAeuyUi9oF8Reau7zry4/a6FqGvz/qjt+HhRq9TkMfmL0/pLMb64L2A4TqF2eHDAFot5fDP3sqrMEgRreJQm4l7176mS1Y285uUAN8Se4tN2BEPDhSv4bnd2fzMGIGSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722417400; c=relaxed/simple;
-	bh=t7fdWK/Ay9juS5kXI8eBeWil8SHXhzTLA3CH4pADQ+Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ToimN412HZKOx0lWBtcFpOld8Rvm1Gcq7fzLGkMaIVPFy6x782wWecn96SALegETwEhIpX3YYg7aCNQmtdCj5mPbzk+vQEvjkmMnYMgSi4AIXarU+T96YLvZ5uZebAuNmYaedypl2q1Dh6zHSTuqjsB7ld5id5T890VVqbW4IWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WYmgG6h4fz4f3jtD;
-	Wed, 31 Jul 2024 17:16:26 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 948A81A018D;
-	Wed, 31 Jul 2024 17:16:35 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgB37ILpAKpmm6FzAQ--.49647S10;
-	Wed, 31 Jul 2024 17:16:35 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	djwong@kernel.org,
-	hch@infradead.org,
-	brauner@kernel.org,
-	david@fromorbit.com,
-	jack@suse.cz,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH 6/6] iomap: drop unnecessary state_lock when changing ifs dirty bits
-Date: Wed, 31 Jul 2024 17:13:05 +0800
-Message-Id: <20240731091305.2896873-7-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240731091305.2896873-1-yi.zhang@huaweicloud.com>
-References: <20240731091305.2896873-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1722423369; c=relaxed/simple;
+	bh=HK4h1PFqWgIByDXpPjcpyxuXOnL9guHIjO5eOafVgLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZR9WpnFbQTdpA/SXVNeBUL6YkNRNzOVRvnA+A20a1HEX/sknnFWsfhMw/d2YkOJWAg4x2wB8q2hy6VPeW0Nxjw7XUIaibaERPsXT92JRRRlQsr4ObgBNzSExDdZZcVj1n8F/7lDhr8u9vmTjgQuxVIHjK8IagZgcDsb31asoUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h+CM5vcR; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nxI5JiXjoal3A364js3YMeIq5EhIREJ3YhkGWH1VbfM=; b=h+CM5vcRayI6+QBa/cSQz5xCHm
+	PKDRuI5uMx5uFljH1IemEufmdLO6UdSfXWiFdQVXs6SLgNpGCGL19hmP6JUsSrCBc8EQtNPzyQ8Q7
+	MFljp6bktgPE7ajtZp5PTlOQ6dE/PtUu5V40foFXDAGdvOvNnOlmePIRc8hjMFoh0KSht1LncExKn
+	4zTJU+CkO6ZJ5K9y1mbXXTTZAGm9sIBOzKF8ygGsWnqEhhrKaGxWyFrrhZLFAJJjFDxa4ZboN4dI+
+	qODgfU8wVWP/z4hVNCcqBXNe+7o0U2Rl8VBLK7QgDxApYMuvrFytKTgOeN/xJEIPCZ1spg2mlcZTT
+	P7nJCAZA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sZ6zu-0000000G1C8-2TvP;
+	Wed, 31 Jul 2024 10:55:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A63EB300820; Wed, 31 Jul 2024 12:55:57 +0200 (CEST)
+Date: Wed, 31 Jul 2024 12:55:57 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Chandan Babu R <chandanbabu@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	xfs <linux-xfs@vger.kernel.org>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>, x86@kernel.org,
+	tglx@linutronix.de
+Subject: Re: Are jump labels broken on 6.11-rc1?
+Message-ID: <20240731105557.GY33588@noisy.programming.kicks-ass.net>
+References: <20240730033849.GH6352@frogsfrogsfrogs>
+ <87o76f9vpj.fsf@debian-BULLSEYE-live-builder-AMD64>
+ <20240730132626.GV26599@noisy.programming.kicks-ass.net>
+ <20240731001950.GN6352@frogsfrogsfrogs>
+ <20240731031033.GP6352@frogsfrogsfrogs>
+ <20240731053341.GQ6352@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB37ILpAKpmm6FzAQ--.49647S10
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw13tFyxuF47AF48KrW7urg_yoW8Ar4DpF
-	s3KFs8Kr4DZryDu3yUXFy8XrnYka9Fq3y8ArWxC3sxGa15ZryYgrn7uay3ZrW0gr9xCFnY
-	vrnrGr18GrZ8C3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUma14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsG
-	vfC2KfnxnUUI43ZEXa7VUbb4S7UUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240731053341.GQ6352@frogsfrogsfrogs>
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On Tue, Jul 30, 2024 at 10:33:41PM -0700, Darrick J. Wong wrote:
 
-Hold the state_lock when set and clear ifs dirty bits is unnecessary
-since both paths are protected under folio lock, so it's safe to drop
-the state_lock, which could reduce some unnecessary locking overhead and
-improve the buffer write performance a bit.
+> Sooooo... it turns out that somehow your patch got mismerged on the
+> first go-round, and that worked.  The second time, there was no
+> mismerge, which mean that the wrong atomic_cmpxchg() callsite was
+> tested.
+> 
+> Looking back at the mismerge, it actually changed
+> __static_key_slow_dec_cpuslocked, which had in 6.10:
+> 
+> 	if (atomic_dec_and_test(&key->enabled))
+> 		jump_label_update(key);
+> 
+> Decrement, then return true if the value was set to zero.  With the 6.11
+> code, it looks like we want to exchange a 1 with a 0, and act only if
+> the previous value had been 1.
+> 
+> So perhaps we really want this change?  I'll send it out to the fleet
+> and we'll see what it reports tomorrow morning.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Bah yes, I missed we had it twice. Definitely both sites want this.
+
+I'll tentatively merge the below patch in tip/locking/urgent. I can
+rebase if there is need.
+
 ---
- fs/iomap/buffered-io.c | 9 ---------
- 1 file changed, 9 deletions(-)
+Subject: jump_label: Fix the fix, brown paper bags galore
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Wed Jul 31 12:43:21 CEST 2024
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 248f4a586f8f..22ce6062cfd1 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -137,14 +137,8 @@ static void ifs_clear_range_dirty(struct folio *folio,
- 	unsigned int first_blk = DIV_ROUND_UP(off, i_blocksize(inode));
- 	unsigned int last_blk = (off + len) >> inode->i_blkbits;
- 	unsigned int nr_blks = last_blk - first_blk;
--	unsigned long flags;
- 
--	if (!nr_blks)
--		return;
--
--	spin_lock_irqsave(&ifs->state_lock, flags);
- 	bitmap_clear(ifs->state, first_blk + blks_per_folio, nr_blks);
--	spin_unlock_irqrestore(&ifs->state_lock, flags);
- }
- 
- static void iomap_clear_range_dirty(struct folio *folio, size_t off, size_t len)
-@@ -163,11 +157,8 @@ static void ifs_set_range_dirty(struct folio *folio,
- 	unsigned int first_blk = (off >> inode->i_blkbits);
- 	unsigned int last_blk = (off + len - 1) >> inode->i_blkbits;
- 	unsigned int nr_blks = last_blk - first_blk + 1;
--	unsigned long flags;
- 
--	spin_lock_irqsave(&ifs->state_lock, flags);
- 	bitmap_set(ifs->state, first_blk + blks_per_folio, nr_blks);
--	spin_unlock_irqrestore(&ifs->state_lock, flags);
- }
- 
- static void iomap_set_range_dirty(struct folio *folio, size_t off, size_t len)
--- 
-2.39.2
+Per the example of:
 
+  !atomic_cmpxchg(&key->enabled, 0, 1)
+
+the inverse was written as:
+
+  atomic_cmpxchg(&key->enabled, 1, 0)
+
+except of course, that while !old is only true for old == 0, old is
+true for everything except old == 0.
+
+Fix it to read:
+
+  atomic_cmpxchg(&key->enabled, 1, 0) == 1
+
+such that only the 1->0 transition returns true and goes on to disable
+the keys.
+
+Fixes: 83ab38ef0a0b ("jump_label: Fix concurrency issues in static_key_slow_dec()")
+Reported-by: Darrick J. Wong <djwong@kernel.org>
+Tested-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/jump_label.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -236,7 +236,7 @@ void static_key_disable_cpuslocked(struc
+ 	}
+ 
+ 	jump_label_lock();
+-	if (atomic_cmpxchg(&key->enabled, 1, 0))
++	if (atomic_cmpxchg(&key->enabled, 1, 0) == 1)
+ 		jump_label_update(key);
+ 	jump_label_unlock();
+ }
+@@ -289,7 +289,7 @@ static void __static_key_slow_dec_cpuslo
+ 		return;
+ 
+ 	guard(mutex)(&jump_label_mutex);
+-	if (atomic_cmpxchg(&key->enabled, 1, 0))
++	if (atomic_cmpxchg(&key->enabled, 1, 0) == 1)
+ 		jump_label_update(key);
+ 	else
+ 		WARN_ON_ONCE(!static_key_slow_try_dec(key));
 
