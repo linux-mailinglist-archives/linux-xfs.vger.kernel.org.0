@@ -1,111 +1,80 @@
-Return-Path: <linux-xfs+bounces-11356-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11358-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F1AB94AA39
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 16:35:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 898C894AA3C
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 16:35:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 711ED1C211D3
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 14:35:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CCDF28446A
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 14:35:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2A947D06B;
-	Wed,  7 Aug 2024 14:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A5C67BB06;
+	Wed,  7 Aug 2024 14:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sUoiO4Zj"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pEHF3CuH"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102457A715;
-	Wed,  7 Aug 2024 14:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AFE7BAE7;
+	Wed,  7 Aug 2024 14:35:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723041322; cv=none; b=Jjkrw+rCXiSwRGmPy/zL/EOivYOohT6dV1VwebEnTv9zF+g18/jU7iM5msSvbVVHDrynZ136XQndCMY5g4zwpXBcJyK84IHy0GSWP1n8Mz2tA86e5R95Pr05oEot1Ffw4pHGKAm1fQvUWX3/xLTWjFz6/two8SAibuGZYiEFPeg=
+	t=1723041341; cv=none; b=vBSqasjT27MYGP9qDjlfUGnlg+hJeeZXKnbzsb8QrCo6D2teweGq4+VlA+rHW6ovpWnUfFBdvf4AdNY67B7kAfDmBLwhHk95BVFAA/63cVDHDvNsOKr91WHeDKgn2yIgxaXcY5SrhShCs9bFQRPzjEpZvjfavsHkEePe/y60zyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723041322; c=relaxed/simple;
-	bh=FHJ6/xag9qvXxicDepVYIh6Aztt1te/ArJKTM93RIP0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ceVrRgwMym2lGlvI+Aqkir2jf/WFLLU7LXkfDwcqO4eAzm/A3d/zafHchLCZs21jG0Cgi0P7DSWUNcmm4TwFG2/KI7EVJ/XLZb2TNp6dMbIVypmHKE/njBPqgefrabd7oo6AQxr+RF973nuF8papX+oE2gEiZmKvAi4pVlyHtIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=sUoiO4Zj; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+	s=arc-20240116; t=1723041341; c=relaxed/simple;
+	bh=eJPkIQ/JqO0aJwTuZ/puLdVqa+kag4LisdYO91DFT8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uWFtTF7XqmO6AN9U1YCSRz8ovjLtUe9Kr/YeemQ1RvqnCN7bLMjsNZtDD0b+Y5IRYSaVoxGn7q97ylz6oeU1jQ2o9jLEJJzQzKdlOws5QOPgALZ3IfI1NJ/VqYzzufsvpVkMSIaqyGaDkQLrVZtewiS9Wso9Vs1J3CssyGAY8ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pEHF3CuH; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=vb3Kfi3oTdqYo9QIBdZXhg9mMAE5ky+XFpkyvdybB1U=; b=sUoiO4ZjR8bee8LcFLnwXctRMe
-	RN7je30rAWaOuvGuhg/pY6XMKeeOs59G5GhMcjBARTjCTjyMiD68KXIFECEHSQSEHnzsqWDkAbbLR
-	kMsO/G81OBMnLS/H1FJ1iO1kqUn7Ncda4SyK3XpwxJt9C61sAgwpFOH6tG1HevvT8WaaxBmdHvDQz
-	Urg/Ej/XGch3JKmcPlPlMUhgmUAqzi5CfrjOoeLXIrKgMkxY9ExEcy1nC1j24jrlWMQFwU+X+PXbX
-	1hpcME1OsjujLGqsBN291sgIH2unR8EBUro6QmaAfZ2Gta0Si3oG1acOST3qFAeWPrnEEbyUwTmQu
-	Mpb6Erhg==;
-Received: from [4.28.11.157] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sbhl2-00000005M0c-1UTD;
-	Wed, 07 Aug 2024 14:35:20 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Zorro Lang <zlang@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	fstests@vger.kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: [PATCH 4/4] xfs/516: use _scratch_mkfs_xfs
-Date: Wed,  7 Aug 2024 07:35:10 -0700
-Message-ID: <20240807143519.2900711-5-hch@lst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240807143519.2900711-1-hch@lst.de>
-References: <20240807143519.2900711-1-hch@lst.de>
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=t1UJ4UAfvFS9I+Dz8qWv7LrfW1PcL8xhFJtoVPpb7Kc=; b=pEHF3CuHDL8vuXsIBqLtFXXVA+
+	Fywf0n3zW84mlY6tTK1uzz4Gmp8FY2JiRcEaK/oSKbdpLAMJ5jqdHZhteJaRAx6h/HrBUw0RAdvrR
+	qshSTQHEi/o6l7C08QSRBHZc0YOw3u6mFRMXWpU8wmlg3o2jAJ2CAHYi+uH+lEd9PFBY8QfzRKiay
+	fGEYf6p6SJTH+EaPY8XvV2PAhUDSnd7HO6DiYBvmnxSx8cCpshID0VwkndlqHPKiOra5wS/XKOij/
+	9qTU+VwI0IAKNGOWSJaWKOcMuXLHE13OH5f9RY7VcTe1AYpW5vtcYscTuy4dwF9+WffTPbFOUasyl
+	0/rG25Zw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sbhlL-00000005M5c-2x6v;
+	Wed, 07 Aug 2024 14:35:39 +0000
+Date: Wed, 7 Aug 2024 07:35:39 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Zorro Lang <zlang@redhat.com>, Christoph Hellwig <hch@infradead.org>,
+	fstests <fstests@vger.kernel.org>, xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] xfs: remove all traces of xfs_check
+Message-ID: <ZrOGOz8R8ptGVsbJ@infradead.org>
+References: <20240806225606.GC623922@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240806225606.GC623922@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Use _scratch_mkfs_xfs instead of _scratch_mkfs to get _notrun handling
-for unsupported option combinations.
+On Tue, Aug 06, 2024 at 03:56:06PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> xfsprogs stopped shipping xfs_check (the wrapper script) in May 2014.
+> It's now been over a decade since it went away, and its replacements
+> (xfs_repair and xfs_scrub) now detect a superset of the problems that
+> check can find.
+> 
+> There is no longer any point in invoking xfs_check, so let's remove it
+> from fstests completely.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Darrick J. Wong <djwong@kernel.org>
----
- tests/xfs/516 | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Yes, please!!
 
-diff --git a/tests/xfs/516 b/tests/xfs/516
-index e52779cf3..882ba48e8 100755
---- a/tests/xfs/516
-+++ b/tests/xfs/516
-@@ -72,7 +72,7 @@ __test_mount_opts()
- test_sunit_opts()
- {
- 	echo "Format with 4k stripe unit; 1x stripe width" >> $seqres.full
--	_scratch_mkfs -b size=4k -d sunit=8,swidth=8 >> $seqres.full 2>&1
-+	_scratch_mkfs_xfs -b size=4k -d sunit=8,swidth=8 >> $seqres.full 2>&1
- 
- 	__test_mount_opts "$@"
- }
-@@ -82,7 +82,7 @@ test_su_opts()
- 	local mounted=0
- 
- 	echo "Format with 256k stripe unit; 4x stripe width" >> $seqres.full
--	_scratch_mkfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
-+	_scratch_mkfs_xfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
- 
- 	__test_mount_opts "$@"
- }
-@@ -92,7 +92,7 @@ test_repair_detection()
- 	local mounted=0
- 
- 	echo "Format with 256k stripe unit; 4x stripe width" >> $seqres.full
--	_scratch_mkfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
-+	_scratch_mkfs_xfs -b size=1k -d su=256k,sw=4 >> $seqres.full 2>&1
- 
- 	# Try to mount the fs with our test options.
- 	_try_scratch_mount >> $seqres.full 2>&1 && mounted=1
--- 
-2.43.0
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
