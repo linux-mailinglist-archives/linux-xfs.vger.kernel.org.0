@@ -1,44 +1,45 @@
-Return-Path: <linux-xfs+bounces-11371-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11372-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB4E994ADFA
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 18:24:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB1E094ADD1
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 18:12:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0BE85B25225
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 16:12:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 06B6D1C217D3
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Aug 2024 16:12:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC7FA1386C6;
-	Wed,  7 Aug 2024 16:11:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12C1A136E23;
+	Wed,  7 Aug 2024 16:12:18 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFA4139579;
-	Wed,  7 Aug 2024 16:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC9B12C475;
+	Wed,  7 Aug 2024 16:12:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723047081; cv=none; b=YzjjpiIHyEjmtTe1DSJX1TLrbRbvAxxotINsIEqTZmmPcaTcD4/7moeXBh3RVQu4XqGd405nIhONhtWNi1waaY7oi+jFIDMTztk26IPHBpW1nXZAOsFs8QE122lrEqTthFRtSuwzAmUZA6E7sO5PRiQuXUF1mJV5DAHLpM1kBpE=
+	t=1723047137; cv=none; b=q3KQlPxU8i4Od+4NUmwRm/W3w2X+oH/gisRkBX+MpLd0tiRGTJbCiOJP3fXu7lDgR9utvmjvmzmmz0SapBfKwkgXzksDnsJEB9Nl+LP40fDGFEMa7cgMuQrt3HAgnNqu3BAATU+YGLaHqp38ZnXJxb8GCDAJ2bHK6KD2mqm5G0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723047081; c=relaxed/simple;
+	s=arc-20240116; t=1723047137; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liuBidQHpLDwjJjy8NbKfpdmKJ9KcBSxE0NAzknQFlF+xX9+DLieGEs5BbjOuYFRLTOkQhx981AHzNPw158qYd0IxGjJxzAfM3FfguGf+ht9hyswuz/eSeIWsCpBLWnsEPJxjGXu1/HFWQhLLHP/YXw13lvedCI80D8e0vrPOXU=
+	 Content-Type:Content-Disposition:In-Reply-To; b=jdAcz9czW/97qsOb8irNGte1YYpvl/a5/C6t6mF1xZcNveE30xhjl1LQvx4NDSOHP3xmyfKWrhsXMSa7RijQ6JSWfdcxq4qP59mJgyaTeaK0oNrSgk8TD9HAwcjzmYH2SBpqkFftUZa+s5Txad6T77G5PTj38IMgFEhT/MZGXhs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 46C9D68BFE; Wed,  7 Aug 2024 18:11:17 +0200 (CEST)
-Date: Wed, 7 Aug 2024 18:11:17 +0200
+	id 7CEC168BFE; Wed,  7 Aug 2024 18:12:13 +0200 (CEST)
+Date: Wed, 7 Aug 2024 18:12:13 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: cem@kernel.org, hch@lst.de, dchinner@redhat.com,
 	fstests@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/4] libfrog: define a autofsck filesystem property
-Message-ID: <20240807161117.GD9745@lst.de>
-References: <172296825594.3193344.4163676649578585462.stgit@frogsfrogsfrogs> <172296825613.3193344.6788691411989910358.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 2/4] xfs_scrub: allow sysadmin to control background
+ scrubs
+Message-ID: <20240807161213.GE9745@lst.de>
+References: <172296825594.3193344.4163676649578585462.stgit@frogsfrogsfrogs> <172296825628.3193344.3037756123720880069.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,7 +48,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <172296825613.3193344.6788691411989910358.stgit@frogsfrogsfrogs>
+In-Reply-To: <172296825628.3193344.3037756123720880069.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
