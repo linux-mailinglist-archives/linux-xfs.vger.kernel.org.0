@@ -1,162 +1,273 @@
-Return-Path: <linux-xfs+bounces-11414-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11416-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF80394C159
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 17:29:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9085594C16F
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 17:32:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C54D28939A
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 15:29:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8AEC28A6A0
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 15:32:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB928190664;
-	Thu,  8 Aug 2024 15:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D2BD18FDA7;
+	Thu,  8 Aug 2024 15:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hhcSD/0Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDar5Y7M"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CC6190499
-	for <linux-xfs@vger.kernel.org>; Thu,  8 Aug 2024 15:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0785A18B475;
+	Thu,  8 Aug 2024 15:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723130911; cv=none; b=YJlW/um0hQ1oiS5CFoMt+aL7MfHKBRN1CbK/aLBhdjPqaX+i3+lIvNjnGUl+fl5HiLuzvKxWPolml0dKECqF1K+NNg41y6vIXakTpy6tPSFYgRBe+kRSaYmgts+UCa2S+WrgiwOxqXLcjRaoQKuTAvLMG7ZmZzujPJMhAY/SRc8=
+	t=1723130995; cv=none; b=gUn0b1WR5BXp8rHVjwKEc+HB0bTE9BdbzG9z/7W48HeFjE65Q4qB/tur6yC0zRghlDPeUIshVpUcNN4ivLxrrBtov9OQXMtdy1G3Pypg7ESeD014yPDSkc8VretdOR2yW9QtQrlnPnoqGyVycDrEACZ7cMjuKMciCA+WBNZTbz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723130911; c=relaxed/simple;
-	bh=5+UUpO6S3VmYBhsgLAtVjzH/JvKZ0+Pe4F6dRl0KP74=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaM22BVZ+KzqH+Goalpsi0zmo4nUTI4hrV5tgJH/Y6oPWldByTFyRZrn+BkkUEzaGnzXbyUnxLlOcl5aoA9ZtwBsGYZWM4Xsgbr85oqnDGZASqmvjeGIWshOxsFphuoZHnLMe4UXnn5amMr3nZ9jl71fGWpxHcm0Ue68MwOV3uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hhcSD/0Z; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=V5j5VFzmWrk70fbT2Ja9cUuW3rjTTkYJ4FQrPgYIQjY=; b=hhcSD/0ZICyzdW0uLHG6f6EPVb
-	KDi9EulwySEswPlhFP7B8AtQu6+U+ytwUHNp0FoK7mOGYk6vPpdJMYvlKZzaysdny+/YHDwGpw7j8
-	u0DQv2hMpbtl8z6KFqeufwUZ4jjscsEw/ayu9ljTrf1iL3GUsuS3S/FhkpL3WFDwKavvSOKppWe69
-	WyC0XEWg/bqM/4wWw+ohzY8sHuZbdpxXadGfYNYyccbU7Ly4l16jBZHPchhZZJFKDaS5SfKmKJ4Oz
-	PpN9nBK9REZMh7IBrow0LHE5pnaa0x0DjOpzP0b+CbKMuIUzhmLkGma0phQC9YHJwfHyyxlDHZzPL
-	PihCRsCg==;
-Received: from [4.28.11.157] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sc541-00000008kXW-2XKl;
-	Thu, 08 Aug 2024 15:28:29 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Chandan Babu R <chandan.babu@oracle.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Dave Chinner <dchinner@redhat.com>,
-	linux-xfs@vger.kernel.org
-Subject: [PATCH 9/9] xfs: reclaim speculative preallocations for append only files
-Date: Thu,  8 Aug 2024 08:27:35 -0700
-Message-ID: <20240808152826.3028421-10-hch@lst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240808152826.3028421-1-hch@lst.de>
-References: <20240808152826.3028421-1-hch@lst.de>
+	s=arc-20240116; t=1723130995; c=relaxed/simple;
+	bh=TPX+G8JITxkTTjZNjQof+SWjs40+x2T5lhRri0LekUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bx5D7Pgy4uiL3HyeNjdjIwoWkqobD8qS+Sg1IkWciCnuaUYU6Bh5ySKOTJcQj92kA3S/DBNbmj3q2UTXB5pQt6pxEcJJyRR7VR5zI60u7GCqo2Icth4E4a1sHOEtTTtOsLtWEBA0N66Jx9Hc07LP+LuCimITdhJV28dFYtpanRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDar5Y7M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 253BCC32782;
+	Thu,  8 Aug 2024 15:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723130994;
+	bh=TPX+G8JITxkTTjZNjQof+SWjs40+x2T5lhRri0LekUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jDar5Y7Mq60Dr3Ugx19OHeKVlRRuXkTiEn9QSC31/QMmcIDb6L7BHT+TNMU8L4/xn
+	 9ZzodWWvDlF926yPAZt9d5J572829A+MWmOb6oMvbNCKO1w3eGO8E1tSEUyoJfU9Ph
+	 KJPuZFlOiGauZQnDmS0+gPBw2WSiSQ1CcV9T7vWjSSGQphnA4BZ3iiiQVxt8Gtu5Ry
+	 fBdkazM8qVKtqpcMtMRnt6kpt3dxN3qYJXK1QZ5Mhe7C1g/n5orBcqBl8p8GjX8fqY
+	 jxirHZuVzqpvKpM5Px3ry66Mvhk2gVzmRTFt4zjg/G4hr0kEXsBotdv24jrmYpifYB
+	 5LwqygFVHrdfQ==
+Date: Thu, 8 Aug 2024 17:29:48 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Zizhi Wo <wozizhi@huawei.com>
+Cc: chandan.babu@oracle.com, djwong@kernel.org, dchinner@redhat.com, 
+	osandov@fb.com, john.g.garry@oracle.com, linux-xfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, yangerkun@huawei.com
+Subject: Re: [PATCH V2] xfs: Make the fsmap more precise
+Message-ID: <shrkrnnqecixpkosqk74mcazzrsjepwgv4oh6p3ywnb43x5nmy@6alfseq27vus>
+References: <20240808144759.1330237-1-wozizhi@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240808144759.1330237-1-wozizhi@huawei.com>
 
-The XFS XFS_DIFLAG_APPEND maps to the VFS S_APPEND flag, which forbids
-writes that don't append at the current EOF.
+On Thu, Aug 08, 2024 at 10:47:59PM GMT, Zizhi Wo wrote:
+> In commit 63ef7a35912d ("xfs: fix interval filtering in multi-step fsmap
+> queries"), Darrick has solved a fsmap bug about incorrect filter condition.
+> But I still notice two problems in fsmap:
 
-But the commit originally adding XFS_DIFLAG_APPEND support (commit
-a23321e766d in xfs xfs-import repository) also checked it to skip
-releasing speculative preallocations, which doesn't make any sense.
+What is different between this patch and the V1?
 
-Another commit (dd9f438e3290 in the xfs-import repository) later extended
-that flag to also report these speculation preallocations which should
-not exist in getbmap.
+Carlos
 
-Remove these checks as nothing XFS_DIFLAG_APPEND implies that
-preallocations beyond EOF should exist, but explicitly check for
-XFS_DIFLAG_APPEND in xfs_file_release to bypass the algorithm that
-discard preallocations on the first close as append only files aren't
-expected to be written to only once.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_bmap_util.c | 12 +++++-------
- fs/xfs/xfs_file.c      |  4 ++++
- fs/xfs/xfs_icache.c    |  2 +-
- 3 files changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 9c42cfb62cf2dc..0f1e3289255c2e 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -331,8 +331,7 @@ xfs_getbmap(
- 		}
- 
- 		if (xfs_get_extsz_hint(ip) ||
--		    (ip->i_diflags &
--		     (XFS_DIFLAG_PREALLOC | XFS_DIFLAG_APPEND)))
-+		    (ip->i_diflags & XFS_DIFLAG_PREALLOC))
- 			max_len = mp->m_super->s_maxbytes;
- 		else
- 			max_len = XFS_ISIZE(ip);
-@@ -524,12 +523,11 @@ xfs_can_free_eofblocks(
- 		return false;
- 
- 	/*
--	 * Only free real extents for inodes with persistent preallocations or
--	 * the append-only flag.
-+	 * Do not free real extents in preallocated files unless the file has
-+	 * delalloc blocks and we are forced to remove them.
- 	 */
--	if (ip->i_diflags & (XFS_DIFLAG_PREALLOC | XFS_DIFLAG_APPEND))
--		if (ip->i_delayed_blks == 0)
--			return false;
-+	if ((ip->i_diflags & XFS_DIFLAG_PREALLOC) && !ip->i_delayed_blks)
-+		return false;
- 
- 	/*
- 	 * Do not try to free post-EOF blocks if EOF is beyond the end of the
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index f1593690ba88d2..f244b8e8056f66 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1220,6 +1220,9 @@ xfs_file_release(
- 	 * one file after another without going back to it while keeping the
- 	 * preallocation for files that have recurring open/write/close cycles.
- 	 *
-+	 * This heuristic is skipped for inodes with the append-only flag as
-+	 * that flag is rather pointless for inodes written only once.
-+	 *
- 	 * There is no point in freeing blocks here for open but unlinked files
- 	 * as they will be taken care of by the inactivation path soon.
- 	 *
-@@ -1234,6 +1237,7 @@ xfs_file_release(
- 	 */
- 	if (inode->i_nlink &&
- 	    (file->f_mode & FMODE_WRITE) &&
-+	    !(ip->i_diflags & XFS_DIFLAG_APPEND) &&
- 	    !xfs_iflags_test(ip, XFS_EOFBLOCKS_RELEASED) &&
- 	    xfs_ilock_nowait(ip, XFS_IOLOCK_EXCL)) {
- 		if (xfs_can_free_eofblocks(ip)) {
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index cf629302d48e74..e995e2f6152dbd 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1159,7 +1159,7 @@ xfs_inode_free_eofblocks(
- 	if (xfs_can_free_eofblocks(ip))
- 		return xfs_free_eofblocks(ip);
- 
--	/* inode could be preallocated or append-only */
-+	/* inode could be preallocated */
- 	trace_xfs_inode_free_eofblocks_invalid(ip);
- 	xfs_inode_clear_eofblocks_tag(ip);
- 	return 0;
--- 
-2.43.0
-
+> 
+> [root@fedora ~]# xfs_io -c 'fsmap -vvvv' /mnt
+>  EXT: DEV    BLOCK-RANGE           OWNER              FILE-OFFSET      AG AG-OFFSET             TOTAL
+>    0: 253:32 [0..7]:               static fs metadata                  0  (0..7)                    8
+>    1: 253:32 [8..23]:              per-AG metadata                     0  (8..23)                  16
+>    2: 253:32 [24..39]:             inode btree                         0  (24..39)                 16
+>    ......
+> 
+> Bug 1:
+> [root@fedora ~]# xfs_io -c 'fsmap -vvvv -d 3 7' /mnt
+> [root@fedora ~]#
+> Normally, we should be able to get [3, 7), but we got nothing.
+> 
+> Bug 2:
+> [root@fedora ~]# xfs_io -c 'fsmap -vvvv -d 15 20' /mnt
+>  EXT: DEV    BLOCK-RANGE      OWNER            FILE-OFFSET      AG AG-OFFSET        TOTAL
+>    0: 253:32 [8..23]:         per-AG metadata                   0  (8..23)             16
+> Normally, we should be able to get [15, 20), but we obtained a whole
+> segment of extent.
+> 
+> The first problem is caused by shifting. When the query interval is before
+> the first extent which can be find in btree, no records can meet the
+> requirement. And the gap will be obtained in the last query. However,
+> rec_daddr is calculated based on the start_block recorded in key[1], which
+> is converted by calling XFS_BB_TO_FSBT. Then if rec_daddr does not exceed
+> info->next_daddr, which means keys[1].fmr_physical >> (mp)->m_blkbb_log
+> <= info->next_daddr, no records will be displayed. In the above example,
+> 3 >> (mp)->m_blkbb_log = 0 and 7 >> (mp)->m_blkbb_log = 0, so the two are
+> reduced to 0 and the gap is ignored:
+> 
+> before calculate ----------------> after shifting
+>  3(st)    7(ed)                       0(st/ed)
+>   |---------|                            |
+>   sector size                        block size
+> 
+> Resolve this issue by introducing the "tail_daddr" field in
+> xfs_getfsmap_info. This records |key[1].fmr_physical + key[1].length| at
+> the granularity of sector. If the current query is the last, the rec_daddr
+> is tail_daddr to prevent missing interval problems caused by shifting. We
+> only need to focus on the last query, because xfs disks are internally
+> aligned with disk blocksize that are powers of two and minimum 512, so
+> there is no problem with shifting in previous queries.
+> 
+> The second problem is that the resulting range is not truncated precisely
+> according to the boundary. Currently, the query display mechanism for owner
+> and missing_owner is different. The query of missing_owner (e.g. freespace
+> in rmapbt/ unknown space in bnobt) is obtained by subtraction (gap), which
+> can accurately lock the range. In the query of owner which almostly finded
+> by btree, as long as certain conditions met, the entire interval is
+> recorded, regardless of the starting address of the key[0] and key[1]
+> incoming from the user state. Focus on the following scenario:
+> 
+>                     a       b
+>                     |-------|
+> 	              query
+>                  c             d
+> |----------------|-------------|----------------|
+>   missing owner1      owner      missing owner2
+> 
+> Currently query is directly displayed as [c, d), the correct display should
+> be [a, b). This problem is solved by calculating max(a, c) and min(b, d) to
+> identify the head and tail of the range. To be able to determine the bounds
+> of the low key, "start_daddr" is introduced in xfs_getfsmap_info. Although
+> in some scenarios, similar results can be achieved without introducing
+> "start_daddr" and relying solely on info->next_daddr (e.g. in bnobt), it is
+> ineffective for overlapping scenarios in rmapbt.
+> 
+> After applying this patch, both of the above issues have been fixed (the
+> same applies to boundary queries for the log device and realtime device):
+> 1)
+> [root@fedora ~]# xfs_io -c 'fsmap -vvvv -d 3 7' /mnt
+>  EXT: DEV    BLOCK-RANGE      OWNER              FILE-OFFSET      AG AG-OFFSET        TOTAL
+>    0: 253:32 [3..6]:          static fs metadata                  0  (3..6)               4
+> 2)
+> [root@fedora ~]# xfs_io -c 'fsmap -vvvv -d 15 20' /mnt
+>  EXT: DEV    BLOCK-RANGE      OWNER            FILE-OFFSET      AG AG-OFFSET        TOTAL
+>    0: 253:32 [15..19]:        per-AG metadata                   0  (15..19)             5
+> 
+> Note that due to the current query range being more precise, high.rm_owner
+> needs to be handled carefully. When it is 0, set it to the maximum value to
+> prevent missing intervals in rmapbt.
+> 
+> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+> ---
+>  fs/xfs/xfs_fsmap.c | 42 ++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 40 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+> index 85dbb46452ca..e7bb21497e5c 100644
+> --- a/fs/xfs/xfs_fsmap.c
+> +++ b/fs/xfs/xfs_fsmap.c
+> @@ -162,6 +162,8 @@ struct xfs_getfsmap_info {
+>  	xfs_daddr_t		next_daddr;	/* next daddr we expect */
+>  	/* daddr of low fsmap key when we're using the rtbitmap */
+>  	xfs_daddr_t		low_daddr;
+> +	xfs_daddr_t		start_daddr;	/* daddr of low fsmap key */
+> +	xfs_daddr_t		end_daddr;	/* daddr of high fsmap key */
+>  	u64			missing_owner;	/* owner of holes */
+>  	u32			dev;		/* device id */
+>  	/*
+> @@ -276,6 +278,7 @@ xfs_getfsmap_helper(
+>  	struct xfs_mount		*mp = tp->t_mountp;
+>  	bool				shared;
+>  	int				error;
+> +	int				trunc_len;
+>  
+>  	if (fatal_signal_pending(current))
+>  		return -EINTR;
+> @@ -283,6 +286,13 @@ xfs_getfsmap_helper(
+>  	if (len_daddr == 0)
+>  		len_daddr = XFS_FSB_TO_BB(mp, rec->rm_blockcount);
+>  
+> +	/*
+> +	 * Determine the maximum boundary of the query to prepare for
+> +	 * subsequent truncation.
+> +	 */
+> +	if (info->last && info->end_daddr)
+> +		rec_daddr = info->end_daddr;
+> +
+>  	/*
+>  	 * Filter out records that start before our startpoint, if the
+>  	 * caller requested that.
+> @@ -348,6 +358,21 @@ xfs_getfsmap_helper(
+>  		return error;
+>  	fmr.fmr_offset = XFS_FSB_TO_BB(mp, rec->rm_offset);
+>  	fmr.fmr_length = len_daddr;
+> +	/*  If the start address of the record is before the low key, truncate left. */
+> +	if (info->start_daddr > rec_daddr) {
+> +		trunc_len = info->start_daddr - rec_daddr;
+> +		fmr.fmr_physical += trunc_len;
+> +		fmr.fmr_length -= trunc_len;
+> +		/* need to update the offset in rmapbt. */
+> +		if (info->missing_owner == XFS_FMR_OWN_FREE)
+> +			fmr.fmr_offset += trunc_len;
+> +	}
+> +	/* If the end address of the record exceeds the high key, truncate right. */
+> +	if (info->end_daddr) {
+> +		fmr.fmr_length = umin(fmr.fmr_length, info->end_daddr - fmr.fmr_physical);
+> +		if (fmr.fmr_length == 0)
+> +			goto out;
+> +	}
+>  	if (rec->rm_flags & XFS_RMAP_UNWRITTEN)
+>  		fmr.fmr_flags |= FMR_OF_PREALLOC;
+>  	if (rec->rm_flags & XFS_RMAP_ATTR_FORK)
+> @@ -364,7 +389,7 @@ xfs_getfsmap_helper(
+>  
+>  	xfs_getfsmap_format(mp, &fmr, info);
+>  out:
+> -	rec_daddr += len_daddr;
+> +	rec_daddr = fmr.fmr_physical + fmr.fmr_length;
+>  	if (info->next_daddr < rec_daddr)
+>  		info->next_daddr = rec_daddr;
+>  	return 0;
+> @@ -655,6 +680,13 @@ __xfs_getfsmap_datadev(
+>  			error = xfs_fsmap_owner_to_rmap(&info->high, &keys[1]);
+>  			if (error)
+>  				break;
+> +			/*
+> +			 * Set the owner of high_key to the maximum again to
+> +			 * prevent missing intervals during the query.
+> +			 */
+> +			if (info->high.rm_owner == 0 &&
+> +			    info->missing_owner == XFS_FMR_OWN_FREE)
+> +			    info->high.rm_owner = ULLONG_MAX;
+>  			xfs_getfsmap_set_irec_flags(&info->high, &keys[1]);
+>  		}
+>  
+> @@ -946,6 +978,9 @@ xfs_getfsmap(
+>  
+>  	info.next_daddr = head->fmh_keys[0].fmr_physical +
+>  			  head->fmh_keys[0].fmr_length;
+> +	/* Assignment is performed only for the first time. */
+> +	if (head->fmh_keys[0].fmr_length == 0)
+> +		info.start_daddr = info.next_daddr;
+>  	info.fsmap_recs = fsmap_recs;
+>  	info.head = head;
+>  
+> @@ -966,8 +1001,10 @@ xfs_getfsmap(
+>  		 * low key, zero out the low key so that we get
+>  		 * everything from the beginning.
+>  		 */
+> -		if (handlers[i].dev == head->fmh_keys[1].fmr_device)
+> +		if (handlers[i].dev == head->fmh_keys[1].fmr_device) {
+>  			dkeys[1] = head->fmh_keys[1];
+> +			info.end_daddr = dkeys[1].fmr_physical + dkeys[1].fmr_length;
+> +		}
+>  		if (handlers[i].dev > head->fmh_keys[0].fmr_device)
+>  			memset(&dkeys[0], 0, sizeof(struct xfs_fsmap));
+>  
+> @@ -991,6 +1028,7 @@ xfs_getfsmap(
+>  		xfs_trans_cancel(tp);
+>  		tp = NULL;
+>  		info.next_daddr = 0;
+> +		info.start_daddr = 0;
+>  	}
+>  
+>  	if (tp)
+> -- 
+> 2.39.2
+> 
+> 
 
