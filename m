@@ -1,107 +1,96 @@
-Return-Path: <linux-xfs+bounces-11405-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11407-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6418794C089
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 17:05:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8F3594C152
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 17:29:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB1DA28453B
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 15:05:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05B871C2565E
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 15:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60A1B18C91F;
-	Thu,  8 Aug 2024 15:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18C9119048D;
+	Thu,  8 Aug 2024 15:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hhmZ5HUk"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dqz4kl0t"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223F34A33
-	for <linux-xfs@vger.kernel.org>; Thu,  8 Aug 2024 15:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4229F18FDD2
+	for <linux-xfs@vger.kernel.org>; Thu,  8 Aug 2024 15:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723129522; cv=none; b=E4fZOUEs6P2iWtX8tBC9PWdzeGYowkFmgEWlbzlwbpv+oaOBe7oPdoMPlDO3rmaCs5ECT5mgEMYLhz+VXRbwuoHOcc9yMLlGQshEyNzeqGCMDFQKVAQmCSbGQ4Nj3iJmYKmxaePEtNvjCG6Sw+1ymEmQXMhtjIyXiwOO5Cq/of4=
+	t=1723130909; cv=none; b=UawMwyHYFT8G1qBdpDSjU5Pfw81nisjhTRVpNolXHvHeeTPlDYhDBieePav25a22LpO2eyTsZieW5Em5DSb5t7uGaeiDrXYNG5OoczKAK/0exPBwU5zFw/dQrHByRoUbj9o1vIXj38Ry+vu1Dwwx4AxYeXkkXiMnyzbyjxcnGLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723129522; c=relaxed/simple;
-	bh=Gh0/rHhGgq8m6tGdd49CQE+dpXG7XLoNvG2LNkUMVN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NbAyO+C85WI4+vKQ+akX+zDLS+YPT/+d2ZeqkxW/B9+p2urBHAOu9eZa8HB3MZYU2ps4YKK1UeKpEoQgVcQvDpdauDV7lexN453+tRdbbYCQRoYSOIApAATDOM+vHeKAAiI4kQrRE4qe4CMz5wJLdcZhnQCzmYqi49wQjVSOaRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hhmZ5HUk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90913C32782;
-	Thu,  8 Aug 2024 15:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723129521;
-	bh=Gh0/rHhGgq8m6tGdd49CQE+dpXG7XLoNvG2LNkUMVN8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hhmZ5HUkSwLF3Q7f/uJlQkkY5WU/0Sv72QqdgHGZsx/FEyEfnYs5/1lZMwdIHJ1sL
-	 p4kmrKzNxJ+NEU6nQPLO99vVTRSU9NWLw5gKpC63lgyuaKJTlasda993iD2ULLx96B
-	 fGbkUji77p5jiATqteUSVA/DQMPjo+8oSoMpL4Gca4srM/TwUoQk2yf4QIClUF3fF8
-	 wi0f7HZ1eFj7864kXQTSbUGHPkeGQRTVtp69rwYI5RSDpN9j18+MqX2kqVBhUsAoVr
-	 vxljvprW+NtTnftw0VnIf7+zWnIiL1CIYfdC/h2KS5Jx3J1QY1WfJ3e8p1Tbd6FGOS
-	 K6n7YWriTnQNw==
-Date: Thu, 8 Aug 2024 08:05:21 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] man: Update unit for fsx_extsize and fsx_cowextsize
-Message-ID: <20240808150521.GO6051@frogsfrogsfrogs>
-References: <20240808074833.1984856-1-john.g.garry@oracle.com>
+	s=arc-20240116; t=1723130909; c=relaxed/simple;
+	bh=0GVmUSFOVq0CuGURGQXVHcs+mjzqRAmUqTtzN8yKUkw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eqdkX0BKlxJEFrQFxdSPSIJ9vg2e3M0Fi4/0LgPf6NqPLN/51Qk3U3KYy2wbc2IbXIW0wxfNTYR5ubM2NogkWR3Kwsg8mIoT7CPZQqM5deb/jHykbthztzy6uANlgc468EHFVyR49ZwQwYVlFvVilpyfFCiK9cpF8b+JXDP2pRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dqz4kl0t; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=WNSygOA8Jm52UlTnQw+eA6erbcIEBD41gCRR4RWQBBg=; b=dqz4kl0tXAPTaBxg582pyiHrS6
+	uG3og9hJJevTcxiuEcGptT2wAkRB3mHalM32RhTIUeV3+tZkbBkzg5JfEQ50XgfJ6nd9cK18yxvAQ
+	EMgJ7rG6+256qpbN99RY10sXOdUqbx7HILoSfw/v9zW8sZI0FfnxgOh47SqekNzqRcD+dqmTwXSrK
+	Us+BudP/FaHm8PEnTG5nyp+tme6+SDXs/xDAon56ukPTlw7UFnRKJnF0qSbkZE4+dvoJOoLceTCij
+	W4bBvTPZH+hmGdx0UhwDk+vAYB69FRKLVn0Q7CkZrpDhojIeIkzncnGBNnjZs40JGSdWa3SSGVnzm
+	1u4OAHZA==;
+Received: from [4.28.11.157] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sc53z-00000008kW2-2lp6;
+	Thu, 08 Aug 2024 15:28:27 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Chandan Babu R <chandan.babu@oracle.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Dave Chinner <dchinner@redhat.com>,
+	linux-xfs@vger.kernel.org
+Subject: post-EOF block handling revamp v2
+Date: Thu,  8 Aug 2024 08:27:26 -0700
+Message-ID: <20240808152826.3028421-1-hch@lst.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240808074833.1984856-1-john.g.garry@oracle.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Aug 08, 2024 at 07:48:33AM +0000, John Garry wrote:
-> The values in fsx_extsize and fsx_cowextsize are in units of bytes, and not
-> filesystem blocks, so update.
-> 
-> In addition, the default cowextsize is 32 filesystem blocks, not 128, so
-> fix that as well.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
+Hi all,
 
-Yep, that's been wrong for a while. :(
+this series reworks handling of post-EOF blocks, primarily in ->release.
+This takes over the work originally started by Dave in:
 
-Thanks for fixing the docs,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+    https://marc.info/?l=linux-xfs&m=154951612101291&w=2
+ 
+and lingering in Darricks's tree:
 
---D
+    https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=reduce-eofblocks-gc-on-close
 
-> 
-> diff --git a/man/man2/ioctl_xfs_fsgetxattr.2 b/man/man2/ioctl_xfs_fsgetxattr.2
-> index 2c626a7e..25a9ba79 100644
-> --- a/man/man2/ioctl_xfs_fsgetxattr.2
-> +++ b/man/man2/ioctl_xfs_fsgetxattr.2
-> @@ -40,7 +40,7 @@ below for more information.
->  .PP
->  .I fsx_extsize
->  is the preferred extent allocation size for data blocks mapped to this file,
-> -in units of filesystem blocks.
-> +in units of bytes.
->  If this value is zero, the filesystem will choose a default option, which
->  is currently zero.
->  If
-> @@ -62,9 +62,9 @@ is the project ID of this file.
->  .PP
->  .I fsx_cowextsize
->  is the preferred extent allocation size for copy on write operations
-> -targeting this file, in units of filesystem blocks.
-> +targeting this file, in units of bytes.
->  If this field is zero, the filesystem will choose a default option,
-> -which is currently 128 filesystem blocks.
-> +which is currently 32 filesystem blocks.
->  If
->  .B XFS_IOC_FSSETXATTR
->  is called with
-> -- 
-> 2.31.1
-> 
-> 
+for years to ensure ->release doesn't too eagerly kill post-EOF block
+speculative preallocation and then goes on to not let preallocation
+on inodes with the append only flag set linger forever.
+
+I'll also post a rebased version of Dave's patches from back then.
+
+The first patch has already been sent standalone and as part of Darrick's
+fixes series, but as the rest of the series depends on it I'm sending it
+here again - third time's a charm.
+
+Changes since v1:
+ - fix a few commit log and comment typos
+
+Diffstat:
+ xfs_bmap_util.c |   34 ++++++++---------------
+ xfs_file.c      |   73 +++++++++++++++++++++++++++++++++++++++++++++++--
+ xfs_icache.c    |    2 -
+ xfs_inode.c     |   82 --------------------------------------------------------
+ xfs_inode.h     |    5 +--
+ 5 files changed, 85 insertions(+), 111 deletions(-)
 
