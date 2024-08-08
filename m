@@ -1,141 +1,165 @@
-Return-Path: <linux-xfs+bounces-11441-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11442-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0619494C54B
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 21:30:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 730F394C564
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 21:41:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD2CF1F24657
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 19:30:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C2111C21E3C
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Aug 2024 19:41:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 940151649A8;
-	Thu,  8 Aug 2024 19:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06E44154C0D;
+	Thu,  8 Aug 2024 19:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="R1tipDvh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c2M7yOgQ"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28ED15F3EE
-	for <linux-xfs@vger.kernel.org>; Thu,  8 Aug 2024 19:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4CD3398E
+	for <linux-xfs@vger.kernel.org>; Thu,  8 Aug 2024 19:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723145319; cv=none; b=sTRsZGsKgx0shIqDAtHE7T6qaGmBZbYD4faje/k5plg5ZIvjCKYZ9AQwgm6YuGRrc/Y/a6uTcHvXxMfGlCAAMLYw3fll/UPgJNV61T3rgOQ3iAcCSoBF7xvXtRIxF/zr4uDxfKxn4ZiFwIc17wPeyCTL7kkA4Lpjd4yoCXOilYE=
+	t=1723146109; cv=none; b=WoN0f0Cr55dhUiVDYal8UoGkArDAqNL0GKo+PmeOmHpfRogg5wg9/GRsnkx+FYt7yosSE+BITecLWwa2rHnly+h2WBA6cYFYaz5mraq5XmOrWXQO+39349Vh8X2oaSPccJRLGvTQbFNEvl7XwK7787q4cFw4/IVq/twFfSQd6dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723145319; c=relaxed/simple;
-	bh=NX0d0m9ReKcqhm2PuSfHrLPH/9MXqCB++0q0ouz1III=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N5aVF3yqca5lXNFIWEa71bQqOGvutD+bu+qdMQpaC05h5EHm+9UZjBBG/bXOlKcuPWYhXgdHSzt+Gi8xjxgCuGDj32nWBaZJtWDnFkeh8xdKFE39FEE1uQdk4YGSHySNP5AB3DlsP+92P87YEccCP1SoqfgB8DWH7kT2Vd2IC7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=R1tipDvh; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7a1d0dc869bso85684185a.2
-        for <linux-xfs@vger.kernel.org>; Thu, 08 Aug 2024 12:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1723145316; x=1723750116; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PCXucMs8l0Ng5ZAiC85xGGR8b9zvUxCeXymlHlDJx8U=;
-        b=R1tipDvhvKJVs72/mPjULEZUaJ6bygiUJvq8Po9od3PIiOk9llwBBBHlCf1jukGRO6
-         LapaxxNTSwrOFkIn5RKOMrwpTP9akOxxK8Vw5InRUus6sJAyaXymmYNOw4WsLGlVNKOG
-         qe2hLPxZiHVZpRDXnlSkt8w3UoQ/UfXA8xEYCcQR4NvjUhTRuUaBU2/sduw5LXq9W3sW
-         88Tt0uUr6Zi3Ny2BAou5I79G/uxwmqFpObtB7g5iIip1T2DkBy2gEYIeovHLRpDKPffg
-         VpUTdHLlx0b+aHN90OTAHwv5FlpZK9Ul9hjZcFknXCOcVWjPimd1BS1LvifNLv6iMv7U
-         tslw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723145316; x=1723750116;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PCXucMs8l0Ng5ZAiC85xGGR8b9zvUxCeXymlHlDJx8U=;
-        b=XNPXhjMYM8YsV1pzOiw+5Fo6TSy129qWbpPvcU1i4+RJXx4JkGUvIj4a5gTOhAXLtB
-         svJCqb82th+dMMH8R1blTiLq/6Fx3d9pLcYcqQIv+IBq3pP7gzUkXn3HJKaWUg6vwg1T
-         gqAgtwbtDGDXtNL2vz5bipbG68OlR2YtfuLq+Y18YCKuZvV88i6iD428lUFqgY3TvWRF
-         CRQzBAbxV1kfKVTV5UYpxyhRaIkmvKRni/A141rBh8LkfD7Q14z+FgwBL3chiEd5ScvH
-         BCc0np8O28P8B3qK98HR9UE8A0dgmf86acaWvjLaNCOK9jWmnWcH8XQoWPvdAJtThqzo
-         VuMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXMtL2q+o4Ry54KORHwxInEs+/vNNt59KVznU5dMTaY/dGx7I+zhuvC3x9tRhV0i0FZ49d3VGoD0gDYvJ64kTt6Y2C7aA2fSt+
-X-Gm-Message-State: AOJu0Yxo4L4o0nSvgiqF3DNkpBU1Y+pgFeTU9KTPRkxi0QXpbdPTZd6X
-	WFBeh6TvPQgzFTNxKQ6LyVaf7Ht2dI5g8cEqtRxxq1sD1ZhlLheDmJrjiq9Fmnw=
-X-Google-Smtp-Source: AGHT+IFqTokrODzDW+F7aRkm8RWDe1d2EvLJDXo8zz/Qi7NPVBOa+VCzv+goifozXKnE/sORJ8j7uA==
-X-Received: by 2002:a05:620a:3943:b0:79d:7246:ea67 with SMTP id af79cd13be357-7a3817f799emr380397285a.33.1723145316678;
-        Thu, 08 Aug 2024 12:28:36 -0700 (PDT)
-Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a3786b5a15sm187770785a.101.2024.08.08.12.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 12:28:36 -0700 (PDT)
-From: Josef Bacik <josef@toxicpanda.com>
-To: kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org,
-	jack@suse.cz,
-	amir73il@gmail.com,
-	brauner@kernel.org,
-	linux-xfs@vger.kernel.org,
-	gfs2@lists.linux.dev,
-	linux-bcachefs@vger.kernel.org
-Subject: [PATCH v2 16/16] xfs: add pre-content fsnotify hook for write faults
-Date: Thu,  8 Aug 2024 15:27:18 -0400
-Message-ID: <aa122a96b7fde9bb49176a1b6c26fcb1e0291a37.1723144881.git.josef@toxicpanda.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1723144881.git.josef@toxicpanda.com>
-References: <cover.1723144881.git.josef@toxicpanda.com>
+	s=arc-20240116; t=1723146109; c=relaxed/simple;
+	bh=BUYDq/10RCQWZP11bHFre3zqt4HggAOsr00lZlWoIho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S1+1KrBCyF4R3AJWhpEkWMxqqozq2nBN/HmQQuGw95rb8Uy2ukbU3w9uYfk9tQ/MeM7gpfUO3MvWjG9WbjvhaXqKDidW0/PChDrwJUMW1PtcNTcMjtKVVfzJtB4HCIvHHhHcC2AoiEbIjHwmZBE7ZtPAdWisGPRv7bl6tAVPs+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c2M7yOgQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723146107;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9UUVV0BPeQtkREcy7OxEz7yMLAmze1t++k5ZEhUUHXM=;
+	b=c2M7yOgQaILAbokXApUqPqMaEzzf7cxTmh4LGj1y5rQ8ZkGwBLHoYFVqA9OTy61I3XlEpa
+	GGPWFZyyqHhcz/e+fJiUho3rb+PIzEz1qB3mSz0UEzcVoDBy9qZiZtBhNYIGUNFpwApMR3
+	52XoYEV0UJM+mOJR4VhnWtQeTlhTv5s=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-yEC4jNT2OcepT77SmFtSDA-1; Thu,
+ 08 Aug 2024 15:41:44 -0400
+X-MC-Unique: yEC4jNT2OcepT77SmFtSDA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 783421955D47;
+	Thu,  8 Aug 2024 19:41:43 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.32.103])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 723A819560A3;
+	Thu,  8 Aug 2024 19:41:42 +0000 (UTC)
+Date: Thu, 8 Aug 2024 14:41:39 -0500
+From: Bill O'Donnell <bodonnel@redhat.com>
+To: Eric Sandeen <sandeen@sandeen.net>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	cem@kernel.org
+Subject: Re: [PATCH v3] xfs_db: release ip resource before returning from
+ get_next_unlinked()
+Message-ID: <ZrUfc57VJ-RPreCL@redhat.com>
+References: <20240807193801.248101-3-bodonnel@redhat.com>
+ <20240808182833.GR6051@frogsfrogsfrogs>
+ <3a91d785-8c8f-4d2b-998f-a4cd92353120@sandeen.net>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a91d785-8c8f-4d2b-998f-a4cd92353120@sandeen.net>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-xfs has it's own handling for write faults, so we need to add the
-pre-content fsnotify hook for this case.  Reads go through filemap_fault
-so they're handled properly there.
+On Thu, Aug 08, 2024 at 02:00:22PM -0500, Eric Sandeen wrote:
+> On 8/8/24 1:28 PM, Darrick J. Wong wrote:
+> > On Wed, Aug 07, 2024 at 02:38:03PM -0500, Bill O'Donnell wrote:
+> >> Fix potential memory leak in function get_next_unlinked(). Call
+> >> libxfs_irele(ip) before exiting.
+> >>
+> >> Details:
+> >> Error: RESOURCE_LEAK (CWE-772):
+> >> xfsprogs-6.5.0/db/iunlink.c:51:2: alloc_arg: "libxfs_iget" allocates memory that is stored into "ip".
+> >> xfsprogs-6.5.0/db/iunlink.c:68:2: noescape: Resource "&ip->i_imap" is not freed or pointed-to in "libxfs_imap_to_bp".
+> >> xfsprogs-6.5.0/db/iunlink.c:76:2: leaked_storage: Variable "ip" going out of scope leaks the storage it points to.
+> >> #   74|   	libxfs_buf_relse(ino_bp);
+> >> #   75|
+> >> #   76|-> 	return ret;
+> >> #   77|   bad:
+> >> #   78|   	dbprintf(_("AG %u agino %u: %s\n"), agno, agino, strerror(error));
+> >>
+> >> Signed-off-by: Bill O'Donnell <bodonnel@redhat.com>
+> >> ---
+> >> v2: cover error case.
+> >> v3: fix coverage to not release unitialized variable.
+> >> ---
+> >>  db/iunlink.c | 7 +++++--
+> >>  1 file changed, 5 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/db/iunlink.c b/db/iunlink.c
+> >> index d87562e3..57e51140 100644
+> >> --- a/db/iunlink.c
+> >> +++ b/db/iunlink.c
+> >> @@ -66,15 +66,18 @@ get_next_unlinked(
+> >>  	}
+> >>  
+> >>  	error = -libxfs_imap_to_bp(mp, NULL, &ip->i_imap, &ino_bp);
+> >> -	if (error)
+> >> +	if (error) {
+> >> +		libxfs_buf_relse(ino_bp);
+> > 
+> > Sorry, I think I've led you astray -- it's not necessary to
+> > libxfs_buf_relse in any of the bailouts.
+> > 
+> > --D
+> > 
+> >>  		goto bad;
+> >> -
+> >> +	}
+> >>  	dip = xfs_buf_offset(ino_bp, ip->i_imap.im_boffset);
+> >>  	ret = be32_to_cpu(dip->di_next_unlinked);
+> >>  	libxfs_buf_relse(ino_bp);
+> >> +	libxfs_irele(ip);
+> >>  
+> >>  	return ret;
+> >>  bad:
+> >> +	libxfs_irele(ip);
+> 
+> And this addition results in a libxfs_irele of an ip() which failed iget()
+> via the first goto bad, so you're releasing a thing which was never obtained,
+> which doesn't make sense.
+> 
+> 
+> There are 2 relevant actions here. The libxfs_iget, and the libxfs_imap_to_bp.
+> Only after libxfs_iget(ip) /succeeds/ does it need a libxfs_irele(ip), on either
+> error paths or normal exit. The fact that it does neither leads to the two leaks
+> noted in CID 1554242.
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
----
- fs/xfs/xfs_file.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+In libxfs_iget, -ENOMEM is returned when kmem_cache_zalloc() fails. For all other
+error cases in that function, kmem_cache_free() releases the memory that was presumably
+successfully allocated. I had wondered if we need to use libxfs_irele() at all in
+get_next_unlinked() (except for the success case)?
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 4cdc54dc9686..585a8c2eea0f 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1325,14 +1325,28 @@ __xfs_filemap_fault(
- 	bool			write_fault)
- {
- 	struct inode		*inode = file_inode(vmf->vma->vm_file);
-+	struct file		*fpin = NULL;
-+	vm_fault_t		ret;
- 
- 	trace_xfs_filemap_fault(XFS_I(inode), order, write_fault);
- 
--	if (write_fault)
--		return xfs_write_fault(vmf, order);
- 	if (IS_DAX(inode))
- 		return xfs_dax_read_fault(vmf, order);
--	return filemap_fault(vmf);
-+
-+	if (!write_fault)
-+		return filemap_fault(vmf);
-+
-+	ret = filemap_maybe_emit_fsnotify_event(vmf, &fpin);
-+	if (unlikely(ret)) {
-+		if (fpin)
-+			fput(fpin);
-+		return ret;
-+	} else if (fpin) {
-+		fput(fpin);
-+		return VM_FAULT_RETRY;
-+	}
-+
-+	return xfs_write_fault(vmf, order);
- }
- 
- static inline bool
--- 
-2.43.0
+
+> libxfs_imap_to_bp needs a corresponding libxfs_buf_relse() (thanks for clarifying
+> djwong) but that libxfs_buf_relse() is already present if libxfs_imap_to_bp
+> succeeds. It's not needed if it fails, because there's nothing to release.
+> 
+> When Darrick said
+> 
+> > I think this needs to cover the error return for libxfs_imap_to_bp too,
+> > doesn't it?
+> 
+> I think he meant that in the error case where libxfs_imap_to_bp fails, libxfs_irele
+> is also needed. (In addition to being needed on a normal return.)
+> 
+> -Eric
+> 
 
 
