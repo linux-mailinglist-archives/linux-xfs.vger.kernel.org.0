@@ -1,60 +1,60 @@
-Return-Path: <linux-xfs+bounces-11533-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11535-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6DE394E6C1
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2024 08:33:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8EB194EC96
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2024 14:16:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 928EE1F22E77
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2024 06:33:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D96BC1C216DF
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Aug 2024 12:16:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4706815445E;
-	Mon, 12 Aug 2024 06:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iOe5EYo1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28EE217A58F;
+	Mon, 12 Aug 2024 12:16:23 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8B114F9C5
-	for <linux-xfs@vger.kernel.org>; Mon, 12 Aug 2024 06:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0242513634B;
+	Mon, 12 Aug 2024 12:16:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723444377; cv=none; b=uH5db48bfqSt41XKoqJN0paspzWCUzt8rE4fdqx9qV1s8x6dmYrlQj0IAGDLQHP9LxOnKaV/pKEZP3PxgHU6R/Vjq5VIIeGn0c1ayFGkyPexPWNZSj/4iJOcrnuiVi6tOSHkJeMi3+yFBdZTdztbiVh9uQMeoR3luEctj/dDemc=
+	t=1723464983; cv=none; b=kOPUWj1PyVG97wQKmBwcTg4K6U0bc+N8UIsZgyYHqz+kmIWMEHCQWPHQAghM0ZDTtsuI03ieKtBFIjzJL7wY6TLaHfd722floEsyHnCeXUH9TEtq6rZ1Z9K+raZDu8FhWgwfpIE0xLBYPxnf4WAyO7xm9t1he/qUhVCezesAEvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723444377; c=relaxed/simple;
-	bh=4QuDUTrqyW4BE4dlfoVHnEm/ecmq2iEGILNatH70YMI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ESLwuHdQ91ooi9OJaJ+tVhg3g0NzGI/+vSQCTt0hcUmxVxLwiaP5uhfGmdbxTkMr5stg5jyGCZJUMtscIMVt8MmT/029FDO37AQ6vNYaS/ZcCYjlF896euKxJVlcQyhvv7PceMA4Vc2kOOHYQpiCSIrjCbM4vc05nIQ5HgpT/f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iOe5EYo1; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=s3wsEKpu/FzK4PyKc3qOv9eRN4n12F02jPE3eJ6t5P0=; b=iOe5EYo1/5P0M3Qo2oznvmxxZB
-	rthD1ciUR7VOHZYJiRA/LD9poWdLgECkzjAbaXjqmTFCZC6mPIj2uaevM+2kp1s/M8lMVIcLa+1nj
-	w7qXyyOevMzFam1G7dvX0QpM8itQBXCvekEh3EL1kJCck3aXnIUs9Q7HI/TdrmB+/EZsXHkoh7qi8
-	n89oQ8z8cZbnjMHwEPu3qG3q1rtdGfT4WYUgHtaWZm0X1+RMQ8dnS7+FN63Xv6lz23sIKlUB2suSw
-	yooLEPMdRFAyT8ySrO8RM7ZJo/qkK6aLRoNEjibNNdPNKL8qBEzPmKUZVP2Fm0WXleQ/CXIaXgbZX
-	6llIZ5bQ==;
-Received: from 2a02-8389-2341-5b80-ee60-2eea-6f8f-8d7f.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:ee60:2eea:6f8f:8d7f] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sdObv-0000000H1gO-0dtm;
-	Mon, 12 Aug 2024 06:32:55 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: cem@kernel.org
-Cc: djwong@kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: [PATCH 4/4] xfs: use kfree_rcu_mightsleep to free the perag structures
-Date: Mon, 12 Aug 2024 08:32:31 +0200
-Message-ID: <20240812063243.3806779-5-hch@lst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240812063243.3806779-1-hch@lst.de>
-References: <20240812063243.3806779-1-hch@lst.de>
+	s=arc-20240116; t=1723464983; c=relaxed/simple;
+	bh=4BYV6v4Hw0CJPWckbUhfullAUNf/TCOxkcGynzSXdtc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V/n8yNqKBZdAQ6xpx4Ox4Glq9Wqx4Jk8kV3VNoDhBd4q/7qclMzYPn+HBrohYHWheJOPn3XNxg4m9+OCSa4tZmBKvNN8RZMuxyX2E6ihek74TkeoRuVvUgTD0RwsKDQCutpNmbjiZWIAcogk2iuZsvNjf1uJlWJ/NrRUOatrznU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WjD4r4Ddcz4f3mJH;
+	Mon, 12 Aug 2024 20:15:56 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 324951A0359;
+	Mon, 12 Aug 2024 20:16:11 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP3 (Coremail) with SMTP id _Ch0CgDHeLcD_blmHhy7BQ--.21435S4;
+	Mon, 12 Aug 2024 20:16:10 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org,
+	brauner@kernel.org,
+	david@fromorbit.com,
+	jack@suse.cz,
+	willy@infradead.org,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH v2 0/6] iomap: some minor non-critical fixes and improvements when block size < folio size
+Date: Mon, 12 Aug 2024 20:11:53 +0800
+Message-Id: <20240812121159.3775074-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -62,64 +62,80 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-CM-TRANSID:_Ch0CgDHeLcD_blmHhy7BQ--.21435S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF17Jr4xGw45tF13trW5ZFb_yoW8uFyUpF
+	WfKF98Kr1Dtw1ayas3W3y7Xr1Fvw1FqF15Ga4xGws8AFnxJFyxXF10ga98uay0yr4Skrs0
+	qr1jgFyxWr1DAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUFg4SDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Source kernel commit: 7344fea851552b1586ee161147a749995504b368
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Using the kfree_rcu_mightsleep is simpler and removes the need for a
-rcu_head in the perag structure.
+Changes since v1:
+ - Patch 5 fix a stale data exposure problem pointed out by Willy, drop
+   the setting of uptodate bits after zeroing out unaligned range.
+ - As Dave suggested, in order to prevent increasing the complexity of
+   maintain the state_lock, don't just drop all the state_lock in the
+   buffered write path, patch 6 introduce a new helper to set uptodate
+   bit and dirty bits together under the state_lock, reduce one time of
+   locking per write, the benefits of performance optimization do not
+   change too much.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- libxfs/xfs_ag.c | 12 +-----------
- libxfs/xfs_ag.h |  3 ---
- 2 files changed, 1 insertion(+), 14 deletions(-)
+This series contains some minor non-critical fixes and performance
+improvements on the filesystem with block size < folio size.
 
-diff --git a/libxfs/xfs_ag.c b/libxfs/xfs_ag.c
-index 58ca12f6e..40d1d8a4b 100644
---- a/libxfs/xfs_ag.c
-+++ b/libxfs/xfs_ag.c
-@@ -183,16 +183,6 @@ out:
- 	return error;
- }
- 
--STATIC void
--__xfs_free_perag(
--	struct rcu_head	*head)
--{
--	struct xfs_perag *pag = container_of(head, struct xfs_perag, rcu_head);
--
--	ASSERT(!delayed_work_pending(&pag->pag_blockgc_work));
--	kfree(pag);
--}
--
- /*
-  * Free up the per-ag resources associated with the mount structure.
-  */
-@@ -216,7 +206,7 @@ xfs_free_perag(
- 		xfs_perag_rele(pag);
- 		XFS_IS_CORRUPT(pag->pag_mount,
- 				atomic_read(&pag->pag_active_ref) != 0);
--		call_rcu(&pag->rcu_head, __xfs_free_perag);
-+		kfree_rcu_mightsleep(pag);
- 	}
- }
- 
-diff --git a/libxfs/xfs_ag.h b/libxfs/xfs_ag.h
-index b5eee2c78..d9cccd093 100644
---- a/libxfs/xfs_ag.h
-+++ b/libxfs/xfs_ag.h
-@@ -63,9 +63,6 @@ struct xfs_perag {
- 	/* Blocks reserved for the reverse mapping btree. */
- 	struct xfs_ag_resv	pag_rmapbt_resv;
- 
--	/* for rcu-safe freeing */
--	struct rcu_head	rcu_head;
--
- 	/* Precalculated geometry info */
- 	xfs_agblock_t		block_count;
- 	xfs_agblock_t		min_block;
+The first 4 patches fix the handling of setting and clearing folio ifs
+dirty bits when mark the folio dirty and when invalidat the folio.
+Although none of these code mistakes caused a real problem now, it's
+still deserve a fix to correct the behavior.
+
+The second 2 patches drop the unnecessary state_lock in ifs when setting
+and clearing dirty/uptodate bits in the buffered write path, it could
+improve some (~8% on my machine) buffer write performance. I tested it
+through UnixBench on my x86_64 (Xeon Gold 6151) and arm64 (Kunpeng-920)
+virtual machine with 50GB ramdisk and xfs filesystem, the results shows
+below.
+
+UnixBench test cmd:
+ ./Run -i 1 -c 1 fstime-w
+
+Before:
+x86    File Write 1024 bufsize 2000 maxblocks       524708.0 KBps
+arm64  File Write 1024 bufsize 2000 maxblocks       801965.0 KBps
+
+After:
+x86    File Write 1024 bufsize 2000 maxblocks       569218.0 KBps
+arm64  File Write 1024 bufsize 2000 maxblocks       871605.0 KBps
+
+Thanks,
+Yi.
+
+Zhang Yi (6):
+  iomap: correct the range of a partial dirty clear
+  iomap: support invalidating partial folios
+  iomap: advance the ifs allocation if we have more than one blocks per
+    folio
+  iomap: correct the dirty length in page mkwrite
+  iomap: don't mark blocks uptodate after partial zeroing
+  iomap: reduce unnecessary state_lock when setting ifs uptodate and
+    dirty bits
+
+ fs/iomap/buffered-io.c | 73 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 60 insertions(+), 13 deletions(-)
+
 -- 
-2.43.0
+2.39.2
 
 
