@@ -1,111 +1,111 @@
-Return-Path: <linux-xfs+bounces-11709-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11707-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40B90953B1A
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 21:49:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15217953B18
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 21:49:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 632CD1C21BA2
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 19:49:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98A052852AC
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 19:49:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5ED682876;
-	Thu, 15 Aug 2024 19:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4933E824A0;
+	Thu, 15 Aug 2024 19:49:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="DwC/dHX3"
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="QrL4QAMG"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from rusty.tulip.relay.mailchannels.net (rusty.tulip.relay.mailchannels.net [23.83.218.252])
+Received: from bumble.birch.relay.mailchannels.net (bumble.birch.relay.mailchannels.net [23.83.209.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE133770E8
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD24770E8
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723751384; cv=pass; b=JEF4EgsT07oVYFA5JGXwvyBiqp2+Q2xT14yke3KfpqCmUw0SJwM2id+3YUgbx5FcKOGUeLkNWp8gZqN4vkoyRninX9IanzvLcLlyxzSep03GsSq90K+3Y+h0uKNvR7j05j37ESlyrN7ZKLUO+/ivSSwwKL8oVPugBITXvSSx2f4=
+	t=1723751374; cv=pass; b=fr5lj1DkW/WC923N3MPtFQHP083dgEcbssRvidL+KjwMgBn88RXxDOtnjE+v3sVAv/EDjvMMPnxCWOy8dl8+8D547uewZM0fBR9wITaAvhjgxgTo+aLjsV17pGwRuipH2BgtR0HjifqSR1eebvaMA2at5IshA6+kO+vg+lixs50=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723751384; c=relaxed/simple;
-	bh=HXs5X2SdPu5IPb39CCTlGl9JDtQi1NSB5c5urGcQwZk=;
+	s=arc-20240116; t=1723751374; c=relaxed/simple;
+	bh=5LmSysuK5yLZB0f0RQUaLLKvwe376pvZ2JeRv9QcNfQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUylvcmlXeydkzm6+tPjmb3lYW3sz4B/yEcbLnEmVVkHUO8tLfNN0Wen+rFYtj9kS4BsWCj3MHQWpq7DETMzKr6EMU827Sdbwh18b2uBNyO+w5/8NZ6r30wOuCMQO10DZcG2SRE+T6A1CAXNWuyD4wKqEA01l9/xfDlpfvi3U2E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=DwC/dHX3; arc=pass smtp.client-ip=23.83.218.252
+	 Content-Type:Content-Disposition:In-Reply-To; b=lULsCZw2JiYM8CneQdkHdPwkfLwC3qJpslGIP1FEZ8A4EmYhbBI9BGuiSjie8Xec4oc7RVd0hrrIybbv+hhw1gQ+w6APBw9cUImsxP/89IWt4cL8kvwgSZ4Ci4ENWvw4m1D9JgsVgJ1IrI1zJzCMQYnPCKagT26BxeyeIrz1/PM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=QrL4QAMG; arc=pass smtp.client-ip=23.83.209.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id A40C9C67BB
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:30:49 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id 30F72503BE5
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:31:52 +0000 (UTC)
 Received: from pdx1-sub0-mail-a210.dreamhost.com (unknown [127.0.0.6])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5B93FC6564
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:30:49 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1723750249; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id DA8145053CD
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:31:51 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1723750311; a=rsa-sha256;
 	cv=none;
-	b=Nfwi0UDnftVLylYd+MPcMyhKrn7M+92cUJSS6/mPfl5Fo/72WK0GL42Y3YPu0EfenSDHpT
-	hSVtHwSSmDljtO2vEZ9Io2zez875+yiSg0V0GWP78VqgTBGye4g4K89GAfBJR9C4rrOALb
-	VpKAgAesVvBr/UiPe60eiw64EFlbUh8Tn5ENa2IkNSbUyFOXXUxIB1byXQ4WK8R3EMybl2
-	gUglOx5ZtrOOk95OG2otNeuZZaWBIREfhqW08Lv31iLlIe5koPmD+HG9aw/hNK7cAXOBws
-	TJhtNCG/lQ2hb7dmi6IGOXdejdVMbz0oy0tv5jjH1kclSbcGXwZBTtRosBXEQg==
+	b=N+5NsY9ifKvSEVxmtb9w/98f4fglw+z2kMpbNWSWxXmHruk6sqdBHF5P7M4TvRm5O828De
+	jkJLpIgFSxHk9So5xB1VPixrlkqUuDF5wJ9MUKkLgPFUgCHKdGN4ockr70Nsv4rg5t6dMf
+	+uDULxcN5aeeDOagcuDXrN5p7NFJNu4IGAx551NHjSfKIC51hZSozz/DDP2QK7L9s83H3I
+	RQokHXJjAqy/AGbxQ3BeHlGjEF+aeuvQNgDG3P2EmIsw1z22V5yb6RdrvH8TNdXCZIh0SD
+	EIODuhlGTiz9ogGXo4S9GUuGdhL31F5cRZ/3N7JaEEo+EFMLTSWsjX10bePJrA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1723750249;
+	s=arc-2022; t=1723750311;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=+yz8QnMgU01wHEONCpX/2eu2lt9HcGc3LQEgdolMzPY=;
-	b=GuEjBaeOph2cVd4L/Ll6RyXvRuOSxe3GJ7Th2vuzu9Utg1kNf5ttlupclSGOC85H6RzT2D
-	G6cvDKVGTZ2fYEB01CX+KVgmA946YKtADG9RKTH9WhEsHBxCQgqq2tEsK51ZvUx3RrwwOa
-	Y4ttXGDvr6hudqG2Rwd9g44MVQD/x0UGuW0MJVIJE6JOTrRDMsNFkN6AVhk1G1cx75jCLe
-	D1BQRMJMa1kQEO9dzack1HUwImZ6+N5N8LcmlOMM5YSCTKkHfZNsBnoznLnUvW9tzwaBKW
-	eltsJ75HxSVUIaiGB/vmRD5tuP5soWYfD8/HCXXV8bd3dIhih88EhWrrl7B3jg==
+	bh=MiHOZpQ51dTUKfpN0a1BAL0ZPQ6v3YA3kaeuXRxm4ho=;
+	b=LIlGppoe/skQsLWWqgrwILp/bXjUjLyHDITbEL1idQDlNWZTt0bt9WGoygNMqZcvUqwEPJ
+	g+s9/wqymdoECb6o1jk/A/ymFiZHfLqdShCmt4lY5OVsEbKR+8SnIWlAOzFSeHuPsJPOem
+	dgd7YDvkoLX7mt8FkHRPtXCHmNmzKAh4FBxdHK5hiLRXDxolYAL6Uzqmw1MmIqRIpuBXXj
+	FZCTh0Vegv4sNBjkUTbMkNKAcd3PyduLObMypVxZIFGnmH3JFT0sTD/JWjY5hiGT8/uZ3I
+	Y4bJ2HSi3geBVjmAdlbHcWPRSxfdA71re36C4UyoZ22QtkbFu+ymF5phaX766w==
 ARC-Authentication-Results: i=1;
-	rspamd-587694846-cgng9;
+	rspamd-c4b59d8dc-pk989;
 	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
 X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
 X-MailChannels-Auth-Id: dreamhost
-X-Trail-Irritate: 6c6b8e4e7d2753b3_1723750249586_2537820552
-X-MC-Loop-Signature: 1723750249586:662977041
-X-MC-Ingress-Time: 1723750249586
+X-Society-Fumbling: 436463574e79823e_1723750312108_2462130268
+X-MC-Loop-Signature: 1723750312107:1032874456
+X-MC-Ingress-Time: 1723750312107
 Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.250.139 (trex/7.0.2);
-	Thu, 15 Aug 2024 19:30:49 +0000
+	by 100.120.172.23 (trex/7.0.2);
+	Thu, 15 Aug 2024 19:31:52 +0000
 Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4WlFbD6bTczT6
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 12:30:48 -0700 (PDT)
+	by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4WlFcR4vh8z1g
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 12:31:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1723750249;
-	bh=+yz8QnMgU01wHEONCpX/2eu2lt9HcGc3LQEgdolMzPY=;
+	s=dreamhost; t=1723750311;
+	bh=MiHOZpQ51dTUKfpN0a1BAL0ZPQ6v3YA3kaeuXRxm4ho=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=DwC/dHX3f3Z5HTMh5N+t2PjQlU2gnxAWXhVtVj+BDend7BTgEMqFMoYXFsatCBbF5
-	 RVjLZx948+J2uZTqNZgXw2KRU78Vunxzi44l65ntteK5bBF1880naEAV3TNOH/Bpav
-	 BmR+XWHXZlN5CNct7u0gIKN5spiceGbBaJfMcMz4Q/uI8/mBPxQhhjGyHrbgj0u61a
-	 OTir4HzlZYEnt/6fWEqQx8H120lI9ThR1Cb/XeeZ3u3W3mLVCY38nUrDR+hgH8zk35
-	 lyV3tDOX0Au4zkmrd7bijYGyJsch0RPwneKziSjTi5zfjisu1UI1TYOWgQg2Hz8YNQ
-	 rXy7a8sRI7ibA==
+	b=QrL4QAMGr0HrnNFv6n/xesOqiMoHND6CxwTt2g94T2So/Y7S2kKtyhOdd0YZM9RtL
+	 xqUyB2y50Ud3Vl0qejVhDgR4VYyr6maQWlG4vU2AQ9Wt/4aJ4XBpi72tqOUbS9R4/F
+	 khG/+7Fnf/rza9Gil7pNWo+t/H3e+HaGjQkoCKPRS+BzW/S1/12VY/y6R/p9KjESPZ
+	 dEPXq7IadypwvHYT4qyVV1pXvxgWjkwvbgDTxsGSKJK3i/jXGsmJ5zsbc5OA7YftHg
+	 AIR3GV8Z6jw082maJQz7a0ak1g/GrUx8vN/cTUB2JqQQ+KsoTBf/q2fi89+y3VFu40
+	 +/eHGBfqxMdTg==
 Received: from johansen (uid 1000)
 	(envelope-from kjlx@templeofstupid.com)
 	id e0064
 	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Thu, 15 Aug 2024 12:30:47 -0700
-Date: Thu, 15 Aug 2024 12:30:47 -0700
+	Thu, 15 Aug 2024 12:31:50 -0700
+Date: Thu, 15 Aug 2024 12:31:50 -0700
 From: Krister Johansen <kjlx@templeofstupid.com>
 To: Chandan Babu R <chandan.babu@oracle.com>,
 	"Darrick J. Wong" <djwong@kernel.org>,
 	Dave Chinner <david@fromorbit.com>
 Cc: Dave Chinner <dchinner@redhat.com>, Zorro Lang <zlang@kernel.org>,
 	linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: [PATCH 0/5] linux: Modifying per-ag reservation to account for
- dependent allocations
-Message-ID: <cover.1723688622.git.kjlx@templeofstupid.com>
+Subject: [PATCH 1/5] xfs: count the number of blocks in a per-ag reservation
+Message-ID: <aa97ca3662b008c5319f636f1520dfe680c20041.1723688622.git.kjlx@templeofstupid.com>
 References: <cover.1723687224.git.kjlx@templeofstupid.com>
+ <cover.1723688622.git.kjlx@templeofstupid.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -114,60 +114,111 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1723687224.git.kjlx@templeofstupid.com>
+In-Reply-To: <cover.1723688622.git.kjlx@templeofstupid.com>
 
-Hi,
-These patches attempt to address the problem where dependent allocations
-fail during a multi allocation transaction, often as a result of
-refilling the AGFL.  The failure results in a filesystem shutdown.  In
-many cases, it manifests as a warn in xfs_bmap_extents_to_btree, when
-the dependent b-tree conversion fails after inadvertently getting an
-ENOSPC.
+In order to get the AGFL reservation, alloc_set_aside, and ag_max_usable
+calculations correct in the face of per-AG reservations, we need to
+understand the number of blocks that a per-AG reservation can leave free
+in a worst-case scenario.
 
-The RFC series was here:
+Compute the number of blocks used for a per-ag reservation by using AG
+0's reservation.  Other code already assumes AG 0's reservation is as
+large or larger than the other AG's.  Subsequent patches will used the
+block count to construct a more accurate set of parameters.
 
-https://lore.kernel.org/linux-xfs/cover.1718232004.git.kjlx@templeofstupid.com/T/#t
+The reservation is counted after log_mount_finish because reservations
+are temporarily enabled for this operation.  An updated alloc_set_aside
+and ag_max_usable need to be computed before enabling reservations at
+the end of a RW mount.
 
-This series attempts follows David's guidance around implementing the
-reservation using the existing xfs_alloc_ag_max_usable and
-XFS_ALLOCBT_AGFL_RESERVE mechanisms.  This mostly worked as advertised
-(thanks!), however, a few additional patches were needed in order to
-address test failures.
+Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+---
+ fs/xfs/xfs_fsops.c | 21 +++++++++++++++++++++
+ fs/xfs/xfs_fsops.h |  1 +
+ fs/xfs/xfs_mount.c |  7 +++++++
+ fs/xfs/xfs_mount.h |  7 +++++++
+ 4 files changed, 36 insertions(+)
 
-In particular, without the 'xfs: include min freelist in
-m_ag_max_usable' patch this series would fail the generic/223 tests
-around stripe alignment, because m_ag_max_usable was slightly larger
-than the actually usable space.  This turned out to be the result of the
-first pre-fill of the AGFL and once corrected the tests pass.
-
-This currently has a failure in xfs/306.  I'm including a patch for
-xfstests to address this.  The per-AG reservation size on the filesystem
-in that test increased by just enough that the filesystem reservation
-that was manually configured to 16 blocks was too small.  Increasing
-that test's reservation to 17 allows it to continue.  The failure
-manifests as dd failing to make progress and the dmesg filling with
-errors about xfs_discard_folio.  Tracing showed that conversion of the
-delalloc to a real allocation was getting ENOSPC.
-
--K
-
-Krister Johansen (5):
-  xfs: count the number of blocks in a per-ag reservation
-  xfs: move calculation in xfs_alloc_min_freelist to its own function
-  xfs: make alloc_set_aside and friends aware of per-AG reservations
-  xfs: push the agfl set aside into xfs_alloc_space_available
-  xfs: include min freelist in m_ag_max_usable
-
- fs/xfs/libxfs/xfs_alloc.c | 184 ++++++++++++++++++++++++++++++--------
- fs/xfs/libxfs/xfs_alloc.h |   1 +
- fs/xfs/xfs_fsops.c        |  21 +++++
- fs/xfs/xfs_fsops.h        |   1 +
- fs/xfs/xfs_mount.c        |  24 +++++
- fs/xfs/xfs_mount.h        |  12 +++
- 6 files changed, 207 insertions(+), 36 deletions(-)
-
-
-base-commit: 7bf888fa26e8f22bed4bc3965ab2a2953104ff96
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index c211ea2b63c4..fefc20df8a2e 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -551,6 +551,27 @@ xfs_fs_reserve_ag_blocks(
+ 	return error;
+ }
+ 
++/*
++ * Count the number of reserved blocks that an AG has requested.
++ */
++uint
++xfs_fs_count_reserved_ag_blocks(
++	struct xfs_mount	*mp,
++	xfs_agnumber_t		agno)
++{
++
++	struct xfs_perag	*pag;
++	uint			blocks = 0;
++
++	pag = xfs_perag_grab(mp, agno);
++	if (!pag)
++		return blocks;
++
++	blocks = pag->pag_meta_resv.ar_asked + pag->pag_rmapbt_resv.ar_asked;
++	xfs_perag_rele(pag);
++	return blocks;
++}
++
+ /*
+  * Free space reserved for per-AG metadata.
+  */
+diff --git a/fs/xfs/xfs_fsops.h b/fs/xfs/xfs_fsops.h
+index 3e2f73bcf831..75f5fa1a38f4 100644
+--- a/fs/xfs/xfs_fsops.h
++++ b/fs/xfs/xfs_fsops.h
+@@ -12,6 +12,7 @@ int xfs_reserve_blocks(struct xfs_mount *mp, uint64_t request);
+ int xfs_fs_goingdown(struct xfs_mount *mp, uint32_t inflags);
+ 
+ int xfs_fs_reserve_ag_blocks(struct xfs_mount *mp);
++uint xfs_fs_count_reserved_ag_blocks(struct xfs_mount *mp, xfs_agnumber_t agno);
+ void xfs_fs_unreserve_ag_blocks(struct xfs_mount *mp);
+ 
+ #endif	/* __XFS_FSOPS_H__ */
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 09eef1721ef4..d6ba67a29e3a 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -952,6 +952,13 @@ xfs_mountfs(
+ 		xfs_warn(mp,
+ 	"ENOSPC reserving per-AG metadata pool, log recovery may fail.");
+ 	error = xfs_log_mount_finish(mp);
++	/*
++	 * Before disabling the temporary per-ag reservation, count up the
++	 * reserved blocks in AG 0.  This will be used to determine how to
++	 * re-size the AGFL reserve and alloc_set_aside prior to enabling
++	 * reservations if the mount is RW.
++	 */
++	mp->m_ag_resblk_count = xfs_fs_count_reserved_ag_blocks(mp, 0);
+ 	xfs_fs_unreserve_ag_blocks(mp);
+ 	if (error) {
+ 		xfs_warn(mp, "log mount finish failed");
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index d0567dfbc036..800788043ca6 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -213,6 +213,13 @@ typedef struct xfs_mount {
+ 	uint64_t		m_resblks;	/* total reserved blocks */
+ 	uint64_t		m_resblks_avail;/* available reserved blocks */
+ 	uint64_t		m_resblks_save;	/* reserved blks @ remount,ro */
++
++	/*
++	 * Number of per-ag resv blocks for a single AG. Derived from AG 0
++	 * under the assumption no per-AG reservations will be larger than that
++	 * one.
++	 */
++	uint			m_ag_resblk_count;
+ 	struct delayed_work	m_reclaim_work;	/* background inode reclaim */
+ 	struct dentry		*m_debugfs;	/* debugfs parent */
+ 	struct xfs_kobj		m_kobj;
 -- 
 2.25.1
 
