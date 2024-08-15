@@ -1,105 +1,100 @@
-Return-Path: <linux-xfs+bounces-11712-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11714-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94826953C91
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 23:24:44 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE0CD953CF6
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 23:54:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 189B71F27448
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 21:24:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 588461F20F1A
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 21:54:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81DB114F9D7;
-	Thu, 15 Aug 2024 21:24:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25CEB15443F;
+	Thu, 15 Aug 2024 21:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="O/+YGfyH"
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="n/tGs89i"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from skyblue.cherry.relay.mailchannels.net (skyblue.cherry.relay.mailchannels.net [23.83.223.167])
+Received: from black.elm.relay.mailchannels.net (black.elm.relay.mailchannels.net [23.83.212.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2250814E2F5
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 21:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF0315442A
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 21:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723757080; cv=pass; b=a/2A+kwZxyKMya3CtiZmkczT1Vwb5YuHIrZgZosEeR+kWkuTbzFnZAVDwKg/q/wH0AUHTJTWn7HONrAOg5zgYkqegJ2vdseCHpt36zezV5KzFoBPkhmD24S7T4qq/D7V5+wEoniWFkn8lglsdXQPcdC0cb/zvTqFTCxyjtvxOzw=
+	t=1723758884; cv=pass; b=bua/Z+4D63Ia13BZQZVLxkRJKkHRt1lHa/rfiNRqdRXPrgTnd454HuJXofW7dPVWHAXzOwFOFSTQNeRTVitpSOc8IifKLvPEZt7jIqVQ34C97f1KAXe7bNijCxpu1kyzjB/e/LxbFDsHd7ROnigvL04V21K8YApQVaX05ywE8w0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723757080; c=relaxed/simple;
+	s=arc-20240116; t=1723758884; c=relaxed/simple;
 	bh=QQK6GS69aXX+74krEAXspDA0eQU5MIwzbpRH8P40iVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sp8+iTT/ER4r/1VbGYSjcKIg0geggIKS4xV+cLN+2PLiroL5kh9vrmdDsvVmhlBCBmuhEvdfKscrekA1bwsBIUuQigYBTYsqjDo+H01Z+jszOePlWS41ckI6WCclus8UvDYyrJfxmmsqRGDn/8UtOHm0jIrcArNFcx5RlNlTXOQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=O/+YGfyH; arc=pass smtp.client-ip=23.83.223.167
+	 Content-Type:Content-Disposition:In-Reply-To; b=T93QePgfrfPr0yc6OHhIi1fDbeeAOMeLfFXEUWznZcNybSSIK1C6IwzikMa8FkiyP0gMsg2dccVkZ2uTtiHKMh9DLhdLN9Br3twiwO+vJlY5spRNf7cBlmJG7AYpctG1z1wCQPMH4a4/KSUaVSECnskD94wGr6OjiGG+/ZVRP2I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=n/tGs89i; arc=pass smtp.client-ip=23.83.212.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id CD33F14613F
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 21:17:29 +0000 (UTC)
-Received: from pdx1-sub0-mail-a258.dreamhost.com (unknown [127.0.0.6])
+	by relay.mailchannels.net (Postfix) with ESMTP id 28DE636606D
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:35:51 +0000 (UTC)
+Received: from pdx1-sub0-mail-a210.dreamhost.com (unknown [127.0.0.6])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 81400146C0D
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 21:17:29 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1723756649; a=rsa-sha256;
+	by relay.mailchannels.net (Postfix) with ESMTPA id CEC3D3664A2
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:35:50 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1723750550; a=rsa-sha256;
 	cv=none;
-	b=nxQvxtewhG2BaKD/pdRZK5phDLTPSfiZ0Y6MQ538AlVO6w8BzkdbuQy5T8kDHIsGn0Pk1r
-	TcPP5I8HLxG7GbbB+KvmQdH6CQib+gGogt/wcZyV6BDp71qJTNTBC4L5q6MrtMnW7upWs8
-	wVlGUq4h8tiJYWm4A1Ad6MvKWyh1a64/4OOSleQo85S78ZIx6qGC3NJkzXs+5DJSTNNrPE
-	F9wG9ta01TvLC5Ubqv3WfWm1+Dv4HSy11q4LCiMYwtYUFWZn2t/aPZgnMieWdxMJlGJ5vW
-	o+GLKgFLaxurXNQCNp9JfMEPEP4Og6FsyKhRSE5wVFR98U+Z0KquvcgyUAP7qA==
+	b=uT3D0dWFWNi3PpIDlA5tCz3ho8LrYRU43VXONgmwsmG4XF70gtyKw571/y2x5Lt/88GDxM
+	JGF7eLuFoRdOIb1UyY27K2Dij8/cZkKE4AlHOg9aqOTiHz7EljVlXQT4B66QxrPp6Df62s
+	G/Xp48xIojCfuUnIbVgvo5lJaXvxnoE2Y1ifdCMASIUhE3kTGxPRXj35EEIRJ1ZoG/4KzC
+	Nw/9vE1J22v53BDRDaccbdOs9hJucjaNhGUNgLaZ+61XYGFJI17V+wP1tVobxmq49dkRIh
+	U+MU2J/oO3XSBT7aMQgdr+uQEeqsJw3vKElpP5wHzUkSmI9UgLzG6qntiyCWGg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-	s=arc-2022; t=1723756649;
+	s=arc-2022; t=1723750550;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 resent-to:resent-from:resent-message-id:in-reply-to:in-reply-to:
-	 references:references:dkim-signature;
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
 	bh=RBN71pbRJTwK1EZaifhgiID77GSAsx/n1jmj9UaAqpI=;
-	b=2CqNyczV59PLXvLgagoUvj4QyPCSfnOGdlOh+ku4D72HSVuaK0VgQHmCORfZKJ8ujYieya
-	vfG4w7YYSSo2ioNzMYWAs1bEpEv2cKv6aGNg/ZmaT/OH9dPfUi3aXkwd/6NO47XH0tyBRW
-	pe7lWuzjxLuOBhdi/rS7RfVWxNqw6cIQIx5sSibG47ldspXw2KAgAbM1lvJheR/vbfYRve
-	Ee21rsEB7dIvcRTiNZYQF146zqFLWr3deMNy9TB2J/1ec85RW8D89VnaS6hR0gFu3YTRI1
-	lYc4veZAGDhba/RLBsdjnpJmBI9qexusjZUTBc+j31e/QQmdyw6TQFa/bDqawA==
+	b=qRBQ2N+nyumBz7SzDR+NsTzf6BFsirbpGPNN/Hz+lmzogSg5wF0SRR+VVIUgeqZqeNoZvf
+	NjAvNDTR64NLrk1koso4oUvp1sLZHeub4PnseGWBM83USXyHTwhrkZWM8fE4S+jy7beBDG
+	W28FJO2Q83ddnSyqchAjGQPCdi8+THM+Ri3w0kHcPkiqWI5rO0PV34w46DAeTijXyRDcZr
+	KYuoP7aW7ARqRk5p0mXM3mfF4GshgQXfv5cwZO0TBtvk5F6Tlm067loU4L/rhuLpADC3I2
+	4HrDOeB+usWYhKXWlJZWRoPV8TQ92JRImZW1WVVdkEJgmcTndQdGu0jWxsHdwg==
 ARC-Authentication-Results: i=1;
-	rspamd-587694846-7tw8q;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=johansen@templeofstupid.com
+	rspamd-587694846-g59mf;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
 X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
 X-MailChannels-Auth-Id: dreamhost
-X-Inform-Shoe: 3cb03cdb7cff3d28_1723756649742_1857344380
-X-MC-Loop-Signature: 1723756649742:687845733
-X-MC-Ingress-Time: 1723756649741
-Received: from pdx1-sub0-mail-a258.dreamhost.com (pop.dreamhost.com
+X-Invention-Well-Made: 774fadda01349edb_1723750551064_2152994407
+X-MC-Loop-Signature: 1723750551064:3416142647
+X-MC-Ingress-Time: 1723750551064
+Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.111.125.119 (trex/7.0.2);
-	Thu, 15 Aug 2024 21:17:29 +0000
+	by 100.110.76.118 (trex/7.0.2);
+	Thu, 15 Aug 2024 19:35:51 +0000
 Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a258.dreamhost.com (Postfix) with ESMTPSA id 4WlHyK2LLRz6H
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 14:17:29 -0700 (PDT)
+	by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4WlFj22LNMzK2
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 12:35:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1723756649;
+	s=dreamhost; t=1723750550;
 	bh=RBN71pbRJTwK1EZaifhgiID77GSAsx/n1jmj9UaAqpI=;
 	h=Date:From:To:Cc:Subject:Content-Type;
-	b=O/+YGfyHlzTvlKzSr38H4uCzJ0747UU0fN9j5F4r34ZWFO/bXi4+jWq0fCMHI6Ilo
-	 oWsMLu0/1OUJQdoNQonCWWRj4sclbykuIQIXu+U/eQsJF37uMsiKqE6mMYqDwcVnov
-	 VMZ8ShagWqNPY2hcJvEon0I7lOmhEJmH64kdnIujzNuymnQQM6UzoWjthAyqIHmREt
-	 yb9dZKbvbtlZ1pFJEuMCBCSmB7+pnstI+ivATJ8HocydjzI7F72Shfh4RngPcFWWVq
-	 eJH+E5wV3VWxKXCQD4K6H/4QqNTN9UOOKekgi+Fl5XiiKk8gJz/ncEhnuBeSeRomdU
-	 9PL8Cf6DSXKgg==
+	b=n/tGs89irVyH72kXnJ4RXETMWFKyLiDZSjN+/IOjdrWNd/3FL8u2P9xAK4GDTgisl
+	 jZq28QbZ7cwaHcXBKY4l7pyIk8pDzurGJb1Neeorm59292PcqHsmQ71IYNZVJaYYzf
+	 +UHQehM+7vEVft55ASYeycFi64fBVdd9xDQtYyWqzzGAits44wSIqbX2EGPpcYZYdn
+	 1rD9rj2uR+/ZVbVpCj0wp4li6T9hakLYpp5UY3Fr/jyrGxaPZFHvILNWxg0ZW4x0eR
+	 sZg4dAwjaHeRVIv2yxxYU957NxujMwnQ8FfPgQ/0SJv3jETx5pKKxsT10hWLNGcKj1
+	 0h6tE1dCNcFHA==
 Received: from johansen (uid 1000)
-	(envelope-from johansen@templeofstupid.com)
-	id e0138
+	(envelope-from kjlx@templeofstupid.com)
+	id e0064
 	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Thu, 15 Aug 2024 14:17:28 -0700
-Resent-From: Krister Johansen <johansen@templeofstupid.com>
-Resent-Date: Thu, 15 Aug 2024 14:17:28 -0700
-Resent-Message-ID: <20240815211728.GB1957@templeofstupid.com>
-Resent-To: linux-xfs@vger.kernel.org
+	Thu, 15 Aug 2024 12:35:49 -0700
 Date: Thu, 15 Aug 2024 12:35:49 -0700
 From: Krister Johansen <kjlx@templeofstupid.com>
 To: Chandan Babu R <chandan.babu@oracle.com>,
