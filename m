@@ -1,112 +1,83 @@
-Return-Path: <linux-xfs+bounces-11716-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11715-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01E00953DC3
-	for <lists+linux-xfs@lfdr.de>; Fri, 16 Aug 2024 01:01:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33064953D9E
+	for <lists+linux-xfs@lfdr.de>; Fri, 16 Aug 2024 00:56:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 273DE1C2571A
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 23:01:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB2E01F23995
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Aug 2024 22:56:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35A3C1553BD;
-	Thu, 15 Aug 2024 22:59:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6241C154C11;
+	Thu, 15 Aug 2024 22:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="igNweWcX"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="DcRZVZ6c"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from dragonfly.birch.relay.mailchannels.net (dragonfly.birch.relay.mailchannels.net [23.83.209.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75D1155726
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 22:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723762780; cv=pass; b=O5QXrisI+uYV7lDvKO4zlIugMo6d0UeYJYa36BynpFjn+KPX5XFS+TkhWdjacWjN2N7FsQXiM52+CBeExwTEMNvi9dlWgM4fL7htYfD8kcQKvdTtxySrLMzztkiyL0gs6i+o+6HxFC+LbetB+ef2z4kY6y+K/Cxp8C/zknrD+tI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723762780; c=relaxed/simple;
-	bh=oN/PUDnAjVWq+DgxdfEgfhbKENytoMooS7/fbncWYqE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8D7154BEA
+	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 22:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723762567; cv=none; b=m84Rhap7gDFLLRvwty+UKWGbda1Fu3Jt0xsX28DLgBiZ0pxxFVBsQ+X4VhBPXYog+vU0Xj2qOsSc/jxdKJylOUTwKRnL2PMlYgR+6fTPLhWaNTECAaUoGYK/0Kj/xkyUFRQ0wknMw4k4kYZb4eSm433R2jb7SIBnB6qxoFPAi58=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723762567; c=relaxed/simple;
+	bh=V225mQvLSldnOZsu/o4H7J3rm6OImbOy18qmjgkzUns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G2uDt+dNJRjVg2S65jVaSTCBmTwTlO/h/nD3AdQ0jt153bOn3eNmj/JHKe+akdMmduY1UmURSNe3X4rxYDCvQbJDBW34L7Sstqt1jM8Ot9vvA5HkVPY0bcqSpsb/91vx+RjS4DaHxQxUbfWIzPZHbIIH5hsbR45cfBy3bhdflLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=igNweWcX; arc=pass smtp.client-ip=23.83.209.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9025184714D
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:32:49 +0000 (UTC)
-Received: from pdx1-sub0-mail-a210.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 44806843C17
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 19:32:49 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1723750369; a=rsa-sha256;
-	cv=none;
-	b=IL3/Spmz9MSNY+Mr/389Tqgupofe2iFy4Ia2WCOA7ntmA9hlR3Cp6TAjRK+lGeQW8akxIp
-	DI0vW+oglY0QSGgSjWNO4dyWzmGHpItki8z/1yUEWjxZjqU6pb0SktLS9IdCc1cqqLmJ4g
-	DpWeUx226+rSN844EMZDarwrkBVl9em6RggXx0mUGOoUQBh1ROco9ID8WagbsWAXnL3b8Q
-	w04QWxLhtGwCmpwXUWS0FtyOA8BMjPWwRlTVir/NUuhK+ABbKuBaKJ+Wjz3FrSa1iXLANy
-	GBS4CD3OqVpgWdfh3/zvQrmgiJQOEQxmGkTvVfF94GjOuhR2uJlt84mwuFw6YQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1723750369;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=ONJXDFMJbMD3oLnJMrIEFCbjfNXrSfx2YBc+dEYC7bM=;
-	b=AmE9pqe8VR9pSbz97HvUDyclquw9A5dRWh8FmQY65fqhS99gDO3d2nznN9gBJPajxbsfQm
-	GYSuB0ym7FyKV2mBnPo2S4U1GsHl/YXwN6jBguoYa3O3F6MJTq+AIONdQHPBLU6WCDjtbf
-	rhPtTtBxdSd6CUk9iyxCzoFqni473ATwVVzlu34xlM8H+KIjcmgM6G4LKXQBbl0AeL/1F5
-	ThuEMUf3BkTPvlOdwn9acWlZpujhGB7aNoQxOorSfbeYWhYsT3+Gwaav3T4Hc1CTZ34dc5
-	yWtddL1f59WP9LC2D/6+LADmkHi+vfdmusNIq1tP2a0Oe7Ufc0Sf/eJkhAQQCg==
-ARC-Authentication-Results: i=1;
-	rspamd-c4b59d8dc-5b9hm;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Scare-Ski: 253a47ab4a267b20_1723750369496_59970097
-X-MC-Loop-Signature: 1723750369496:1856065518
-X-MC-Ingress-Time: 1723750369496
-Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.121.240.56 (trex/7.0.2);
-	Thu, 15 Aug 2024 19:32:49 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4WlFdW0bTLzK2
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 12:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1723750367;
-	bh=ONJXDFMJbMD3oLnJMrIEFCbjfNXrSfx2YBc+dEYC7bM=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=igNweWcXlmO9kRDqrJY24K7BXyP4O0LIPZy6HVMtAvxAGiCCt1qHiaLiou/OIJAA7
-	 i34offxByXO3ZgXQjNO0T37Mrjo7psmC06a4xdcVYKPTYayOrz/GJa8Jr8WzbrRVU0
-	 KmRHg9Rkzoog7DZoEdlnz3UhBuub40mB3vmqPHMS2yCmdUUee1zQJoBk3rh1UmzCo9
-	 z3t5Lg4uESfsVi5IS1C4Z5xJy1Jb/TdEw0P+0OBYQAwNohw+G7iKaXQVfp0uxNVWhk
-	 swrWr0VF1KUeizYJaXWkTKtyC25SB02WYXZ148jVco+/nLrX0XuWya2404CAE5YbXw
-	 7UdSlRI6K0tZA==
-Received: from johansen (uid 1000)
-	(envelope-from kjlx@templeofstupid.com)
-	id e0064
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Thu, 15 Aug 2024 12:32:45 -0700
-Date: Thu, 15 Aug 2024 12:32:45 -0700
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Dave Chinner <david@fromorbit.com>
-Cc: Dave Chinner <dchinner@redhat.com>, Zorro Lang <zlang@kernel.org>,
-	linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: [PATCH 2/5] xfs: move calculation in xfs_alloc_min_freelist to its
- own function
-Message-ID: <7e4310e32168cc4aa9f3a0782a6f6fabcaf476d5.1723688622.git.kjlx@templeofstupid.com>
-References: <cover.1723687224.git.kjlx@templeofstupid.com>
- <cover.1723688622.git.kjlx@templeofstupid.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=COTVTHBYtamayrEGt5izA+OVSEPnWIjrPeXRxCwkCIHyu0Z9B1XWAwIwJcpTuv4Ae65lgwMEdSLgxsFzryXnBDVxcsPDTQZJ1AUjsRyTYl7P8AOmfAoZFEEhK0F105zIIVj7BhTfXplKvXF4/I59imvs/nuPFqK8RjElaY7ny7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=DcRZVZ6c; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-710e39961f4so1085975b3a.3
+        for <linux-xfs@vger.kernel.org>; Thu, 15 Aug 2024 15:56:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1723762564; x=1724367364; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HpvYCpw7xXOcgiFoL0p66SwE4Ip9+p+G8fo1oNmytn4=;
+        b=DcRZVZ6c3cCmBn4oX23x7lf0UuXvxpSevXQzbQtUUzeMoT3oiO8lA6kDm2dhexCULU
+         skJ+eyvRTpGKTlJDMlNXSQ6cJ/bMqvh3k2A37DEmSM6+joDEI5ODd0agcadx/tldht0c
+         Ks0iB0CkppxaTdzD0vLQg1FQFT3kBQTnkIYU9tlaUpnDPyNVOtgqwulWuRClvp8zln/3
+         55Y6S1skJz26e1e/owclaUVOaRgMLMTAcsPzReVwMfkffz8eqhs4gF+58XhurTcDbgTg
+         xHXrt6qqewjFOUv/oMm9G8JVfJPPyZVsoD04kBgk5dl5cXr0bEPKZ+h0MU3XWyEl8GvY
+         ISsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723762564; x=1724367364;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HpvYCpw7xXOcgiFoL0p66SwE4Ip9+p+G8fo1oNmytn4=;
+        b=sim2r+5nvQgwviy4XUVzCc1ab8v5ZqsBOh8RTxSnzwSJJISFIrqHjd2EjtIHfu7+Yo
+         2PVGEcI+/0t9AJ7Xd0TILpRKWWIQh1DLk0PJQiCaAgIB6B4gDD+n5deK4Dr73WOJVWPe
+         DvvylfeHtjkYQamJ6Lfm4oGLLS/xb07b1tTo5I08Ng63FLVdze/U4VkM6Rq7o1Gs6N5y
+         Hbh9u2m03QYExx5DEjdQvL84CAewMq5JVbd+19N0RaxfhUDPqjUrtUuUS9TlvSm/1Akr
+         JVAQRnTSMv/A66p+7qIGCWPF+dNWEH/7B/Lccjg9jdYETFH+U0dwASV6W8j0+WsfMzji
+         /Flg==
+X-Gm-Message-State: AOJu0YzWQZwVkr2/CXxaYHGIhhC0yyitzTlMOp7F7vZjLsZ34Ahenhnf
+	7C79+366lbzzGeWEmYCwErq4zoWjnK+aC2zhYZ1xSEK1lk2i58lklAiwCy6A0CAqjAJy0g3k8dp
+	p
+X-Google-Smtp-Source: AGHT+IFdYyQfsGsJqnlnP43/yRVIRlbQO3OOFx9BvymCWBCriBcMzO0BMD3Rk/+mdI0C1MzfpiPOOQ==
+X-Received: by 2002:a05:6a21:918a:b0:1c4:c1cd:a29d with SMTP id adf61e73a8af0-1c904fb50fbmr1604626637.28.1723762564022;
+        Thu, 15 Aug 2024 15:56:04 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-47-239.pa.nsw.optusnet.com.au. [49.181.47.239])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7c6b61e0e93sm1687244a12.42.2024.08.15.15.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2024 15:56:03 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sejNw-000tGX-2P;
+	Fri, 16 Aug 2024 08:56:00 +1000
+Date: Fri, 16 Aug 2024 08:56:00 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: perf loss on parallel compile due to conention on the buf
+ semaphore
+Message-ID: <Zr6HgCW3nwZi6CTm@dread.disaster.area>
+References: <CAGudoHFJV=S61Fjb=QVf4mSTRfkYf5QR1y0TDMhnawZKtgyouA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -115,124 +86,89 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1723688622.git.kjlx@templeofstupid.com>
+In-Reply-To: <CAGudoHFJV=S61Fjb=QVf4mSTRfkYf5QR1y0TDMhnawZKtgyouA@mail.gmail.com>
 
-This splits xfs_alloc_min_freelist into two pieces.  The piece that
-remains in the function determines the appropriate level to pass to the
-calculation function.  The calcution is extracted into its own inline
-function so that it can be used in multiple locations in xfs_alloc.
+On Thu, Aug 15, 2024 at 02:25:48PM +0200, Mateusz Guzik wrote:
+> I have an ext4-based system where xfs got mounted on tmpfs for testing
+> purposes. The directory is being used a lot by gcc when compiling.
+> 
+> I'm testing with 24 compilers running in parallel, each operating on
+> their own hello world source file, listed at the end for reference.
+>
+> Both ext4 and btrfs backing the directory result in 100% cpu
+> utilization and about 1500 compiles/second. With xfs I see about 20%
+> idle(!) and about 1100 compiles/second.
 
-No functional change.  A subsequent patch will leverage this split.
+Yup, you're not using any of the allocation parallelism in XFS by
+running all the microbenchmark threads in the same directory. That
+serialises the tasks on inode and extent allocation and freeing
+because they all hit the same allocation group.
 
-Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
----
- fs/xfs/libxfs/xfs_alloc.c | 75 +++++++++++++++++++++++----------------
- 1 file changed, 44 insertions(+), 31 deletions(-)
+Start by separating threads per directory because XFS puts
+directories in different allocation groups when they are allocated,
+and then keeps the contents of the directories local to the AG the
+directory is located in. This largely gives perfect scalability
+across directories as long as the filesystem has enough AGs in it.
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 59326f84f6a5..17e029bb1b6d 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -79,6 +79,46 @@ xfs_prealloc_blocks(
- 	return XFS_IBT_BLOCK(mp) + 1;
- }
- 
-+static inline unsigned int
-+xfs_alloc_min_freelist_calc(
-+	const unsigned int bno_level,
-+	const unsigned int cnt_level,
-+	const unsigned int rmap_level)
-+{
-+	unsigned int		min_free;
-+
-+	/*
-+	 * For a btree shorter than the maximum height, the worst case is that
-+	 * every level gets split and a new level is added, then while inserting
-+	 * another entry to refill the AGFL, every level under the old root gets
-+	 * split again. This is:
-+	 *
-+	 *   (full height split reservation) + (AGFL refill split height)
-+	 * = (current height + 1) + (current height - 1)
-+	 * = (new height) + (new height - 2)
-+	 * = 2 * new height - 2
-+	 *
-+	 * For a btree of maximum height, the worst case is that every level
-+	 * under the root gets split, then while inserting another entry to
-+	 * refill the AGFL, every level under the root gets split again. This is
-+	 * also:
-+	 *
-+	 *   2 * (current height - 1)
-+	 * = 2 * (new height - 1)
-+	 * = 2 * new height - 2
-+	 */
-+
-+	/* space needed by-bno freespace btree */
-+	min_free = bno_level * 2 - 2;
-+	/* space needed by-size freespace btree */
-+	min_free += cnt_level * 2 - 2;
-+	/* space needed reverse mapping used space btree */
-+	if (rmap_level)
-+		min_free += rmap_level * 2 - 2;
-+
-+	return min_free;
-+}
-+
- /*
-  * The number of blocks per AG that we withhold from xfs_dec_fdblocks to
-  * guarantee that we can refill the AGFL prior to allocating space in a nearly
-@@ -152,7 +192,6 @@ xfs_alloc_ag_max_usable(
- 	return mp->m_sb.sb_agblocks - blocks;
- }
- 
--
- static int
- xfs_alloc_lookup(
- 	struct xfs_btree_cur	*cur,
-@@ -2449,39 +2488,13 @@ xfs_alloc_min_freelist(
- 	const unsigned int	bno_level = pag ? pag->pagf_bno_level : 1;
- 	const unsigned int	cnt_level = pag ? pag->pagf_cnt_level : 1;
- 	const unsigned int	rmap_level = pag ? pag->pagf_rmap_level : 1;
--	unsigned int		min_free;
- 
- 	ASSERT(mp->m_alloc_maxlevels > 0);
- 
--	/*
--	 * For a btree shorter than the maximum height, the worst case is that
--	 * every level gets split and a new level is added, then while inserting
--	 * another entry to refill the AGFL, every level under the old root gets
--	 * split again. This is:
--	 *
--	 *   (full height split reservation) + (AGFL refill split height)
--	 * = (current height + 1) + (current height - 1)
--	 * = (new height) + (new height - 2)
--	 * = 2 * new height - 2
--	 *
--	 * For a btree of maximum height, the worst case is that every level
--	 * under the root gets split, then while inserting another entry to
--	 * refill the AGFL, every level under the root gets split again. This is
--	 * also:
--	 *
--	 *   2 * (current height - 1)
--	 * = 2 * (new height - 1)
--	 * = 2 * new height - 2
--	 */
--
--	/* space needed by-bno freespace btree */
--	min_free = min(bno_level + 1, mp->m_alloc_maxlevels) * 2 - 2;
--	/* space needed by-size freespace btree */
--	min_free += min(cnt_level + 1, mp->m_alloc_maxlevels) * 2 - 2;
--	/* space needed reverse mapping used space btree */
--	if (xfs_has_rmapbt(mp))
--		min_free += min(rmap_level + 1, mp->m_rmap_maxlevels) * 2 - 2;
--	return min_free;
-+	return xfs_alloc_min_freelist_calc(
-+	    min(bno_level + 1, mp->m_alloc_maxlevels),
-+	    min(cnt_level + 1, mp->m_alloc_maxlevels),
-+	    xfs_has_rmapbt(mp) ? min(rmap_level + 1, mp->m_rmap_maxlevels) : 0);
- }
- 
- /*
+For scalability microbenchmarks, I tend to use ian AG count of 2x
+max thread count.  i.e. for 24 threads, I'd probably use:
+
+# mkfs.xfs -d agcount=49 ....
+
+and put every thread instance in a newly created directory.
+
+For normal workloads (e.g. compiling a large source tree) this
+special setup step is not necessary. e.g. the creation of a large
+source tree naturally distributes all the directories and files over
+all the AGs in the filesystem and so there isn't a single AGI or AGF
+buffer lock that serialises the entire concurrent compilation.
+
+You're going to see the same thing with any other will-it-scale
+concurrency microbenchmark that has each thread allocate/free inodes
+or extents on files in the same directory.
+
+IOWs, this is purely a microbenchmarking setup issue, not a real
+world filesystem scalability issue.
+
+> The fact that this is contended aside, I'll note the stock semaphore
+> code does not do adaptive spinning, which avoidably significantly
+> worsens the impact.
+
+No, we most definitely do not want adaptive spinning. This is a long
+hold, non-owner sleeping lock - it is owned by the buffer, not the
+task that locks the buffer. The semaphore protects the contents of
+the buffer as IO is performed on it (i.e. while it has no task
+associated with it, but hardware is modifying the contents via
+asynchronous DMA).
+
+It is also held for long periods of time even when the task that
+locked it is on-cpu. Inode and extent allocation/freeing can involve
+updating multiple btrees that each contain millions of records, and
+all the buffers may be cached and so the task running the allocaiton
+and holding the AGI/AGF locked might actually run for many
+milliseconds before it yeilds the lock.
+
+We absolutely do not want tens of threads optimistically spinning on
+these locks when contention occurs - spinning locks areit is
+extremely power-inefficient and these locks are held long enough
+that you can measure spinning lock contention events via the power
+socket monitoring...
+
+> You can probably convert this to a rw semaphore
+> and only ever writelock, which should sort out this aspect. I did not
+> check what can be done to contend less to begin with.
+
+No.  We cannot use any other Linux kernel lock for this, because
+they are all mutexes (including rwsems). The optimistic spinning is
+based on a task owning the lock and doing the unlock (that's why
+rwsems track the write owner task).
+
+We need *pure* sleeping semaphore locks for these buffers and we'd
+really, really like for rwsems to be pure semaphores and not a
+bastardised rwmutex for the same reasons....
+
+-Dave.
 -- 
-2.25.1
-
+Dave Chinner
+david@fromorbit.com
 
