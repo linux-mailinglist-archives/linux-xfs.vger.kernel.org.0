@@ -1,126 +1,98 @@
-Return-Path: <linux-xfs+bounces-11757-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11759-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A08E0955ED6
-	for <lists+linux-xfs@lfdr.de>; Sun, 18 Aug 2024 22:16:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F38BE9560A4
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Aug 2024 02:58:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A96F1F21168
-	for <lists+linux-xfs@lfdr.de>; Sun, 18 Aug 2024 20:16:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9367D1F21FB3
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Aug 2024 00:58:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE3841494D8;
-	Sun, 18 Aug 2024 20:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J9BHqRkB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3975D1E4BE;
+	Mon, 19 Aug 2024 00:58:01 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ED91F5FD
-	for <linux-xfs@vger.kernel.org>; Sun, 18 Aug 2024 20:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523DB1D555;
+	Mon, 19 Aug 2024 00:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724012192; cv=none; b=isOPOxLhHu+aRIw6OxRML/bqwEkDlxByH8FF29e1LZ5ffYaMhGOMd+0w0Ph4m1ZiSVOow+sFTqBBlJpXTh08sM5LXDCCCPz5fQ9puTJSGyrEaONWHlLlElc21J162h4i8NKDuYOaDM5w9NxX9cYwpYmKL7Q4fBmPv4w9Xt5URcc=
+	t=1724029081; cv=none; b=AUZfUJHu4U4mmO/9MbaziQegNK9W2fEBE8FNa7qOq1q2cRvJuljdNVTH29TIFN6G0VRJF8q17lXUiFI+aOv6uppIXeeRT0R7/e4wLBYa/zQiLSY8UN7ju42w21DiY1K1uD2sl7zyvwn6qOB/d4VthRDbwKr+SaVoWFYM3oEvhMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724012192; c=relaxed/simple;
-	bh=TGUbjXVA9aSl50o7GSmUfIw+O8tTGf4xBLnLzbfqck8=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=NGypf693c4dxj5kuZf/GwD++SK6XzPYOnY60mZcMojtd1OjgKOs1BvTh2bG0cqIfdBT2ZPLyvlTTilvu8KSoetvhh/cmxnI5Lo5k9c40rJx2xeJq9G42IPUFh30UpPWioUGF16+nfpas11ulUH4P2sqNP4JCebZXZdX+8u2ztGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J9BHqRkB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724012189;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9pnN2touy3okUISVQBvLtGnxKUZwMFoasBZg0jnjJZE=;
-	b=J9BHqRkBWdHQo2p3TWcSa0anUdexT86xXE/DIA9ZTejKgnsk81VWvzUZXPhg+EolqPDsAl
-	UNAtmio2nWOaD21GLK9rRy91285SMB6Aj3N4ew7atyLpB/kAGj0cGcN6pq5qoOsLqlD028
-	P/ZAo0s50n0O4rFZeEE8j9DE2k2uYV4=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-9tKNDKzHPnWMT12Xkczofg-1; Sun,
- 18 Aug 2024 16:16:28 -0400
-X-MC-Unique: 9tKNDKzHPnWMT12Xkczofg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4036219560B4;
-	Sun, 18 Aug 2024 20:16:24 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.30])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 00B8C30001A4;
-	Sun, 18 Aug 2024 20:16:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240818165124.7jrop5sgtv5pjd3g@quentin>
-References: <20240818165124.7jrop5sgtv5pjd3g@quentin> <20240815090849.972355-1-kernel@pankajraghav.com> <2924797.1723836663@warthog.procyon.org.uk>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: dhowells@redhat.com, brauner@kernel.org, akpm@linux-foundation.org,
-    chandan.babu@oracle.com, linux-fsdevel@vger.kernel.org,
-    djwong@kernel.org, hare@suse.de, gost.dev@samsung.com,
-    linux-xfs@vger.kernel.org, hch@lst.de, david@fromorbit.com,
-    Zi Yan <ziy@nvidia.com>, yang@os.amperecomputing.com,
-    linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-    willy@infradead.org, john.g.garry@oracle.com,
-    cl@os.amperecomputing.com, p.raghav@samsung.com, mcgrof@kernel.org,
-    ryan.roberts@arm.com
-Subject: Re: [PATCH v12 00/10] enable bs > ps in XFS
+	s=arc-20240116; t=1724029081; c=relaxed/simple;
+	bh=t+v1L6RykYerGcKn9EIawyURcD9jExAKYf4UT94q4N0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RAX4Ub5PrYjw6c+X/vN29pTPnRt0T5xgs9jRM4AX52IDooF1zQBkGJHh/ol9InIisoPnfgtQkqrCEQVyMKCPFahpL4dEBL3so55wq7/hZWUGU00TjOB1F7HMNQ/DFY9ejLT0FMbW4h9hl0NSqzyKv4jyl3gZKW/IijTju5KdGQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WnDbR689dz1j6cP;
+	Mon, 19 Aug 2024 08:52:51 +0800 (CST)
+Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
+	by mail.maildlp.com (Postfix) with ESMTPS id 902C2140109;
+	Mon, 19 Aug 2024 08:57:49 +0800 (CST)
+Received: from localhost.localdomain (10.175.104.67) by
+ kwepemf100017.china.huawei.com (7.202.181.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 19 Aug 2024 08:57:48 +0800
+From: Zizhi Wo <wozizhi@huawei.com>
+To: <chandan.babu@oracle.com>, <djwong@kernel.org>, <dchinner@redhat.com>,
+	<osandov@fb.com>, <john.g.garry@oracle.com>
+CC: <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<wozizhi@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH V4 0/2] Some bugfix for xfs fsmap
+Date: Mon, 19 Aug 2024 08:53:18 +0800
+Message-ID: <20240819005320.304211-1-wozizhi@huawei.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3141776.1724012176.1@warthog.procyon.org.uk>
-Date: Sun, 18 Aug 2024 21:16:16 +0100
-Message-ID: <3141777.1724012176@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemf100017.china.huawei.com (7.202.181.16)
 
-Pankaj Raghav (Samsung) <kernel@pankajraghav.com> wrote:
+Changes since V3[1]:
+ - For the first patch, simply place the modification logic in the
+   xfs_fsmap_owner_to_rmap() function.
+ - For the second patch, more detailed comments were added and related
+   changes were made to the initialization of the end_daddr field.
 
-> I am no expert in network filesystems but are you sure there are no
-> PAGE_SIZE assumption when manipulating folios from the page cache in
-> AFS?
+This patch set contains two patches to repair fsmap. Although they are both
+problems of missing query intervals, the root causes of the two are
+inconsistent, so two patches are proposed.
 
-Note that I've removed the knowledge of the pagecache from 9p, afs and cifs to
-netfslib and intend to do the same to ceph.  The client filesystems just
-provide read and write ops to netfslib and netfslib uses those to do ordinary
-buffered I/O, unbuffered I/O (selectable by mount option on some filesystems)
-and DIO.
+Patch 1: The fix addresses the interval omission issue caused by the
+incorrect setting of "rm_owner" in the high_key during rmap queries. In
+this scenario, fsmap finds the record on the rmapbt, but due to the
+incorrect setting of the "rm_owner", the key of the record is larger than
+the high_key, causing the query result to be incorrect. This issue is
+resolved by fixing the "rm_owner" setup logic.
 
-That said, I'm not sure that I haven't made some PAGE_SIZE assumptions.  I
-don't *think* I have since netfslib is fully multipage folio capable, but I
-can't guarantee it.
+Patch 2: The fix addresses the interval omission issue caused by bit
+shifting during gap queries in fsmap. In this scenario, fsmap does not
+find the record on the rmapbt, so it needs to locate it by the gap of the
+info->next_daddr and high_key address. However, due to the shift, the two
+are reduced to 0, so the query error is caused. The issue is resolved by
+introducing the "end_daddr" field in the xfs_getfsmap_info structure to
+store the high_key at the sector granularity.
 
-Mostly this was just a note to you that there might be an issue with your code
-- but I haven't investigated it yet and it could well be in my code.
+[1] https://lore.kernel.org/all/20240812011505.1414130-1-wozizhi@huawei.com/
 
-Apparently, I also need to update xfstests, so it could be that too.
+Zizhi Wo (2):
+  xfs: Fix the owner setting issue for rmap query in xfs fsmap
+  xfs: Fix missing interval for missing_owner in xfs fsmap
 
-> > 	ls /afs/openafs.org/www/docs.openafs.org/
-> > 
-> > and browse the publicly accessible files under there.
-> 
-> Great. But is this enough to run FStests? I assume I also need some afs
-> server to run the fstests?
+ fs/xfs/xfs_fsmap.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-Sadly not, but if you turn on some tracepoints, you can see netfslib operating
-under the bonnet.
-
-> Are the tests just failing or are you getting some kernel panic?
-
-Just failing.
-
-Thanks,
-David
+-- 
+2.39.2
 
 
