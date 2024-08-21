@@ -1,64 +1,50 @@
-Return-Path: <linux-xfs+bounces-11831-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11825-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 286129594D6
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 08:40:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 872B59594BF
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 08:36:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5AEB71C22626
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 06:40:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E5D41F2453E
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 06:36:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E7C417108A;
-	Wed, 21 Aug 2024 06:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K+t2+Gnq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89C615C159;
+	Wed, 21 Aug 2024 06:36:39 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2B5170A2C;
-	Wed, 21 Aug 2024 06:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04EB79CD
+	for <linux-xfs@vger.kernel.org>; Wed, 21 Aug 2024 06:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724222360; cv=none; b=FhJojMJbq6z2m414HyBNztycZLyxmmaF42UZD7t/bKdIQ8FIR4XAwue3nitIKdCXikZYHPL4aewbdDTLzqeinHaxnO+W07L0t9HBAMoE6cTOHdcu5JYGWNlVkqiX3YPng0x63EtrFOBIjalJNWdvks2u4JuXOQ6KhOf2R91mBlA=
+	t=1724222199; cv=none; b=VrM4PGEbdPbrLCt+M12KgtcTTYefBF7Vtq59X7DO0Q/b2t7CQe2pgTkttzY1CzMP287pm5qUQQB7SHMe1CtxiSMZIMS0GtNPF0DTKsVLTYdiD5Mlp9oPChFvueM/D79kcpT+LbfmeJBBXy22sGZ8qvSav7kAVDwB0JH7dex/pyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724222360; c=relaxed/simple;
-	bh=a1l5H0ZeSXPVmUrT5jKzje4uC6mxacoXnv/Sytvf8LY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dDTM00qc7IzsFC6WM0a88j6kLkXug7OaiFK7WcoY/IUu5UEVZ9b9sY7TpIkEwU3YYoGob8fxWyBNsM3K+B3jvvUkql0gh1KfEVaHPL3pujsT990ftH7MFQ9q7QBVcZ/9qZNZx6hGIXeXIjCRi9ImmdIcJUCCLVei50CSBuh9/Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=K+t2+Gnq; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=Ql+VaQTZ7hLkH7bRT5C66iw8O48DAz+gyyCW66CXGQM=; b=K+t2+Gnq+Cz14uZTdmhzBTYsoA
-	LJTBOvGnscxKOroGRK20aJA3trjEqhXVVhIGi1TC2hPtQIEkLZMSUTUqXWGoDfXJSeCazkFsnu+tw
-	0GSCPZPpvJK1hNFnKFB9VR0JMiBnL3Zy3b3/p/bcCgEkVTO+k/fSG5RjjvrB+tU0wlRuwtEf32Yv7
-	2cZ/oFQ6Hhp4qhGp5gq8+aE/krgKF6nQkuNUv4cXwGISZddZHzvnYFvENQARwvHB1Epqw234UZFsS
-	MkP+HrnjCKLoMJAvWl1li2TNR+Y2d5/iuZVZpJxeOFuKgcSVj6iUTos34l2gDwSvt4KDV4pa7uy+8
-	txASn7rg==;
-Received: from 2a02-8389-2341-5b80-94d5-b2c4-989b-ff6e.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:94d5:b2c4:989b:ff6e] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sgf00-00000007kGp-46bz;
-	Wed, 21 Aug 2024 06:39:17 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Chandan Babu R <chandan.babu@oracle.com>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 5/5] xfs: use xas_for_each_marked in xfs_reclaim_inodes_count
-Date: Wed, 21 Aug 2024 08:38:32 +0200
-Message-ID: <20240821063901.650776-6-hch@lst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240821063901.650776-1-hch@lst.de>
-References: <20240821063901.650776-1-hch@lst.de>
+	s=arc-20240116; t=1724222199; c=relaxed/simple;
+	bh=c2GIkGocM+Ol4iroqaRZr1NzMdnYbgUGEk+4J9D378I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lebG3Rf7IwpuNSMoSSXy8P2eQu9yNMV9DuCajtZ8qz4m9mPK46rZ/n2SbYZKrdADIPC5GM9GAVWn+Tl7/A7KWJqDp+XzFbNQ1XBukAToIKpmuVGagfk0VKH853mc5H41Nefof8OZClXwqv+avJxnPCaKHHl1Ro5Yb6ICWVr6+Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Wpc1j1nqgzQqG8;
+	Wed, 21 Aug 2024 14:31:53 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2A90F180101;
+	Wed, 21 Aug 2024 14:36:35 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
+ (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 Aug
+ 2024 14:36:34 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <chandan.babu@oracle.com>, <djwong@kernel.org>
+CC: <linux-xfs@vger.kernel.org>, <lihongbo22@huawei.com>
+Subject: [PATCH -next] xfs: use LIST_HEAD() to simplify code
+Date: Wed, 21 Aug 2024 14:43:55 +0800
+Message-ID: <20240821064355.2293091-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -66,97 +52,34 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-xfs_reclaim_inodes_count iterates over all AGs to sum up the reclaimable
-inodes counts.  There is no point in grabbing a reference to the them or
-unlock the RCU critical section for each iteration, so switch to the
-more efficient xas_for_each_marked iterator.
+list_head can be initialized automatically with LIST_HEAD()
+instead of calling INIT_LIST_HEAD().
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 ---
- fs/xfs/xfs_icache.c | 36 ++++++++----------------------------
- fs/xfs/xfs_trace.h  |  2 +-
- 2 files changed, 9 insertions(+), 29 deletions(-)
+ fs/xfs/xfs_mru_cache.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 5bca845e702f1d..d36dbaba660013 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -300,32 +300,6 @@ xfs_perag_clear_inode_tag(
- 	trace_xfs_perag_clear_inode_tag(pag, _RET_IP_);
- }
- 
--/*
-- * Search from @first to find the next perag with the given tag set.
-- */
--static struct xfs_perag *
--xfs_perag_get_next_tag(
--	struct xfs_mount	*mp,
--	struct xfs_perag	*pag,
--	unsigned int		tag)
--{
--	unsigned long		index = 0;
--
--	if (pag) {
--		index = pag->pag_agno + 1;
--		xfs_perag_rele(pag);
--	}
--
--	rcu_read_lock();
--	pag = xa_find(&mp->m_perags, &index, ULONG_MAX, ici_tag_to_mark(tag));
--	if (pag) {
--		trace_xfs_perag_get_next_tag(pag, _RET_IP_);
--		atomic_inc(&pag->pag_ref);
--	}
--	rcu_read_unlock();
--	return pag;
--}
--
- /*
-  * Find the next AG after @pag, or the first AG if @pag is NULL.
-  */
-@@ -1080,11 +1054,17 @@ long
- xfs_reclaim_inodes_count(
- 	struct xfs_mount	*mp)
+diff --git a/fs/xfs/xfs_mru_cache.c b/fs/xfs/xfs_mru_cache.c
+index 7443debaffd6..d0f5b403bdbe 100644
+--- a/fs/xfs/xfs_mru_cache.c
++++ b/fs/xfs/xfs_mru_cache.c
+@@ -230,9 +230,8 @@ _xfs_mru_cache_clear_reap_list(
+ 		__releases(mru->lock) __acquires(mru->lock)
  {
--	struct xfs_perag	*pag = NULL;
-+	XA_STATE		(xas, &mp->m_perags, 0);
- 	long			reclaimable = 0;
-+	struct xfs_perag	*pag;
+ 	struct xfs_mru_cache_elem *elem, *next;
+-	struct list_head	tmp;
++	LIST_HEAD(tmp);
  
--	while ((pag = xfs_perag_get_next_tag(mp, pag, XFS_ICI_RECLAIM_TAG)))
-+	rcu_read_lock();
-+	xas_for_each_marked(&xas, pag, ULONG_MAX, XFS_PERAG_RECLAIM_MARK) {
-+		trace_xfs_reclaim_inodes_count(pag, _THIS_IP_);
- 		reclaimable += pag->pag_ici_reclaimable;
-+	}
-+	rcu_read_unlock();
-+
- 	return reclaimable;
- }
+-	INIT_LIST_HEAD(&tmp);
+ 	list_for_each_entry_safe(elem, next, &mru->reap_list, list_node) {
  
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 002d012ebd83cb..d73c0a49d9dc29 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -210,7 +210,6 @@ DEFINE_EVENT(xfs_perag_class, name,	\
- 	TP_PROTO(struct xfs_perag *pag, unsigned long caller_ip), \
- 	TP_ARGS(pag, caller_ip))
- DEFINE_PERAG_REF_EVENT(xfs_perag_get);
--DEFINE_PERAG_REF_EVENT(xfs_perag_get_next_tag);
- DEFINE_PERAG_REF_EVENT(xfs_perag_hold);
- DEFINE_PERAG_REF_EVENT(xfs_perag_put);
- DEFINE_PERAG_REF_EVENT(xfs_perag_grab);
-@@ -218,6 +217,7 @@ DEFINE_PERAG_REF_EVENT(xfs_perag_grab_next_tag);
- DEFINE_PERAG_REF_EVENT(xfs_perag_rele);
- DEFINE_PERAG_REF_EVENT(xfs_perag_set_inode_tag);
- DEFINE_PERAG_REF_EVENT(xfs_perag_clear_inode_tag);
-+DEFINE_PERAG_REF_EVENT(xfs_reclaim_inodes_count);
- 
- TRACE_EVENT(xfs_inodegc_worker,
- 	TP_PROTO(struct xfs_mount *mp, unsigned int shrinker_hits),
+ 		/* Remove the element from the data store. */
 -- 
-2.43.0
+2.34.1
 
 
