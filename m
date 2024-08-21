@@ -1,85 +1,89 @@
-Return-Path: <linux-xfs+bounces-11825-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-11832-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 872B59594BF
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 08:36:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEA3B95957D
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 09:16:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E5D41F2453E
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 06:36:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73390281752
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Aug 2024 07:16:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A89C615C159;
-	Wed, 21 Aug 2024 06:36:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B48DA158D72;
+	Wed, 21 Aug 2024 07:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="kBxW1OsG"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04EB79CD
-	for <linux-xfs@vger.kernel.org>; Wed, 21 Aug 2024 06:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912CE1A2868;
+	Wed, 21 Aug 2024 07:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724222199; cv=none; b=VrM4PGEbdPbrLCt+M12KgtcTTYefBF7Vtq59X7DO0Q/b2t7CQe2pgTkttzY1CzMP287pm5qUQQB7SHMe1CtxiSMZIMS0GtNPF0DTKsVLTYdiD5Mlp9oPChFvueM/D79kcpT+LbfmeJBBXy22sGZ8qvSav7kAVDwB0JH7dex/pyA=
+	t=1724224566; cv=none; b=o4mk6rsnGVUVzZXYR1xN8ZoPy52EGvxZfHrfswEvMMAENmRWBR75cB6tLsDBV7L5Zv6yEBHcOROmt99mSKu0tY9Zc+8UkBs8lrvBSnL3RQLnDlXScKDxCdk+98LId10mYqFNLL6gM21fV2s//LhSp15CbxkEafJWglnmmtdsY8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724222199; c=relaxed/simple;
-	bh=c2GIkGocM+Ol4iroqaRZr1NzMdnYbgUGEk+4J9D378I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lebG3Rf7IwpuNSMoSSXy8P2eQu9yNMV9DuCajtZ8qz4m9mPK46rZ/n2SbYZKrdADIPC5GM9GAVWn+Tl7/A7KWJqDp+XzFbNQ1XBukAToIKpmuVGagfk0VKH853mc5H41Nefof8OZClXwqv+avJxnPCaKHHl1Ro5Yb6ICWVr6+Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Wpc1j1nqgzQqG8;
-	Wed, 21 Aug 2024 14:31:53 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2A90F180101;
-	Wed, 21 Aug 2024 14:36:35 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 Aug
- 2024 14:36:34 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <chandan.babu@oracle.com>, <djwong@kernel.org>
-CC: <linux-xfs@vger.kernel.org>, <lihongbo22@huawei.com>
-Subject: [PATCH -next] xfs: use LIST_HEAD() to simplify code
-Date: Wed, 21 Aug 2024 14:43:55 +0800
-Message-ID: <20240821064355.2293091-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1724224566; c=relaxed/simple;
+	bh=gGa8aDchR6P35xmEhYkIohAWzHWpKhSYViKdBUb5fSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PHYqrKI4rPA6o0HU+dR+Hj1aZmisI0Ja61oWWlt6oKnkewY4iU5cF6POUbr6IbyicEdCrARpsZsmktGCCyDrXCb72JhxSOqzrOjV1T9IfzZePqTG7pTJhyiwvpyVBdDQfs8DklURI6xNB2EtSMIixz+94dBnENUKioCfp43Ooj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=kBxW1OsG; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Wpd0S5Lg5z9t63;
+	Wed, 21 Aug 2024 09:15:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1724224552;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rYduLHKa0UHntXi/4itA9oNRT2pbqE6hHxbM6/MwnOA=;
+	b=kBxW1OsGM38Idead3+WnZ9Z5SBYYwxcEKeB6IXQ+T2Po00kcJxg2GozC7yxon/8hEC3Hqf
+	HwwfF3xGe7m8KuAne9mcpU/rUiOtNnZXh5ZEVRVVggUipkOPl3O6X4BGOlg/VwqB8P7tKS
+	ZW5yvXOMqrfzIvZBwZ76sbYKig8uYddGLTpWTBSEiHKChB7zk9M/0M0pog3AXBaXenU0SN
+	vUHgB0lZCu0SYeiklp49XQ+eGj6dVaqPxNMAhS5wrCZCDa0X5oYAkS9BoqteNARNVWCYG2
+	+oRPW2jnmZfb8LYdg7FaLjv5CgHR1OSEm+tiOzxKErnqhqIaYWiRJulpcknyFA==
+Date: Wed, 21 Aug 2024 07:15:46 +0000
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: David Sterba <dsterba@suse.cz>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH] Documentation: iomap: fix a typo
+Message-ID: <20240821071546.isbpc2smmjhooetj@quentin>
+References: <20240820161329.1293718-1-kernel@pankajraghav.com>
+ <20240821000525.GM25962@twin.jikos.cz>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240821000525.GM25962@twin.jikos.cz>
+X-Rspamd-Queue-Id: 4Wpd0S5Lg5z9t63
 
-list_head can be initialized automatically with LIST_HEAD()
-instead of calling INIT_LIST_HEAD().
+On Wed, Aug 21, 2024 at 02:05:25AM +0200, David Sterba wrote:
+> On Tue, Aug 20, 2024 at 06:13:29PM +0200, Pankaj Raghav (Samsung) wrote:
+> > From: Pankaj Raghav <p.raghav@samsung.com>
+> > 
+> > Change voidw -> void.
+> 
+> Tips for more typo fixes in the same file: fileystem, constaints,
+> specifc
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- fs/xfs/xfs_mru_cache.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+These are already fixed in fs-next:
+9ba1824cc875 ("Fix spelling and gramatical errors")
 
-diff --git a/fs/xfs/xfs_mru_cache.c b/fs/xfs/xfs_mru_cache.c
-index 7443debaffd6..d0f5b403bdbe 100644
---- a/fs/xfs/xfs_mru_cache.c
-+++ b/fs/xfs/xfs_mru_cache.c
-@@ -230,9 +230,8 @@ _xfs_mru_cache_clear_reap_list(
- 		__releases(mru->lock) __acquires(mru->lock)
- {
- 	struct xfs_mru_cache_elem *elem, *next;
--	struct list_head	tmp;
-+	LIST_HEAD(tmp);
- 
--	INIT_LIST_HEAD(&tmp);
- 	list_for_each_entry_safe(elem, next, &mru->reap_list, list_node) {
- 
- 		/* Remove the element from the data store. */
 -- 
-2.34.1
-
+Pankaj Raghav
 
