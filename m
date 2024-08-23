@@ -1,40 +1,40 @@
-Return-Path: <linux-xfs+bounces-12120-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12122-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA15495CB2F
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 13:09:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 86A4295CB31
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 13:09:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F608B2215E
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 11:09:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB679B20F9B
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 11:09:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775F7187336;
-	Fri, 23 Aug 2024 11:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D8018754E;
+	Fri, 23 Aug 2024 11:09:39 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749161514CE
-	for <linux-xfs@vger.kernel.org>; Fri, 23 Aug 2024 11:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16BB149C46
+	for <linux-xfs@vger.kernel.org>; Fri, 23 Aug 2024 11:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724411378; cv=none; b=iJlSEkBo3h+AROa6JZk1HbuJ25tpI2ltwBeTIF+oGuYWG/BTQfxrS7Ff9LRAkeLYG8EMdeS/Eg6beancDPPhLjn9oY6/szkxQNgoS3cM8OVP9s+HUHT5DmGjlXcyFoTr6NmSlcWoQCRjMeyQgxKUzs0jQKJhU5POh1nPuq5wKs0=
+	t=1724411379; cv=none; b=Y7pnVsZb3IzYttALIbu2k/ioLLwlFGxa3pF51cX3IxiC22MoacVbP+JNDCwNiZIT28alD6uJbbuHoO6ANVOcDJjKDmewQD/XJofPpyMarvKzJcWkM5iTVnT3fCfwxy5eeu7OLbO6BhimfCyGLzOPEPN6I+uxnBmAw2kpjphOXHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724411378; c=relaxed/simple;
-	bh=OY3f8qWwhoKwmht4EJD0rARQyAWl74BWn7bk9rxSP9g=;
+	s=arc-20240116; t=1724411379; c=relaxed/simple;
+	bh=/5n8hzWgz/HuQgiUpMiAmUNXf8su2E3o1Qj6bFxF41U=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=adM/aRkvoxSAyNjOlhbznjfEQn8/qmTey4YvHBFvneqWuKXcXD9J6lnUOmvJm8JcWsOuB3WO5khqoxeYJssKQbQprbiv1uTVUjShwvjKE4wRBzHTcd+dQJHCW258Sas+v0zGO+VzNL81jKWp2NDnzflOB0Glv/WQH9kY/25CO/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	 MIME-Version:Content-Type; b=ezwosEoZpqQgyl1CKuBdC7wFNLpHDOx8l1o68W2xfBRA9uJdvNW0gzJ6zOpCEaVTvqUJ4e+nlPYbTSIolSaFIYnkoFJ7Za0sPgd8axJO+tbj5JnI/ZbZWSrd/Lyri+UIFKsKYyWdmMlj0ue73AhvW4OsrnqDI0GzO2dqYE1pDrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wqy541m3sz1j6fC;
-	Fri, 23 Aug 2024 19:09:28 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Wqy536v4Jz1S8Nh;
+	Fri, 23 Aug 2024 19:09:27 +0800 (CST)
 Received: from dggpemf500017.china.huawei.com (unknown [7.185.36.126])
-	by mail.maildlp.com (Postfix) with ESMTPS id EFDAF1402C7;
-	Fri, 23 Aug 2024 19:09:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 72CE1180042;
+	Fri, 23 Aug 2024 19:09:33 +0800 (CST)
 Received: from localhost.localdomain (10.175.104.67) by
  dggpemf500017.china.huawei.com (7.185.36.126) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -43,9 +43,9 @@ From: Long Li <leo.lilong@huawei.com>
 To: <djwong@kernel.org>, <chandanbabu@kernel.org>
 CC: <linux-xfs@vger.kernel.org>, <david@fromorbit.com>, <yi.zhang@huawei.com>,
 	<houtao1@huawei.com>, <leo.lilong@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH 2/5] xfs: ensuere deleting item from AIL after shutdown in dquot flush
-Date: Fri, 23 Aug 2024 19:04:36 +0800
-Message-ID: <20240823110439.1585041-3-leo.lilong@huawei.com>
+Subject: [PATCH 3/5] xfs: add XFS_ITEM_UNSAFE for log item push return result
+Date: Fri, 23 Aug 2024 19:04:37 +0800
+Message-ID: <20240823110439.1585041-4-leo.lilong@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240823110439.1585041-1-leo.lilong@huawei.com>
 References: <20240823110439.1585041-1-leo.lilong@huawei.com>
@@ -60,38 +60,59 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  dggpemf500017.china.huawei.com (7.185.36.126)
 
-Deleting items from the AIL before the log is shut down can result in the
-log tail moving forward in the journal on disk because log writes can still
-be taking place. As a result, items that have been deleted from the AIL
-might not be recovered during the next mount, even though they should be,
-as they were never written back to disk.
+After pushing log items, the log item may have been freed, making it
+unsafe to access in tracepoints. This commit introduces XFS_ITEM_UNSAFE
+to indicate when an item might be freed during the item push operation.
 
 Signed-off-by: Long Li <leo.lilong@huawei.com>
 ---
- fs/xfs/xfs_dquot.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_stats.h     | 1 +
+ fs/xfs/xfs_trans.h     | 1 +
+ fs/xfs/xfs_trans_ail.c | 7 +++++++
+ 3 files changed, 9 insertions(+)
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index c1b211c260a9..4cbe3db6fc32 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1332,9 +1332,15 @@ xfs_qm_dqflush(
- 	return 0;
+diff --git a/fs/xfs/xfs_stats.h b/fs/xfs/xfs_stats.h
+index a61fb56ed2e6..9a7a020587cf 100644
+--- a/fs/xfs/xfs_stats.h
++++ b/fs/xfs/xfs_stats.h
+@@ -86,6 +86,7 @@ struct __xfsstats {
+ 	uint32_t		xs_push_ail_pushbuf;
+ 	uint32_t		xs_push_ail_pinned;
+ 	uint32_t		xs_push_ail_locked;
++	uint32_t		xs_push_ail_unsafe;
+ 	uint32_t		xs_push_ail_flushing;
+ 	uint32_t		xs_push_ail_restarts;
+ 	uint32_t		xs_push_ail_flush;
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index f06cc0f41665..fd4f04853fe2 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -117,6 +117,7 @@ void	xfs_log_item_init(struct xfs_mount *mp, struct xfs_log_item *item,
+ #define XFS_ITEM_PINNED		1
+ #define XFS_ITEM_LOCKED		2
+ #define XFS_ITEM_FLUSHING	3
++#define XFS_ITEM_UNSAFE		4
  
- out_abort:
-+	/*
-+	 * Shutdown first to stop the log before deleting items from the AIL.
-+	 * Deleting items from the AIL before the log is shut down can result
-+	 * in the log tail moving forward in the journal on disk because log
-+	 * writes can still be taking place.
-+	 */
-+	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- 	dqp->q_flags &= ~XFS_DQFLAG_DIRTY;
- 	xfs_trans_ail_delete(lip, 0);
--	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- out_unlock:
- 	xfs_dqfunlock(dqp);
- 	return error;
+ /*
+  * This is the structure maintained for every active transaction.
+diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+index 8ede9d099d1f..a5ab1ffb8937 100644
+--- a/fs/xfs/xfs_trans_ail.c
++++ b/fs/xfs/xfs_trans_ail.c
+@@ -561,6 +561,13 @@ xfsaild_push(
+ 
+ 			stuck++;
+ 			break;
++		case XFS_ITEM_UNSAFE:
++			/*
++			 * The item may have been freed, so we can't access the
++			 * log item here.
++			 */
++			XFS_STATS_INC(mp, xs_push_ail_unsafe);
++			break;
+ 		default:
+ 			ASSERT(0);
+ 			break;
 -- 
 2.39.2
 
