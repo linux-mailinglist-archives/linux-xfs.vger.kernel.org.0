@@ -1,257 +1,137 @@
-Return-Path: <linux-xfs+bounces-12121-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12123-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6805195CB30
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 13:09:50 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 546CD95CC72
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 14:37:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92668B220B4
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 11:09:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 872781C220CE
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 12:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11627187352;
-	Fri, 23 Aug 2024 11:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB09C18595A;
+	Fri, 23 Aug 2024 12:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgD5VoXW"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0098185B7F
-	for <linux-xfs@vger.kernel.org>; Fri, 23 Aug 2024 11:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621339457;
+	Fri, 23 Aug 2024 12:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724411378; cv=none; b=qpkU6AZskq3GcRFjpfRScsWOqHG/oK/tL1Xyr6pYJp68PgVRtmSJwwNlFf240czcJCuWPOHbP8CjRJe+9AwJBVkcu54behS/ZOx1Gqwy0bs4uLhJ2lA3XpmWcB9vV+T9JI1jIndZ1HMKpXFqjWd/sOwgq/9fm6fmxxpxd8o3ZNw=
+	t=1724416620; cv=none; b=hzi+oJz4rB74a+3lPhg2Qp36/nXK9kUKVuuo8btmiFiFhIX3lCvdeXXgLU9ZVo95dFFd4g5OIu+Z+eaDAlFXizg4g8aH2cqx4RzvnDj/cNAhTnCaV9igyGu3+l/jOTZoocq/ZWBokqT81fqMu88S3VuT6vw7KohLMAjd10B200Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724411378; c=relaxed/simple;
-	bh=ZfHbmb7SG0djaOqPcbnC/PTZ2XJ/fpFfgigxqJqV0+g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D+cA9Goq3C6BlimhpOUsH+lkkJd0p5oVu6Pddwyu7DEH35KDh51W+w/xSUqmTLFGz7FWjCB1mICiC47wjr82OAetocWZoFEN32Df38n+m5ICCgVAKzscRUfo5a6kg4VMTKPqo03hoxA7P1hLNwlcu50I5ej6vWnUIvbEs28xbeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Wqy3M6jl5zpTDT;
-	Fri, 23 Aug 2024 19:07:59 +0800 (CST)
-Received: from dggpemf500017.china.huawei.com (unknown [7.185.36.126])
-	by mail.maildlp.com (Postfix) with ESMTPS id 61FEC1800A4;
-	Fri, 23 Aug 2024 19:09:34 +0800 (CST)
-Received: from localhost.localdomain (10.175.104.67) by
- dggpemf500017.china.huawei.com (7.185.36.126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 Aug 2024 19:09:33 +0800
-From: Long Li <leo.lilong@huawei.com>
-To: <djwong@kernel.org>, <chandanbabu@kernel.org>
-CC: <linux-xfs@vger.kernel.org>, <david@fromorbit.com>, <yi.zhang@huawei.com>,
-	<houtao1@huawei.com>, <leo.lilong@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH 5/5] xfs: fix a UAF when inode item push
-Date: Fri, 23 Aug 2024 19:04:39 +0800
-Message-ID: <20240823110439.1585041-6-leo.lilong@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240823110439.1585041-1-leo.lilong@huawei.com>
-References: <20240823110439.1585041-1-leo.lilong@huawei.com>
+	s=arc-20240116; t=1724416620; c=relaxed/simple;
+	bh=wJm/cK61ICsrxHTxRJLxc2PoHQxXnV6Nne6+HqDiJW4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CgEm23S2YuUNdb87zk9MnUO+nNvHLHm6huIoosEUuRPZ9Hv4RN8XUxvX4907a8c4njIzv010JG19pT9ehGG1zCHBwKL0PHra2xH2ED+oFMVuZ99FKPB/AjjeLrtb9IZE3jvhlfZo6F1jdHuYpq9phMGWvcKSMnPlkJLeA7dnPn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgD5VoXW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DE4C32786;
+	Fri, 23 Aug 2024 12:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724416620;
+	bh=wJm/cK61ICsrxHTxRJLxc2PoHQxXnV6Nne6+HqDiJW4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QgD5VoXWbeZLTru9Tt25aCYhK02rbbQac4qidyVHfGzE+bV8LU4NPLi4BMcFJEsSV
+	 Mja9oOTr8okQXOVansqh1krU3Cdl0UkXQ++CuZqDD7wNa7LEQMqfo1uq9OTEiVMqLG
+	 6XCFsnL4xDGQi3XY77gs5evZpPZn1oWkCHRKqKjeLUJ550XFskgHz+Nngj497f8GsC
+	 YNwH43SjXX7y4e/I/AHcpp8/0sf/Ze2I/tdzCQjx2h6eKRwg/I0bNiYx3MdTPoxX8L
+	 s6RwuOf9mnw/xOXzbBtTUBcWJj28i/GZYwqXsXfHwVZF5Ur2JSlw5ytJE1Gqb1tD8U
+	 yS1VVo76yrUHA==
+From: Christian Brauner <brauner@kernel.org>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	Luis Chamberlain <mcgrof@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	chandan.babu@oracle.com,
+	linux-fsdevel@vger.kernel.org,
+	djwong@kernel.org,
+	hare@suse.de,
+	gost.dev@samsung.com,
+	linux-xfs@vger.kernel.org,
+	hch@lst.de,
+	david@fromorbit.com,
+	Zi Yan <ziy@nvidia.com>,
+	yang@os.amperecomputing.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	willy@infradead.org,
+	john.g.garry@oracle.com,
+	cl@os.amperecomputing.com,
+	p.raghav@samsung.com,
+	ryan.roberts@arm.com,
+	akpm@linux-foundation.org
+Subject: Re: [PATCH v13 00/10] enable bs > ps in XFS
+Date: Fri, 23 Aug 2024 14:36:42 +0200
+Message-ID: <20240823-anstieg-nachwachsen-be47155a7797@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240822135018.1931258-1-kernel@pankajraghav.com>
+References: <20240822135018.1931258-1-kernel@pankajraghav.com> <ZsesYqVivEAToPUI@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2513; i=brauner@kernel.org; h=from:subject:message-id; bh=wJm/cK61ICsrxHTxRJLxc2PoHQxXnV6Nne6+HqDiJW4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSdaIrLviV+VlbhcaZ103ODmJXf29vOvTnKV1taYex2c v1Ng/8KHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABORfsPwP2zF82efLh7WelQn lbx56vdLCzYlJnn5PpzyUPTTMY+0HU8ZGf7mBDRzz3s+SaMhbUlH7MLY1pjVd4XCnkzdJpH4wGP +Ik4A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemf500017.china.huawei.com (7.185.36.126)
 
-KASAN reported a UAF bug while fault injection test:
+On Thu, 22 Aug 2024 15:50:08 +0200, Pankaj Raghav (Samsung) wrote:
+> From: Pankaj Raghav <p.raghav@samsung.com>
+> 
+> This is the 13th version of the series that enables block size > page size
+> (Large Block Size) experimental support in XFS. Please consider this for
+> the inclusion in 6.12.
+> 
+> The context and motivation can be seen in cover letter of the RFC v1 [0].
+> We also recorded a talk about this effort at LPC [1], if someone would
+> like more context on this effort.
+> 
+> [...]
 
-  ==================================================================
-  BUG: KASAN: use-after-free in xfs_inode_item_push+0x2db/0x2f0
-  Read of size 8 at addr ffff888022f74788 by task xfsaild/sda/479
+I've rebased this onto v6.11-rc1 and did a test compile for each commit
+and ran xfstests for xfs. Looks good so far. Should show up in fs-next
+tomorrow.
 
-  CPU: 0 PID: 479 Comm: xfsaild/sda Not tainted 6.2.0-rc7-00003-ga8a43e2eb5f6 #89
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x51/0x6a
-   print_report+0x171/0x4a6
-   kasan_report+0xb7/0x130
-   xfs_inode_item_push+0x2db/0x2f0
-   xfsaild+0x729/0x1f70
-   kthread+0x290/0x340
-   ret_from_fork+0x1f/0x30
-   </TASK>
-
-  Allocated by task 494:
-   kasan_save_stack+0x22/0x40
-   kasan_set_track+0x25/0x30
-   __kasan_slab_alloc+0x58/0x70
-   kmem_cache_alloc+0x197/0x5d0
-   xfs_inode_item_init+0x62/0x170
-   xfs_trans_ijoin+0x15e/0x240
-   xfs_init_new_inode+0x573/0x1820
-   xfs_create+0x6a1/0x1020
-   xfs_generic_create+0x544/0x5d0
-   vfs_mkdir+0x5d0/0x980
-   do_mkdirat+0x14e/0x220
-   __x64_sys_mkdir+0x6a/0x80
-   do_syscall_64+0x39/0x80
-   entry_SYSCALL_64_after_hwframe+0x63/0xcd
-
-  Freed by task 14:
-   kasan_save_stack+0x22/0x40
-   kasan_set_track+0x25/0x30
-   kasan_save_free_info+0x2e/0x40
-   __kasan_slab_free+0x114/0x1b0
-   kmem_cache_free+0xee/0x4e0
-   xfs_inode_free_callback+0x187/0x2a0
-   rcu_do_batch+0x317/0xce0
-   rcu_core+0x686/0xa90
-   __do_softirq+0x1b6/0x626
-
-  The buggy address belongs to the object at ffff888022f74758
-   which belongs to the cache xfs_ili of size 200
-  The buggy address is located 48 bytes inside of
-   200-byte region [ffff888022f74758, ffff888022f74820)
-
-  The buggy address belongs to the physical page:
-  page:ffffea00008bdd00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x22f74
-  head:ffffea00008bdd00 order:1 compound_mapcount:0 subpages_mapcount:0 compound_pincount:0
-  flags: 0x1fffff80010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
-  raw: 001fffff80010200 ffff888010ed4040 ffffea00008b2510 ffffea00008bde10
-  raw: 0000000000000000 00000000001a001a 00000001ffffffff 0000000000000000
-  page dumped because: kasan: bad access detected
-
-  Memory state around the buggy address:
-   ffff888022f74680: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
-   ffff888022f74700: fc fc fc fc fc fc fc fc fc fc fc fa fb fb fb fb
-  >ffff888022f74780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                        ^
-   ffff888022f74800: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-   ffff888022f74880: fc fc 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ==================================================================
-
-When push inode item in xfsaild, it will race with reclaim inodes task.
-Consider the following call graph, both tasks deal with the same inode.
-During flushing the cluster, it will enter xfs_iflush_abort() in shutdown
-conditions, inode's XFS_IFLUSHING flag will be cleared and lip->li_buf set
-to null. Concurrently, inode will be reclaimed in shutdown conditions,
-there is no need to wait xfs buf lock because of lip->li_buf is null at
-this time, inode will be freed via rcu callback if xfsaild task schedule
-out during flushing the cluster. so, it is unsafe to reference lip after
-flushing the cluster in xfs_inode_item_push().
-
-			<log item is in AIL>
-			<filesystem shutdown>
-spin_lock(&ailp->ail_lock)
-xfs_inode_item_push(lip)
-  xfs_buf_trylock(bp)
-  spin_unlock(&lip->li_ailp->ail_lock)
-  xfs_iflush_cluster(bp)
-    if (xfs_is_shutdown())
-      xfs_iflush_abort(ip)
-	xfs_trans_ail_delete(ip)
-	  spin_lock(&ailp->ail_lock)
-	  spin_unlock(&ailp->ail_lock)
-	xfs_iflush_abort_clean(ip)
-      error = -EIO
-			<log item removed from AIL>
-			<log item li_buf set to null>
-    if (error)
-      xfs_force_shutdown()
-	xlog_shutdown_wait(mp->m_log)
-	  might_sleep()
-					xfs_reclaim_inode(ip)
-					if (shutdown)
-					  xfs_iflush_shutdown_abort(ip)
-					    if (!bp)
-					      xfs_iflush_abort(ip)
-					      return
-				        __xfs_inode_free(ip)
-					   call_rcu(ip, xfs_inode_free_callback)
-			......
-			<rcu grace period expires>
-			<rcu free callbacks run somewhere>
-			  xfs_inode_free_callback(ip)
-			    kmem_cache_free(ip->i_itemp)
-			......
-<starts running again>
-    xfs_buf_ioend_fail(bp);
-      xfs_buf_ioend(bp)
-        xfs_buf_relse(bp);
-    return error
-spin_lock(&lip->li_ailp->ail_lock)
-  <UAF on log item>
-
-Additionally, after xfsaild_push_item(), the tracepoints can still access
-the log item, potentially causing a UAF. I've previously submitted two
-versions [1][2] attempting to solve this issue, but the solutions had
-flaws.
-
-Fix it by returning XFS_ITEM_UNSAFE in xfs_inode_item_push() when the log
-item might be freed, ensuring xfsaild does not access the log item after
-it is pushed.
-
-[1] https://patchwork.kernel.org/project/xfs/patch/20230211022941.GA1515023@ceph-admin/
-[2] https://patchwork.kernel.org/project/xfs/patch/20230722025721.312909-1-leo.lilong@huawei.com/
-Fixes: 90c60e164012 ("xfs: xfs_iflush() is no longer necessary")
-Signed-off-by: Long Li <leo.lilong@huawei.com>
 ---
- fs/xfs/xfs_inode_item.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index b509cbd191f4..c855cd2c81a5 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -720,10 +720,11 @@ STATIC uint
- xfs_inode_item_push(
- 	struct xfs_log_item	*lip,
- 	struct list_head	*buffer_list)
--		__releases(&lip->li_ailp->ail_lock)
--		__acquires(&lip->li_ailp->ail_lock)
-+		__releases(&ailp->ail_lock)
-+		__acquires(&ailp->ail_lock)
- {
- 	struct xfs_inode_log_item *iip = INODE_ITEM(lip);
-+	struct xfs_ail		*ailp = lip->li_ailp;
- 	struct xfs_inode	*ip = iip->ili_inode;
- 	struct xfs_buf		*bp = lip->li_buf;
- 	uint			rval = XFS_ITEM_SUCCESS;
-@@ -748,7 +749,7 @@ xfs_inode_item_push(
- 	if (!xfs_buf_trylock(bp))
- 		return XFS_ITEM_LOCKED;
- 
--	spin_unlock(&lip->li_ailp->ail_lock);
-+	spin_unlock(&ailp->ail_lock);
- 
- 	/*
- 	 * We need to hold a reference for flushing the cluster buffer as it may
-@@ -762,17 +763,23 @@ xfs_inode_item_push(
- 		if (!xfs_buf_delwri_queue(bp, buffer_list))
- 			rval = XFS_ITEM_FLUSHING;
- 		xfs_buf_relse(bp);
--	} else {
-+	} else if (error == -EAGAIN) {
- 		/*
- 		 * Release the buffer if we were unable to flush anything. On
- 		 * any other error, the buffer has already been released.
- 		 */
--		if (error == -EAGAIN)
--			xfs_buf_relse(bp);
-+		xfs_buf_relse(bp);
- 		rval = XFS_ITEM_LOCKED;
-+	} else {
-+		/*
-+		 * The filesystem has already been shut down. If there's a race
-+		 * between inode flush and inode reclaim, the inode might be
-+		 * freed. Accessing the item after this point would be unsafe.
-+		 */
-+		rval = XFS_ITEM_UNSAFE;
- 	}
- 
--	spin_lock(&lip->li_ailp->ail_lock);
-+	spin_lock(&ailp->ail_lock);
- 	return rval;
- }
- 
--- 
-2.39.2
+Applied to the vfs.blocksize branch of the vfs/vfs.git tree.
+Patches in the vfs.blocksize branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.blocksize
+
+[01/10] fs: Allow fine-grained control of folio sizes
+        https://git.kernel.org/vfs/vfs/c/e8201b314c01
+[02/10] filemap: allocate mapping_min_order folios in the page cache
+        https://git.kernel.org/vfs/vfs/c/c104d25f8c49
+[03/10] readahead: allocate folios with mapping_min_order in readahead
+        https://git.kernel.org/vfs/vfs/c/7949d4e70aef
+[04/10] mm: split a folio in minimum folio order chunks
+        https://git.kernel.org/vfs/vfs/c/fd031210c9ce
+[05/10] filemap: cap PTE range to be created to allowed zero fill in folio_map_range()
+        https://git.kernel.org/vfs/vfs/c/e9f3b433acd0
+[06/10] iomap: fix iomap_dio_zero() for fs bs > system page size
+        https://git.kernel.org/vfs/vfs/c/d940b3b7b76b
+[07/10] xfs: use kvmalloc for xattr buffers
+        https://git.kernel.org/vfs/vfs/c/13c9f3c68405
+[08/10] xfs: expose block size in stat
+        https://git.kernel.org/vfs/vfs/c/4e70eedd93ae
+[09/10] xfs: make the calculation generic in xfs_sb_validate_fsb_count()
+        https://git.kernel.org/vfs/vfs/c/f8b794f50725
+[10/10] xfs: enable block size larger than page size support
+        https://git.kernel.org/vfs/vfs/c/0ab3ca31b012
 
