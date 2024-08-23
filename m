@@ -1,51 +1,51 @@
-Return-Path: <linux-xfs+bounces-12118-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12120-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A36895CB2C
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 13:09:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA15495CB2F
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 13:09:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E995E284900
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 11:09:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F608B2215E
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Aug 2024 11:09:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47EEA18733D;
-	Fri, 23 Aug 2024 11:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775F7187336;
+	Fri, 23 Aug 2024 11:09:38 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8A3149C46
-	for <linux-xfs@vger.kernel.org>; Fri, 23 Aug 2024 11:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749161514CE
+	for <linux-xfs@vger.kernel.org>; Fri, 23 Aug 2024 11:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724411377; cv=none; b=q4u2lS1zrB2+fzu6kZvR5s+A+z2+W3zxDhen5I4zrD25EePeFzAIALIrUbe1gYW68jTh5tPKtb+fQEZbWtN85vaMx90jTDcXeBE6clqFhcebr5C88Wjw3oVoHm1dphJj6uGhqd8NeQziBNIahpSy+RIeq5WYyy36JYF+gZP+Pc4=
+	t=1724411378; cv=none; b=iJlSEkBo3h+AROa6JZk1HbuJ25tpI2ltwBeTIF+oGuYWG/BTQfxrS7Ff9LRAkeLYG8EMdeS/Eg6beancDPPhLjn9oY6/szkxQNgoS3cM8OVP9s+HUHT5DmGjlXcyFoTr6NmSlcWoQCRjMeyQgxKUzs0jQKJhU5POh1nPuq5wKs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724411377; c=relaxed/simple;
-	bh=SumY8s8vVWlvWgWsSZyYCJFPDfkXACMGJosfzreKhzo=;
+	s=arc-20240116; t=1724411378; c=relaxed/simple;
+	bh=OY3f8qWwhoKwmht4EJD0rARQyAWl74BWn7bk9rxSP9g=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L/fH4evrJXZppgYVPTwfaWlGUleKP4wpigqMp3wqB43kqmVtju5zFge5bDVr6wTdUBvG8NgnjncIR/3QK4XeY2W0/Y04yovO/XeSQDIbW4qOqkrL7v7MFj1otzynjclFjAaiSfbq9zaYd7U27z/4GwMDeRLpmndXW9aaWbOc9XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=adM/aRkvoxSAyNjOlhbznjfEQn8/qmTey4YvHBFvneqWuKXcXD9J6lnUOmvJm8JcWsOuB3WO5khqoxeYJssKQbQprbiv1uTVUjShwvjKE4wRBzHTcd+dQJHCW258Sas+v0zGO+VzNL81jKWp2NDnzflOB0Glv/WQH9kY/25CO/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Wqy4g4ZKbzyR80;
-	Fri, 23 Aug 2024 19:09:07 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wqy541m3sz1j6fC;
+	Fri, 23 Aug 2024 19:09:28 +0800 (CST)
 Received: from dggpemf500017.china.huawei.com (unknown [7.185.36.126])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B7141800CD;
+	by mail.maildlp.com (Postfix) with ESMTPS id EFDAF1402C7;
 	Fri, 23 Aug 2024 19:09:32 +0800 (CST)
 Received: from localhost.localdomain (10.175.104.67) by
  dggpemf500017.china.huawei.com (7.185.36.126) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 23 Aug 2024 19:09:31 +0800
+ 15.2.1544.11; Fri, 23 Aug 2024 19:09:32 +0800
 From: Long Li <leo.lilong@huawei.com>
 To: <djwong@kernel.org>, <chandanbabu@kernel.org>
 CC: <linux-xfs@vger.kernel.org>, <david@fromorbit.com>, <yi.zhang@huawei.com>,
 	<houtao1@huawei.com>, <leo.lilong@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH 1/5] xfs: remove redundant set null for ip->i_itemp
-Date: Fri, 23 Aug 2024 19:04:35 +0800
-Message-ID: <20240823110439.1585041-2-leo.lilong@huawei.com>
+Subject: [PATCH 2/5] xfs: ensuere deleting item from AIL after shutdown in dquot flush
+Date: Fri, 23 Aug 2024 19:04:36 +0800
+Message-ID: <20240823110439.1585041-3-leo.lilong@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240823110439.1585041-1-leo.lilong@huawei.com>
 References: <20240823110439.1585041-1-leo.lilong@huawei.com>
@@ -60,26 +60,38 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  dggpemf500017.china.huawei.com (7.185.36.126)
 
-ip->i_itemp has been set null in xfs_inode_item_destroy(), so there is
-no need set it null again in xfs_inode_free_callback().
+Deleting items from the AIL before the log is shut down can result in the
+log tail moving forward in the journal on disk because log writes can still
+be taking place. As a result, items that have been deleted from the AIL
+might not be recovered during the next mount, even though they should be,
+as they were never written back to disk.
 
 Signed-off-by: Long Li <leo.lilong@huawei.com>
 ---
- fs/xfs/xfs_icache.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/xfs/xfs_dquot.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index cf629302d48e..a5e5e5520a3b 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -143,7 +143,6 @@ xfs_inode_free_callback(
- 		ASSERT(!test_bit(XFS_LI_IN_AIL,
- 				 &ip->i_itemp->ili_item.li_flags));
- 		xfs_inode_item_destroy(ip);
--		ip->i_itemp = NULL;
- 	}
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index c1b211c260a9..4cbe3db6fc32 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -1332,9 +1332,15 @@ xfs_qm_dqflush(
+ 	return 0;
  
- 	kmem_cache_free(xfs_inode_cache, ip);
+ out_abort:
++	/*
++	 * Shutdown first to stop the log before deleting items from the AIL.
++	 * Deleting items from the AIL before the log is shut down can result
++	 * in the log tail moving forward in the journal on disk because log
++	 * writes can still be taking place.
++	 */
++	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+ 	dqp->q_flags &= ~XFS_DQFLAG_DIRTY;
+ 	xfs_trans_ail_delete(lip, 0);
+-	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+ out_unlock:
+ 	xfs_dqfunlock(dqp);
+ 	return error;
 -- 
 2.39.2
 
