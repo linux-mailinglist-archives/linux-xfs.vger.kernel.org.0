@@ -1,68 +1,72 @@
-Return-Path: <linux-xfs+bounces-12406-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12408-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABD79962F89
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Aug 2024 20:14:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27256962F8A
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Aug 2024 20:14:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 669DC285DA7
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Aug 2024 18:14:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A65F1F23D83
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Aug 2024 18:14:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DD6A1AAE04;
-	Wed, 28 Aug 2024 18:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 851A31AAE0A;
+	Wed, 28 Aug 2024 18:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PxfI831l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S7VhhFSs"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31FA149C53
-	for <linux-xfs@vger.kernel.org>; Wed, 28 Aug 2024 18:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE8F1AAE18
+	for <linux-xfs@vger.kernel.org>; Wed, 28 Aug 2024 18:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724868883; cv=none; b=aWPV5Jj2HyvZx6dBAbuvaBtM2dJkz2jwfETPr6lKzEBkQeFTT35Y+a3awxGSWTobYc6faqLK8mPzZxz37wge+3FFbdDo9Sp0To04mrMVb7AqZcNNpYdfu8yGapSDRgSKNbdkkfQRiAQ5V9EFlXgIm0idDaAirhx07PSC5Z5/0eQ=
+	t=1724868887; cv=none; b=F5ioPOCEYJXCiuXRyk0OFcMAqf2W4hemVO3vNG+7ujvjFrluWaGqj07olkx054SKVpYp8wTvPsUiN3OfE+ELze6C0uOnDNcZ9IXZwn8pid4ZNZgD/2PtK7t6wlxxXRqajoiMrNCtRRhO0b2xoGJidIsN2U9eBCeZIdEQsNBcxK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724868883; c=relaxed/simple;
-	bh=dCpgtWqxPDrrTQ2PCkorVmKKJSIljMGz1nChm/bJdu4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LfU4GI71jx3IEK/b0S02EeKlHOIFUI0lork0p6iQMZTTvfyJ2HzAqeFwD40zk/hmu3A3G/hS510kjNy+E7Br9UPcOFL32OSoIqOorwPxeKuUyWzEF/k9eYwSTjpdsJl1mNGplrPMXZlpI9Had6YJnKUTVH5rB73JZCqr4zZflgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PxfI831l; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1724868887; c=relaxed/simple;
+	bh=cHRUz83EMXaqlfUJ9OTVmO+N10HSLJcP+o16mw1uDtM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SEHdrDHdQNsLIJNi4uNNOpupJuLk9eqQuIqVluys3HQ+WN7+IF4PDqtLpnL6KA5yNHkazEgVuQ/nrRmDBkoYYsOdXMJli+WWxBdq5OJ5DwTQcdTP9DmCp8UEIkOHKqjJohiWNFHcvfom9dMQKz/7ZGd7Wx7DTTU7EvCpvGdhuag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S7VhhFSs; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724868880;
+	s=mimecast20190719; t=1724868884;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=e6JKSconfC+2wgnKdBFMcjcFwJ+SubtzD+n1gupZ0UI=;
-	b=PxfI831lHvJIK9VWSKfvGHZ4+IQJIIguyN95mRMeeZgolelmeRrdE51azAR5EoOVzpcm2L
-	wFCBHUS/X/uLPFWCfNDOwPBWvSxU2ZgIMOamRn5msA700cfgJY2UgadKkdBAuz1u+9PXc4
-	oRXo+kU59AXXX9AEJcyI7HAsw0/tO14=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yt9reNIdExQOeIUP0ueGXEa/D+je1P4YQPbZxIQzm0Y=;
+	b=S7VhhFSs/HymbOT2VVkqeFWbl4aIk2h06PgUx4rbK+KT+vXhQLFfJOC7iisGp3nBbJkmgE
+	0Fjj6r8/Fo4wczZb/yu/ymTfX+edHq98PI2Uka8DCfAB517ElqFJttYBBGXKK45yeXbqbI
+	h13kR/F87puVgW0uy8zk5E6FdzNOt0M=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-e1ZobT1aO-2olXFmSOPXYw-1; Wed,
- 28 Aug 2024 14:14:37 -0400
-X-MC-Unique: e1ZobT1aO-2olXFmSOPXYw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-690-O_KnlUshPYCdEKDZes_H4g-1; Wed,
+ 28 Aug 2024 14:14:40 -0400
+X-MC-Unique: O_KnlUshPYCdEKDZes_H4g-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 94BB21955D4E;
-	Wed, 28 Aug 2024 18:14:34 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EF6991955D4B;
+	Wed, 28 Aug 2024 18:14:35 +0000 (UTC)
 Received: from bfoster.redhat.com (unknown [10.22.16.95])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6A99219560A3;
-	Wed, 28 Aug 2024 18:14:33 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D798119560A3;
+	Wed, 28 Aug 2024 18:14:34 +0000 (UTC)
 From: Brian Foster <bfoster@redhat.com>
 To: fstests@vger.kernel.org
 Cc: linux-xfs@vger.kernel.org,
 	djwong@kernel.org,
 	josef@toxicpanda.com,
 	david@fromorbit.com
-Subject: [PATCH v2 0/4] fstests/fsx: test coverage for eof zeroing
-Date: Wed, 28 Aug 2024 14:15:30 -0400
-Message-ID: <20240828181534.41054-1-bfoster@redhat.com>
+Subject: [PATCH v2 1/4] fsx: don't skip file size and buf updates on simulated ops
+Date: Wed, 28 Aug 2024 14:15:31 -0400
+Message-ID: <20240828181534.41054-2-bfoster@redhat.com>
+In-Reply-To: <20240828181534.41054-1-bfoster@redhat.com>
+References: <20240828181534.41054-1-bfoster@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -73,36 +77,136 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Hi all,
+fsx supports the ability to skip through a certain number of
+operations of a given command sequence before beginning full
+operation. The way this works is by tracking the operation count,
+simulating minimal side effects of skipped operations in-memory, and
+then finally writing out the in-memory state to the target file when
+full operation begins.
 
-Here's v2 of the patches for improved test coverage (via fsx) for EOF
-related zeroing. The most notable change is that the discussion on v1
-uncovered that some of the existing fsx behavior was wrong wrt to
-simulated ops, so patch 1 is factored out as a standalone bug fix to
-address that.
+Several fallocate() related operations don't correctly track
+in-memory state when simulated, however. For example, consider an
+ops file with the following two operations:
 
-Brian
+  zero_range 0x0 0x1000 0x0
+  read 0x0 0x1000 0x0
 
-v2:
-- Factored out patch 1 to fix simulation mode.
-- Use MAP_FAILED, don't inject data for simulated ops.
-- Rebase to latest master and renumber test.
-- Use run_fsx and -S 0 by default (timestamp seed).
-v1: https://lore.kernel.org/fstests/20240822144422.188462-1-bfoster@redhat.com/
+... and an fsx run like so:
 
-Brian Foster (4):
-  fsx: don't skip file size and buf updates on simulated ops
-  fsx: factor out a file size update helper
-  fsx: support eof page pollution for eof zeroing test coverage
-  generic: test to run fsx eof pollution
+  fsx -d -b 2 --replay-ops=<opsfile> <file>
 
- ltp/fsx.c             | 134 ++++++++++++++++++++++++++++++++----------
- tests/generic/363     |  23 ++++++++
- tests/generic/363.out |   2 +
- 3 files changed, 127 insertions(+), 32 deletions(-)
- create mode 100755 tests/generic/363
- create mode 100644 tests/generic/363.out
+This simulates the zero_range operation, but fails to track the file
+extension that occurs as a side effect such that the subsequent read
+doesn't occur as expected:
 
+  Will begin at operation 2
+  skipping zero size read
+
+The read is skipped in this case because the file size is zero.  The
+proper behavior, and what is consistent with other size changing
+operations, is to make the appropriate in-core changes before
+checking whether an operation is simulated so the end result of
+those changes can be reflected on-disk for eventual non-simulated
+operations. This results in expected behavior with the same ops file
+and test command:
+
+  Will begin at operation 2
+  2 read  0x0 thru        0xfff   (0x1000 bytes)
+
+Update zero, copy and clone range to do the file size and EOF change
+related zeroing before checking against the simulated ops count.
+
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+---
+ ltp/fsx.c | 40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
+
+diff --git a/ltp/fsx.c b/ltp/fsx.c
+index 2dc59b06..c5727cff 100644
+--- a/ltp/fsx.c
++++ b/ltp/fsx.c
+@@ -1247,6 +1247,17 @@ do_zero_range(unsigned offset, unsigned length, int keep_size)
+ 	log4(OP_ZERO_RANGE, offset, length,
+ 	     keep_size ? FL_KEEP_SIZE : FL_NONE);
+ 
++	if (!keep_size && end_offset > file_size) {
++		/*
++		 * If there's a gap between the old file size and the offset of
++		 * the zero range operation, fill the gap with zeroes.
++		 */
++		if (offset > file_size)
++			memset(good_buf + file_size, '\0', offset - file_size);
++
++		file_size = end_offset;
++	}
++
+ 	if (testcalls <= simulatedopcount)
+ 		return;
+ 
+@@ -1263,17 +1274,6 @@ do_zero_range(unsigned offset, unsigned length, int keep_size)
+ 	}
+ 
+ 	memset(good_buf + offset, '\0', length);
+-
+-	if (!keep_size && end_offset > file_size) {
+-		/*
+-		 * If there's a gap between the old file size and the offset of
+-		 * the zero range operation, fill the gap with zeroes.
+-		 */
+-		if (offset > file_size)
+-			memset(good_buf + file_size, '\0', offset - file_size);
+-
+-		file_size = end_offset;
+-	}
+ }
+ 
+ #else
+@@ -1538,6 +1538,11 @@ do_clone_range(unsigned offset, unsigned length, unsigned dest)
+ 
+ 	log5(OP_CLONE_RANGE, offset, length, dest, FL_NONE);
+ 
++	if (dest > file_size)
++		memset(good_buf + file_size, '\0', dest - file_size);
++	if (dest + length > file_size)
++		file_size = dest + length;
++
+ 	if (testcalls <= simulatedopcount)
+ 		return;
+ 
+@@ -1556,10 +1561,6 @@ do_clone_range(unsigned offset, unsigned length, unsigned dest)
+ 	}
+ 
+ 	memcpy(good_buf + dest, good_buf + offset, length);
+-	if (dest > file_size)
+-		memset(good_buf + file_size, '\0', dest - file_size);
+-	if (dest + length > file_size)
+-		file_size = dest + length;
+ }
+ 
+ #else
+@@ -1756,6 +1757,11 @@ do_copy_range(unsigned offset, unsigned length, unsigned dest)
+ 
+ 	log5(OP_COPY_RANGE, offset, length, dest, FL_NONE);
+ 
++	if (dest > file_size)
++		memset(good_buf + file_size, '\0', dest - file_size);
++	if (dest + length > file_size)
++		file_size = dest + length;
++
+ 	if (testcalls <= simulatedopcount)
+ 		return;
+ 
+@@ -1792,10 +1798,6 @@ do_copy_range(unsigned offset, unsigned length, unsigned dest)
+ 	}
+ 
+ 	memcpy(good_buf + dest, good_buf + offset, length);
+-	if (dest > file_size)
+-		memset(good_buf + file_size, '\0', dest - file_size);
+-	if (dest + length > file_size)
+-		file_size = dest + length;
+ }
+ 
+ #else
 -- 
 2.45.0
 
