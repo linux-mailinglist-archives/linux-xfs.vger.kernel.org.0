@@ -1,187 +1,193 @@
-Return-Path: <linux-xfs+bounces-12821-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12823-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 448D8973754
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Sep 2024 14:29:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2D48973874
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Sep 2024 15:18:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 01F32288232
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Sep 2024 12:29:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 689AB2850B4
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Sep 2024 13:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 253021917D6;
-	Tue, 10 Sep 2024 12:29:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BE1718CC1A;
+	Tue, 10 Sep 2024 13:18:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="pMQ4ThON"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WaVY7oGn"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11010042.outbound.protection.outlook.com [52.101.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45E9191484;
-	Tue, 10 Sep 2024 12:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725971353; cv=fail; b=LOuUJw5HtJ/0BGNi9mwYmUSaTscZPEpFBnhcZsh7HlotuPchVQuwLeoFdWPQdy4I/aLTJHBm5wj2UE9UqTGFa1iFNgEfQRveSasOqJQSOmHOyFy942GDrmWxp1ox5E1sUmwOsveNPkDv7CI+Ue2B8T6dG7aX3u5prknf0xHu2rE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725971353; c=relaxed/simple;
-	bh=iJ4VBeovxXiQyhYRvFx/CNhnJg9oSMvDuGSSh1aoPKc=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CLhPsLyHzDt5Fy6N+UJe5wGooUUMtABReZlxAwYM74ogyLN4nVdRHunfPx4yTxi6Icsr7jUD5XFM4O4j/gcnXKurtWQQebZEy2XPiMwfbF2TB8/EJUrS/WaspNYD05rrPpskqh/Rs41Xus0EUBvWK/4x5uMEH7XTl65IBVo8rlQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=pMQ4ThON; arc=fail smtp.client-ip=52.101.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i6+IOkVeRfT84wkKAV15RpyPFO/RkOVtM+VR3nHM+OaumveiezhSQzmnyfb9/TYgXniQOrNs2/Bw8/Qq1UyuX2DK6Ekjsm5rMKvMxJnV2TEQv8g7j7lyF3koZ0Q7MOlPFmmuT3gyczbYm0nz6jsxF1SfNWJdUlvK6iU5ddt7nfmYL9uH23oZVR6M95vW6CZEmKx5BrVVoqUZzf3+VzNdHKi76Oy0mpXOpzO7kxGwscUdsywjH/vF/BHrTNIZh4uxhifb66ghmngb2mDfrWmjZLdftREyTNVEvj7X3rtpCWOqoHJ/fCVEp2qIlufelrAxwMbTLq7N8dUOBPXUdQ+J+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A1ro3QwgJGjf+5vk49ssAoHTTxZsuukUSZTP9tf/wUk=;
- b=CKMGcojKgo64pO5/lg7dM5AweokIpK1hj+dZvuN/i2zqb16xQzwc7722ScCHmYnWJvExfTDGfH3ZYEQlxjLxRmnIdqh1ogofWISOMNB56ysQvoO1lxRAxgkMBB4ev+WnsK2H4f6c/hj4xEWZwNrbnAD5nMzVrMdtVYfl20xY0D7pEZ2t99OodfjzqUv21q3c2OLqy6Rl98eI2Haj3BnF/YPzeTmfbvebW/AI3JPiVpM/YBmko68FhKSvLIAiW6qA3PzE6f40BsoZoSJmDT4LOe1kgwwVe/N/rNNH5TG7EiR5cjlI4j02X6Jz4lvdXmRISbphI7VPiteKzX09qdKxZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A1ro3QwgJGjf+5vk49ssAoHTTxZsuukUSZTP9tf/wUk=;
- b=pMQ4ThON1f11eeI263oHjGyQJqJkCKtYIwpM1VqgsDK5XeUhgzVlrySn1VMo8pFToncQK6JUwCUMdPknNc4GpHUuRt8U3nuXvhVsEXneIlhJkNS2j+/WMsaOr01o5Jh/LZQq4rb1zwSzc2I+qrs4kpnVXB45Y+uQ2l3xB0zMLrxXIXLVOiPoqEbzgW3phUyY5b2eDnNZfRYt7V5KuDvdlTtszvpIXmvmS+E1Cci2U+WmHrUmuICiyds1hCGLt+X4k+U2ko8zf1K7kseRR/yZ5PqVab4UcOpRMNKsBK9Y7ZMrCTyb83fXt9wHuu6E9T6TpnAw/ikxtRa0+5bja7n/oQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from KL1PR0601MB4113.apcprd06.prod.outlook.com (2603:1096:820:31::7)
- by PUZPR06MB5553.apcprd06.prod.outlook.com (2603:1096:301:ed::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.24; Tue, 10 Sep
- 2024 12:29:06 +0000
-Received: from KL1PR0601MB4113.apcprd06.prod.outlook.com
- ([fe80::7e85:dad0:3f7:78a1]) by KL1PR0601MB4113.apcprd06.prod.outlook.com
- ([fe80::7e85:dad0:3f7:78a1%4]) with mapi id 15.20.7939.022; Tue, 10 Sep 2024
- 12:29:05 +0000
-From: Yan Zhen <yanzhen@vivo.com>
-To: chandan.babu@oracle.com
-Cc: djwong@kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	opensource.kernel@vivo.com,
-	Yan Zhen <yanzhen@vivo.com>
-Subject: [PATCH v1] xfs: scrub: convert comma to semicolon
-Date: Tue, 10 Sep 2024 20:28:42 +0800
-Message-Id: <20240910122842.3269966-1-yanzhen@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0080.jpnprd01.prod.outlook.com
- (2603:1096:404:2c::20) To KL1PR0601MB4113.apcprd06.prod.outlook.com
- (2603:1096:820:31::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8415674E;
+	Tue, 10 Sep 2024 13:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725974311; cv=none; b=BNzNHpSGkroe7T5ExwcSeDGIQG1+HBwZlsVdHrYf8u9XoxaDHc31ym+xfAq1FDpnvltySiEmEIJ9rFKipdkj0rIEy3bbmVglET9FdtRYF+2eoV+Lht+bMIINzRuKipCLYT/AVHT38L9kaZsllG3y0sOong50xoSGgkUXUQPQRRo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725974311; c=relaxed/simple;
+	bh=IOI0mwJULIalAjY5tAYle02KG6qoQq1/4/vmstLws20=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=A+Eo/TFu6/nNZTU5+E3bHYHcg5XUD3BE1qvZZQ9w+JchzqMkP7PEjQDgtQ6RCGHbReKtwP4sV1GOdj7iKHUQbS+IvpAccwRRj6dcJVlNZhm/oiHE/a5+iKjfeynUXOZFBP22n7TLpNfwbuP2xyNaBhAaBL44pGAuoM/dSveJnD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WaVY7oGn; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-718d91eef2eso2745787b3a.1;
+        Tue, 10 Sep 2024 06:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725974309; x=1726579109; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GZSCd6+9c94uE7g9eY8EW7ZyFVJE0bJLRo9INXMYKaY=;
+        b=WaVY7oGnW6j+PBIDcE1wlhAFjNn74kwUAOC3iyfEoq0CakzNovu1c3v1YIbUTog7/w
+         BT0xTb3jH7/pW3y0DYor/wLqMS8xxBj396A4iyBpAQBRxPqQdSqZgzZeimJ9WobXghDR
+         hK6yqp2DsLK8DHUcKXKeABv/d8WY/80ixB0vAmkVHOimXhjoLPo5RKcq40QJTZIkUMVQ
+         nrmueFN0rqZdf7Cr59FxhFoO+5BcFEVPRw7QmWULN4uNthN1g6SK/EwQp79DyNqhR72W
+         wCvq4JHt9gc8wpn2KwcfCHK3NFFS+Yzt30G5TT3sn4ca6X3BiC2kn0ZOk8OBRi8DEDFC
+         puQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725974309; x=1726579109;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GZSCd6+9c94uE7g9eY8EW7ZyFVJE0bJLRo9INXMYKaY=;
+        b=LQqXF4feJbRWiXqehli3G0dbu6/BlXBZ43E2OG+dhSVm2kc09fq5AVpneukl+WexFT
+         xZU7zGCkWDOSMQtNpJcCAv3sFl9lYqbdvLM5573pOHaMylCPc83tH2nOzcjVR/H4E30k
+         ukN3EdY4h4DDmDT1qsE6jD8NouHs8PSuDN8HaBK5yCL4m66YlpmF50SZRs7IXwQK6mfZ
+         EgZxCNdL+15oZ5FcYiHObBVnV1NwG3TD1CHJLkKAafJYERIx/aFZpvSpcDKAdjwK6k1J
+         aTOEsQh3hulQLwLpxpAVRIkpap5Y8VSnvB9ecAVMWDr6XTp13KsatckyW9NiqNpYmRDx
+         YUWw==
+X-Forwarded-Encrypted: i=1; AJvYcCU79ejSdV9Q96Wz6bfusorLohEiBpCCTm1BC1WIdGwVkvHND98IujRf/YOV+WzQ/eQ1AoUXPtDeNMAi@vger.kernel.org, AJvYcCVSFnDlXvsWJ3+9E0WfAQRNXetvdcmc/P+rGocVZ5Vc7EKYFhsbSUlr4zCysZzTrh6VrzSguQ3eqBudb/N1@vger.kernel.org, AJvYcCVfeFxQ/bOaXHFFMTGnMXmjHoaX20HhBTDsvo712/OtTUmvGJ60EG2CWuoqGv3OJfguVZuEahnsUePN3cCc@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP2u/XKvBiwkbLGeZdKLuGriDKdLaSMMDhLqXmXej8TB5E5g3H
+	HUbWGPURuNp6e7JiF1f3R+0LlDmB/cCc7dAHOxhyb7oxPNMbKHSZ
+X-Google-Smtp-Source: AGHT+IFYMIl2DfFThQL0MS1eR55Gv9drM5or7sHiHBvgh5wilqXFLTjSDanBiPTDBZf4mLOZQUJZQw==
+X-Received: by 2002:a05:6a00:66e4:b0:707:fa61:1c6a with SMTP id d2e1a72fcca58-71907f0f6ddmr4484924b3a.10.1725974308849;
+        Tue, 10 Sep 2024 06:18:28 -0700 (PDT)
+Received: from dw-tp ([171.76.84.199])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d8255dc20fsm4784462a12.65.2024.09.10.06.18.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 06:18:28 -0700 (PDT)
+From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+To: Dave Chinner <david@fromorbit.com>, John Garry <john.g.garry@oracle.com>
+Cc: John Garry <john.g.garry@oracle.com>, chandan.babu@oracle.com, djwong@kernel.org, dchinner@redhat.com, hch@lst.de, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, catherine.hoang@oracle.com, martin.petersen@oracle.com
+Subject: Re: [PATCH v4 00/14] forcealign for xfs
+In-Reply-To: <ZtlQt/7VHbOtQ+gY@dread.disaster.area>
+Date: Tue, 10 Sep 2024 18:03:12 +0530
+Message-ID: <8734m7henr.fsf@gmail.com>
+References: <20240813163638.3751939-1-john.g.garry@oracle.com> <87frqf2smy.fsf@gmail.com> <ZtjrUI+oqqABJL2j@dread.disaster.area> <877cbq3g9i.fsf@gmail.com> <ZtlQt/7VHbOtQ+gY@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR0601MB4113:EE_|PUZPR06MB5553:EE_
-X-MS-Office365-Filtering-Correlation-Id: d7a5cb6b-0673-4b91-ff8a-08dcd19428ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YSDs5MrGUVYYFE497G0JcQGBwH+7j+C9DDpM6icYW7Q2cH7nZruOxKVOf1Jh?=
- =?us-ascii?Q?frpRgvH2TDcvkFp/wCrJWWlJ/77uQcqX6rDHtH3ebyivz3rAnuPwDmp6UGnA?=
- =?us-ascii?Q?i8zZO8/tvSpNyuQBICBb6fLof1hK1NaN1rrrdq/CE3lrkwdqcXJjlJjXaE6h?=
- =?us-ascii?Q?SM2o3TXa/A8Q8Q+SML2igsI77dL55Ocp2qtCexhFoNhOU41IGMtaW8T4u96J?=
- =?us-ascii?Q?jBhqL/50gp+BmgYU5kUtkh9pivtQBtr3GtZExTUUtN6Su9LigwXUwmhmQEYH?=
- =?us-ascii?Q?veu+my37x4/xsQ480K0vG7dDD7SLBMhfoSrwONvH0GPVhxxuTFnhk3XjS/XH?=
- =?us-ascii?Q?+DPAuIjoCa9UrkFQMZ9OY2iZyC+JBJHPPpLM4IaLrvRb9uFbLauFohBwDPJ+?=
- =?us-ascii?Q?6Ry9WSvazzhqLRXIuYHdJShY7PKOX9IShtdc+3kHLa6nt2YgDNO3H1e6EW7i?=
- =?us-ascii?Q?MZWwZz/MJY150QB09KpyUpQ506GGIhrdd06cLMYRK18Lr+6WuIszGg9p+WYT?=
- =?us-ascii?Q?Bi6T+BDh/byzzzenI41jGrpaj3FDAjgzRDZL41IScRqa0tz/uVFpt5epat0V?=
- =?us-ascii?Q?JYjGrOasz7xYixtAY4GaxctM7qGO3Y1Vq58eoQaDhKPeT313g265izsTNdJD?=
- =?us-ascii?Q?Xtv0z5uH6qE6mbEM4O3yU8WRwxsZYFVgsVOtw/bsuMKtXFzcTetI7LYl7/aT?=
- =?us-ascii?Q?q534WvZI7ymCcv5aNXlT2Jst1QVbXG2Qzyv+kD70+bD3HxMka/g5emM0TyLJ?=
- =?us-ascii?Q?QLqFYn8+Te0YJpYy3Nf6wvtq1adzTsqhREiqXGKVOv3S4KZ9bBwigzNtg5Kd?=
- =?us-ascii?Q?wzoam4ZAf7k1aq3XOSTwk08nOimuLFo/HBSitnzy8/Va5qct6In5bQQqFvPH?=
- =?us-ascii?Q?4VLOHdsia/hW9RymoZOjP5+WfF8gebbTY/hDmBdMYX3Gnw22x/gsa8XH+h4U?=
- =?us-ascii?Q?P6pW2i27NrCYx8+0UlmqV3YY2SRH9OPB5I5bRBOvDPviC6tTMKHZBORkJTMh?=
- =?us-ascii?Q?7vUy2Ke+schWojqbDgGtz6x3KNKoWICS/3urYxqkFtVFTvmnViS2UEugbXZk?=
- =?us-ascii?Q?jMkRkiZ/QQ/7OnZe+sUzanO21Jqo7PjI+/C+j9muREiyZgogtSJ4KWP0/YtY?=
- =?us-ascii?Q?GHpsdtmf6JuZfvEJskgugiVdZBoKUYfv20PrAqt0dpteSkwMy8cFdl5W3jSF?=
- =?us-ascii?Q?Wd1hJ7AKKFgAqPNEEIeagQcrWJQ3688e8A08fvZeFbgVn1b/NZJ5lIrAdM/x?=
- =?us-ascii?Q?jaDB/Dx5yLassL5K9tnYDLITGMdmH6GwMaRHvgluZsVq79OCy1F6SFaUjcvw?=
- =?us-ascii?Q?wWV1K5LcA/r3teTEboJl/tBkZ3KJodhwTgA4TM0nG2nBH8oRfhsuXCeNuZtX?=
- =?us-ascii?Q?X8i/96ZYr2H5OP7cWXf+C22cRR3oS5sKKgzblsJ3eMw0r8c8yw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR0601MB4113.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fvVaqK8eqSXpg39LIKYiCQsO4g+6lO9s28uyK0w4ybbE7TihAjdU+9XM/mcH?=
- =?us-ascii?Q?KFjqzBHrIRHZnzRIu5SXvzkVJidwnuWLEKTupS16bWeRH9S4NhirNuIWanri?=
- =?us-ascii?Q?bLN4yPdl4/TS+14X9vcAnsrD+DHAtZFkfJBAkuYQRq4EIf0kgaG6w9m6L7wP?=
- =?us-ascii?Q?Nm+MJqC69YNqa6gvp5TGopu85avhyapOyLTlLN07lUV9vZc4NYTvdgvbSEyd?=
- =?us-ascii?Q?H9Rc/yaqgXcXAFJb3aOQPxK+woGDHo48kd6+woo1OB+Z2jzIxTQnTx+lELPu?=
- =?us-ascii?Q?mHlp0Q9Qs43iKse7bMNNepWYg7dxPc/TdePZGeT/yqaEbaULcd6bUYEjbsw/?=
- =?us-ascii?Q?AxWdbgERQD848bMxBYcIO3M6qNSZqb1YW6nQOpmHVVg7tVKJF1bWv7Gq3/6c?=
- =?us-ascii?Q?BRMVKszD8Qu5WwJliTC5++pf+ceJ85LYExOwvTiIWl1NIW4O2Bt8FYdvXl6O?=
- =?us-ascii?Q?nWjtvWWiWnznGmfVxCBx8I3+uW9EwtIKJdu560iEg39XHWPuz3Eiv3K+JFXE?=
- =?us-ascii?Q?wDSHFqZoEVdQbOJgvZBgmiZCmRik3gB/7FcceKLqbHL6ivoOzUjWNQvUesF/?=
- =?us-ascii?Q?QoiByBQIaCmTQGQ2fXGZT371d0pLfnSVOfoBfqfAt53NWdtM9k02LasMR5vS?=
- =?us-ascii?Q?wW5WuypdJIPlkIgRe93QsV2obhuI2pRCNs4TZdM8GYuEgGflg85aUjgBLkN9?=
- =?us-ascii?Q?Uzp3E3e/Q+1Vpv9GZD8vBgfLMx4flyNGjea0eTb9pZRqV6M3lKTp7ZjA7cLz?=
- =?us-ascii?Q?25hEWkBvelmNO90xneDEV5lFPaiAE3OEYFPCkoJIo0ZkYX24N8MVDs0Nm3HP?=
- =?us-ascii?Q?9AypslOvh1CnmNuVornHe2nNWt+DftHpI0+G/Thw4+imM5CsXnDK3L8CSNVz?=
- =?us-ascii?Q?T6bOIbQJqboQCYOBnk/mpG2RhMZOKtoB2HddSshbSFUh3y410as+0NISbGD4?=
- =?us-ascii?Q?fn0ltB0pWr698KG4hsvd9Dq/fJnkGdQtAOUYEnS67FvPvxIlrmk9G6WG8xOK?=
- =?us-ascii?Q?lq6sIXLGaeYYGO3n+2sAsIwX0vAmiVpO8RDXq8b76m+BavAr4L5s4wiPEaFt?=
- =?us-ascii?Q?ZKy5rglXeYPARtwlYsSN0qlpi/qIslgXTvRXXPoPaE6OJ4IBGty1t14eo8Fv?=
- =?us-ascii?Q?ogumb6/Ra8+SlE5wahix4PGFXa5XNNf+wzh01tY/93tj1iAewVfpNiL+V0yY?=
- =?us-ascii?Q?tLnmnZpchh5xlC+GvtOdGEmvGVZ+qtnOharc8nrNp/uwUxha1GSguofxrOuF?=
- =?us-ascii?Q?4M5mLnIWzIZmT9jX5Pd6ROiSJHLxwDB/H8zgWN8SB+GwrIT8mGGsLz2i9ENV?=
- =?us-ascii?Q?m/oJ3zrXSBK0vl9qntbQSdDjHi7Kpwua5zj9UupxCc/FDCjX5f7lCObDrXKw?=
- =?us-ascii?Q?kdGXaI2zZZ3msLPG9fagYuJXMkgcnuoM0ma2Urou/b3q3qDKyEYNvrXk0Y77?=
- =?us-ascii?Q?MI0QSiTQ+5FzYTYn2kjV95L9init1ir6ZjQbBfPItTbRKgghCojN8NnWm1Om?=
- =?us-ascii?Q?oAO3BwE7QgP376RmYIx3hp9eyznFri4turVUvV80PXzg+2mJrYqSyIimABMo?=
- =?us-ascii?Q?Pd7cQ5/syGzdTWB857bpSoCPN3+1+fDxA3nVrJnN?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7a5cb6b-0673-4b91-ff8a-08dcd19428ef
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR0601MB4113.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2024 12:29:05.5157
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jzWLaKrh1F067/XjTA1vInzD3h8IsjVBpJOxNveizGGBU2Rr3twfR06HSbKjiz0wXbrq+DGn7pExX64Zv8YfHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5553
 
-Replace a comma between expression statements by a semicolon.
+Dave Chinner <david@fromorbit.com> writes:
 
-Signed-off-by: Yan Zhen <yanzhen@vivo.com>
----
- fs/xfs/scrub/ialloc_repair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> On Thu, Sep 05, 2024 at 09:26:25AM +0530, Ritesh Harjani wrote:
+>> Dave Chinner <david@fromorbit.com> writes:
+>> > On Wed, Sep 04, 2024 at 11:44:29PM +0530, Ritesh Harjani wrote:
+>> >> 3. It is the FORCEALIGN feature which _mandates_ both allocation
+>> >> (by using extsize hint) and de-allocation to happen _only_ in
+>> >> extsize chunks.
+>> >>
+>> >>    i.e. forcealign mandates -
+>> >>    - the logical and physical start offset should be aligned as
+>> >>    per args->alignment
+>> >>    - extent length be aligned as per args->prod/mod.
+>> >>      If above two cannot be satisfied then return -ENOSPC.
+>> >
+>> > Yes.
+>> >
+>> >> 
+>> >>    - Does the unmapping of extents also only happens in extsize
+>> >>    chunks (with forcealign)?
+>> >
+>> > Yes, via use of xfs_inode_alloc_unitsize() in the high level code
+>> > aligning the fsbno ranges to be unmapped.
+>> >
+>> > Remember, force align requires both logical file offset and
+>> > physical block number to be correctly aligned,
+>> 
+>> This is where I would like to double confirm it again. Even the
+>> extsize hint feature (w/o FORCEALIGN) will try to allocate aligned
+>> physical start and logical start file offset and length right?
+>
+> No.
+>
+>> (Or does extsize hint only restricts alignment to logical start file
+>> offset + length and not the physical start?)
+>
+> Neither.
+>
+> extsize hint by itself (i.e. existing behaviour) has no alignment
+> effect at all. All it affects is -size- of the extent. i.e. once
+> the extent start is chosen, extent size hints will trim the length
+> of the extent to a multiple of the extent size hint. Alignment is
+> not considered at all.
+>
+>> Also it looks like there is no difference with ATOMIC_WRITE AND
+>> FORCEALIGN feature with XFS, correct? (except that ATOMIC_WRITE is
+>> adding additional natural alignment restrictions on pos and len). 
+>
+> Atomic write requires additional hardware support, and it restricts
+> the valid sizes of extent size hints that can be set. Only atomic
+> writes can be done on files marked as configured for atomic writes;
+> force alignment can be done on any file...
+>
+>> So why maintain 2 separate on disk inode flags for FORCEALIGN AND
+>> ATOMIC_WRITE?
+>
+> the atomic write flag indicates that a file has been set up
+> correctly for atomic writes to be able to issues reliably. force
+> alignment doesn't guarantee that - it's just a mechanism that tells
+> the allocator to behave a specific way.
+>
+>> - Do you foresee FORCEALIGN to be also used at other places w/o
+>> ATOMIC_WRITE where feature differentiation between the two on an
+>> inode is required?
+>
+> The already exist. For example, reliably allocating huge page
+> mappings on DAX filesystems requires 2MB forced alignment. 
+>
+>> - Does the same reasoning will hold for XFS_SB_FEAT_RO_COMPAT_FORCEALIGN
+>> & XFS_SB_FEAT_RO_COMPAT_ATOMICWRITES too?
+>
+> Same as above.
+>
+>> - But why ro_compact for ATOMICWRITES? There aren't any on disk metadata
+>> changes within XFS filesystem to support atomic writes, right? 
+>
+> Because if you downgrade the kernel to something that doesn't
+> support atomic writes, then non-atomic sized/aligned data can be
+> written to the file and/or torn writes can occur.
+>
+> Worse, extent size hints that don't match the underlying hardware
+> support could be set up for inodes, and when the kernel is upgraded
+> again then atomic writes will fail on inodes that have atomic write
+> flags set on them....
+>
+>> Is it something to just prevent users from destroying their own data
+>> by not allowing a rw mount from an older kernel where users could do
+>> unaligned writes to files marked for atomic writes?
+>> Or is there any other reasoning to prevent XFS filesystem from becoming
+>> inconsistent if an older kernel does a rw mount here.
+>
+> The older kernel does not know what the unknown inode flag means
+> (i.e. atomic writes) and so, by definition, we cannot allow it to
+> modify metadata or file data because it may not modify it in the
+> correct way for that flag being set on the inode.
+>
+> Kernels that don't understand feature flags need to treat the
+> filesystem as read-only, no matter how trivial the feature addition
+> might seem.
+>
 
-diff --git a/fs/xfs/scrub/ialloc_repair.c b/fs/xfs/scrub/ialloc_repair.c
-index a00ec7ae1..c8d2196a0 100644
---- a/fs/xfs/scrub/ialloc_repair.c
-+++ b/fs/xfs/scrub/ialloc_repair.c
-@@ -657,7 +657,7 @@ xrep_ibt_build_new_trees(
- 	 * Start by setting up the inobt staging cursor.
- 	 */
- 	fsbno = XFS_AGB_TO_FSB(sc->mp, sc->sa.pag->pag_agno,
--			XFS_IBT_BLOCK(sc->mp)),
-+			XFS_IBT_BLOCK(sc->mp));
- 	xrep_newbt_init_ag(&ri->new_inobt, sc, &XFS_RMAP_OINFO_INOBT, fsbno,
- 			XFS_AG_RESV_NONE);
- 	ri->new_inobt.bload.claim_block = xrep_ibt_claim_block;
-@@ -678,7 +678,7 @@ xrep_ibt_build_new_trees(
- 			resv = XFS_AG_RESV_NONE;
- 
- 		fsbno = XFS_AGB_TO_FSB(sc->mp, sc->sa.pag->pag_agno,
--				XFS_FIBT_BLOCK(sc->mp)),
-+				XFS_FIBT_BLOCK(sc->mp));
- 		xrep_newbt_init_ag(&ri->new_finobt, sc, &XFS_RMAP_OINFO_INOBT,
- 				fsbno, resv);
- 		ri->new_finobt.bload.claim_block = xrep_fibt_claim_block;
--- 
-2.34.1
+1. Will it require a fresh formatting of filesystem with mkfs.xfs for
+enabling atomic writes (/forcealign) on XFS?
+  a. Is that because reflink is not support with atomic writes
+  (/forcealign) today?
 
+As I understand for setting forcealign attr on any inode it checks for
+whether xfs_has_forcealign(mp). That means forcealign can _only_ be
+enabled during mkfs time and it also needs reflink to be disabled with
+-m reflink=0. Right?
+
+-ritesh
 
