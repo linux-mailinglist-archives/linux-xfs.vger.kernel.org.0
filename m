@@ -1,88 +1,80 @@
-Return-Path: <linux-xfs+bounces-12849-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12855-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B2279762D6
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 09:38:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A29D9762E6
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 09:40:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 353261C22328
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 07:38:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C5E91C20B94
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 07:40:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FF6F18E052;
-	Thu, 12 Sep 2024 07:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB05D18E03D;
+	Thu, 12 Sep 2024 07:39:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="NmU+sMvZ"
+	dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b="BXj2N8/0"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mitropoulos.debian.org (mitropoulos.debian.org [194.177.211.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A20F18C92D
-	for <linux-xfs@vger.kernel.org>; Thu, 12 Sep 2024 07:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD67818DF7E
+	for <linux-xfs@vger.kernel.org>; Thu, 12 Sep 2024 07:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.177.211.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726126705; cv=none; b=D5WC6Bt9/B0iwP8v0k45PU4JQ854fayCatcwozjnewYEG1Ftta2/gGmfDlXnCLimX0DhGg28N8PiHH3RlXNs5HTLshZYzQrr8BAo1LnPSeDdNGziKQdyJnLKFf2lAjkGHwVFAopVCoMuFiranPTrHO/bcFD7S4ULPee/SXkYuy4=
+	t=1726126783; cv=none; b=hO5dSS4fdiavjWGzL32PgrHEu8ZWLwsnoQuLA8RzoR2KmK6opGQpkVKBh7Hl8ginx247V6cY7HMP5vj1lf8chDq6HFfy0LYqI8paShwwHE9fN4VOgoIpj9uidU3Xwk62BakxLBE0zh+uHYNu7AcBUPEWPi2zyUuBNQeciuDttpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726126705; c=relaxed/simple;
-	bh=zv8FlXkApm/6+aieah+Fctfu6hPlPZHXRIJ3hVKzFyM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cIGH1hUrKss7Whs71CsJtMOfUY3sAcfpACasVLPhIq40Y8q/EZsTtxVJbiECfwOy1DTW12eSnZzbx7rRKjs42xbkNZMlXQf8hS6bXPq/5m3YA8w56bgyDeWLO0qclTpEiiCUFukXpPixQp15mr9DYp3fXk2SZzd0xkJQyFzqrd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=NmU+sMvZ; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=NtnneFsy22GAB+GBHEZSUKwjEqcF3sVcSSbAkgvuLo0=; b=NmU+sMvZ7lKj7BtuZ9NTd44cZ9
-	6bPLg/x84MPp7Ec+Vny5/90tHcKkGIXqPAkvsp/NvRiVPORTnCo1d3TO0rfwVmOckevmKqHTv+NR2
-	ivEyht4SGs+9yMqS0rTv0rsoYX/a5kmmEQuuR3mP+YRp33UP7jaRP6c+yHjhzAtZMiSWDlhLAeGwr
-	D1kHZ4gC0mXjWKeknILRb22nBrBOhOqKstgCmV1TIgPueFzXUiKwtqBmitYyorvDqiWowr4IqF8Mq
-	wKOnh809VunJ1LmZV1mH6izSwcgQgTCM6BkNdFJdtpx94bnF06SdrWqloBoRdukmTaeXCaYk3c7HM
-	c3hMkcdA==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	s=arc-20240116; t=1726126783; c=relaxed/simple;
+	bh=DAuzemJ/LgaH+QiaQaCAZOInoNfgpaQKdbJxqlVekBE=;
+	h=To:From:Subject:Date:Message-Id; b=cDflL0qd3LZFZONtKDN7fSk4kTngpBKxxY5xU0+CYAxsv/TFYprZrhxOeU5CGLilh0NAkOxwHqRJ1lV1T8POljmGlM6pnldTX4s8oefdcmJmPwL0FJEw9kAnE5VLYWl07DiThKi0nEERievV1lQzPdicCVXLXI6bW9gMxH+Hptg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org; spf=none smtp.mailfrom=ftp-master.debian.org; dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b=BXj2N8/0; arc=none smtp.client-ip=194.177.211.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp-master.debian.org
+Received: from usper.debian.org ([2603:400a:ffff:bb8::801f:45]:54568)
+	from C=NA,ST=NA,L=Ankh Morpork,O=Debian SMTP,OU=Debian SMTP CA,CN=usper.debian.org,EMAIL=hostmaster@usper.debian.org (verified)
+	by mitropoulos.debian.org with esmtps (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.94.2)
-	(envelope-from <bage@debian.org>)
-	id 1soe8Z-005cqi-25; Thu, 12 Sep 2024 07:21:06 +0000
-From: Bastian Germann <bage@debian.org>
+	(envelope-from <ftpmaster@ftp-master.debian.org>)
+	id 1soeQV-006qVo-Kc
+	for linux-xfs@vger.kernel.org; Thu, 12 Sep 2024 07:39:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ftp-master.debian.org; s=smtpauto.usper; h=Message-Id:Date:Subject:From:To:
+	Reply-To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=scMemI5U3LlxwyMuyt4TJNxKLmnfXpRAFc0w80Dyr4M=; b=BXj2N8/0akdeNIizIJlbwr6sR2
+	8m4JjkGVSNRjTGm/F+Ctcm/9Wmdcujqa0StDHQ6mffLPYcQs6fsAl2Oyybq1KUo4ejgAK+ayOpaLs
+	HyVAnFPUwiC7DpPpNRDCTujeT7La40bkmcoWhMUsHH1pbEC1x3MvfnydL7XeztROTpfDZrhF2bBeM
+	N3YRHLE52YimRBghnf38IypaB6oev1gFTAR9XoFJMV1S+WxnjcoISJYhphVei5VKTvzfyUqsYaV8i
+	gIFPOSrFSgunZFcMmQTaE7Yobih7IgvxUom4YqUH6QwcAn+h8rf3jHWw/muBtTH0ypSCp+528wSuR
+	uGv5QL3w==;
+Received: from dak-unpriv by usper.debian.org with local (Exim 4.94.2)
+	(envelope-from <ftpmaster@ftp-master.debian.org>)
+	id 1soeQT-004IFm-9y
+	for linux-xfs@vger.kernel.org; Thu, 12 Sep 2024 07:39:37 +0000
 To: linux-xfs@vger.kernel.org
-Cc: Bastian Germann <bage@debian.org>
-Subject: [PATCH 6/6] debian: Correct the day-of-week on 2024-09-04
-Date: Thu, 12 Sep 2024 09:20:53 +0200
-Message-ID: <20240912072059.913-7-bage@debian.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240912072059.913-1-bage@debian.org>
-References: <20240912072059.913-1-bage@debian.org>
+From: Debian FTP Masters <ftpmaster@ftp-master.debian.org>
+Subject: Processing of xfsprogs_6.10.1-1_source.changes
+Date: Thu, 12 Sep 2024 07:39:37 +0000
+X-Debian: DAK
+X-DAK: DAK
+Precedence: bulk
+Auto-Submitted: auto-generated
+X-Debian-Package: xfsprogs
+Message-Id: <E1soeQT-004IFm-9y@usper.debian.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Debian-User: bage
 
-Signed-off-by: Bastian Germann <bage@debian.org>
----
- debian/changelog | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+xfsprogs_6.10.1-1_source.changes uploaded successfully to localhost
+along with the files:
+  xfsprogs_6.10.1-1.dsc
+  xfsprogs_6.10.1.orig.tar.xz
+  xfsprogs_6.10.1-1.debian.tar.xz
+  xfsprogs_6.10.1-1_source.buildinfo
 
-diff --git a/debian/changelog b/debian/changelog
-index cf7fcb4c..82d4a488 100644
---- a/debian/changelog
-+++ b/debian/changelog
-@@ -2,7 +2,7 @@ xfsprogs (6.10.1-1) unstable; urgency=low
- 
-   * New upstream release
- 
-- -- Nathan Scott <nathans@debian.org>  Mon, 04 Sep 2024 14:00:00 +0100
-+ -- Nathan Scott <nathans@debian.org>  Wed, 04 Sep 2024 14:00:00 +0100
- 
- xfsprogs (6.10.0-1) unstable; urgency=low
- 
--- 
-2.45.2
+Greetings,
 
+	Your Debian queue daemon (running on host usper.debian.org)
 
