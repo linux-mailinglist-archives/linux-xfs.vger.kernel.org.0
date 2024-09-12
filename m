@@ -1,57 +1,60 @@
-Return-Path: <linux-xfs+bounces-12852-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12854-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9E4B9762DB
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 09:38:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DD239762DD
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 09:39:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 832A32842F9
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 07:38:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 69F1CB21B62
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 07:39:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD5D18E764;
-	Thu, 12 Sep 2024 07:38:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D5718C033;
+	Thu, 12 Sep 2024 07:38:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="mgpXrN8h"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="JeuIl5cu"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22AC18FDAB
-	for <linux-xfs@vger.kernel.org>; Thu, 12 Sep 2024 07:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EFF18C921
+	for <linux-xfs@vger.kernel.org>; Thu, 12 Sep 2024 07:38:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726126717; cv=none; b=iRQ5mw9zIso+H7Px1e05Ksq74HbS2VgcNL1OIQ3YZxhD58bxxg06bbT0EM3rd6BYEVXEdpIVS2aN2kOV+ZnlN2akCapyz+m/RYOl1OMfLRLwtKEvTQS3S+1KtI5K6QTArB8tV9HExQy96imZKqdHGauOXXUPYwNVxf9F++wbMl4=
+	t=1726126723; cv=none; b=Ywv0hiNj5rU/TGjGpqQzmxJfWNImGMl0rw2IfNTxxYqCmb49+V3a2zanWmEa++HazHGqWwnDjsFpSTpFvXD/fein4GGEwYgfWTCMX64/48Cgu8z06UbiDvy1xkn2OTOD2tdMEd7zlc4mcf7ecXhKY0THJ2fC+ikDiYi18BV3y2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726126717; c=relaxed/simple;
-	bh=fqBxynk4Es3e74L0eg4okwsb6TAncM3I+/iswBmor/c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cAx1tTx/ToSbCacboyFRI18OyOfcmM7DnSFThxUiELOr3PEwjgx3iJpz/Q4ZFJ9f5txjeIfwbvj9b84HKNo7hMrkc0T4DvxNFOvoOpDOTQGmXFk8vEWXJRNhQ2dIXxOXUVrH9UMCrLc7R5ktyCuleKDkoWVzxFvhjbC6FhYdTxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=mgpXrN8h; arc=none smtp.client-ip=82.195.75.108
+	s=arc-20240116; t=1726126723; c=relaxed/simple;
+	bh=GLbNOCupdSU9sHOR6lH8t9NHJx2JAXZEJG3q4/vmK20=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EMEXWHfC9kcQTQfjDfQt1bCtUR12+lsoOCvA2QzKM8b5ai9z/LKx/ELHIB5ATuW4mm+LUe6O2vmcUPFXuNB74ih1NzqZBP/PpkSLFGWy2ir8C2ioAy9C8obALXcZuHYhKViEic1VlDIQz0RnVBZxPqTkr28cRjjGx7wzqlrqgG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=JeuIl5cu; arc=none smtp.client-ip=82.195.75.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
 	s=smtpauto.stravinsky; h=X-Debian-User:Content-Transfer-Encoding:MIME-Version
-	:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=DR3RQQKXaJRcRLHbqR0gmR++mUyDXKynHRIn1o1u4TE=; b=mgpXrN8h7PiflGMmadsr1OBua4
-	CBfGSrEsOwQpsdAL1fyTfUzJppTNNaGbmx6+KbSqK+OPahlJx1msW2n0/ujIe+ey/4zkeQi9d80Q8
-	1KyaVznZIyGtwpoUMa7eVGK1WDEr/4YkwKaH+lbyO3ae1UTGowgokt0spKgJRl3in8YBGBbepXM2U
-	Fe7D5YoVDtNGDXq3dJNEIxDxHI9COgIfZR35NH9EP1yjBcTZ5Qw12/ympA9O2AkxuFGub8eW4Npj5
-	6lLq5TBBEK8afHgnw0w0oxTDnYHuY23t0Y//X3NgOEBY8jkg1c/ick1NF3wOn8sLRB/YioZNM4E+b
-	Qq7BWlwQ==;
+	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=gcYNM3C51Cypgj7C9yVrzJZMfQVJ75AGr/d/Pl0KV3o=; b=JeuIl5cuZLU//Ql4S0c/YnDu5q
+	2RGCuspltE1b1OMYQIy0pC+FENV2dvv+X2sp3/byxDsJOiF4+D2BTCnVGSYDcrV4bq651UcG8V1D+
+	IhuZV6BUFoHmEhmEQtCVMO7LYe+gAR68NgdzpJRv+4sRD6fDcdd+hM5Ud5PKClJ6I0uFmLV8fyoYW
+	six8KOaakMARS/scolpToHgJxmKIcfIRPHEFxrJ6LxmwluyItb7xYwubf9aaIxPHSOpsx4fRfgddH
+	Vpsd0YGevf15ggUI06YpxZhxBCy1E3P4JvN/RzWoInkVKanVqWW/YSqpvDaLP+R3GU/aBEXgI+G9F
+	txten/Zg==;
 Received: from authenticated user
 	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.94.2)
 	(envelope-from <bage@debian.org>)
-	id 1soe8W-005cqi-0v; Thu, 12 Sep 2024 07:21:03 +0000
+	id 1soe8W-005cqi-Ec; Thu, 12 Sep 2024 07:21:03 +0000
 From: Bastian Germann <bage@debian.org>
 To: linux-xfs@vger.kernel.org
 Cc: Bastian Germann <bage@debian.org>
-Subject: [PATCH 0/6] debian: Debian and Ubuntu archive changes
-Date: Thu, 12 Sep 2024 09:20:47 +0200
-Message-ID: <20240912072059.913-1-bage@debian.org>
+Subject: [PATCH 1/6] debian: Update debhelper-compat level
+Date: Thu, 12 Sep 2024 09:20:48 +0200
+Message-ID: <20240912072059.913-2-bage@debian.org>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240912072059.913-1-bage@debian.org>
+References: <20240912072059.913-1-bage@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -61,27 +64,35 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Debian-User: bage
 
-Hi,
+debhelper-compat-upgrade-checklist.7 discourages using level 11.
+Update to compat level 12, which is supported back to buster.
 
-I am forwarding all the changes that are in the Debian and Ubuntu
-archives with a major structural change in the debian/rules file,
-which gets the package to a more modern dh-based build flavor.
+Signed-off-by: Bastian Germann <bage@debian.org>
+---
+ debian/compat  | 2 +-
+ debian/control | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Bastian Germann (6):
-  debian: Update debhelper-compat level
-  debian: Update public release key
-  debian: Prevent recreating the orig tarball
-  debian: Add Build-Depends: systemd-dev
-  debian: Modernize build script
-  debian: Correct the day-of-week on 2024-09-04
-
- debian/changelog                |   2 +-
- debian/compat                   |   2 +-
- debian/control                  |   2 +-
- debian/rules                    |  81 ++++++++----------------
- debian/upstream/signing-key.asc | 106 ++++++++++++++------------------
- 5 files changed, 75 insertions(+), 118 deletions(-)
-
+diff --git a/debian/compat b/debian/compat
+index b4de3947..48082f72 100644
+--- a/debian/compat
++++ b/debian/compat
+@@ -1 +1 @@
+-11
++12
+diff --git a/debian/control b/debian/control
+index 31773e53..369d11a4 100644
+--- a/debian/control
++++ b/debian/control
+@@ -3,7 +3,7 @@ Section: admin
+ Priority: optional
+ Maintainer: XFS Development Team <linux-xfs@vger.kernel.org>
+ Uploaders: Nathan Scott <nathans@debian.org>, Anibal Monsalve Salazar <anibal@debian.org>, Bastian Germann <bage@debian.org>
+-Build-Depends: libinih-dev (>= 53), uuid-dev, dh-autoreconf, debhelper (>= 5), gettext, libtool, libedit-dev, libblkid-dev (>= 2.17), linux-libc-dev, libdevmapper-dev, libattr1-dev, libicu-dev, pkg-config, liburcu-dev
++Build-Depends: libinih-dev (>= 53), uuid-dev, debhelper (>= 12), gettext, libtool, libedit-dev, libblkid-dev (>= 2.17), linux-libc-dev, libdevmapper-dev, libattr1-dev, libicu-dev, pkg-config, liburcu-dev
+ Standards-Version: 4.0.0
+ Homepage: https://xfs.wiki.kernel.org/
+ 
 -- 
 2.45.2
 
