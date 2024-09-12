@@ -1,95 +1,88 @@
-Return-Path: <linux-xfs+bounces-12847-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12852-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45BB69754A1
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Sep 2024 15:53:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9E4B9762DB
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 09:38:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 785AF1C209ED
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Sep 2024 13:53:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 832A32842F9
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Sep 2024 07:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C767D19F138;
-	Wed, 11 Sep 2024 13:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FD5D18E764;
+	Thu, 12 Sep 2024 07:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NeyCdeiW"
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="mgpXrN8h"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A6119E96A;
-	Wed, 11 Sep 2024 13:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22AC18FDAB
+	for <linux-xfs@vger.kernel.org>; Thu, 12 Sep 2024 07:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726062703; cv=none; b=ra4undIwXsq/jk2dwXOk4BDvRYwe5MqIyOzE/ZS9yWxAyXksRP7li7IB1+8hk5v3Yx1U6ACB4+fEZV8eBBLu2sXwWuPQQvABFX92pI9iw6LONKljDu/Bw1lYBb49FeQVHyj8M1qvp5YtP9jba/BNXp6WsziInpPi6QYS9iIA2ds=
+	t=1726126717; cv=none; b=iRQ5mw9zIso+H7Px1e05Ksq74HbS2VgcNL1OIQ3YZxhD58bxxg06bbT0EM3rd6BYEVXEdpIVS2aN2kOV+ZnlN2akCapyz+m/RYOl1OMfLRLwtKEvTQS3S+1KtI5K6QTArB8tV9HExQy96imZKqdHGauOXXUPYwNVxf9F++wbMl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726062703; c=relaxed/simple;
-	bh=esTHwqZQY89z5c47Uj1ctm3mtoh1ZJVRwU7dALV134M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=GbN9fkg8t+RGSgi7dkBL/4/eO4z94+MQ1OizVDjD0V8SMCfbqfyI8FyKodvEWnKkrwDTD+KSIG0IsE8jOfC2fA+1YtHJ6uWM455odU5sjBvdDzLLP3Sacp0CtuJxRNhSz0G3aX6Vix2azNdyR/C8AaVm9Q4UP3ITaGwnnBUKnqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NeyCdeiW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF906C4CEC0;
-	Wed, 11 Sep 2024 13:51:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726062703;
-	bh=esTHwqZQY89z5c47Uj1ctm3mtoh1ZJVRwU7dALV134M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NeyCdeiWUHf3IhSEPWgn2DkGBpDRb6SsxBs0RlFNx4Fczo9SA+YQUAs7N7MXjnlwH
-	 Gyy1v26ZHQEufa0y5X3aD8gjYfMyeELL8qUE+3IT4CaETrivxjLh7SrcITxVwztza/
-	 VA8AFfg3ajOY04ThGUNZAC11cVEBrJTzICSAA12u+teMxc4mbJA/QuYMUZvA8W15uv
-	 whxc0cB3MSr0cZpm7J0awJF375VohEBUdzt/+7tvxuNOcCOiwPY4NzvlReDT3hx+/W
-	 B6u9ooKkI5apaP5bHY5GrIGwL9AX47T3mdgiRO06TIrTHWAd4q8mOybhrqk7+Zjwyv
-	 MiK8XtH8RPkVw==
-Date: Wed, 11 Sep 2024 08:51:41 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: dan.j.williams@intel.com, linux-mm@kvack.org, vishal.l.verma@intel.com,
-	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com,
-	jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
-	will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
-	dave.hansen@linux.intel.com, ira.weiny@intel.com,
-	willy@infradead.org, djwong@kernel.org, tytso@mit.edu,
-	linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
-	david@fromorbit.com
-Subject: Re: [PATCH 02/12] pci/p2pdma: Don't initialise page refcount to one
-Message-ID: <20240911135141.GA629523@bhelgaas>
+	s=arc-20240116; t=1726126717; c=relaxed/simple;
+	bh=fqBxynk4Es3e74L0eg4okwsb6TAncM3I+/iswBmor/c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cAx1tTx/ToSbCacboyFRI18OyOfcmM7DnSFThxUiELOr3PEwjgx3iJpz/Q4ZFJ9f5txjeIfwbvj9b84HKNo7hMrkc0T4DvxNFOvoOpDOTQGmXFk8vEWXJRNhQ2dIXxOXUVrH9UMCrLc7R5ktyCuleKDkoWVzxFvhjbC6FhYdTxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=mgpXrN8h; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Content-Transfer-Encoding:MIME-Version
+	:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=DR3RQQKXaJRcRLHbqR0gmR++mUyDXKynHRIn1o1u4TE=; b=mgpXrN8h7PiflGMmadsr1OBua4
+	CBfGSrEsOwQpsdAL1fyTfUzJppTNNaGbmx6+KbSqK+OPahlJx1msW2n0/ujIe+ey/4zkeQi9d80Q8
+	1KyaVznZIyGtwpoUMa7eVGK1WDEr/4YkwKaH+lbyO3ae1UTGowgokt0spKgJRl3in8YBGBbepXM2U
+	Fe7D5YoVDtNGDXq3dJNEIxDxHI9COgIfZR35NH9EP1yjBcTZ5Qw12/ympA9O2AkxuFGub8eW4Npj5
+	6lLq5TBBEK8afHgnw0w0oxTDnYHuY23t0Y//X3NgOEBY8jkg1c/ick1NF3wOn8sLRB/YioZNM4E+b
+	Qq7BWlwQ==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <bage@debian.org>)
+	id 1soe8W-005cqi-0v; Thu, 12 Sep 2024 07:21:03 +0000
+From: Bastian Germann <bage@debian.org>
+To: linux-xfs@vger.kernel.org
+Cc: Bastian Germann <bage@debian.org>
+Subject: [PATCH 0/6] debian: Debian and Ubuntu archive changes
+Date: Thu, 12 Sep 2024 09:20:47 +0200
+Message-ID: <20240912072059.913-1-bage@debian.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r09rgfjj.fsf@nvdebian.thelocal>
+Content-Transfer-Encoding: 8bit
+X-Debian-User: bage
 
-On Wed, Sep 11, 2024 at 11:07:51AM +1000, Alistair Popple wrote:
-> 
-> >> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> >> index 4f47a13..210b9f4 100644
-> >> --- a/drivers/pci/p2pdma.c
-> >> +++ b/drivers/pci/p2pdma.c
-> >> @@ -129,6 +129,12 @@ static int p2pmem_alloc_mmap(struct file *filp, struct kobject *kobj,
-> >>  	}
-> >>  
-> >>  	/*
-> >> +	 * Initialise the refcount for the freshly allocated page. As we have
-> >> +	 * just allocated the page no one else should be using it.
-> >> +	 */
-> >> +	set_page_count(virt_to_page(kaddr), 1);
-> >
-> > No doubt the subject line is true in some overall context, but it does
-> > seem to say the opposite of what happens here.
-> 
-> Fair. It made sense to me from the mm context I was coming from (it was
-> being initialised to 1 there) but not overall. Something like "move page
-> refcount initialisation to p2pdma driver" would make more sense?
+Hi,
 
-Definitely would, thanks.
+I am forwarding all the changes that are in the Debian and Ubuntu
+archives with a major structural change in the debian/rules file,
+which gets the package to a more modern dh-based build flavor.
+
+Bastian Germann (6):
+  debian: Update debhelper-compat level
+  debian: Update public release key
+  debian: Prevent recreating the orig tarball
+  debian: Add Build-Depends: systemd-dev
+  debian: Modernize build script
+  debian: Correct the day-of-week on 2024-09-04
+
+ debian/changelog                |   2 +-
+ debian/compat                   |   2 +-
+ debian/control                  |   2 +-
+ debian/rules                    |  81 ++++++++----------------
+ debian/upstream/signing-key.asc | 106 ++++++++++++++------------------
+ 5 files changed, 75 insertions(+), 118 deletions(-)
+
+-- 
+2.45.2
+
 
