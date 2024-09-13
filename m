@@ -1,322 +1,144 @@
-Return-Path: <linux-xfs+bounces-12875-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12872-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EA5E9778A5
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 08:10:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37C229777DF
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 06:26:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A5F12869A5
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 06:10:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D60D11F258DC
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 04:26:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD02E15443F;
-	Fri, 13 Sep 2024 06:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 131C31D31BB;
+	Fri, 13 Sep 2024 04:26:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJAw2Pzf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUZVsg0E"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C83F224CF
-	for <linux-xfs@vger.kernel.org>; Fri, 13 Sep 2024 06:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617B713A87C;
+	Fri, 13 Sep 2024 04:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726207847; cv=none; b=KjJEAaNWSRwM62hYDzhiA9a8toerTT6+19qP4s1EESTnpZZZe2rmPEHGCrCIy7QktmXsXUqjbKf3zGsge7Sf99djb16HansyEXu7bTenu+/gkZrnUzjVsvHG910TWo23Y73YKR4fdvWul+MWUUQD4D05TpxGwwbQb5vDzQj0iPU=
+	t=1726201605; cv=none; b=DOSw36UWR/t6/TDpLDXFFZvauH6HQFOZWPgwLfXPnG1DpjNvaCEi4iCxyjzqddTj1rmmtWJ9J/GY3Ab6FYvA3R2r3w95+H61agbSKJh1ISmNQ5yE8FKs3TOZYmtA4Y0NYlSnWx73/NRZxy637fSFWb5Lu7gu/Zi+ROMwRuPalO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726207847; c=relaxed/simple;
-	bh=Zwz1gA145ltwbuYihkTsfozLGcxFlnMP7BDoQ2/AUzM=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=tMNLbFXAzyqN/6nnD1Sg3ZTCI4WQ6Sj7CZf4IP7oKSOyMGEmFpiDDp0sODRolsyuBathz3QKd+YjnFQnsGhkx5Aahn5y7TOScgf3ZbrVlZ0wdD5cRMqaHxFz4DJci275le5+95BOTyhTuo5Dn8U5OabktTGs5FAHftUzlMYNFNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJAw2Pzf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D694C4CEC0;
-	Fri, 13 Sep 2024 06:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726207847;
-	bh=Zwz1gA145ltwbuYihkTsfozLGcxFlnMP7BDoQ2/AUzM=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-	b=OJAw2PzfTPijfp6PLEoETMJcKM1ACyjC01dlHcs1wbWHfFAFdJiexalJni5Y9lmo4
-	 Rv821hzI5G6NPJugAn0c9sHdo/ATpQ0KwNAsgKYAjjJVbcfClqqDjGsQZeNicTT/vt
-	 ddIT2XTgiXlcAHbklYvM/ISu+7rbfS6ltoAHvnhpQ+RbXol2QMowJ6ZpSC7rDhtapC
-	 sjMGQxVXPL6mmgk42MdmPL9+6TM3qX7N9UVWz0xHYs5TgSZc594r7U7fIINGipyCCV
-	 UwKPpf+rsTH8D6dWn2OhPJoEFiqSylNfnq30Dis6kKh5pfnnBe5187SplUy9nXmYcM
-	 jji7+soETTQlA==
-References: <20240902075045.1037365-1-chandanbabu@kernel.org>
- <ZtW8cIgjK88RrB77@dread.disaster.area>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Chandan Babu R <chandanbabu@kernel.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [RFC PATCH] xfs: Prevent umount from indefinitely waiting on
- XFS_IFLUSHING flag on stale inodes
-Date: Thu, 05 Sep 2024 18:12:29 +0530
-In-reply-to: <ZtW8cIgjK88RrB77@dread.disaster.area>
-Message-ID: <87v7z0xevx.fsf@debian-BULLSEYE-live-builder-AMD64>
+	s=arc-20240116; t=1726201605; c=relaxed/simple;
+	bh=s8y2LxutHw1JNq+rOeyZekzVclfC3r0yw8vj7dA/mZw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E6W4QsiTD/U+xGUnKSUzxeJx9KMRl6VeB2gTSJRObeqmy/XOS5WBBiV/n57r+CiNDHX1Op+a7eADYtG8O/cOSnDfAvTUvUYLo0vGqoo3bp4r6To4aaIN11EEsigYV5+zTUFjzuxxDSPxTwyyTT4F3x5LyNTFi4nJBDmfN3dmEyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUZVsg0E; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7d4fa972cbeso1408611a12.2;
+        Thu, 12 Sep 2024 21:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726201603; x=1726806403; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5UCSDqZtrxdlfDIyJ4PYB/eyUMcd92kaOx6CvjF7g6Q=;
+        b=mUZVsg0EwYhnVfcoijV8d9hLFYJTm/+8ieqhD8mY4cu9DKfZ7O1zmUJxrIvFSDWfmJ
+         78HtAIZKakLdpJKsqn/AXodpdTMKlMBP7w5oIUsbctitPlJKNRtXYbD8xxN/vSV8RZtw
+         94dKUeHFWLCMNgKJ22DrYMwffXoRiVwMb5TuWbITQfJY3UYlrMVCUcNq7VoE8ZljFNkw
+         jqr8q8H/sxEZRLmCsVigS+zcef5WKMX2ixapRaL7CkklMAg1mBX1zcAk+kJUhjIQYUa2
+         kieuW5cTv5pmHzD+eTsqTvWLDAoHVpX6/sucafaXiyNaRhkYrMp4tix4coSp8K4HgXfR
+         0dcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726201603; x=1726806403;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5UCSDqZtrxdlfDIyJ4PYB/eyUMcd92kaOx6CvjF7g6Q=;
+        b=HwnYjJeTBrqfpBiVZLVoBt5NcsDqVLDQ89SWf/XO33Ra+GbHE3+ZXX3fENSbhR3TaW
+         FL6v3dlAoOi/MhRZsB0L+YWaQkUjbljRzs+EAQ0pOxFXrqrVs4HsSJpOBoVrppGyTEoC
+         L9RPQmrRkUmKiISNIohSfcx5SUYbpAGt3hP0gEsLsNOBKasUCsawsAsdXeu43GAlIqAb
+         yAcUBzOTvJKle/+jGuMYnN2eHBxFU8m/tSv0N9H3nKKv8W+FMVu60Vcx83zGTyFu0hlQ
+         PvlNGRzDckfi+j6uSiDH/xKQrJQmC3Q0FsQ8TSSynCek4l/Re9Ob48awt8NQoT80QOX/
+         GUgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgPhdvogtUSAJmXILqSBNzubfNx8IMvJyBrY0zjjLuBpYMUjO0uOtD5gX1kQqEEXD0/R8=@vger.kernel.org, AJvYcCVcLOeFLil3lCgEfpOgz2pZRJWJU0KuFinG+LK4833749h2KeGODKsLZt6YdkAcUO6emVAYVJS+WxypTgeU@vger.kernel.org, AJvYcCVqH7cMQuSTe2b5AmNEuq9H71F59DMKplE39K+nkN9Epim3KUvXFf/O8d6scCENpWU9QdCn7b/sg2rPSQ==@vger.kernel.org, AJvYcCWEsWbMseyzJaS01AfkjutTTTdmk6I4mx3aGyHGe4o/Rmtil0ja109lLd4nRZ6NcI1jFmZs0n1U+Re+@vger.kernel.org, AJvYcCXI1yOdfxOSvTVJZ5er3GQmG7ty+q1edADSOAiTaixX1FoUoaD+PIeLM2NJg4CEJCVlQ//LeiEM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCEP5Uw8tuF5SegdBl6E/OZz3byKAXN5giljnW2wfco3VEGMk1
+	OA75ZrwXnnbV+IY7i5E2J6DhPmveBjTIIfwD4ULmT4am5/G2e6DeXNaclPYvRxa7oAb5qYe9tzo
+	iM/fKQz5Pk6hh5uaMH+4d1NChMIo=
+X-Google-Smtp-Source: AGHT+IHwOdOFteLST4od4RwYt9rmDfY2JPAQXl9/wd1FLajiqtRgjBhS0MTgoNifm/7YfojeHqx1nMXkbHKudo7SzyM=
+X-Received: by 2002:a17:90a:9384:b0:2c9:7e9d:8424 with SMTP id
+ 98e67ed59e1d1-2dba0067fa7mr5810882a91.30.1726201603388; Thu, 12 Sep 2024
+ 21:26:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240913135551.4156251c@canb.auug.org.au> <20240913040038.GA2825852@ZenIV>
+In-Reply-To: <20240913040038.GA2825852@ZenIV>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 12 Sep 2024 21:26:31 -0700
+Message-ID: <CAEf4BzashWCozzD7KetgC0Wya-KqUzj0omguAOt+oUVDzHys=Q@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the bpf-next tree
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, David Chinner <david@fromorbit.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org, bpf <bpf@vger.kernel.org>, 
+	Networking <netdev@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 02, 2024 at 11:24:00 PM +1000, Dave Chinner wrote:
-> On Mon, Sep 02, 2024 at 01:20:41PM +0530, Chandan Babu R wrote:
->> Executing xfs/057 can lead to an unmount task to wait indefinitely for
->> XFS_IFLUSHING flag on some inodes to be cleared. The following timeline
->> describes as to how inodes can get into such a state.
->> 
->>   Task A               Task B                      Iclog endio processing
->>   ----------------------------------------------------------------------------
->>   Inodes are freed
->> 
->>   Inodes items are
->>   added to the CIL
->> 
->>   CIL contents are
->>   written to iclog
->> 
->>   iclog->ic_fail_crc
->>   is set to true
->> 
->>   iclog is submitted
->>   for writing to the
->>   disk
->> 
->>                        Last inode in the cluster
->>                        buffer is freed
->> 
->>                        XFS_[ISTALE/IFLUSHING] is
->>                        set on all inodes in the
->>                        cluster buffer
->> 
->>                        XFS_STALE is set on
->>                        the cluster buffer
->>                                                    iclog crc error is detected
->>                        ...                         during endio processing
->>                        During xfs_trans_commit,    Set XFS_LI_ABORTED on inode
->>                        log shutdown is detected    items
->>                        on xfs_buf_log_item         - Unpin the inode since it
->>                                                    is stale and return -1
->>                        xfs_buf_log_item is freed
+On Thu, Sep 12, 2024 at 9:00=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> w=
+rote:
 >
-> How do we get the buffer log item freed here? It should be in the
-> CIL and/or the AIL because the unlinked inode list updates should
-> have already logged directly to that buffer and committed in in
-> previous transactions. 
+> On Fri, Sep 13, 2024 at 01:55:51PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > After merging the bpf-next tree, today's linux-next build (powerpc
+> > ppc64_defconfig) failed like this:
+> >
+> > fs/xfs/xfs_exchrange.c: In function 'xfs_ioc_commit_range':
+> > fs/xfs/xfs_exchrange.c:938:19: error: 'struct fd' has no member named '=
+file'
+> >   938 |         if (!file1.file)
+> >       |                   ^
+> > fs/xfs/xfs_exchrange.c:940:26: error: 'struct fd' has no member named '=
+file'
+> >   940 |         fxr.file1 =3D file1.file;
+> >       |                          ^
+> >
+> > Caused by commit
+> >
+> >   1da91ea87aef ("introduce fd_file(), convert all accessors to it.")
+> >
+> > interacting with commit
+> >
+> >   398597c3ef7f ("xfs: introduce new file range commit ioctls")
+> >
+> > I have applied the following patch for today.
+> >
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Fri, 13 Sep 2024 13:53:35 +1000
+> > Subject: [PATCH] fix up 3 for "introduce fd_file(), convert all accesso=
+rs to
+> >  it."
+> >
+> > interacting with commit "xfs: introduce new file range commit ioctls"
+> > from the xfs tree.
 >
-
-Apologies for the late response. I was held up with other work and also
-accidently overwrote the perf.data file. I had to spend some time to get a
-good trace file.
-
-Apart from the inode freed by Task B (the last inode to be freed), the
-remaining inodes of the cluster buffer would have gone through the following
-steps during inode inactivation processing,
-1. Add the corresponding inode items to the list at bp->b_li_list.
-2. Free the corresponding buffer log item because it is neither dirty nor
-   stale and the refcount of buffer log item was 1 before executing
-   xfs_buf_item_put(). Please refer to xfs_inode_item_precommit() =>
-   xfs_trans_brelse() => xfs_buf_item_put().
-3. The inode log item is then added to the CIL.
-
-At this point in execution, I can't seem to find the reason for the buffer log
-item to be on either the CIL or AIL.
-
-
-The new trace file has a slightly different timeline,
-
-  Task A             Task B                      Iclog endio processing        CIL push worker               
- ------------------+---------------------------+-----------------------------+------------------------------ 
-  Inodes are freed                                                                                           
-                                                                                                             
-  Inodes items are                                                                                           
-  added to the CIL                                                                                           
-                                                                                                             
-                                                                                                             
-                     Last inode in the cluster                                                               
-                     buffer is freed                                                                         
-                                                                                                             
-                     XFS_[ISTALE/IFLUSHING] is                                                               
-                     set on all inodes in the                                                                
-                     cluster buffer                                                                          
-                                                                                                             
-                     XFS_STALE is set on                                       Probably waiting on           
-                     the cluster buffer                                        cil->xc_[start/commit]_wait
-                                                                                           
-                     ...                         iclog crc error is detected   ...                           
-                                                 during endio processing.                                    
-                                                 This checkpoint transaction                                 
-                                                 was mostly submitted before                                 
-                                                 any of the inodes from the                                  
-                                                 cluster buffer were freed.                                  
-                                                                                                             
-                                                 Set XLOG_IO_ERROR and                                       
-                                                 XFS_OPSTATE_SHUTDOWN.                                       
-                                                                                                             
-                                                 Wake up waiters waiting on                                  
-                                                 cil->xc_[start/commit]_wait                                 
-                     During xfs_trans_commit,                                  Execute xlog_cil_committed()  
-                     log shutdown is detected                                  as part of error handling.    
-                                                                                                             
-                     XFS_LI_ABORTED is set                                     Set XFS_LI_ABORTED on inode   
-                     on xfs_buf_log_item                                       items.                        
-                                                                                                             
-                     xfs_buf_log_item is freed                                 xfs_inode_item_committed()    
-                                                                               - Unpin the inode since it    
-                     xfs_buf is not freed here                                 is stale and return -1        
-                     since b_hold has a                                                                      
-                     non-zero value                                            Inode log items are not       
-                                                                               processed further since       
-                                                                               xfs_inode_item_committed()    
-                                                                               returns -1                    
- 
-The above time line was contructed based on the following trace data,
-
-xfs__xfs_iunlink_remove     2 02114.099694694     9903 kworker/2:3-eve
-dev=7340037, agno=0, agino=53801  
-	[ffffffffc1a9e039] xfs_iunlink_remove_inode+0x4c9 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1a9e039] xfs_iunlink_remove_inode+0x4c9 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1aa0254] xfs_iunlink_remove+0x94 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1aa0745] xfs_inode_uninit+0x95 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4c1f6] xfs_ifree+0x246 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4c68e] xfs_inactive_ifree+0x18e (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4cdcd] xfs_inactive+0x4fd (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b2f443] xfs_inodegc_worker+0x273 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffff878623a3] process_one_work+0x603 ([kernel.kallsyms])
-	[ffffffff87865560] worker_thread+0x7d0 ([kernel.kallsyms])
-	[ffffffff8787f9cb] kthread+0x2eb ([kernel.kallsyms])
-	[ffffffff876d9424] ret_from_fork+0x34 ([kernel.kallsyms])
-	[ffffffff876094ea] ret_from_fork_asm+0x1a ([kernel.kallsyms])
-
-53801 is the last inode in the cluster buffer to be freed.
-
-
-xfs__xfs_trans_binval 2 02114.128632378 9903 kworker/2:3-eve dev=7340037,
-buf_bno=53792, buf_len=32, buf_hold=35, buf_pincount=0, buf_lockval=0,
-buf_flags=DONE | INODES | PAGES, bli_recur=0, bli_refcount=1,
-bli_flags=STALE_INODE, li_flags=
-	[ffffffffc1bdac19] xfs_trans_binval+0x2b9 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1bdac19] xfs_trans_binval+0x2b9 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b48611] xfs_ifree_cluster+0x4a1 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4c336] xfs_ifree+0x386 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4c68e] xfs_inactive_ifree+0x18e (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4cdcd] xfs_inactive+0x4fd (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b2f443] xfs_inodegc_worker+0x273 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffff878623a3] process_one_work+0x603 ([kernel.kallsyms])
-	[ffffffff87865560] worker_thread+0x7d0 ([kernel.kallsyms])
-	[ffffffff8787f9cb] kthread+0x2eb ([kernel.kallsyms])
-	[ffffffff876d9424] ret_from_fork+0x34 ([kernel.kallsyms])
-	[ffffffff876094ea] ret_from_fork_asm+0x1a ([kernel.kallsyms])
-
-Cluster buffer is invalidated.
-
-
-xfs__xfs_buf_item_release 2 02114.128823015 9903 kworker/2:3-eve dev=7340037,
-buf_bno=53792, buf_len=32, buf_hold=34, buf_pincount=0, buf_lockval=0,
-buf_flags=DONE | STALE | INODES | PAGES, bli_recur=0, bli_refcount=1,
-bli_flags=STALE | STALE_INODE, li_flags=ABORTED
-	[ffffffffc1b9e488] xfs_buf_item_release+0x3d8 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b9e488] xfs_buf_item_release+0x3d8 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b7528d] xfs_trans_free_items+0xcd (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b77b5b] __xfs_trans_commit+0x29b (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b796da] xfs_trans_roll+0x11a (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1a306ba] xfs_defer_trans_roll+0x11a (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1a31b27] xfs_defer_finish_noroll+0x667 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b77ce6] __xfs_trans_commit+0x426 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4c6f0] xfs_inactive_ifree+0x1f0 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4cdcd] xfs_inactive+0x4fd (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b2f443] xfs_inodegc_worker+0x273 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffff878623a3] process_one_work+0x603 ([kernel.kallsyms])
-	[ffffffff87865560] worker_thread+0x7d0 ([kernel.kallsyms])
-	[ffffffff8787f9cb] kthread+0x2eb ([kernel.kallsyms])
-	[ffffffff876d9424] ret_from_fork+0x34 ([kernel.kallsyms])
-	[ffffffff876094ea] ret_from_fork_asm+0x1a ([kernel.kallsyms])
-
-Buffer log item is aborted by the higher level transaction. Please note that
-buffer log items's refcount is set to 1.
-
-xfs__xfs_buf_rele        2 02114.129083754     9903 kworker/2:3-eve
-dev=7340037, bno=53792, nblks=32, hold=33, pincount=0, lockval=1, flags=DONE |
-STALE | INODES | PAGES, caller_ip=18446744072664601229,
-buf_ops=18446744072669101824
-	[ffffffffc1af372d] xfs_buf_rele_cached+0x3ed (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1af372d] xfs_buf_rele_cached+0x3ed (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b7528d] xfs_trans_free_items+0xcd (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b77b5b] __xfs_trans_commit+0x29b (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b796da] xfs_trans_roll+0x11a (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1a306ba] xfs_defer_trans_roll+0x11a (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1a31b27] xfs_defer_finish_noroll+0x667 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b77ce6] __xfs_trans_commit+0x426 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4c6f0] xfs_inactive_ifree+0x1f0 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b4cdcd] xfs_inactive+0x4fd (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b2f443] xfs_inodegc_worker+0x273 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffff878623a3] process_one_work+0x603 ([kernel.kallsyms])
-	[ffffffff87865560] worker_thread+0x7d0 ([kernel.kallsyms])
-	[ffffffff8787f9cb] kthread+0x2eb ([kernel.kallsyms])
-	[ffffffff876d9424] ret_from_fork+0x34 ([kernel.kallsyms])
-	[ffffffff876094ea] ret_from_fork_asm+0x1a ([kernel.kallsyms])
-
-xfs_buf is not released since the new 'hold' count will be 32; However the
-caller i.e. xfs_buf_item_relse() will free the xfs_buf_log_item 
-
-xfs__xfs_inode_unpin 2 02115.142605975 5368 kworker/u16:0-e dev=7340037,
-ino=53792, count=0, pincount=2, caller_ip=18446744072664863980
-	[ffffffffc1bb5344] xfs_inode_item_unpin+0x174 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1bb5344] xfs_inode_item_unpin+0x174 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1bb54ec] xfs_inode_item_committed+0x9c (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b915a0] xlog_cil_ail_insert+0x330 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b92104] xlog_cil_committed+0x454 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b94569] xlog_cil_push_work+0x11a9 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffff878623a3] process_one_work+0x603 ([kernel.kallsyms])
-	[ffffffff87865560] worker_thread+0x7d0 ([kernel.kallsyms])
-	[ffffffff8787f9cb] kthread+0x2eb ([kernel.kallsyms])
-	[ffffffff876d9424] ret_from_fork+0x34 ([kernel.kallsyms])
-	[ffffffff876094ea] ret_from_fork_asm+0x1a ([kernel.kallsyms])
-
-CIL push worker is executing error handling code; 53792 is one of the inodes
-which was freed and committed to the CIL by Task A. It is being unpinned since
-the inode is stale.
-
-xfs__xfs_inode_unpin     2 02115.312093611     5368 kworker/u16:0-e
-dev=7340037, ino=53800, count=0, pincount=1,
-caller_ip=18446744072664863980 
-	[ffffffffc1bb5344] xfs_inode_item_unpin+0x174 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1bb5344] xfs_inode_item_unpin+0x174 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1bb54ec] xfs_inode_item_committed+0x9c (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b915a0] xlog_cil_ail_insert+0x330 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b92104] xlog_cil_committed+0x454 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffffc1b94569] xlog_cil_push_work+0x11a9 (/lib/modules/6.11.0-rc3+/kernel/fs/xfs/xfs.ko)
-	[ffffffff878623a3] process_one_work+0x603 ([kernel.kallsyms])
-	[ffffffff87865560] worker_thread+0x7d0 ([kernel.kallsyms])
-	[ffffffff8787f9cb] kthread+0x2eb ([kernel.kallsyms])
-	[ffffffff876d9424] ret_from_fork+0x34 ([kernel.kallsyms])
-	[ffffffff876094ea] ret_from_fork_asm+0x1a ([kernel.kallsyms])
-
-Another stale inode being unpinned.
-
->>
->> To overcome this bug, this commit removes the check for log shutdown during
->> high level transaction commit operation. The log items in the high level
->> transaction will now be committed to the CIL despite the log being
->> shutdown. This will allow the CIL processing logic (i.e. xlog_cil_push_work())
->> to invoke xlog_cil_committed() as part of error handling. This will cause
->> xfs_buf log item to to be unpinned and the corresponding inodes to be aborted
->> and have their XFS_IFLUSHING flag cleared.
+> ... and the same for io_uring/rsrc.c, conflict with "io_uring: add IORING=
+_REGISTER_COPY_BUFFERS method".
 >
-> I don't know exactly how the problem arose, but I can say for
-> certain that the proposed fix is not valid.  Removing that specific
-> log shutdown check re-opens a race condition which can causes on
-> disk corruption. The shutdown was specifically placed to close that
-> race - See commit 3c4cb76bce43 ("xfs: xfs_trans_commit() path must
-> check for log shutdown") for details.
->
-> I have no idea what the right way to fix this is yet, but removing
-> the shutdown check isn't it...
->
+> FWIW, that (sub)series is in viro/vfs.git#for-next - I forgot to put it
+> there, so when bpf tree reorgs had lost their branch on top of that thing=
+,
+> the conflict fixes got dropped from -next.  Sorry... ;-/
 
-I haven't read the commit yet. I will do so and get back.
+Should I take out the following from bpf-next/for-next for now?
 
--- 
-Chandan
+a8e40fd0f127 ("Merge branch 'bpf-next/struct_fd' into for-next")
+
+Al, currently I'm basing my patches on top of your stable-struct_fd
+branch. If you need to update it, I think that's fine, I can rebase on
+top of the updated branch, given my patches weren't yet merged
+anywhere. Let me know.
 
