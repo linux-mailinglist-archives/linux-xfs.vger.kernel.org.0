@@ -1,95 +1,111 @@
-Return-Path: <linux-xfs+bounces-12874-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12876-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0909797786C
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 07:42:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 82604977F50
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 14:11:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97D411F25AA1
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 05:42:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 396E41F227BD
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Sep 2024 12:11:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08017186E30;
-	Fri, 13 Sep 2024 05:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 312F81D933A;
+	Fri, 13 Sep 2024 12:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjU9PHCU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aRvVf7oj"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDA21D52B
-	for <linux-xfs@vger.kernel.org>; Fri, 13 Sep 2024 05:42:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64E51C175F;
+	Fri, 13 Sep 2024 12:11:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726206146; cv=none; b=jz1capaILGgqOzlVJ1fTRIOcm0shny5GIwqMf9ovPwN6vVvyI+D7Yrox0IGMJRf2OwqX/s7nsyGsOtjRk+FKy5dv9Y2x6HeEIMEagOosm2EfQ3wu2GIUTX1kXrY3VNW7gzUJewfgQYOH25Ct2VIZ8uAJSFVtfOi4D7947cMod5c=
+	t=1726229489; cv=none; b=iLtPx5TXqIveGJju7eRjDRjbp9WzoYC+R3rFPBX/mf1VnEw34bqdRz3A20sxswtrktM5aBKJz4YONK3RIS3fuMFM0U3/OtYb9UHGDJDDX8E3PoGFaiXcW2ydviBsSRMhiIYbKJsByZyfUfBmBuxKvX7+8GiwF7W22jnGzMhXgr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726206146; c=relaxed/simple;
-	bh=+dhDShFAjFIYABi7dc5CRIEuod1vpFBt4Z5M5e6Da3U=;
+	s=arc-20240116; t=1726229489; c=relaxed/simple;
+	bh=7xIfV9cbzSwkAOH/0KEgBigHdF3rNbLzHt6TgHTSjX8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EIF9D+vh2uVbK9JCUAc/naBlWQUbgO2hkAejwinZhrFoMyPtyMrnC8/PwKykWH74645LYaXphyLBle9plDCC65GTSZJilqTOY+reyAUseC5b089SMygk6FiwXX+JwFaTK07kL3wYYd0hZyyPxHpbWrLNvONBSCC1rmtn4X9elTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjU9PHCU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74BF4C4CEC0;
-	Fri, 13 Sep 2024 05:42:25 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jq7T/jJndbko7flxNKTSpeqmW7sz4Sy/LaRdpLcLqoRNlWFfWorEjj4m3gO2qQQQ0bKbNhMbtxphYLGH+L9JV+OUVRE2XMjzvYfBhB0D0fsl26ftpac5QLEEuc0JEUO7DgINRYWqUTPvQIaZKGdoKG0teIxBhRcBCUHldf0XeEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aRvVf7oj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A34C4CEC0;
+	Fri, 13 Sep 2024 12:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726206146;
-	bh=+dhDShFAjFIYABi7dc5CRIEuod1vpFBt4Z5M5e6Da3U=;
+	s=k20201202; t=1726229488;
+	bh=7xIfV9cbzSwkAOH/0KEgBigHdF3rNbLzHt6TgHTSjX8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GjU9PHCUYT9N2E03KPDx+GBcT5MRu4j22FSh6KBTL+H5lfuRvSZZpp7SvlOvpthHm
-	 cIb0PMJoH+x55wqZ0+qWeDiiA66JI2aE+nGYQpl0ZxJX6GKAvUJeo7JD/xMDuKLJzV
-	 rhehNzor19H1K7RePG+2RHQ5dCEJuxDIlOLGCuduNzYd61EmtuVpj0j8WNmrGZOYQf
-	 wvEIUt1WdweVZYlW2+6Gl5PA/Hmf8jrknajcCpIjjNtl4sPCUzbuWohAsQQKajwzt/
-	 KdTemnvzYC1TsLP3nmmV4o4en+B0Mqlm3rUfmIOrmiNIf/pgJerqHmYAb0FSB2DpcK
-	 4kJhNa2ffd2RQ==
-Date: Fri, 13 Sep 2024 07:42:22 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Bastian Germann <bage@debian.org>
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 0/6] debian: Debian and Ubuntu archive changes
-Message-ID: <slyvt2rz27lnawl6k22ozv2mevul6zrv3j5pzmobrxao5ilsmh@qz4l27bmlqd7>
-References: <20240912072059.913-1-bage@debian.org>
+	b=aRvVf7ojKKKqLD9YWcx/3bpn4sdndF1F9fraVJqDU9bsn8N9wDsH6LxXzx5WXi26H
+	 RwHxd2OsJbu+eV3786Ep4aqOwbz5xkjy5VnVOCcecIYWaO3v3JiJ0ZpPpXxnUFn4KO
+	 akkoN0/Q3X/1rJ7i6GOfDOxsjXqtkxqROJ40T1bVJEwb6JaS6OH9ApegotS4CmLHIk
+	 a167Sb5gvXUNQxhLfgiAjmCLv1c6M/jLZJoD7pcXz4WFNe/SzshO7m76/XfsWddZrF
+	 MFKoPSvf8yrcXolFmwP3Swuwl7aTm+lUg/5KGOG/DCxutKVu5/zyJ3g7l79DG5f0y9
+	 gdfel2VlMccNg==
+Date: Fri, 13 Sep 2024 14:11:22 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Pankaj Raghav <p.raghav@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, Matthew Wilcox <willy@infradead.org>, 
+	Christian Theune <ct@flyingcircus.io>, linux-mm@kvack.org, 
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Daniel Dao <dqminh@cloudflare.com>, Dave Chinner <david@fromorbit.com>, clm@meta.com, 
+	regressions@lists.linux.dev, regressions@leemhuis.info
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+Message-ID: <20240913-ortsausgang-baustart-1dae9a18254d@brauner>
+References: <A5A976CB-DB57-4513-A700-656580488AB6@flyingcircus.io>
+ <ZuNjNNmrDPVsVK03@casper.infradead.org>
+ <0fc8c3e7-e5d2-40db-8661-8c7199f84e43@kernel.dk>
+ <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240912072059.913-1-bage@debian.org>
+In-Reply-To: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
 
-On Thu, Sep 12, 2024 at 09:20:47AM GMT, Bastian Germann wrote:
-> Hi,
+On Thu, Sep 12, 2024 at 03:25:50PM GMT, Linus Torvalds wrote:
+> On Thu, 12 Sept 2024 at 15:12, Jens Axboe <axboe@kernel.dk> wrote:
+> >
+> > When I saw Christian's report, I seemed to recall that we ran into this
+> > at Meta too. And we did, and hence have been reverting it since our 5.19
+> > release (and hence 6.4, 6.9, and 6.11 next). We should not be shipping
+> > things that are known broken.
 > 
-> I am forwarding all the changes that are in the Debian and Ubuntu
-> archives with a major structural change in the debian/rules file,
-> which gets the package to a more modern dh-based build flavor.
+> I do think that if we have big sites just reverting it as known broken
+> and can't figure out why, we should do so upstream too.
 > 
-> Bastian Germann (6):
->   debian: Update debhelper-compat level
->   debian: Update public release key
->   debian: Prevent recreating the orig tarball
->   debian: Add Build-Depends: systemd-dev
->   debian: Modernize build script
->   debian: Correct the day-of-week on 2024-09-04
+> Yes,  it's going to make it even harder to figure out what's wrong.
+> Not great. But if this causes filesystem corruption, that sure isn't
+> great either. And people end up going "I'll use ext4 which doesn't
+> have the problem", that's not exactly helpful either.
 > 
->  debian/changelog                |   2 +-
->  debian/compat                   |   2 +-
->  debian/control                  |   2 +-
->  debian/rules                    |  81 ++++++++----------------
->  debian/upstream/signing-key.asc | 106 ++++++++++++++------------------
->  5 files changed, 75 insertions(+), 118 deletions(-)
+> And yeah, the reason ext4 doesn't have the problem is simply because
+> ext4 doesn't enable large folios. So that doesn't pin anything down
+> either (ie it does *not* say "this is an xfs bug" - it obviously might
+> be, but it's probably more likely some large-folio issue).
+> 
+> Other filesystems do enable large folios (afs, bcachefs, erofs, nfs,
+> smb), but maybe just not be used under the kind of load to show it.
+> 
+> Honestly, the fact that it hasn't been reverted after apparently
+> people knowing about it for months is a bit shocking to me. Filesystem
+> people tend to take unknown corruption issues as a big deal. What
+> makes this so special? Is it because the XFS people don't consider it
+> an XFS issue, so...
 
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
+So this issue it new to me as well. One of the items this cycle is the
+work to enable support for block sizes that are larger than page sizes
+via the large block size (LBS) series that's been sitting in -next for a
+long time. That work specifically targets xfs and builds on top of the
+large folio support.
 
-Those changes look fine for me, but I'll wait Darrick's review too as he's more
-familiar with Debian than I am.
-
-Carlos
-
-> 
-> -- 
-> 2.45.2
-> 
-> 
+If the support for large folios is going to be reverted in xfs then I
+see no point to merge the LBS work now. So I'm holding off on sending
+that pull request until a decision is made (for xfs). As far as I
+understand, supporting larger block sizes will not be meaningful without
+large folio support.
 
