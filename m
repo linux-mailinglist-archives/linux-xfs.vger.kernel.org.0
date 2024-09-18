@@ -1,265 +1,236 @@
-Return-Path: <linux-xfs+bounces-12997-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-12995-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F3B297BC4E
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2024 14:36:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEC4897BC2A
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2024 14:22:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FD20B225EA
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2024 12:36:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E03F1C20973
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Sep 2024 12:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEAFE189F31;
-	Wed, 18 Sep 2024 12:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CE69176FB8;
+	Wed, 18 Sep 2024 12:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTsZRbeo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C5ZiV9Eg"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DEF2628C;
-	Wed, 18 Sep 2024 12:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E61A2E64B
+	for <linux-xfs@vger.kernel.org>; Wed, 18 Sep 2024 12:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726662946; cv=none; b=tSVYoKDLQ0BJuJ1TDTCgPh33dV2HLCW/HycKQI3KvH4SqR34TvV1aTuEaMjrSv2XOUf9AsWZNNVe9dYic9y739TjQNJPSJ5nRsRe9dk8VBOAuqFRrwHXfL8HIVgR7RNMXk9zpSKpaA58Nb1zB7X9t2vZFmlT8x50o0t5QJWbNlo=
+	t=1726662112; cv=none; b=GmkmKJnl2MOt0J/4viNjAUOf2qVnXUKN335dwLfxLsWIknDRlvO2+p0FsdcLLbZyOsqD/hNNDS8/8CclsINkBSUKjAEX/0CNz1T9AQ8Z72kNAZsywugFTEsPPfuGfJna4DsIuv6kTW4MeGebqlBY83LuMe0YtqrHrEAGVecWO78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726662946; c=relaxed/simple;
-	bh=BMyyjObhnBwopFESIP5QS0Ad5ptwGbYIvoucOYWwcKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YzZAVQkTVMtzcwQJxNJDjPqrmfxZ8e3dYjsLTEwQDOOcrAPdkZd2vnruBArKmdaDOtojfDz3oN9XGs9z6pddgK5DmAkf2r161nO+SfBVPUywbK2dsj1wCdf6kBc4bZtThU7h6lZ8B/LvuhPzJURjHEOyQZ7Ct24IuadCUzN5eb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTsZRbeo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8C0C4CEC3;
-	Wed, 18 Sep 2024 12:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726662945;
-	bh=BMyyjObhnBwopFESIP5QS0Ad5ptwGbYIvoucOYWwcKs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hTsZRbeo8QH8p6ES3NVqC7Y55Mh37+QK+BlnUTE65pKLiQx7IIvuvtfFhJsUix1Ii
-	 8TdqDgTaZooiMYwPjOfKYPrUQwMnUlhDsJhXHCf+bRekNZI2wlB8hvUWW1rdtfhZkc
-	 Yhm5vtzb11/eVxr4f2wNhjJVu4JacHdWfu2uGgE/rEKb5nC3RB1wIF+HORFZ2vSOuu
-	 1YpjdzZ/cDT8/oNEMud02JN0ohRVU1Ox8YyYugavE1kWVTqPXD2dakG7z0ug4Wy2mG
-	 fCI5qzrFjljZ8v3uoKJhSn/eH6hrNZh+L6u3o4jt4Xnt4fNYZm2vAp/RaAEveSlhh+
-	 ReITv56w5f6Gw==
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Chandan Babu R <chandanbabu@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: chandanbabu@kernel.org,linux-fsdevel@vger.kernel.org,linux-xfs@vger.kernel.org,
- sfr@canb.auug.org.au, viro@zeniv.linux.org.uk
-Subject: [GIT PULL] xfs: new code for 6.12
-Date: Wed, 18 Sep 2024 17:47:54 +0530
-Message-ID: <87jzf9w34x.fsf@debian-BULLSEYE-live-builder-AMD64>
+	s=arc-20240116; t=1726662112; c=relaxed/simple;
+	bh=PIH2MVmpa479jBpT5qS04GGWMKGVCk3tdH8HlcGhZpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXmBG1Q0QYQO1IiR5z2UMHcUxCBhfqO1hkUApiWly1iXY8ScFFsKg2yWZ9UvcekJN49wqcMiHVYEfJGlC4dWrn1hwMRd90URC9O1L4BIT6mrLvX/VX+OcMxkHbZHWxQSJ48xg2KPJozQFYfkpuKKSApEVQH0eDL25kBnCmsWv1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C5ZiV9Eg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726662109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZnYfNYNvKzMtBisGm5i7LLVAYcterxx3NjCo+s4EHuc=;
+	b=C5ZiV9EgaW1CenOram2yGAw6UXTOpjNBQg21GiykmnrbIEXcXWLf7UxRgbwx5Q9eT0iLJv
+	4RWW0eZBhfnGMiJoCIKq+zyvhyEPXhVN/g1hGS9mVehSRuWXEuRVz5MFj6CPHEJmxCwGjr
+	wykzoA0e2vvDaOKoj+14Ct2u3IxhydY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-435-DZQp13IBM2i8HE6Q3vERpw-1; Wed,
+ 18 Sep 2024 08:21:47 -0400
+X-MC-Unique: DZQp13IBM2i8HE6Q3vERpw-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B6E9C19773FC;
+	Wed, 18 Sep 2024 12:21:37 +0000 (UTC)
+Received: from bfoster (unknown [10.22.9.175])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 00A65195608A;
+	Wed, 18 Sep 2024 12:21:36 +0000 (UTC)
+Date: Wed, 18 Sep 2024 08:22:43 -0400
+From: Brian Foster <bfoster@redhat.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/1] xfs: don't free cowblocks from under dirty pagecache
+ on unshare
+Message-ID: <ZurGE3Cn0LNZMVOn@bfoster>
+References: <20240903124713.23289-1-bfoster@redhat.com>
+ <20240906114051.120743-1-bfoster@redhat.com>
+ <20240917183142.GI182194@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240917183142.GI182194@frogsfrogsfrogs>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi Linus,
+On Tue, Sep 17, 2024 at 11:31:42AM -0700, Darrick J. Wong wrote:
+> On Fri, Sep 06, 2024 at 07:40:51AM -0400, Brian Foster wrote:
+> > fallocate unshare mode explicitly breaks extent sharing. When a
+> > command completes, it checks the data fork for any remaining shared
+> > extents to determine whether the reflink inode flag and COW fork
+> > preallocation can be removed. This logic doesn't consider in-core
+> > pagecache and I/O state, however, which means we can unsafely remove
+> > COW fork blocks that are still needed under certain conditions.
+> > 
+> > For example, consider the following command sequence:
+> > 
+> > xfs_io -fc "pwrite 0 1k" -c "reflink <file> 0 256k 1k" \
+> > 	-c "pwrite 0 32k" -c "funshare 0 1k" <file>
+> > 
+> > This allocates a data block at offset 0, shares it, and then
+> > overwrites it with a larger buffered write. The overwrite triggers
+> > COW fork preallocation, 32 blocks by default, which maps the entire
+> > 32k write to delalloc in the COW fork. All but the shared block at
+> > offset 0 remains hole mapped in the data fork. The unshare command
+> > redirties and flushes the folio at offset 0, removing the only
+> > shared extent from the inode. Since the inode no longer maps shared
+> > extents, unshare purges the COW fork before the remaining 28k may
+> > have written back.
+> > 
+> > This leaves dirty pagecache backed by holes, which writeback quietly
+> > skips, thus leaving clean, non-zeroed pagecache over holes in the
+> > file. To verify, fiemap shows holes in the first 32k of the file and
+> > reads return different data across a remount:
+> > 
+> > $ xfs_io -c "fiemap -v" <file>
+> > <file>:
+> >  EXT: FILE-OFFSET      BLOCK-RANGE      TOTAL FLAGS
+> >    ...
+> >    1: [8..511]:        hole               504
+> >    ...
+> > $ xfs_io -c "pread -v 4k 8" <file>
+> > 00001000:  cd cd cd cd cd cd cd cd  ........
+> > $ umount <mnt>; mount <dev> <mnt>
+> > $ xfs_io -c "pread -v 4k 8" <file>
+> > 00001000:  00 00 00 00 00 00 00 00  ........
+> > 
+> > To avoid this problem, make unshare follow the same rules used for
+> > background cowblock scanning and never purge the COW fork for inodes
+> > with dirty pagecache or in-flight I/O.
+> > 
+> > Fixes: 46afb0628b ("xfs: only flush the unshared range in xfs_reflink_unshare")
+> > Signed-off-by: Brian Foster <bfoster@redhat.com>
+> 
+> Question: Does xfs_repair report orphaned cow staging blocks after this?
+> There's a longstanding bug that I've seen in the long soak xfs/286 VM
+> where we slowly leak cow fork blocks (~80 per ~1 billion fsxops over 7
+> days).
+> 
 
-Please pull this branch with changes for XFS for 6.12-rc1.
+I've not seen that, at least in the test case I have. I think what's
+happening here is more that we clean up the COW fork correctly from an
+accounting standpoint, but we do so prematurely because the pagecache is
+dirty in ranges that are still only backed by COW fork blocks.
 
-The pull request introduces new ioctls for exchanging contents of two files.
-The remaining changes are limited to fixes and cleanups.
+> Anyhow this looks correct on its own so
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> 
 
-I did a test-merge with the main upstream branch as of a few minutes ago and
-didn't see any conflicts. Please let me know if you encounter any problems.
+Thanks!
 
-Please note that in case you end up pulling contents of for-next branches of either
-https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git
-or
-https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+Brian
 
-... You might end up with compilation errors. The trivial patch at
-https://lore.kernel.org/linux-next/20240916093012.3a4dbb3f@canb.auug.org.au/#r
-will resolve the issue.
+> --D
+> 
+> > ---
+> > 
+> > Here's another COW issue I came across via some unshare testing. A quick
+> > hack to enable unshare in fsx uncovered it. I'll follow up with a proper
+> > patch for that.
+> > 
+> > I'm sending this as a 2/1 here just to reflect patch order in my local
+> > tree. Also note that I haven't explicitly tested the fixes commit, but a
+> > quick test to switch back to the old full flush behavior on latest
+> > master also makes the problem go away, so I suspect that's where the
+> > regression was introduced.
+> > 
+> > Brian
+> > 
+> >  fs/xfs/xfs_icache.c  |  8 +-------
+> >  fs/xfs/xfs_reflink.c |  3 +++
+> >  fs/xfs/xfs_reflink.h | 19 +++++++++++++++++++
+> >  3 files changed, 23 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> > index 900a6277d931..a1b34e6ccfe2 100644
+> > --- a/fs/xfs/xfs_icache.c
+> > +++ b/fs/xfs/xfs_icache.c
+> > @@ -1278,13 +1278,7 @@ xfs_prep_free_cowblocks(
+> >  	 */
+> >  	if (!sync && inode_is_open_for_write(VFS_I(ip)))
+> >  		return false;
+> > -	if ((VFS_I(ip)->i_state & I_DIRTY_PAGES) ||
+> > -	    mapping_tagged(VFS_I(ip)->i_mapping, PAGECACHE_TAG_DIRTY) ||
+> > -	    mapping_tagged(VFS_I(ip)->i_mapping, PAGECACHE_TAG_WRITEBACK) ||
+> > -	    atomic_read(&VFS_I(ip)->i_dio_count))
+> > -		return false;
+> > -
+> > -	return true;
+> > +	return xfs_can_free_cowblocks(ip);
+> >  }
+> >  
+> >  /*
+> > diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+> > index 6fde6ec8092f..5bf6682e701b 100644
+> > --- a/fs/xfs/xfs_reflink.c
+> > +++ b/fs/xfs/xfs_reflink.c
+> > @@ -1595,6 +1595,9 @@ xfs_reflink_clear_inode_flag(
+> >  
+> >  	ASSERT(xfs_is_reflink_inode(ip));
+> >  
+> > +	if (!xfs_can_free_cowblocks(ip))
+> > +		return 0;
+> > +
+> >  	error = xfs_reflink_inode_has_shared_extents(*tpp, ip, &needs_flag);
+> >  	if (error || needs_flag)
+> >  		return error;
+> > diff --git a/fs/xfs/xfs_reflink.h b/fs/xfs/xfs_reflink.h
+> > index fb55e4ce49fa..4a58e4533671 100644
+> > --- a/fs/xfs/xfs_reflink.h
+> > +++ b/fs/xfs/xfs_reflink.h
+> > @@ -6,6 +6,25 @@
+> >  #ifndef __XFS_REFLINK_H
+> >  #define __XFS_REFLINK_H 1
+> >  
+> > +/*
+> > + * Check whether it is safe to free COW fork blocks from an inode. It is unsafe
+> > + * to do so when an inode has dirty cache or I/O in-flight, even if no shared
+> > + * extents exist in the data fork, because outstanding I/O may target blocks
+> > + * that were speculatively allocated to the COW fork.
+> > + */
+> > +static inline bool
+> > +xfs_can_free_cowblocks(struct xfs_inode *ip)
+> > +{
+> > +	struct inode *inode = VFS_I(ip);
+> > +
+> > +	if ((inode->i_state & I_DIRTY_PAGES) ||
+> > +	    mapping_tagged(inode->i_mapping, PAGECACHE_TAG_DIRTY) ||
+> > +	    mapping_tagged(inode->i_mapping, PAGECACHE_TAG_WRITEBACK) ||
+> > +	    atomic_read(&inode->i_dio_count))
+> > +		return false;
+> > +	return true;
+> > +}
+> > +
+> >  extern int xfs_reflink_trim_around_shared(struct xfs_inode *ip,
+> >  		struct xfs_bmbt_irec *irec, bool *shared);
+> >  int xfs_bmap_trim_cow(struct xfs_inode *ip, struct xfs_bmbt_irec *imap,
+> > -- 
+> > 2.45.0
+> > 
+> > 
+> 
 
-The following changes since commit 431c1646e1f86b949fa3685efc50b660a364c2b6:
-
-  Linux 6.11-rc6 (2024-09-01 19:46:02 +1200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-6.12-merge-1
-
-for you to fetch changes up to 90fa22da6d6b41dc17435aff7b800f9ca3c00401:
-
-  xfs: ensure st_blocks never goes to zero during COW writes (2024-09-03 10:07:47 +0530)
-
-----------------------------------------------------------------
-New code for 6.12:
-
-  * Introduce new ioctls to exchange contents of two files.
-    The first ioctl does the preparation work to exchange the contents of two
-    files while the second ioctl performs the actual exchange if the target
-    file has not been changed since a given sampling point.
-
-  * Fixes
-    - Fix bugs associated with calculating the maximum range of realtime
-      extents to scan for free space.
-    - Copy keys instead of records when resizing the incore BMBT root block.
-    - Do not report FITRIMming more bytes than possibly exist in the
-      filesystem.
-    - Modify xfs_fs.h to prevent C++ compilation errors.
-    - Do not over eagerly free post-EOF speculative preallocation.
-    - Ensure st_blocks never goes to zero during COW writes
-
-  * Cleanups/refactors
-    - Use Xarray to hold per-AG data instead of a Radix tree.
-    - Cleanup the following functionality,
-      - Realtime bitmap.
-      - Inode allocator.
-      - Quota.
-      - Inode rooted btree code.
-
-Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
-
-----------------------------------------------------------------
-Chandan Babu R (8):
-      Merge tag 'atomic-file-commits-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-      Merge tag 'metadir-cleanups-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-      Merge tag 'rtbitmap-cleanups-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-      Merge tag 'rtalloc-fixes-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-      Merge tag 'rtalloc-cleanups-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-      Merge tag 'quota-cleanups-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-      Merge tag 'xfs-fixes-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-      Merge tag 'btree-cleanups-6.12_2024-09-02' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-6.12-mergeA
-
-Christoph Hellwig (37):
-      xfs: remove xfs_validate_rtextents
-      xfs: factor out a xfs_validate_rt_geometry helper
-      xfs: make the RT rsum_cache mandatory
-      xfs: use the recalculated transaction reservation in xfs_growfs_rt_bmblock
-      xfs: clean up the ISVALID macro in xfs_bmap_adjacent
-      xfs: remove the limit argument to xfs_rtfind_back
-      xfs: ensure rtx mask/shift are correct after growfs
-      xfs: factor out a xfs_rtallocate helper
-      xfs: assert a valid limit in xfs_rtfind_forw
-      xfs: rework the rtalloc fallback handling
-      xfs: add bounds checking to xfs_rt{bitmap,summary}_read_buf
-      xfs: factor out a xfs_rtallocate_align helper
-      xfs: cleanup the calling convention for xfs_rtpick_extent
-      xfs: make the rtalloc start hint a xfs_rtblock_t
-      xfs: push the calls to xfs_rtallocate_range out to xfs_bmap_rtalloc
-      xfs: factor out a xfs_growfs_rt_bmblock helper
-      xfs: remove xfs_{rtbitmap,rtsummary}_wordcount
-      xfs: factor out a xfs_last_rt_bmblock helper
-      xfs: replace m_rsumsize with m_rsumblocks
-      xfs: match on the global RT inode numbers in xfs_is_metadata_inode
-      xfs: factor out rtbitmap/summary initialization helpers
-      xfs: remove xfs_rtb_to_rtxrem
-      xfs: push transaction join out of xfs_rtbitmap_lock and xfs_rtgroup_lock
-      xfs: simplify xfs_rtalloc_query_range
-      xfs: remove the i_mode check in xfs_release
-      xfs: refactor f_op->release handling
-      xfs: don't bother returning errors from xfs_file_release
-      xfs: skip all of xfs_file_release when shut down
-      xfs: check XFS_EOFBLOCKS_RELEASED earlier in xfs_release_eofblocks
-      xfs: simplify extent lookup in xfs_can_free_eofblocks
-      xfs: reclaim speculative preallocations for append only files
-      xfs: use kfree_rcu_mightsleep to free the perag structures
-      xfs: move the tagged perag lookup helpers to xfs_icache.c
-      xfs: simplify tagged perag iteration
-      xfs: convert perag lookup to xarray
-      xfs: use xas_for_each_marked in xfs_reclaim_inodes_count
-      xfs: ensure st_blocks never goes to zero during COW writes
-
-Dan Carpenter (1):
-      xfs: remove unnecessary check
-
-Darrick J. Wong (19):
-      xfs: don't return too-short extents from xfs_rtallocate_extent_block
-      xfs: don't scan off the end of the rt volume in xfs_rtallocate_extent_block
-      xfs: refactor aligning bestlen to prod
-      xfs: clean up xfs_rtallocate_extent_exact a bit
-      xfs: add xchk_setup_nothing and xchk_nothing helpers
-      xfs: reduce excessive clamping of maxlen in xfs_rtallocate_extent_near
-      xfs: validate inumber in xfs_iget
-      xfs: fix broken variable-sized allocation detection in xfs_rtallocate_extent_block
-      xfs: rearrange xfs_fsmap.c a little bit
-      xfs: introduce new file range commit ioctls
-      xfs: pass the icreate args object to xfs_dialloc
-      xfs: move xfs_ioc_getfsmap out of xfs_ioctl.c
-      xfs: fix C++ compilation errors in xfs_fs.h
-      xfs: fix FITRIM reporting again
-      xfs: replace shouty XFS_BM{BT,DR} macros
-      xfs: refactor loading quota inodes in the regular case
-      xfs: fix a sloppy memory handling bug in xfs_iroot_realloc
-      xfs: standardize the btree maxrecs function parameters
-      xfs: only free posteof blocks on first close
-
-Dave Chinner (1):
-      xfs: don't free post-EOF blocks on read close
-
-Hongbo Li (1):
-      xfs: use LIST_HEAD() to simplify code
-
-Jiapeng Chong (1):
-      xfs: Remove duplicate xfs_trans_priv.h header
-
-John Garry (1):
-      xfs: Use xfs set and clear mp state helpers
-
- fs/xfs/libxfs/xfs_ag.c             |  94 +---
- fs/xfs/libxfs/xfs_ag.h             |  14 -
- fs/xfs/libxfs/xfs_alloc_btree.c    |   6 +-
- fs/xfs/libxfs/xfs_alloc_btree.h    |   3 +-
- fs/xfs/libxfs/xfs_attr_leaf.c      |   8 +-
- fs/xfs/libxfs/xfs_bmap.c           | 101 +++--
- fs/xfs/libxfs/xfs_bmap_btree.c     |  24 +-
- fs/xfs/libxfs/xfs_bmap_btree.h     | 207 ++++++---
- fs/xfs/libxfs/xfs_defer.c          |   1 -
- fs/xfs/libxfs/xfs_fs.h             |  31 +-
- fs/xfs/libxfs/xfs_ialloc.c         |   9 +-
- fs/xfs/libxfs/xfs_ialloc.h         |   4 +-
- fs/xfs/libxfs/xfs_ialloc_btree.c   |   6 +-
- fs/xfs/libxfs/xfs_ialloc_btree.h   |   3 +-
- fs/xfs/libxfs/xfs_inode_fork.c     |  40 +-
- fs/xfs/libxfs/xfs_inode_util.c     |   2 +-
- fs/xfs/libxfs/xfs_refcount_btree.c |   5 +-
- fs/xfs/libxfs/xfs_refcount_btree.h |   3 +-
- fs/xfs/libxfs/xfs_rmap_btree.c     |   7 +-
- fs/xfs/libxfs/xfs_rmap_btree.h     |   3 +-
- fs/xfs/libxfs/xfs_rtbitmap.c       | 274 ++++++++----
- fs/xfs/libxfs/xfs_rtbitmap.h       |  61 +--
- fs/xfs/libxfs/xfs_sb.c             |  92 ++--
- fs/xfs/libxfs/xfs_sb.h             |   3 +
- fs/xfs/libxfs/xfs_trans_resv.c     |   4 +-
- fs/xfs/libxfs/xfs_types.h          |  12 -
- fs/xfs/scrub/bmap_repair.c         |   2 +-
- fs/xfs/scrub/common.h              |  29 +-
- fs/xfs/scrub/inode_repair.c        |  12 +-
- fs/xfs/scrub/rtsummary.c           |  11 +-
- fs/xfs/scrub/rtsummary.h           |   2 +-
- fs/xfs/scrub/rtsummary_repair.c    |  12 +-
- fs/xfs/scrub/scrub.h               |  29 +-
- fs/xfs/scrub/tempfile.c            |   2 +-
- fs/xfs/xfs_bmap_item.c             |  17 +
- fs/xfs/xfs_bmap_util.c             |  38 +-
- fs/xfs/xfs_discard.c               |  17 +-
- fs/xfs/xfs_exchrange.c             | 143 +++++-
- fs/xfs/xfs_exchrange.h             |  16 +-
- fs/xfs/xfs_file.c                  |  72 ++-
- fs/xfs/xfs_fsmap.c                 | 403 +++++++++++------
- fs/xfs/xfs_fsmap.h                 |   6 +-
- fs/xfs/xfs_fsops.c                 |   2 +-
- fs/xfs/xfs_icache.c                |  89 ++--
- fs/xfs/xfs_inode.c                 |  86 +---
- fs/xfs/xfs_inode.h                 |  12 +-
- fs/xfs/xfs_ioctl.c                 | 134 +-----
- fs/xfs/xfs_log.c                   |   2 +-
- fs/xfs/xfs_log_recover.c           |   2 +-
- fs/xfs/xfs_mount.c                 |   2 +-
- fs/xfs/xfs_mount.h                 |   5 +-
- fs/xfs/xfs_mru_cache.c             |   3 +-
- fs/xfs/xfs_qm.c                    |  48 +-
- fs/xfs/xfs_qm.h                    |   3 +
- fs/xfs/xfs_qm_syscalls.c           |  13 +-
- fs/xfs/xfs_quotaops.c              |  53 ++-
- fs/xfs/xfs_rtalloc.c               | 868 +++++++++++++++++--------------------
- fs/xfs/xfs_super.c                 |  13 +-
- fs/xfs/xfs_symlink.c               |   2 +-
- fs/xfs/xfs_trace.h                 |  61 ++-
- 60 files changed, 1772 insertions(+), 1454 deletions(-)
 
