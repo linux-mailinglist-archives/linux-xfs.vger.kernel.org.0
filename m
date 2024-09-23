@@ -1,53 +1,85 @@
-Return-Path: <linux-xfs+bounces-13110-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13112-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE44E97EFC1
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 19:11:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02DCA9839F5
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Sep 2024 01:09:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B2AE1C2153C
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 17:11:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C1221F221D2
+	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 22:53:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E032119F11F;
-	Mon, 23 Sep 2024 17:10:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0B3126C0C;
+	Mon, 23 Sep 2024 22:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0LTdSys"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="FzYrDavk"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F36019E969
-	for <linux-xfs@vger.kernel.org>; Mon, 23 Sep 2024 17:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C982E419
+	for <linux-xfs@vger.kernel.org>; Mon, 23 Sep 2024 22:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727111458; cv=none; b=BQDYhz1dAgSCxRcUQsk4Enh+ZRcDXIT/yMl4kC5+Oy4gwrjIMN65heLwjylQeTRy2y4nLd16YszbLt3Dntry0zPOTDJprPuEnTrNYwKLSOsTSJ4NC2Mh7y/qpzinSpfKyEM6I6dSqW7PA8j9AgnLawY7qy8RMainqe/n8yENqsI=
+	t=1727131989; cv=none; b=qSFDGggk8PObzfldEREK5fVsGEorfovfFrtp8b+0ynABwLkqsygcHolzWwllaVo7twLz7zbkwF9dhm+C7eHMDFh4MR00UitOF+ORsTXfYuG0xgQaQpv27BA3qMVaq34s+IxVtC6nWCBTbO8Prd2/oafrYJt4Jk4CIh7L02eStow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727111458; c=relaxed/simple;
-	bh=xTCjYGIXC6ERzAHjCZU0wyrCGzJGc1GMZQn8ZD9BNjA=;
+	s=arc-20240116; t=1727131989; c=relaxed/simple;
+	bh=FsNCQM/RwOS08qx2KrsG0GEIZhW5WfuJ8AV3HIg0AnM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3J8B7FkX5/ebelhnT6LlQQRTkh2rttANIwMM9o8MDmpWwoniBZ1IGoL5FRuv4Om9AUfw159eJP74C6ihlBRYt7gngytwIzr77zflKBN5+hIYkcCKaSeqGFgl2jckEPug2xPLNf68ZflYCuloP7XUagruJgCkLGqLK2dqLS7eTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0LTdSys; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D3FCC4CEC4;
-	Mon, 23 Sep 2024 17:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727111458;
-	bh=xTCjYGIXC6ERzAHjCZU0wyrCGzJGc1GMZQn8ZD9BNjA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q0LTdSysgV0hH/G2kBYEO85ridZlusvbWzJtoWylxahZ8ezeV6k39D0RJcf2Oqufu
-	 PBux3nV66AGQd4mZXvgfadHQJf9lp9AhN+w5H5QtH/T6V791q+Qt2FEfaaTbsv461b
-	 KvpOBhwouz9WbyHhjeta82GHKf5xcQEalEeaF2meoLINqMgum1V9+a4Me6g3eO9+Fu
-	 egZqGWh2TAQo+fgL+sE9dS4/meR1tniFBF0m4+OZXvxEwrAem38/QaGYqsgvAtprws
-	 Jxp4uatTGRmZBMI8uJ205p/QaFhMDirtaq0oir9iyOcsIZDtDpMz5ey3Wzr0GgmV+B
-	 9fbZ0JucVj68w==
-Date: Mon, 23 Sep 2024 19:10:53 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org, hch@lst.de
-Subject: Re: [PATCHSET] xfsprogs: do not depend on deprecated libattr
-Message-ID: <vmx3ywjeuwwa555v2rfeleezzayn57ws6xscosiv3a3iel2g7k@7nfexc4uohfy>
-References: <172678988199.4013721.16925840378603009022.stgit@frogsfrogsfrogs>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pyWMQaAKQc74JYktvbCJLrXomRsRuXggnjG7T8WVLgvj+H3Hxre/HwC3VVBoiWX6D71frR54OO3cBLDdhBpWJKxqmIWrh2U1CRCaqBVj2VShG3T5juYeULrELAJfc8XOCdHolfPCojgHEXrjIQYneHyIkALVjNY0P1P/jyZY6BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=FzYrDavk; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-20696938f86so38042005ad.3
+        for <linux-xfs@vger.kernel.org>; Mon, 23 Sep 2024 15:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1727131986; x=1727736786; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O9P5XLC60lNK/p8dfMcbHXQIRSzTU85TV2a/v1O9tY0=;
+        b=FzYrDavkG1W5pnq60r7GF9Vf71nuFi9iM+p7r+cV5hj4Ilo8zsj41ixjuvY4xSLfXy
+         fKPxKhdrQNmemZUBpqFFqC+nDH8wjaPpyhJfjqIvC6NSWOvChB/7Ma5MVNMftMSguMik
+         USqcCYz78dvL1JlsKjHyNeb+/DLrQ5sj/V9MO4+dZ9BUn+gFU1ZuvTd0ysIcwl3K0aqL
+         vZXIrdDQawTfthYwpgHesG/1gpYKP0X2g5RbAIHpkViaNVxXL4Md4sJc97ZBOtR+sdpe
+         1BgX2wP2QYMZWfKLpWoi9aQeAC87Vcs7/vj9BsVL1+pdu7Ztl2c8+wJOgtLk1VX5ZrnE
+         mc+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727131986; x=1727736786;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O9P5XLC60lNK/p8dfMcbHXQIRSzTU85TV2a/v1O9tY0=;
+        b=aIWKgQrudpB3vvl8/zvorTvJdgRg00A3ti5gKsLzBkfB7vq2t0hRVQMuH5a2ZWRMMl
+         cfHPYdIzQIsa3xARsEgNvI/NurH4ZmSjLFLpGCin9caPHaUOSwFJ4OKNhZNJIDS18kic
+         Vq2hkykc6UnNYHOLmB/9z1Y185ccZ7hsMPJNs4lrmg/Gh3qCW6Vhi0KQnP3r0rvk0cFD
+         XjKw5TkJMX9/udwtmJt3sHEuDQ5h9wmcKvc1UJ/inVm6eFS640MVQXuyA92L69YWEQMc
+         gPM8rUOSQu8jarc3dCYmf2Sj+V5XU4OjkzfzNnjgN/nxxw6Ee8Hpho3ZCrBICnUwEy6z
+         +EBA==
+X-Gm-Message-State: AOJu0YwYxFRUOke8iHqpZrD8zk/EaDLFLYYWEcesqaTc7BMUr/emauZ1
+	IJhxDSo8P96IpufB2Zx+GwYT6wZwTrVVbI4qnGUxHN+5XJCrOnjnXuw/M/o/ywU=
+X-Google-Smtp-Source: AGHT+IGqFdL5QL1D3D/7v1BdqTwc7J8Riov7Lafb0j7972QRq9FLgl3e08r+fjrZlt9IM1YhdwTlsA==
+X-Received: by 2002:a17:903:2305:b0:206:9693:7d5b with SMTP id d9443c01a7336-208d988d398mr197241855ad.55.1727131986385;
+        Mon, 23 Sep 2024 15:53:06 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-78-197.pa.nsw.optusnet.com.au. [49.179.78.197])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20af17ee05dsm673315ad.123.2024.09.23.15.53.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2024 15:53:06 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1ssrvT-009ArR-24;
+	Tue, 24 Sep 2024 08:53:03 +1000
+Date: Tue, 24 Sep 2024 08:53:03 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Christoph Hellwig <hch@infradead.org>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Subject: Re: [PATCH v3] xfs: Use try_cmpxchg() in
+ xlog_cil_insert_pcp_aggregate()
+Message-ID: <ZvHxTyS79BZSAYQf@dread.disaster.area>
+References: <20240923122311.914319-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -56,43 +88,31 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <172678988199.4013721.16925840378603009022.stgit@frogsfrogsfrogs>
+In-Reply-To: <20240923122311.914319-1-ubizjak@gmail.com>
 
-On Thu, Sep 19, 2024 at 04:52:59PM GMT, Darrick J. Wong wrote:
-> Hi all,
+On Mon, Sep 23, 2024 at 02:22:17PM +0200, Uros Bizjak wrote:
+> Use !try_cmpxchg instead of cmpxchg (*ptr, old, new) != old in
+> xlog_cil_insert_pcp_aggregate().  x86 CMPXCHG instruction returns
+> success in ZF flag, so this change saves a compare after cmpxchg.
 > 
-> Remove xfsprogs dependence on libattr for certain attr_list_by_handle support
-> macros because libattr is deprecated.  The code in that library came from XFS
-> originally anyway, so we can do a special one-off for ourselves.
+> Also, try_cmpxchg implicitly assigns old *ptr value to "old" when
+> cmpxchg fails. There is no need to re-read the value in the loop.
 > 
-> This has been running on the djcloud for months with no problems.  Enjoy!
-> Comments and questions are, as always, welcome.
-
-For the series:
-
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-
-Carlos
-
+> Note that the value from *ptr should be read using READ_ONCE to
+> prevent the compiler from merging, refetching or reordering the read.
 > 
-> --D
-> ---
-> Commits in this patchset:
->  * misc: clean up code around attr_list_by_handle calls
->  * libfrog: emulate deprecated attrlist functionality in libattr
-> ---
->  configure.ac          |    2 --
->  debian/control        |    2 +-
->  include/builddefs.in  |    1 -
->  libfrog/Makefile      |    8 ++-----
->  libfrog/fakelibattr.h |   36 ++++++++++++++++++++++++++++++
->  libfrog/fsprops.c     |   22 ++++++++++--------
->  m4/package_attr.m4    |   25 ---------------------
->  scrub/Makefile        |    4 ---
->  scrub/phase5.c        |   59 +++++++++++++++++++++++++++----------------------
->  9 files changed, 85 insertions(+), 74 deletions(-)
->  create mode 100644 libfrog/fakelibattr.h
->  delete mode 100644 m4/package_attr.m4
+> No functional change intended.
 > 
- 
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Reviewed-by: Christoph Hellwig <hch@infradead.org>
+> Cc: Chandan Babu R <chandan.babu@oracle.com>
+> Cc: "Darrick J. Wong" <djwong@kernel.org>
+
+Looks fine.
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+-- 
+Dave Chinner
+david@fromorbit.com
 
