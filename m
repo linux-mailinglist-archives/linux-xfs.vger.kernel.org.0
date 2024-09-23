@@ -1,142 +1,88 @@
-Return-Path: <linux-xfs+bounces-13101-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13102-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8284797EE8A
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 17:53:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F5EE97EEA8
+	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 17:58:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2AA67B21181
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 15:53:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53A242818D8
+	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 15:58:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA7B19993C;
-	Mon, 23 Sep 2024 15:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5F019E964;
+	Mon, 23 Sep 2024 15:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6roe/Ey"
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="C5pG950E"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263B1197A9B;
-	Mon, 23 Sep 2024 15:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6117C19C578;
+	Mon, 23 Sep 2024 15:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727106800; cv=none; b=m9rf1FKGyv2ctOGfyvzV/OfaAH+kvyWl6sFEbRoqQwF3YG61DgwnG3hYx5RJgQwqol7g4ediggzcjeVF01XhHRFQtWHsCpnL/j17h0QEL8FDSq4P5uSLSwhUXjU7nwcxB8UwucaI37ziDaJzutzFa8mpbLHTHypZerHfKKwFT8A=
+	t=1727107085; cv=none; b=pdhpsk3gTae9HXsYbrtIzBW7pKhbZvO2BS3v+brAqGLSDYs1E9GeaY5b/ZdraBV5Q8FKoLpDFEpUGxcgNZAkEDYiVqNgeeUWSF8Vmlg44RZsaN/ozaHfxwY5FpKr5B6QPe2b+xsIvhg/azRoIhM4EJaoAlglfjwTYpKdF8mz1Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727106800; c=relaxed/simple;
-	bh=QNgb9hMdvEcyozNtaS81ANiyuzRgkFkGC8w6qUB9R8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYIFkacEfTVmF08B8EsCT3oHNFQK9GXmJINe+5hJbGUkPJjfFhxlxaYHZcEWyD0joJQYAMjDI5tFK4WGwfI5PN7QbLAEUI+VEPiT+4JnvHA/t6Q4BaIneEDv00QOS9s2udr7dSO7se9HOraeJA2awM7Mhqje9Rgix/y3k4Bv7J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6roe/Ey; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A13C4CED1;
-	Mon, 23 Sep 2024 15:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727106800;
-	bh=QNgb9hMdvEcyozNtaS81ANiyuzRgkFkGC8w6qUB9R8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s6roe/EyAEQpGIIzY82nSmDss6TVt62/qnlh4yG8BOhKuHKpWyDc0mUXhgEWOrcV9
-	 7IY4ZkcH0ne/YpUxwUYkczFSQ0wkVrazP86W3o1jNfn/6qZzeaJ+Rvyi7WDBsv6CFE
-	 7AhjCLNQEDQS85BNAVwABCiMAWXx2YeBlUJh7PLRHz/psC9RxqzAjfYeEYNN1kq9XJ
-	 aWJtc/htvTS+aybuTVnO+1/guivprwzLTc4fIcVQQfRLYPv2F0p8FqHHnt64E8jbSf
-	 LHxP/3SBND8MoDEJ2YQc/aJLBB2+zRaAJkBgqYgZHiSx6yhoiPIEyuyMp60xicuzXi
-	 EgOls3CE1JW1w==
-Date: Mon, 23 Sep 2024 08:53:19 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Chandan Babu R <chandan.babu@oracle.com>,
-	Christian Brauner <brauner@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 01/10] iomap: factor out a iomap_last_written_block helper
-Message-ID: <20240923155319.GC21877@frogsfrogsfrogs>
-References: <20240923152904.1747117-1-hch@lst.de>
- <20240923152904.1747117-2-hch@lst.de>
+	s=arc-20240116; t=1727107085; c=relaxed/simple;
+	bh=a9BxBT1wCsc64mDbrrLB8LyO97F4nWvsqQxh7Vxni3Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tqQAufI2xp1y6yQwfrlM6ArcGW+K2ZdyG6/u15j4QpUbycbtetsbtWc4/ba0PH5j6c5s3gotgTMbFQ5GsTKSrTuJjKcJ+2zgRwKGlqY6v1heivmJdUO7riCtbwBNC1vadjIdYkOMfnRVEWaif5upZe3rriWzXWVLyKnaQpkobmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=C5pG950E; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+From: Andrey Kalachev <kalachev@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1727107072;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=a9BxBT1wCsc64mDbrrLB8LyO97F4nWvsqQxh7Vxni3Y=;
+	b=C5pG950EhOtuNimW191S9KrqksQ0/MvpfhTaTBDoJr0uLHsHSTCi8Hl8VMScdHxaFsNYPY
+	ICCuKeT2GfEEzhinmUQL6elTkurMC8orSLG6X9rt1C5n8tu+QEGAsEbTgZuJq2ixHwqlRi
+	odT7yz5Sd7p4YQdWHF6pHULmeNz9Wa0=
+To: stable@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	chandan.babu@oracle.com,
+	djwong@kernel.org,
+	kalachev@swemel.ru,
+	lvc-project@linuxtesting.org,
+	syzbot+66f256de193ab682584f@syzkaller.appspotmail.com,
+	syzbot+904ffc7f25c759741787@syzkaller.appspotmail.com
+Subject: RESEND. syzbot: KASAN: slab-out-of-bounds Read in xlog_pack_data
+Date: Mon, 23 Sep 2024 18:57:49 +0300
+Message-Id: <20240923155752.8443-1-kalachev@swemel.ru>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240923152904.1747117-2-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 23, 2024 at 05:28:15PM +0200, Christoph Hellwig wrote:
-> Split out a pice of logic from iomap_file_buffered_write_punch_delalloc
-> that is useful for all iomap_end implementations.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/iomap/buffered-io.c | 13 ++-----------
->  include/linux/iomap.h  | 14 ++++++++++++++
->  2 files changed, 16 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 11ea747228aeec..884891ac7a226c 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -1280,7 +1280,6 @@ void iomap_file_buffered_write_punch_delalloc(struct inode *inode,
->  {
->  	loff_t			start_byte;
->  	loff_t			end_byte;
-> -	unsigned int		blocksize = i_blocksize(inode);
->  
->  	if (iomap->type != IOMAP_DELALLOC)
->  		return;
-> @@ -1289,16 +1288,8 @@ void iomap_file_buffered_write_punch_delalloc(struct inode *inode,
->  	if (!(iomap->flags & IOMAP_F_NEW))
->  		return;
->  
-> -	/*
-> -	 * start_byte refers to the first unused block after a short write. If
-> -	 * nothing was written, round offset down to point at the first block in
-> -	 * the range.
-> -	 */
-> -	if (unlikely(!written))
-> -		start_byte = round_down(pos, blocksize);
-> -	else
-> -		start_byte = round_up(pos + written, blocksize);
-> -	end_byte = round_up(pos + length, blocksize);
-> +	start_byte = iomap_last_written_block(inode, pos, written);
-> +	end_byte = round_up(pos + length, i_blocksize(inode));
->  
->  	/* Nothing to do if we've written the entire delalloc extent */
->  	if (start_byte >= end_byte)
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index 4ad12a3c8bae22..e62df5d93f04de 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -256,6 +256,20 @@ static inline const struct iomap *iomap_iter_srcmap(const struct iomap_iter *i)
->  	return &i->iomap;
->  }
->  
-> +/*
-> + * Return the file offset for the first unused block after a short write.
+Hi,
 
-the first *unchanged* block after a short write?
+I found that the syzbot bug 'KASAN: slab-out-of-bounds Read in xlog_pack_data' [1]
+has been fixed in master branch since v6.4-rc6-11-gf1e1765aad7d [2].
+But, it still exist in LTS kernels: 5.4, 5.10, 5.15 [3], 6.1 [4]
+Common c-reproducer code can be found here [5].
 
-> + *
-> + * If nothing was written, round offset down to point at the first block in
+I've made backport f1e1765aad7d ("xfs: journal geometry is not properly bounds checked")
+Patch for v5.15 & v6.1 is same with original upstream code.
+Patches for v5.4 and v5.10 has some cosmetic variations:
+`xfs_has_crc(mp)` call replaced by `xfs_sb_version_hascrc(&mp->m_sb)` at most.
 
-Might as well make explicit which variable we're operating on:
-"...round @pos down..."
+I would be grateful for any assistance.
 
---D
+Regards,
+AK
 
-> + * the range, else round up to include the partially written block.
-> + */
-> +static inline loff_t iomap_last_written_block(struct inode *inode, loff_t pos,
-> +		ssize_t written)
-> +{
-> +	if (unlikely(!written))
-> +		return round_down(pos, i_blocksize(inode));
-> +	return round_up(pos + written, i_blocksize(inode));
-> +}
-> +
->  ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
->  		const struct iomap_ops *ops, void *private);
->  int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops);
-> -- 
-> 2.45.2
-> 
+[1] https://syzkaller.appspot.com/bug?extid=b7854dc75e15ffc8c2ae
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f1e1765aad7de7a8b8102044fc6a44684bc36180
+[3] https://syzkaller.appspot.com/bug?extid=66f256de193ab682584f
+[4] https://syzkaller.appspot.com/bug?extid=904ffc7f25c759741787
+[5] https://syzkaller.appspot.com/text?tag=ReproC&x=152f7343280000
+
+Reported-by: syzbot+66f256de193ab682584f@syzkaller.appspotmail.com
+Reported-by: syzbot+904ffc7f25c759741787@syzkaller.appspotmail.com
+
 
