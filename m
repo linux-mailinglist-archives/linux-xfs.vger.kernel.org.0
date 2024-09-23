@@ -1,34 +1,34 @@
-Return-Path: <linux-xfs+bounces-13105-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13104-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2796D97EEB4
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 17:58:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1593597EEAB
+	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 17:58:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E5A11C20976
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 15:58:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C11D9281918
+	for <lists+linux-xfs@lfdr.de>; Mon, 23 Sep 2024 15:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178C919DF97;
-	Mon, 23 Sep 2024 15:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D48D819E969;
+	Mon, 23 Sep 2024 15:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="EG0KGQdE"
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="j0YYdtPG"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC0C19CC1E;
-	Mon, 23 Sep 2024 15:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58CD19CC3D;
+	Mon, 23 Sep 2024 15:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727107102; cv=none; b=it2eVwl951nJHCKS7AbzLfhfSZH2qSot7rVE92ihR/X/5h1AX373vXzJZYI2mrr49QHQRZm22eWaHv9B1exrNsQlBsLKVM/j678TdjCTydkMA7uckUBKB+Z9jc1DhWaB5WUrbwT0FZUFejRrqrl/5kK752f6FQOK6YO5jpevQIk=
+	t=1727107085; cv=none; b=Foy8mf6doKbq/lez8Toqf/r9AO+w8NeQwrtXzKLmw9/XtK0qSd83dArXxzsejWtVjKnpefE8Qsi/opQq+Iw1tx818y6Gb5W+3iGnS0FXpwek+K7cW1j8AqW4B9LW7i0r9KqQ+nmO5Bypt+konOAB5hrzvzv7rwN11N02bSQYkyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727107102; c=relaxed/simple;
-	bh=+AhDDlxJLGA2nTSsLxDsG3JkEcorN5caTXa+hhgB7vY=;
+	s=arc-20240116; t=1727107085; c=relaxed/simple;
+	bh=0J7gfvBpB+FgS2bFAuER1TdSkgdYwidxr2+lPX+nVTw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KaNdHK7xBGBtJHi+ubBYbjnZbbSiDxSGD/oOSPZ1dKsLV7YC4gnOybmN1oLvN90GNKJM9FIxPB4WXBv4u2CJFAZgYtH9pkzeq76mddbP7j7QhQrzMf9FVv8mVXWZTqMBFfm6gWqwPpn+WgNL6jBOnEBNC/TQPHHI89AnhFLdbWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=EG0KGQdE; arc=none smtp.client-ip=95.143.211.150
+	 MIME-Version; b=WDFYdXAzMfdvH/RRGh1jY2A64U68zAlYRFZiZITU1fJ4u7UaX8n3JYgN49AkBWxNPARf9wLcGEcNCZcXHq5uk7u3kXDRbrA3EQKNAt7XvGFe8+mRDT+z2++ebn3f7Qa1crce8QRViPCDDwiRVGyX4gPHnqlu4G7Omtwkx5pQ7W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=j0YYdtPG; arc=none smtp.client-ip=95.143.211.150
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
 From: Andrey Kalachev <kalachev@swemel.ru>
@@ -38,10 +38,10 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9o8Ge5dq6QwPxNQh1VhU5euGS5Dgr/hRUBZl+yrjOf8=;
-	b=EG0KGQdEG0bCEvI30PQ70kj2WGlrNkT5BJBtob11ve0JLAesaxOONJWZYj0g6qDcxascjP
-	jhMrTu9t+9dnDUtmmVGWsv1pQn7B8busX9Jdsh0YK4xAvbtGiC4US6Dxj19qISCy51ZDJR
-	Q9ZoGBXq7HYAevw2FimBtebjq4vV2s4=
+	bh=ynPq85ekBVPmuuihOUBIuo2BoM5qdCKn7Uj6qDMEcdY=;
+	b=j0YYdtPG1sdzrBRarsHrIQ17Sds+WHV9Si/A5UOI/hssMsUfAEZouHVd63BF+sbCsOwdi3
+	cNuFAfEHoLGAJf91K+KVNLT9tF3m8HJvKgdHVTCyQGpkBl8MLp7KO6jMHRLAclj4JZBXFI
+	kgtPdUCCqJnmerVOI1QgBrk5KkEtYu8=
 To: stable@vger.kernel.org
 Cc: linux-xfs@vger.kernel.org,
 	chandan.babu@oracle.com,
@@ -50,9 +50,9 @@ Cc: linux-xfs@vger.kernel.org,
 	lvc-project@linuxtesting.org,
 	syzbot+66f256de193ab682584f@syzkaller.appspotmail.com,
 	syzbot+904ffc7f25c759741787@syzkaller.appspotmail.com
-Subject: [PATCH 5.4.y] xfs: journal geometry is not properly bounds checked
-Date: Mon, 23 Sep 2024 18:57:50 +0300
-Message-Id: <20240923155752.8443-2-kalachev@swemel.ru>
+Subject: [PATCH 5.10.y] xfs: journal geometry is not properly bounds checked
+Date: Mon, 23 Sep 2024 18:57:51 +0300
+Message-Id: <20240923155752.8443-3-kalachev@swemel.ru>
 In-Reply-To: <20240923155752.8443-1-kalachev@swemel.ru>
 References: <20240923155752.8443-1-kalachev@swemel.ru>
 Precedence: bulk
@@ -114,10 +114,10 @@ Signed-off-by: Andrey Kalachev <kalachev@swemel.ru>
  2 files changed, 70 insertions(+), 33 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index ac6cdca63e15..11d110a3e676 100644
+index 66e8353da2f3..24038c1cc943 100644
 --- a/fs/xfs/libxfs/xfs_sb.c
 +++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -309,7 +309,6 @@ xfs_validate_sb_common(
+@@ -310,7 +310,6 @@ xfs_validate_sb_common(
  	    sbp->sb_inodelog < XFS_DINODE_MIN_LOG			||
  	    sbp->sb_inodelog > XFS_DINODE_MAX_LOG			||
  	    sbp->sb_inodesize != (1 << sbp->sb_inodelog)		||
@@ -125,7 +125,7 @@ index ac6cdca63e15..11d110a3e676 100644
  	    sbp->sb_inopblock != howmany(sbp->sb_blocksize,sbp->sb_inodesize) ||
  	    XFS_FSB_TO_B(mp, sbp->sb_agblocks) < XFS_MIN_AG_BYTES	||
  	    XFS_FSB_TO_B(mp, sbp->sb_agblocks) > XFS_MAX_AG_BYTES	||
-@@ -327,6 +326,61 @@ xfs_validate_sb_common(
+@@ -328,6 +327,61 @@ xfs_validate_sb_common(
  		return -EFSCORRUPTED;
  	}
  
@@ -184,14 +184,14 @@ index ac6cdca63e15..11d110a3e676 100644
 +		}
 +	}
 +
- 	if (sbp->sb_unit) {
- 		if (!xfs_sb_version_hasdalign(sbp) ||
- 		    sbp->sb_unit > sbp->sb_width ||
+ 	/* Validate the realtime geometry; stolen from xfs_repair */
+ 	if (sbp->sb_rextsize * sbp->sb_blocksize > XFS_MAX_RTEXTSIZE ||
+ 	    sbp->sb_rextsize * sbp->sb_blocksize < XFS_MIN_RTEXTSIZE) {
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 03a52b3919b8..fe8d9fc6ccd5 100644
+index 22d7d74231d4..c731378704f0 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -601,7 +601,6 @@ xfs_log_mount(
+@@ -562,7 +562,6 @@ xfs_log_mount(
  	xfs_daddr_t	blk_offset,
  	int		num_bblks)
  {
@@ -199,7 +199,7 @@ index 03a52b3919b8..fe8d9fc6ccd5 100644
  	int		error = 0;
  	int		min_logfsbs;
  
-@@ -622,53 +621,37 @@ xfs_log_mount(
+@@ -583,53 +582,37 @@ xfs_log_mount(
  	}
  
  	/*
