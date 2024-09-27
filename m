@@ -1,55 +1,58 @@
-Return-Path: <linux-xfs+bounces-13233-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13234-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 902C1988A45
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 20:45:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0BDC988A47
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 20:45:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9E4E1C215DF
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 18:45:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8365E1F22CB2
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 18:45:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E54B1C174E;
-	Fri, 27 Sep 2024 18:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 642BA1C2316;
+	Fri, 27 Sep 2024 18:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE+hc+mQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrThnMmY"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C11B18872D;
-	Fri, 27 Sep 2024 18:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208611C1ABE;
+	Fri, 27 Sep 2024 18:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727462738; cv=none; b=R33MjwzrPDqdVuOonLzP4ZgDGk56BKg3Ge5gXG64ZKC3KqPm1XnEEKa/EfX67CKCupxldtRsfjtmmW/lq2FDFF+z+m88Srm2UqlmK29k3WqAPJRVtAiO9r8fjXINkqK4EGVmFEWwWwRKNa6I/kQvY2i731iF5cGtFXsedIcV/oQ=
+	t=1727462740; cv=none; b=m5xrhxy1zxMfYIuDC2cPPvjWifmh84Uv9zCwc15Oh/FJNr6/aUJR4vNp2skrDfY1+u1x7M8wqu1EwrRsxvbpoHgTVRxeaq6900PsqL+ayvpCDsSEcqlL6X9G9yni0aY/4FLNQSyyy8JZ44Q99+T37AEXaPMXneoltF6xXexW50g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727462738; c=relaxed/simple;
-	bh=M7iP7v9Qt9Zh+X/r4YT1GybGDs7MmvkGkWj3mjCDMEs=;
+	s=arc-20240116; t=1727462740; c=relaxed/simple;
+	bh=uE8mZid6AM9SjAKFwfUA7F5bA9Qbgqo/SlQasxBOdOM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oz9h32Nx1Y3A+GSt00bjAnPh43akcOvasv3zA/amTcOZhA3ssjnXZmcPHKTQtPcnMNpSse3VJE/t4HOKZ78Uu+mD+DFwLWTFh1lnydbkawc6a5f/CkiqmxST6u/1hDEnk24aBLddIVMrtHzXhaFaur08bU8DpdBqFnn4jrRo9Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE+hc+mQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ACADC4CECE;
-	Fri, 27 Sep 2024 18:45:35 +0000 (UTC)
+	 MIME-Version:Content-Type; b=W8DERRzeZfFjZuaL4DIs+TLYtDgZmhni8tfoeMvzFkeqRz9gg/p7OtPi6EA6jn84Qh/wLedvrfFDxviTCtG08pvyBLmNUbh+g7gUEAMIr5Dpkryg3wiciz1hnF8ffhnMGjnDTNuscsvjIMDnfW4pwTgCibfVFYedBjRkVosCv6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrThnMmY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48946C4CEC4;
+	Fri, 27 Sep 2024 18:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727462737;
-	bh=M7iP7v9Qt9Zh+X/r4YT1GybGDs7MmvkGkWj3mjCDMEs=;
+	s=k20201202; t=1727462739;
+	bh=uE8mZid6AM9SjAKFwfUA7F5bA9Qbgqo/SlQasxBOdOM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=eE+hc+mQk5GFR0EPRkfOmwrhP9FZoIPH5vzh2KQMpod/7lBZ04KzlPAcPHBcAsQb/
-	 TklPYFUMNnwNZrRuUd7ZZa3Fpd45MEtQ+pr7dcYzTr5ryI/j3SZitqnAD+ixlY0Ghb
-	 qLB6GyTZHqyiXvXao75KviyGKlxy0bDQ2w9n8aRhLr5SBoBMiRcBT19KuuR/n7HgLA
-	 uwDPHyq1aSIbhl2RB32OQj+joK8FNuWJto1u6hd7CP2wAnsNYDIz65BLDL3Tp2NirR
-	 QrlLcq185sym4qc5XiL23Hw/75MWY/tVf6voufRC0+fdzJHw5ift16sZPhzICpjuV7
-	 6LU2KfAlDVf/w==
+	b=BrThnMmYww28L53PSyMbF4iSw9DrjcFESjd9//+HSxwdGSelKCYqTb+w3vdoJZBLt
+	 g0bwHcq+Bmrqcb7NUKPysikLFTXea+wCZgrBqm4Xu1ougruAQij4oxrCRXL0z+8Jg7
+	 T1arRrO64Zln33P192ZOkm7ZPr5CJ0OkzkLtq52NkfRKC1riV8Z58SBrtCNaOTU0m/
+	 ocb2yOQE2oVyNkYwWZ20p2OctjfdP8AmlYaMzhgvJKZDHWqAWm4y3kOMve1HJC2ZiT
+	 HDRbTmj4+ic5740nIvsMrPM8spM//FMJl4Zn6RZcd+cL2Y4r+uFNCNVUQQHC4ENxkZ
+	 CZzf5mdfXJmIw==
 From: Carlos Maiolino <cem@kernel.org>
-To: chandan.babu@oracle.com, Yan Zhen <yanzhen@vivo.com>
-Cc: djwong@kernel.org, linux-xfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-In-Reply-To: <20240910122842.3269966-1-yanzhen@vivo.com>
-References: <20240910122842.3269966-1-yanzhen@vivo.com>
-Subject: Re: [PATCH v1] xfs: scrub: convert comma to semicolon
-Message-Id: <172746273590.131348.11997711109844038194.b4-ty@kernel.org>
-Date: Fri, 27 Sep 2024 20:45:35 +0200
+To: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Uros Bizjak <ubizjak@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>
+In-Reply-To: <20240923122311.914319-1-ubizjak@gmail.com>
+References: <20240923122311.914319-1-ubizjak@gmail.com>
+Subject: Re: [PATCH v3] xfs: Use try_cmpxchg() in
+ xlog_cil_insert_pcp_aggregate()
+Message-Id: <172746273791.131348.18071682105497639956.b4-ty@kernel.org>
+Date: Fri, 27 Sep 2024 20:45:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -60,15 +63,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.1
 
-On Tue, 10 Sep 2024 20:28:42 +0800, Yan Zhen wrote:
-> Replace a comma between expression statements by a semicolon.
+On Mon, 23 Sep 2024 14:22:17 +0200, Uros Bizjak wrote:
+> Use !try_cmpxchg instead of cmpxchg (*ptr, old, new) != old in
+> xlog_cil_insert_pcp_aggregate().  x86 CMPXCHG instruction returns
+> success in ZF flag, so this change saves a compare after cmpxchg.
 > 
+> Also, try_cmpxchg implicitly assigns old *ptr value to "old" when
+> cmpxchg fails. There is no need to re-read the value in the loop.
 > 
+> [...]
 
 Applied to xfs-6.12-rc2, thanks!
 
-[1/1] xfs: scrub: convert comma to semicolon
-      commit: 4956580c2d9ae8c81cdbe9ce19f5c8d14d56dac6
+[1/1] xfs: Use try_cmpxchg() in xlog_cil_insert_pcp_aggregate()
+      commit: 6e19fd40d755a64f271687a21cd304ecba41a571
 
 Best regards,
 -- 
