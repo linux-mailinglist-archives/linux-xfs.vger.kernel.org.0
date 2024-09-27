@@ -1,51 +1,56 @@
-Return-Path: <linux-xfs+bounces-13208-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13211-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8774987EA8
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 08:50:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAF67987FE6
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 10:00:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A8FC285523
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 06:50:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A151C1F24C17
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Sep 2024 08:00:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E182C165F13;
-	Fri, 27 Sep 2024 06:50:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74BA9188A31;
+	Fri, 27 Sep 2024 08:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qpfC1p7G"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1c3qzkdD"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E37D15D5C1;
-	Fri, 27 Sep 2024 06:50:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246B51891AC;
+	Fri, 27 Sep 2024 08:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727419846; cv=none; b=gppi84wAqFVYc3kTMNjCfkXq1fTNSg8cVvi9mmVWtoZQBQh+6AXo0o/W9xEbv+jYY/jU0eCM8Cj9UWGH106Ka2zN4w3NlVg2Tnsngt4aWYFRxm74rvtbSDFKu9lzCi0ff8VVyjGNsSbin43HWG4n63yNvobXcGchxJN/TtHqg/E=
+	t=1727424014; cv=none; b=rToB/6KMYUUKcys0hGlkxei5nvGjIIXtudgYCqUdNyLcsalBl9GhRrxfZNssQrnnRk3MAbNZ2hGsj+lQlzTRyg9rLNwVyLW5rz4bxTA1fQ2/JshP9x+cege2jaAptt/ekfF8p0m+F68JrZK499ehLNwsZ5GfYHUJLo7TY6s5XdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727419846; c=relaxed/simple;
-	bh=N8teYEJPkmK2POrlToDCjodPIDG98sQ3YaSljfJee4E=;
+	s=arc-20240116; t=1727424014; c=relaxed/simple;
+	bh=L0uoZHFB2C8UorYQjOj3kB0cugoikB5qFEFhLGdbOCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IpPP6z6cNZQYpEyuTrGvpwz9/Y9u5DvlKtOSbHrgU4qjcdFbPZBQyzdBpCCrIt8QhHd70XLjp0yVRn0vYxFgTCxyl69cv6fLA3Mp8MgSSn79qd++WTNp30CL3eeOGw0MkueEm/tpjcgR3/0s6A5kIZKhaipCWHzFRICB1Z0ETDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qpfC1p7G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB563C4CEC4;
-	Fri, 27 Sep 2024 06:50:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=sGlq22JecP6DffQDJnx0gNWsYnoKRZjl+6mSsMDwnYPzM5IV0fsjmefffEwwEpWAL376NEMhBHHZViIr0F4NKPaqo26dl2BOAdJhatHPyqZ8U4gwUbBBMnrOV1FatIwH39Keut4oit37DPRqvUlHHL0ykJRQC7i3EHUViZZvnXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1c3qzkdD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BEB5C4CEC4;
+	Fri, 27 Sep 2024 08:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1727419846;
-	bh=N8teYEJPkmK2POrlToDCjodPIDG98sQ3YaSljfJee4E=;
+	s=korg; t=1727424013;
+	bh=L0uoZHFB2C8UorYQjOj3kB0cugoikB5qFEFhLGdbOCk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qpfC1p7Gz5j0NfI+N24Vqj2s3n7ESFMBFWGnl+hunRPHndwWDinrblwTW0xstbCba
-	 lnNCVors+ZmYdL/LWRPk3V+14mQOPcc3syygw52qSmZQPywbZK9h0QYaHvYJWVUvoM
-	 KdjhAWmIzaanbTtGpLjmucQpU2HR+Yttj21o2IOo=
-Date: Fri, 27 Sep 2024 08:50:43 +0200
+	b=1c3qzkdDDnvJ+XyNj90PhSdilOVExaSWFpD7/ikDDDLBYR4XoF2tJ+7k15paCuBVb
+	 DVz9Jb2OCbMtOv8IOuMBxhoJHUYvoxdA/jw77me9RtAeGWu0W4D3zVFTBXUSjS+m0Q
+	 9x91Yp/iIUWeP33DiYhGixInIxviMnVTco6mQf7g=
+Date: Fri, 27 Sep 2024 08:52:11 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
-To: Leah Rumancik <leah.rumancik@gmail.com>
-Cc: stable@vger.kernel.org, linux-xfs@vger.kernel.org, amir73il@gmail.com,
-	chandan.babu@oracle.com, cem@kernel.org, catherine.hoang@oracle.com
-Subject: Re: [PATCH 6.1 00/26] xfs backports to catch 6.1.y up to 6.6
-Message-ID: <2024092735-authentic-masculine-decb@gregkh>
-References: <20240924183851.1901667-1-leah.rumancik@gmail.com>
+To: Kuntal Nayak <kuntal.nayak@broadcom.com>
+Cc: leah.rumancik@gmail.com, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ajay.kaher@broadcom.com,
+	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
+	lei lu <llfamsec@gmail.com>, Dave Chinner <dchinner@redhat.com>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	Chandan Babu R <chandanbabu@kernel.org>
+Subject: Re: [PATCH v5.10] xfs: add bounds checking to
+ xlog_recover_process_data
+Message-ID: <2024092733-surfer-trace-668e@gregkh>
+References: <20240924223958.347475-1-kuntal.nayak@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -54,21 +59,18 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240924183851.1901667-1-leah.rumancik@gmail.com>
+In-Reply-To: <20240924223958.347475-1-kuntal.nayak@broadcom.com>
 
-On Tue, Sep 24, 2024 at 11:38:25AM -0700, Leah Rumancik wrote:
-> Hello again,
+On Tue, Sep 24, 2024 at 03:39:56PM -0700, Kuntal Nayak wrote:
+> From: lei lu <llfamsec@gmail.com>
 > 
-> Here is the next set of XFS backports, this set is for 6.1.y and I will
-> be following up with a set for 5.15.y later. There were some good
-> suggestions made at LSF to survey test coverage to cut back on
-> testing but I've been a bit swamped and a backport set was overdue.
-> So for this set, I have run the auto group 3 x 8 configs with no
-> regressions seen. Let me know if you spot any issues.
-> 
-> This set has already been ack'd on the XFS list.
+> [ Upstream commit fb63435b7c7dc112b1ae1baea5486e0a6e27b196 ]
 
-All now queued up, thanks.
+For xfs patches, we can only take them from the xfs developers, so
+please work with them to get acks that this series is properly tested
+and approved by them for acceptance into the stable trees.
+
+thanks,
 
 greg k-h
 
