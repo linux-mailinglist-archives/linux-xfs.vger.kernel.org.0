@@ -1,183 +1,157 @@
-Return-Path: <linux-xfs+bounces-13288-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13284-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71A7A98B0C7
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Oct 2024 01:23:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF33198B089
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Oct 2024 00:53:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F40A01F2291C
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2024 23:23:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F3CB61C224DA
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2024 22:53:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B801891A3;
-	Mon, 30 Sep 2024 23:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C10D17B516;
+	Mon, 30 Sep 2024 22:53:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="TUY3biKg"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="ov85AWO/"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from antelope.elm.relay.mailchannels.net (antelope.elm.relay.mailchannels.net [23.83.212.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A832F17332B;
-	Mon, 30 Sep 2024 23:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727738580; cv=pass; b=Cj3ZxzLL7j1pi9QcBDY02bo6p6GOOTn3FMwX9/0kYMYbE5f1Y5VbPBvNOnJtUk8WRf9CkrgSC8Z+vyxFrdgBn9dvzqi2ilErOjzx0C2zt4Xk1THMOr3sbIxFeerivNRlg69oDCHnGGPwmjX+pureXSon5tUsFZfGnBnfaFxPKL0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727738580; c=relaxed/simple;
-	bh=KuWYaVWKp7Y+khtrf4Tw07FIwkFQfxcX5Lty0r61JlA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D91E21373
+	for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2024 22:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727736820; cv=none; b=aayQ/VrNDsZY34k4hgIubdOvutnliaGIQjeZx7PO4kyaU69M8m9hmnvpeKthHqrCBTBnsqScQsvFtNvi1IviSoB4tLu5ubA8OfyAnomnOTmawpUE4WWwsoXxIsKusRgj13ZKkgt46AUYU6JDRfI9NY8/y0SDQD0WM+/OfEvRWEA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727736820; c=relaxed/simple;
+	bh=J3rvnH3FdvtJ5wDpJKLxH3H4+FhnCYXfdxLwv3Q6jQo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HUW0KE+2OhvS/nzYOaH/Zp8d6681bMvaFZwKeteTwZobhI2peKyKjg+jhDOBhUQzOYfq2dWLNggqITc0g2YaUXrTLP1Y+aKPn9UFWrt6FqNxByjkATTUNggzMgWxWRGoME+riHeertAkXJkHABVXPXGsjHKfPJ12L5c+mx7SP6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=TUY3biKg; arc=pass smtp.client-ip=23.83.212.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 40EB4321942;
-	Mon, 30 Sep 2024 22:43:55 +0000 (UTC)
-Received: from pdx1-sub0-mail-a315.dreamhost.com (100-96-89-39.trex-nlb.outbound.svc.cluster.local [100.96.89.39])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id BD29532194D;
-	Mon, 30 Sep 2024 22:43:54 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1727736234; a=rsa-sha256;
-	cv=none;
-	b=muQHMFRXN3C/adqoY/sPI2MLe8tqrQwN5k2w5ZtV2LnBnnjJ8E38rhJlQiFINKlJkLVSaC
-	WvsC5qoErzOk6ITHgIHgKR673/I1zaGqMxox++4xl6it+wy59Zau6+wa3j29QHL9AInRD9
-	gdk4W/g7i8zSfLydhhLxvQWAec4Ee9WQKDhFEdPDZ5S7JMH7/XUQEmf9bnm4MWRrPMXhKp
-	09WyxQX4uvchZpJSgEycZeFfLLU8XHB5AKDuE1TkYKFdyLjUzBQub1vbBVj9dvBNO7f5HA
-	rz4xlC6er/GLdbdlhIhQ/qeOhok69kuG7IBkAXJx1vaefj5FpBSun+tixlK8uA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1727736234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=1w0tpQyukzCFtuLGpM8ycIFWg9JzhAhfgoalyyzoLVQ=;
-	b=21bMOOT4abstJs3g5nIsvv+BuknM78ZWGyuiLobft8Mvt5qPFavzq7Cvz1KitpV8zXOvng
-	w32pD4fCXl4HjssB5JN+nPE6CEdi1ztFP2h///upLIiDErmc35Lm9i27OhetpUnyReWaMH
-	72s2hVPwXCA29Uwz1jQ6uFRv2KMSnUlBOAQbVhcs6hpdjMkTXtaVjxN7LyTIDEhWzeToaC
-	OreXqQ+fJqKE5bnW94NM0+EDtiE2nsSfZfjaJSvQ2QAPe2iOPq2PHmiy5oaOFjrCSr1t2r
-	2htvUmHxptI3bpIbojTgf99U/JxOFnq6+gHlW5tBkAd5apvdxski8Qsbgzpqjg==
-ARC-Authentication-Results: i=1;
-	rspamd-9d66c6866-nmtlj;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Harbor-Broad: 517ec72679099906_1727736235078_1270078056
-X-MC-Loop-Signature: 1727736235078:327392066
-X-MC-Ingress-Time: 1727736235078
-Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.89.39 (trex/7.0.2);
-	Mon, 30 Sep 2024 22:43:55 +0000
-Received: from offworld (unknown [104.36.31.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4XHbhn6DJ5z2J;
-	Mon, 30 Sep 2024 15:43:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1727736234;
-	bh=1w0tpQyukzCFtuLGpM8ycIFWg9JzhAhfgoalyyzoLVQ=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=TUY3biKgg42trn3IoLk0/DZp2IMqhEGNxyKNE8+dITdU6gb/z0LzTA5wCGsXwiIfg
-	 o18/ad/GiSsE+qskJJwAyXTz9PzBLhasu02jhlAuwL3i9F24o7JmotOiAIpx9SNxiN
-	 Ah+5s7XE+m+2mNSuN0A1RfCqr8WK3KiYICuLfIO/8UczWqVju/2azj789TR7luiWda
-	 5SVUsBSBi9kgMYPdgsRqhEBkAy/SKTIgBFqQ4qJqgV0YgA+5BsrnQsNfT7DyyO8v1R
-	 MD20KPs2k5x9WwbAz0aZhx4LHOKauxLQ9xcKragDPZhCG3arRKVLd0zGO9pYI9bMql
-	 OT1JFYSJTdnEA==
-Date: Mon, 30 Sep 2024 15:42:27 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Christian Theune <ct@flyingcircus.io>, Dave Chinner <david@fromorbit.com>, Chris Mason <clm@meta.com>, 
-	Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Daniel Dao <dqminh@cloudflare.com>, regressions@lists.linux.dev, regressions@leemhuis.info
-Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
- folios since Dec 2021 (any kernel from 6.1 upwards)
-Message-ID: <cldkpg3wtz2ovbyh53verlcauhqla7x2bi5ru4qo3kf4ehbiwz@ou56y3qjr5cv>
-Mail-Followup-To: Matthew Wilcox <willy@infradead.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Christian Theune <ct@flyingcircus.io>, 
-	Dave Chinner <david@fromorbit.com>, Chris Mason <clm@meta.com>, Jens Axboe <axboe@kernel.dk>, 
-	linux-mm@kvack.org, "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Dao <dqminh@cloudflare.com>, 
-	regressions@lists.linux.dev, regressions@leemhuis.info
-References: <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
- <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
- <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
- <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
- <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
- <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
- <CAHk-=wj6YRm2fpYHjZxNfKCC_N+X=T=ay+69g7tJ2cnziYT8=g@mail.gmail.com>
- <295BE120-8BF4-41AE-A506-3D6B10965F2B@flyingcircus.io>
- <CAHk-=wgF3LV2wuOYvd+gqri7=ZHfHjKpwLbdYjUnZpo49Hh4tA@mail.gmail.com>
- <ZvsQmJM2q7zMf69e@casper.infradead.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ENrBFCuZME8kaS6aRxdbw6sp3Yp94rChCf2IQWxQP6f7HJ1gTewIhbBLYfadASw0AoMv2RDbdQ4gAO1R47LptECTQMNkTyUQY1Qp0dB5b4bqeR8ooWeA5tEKer177ZmWBP49V/0tpkYbl4Lt+FUiajcJlOo6X5s9XBpJPLbgrbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=ov85AWO/; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20ba733b6faso5267135ad.0
+        for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2024 15:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1727736818; x=1728341618; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pgp5JKh5leY7tqoP1ESqMVgnos2B4G5hEQe2yB61B94=;
+        b=ov85AWO/ihqNiIwSzjZxOlijQDUg/6oIlOnas87mlLb7T1WMdbUBuUTCYiR4oll1dS
+         mdjyJ5s4hpveQtL4dhKmHrtAn+sCeO7rh6eX6+E3OAtKDWiAoMaJKTHUgOu85FCAaZTO
+         zz/W8eAwduNB+5dWn9lDeiT3SNYT+BMQ2fC9XicFxklglqy2L3G+VuSMavnRU7tm5kjU
+         GZVo95hAYCJ1SFZ0tIxi/PtFepzCbKDMmsmRf4yRD6JrrHzirGuRKtXoW6YilaV9QRVX
+         FQJgq0HdhBzEjirMNPtwFz+5jcpZIHACLSxELeNu3pNpyDvLHx22fhUzjBSXjvMBKNvz
+         xRpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727736818; x=1728341618;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pgp5JKh5leY7tqoP1ESqMVgnos2B4G5hEQe2yB61B94=;
+        b=RGXGL56qCPfo7Y/VDOcHU4IWzXRKZWVWOcyWZb6xZg+dOXvL3fi9OeQncRYPN98Am+
+         mDYiYmWlm/QSsFDbJc7KMBtZK4SBs3106KRFzZsTgQ4z7iWX/f+9po/s9e3RTP4zKvAe
+         wHx2WzB0i5bOpF0QQDmcmYxV/4OZjUYMqmgyUKf0SI+3vkXPOE8mNjNPmypuIoDFG5ak
+         kDOKYvfU58JzvNsv5aOTIu8YVAOJTB0wDy+yEoNqC4/C4vaGN9Vg6tajqSGm5J4gxXzB
+         91pyyJ95aftcZau+VMYBOEYJBS7kesAqZM3FPG5cS+pTt05Pj7ffnD8bOVOkECGsXj1F
+         q4mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWz1irsm2oderTT63kdLlqi90lhm6jUOY4zxBA67IiUcbZmXPZCN5TOXGtyLDRCokehztZTkKbOP1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTCo1vqKkEdLIi80xOfMNws1uxV3tstGvWTH2hVpNj8/zEqeXK
+	RLH9kvwnrbmjiXwIZFCJln5q42drCDUnmOU7Ca9FcqFOfshZXn0iyQmHPtxh4ihLd8/nhhq+RCb
+	8
+X-Google-Smtp-Source: AGHT+IEF8BEkk0IN+81hYa2ZOkh8wLYdy6mi8kdrGn30rQ6f6oZX06lZ9QaDRhKWfAXT2N9xyRUEdA==
+X-Received: by 2002:a17:902:ecd0:b0:20b:51f0:c82e with SMTP id d9443c01a7336-20b51f0ccd2mr150153965ad.51.1727736818492;
+        Mon, 30 Sep 2024 15:53:38 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-78-197.pa.nsw.optusnet.com.au. [49.179.78.197])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20b37e4e54dsm59215095ad.249.2024.09.30.15.53.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2024 15:53:38 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1svPGp-00CFN1-1y;
+	Tue, 01 Oct 2024 08:53:35 +1000
+Date: Tue, 1 Oct 2024 08:53:35 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: chandan.babu@oracle.com, djwong@kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH] xfs: Fix circular locking during xfs inode reclamation
+Message-ID: <Zvsr76vifZeNDArE@dread.disaster.area>
+References: <20240930034406.7600-1-laoar.shao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZvsQmJM2q7zMf69e@casper.infradead.org>
-User-Agent: NeoMutt/20240425
+In-Reply-To: <20240930034406.7600-1-laoar.shao@gmail.com>
 
-On Mon, 30 Sep 2024, Matthew Wilcox wrote:\n
->On Mon, Sep 30, 2024 at 01:12:37PM -0700, Linus Torvalds wrote:
->> It's basically been that way forever. The code has changed many times,
->> but we've basically always had that "wait on bit will wait not until
->> the next wakeup, but until it actually sees the bit being clear".
->>
->> And by "always" I mean "going back at least to before the git tree". I
->> didn't search further. It's not new.
->>
->> The only reason I pointed at that (relatively recent) commit from 2021
->> is that when we rewrote the page bit waiting logic (for some unrelated
->> horrendous scalability issues with tens of thousands of pages on wait
->> queues), the rewritten code _tried_ to not do it, and instead go "we
->> were woken up by a bit clear op, so now we've waited enough".
->>
->> And that then caused problems as explained in that commit c2407cf7d22d
->> ("mm: make wait_on_page_writeback() wait for multiple pending
->> writebacks") because the wakeups aren't atomic wrt the actual bit
->> setting/clearing/testing.
->
->Could we break out if folio->mapping has changed?  Clearly if it has,
->we're no longer waiting for the folio we thought we were waiting for,
->but for a folio which now belongs to a different file.
->
->maybe this:
->
->+void __folio_wait_writeback(struct address_space *mapping, struct folio *folio)
->+{
->+       while (folio_test_writeback(folio) && folio->mapping == mapping) {
+On Mon, Sep 30, 2024 at 11:44:06AM +0800, Yafang Shao wrote:
+> I encountered the following error messages on our test servers:
+> 
+> [ 2553.303035] ======================================================
+> [ 2553.303692] WARNING: possible circular locking dependency detected
+> [ 2553.304363] 6.11.0+ #27 Not tainted
+> [ 2553.304732] ------------------------------------------------------
+> [ 2553.305398] python/129251 is trying to acquire lock:
+> [ 2553.305940] ffff89b18582e318 (&xfs_nondir_ilock_class){++++}-{3:3}, at: xfs_ilock+0x70/0x190 [xfs]
+> [ 2553.307066]
+> but task is already holding lock:
+> [ 2553.307682] ffffffffb4324de0 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x368/0xb10
+> [ 2553.308670]
+> which lock already depends on the new lock.
 
-READ_ONCE(folio->mapping)?
+.....
 
->+               trace_folio_wait_writeback(folio, mapping);
->+               folio_wait_bit(folio, PG_writeback);
->+       }
->+}
->
->[...]
->
-> void folio_wait_writeback(struct folio *folio)
-> {
->-       while (folio_test_writeback(folio)) {
->-               trace_folio_wait_writeback(folio, folio_mapping(folio));
->-               folio_wait_bit(folio, PG_writeback);
->-       }
->+       __folio_wait_writeback(folio->mapping, folio);
-> }
+> [ 2553.342664]  Possible unsafe locking scenario:
+> 
+> [ 2553.343621]        CPU0                    CPU1
+> [ 2553.344300]        ----                    ----
+> [ 2553.344957]   lock(fs_reclaim);
+> [ 2553.345510]                                lock(&xfs_nondir_ilock_class);
+> [ 2553.346326]                                lock(fs_reclaim);
+> [ 2553.347015]   rlock(&xfs_nondir_ilock_class);
+> [ 2553.347639]
+>  *** DEADLOCK ***
+> 
+> The deadlock is as follows,
+> 
+>     CPU0                                  CPU1
+>    ------                                ------
+> 
+>   alloc_anon_folio()
+>     vma_alloc_folio(__GFP_FS)
+>      fs_reclaim_acquire(__GFP_FS);
+>        __fs_reclaim_acquire();
+> 
+>                                     xfs_attr_list()
+>                                       xfs_ilock()
+>                                       kmalloc(__GFP_FS);
+>                                         __fs_reclaim_acquire();
+> 
+>        xfs_ilock
 
-Also, the last sentence in the description would need to be dropped.
+Yet another lockdep false positive. listxattr() is not in a
+transaction context on a referenced inode, so GFP_KERNEL is correct.
+The problem is lockdep has no clue that fs_reclaim context can only
+lock unreferenced inodes, so we can actualy run GFP_KERNEL context
+memory allocation with a locked, referenced inode safely.
 
-Thanks,
-Davidlohr
+We typically use __GFP_NOLOCKDEP on these sorts of allocations, but
+the long term fix is to address the lockdep annotations to take
+reclaim context into account. We can't do that until the realtime
+inode subclasses are removed which will give use the spare lockdep
+subclasses to add a reclaim context subclass. That is buried in the
+middle of a much large rework:
+
+https://lore.kernel.org/linux-xfs/172437087542.59588.13853236455832390956.stgit@frogsfrogsfrogs/
+
+-Dave.
+
+
+-- 
+Dave Chinner
+david@fromorbit.com
 
