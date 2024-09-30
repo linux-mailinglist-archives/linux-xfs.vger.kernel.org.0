@@ -1,125 +1,170 @@
-Return-Path: <linux-xfs+bounces-13287-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13289-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E81398B0B4
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Oct 2024 01:19:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D77F698B137
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Oct 2024 01:53:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 249402824F4
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2024 23:19:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66E782820F2
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Sep 2024 23:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBCF18858C;
-	Mon, 30 Sep 2024 23:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67BD5189511;
+	Mon, 30 Sep 2024 23:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="fkclomyF"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ajUDsE11"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C7D5339F
-	for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2024 23:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56763185B54
+	for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2024 23:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727738380; cv=none; b=tKb3hXcv5rtsZ0cGrepSftzS/Dzc2MORZDgi11TsI6cfpazo+rUbqVixX1neUWPDJpQCyDIbI4DenGoZ2tizIGRaCxq4nTvnD7ZRqQYbep7FtUsXaq3w22NiGQrry05HSRrpG2i1g96zJ/3U2Ii2jTcbDOcKJaB3b01Fs9yslUE=
+	t=1727740409; cv=none; b=RAdnJwgS+JBQ1Essztof+37ONOR1t/n/Bxcp3Ze42Y6pImNr0tf9GikG1szQSsc8eOjKuX26S4s85gKjZ+MxsaFupttGdOcYjwrffQWPkQue9nZn3aFUq0V3YyOzmdMQRXf7fVhmPv8TmVQ+ud3K6i76Gp1ndiEjzW0uaJqmYS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727738380; c=relaxed/simple;
-	bh=dXCXD5wrJmdqTWj0YHYVjrXP6eqVQATpBMpQrbW8Ry0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kv2sXfRFV/blHGX5MUgtt28ltwC2Rl7SUsggL1nzNKu2jnl+45eb1tQzhczLX+TQjoODat2m481ljJ37z+sPAC0kachOapJJHQUrsIQGwcPSAK16GxwyrfB1dq3gZbcbJ0ldNkBbuhsWbEDXliZAu4rOhBCtANBpB7GIq0Cx5GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=fkclomyF; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2e109539aedso1626459a91.0
-        for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2024 16:19:39 -0700 (PDT)
+	s=arc-20240116; t=1727740409; c=relaxed/simple;
+	bh=jqmfhlo6Nq51O9MWU++JmBpPZJAwV8doQ3e17gImTUE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TAeKro3qSQ5bNCfaYE+0TmBguHlElxzVoGYfc0zurLstysnlkqZF8sQVAhw+6Dxv4yRBX8qUyZxuNNg+1kvhGRqIMzM+0cbdhALOCY3wf93yjgN2kj/fE9KWJSmvTeEi10nLc930uI9QO6dDMOgHsZSdDFmPh3AWyLF2gox9ujU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ajUDsE11; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a8d2b24b7a8so1101171566b.1
+        for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2024 16:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1727738378; x=1728343178; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YU82hqcu3AmyXYClRxGGlvm1J9lCdXT7ZaoZ+qqkZug=;
-        b=fkclomyFLBET0VMNkSKfMCE90ntPhrCUo21LSTFc6XwiGt6lFM30kxeoaDHlM92Er/
-         f/IDUCR4GBly6HNKbjgyHke4F+eJgUJ2lx2H7/56KIYAcYHXgpV+nHfguzwiEFhOTFH0
-         Ded8WqD2vg8I6PiGF/pAJgu5eXkgsTvbRSUTq073KF97SAhAWEEKhOJEfl/cCGGwHhbB
-         tie9D9I/Ubxmt679HyvHLmGJRT6Wr1WMOgZMxz1MbxUyJO/JYxUwaqfYg+TpI+m7r1SL
-         lv1j4VXXvnu942Rr1sq7ty+oeBLhhTYlgrgAP7TaKe4/hpBGgZAGoS2vlZm7f6IX63wq
-         t3lQ==
+        d=linux-foundation.org; s=google; t=1727740405; x=1728345205; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=N6S4zxOawKjAaveDpwT3Z661D+kmHQpHbS1yW1IiFsM=;
+        b=ajUDsE11WI1Vq55/BJx/W1mDMt3Yjffus4198B9oxyfK9xgJ2DMoKGrnbgyJyVhuwE
+         yuHr22S46R/D+7yyf9LwFQoS/FJJGJjKoJob7naBHr/4fCXG4Qd4bbbrCgRn9morzWUU
+         x0K24QYqXETNwJkYMIHp6CxPRQHI5LnnlFax0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727738378; x=1728343178;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YU82hqcu3AmyXYClRxGGlvm1J9lCdXT7ZaoZ+qqkZug=;
-        b=YTxVZmuqJ8MPoU14hHd1GSK1N5SWGo08ZPtYbPnPWQCEZMypfcIdiU1/yZUYN5KH7q
-         qh5cEotS93tzTlZXsNvWYANr8bb1wwctbRy3dsBmjK97acu6978WTbqT3CqFJXF1cHja
-         eVkFdanU3aEEnqhQM+iCc9Na1KxjZ+3asMfs6lLe/2iezPUqpOKlt/k4evOQeAfC9+qK
-         meicaSIZxmuUAgf26cbdUXHbeB7ChnKMzbU1DHCE3peo7i5ZVCTTgtz7lxSqFOc1+JHE
-         PGjtuDSMyYNX8NPaxM31zNy5EDrn5imiQHiNibL6KVtmgaBozhNwQ6oo+M2hS+73iLTd
-         I35g==
-X-Forwarded-Encrypted: i=1; AJvYcCWMILNFujYdT8cjUk7xiEV2YZQgTGilrUvuET0/LX58NDmsh/soZvHa8N6foA7nRJTXlnUZbR2IsRM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTrINHlGEYYDW4g8XwziVD6/flMtCihRvZbBU8LVFWgoZtP7NP
-	JTJ3APYeoVIyswQOarY7mi4cPrydb7SbXXZJjfsu0teqUQpe+j7e5nlihkuLhGE=
-X-Google-Smtp-Source: AGHT+IEGrY3dHhFNHeOESvTCbVszKpY2A5f5D7dN9U01R5cFHlJYIKcKzPUQN3zGv59u+QdQq4RiGA==
-X-Received: by 2002:a17:90a:df01:b0:2d3:c8e5:e548 with SMTP id 98e67ed59e1d1-2e0b89dff8cmr16755521a91.13.1727738378524;
-        Mon, 30 Sep 2024 16:19:38 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-78-197.pa.nsw.optusnet.com.au. [49.179.78.197])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e16812547esm1239a91.1.2024.09.30.16.19.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 16:19:38 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1svPfy-00CFto-1b;
-	Tue, 01 Oct 2024 09:19:34 +1000
-Date: Tue, 1 Oct 2024 09:19:34 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: Long Li <leo.lilong@huawei.com>
-Cc: djwong@kernel.org, chandanbabu@kernel.org, linux-xfs@vger.kernel.org,
-	yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com
-Subject: Re: [next] xfs: remove the redundant xfs_alloc_log_agf
-Message-ID: <ZvsyBj3jBjuTjXey@dread.disaster.area>
-References: <20240930104217.2184941-1-leo.lilong@huawei.com>
+        d=1e100.net; s=20230601; t=1727740405; x=1728345205;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N6S4zxOawKjAaveDpwT3Z661D+kmHQpHbS1yW1IiFsM=;
+        b=cXeaDLd48+bQ5rK0U1ujvRDFSAeXtyRJy8OD3ch0Xgx3Xa901piCX3JkNgX5I8dQ8P
+         /Iuv9+5Flg0KatOY/11arXodP23qXIqo+/FUSibOV46ei+SeqZJOoBj1/OvH03X4R2UZ
+         ZtATqphFYIO19r0Pe/NcyTl3H/yhpqd+gUpezLcFh5yq1yBM13I72+Zw5kwDw6Rz/Oic
+         yHnyF1R6Pqjv/qVVHfBPMeLvS2yR/2Qt8BlB6UuJqLbJPQtBWTKj4jdNDEDGbTK3EsUN
+         NYz4gdCV63toAEunwDOr21zdOpM6K7vkK2LZlK/Jbpxprl9ZK6m94tlSGKHg8zdehTVD
+         hTjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrzS6kLlGfWD2t8KZQ4ZGKLXwZ7MTlH7NSJVuSyddGFLHjz+IqqO0Sb+dGb8XpFQzqggIIR1iQ9sg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4JRV7t57TmE9TsI4jN0rymwNJn1vnyfD/Zy7eSOf2+BSRTj2E
+	4dx5qF93VKNZBmCofqdZPEIMoQx/AM3ZmLFThxGG7GWb5Jw7QiKOsZ+XV9RafZifQFgPrv7Vkcz
+	AVIuS/Q==
+X-Google-Smtp-Source: AGHT+IHbuFgWJcE3H7UzcIRzw9fYShGIfNPY3DBQ+d+dfyql1XBNC/ijWnXWdf91huHkL0LI8EvryA==
+X-Received: by 2002:a17:907:3f8d:b0:a7a:8284:c8d6 with SMTP id a640c23a62f3a-a967bfd9483mr115635866b.24.1727740405586;
+        Mon, 30 Sep 2024 16:53:25 -0700 (PDT)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a93c2775d0bsm618651866b.11.2024.09.30.16.53.22
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2024 16:53:23 -0700 (PDT)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5c87ab540b3so7449468a12.1
+        for <linux-xfs@vger.kernel.org>; Mon, 30 Sep 2024 16:53:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXreAtFt2fYFLudKyx6Ykw/rfprIbeaw9Pp1TtiTIXvOxWof4RTEUya+0fI+kpzvNsLMpdtpMbDIfY=@vger.kernel.org
+X-Received: by 2002:a17:907:7294:b0:a8d:5f69:c839 with SMTP id
+ a640c23a62f3a-a967bf527c8mr104147566b.15.1727740402409; Mon, 30 Sep 2024
+ 16:53:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240930104217.2184941-1-leo.lilong@huawei.com>
+References: <ZuuBs762OrOk58zQ@dread.disaster.area> <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io> <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+ <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io> <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
+ <CAHk-=wj6YRm2fpYHjZxNfKCC_N+X=T=ay+69g7tJ2cnziYT8=g@mail.gmail.com>
+ <295BE120-8BF4-41AE-A506-3D6B10965F2B@flyingcircus.io> <CAHk-=wgF3LV2wuOYvd+gqri7=ZHfHjKpwLbdYjUnZpo49Hh4tA@mail.gmail.com>
+ <ZvsQmJM2q7zMf69e@casper.infradead.org>
+In-Reply-To: <ZvsQmJM2q7zMf69e@casper.infradead.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 30 Sep 2024 16:53:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wire4EQTQAwggte-MJPC1Wy-RB8egx8wjxi7dApGaiGFw@mail.gmail.com>
+Message-ID: <CAHk-=wire4EQTQAwggte-MJPC1Wy-RB8egx8wjxi7dApGaiGFw@mail.gmail.com>
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Christian Theune <ct@flyingcircus.io>, Dave Chinner <david@fromorbit.com>, Chris Mason <clm@meta.com>, 
+	Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org, 
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Daniel Dao <dqminh@cloudflare.com>, 
+	regressions@lists.linux.dev, regressions@leemhuis.info
+Content-Type: text/plain; charset="UTF-8"
 
-[ Your email is being being classified as spam by gmail because it
-does not have a valid DKIM authentication signature.  Hence it
-doesn't get delivered to anyone who's mail is backed by gmail.... ]
+On Mon, 30 Sept 2024 at 13:57, Matthew Wilcox <willy@infradead.org> wrote:
+>
+> Could we break out if folio->mapping has changed?  Clearly if it has,
+> we're no longer waiting for the folio we thought we were waiting for,
+> but for a folio which now belongs to a different file.
 
-On Mon, Sep 30, 2024 at 06:42:17PM +0800, Long Li wrote:
-> There are two invocations of xfs_alloc_log_agf in xfs_alloc_put_freelist.
-> The AGF does not change between the two calls. Although this does not pose
-> any practical problems, it seems like a small mistake. Therefore, fix it
-> by removing the first xfs_alloc_log_agf invocation.
-> 
-> Signed-off-by: Long Li <leo.lilong@huawei.com>
-> ---
->  fs/xfs/libxfs/xfs_alloc.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-> index 59326f84f6a5..cce32b2f3ffd 100644
-> --- a/fs/xfs/libxfs/xfs_alloc.c
-> +++ b/fs/xfs/libxfs/xfs_alloc.c
-> @@ -3159,8 +3159,6 @@ xfs_alloc_put_freelist(
->  		logflags |= XFS_AGF_BTREEBLKS;
->  	}
->  
-> -	xfs_alloc_log_agf(tp, agbp, logflags);
-> -
+Sounds like a sane check to me, but it's also not clear that this
+would make any difference.
 
-Looks fine. That's been there since commit 92821e2ba4ae ("[XFS] Lazy
-Superblock Counters") was merged back in 2007...
+The most likely reason for starvation I can see is a slow thread
+(possibly due to cgroup throttling like Christian alluded to) would
+simply be continually unlucky, because every time it gets woken up,
+some other thread has already dirtied the data and caused writeback
+again.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+I would think that kind of behavior (perhaps some DB transaction
+header kind of folio) would be more likely than the mapping changing
+(and then remaining under writeback for some other mapping).
 
--- 
-Dave Chinner
-david@fromorbit.com
+But I really don't know.
+
+I would much prefer to limit the folio_wait_bit() loop based on something else.
+
+For example, the basic reason for that loop (unless there is some
+other hidden one) is that the folio writeback bit is not atomic wrt
+the wakeup. Maybe we could *make* it atomic, by simply taking the
+folio waitqueue lock before clearing the bit?
+
+(Only if it has the "waiters" bit set, of course!)
+
+Handwavy.
+
+Anyway, this writeback handling is nasty. folio_end_writeback() has a
+big comment about the subtle folio reference issue too, and ignoring
+that we also have this:
+
+        if (__folio_end_writeback(folio))
+                folio_wake_bit(folio, PG_writeback);
+
+(which is the cause of the non-atomicity: __folio_end_writeback() will
+clear the bit, and return the "did we have waiters", and then
+folio_wake_bit() will get the waitqueue lock and wake people up).
+
+And notice how __folio_end_writeback() clears the bit with
+
+                ret = folio_xor_flags_has_waiters(folio, 1 << PG_writeback);
+
+which does that "clear bit and look it it had waiters" atomically. But
+that function then has a comment that says
+
+ * This must only be used for flags which are changed with the folio
+ * lock held.  For example, it is unsafe to use for PG_dirty as that
+ * can be set without the folio lock held.  [...]
+
+but the code that uses it here does *NOT* hold the folio lock.
+
+I think the comment is wrong, and the code is fine (the important
+point is that the folio lock _serialized_ the writers, and while
+clearing doesn't hold the folio lock, you can't clear it without
+setting it, and setting the writeback flag *does* hold the folio
+lock).
+
+So my point is not that this code is wrong, but that this code is all
+kinds of subtle and complex. I think it would be good to change the
+rules so that we serialize with waiters, but being complex and subtle
+means it sounds all kinds of nasty.
+
+            Linus
 
