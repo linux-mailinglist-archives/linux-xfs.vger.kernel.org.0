@@ -1,74 +1,74 @@
-Return-Path: <linux-xfs+bounces-13618-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13620-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A276C990294
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EE1E990293
 	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 13:57:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 10809B212F8
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 11:57:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 368221F21CDD
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 11:57:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 582B215A868;
-	Fri,  4 Oct 2024 11:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042C215B133;
+	Fri,  4 Oct 2024 11:57:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="INcMwADS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eGfWoq4o"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4A4148316
-	for <linux-xfs@vger.kernel.org>; Fri,  4 Oct 2024 11:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B99157487
+	for <linux-xfs@vger.kernel.org>; Fri,  4 Oct 2024 11:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728043036; cv=none; b=JFlzjPGSNSbOQdUwu1+WHf6K9SOzv63pg4mmRDSGkJJqe8hM/M+eqbpEv5rSeG/sq01i+h1sUGkXBBILvJ7DO50HOaal6v4xE/5G5dDWWWqaJbtq6OPfB7HGO2Rpn/MpbzMC3BPG4pLuhNToskkfb5RDWjJlj1zp31B7Dkamwkw=
+	t=1728043037; cv=none; b=b9tU8DzU6fIqhgEGIkCVkLePK7yu61wNwT2pKtv5Y1y7IfB6nKrhmYrQLgRDpPlcJonWys2rh5b4zTImuOTN7PzZpM6sHiCukJ2ds12pxKwp3+MujWWneMpwfi/5La7Nl+MjtlIFG6xkGsmtaX2kNKl7cGlyESb+K+rGr5Rvj5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728043036; c=relaxed/simple;
-	bh=0ul9v+B3UApWP++wwXhDXQIMaA12/0adKopZLQChiUA=;
+	s=arc-20240116; t=1728043037; c=relaxed/simple;
+	bh=URXEBJreisPCa4lLw/TAGR4MFn1cgcSg1bIs53k/0OA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bSRiCdoqV90+VPiz73/K9Loi7qaaUA2FsX33sfdUHJ6ykurOhlBQzutrodjGB1PoniL0W/l3gGtsxSPZR3wsylh7ksTkVC6W+vQ4nk3PzpfGpQFQprG2KIFRhm5Odyf51V5guOuh3Wgm2DT5zWRy/DT+JQnz6ZrpO5hQBILYuLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=INcMwADS; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=C0GPAwuGlJxlhLbYhbj5d3KYH3DBZVpLHnHgyAbyED7cklnttbSvbnLWOEJN+bJLPDMhmK6Hu1+Zg3qB+OyjadH6OYS/74Ur0IURJuJnVCFnN3mzfQICAX3GMed8VvXSiT1U+w8LIW6+9vC1smWv4SBgTlKg97o3gkWWxErKvzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eGfWoq4o; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728043033;
+	s=mimecast20190719; t=1728043034;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EVg8YE2k3AR6L6CmHT2x5AkJdw/4e+8Fy+vN87hK8sA=;
-	b=INcMwADSeGWO7zjZ7Bij686IHXfHScAUAk/eEkrm10Y5pIfMpVhblzuRWrSOqx/E2QHDU2
-	ebqksZmcX+TaOlh2MFU6zPiXCYRm3brJymXQQZbaeQacOw7d7nZqzlrPwjAqNjOq9KY9lc
-	dSb8UCPvhVAHjT0V299JKLWYhQ22988=
+	bh=0KN0fYPeHsc3j1Q0Gn6HCPdjsFTgSR6ExkB4Wg8g7WI=;
+	b=eGfWoq4o9UN8KVhOi3dRfS2L1TS06f1W6RY7MrztRWNJKFX7ohv5XF2VnlCbQ7xAILfJEe
+	UCMyGHu/gBfhfghQwRuN/1D0Q1ZH6siu4nFLARRA4zqrmGo2bR2/BaNsPKltLQ22uoqmU5
+	f9UeN0HNPggWidToix/ludTwQiZvM8U=
 Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
  [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-448-vuv-Mx3vNJioAISOZp0ARg-1; Fri, 04 Oct 2024 07:57:12 -0400
-X-MC-Unique: vuv-Mx3vNJioAISOZp0ARg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a990fc9777eso144048966b.0
-        for <linux-xfs@vger.kernel.org>; Fri, 04 Oct 2024 04:57:12 -0700 (PDT)
+ us-mta-413-3k3DLOW_OiGuLaJZF7N1pg-1; Fri, 04 Oct 2024 07:57:13 -0400
+X-MC-Unique: 3k3DLOW_OiGuLaJZF7N1pg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a8d26b5857cso156198566b.0
+        for <linux-xfs@vger.kernel.org>; Fri, 04 Oct 2024 04:57:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728043031; x=1728647831;
+        d=1e100.net; s=20230601; t=1728043032; x=1728647832;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EVg8YE2k3AR6L6CmHT2x5AkJdw/4e+8Fy+vN87hK8sA=;
-        b=gVhKGPjf1C2wpdH0zEqdbOre4KWxbuJFZr4X1ZQ3yDt5iZ6jVvsrUloefXulRGR/D9
-         izHadztbrrwfGqBZX5Gr5Pho+9A3b/+rhszwQaRGGlPCe58l2sZnu1Lc/9nR8t07ENbT
-         1+YKOYzaorUxvTWq+pTsO+Dq+gWYJsoF6LBIeL83o0Vxr66Zr706OX/z9hqnzOvvlxOt
-         P6FQsNZm1DiXWvUyWdQbrUiK6p7h5UTkI1ujE7TBf1YEHY4o33Nk0daR326EnDfvcR+c
-         cNf/IxLGTuBhUbh8Hl7x9t6WyB0F8+UG5AFfgm7HZgWJq127O/5YsVGobT6g7iZBvsyy
-         7Buw==
-X-Gm-Message-State: AOJu0YzH400lTCF0JFYc3nP6KQyLr0Qs6x3oqcMieWPEuz1OXl5s02xB
-	NpONas/6+DQsQa3huZkqyMI1E3VDAh1en6CNbEt3fnqccqXq7U02iUmy/T0ZzTEIY3Vc5SfQ1hX
-	nf4IvxaB4LAoWJGIJnbOlrt78Jeh1Q6NGFbN8cD0s6q4kqDue4S/2oSgra7dqWITW8ovrELlStL
-	5O+9LNwJfpM1C+A8lHhEVQuETopjPN6KcMv9dsaafh
-X-Received: by 2002:a17:907:3f18:b0:a6f:593f:d336 with SMTP id a640c23a62f3a-a991bd13582mr262675566b.11.1728043031023;
+        bh=0KN0fYPeHsc3j1Q0Gn6HCPdjsFTgSR6ExkB4Wg8g7WI=;
+        b=pRUnQFLw0zAfd5Ymc9p8Id/G7XTNzE4MPOmAUUOMv6clMSLBCNCM+KXrQGcAtiyPAa
+         agHRY/BoSvCVw8U63LwSPdIaUjJ6kRADJ87csP5GVertoAGcCn1AqJPk0wgyZUzluMKq
+         5S02qRNNpxAewZ8AXx2h4WRCKZJ6t3LPYZpZ3HwxrKtUjS5vF2SBqBY9SZv+HfCPGz3g
+         5UF2pTX/FO1kaeQfVBhWm3O9WdVsxSiw2dLWUOpJBXb6Jh6SJeyCLxYNdpyFxLzQi+vc
+         s9XxvKo9tT1BJ7/MicaNf9kwwmbIJtELKS3Heu6eId5wYWm8DqhXyX2lq5r8BmmwIZkk
+         dQDg==
+X-Gm-Message-State: AOJu0YxHfiGJVjnravl7OE5wHGnVwoBEnyPCOW7FqCQY6qMECxJjQj3e
+	b/+LhabzEM8x1eMyRD9y1cKK72VrzsgAmmsaHy2bBh2gynOLBbbnjHUbDN6t3ichd1dzs7LJ84i
+	Yp4bo1ecU/Oop180p038uHBzr6t3U9Yc5XB7/inRwKNXkCQbZpj4B9hZCYGm8WZKF4zLaGXlsAm
+	X6A9pGWR3oRiDJpg2sCUXwM5fw1rWS92XGfoWykyk6
+X-Received: by 2002:a17:907:26c7:b0:a86:fa3d:e984 with SMTP id a640c23a62f3a-a991bd401d1mr268908066b.20.1728043031881;
         Fri, 04 Oct 2024 04:57:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHfcg8yu/3aWkk9m955FCSOcO9VXXU7K2RRYC5arA5iyPvgy5OZjPT+rV06d51vfB7bhDfpQ==
-X-Received: by 2002:a17:907:3f18:b0:a6f:593f:d336 with SMTP id a640c23a62f3a-a991bd13582mr262673766b.11.1728043030655;
-        Fri, 04 Oct 2024 04:57:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJyB9t2IlxO0Dd64oFjv/7SHyb6+DmwA8ffnkh3Op0NzPHiFatj3pgPGcMbFjmF90diKWNUQ==
+X-Received: by 2002:a17:907:26c7:b0:a86:fa3d:e984 with SMTP id a640c23a62f3a-a991bd401d1mr268904766b.20.1728043031334;
+        Fri, 04 Oct 2024 04:57:11 -0700 (PDT)
 Received: from thinky.redhat.com (ip-217-030-065-002.aim-net.cz. [217.30.65.2])
         by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99102a64a5sm216734566b.76.2024.10.04.04.57.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
@@ -78,9 +78,9 @@ To: linux-xfs@vger.kernel.org
 Cc: aalbersh@kernel.org,
 	Andrey Albershteyn <aalbersh@redhat.com>,
 	"Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH v4 1/2] xfsprogs: fix permissions on files installed by libtoolize
-Date: Fri,  4 Oct 2024 13:57:03 +0200
-Message-ID: <20241004115704.2105777-2-aalbersh@redhat.com>
+Subject: [PATCH v4 2/2] xfsprogs: update gitignore
+Date: Fri,  4 Oct 2024 13:57:04 +0200
+Message-ID: <20241004115704.2105777-3-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20241004115704.2105777-1-aalbersh@redhat.com>
 References: <20241004115704.2105777-1-aalbersh@redhat.com>
@@ -92,36 +92,48 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Libtoolize installs some set of AUX files from its system package.
-Not all distributions have the same permissions set on these files.
-For example, read-only libtoolize system package will copy those
-files without write permissions. This causes build to fail as next
-line copies ./include/install-sh over ./install-sh which is not
-writable.
-
-Fix this by setting permission explicitly on files copied by
-libtoolize.
+Building xfsprogs seems to produce many build artifacts which are
+not tracked by git. Ignore them.
 
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ .gitignore | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 4e768526c6fe..c40728d9a455 100644
---- a/Makefile
-+++ b/Makefile
-@@ -109,6 +109,9 @@ endif
+diff --git a/.gitignore b/.gitignore
+index fd131b6fde52..756867124a02 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -33,6 +33,7 @@
+ /config.status
+ /config.sub
+ /configure
++/*~
  
- configure: configure.ac
- 	libtoolize -c -i -f
-+	chmod 755 config.guess config.sub install-sh
-+	chmod 644 ltmain.sh m4/libtool.m4 m4/ltoptions.m4 m4/ltsugar.m4 \
-+		m4/ltversion.m4 m4/lt~obsolete.m4
- 	cp include/install-sh .
- 	aclocal -I m4
- 	autoconf
+ # libtool
+ /libtool
+@@ -69,13 +70,16 @@ cscope.*
+ /rtcp/xfs_rtcp
+ /spaceman/xfs_spaceman
+ /scrub/xfs_scrub
+-/scrub/xfs_scrub@.service
+ /scrub/xfs_scrub_all
+-/scrub/xfs_scrub_all.cron
+-/scrub/xfs_scrub_all.service
+-/scrub/xfs_scrub_fail@.service
++/scrub/xfs_scrub_fail
++/scrub/*.cron
++/scrub/*.service
+ 
+ # generated crc files
+ /libfrog/crc32selftest
+ /libfrog/crc32table.h
+ /libfrog/gen_crc32table
++
++# docs
++/man/man8/mkfs.xfs.8
++/man/man8/xfs_scrub_all.8
 -- 
 2.44.1
 
