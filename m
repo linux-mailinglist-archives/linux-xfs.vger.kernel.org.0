@@ -1,218 +1,227 @@
-Return-Path: <linux-xfs+bounces-13613-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13615-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8348D98FFA6
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 11:26:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C06A990054
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 11:54:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF770B22AAB
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 09:26:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB3241C237B4
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 09:54:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B0B1547C5;
-	Fri,  4 Oct 2024 09:24:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B901B14884D;
+	Fri,  4 Oct 2024 09:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EQzQZ0mq";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="e7Hm7u8p"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PfaZTAg0"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC1A14D2B3;
-	Fri,  4 Oct 2024 09:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728033841; cv=fail; b=Msr8UFDhREwxQR3/Nc9tQnm7b2ePJEUXS9R965NSY7R3dM1xVSEYbt104jMT9ll1C+d/u1PwU6ENvX3S8OKyMtTMH3NAaT0cNJO/fzOQFQGrlOkJ/No2ZmzuElaWO5T+VQcM7R7nndrhbxC7beS8d2rCIALu+4sB3RTMmcsFgxE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728033841; c=relaxed/simple;
-	bh=Ao5wS8zFqjiWuLBEFQKIpdd74u7Jy6t5sEuht///BAg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HJb9H+YvUuBR1MZWPJQxdJgxaEjU1NQrwWGFMOTDgjMOtFAQXqpUe7UreQXtzKqkPggUk5iSSW5MnkzFjuGHn4Bg6ywIxnIvSSckMwoo/fdL8rCbdUWo5y1ezokAXp8DSwgo3wldM9rNNJ/3SP74RPYGWKng2y5oNtyX4vmayfU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EQzQZ0mq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=e7Hm7u8p; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4947tdts013481;
-	Fri, 4 Oct 2024 09:23:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:content-transfer-encoding:content-type:mime-version; s=
-	corp-2023-11-20; bh=jIyXK717ZbzgZ9k0xICFVe7kia4cyLIACzQgT4x7Hzc=; b=
-	EQzQZ0mqbV/2LJpCckfdLfVk8C2dvavjdLvTL2Zu6OSHgnCgnfImKaCHKVJz1dns
-	0EP4geJSAv8OwX5sJspqnxrp6bbqA5FtEEzjIeqC92U9c5atnaDqskxKM3LDkFed
-	NYgmIGDC/sFJ0JPi25VxlTS6R2applHU7XWEj9NnSkZrlaNEtvb+MYB/S1saleDD
-	ENjuLTju5vzQjtP33i9evUy2Se28S08G+L+X2ySdzihzQVOArBjaaBiajAhkJ6+O
-	gzRWO0S2KRMs06VRWxTcsZRFGFLx+8H3v2Dz5AeHSXSgcP0XHAzlkJP7G33NucJy
-	k78tZHGoE3WHCfosGWbsog==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42204es6pr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 04 Oct 2024 09:23:43 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49495IE8038110;
-	Fri, 4 Oct 2024 09:23:42 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2042.outbound.protection.outlook.com [104.47.70.42])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 422057118t-5
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 04 Oct 2024 09:23:42 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DLX5gjfvcNSVKmEpZfgldghYPibH/mdAcjAJPHHZcEC2PgGKyMUucYTndf5k+F43xYtJkhpun7Cspe8f4EzmpBZ0b8qZH8siwKR6hcQ/BoY4Cu27/VvRqz43UBGD1/gmI8Cz6G2U5In+XQ+JCYaozIxqiuhryrXnQWquH/qFY4COhjJi9Z8AF4GWmZRNVKxIKt8ldjLZREABBgJBo1N5e3cC5NLlW6pe47EoRHB2hxxaW8kZcbhgbDdDIFM9MfIwwWMlTyL+olRhGIkC1oBC5Xu0QUN1gqzc54P2GuU59AWgJ0EjVK7an49btZuWS99aVWAaQLIptxsOPpiw898W1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jIyXK717ZbzgZ9k0xICFVe7kia4cyLIACzQgT4x7Hzc=;
- b=LDFEQNmVT/j2uzXDLtcFtz+3ige7dlEsMpq84iAssGBWi74Upje9EJcFY6hb4Yhcw+PeSbVPuAfHagw/N26tP9wDkDzIdo5XhXA/GWI/SxsTqf42fdhV6tREmLEAWKdjNQTGPB15J3CM/IGjbL5gzsH/X8THPwnC4OiHqVON7iH0u9b7H6yAT5X1llmHNl9CHsbByH4/ziAKkDajZj1CqiD7V5umsPZ46Z6hTOK3vytMZCOgOjrVtjlVnISRGLLHfKeq0ysEPd1SoAL/v5QqXTmp6It6Z2PHzGi4qzJWG+e9KyV6qupfS6dGmhEQxjhdNWFWOM5uR7pn06NX/xt9iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jIyXK717ZbzgZ9k0xICFVe7kia4cyLIACzQgT4x7Hzc=;
- b=e7Hm7u8p/XBHDqk93Febu/KXJ41Jjgnyb546bSeaO4ilN1rXR+pt2+BbkTvw5mTfZUACWnaHCUk2SybRninVGMMW89LEDQnRobmUFxyOfsmQhzQzg5tdd6Aq8Uiy1WEM7BOFUNkbp5fGbO8uk87VUyvMYLeuiqa/PNcDCWNjfps=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by IA1PR10MB6900.namprd10.prod.outlook.com (2603:10b6:208:420::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8026.18; Fri, 4 Oct
- 2024 09:23:35 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%3]) with mapi id 15.20.8026.016; Fri, 4 Oct 2024
- 09:23:35 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: axboe@kernel.dk, brauner@kernel.org, djwong@kernel.org,
-        viro@zeniv.linux.org.uk, jack@suse.cz, dchinner@redhat.com, hch@lst.de,
-        cem@kernel.org
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, hare@suse.de,
-        martin.petersen@oracle.com, catherine.hoang@oracle.com,
-        mcgrof@kernel.org, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
-        John Garry <john.g.garry@oracle.com>
-Subject: [PATCH v7 8/8] xfs: Support setting FMODE_CAN_ATOMIC_WRITE
-Date: Fri,  4 Oct 2024 09:22:54 +0000
-Message-Id: <20241004092254.3759210-9-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20241004092254.3759210-1-john.g.garry@oracle.com>
-References: <20241004092254.3759210-1-john.g.garry@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P265CA0126.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c6::17) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217C3140E50;
+	Fri,  4 Oct 2024 09:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728035656; cv=none; b=JfRfTKbj480jeC8SmfNQd+yOBs1LioU9Yb2wozEMgK4X9sSnTcUFISSylmPRQdr5kuhnbER6vIldAENLDcSkiGZO8ri2YJNcMnXZYzSmeEFhU8yta8VzRRBoQztLJ5vjvhSYg8c69vRKXgTt5oPO42cu4TJgeYn4bTvz9qHJRb8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728035656; c=relaxed/simple;
+	bh=No1Zczym9zA0U6AM4Yjp5S/GQIC28WW4I8Vm9nagyu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKz7AHKQ/FQptmTfItMKYFR83Pe40DLr9wB2/j+n094MOysZfnhisi0gTppSry8nNXQtGWuNEEJL//en6IPepOowLuNGbOnTMths2cy3fjM9s27morswAR4gcC9gpMnNTylf9RX6bPA8GNQwOcXogmXaj0fQkFdCq0HpkhOKkIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PfaZTAg0; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728035654; x=1759571654;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=No1Zczym9zA0U6AM4Yjp5S/GQIC28WW4I8Vm9nagyu4=;
+  b=PfaZTAg0vSIy0ahotVo3UXtTfsSGbOXPd1uEslgcoPqJGfIqDIBZp1XW
+   ip9new+kYKDRoZuCB5Q8jNegxbCcbp0tKsqnx+eK23ldRleu84KtdSywD
+   ZEJEZh0Xwll+5ny2nCMjxjRyOeV5zw3b1Gykcisqae/wrlHJQGY9Jmb57
+   atf2G15i1aBRsGCxLpsbcmqQnBlZVuXcWqD2znGL3FVQHVYHXIf1HvUCt
+   3pXQk8IafW94sS2EAjwhfLxnDNoirG2rjl2df278SZUidahbim2qlmDuc
+   GnlcXwGxWYD9ysMR7E5dOol1K9piLfasS401/bW901YWJ0xoPKZjdvvpX
+   A==;
+X-CSE-ConnectionGUID: SVKyQ/zGTpKXrdkSaGdsUg==
+X-CSE-MsgGUID: gXvyGQb3RbyABxd79AOXaA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="44719853"
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="44719853"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2024 02:54:13 -0700
+X-CSE-ConnectionGUID: KAiSxmwPSmyNaOWcpdDlMw==
+X-CSE-MsgGUID: Fiw1YLBmTsqRkSqmTltRbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,177,1725346800"; 
+   d="scan'208";a="79420510"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 04 Oct 2024 02:54:12 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1swf0j-0001RK-0I;
+	Fri, 04 Oct 2024 09:54:09 +0000
+Date: Fri, 4 Oct 2024 17:53:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-xfs@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org, kent.overstreet@linux.dev,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH 2/7] vfs: add inode iteration superblock method
+Message-ID: <202410041724.REiCiIEQ-lkp@intel.com>
+References: <20241002014017.3801899-3-david@fromorbit.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|IA1PR10MB6900:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1f1bf6f3-d93e-4567-2c26-08dce45638c9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0QCnupAp6852IJuaJvri6PIG0+2Cej1r0HwAgB0DF86ia2ngsqojJUTFoTo3?=
- =?us-ascii?Q?bUf7GdxpdcouQs6yYrpdnJTXWFhg9VMGi1Vy1PkfsiJGT1o34B5n/jDCip+6?=
- =?us-ascii?Q?zdhA8p1WFWyAT1i2weidy7vkDboypJB7oIFNiboW7qu/SEPif2lQR2xM8Hcc?=
- =?us-ascii?Q?RLB/yE8G7O1uA8mKSgLYVCA8o4mCquIf8+61RVY0P/6AT2a1IhXW3KPykQ1f?=
- =?us-ascii?Q?tmR2XGu4/LSA0eC5yz75ZspZSr9gl8IdfC/B9lOCDcfyYnzzhpynhnKzWKPq?=
- =?us-ascii?Q?NkpZIWxeOzil5q3YrqMdML1/Ki2Vx5jCWAXPoDXNAV7K0EDr0FOPC19fsW1A?=
- =?us-ascii?Q?It9MIeSgcIzjDEzfgOPcDMJ35xXuwZ1ur5uBxpjgVgjlUNs4yzm3Vta4N4S4?=
- =?us-ascii?Q?ccGHNxAuwiFc/M78qmPOjVIzRkSUodDLIcrVvKUK8B5/ScmIff9eFQKe9THY?=
- =?us-ascii?Q?yl90rfyqeWyGvy3zov7a6s9Ur9Ao/fryur5hzn+KfMGTS6DfnGWf71EwPF02?=
- =?us-ascii?Q?qQNgIiStoQSMbrOTI7SRizV8LjCBJEM3Pyv8nmTJq0lWOnolkHMhd1FA2Yvd?=
- =?us-ascii?Q?VFSEIyjlVd+4gUyYcJ9yoo6p9B7qIDO36Oe3175LGl13txfr4DrOiV1ZiuiU?=
- =?us-ascii?Q?o6ZNt8UjR6sU8QAJhM8LHRVItcK47cqYRmioKLkaknskgeF3Ge5aXKGtDBq4?=
- =?us-ascii?Q?x7ymAuO8U3P6Hfvzm8JPeSw61c/i1Kx1knAOGFLUd3IaujQUJ15ICBwUvcNb?=
- =?us-ascii?Q?6EEtApXCPTef1OXLBQwH7vOz6ui02nMr1NuXxbK991KJ9vpSF69PrPta+0PZ?=
- =?us-ascii?Q?dsE7zKrfrPjQRmt22yBxnFc2cn0UxNqOdqVPeuJBvkHJlo5yDuI5yLI6NpsY?=
- =?us-ascii?Q?zhG6FmHr0nfzVRGCjUvlCTyznqRUJ/P1aZPuCal05WKHKJqcNPDcD4XeleQh?=
- =?us-ascii?Q?R1yWqwch32PtUojF8wEJS/bQ8+iL35cqZKlbDz7jzNMNB57GoxytN2cjlpTJ?=
- =?us-ascii?Q?1w/b6q5GU7CQR0o1hLWSw1M7ERHjbHPRY/Iq7ltecpVvbXeH02/No6WTJwFi?=
- =?us-ascii?Q?Ax/hHidqlwzjntKjIohKBnV00US7PLY5H/zSe/zhZ/QDi0oLkFj02mLdRTYH?=
- =?us-ascii?Q?LUHKF8H6NSUArtuc+3YIsYEDVQ49bL/pZkRoCorsxB3EkZLKACdofCQI+HB4?=
- =?us-ascii?Q?LRkEskgfBreSqexgYAQwk94aRlc09wfW1LDBWF+1e6f6QBVRZtZG4LCx3KDe?=
- =?us-ascii?Q?Gbqvs6Nk/AO7/qfT30PhJ1jIsVlE3gYu36M81dviHg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?X0uhcQYIpcAF7bBeRdfo33J2neHTgKtSLII2f5HPPdwk7IT+2GLd51ERBNlf?=
- =?us-ascii?Q?z1Isjqc/CStLrInLyUWj7UMPuHUjNnaTbM9qljycRGnrbzqq0FF2knie8Ldi?=
- =?us-ascii?Q?Ym8ttjP9nk3ExbRMdNimObbu0bcQQ3isZWQlDACEyZ1QEPeRZR47PRIL569f?=
- =?us-ascii?Q?q6eGguMew7/BcwBKwCkLiWnUL3UF9QZd5scuohvbZd8gWBeD3VNG1jJlYRom?=
- =?us-ascii?Q?LlxjzZ+mq3f/TA6NXfUPFfaYFAC56IkfyMXnvkPNJUUg0BVfpr2wFi2NXk2E?=
- =?us-ascii?Q?O9sjn2rRKDC4dke9UFW+zklhzkhJgsKB+x15NSBdmS4uYkRgDkKYNzrF2SHK?=
- =?us-ascii?Q?QZK0l7oNa1ljVACuuf7NHOHA8udZJgDHXr3FBygWMzvSphTvRu+Eup87wZNl?=
- =?us-ascii?Q?q5RT+JGp7mU631FK6HEEX5DLI2/B7I/hasgEb1Ph3DwHZJS5PF+rncFO/f5o?=
- =?us-ascii?Q?F66JNZ40JpMbW4+RM8PoreR52U+8gbVjcQmrDh4FixziocDCB+rKXs3VzKoX?=
- =?us-ascii?Q?mhyY8IQU/2mTGLs2fb8x89bdPaONsXW8VCVMdncQVdUrVs6gVaoBVhpcfUNy?=
- =?us-ascii?Q?MWDI9RRsVDuVA4Hem7NXJiROvM2/Vdl/05iD53BAN1MtduYw5woKTi3fHfok?=
- =?us-ascii?Q?i4eDWDUNpr7lZbic9fbuDtjkVKjnl7BHrKasr2xvfJ6rD2tHWq/bzHMaGIEt?=
- =?us-ascii?Q?yhcCVziKhD+VysjwBm6hv5qyW/WVSk2/zeOQEuNB+vsx57rsIwHZ7caVOfRl?=
- =?us-ascii?Q?uecRB6iMmnx15kD/XpHjp2QntyAOtlotVpvZOfJHDuPzhda5sW4gRXAclCtU?=
- =?us-ascii?Q?o5jYWcnWvy7uyVLqWAO/BgUyIy3hgR6VkekphTb2WYEJB/fwyH2yoH7vNESa?=
- =?us-ascii?Q?iKoWiwVMYvDEfuwXQkVz2WEUg1RdiTgfDzpDStHEL/iVqDO8ofzNNcHA/tH1?=
- =?us-ascii?Q?p+AiBhIsNMQ7beT1Juj7nM9kHWPIHbOKznUKqTrPL/9slQw9RQMEgIEOCFuU?=
- =?us-ascii?Q?jVQXz6Q0GvcNtyNnkACTGlf30m5HZ4nVO2zhtilStuM0DH6J/ZVZjN0IRmju?=
- =?us-ascii?Q?+WzVGt0pHuZKrsCJpy+j9sFoJW9ssJ4R5bTGPBWusbtKe5upNuGdBPR+2C8/?=
- =?us-ascii?Q?kHHwjKFCXi0DPYvj/p4M9iV2NGoIE9FGwSxGYzWeoeZMqegyLy8lEd2wxGEb?=
- =?us-ascii?Q?mh5EogC+BRr9xH+x8qd9jayym9AcAjGPa7We+bkCzUsLTaJh+VjYIHV/mFBG?=
- =?us-ascii?Q?XR0WFJymF+4g23R3a94wfv+JTtrgMIO6goOa70OLhSqnY4VBcpZ+sKyVVoDw?=
- =?us-ascii?Q?L6yVIxMJ5+6vzX0S2Eopb83gAr3uBbmG93PgrSWcT3wQEVlk0a44/CLRHeIK?=
- =?us-ascii?Q?XtrgTNBO0r/XpDSeSu3euLggtKkJ+UeMu/lh5w5ZwtoDU2kRp/s2TQ8eqiu0?=
- =?us-ascii?Q?/ReoMueQ0rEk/J2dFY4GtNZeqwCXKSNGPJU4SmF2Jh7x2/JA6tUy17lcJNBK?=
- =?us-ascii?Q?8hEgftYD8RO5HqRimduxJF+IgLrcl120gzLxpPl4e5U2zZrHwLVHefvUjBet?=
- =?us-ascii?Q?8hPN8RYlrsRNRDXsadpU7ZqYBk8jm8ikimju1TYmQOt0jqlJNQw2v2CcodBh?=
- =?us-ascii?Q?bA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	hhqfeC2M3Qa2uL0mhbwCTlHKh/fhDhs9qNmUL6w+o8WYkYOXUDohAgjKVCLnqzxKRmZii/xlZmQU/MatOsADU1FzR4vcZIriZPLYBVgdEyvoxzjTFXDXVlegoEF9BiR/vvV4DuwJibCAl4dp5Un4JooFnGnRvTySRo7cupI8oPqQagQEkC4HnXJgMMC32BqdAyYCgIeO+LI8FaNzawojRODMBp21WeuCxIk0rMsJ5/uv2soZG0D5HUIWAY5RLbiM++8hvuYT+H7LC+5GSNVXJeULMfz1SdEjA78MqWVUo2Cwv0+SXlgh2NRAGYS2uSiQViMdT8maDtdFzyRe4l4aSyEvF9EIDRNGHPOsobKGqRu3LVR+mdxcCTjbcH0kL56zKLxgVwxWWReZfBbRe+g+X24Zdeaj3cWY4h+Wm+RN9QqYl5mLLu4MEkjMEeQ5nolUjQBDsTZd1TaEIKATE9umEtPMfZ61h6hnRGOXeHBavpanWvy15YZdm7OzZK+B7ctNg7S6f2Sx213g+spDDwoyuzVHrQn4TaVcmif5p6Rv9kGSMxtvp0ddSyvIEQ8smvgLgP32ISlYAr/V2VuRH9622Xm6NAirBpx3e8dWVUaOZIM=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f1bf6f3-d93e-4567-2c26-08dce45638c9
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2024 09:23:35.1665
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tTZtMDCaznVQ7ZrUeORUST4QVNVcBEY1zg0Ub4l65UgWtg/YnnNffP4b5IwUSXhwupjdjvujVEFsOzutTAFN+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6900
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-04_06,2024-10-03_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2409260000 definitions=main-2410040068
-X-Proofpoint-GUID: mseplWj3gWzu3gU3DRiBwvhOMBHNuA9v
-X-Proofpoint-ORIG-GUID: mseplWj3gWzu3gU3DRiBwvhOMBHNuA9v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241002014017.3801899-3-david@fromorbit.com>
 
-For when an inode is enabled for atomic writes, set FMODE_CAN_ATOMIC_WRITE
-flag.
+Hi Dave,
 
-Signed-off-by: John Garry <john.g.garry@oracle.com>
----
- fs/xfs/xfs_file.c | 2 ++
- 1 file changed, 2 insertions(+)
+kernel test robot noticed the following build warnings:
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 3a0a35e7826a..e4a3a9882b0a 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1217,6 +1217,8 @@ xfs_file_open(
- 	if (xfs_is_shutdown(XFS_M(inode->i_sb)))
- 		return -EIO;
- 	file->f_mode |= FMODE_NOWAIT | FMODE_CAN_ODIRECT;
-+	if (xfs_inode_can_atomicwrite(XFS_I(inode)))
-+		file->f_mode |= FMODE_CAN_ATOMIC_WRITE;
- 	return generic_file_open(inode, file);
- }
- 
+[auto build test WARNING on brauner-vfs/vfs.all]
+[also build test WARNING on xfs-linux/for-next axboe-block/for-next linus/master v6.12-rc1 next-20241004]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dave-Chinner/vfs-replace-invalidate_inodes-with-evict_inodes/20241002-094254
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20241002014017.3801899-3-david%40fromorbit.com
+patch subject: [PATCH 2/7] vfs: add inode iteration superblock method
+config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20241004/202410041724.REiCiIEQ-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241004/202410041724.REiCiIEQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410041724.REiCiIEQ-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> fs/super.c:183: warning: Function parameter or struct member 'private_data' not described in 'super_iter_inodes'
+>> fs/super.c:183: warning: Function parameter or struct member 'flags' not described in 'super_iter_inodes'
+>> fs/super.c:241: warning: bad line: 
+>> fs/super.c:260: warning: Function parameter or struct member 'private_data' not described in 'super_iter_inodes_unsafe'
+
+
+vim +183 fs/super.c
+
+   169	
+   170	/**
+   171	 * super_iter_inodes - iterate all the cached inodes on a superblock
+   172	 * @sb: superblock to iterate
+   173	 * @iter_fn: callback to run on every inode found.
+   174	 *
+   175	 * This function iterates all cached inodes on a superblock that are not in
+   176	 * the process of being initialised or torn down. It will run @iter_fn() with
+   177	 * a valid, referenced inode, so it is safe for the caller to do anything
+   178	 * it wants with the inode except drop the reference the iterator holds.
+   179	 *
+   180	 */
+   181	int super_iter_inodes(struct super_block *sb, ino_iter_fn iter_fn,
+   182			void *private_data, int flags)
+ > 183	{
+   184		struct inode *inode, *old_inode = NULL;
+   185		int ret = 0;
+   186	
+   187		spin_lock(&sb->s_inode_list_lock);
+   188		list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
+   189			spin_lock(&inode->i_lock);
+   190			if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
+   191				spin_unlock(&inode->i_lock);
+   192				continue;
+   193			}
+   194	
+   195			/*
+   196			 * Skip over zero refcount inode if the caller only wants
+   197			 * referenced inodes to be iterated.
+   198			 */
+   199			if ((flags & INO_ITER_REFERENCED) &&
+   200			    !atomic_read(&inode->i_count)) {
+   201				spin_unlock(&inode->i_lock);
+   202				continue;
+   203			}
+   204	
+   205			__iget(inode);
+   206			spin_unlock(&inode->i_lock);
+   207			spin_unlock(&sb->s_inode_list_lock);
+   208			iput(old_inode);
+   209	
+   210			ret = iter_fn(inode, private_data);
+   211	
+   212			old_inode = inode;
+   213			if (ret == INO_ITER_ABORT) {
+   214				ret = 0;
+   215				break;
+   216			}
+   217			if (ret < 0)
+   218				break;
+   219	
+   220			cond_resched();
+   221			spin_lock(&sb->s_inode_list_lock);
+   222		}
+   223		spin_unlock(&sb->s_inode_list_lock);
+   224		iput(old_inode);
+   225		return ret;
+   226	}
+   227	
+   228	/**
+   229	 * super_iter_inodes_unsafe - unsafely iterate all the inodes on a superblock
+   230	 * @sb: superblock to iterate
+   231	 * @iter_fn: callback to run on every inode found.
+   232	 *
+   233	 * This is almost certainly not the function you want. It is for internal VFS
+   234	 * operations only. Please use super_iter_inodes() instead. If you must use
+   235	 * this function, please add a comment explaining why it is necessary and the
+   236	 * locking that makes it safe to use this function.
+   237	 *
+   238	 * This function iterates all cached inodes on a superblock that are attached to
+   239	 * the superblock. It will pass each inode to @iter_fn unlocked and without
+   240	 * having performed any existences checks on it.
+ > 241	
+   242	 * @iter_fn must perform all necessary state checks on the inode itself to
+   243	 * ensure safe operation. super_iter_inodes_unsafe() only guarantees that the
+   244	 * inode exists and won't be freed whilst the callback is running.
+   245	 *
+   246	 * @iter_fn must not block. It is run in an atomic context that is not allowed
+   247	 * to sleep to provide the inode existence guarantees. If the callback needs to
+   248	 * do blocking operations it needs to track the inode itself and defer those
+   249	 * operations until after the iteration completes.
+   250	 *
+   251	 * @iter_fn must provide conditional reschedule checks itself. If rescheduling
+   252	 * or deferred processing is needed, it must return INO_ITER_ABORT to return to
+   253	 * the high level function to perform those operations. It can then restart the
+   254	 * iteration again. The high level code must provide forwards progress
+   255	 * guarantees if they are necessary.
+   256	 *
+   257	 */
+   258	void super_iter_inodes_unsafe(struct super_block *sb, ino_iter_fn iter_fn,
+   259			void *private_data)
+ > 260	{
+   261		struct inode *inode;
+   262		int ret;
+   263	
+   264		rcu_read_lock();
+   265		spin_lock(&sb->s_inode_list_lock);
+   266		list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
+   267			ret = iter_fn(inode, private_data);
+   268			if (ret == INO_ITER_ABORT)
+   269				break;
+   270		}
+   271		spin_unlock(&sb->s_inode_list_lock);
+   272		rcu_read_unlock();
+   273	}
+   274	
+
 -- 
-2.31.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
