@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-13634-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13635-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BFD7990CA0
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 20:53:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 004F2990CFE
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 21:00:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6132FB2B213
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 18:43:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCEDB281C60
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Oct 2024 19:00:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72FA01F28F4;
-	Fri,  4 Oct 2024 18:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F1F32022E2;
+	Fri,  4 Oct 2024 18:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bf6TL3ki"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fH8lovuf"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3361F28E8;
-	Fri,  4 Oct 2024 18:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF5C2022D7;
+	Fri,  4 Oct 2024 18:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728066147; cv=none; b=GE3Q+qKVSybh0+0aOMdfcyIYvMExbrSHL4k/chhuoQWk5/KKPWMy/ysLDD2TV1ixpuHd0t5FMPsjPUczLkQVHuolOxIgyDELZvAJ6k8LqRV7o/kaehuhrr8kpEuj8/H4cbCALBpAzS41Uyoo+HVpXasSjflYjW2T6DY/5THZZxI=
+	t=1728066325; cv=none; b=joq/kE4z/WonpxiFeY6KWMLBqA3aQoaRj6lxcGgfVwVBVhK4zn5vcWBSevOZw9KSO9IpVdyAEfkNg1jvrMkRnXWKn2qzEgko9DGR2P8B80ERqdXxZBQr9NFYG5NcgejqGLzUP0BKd2zbXpcVIc/X8mAfjaaK4aaPV1hLIdGvu7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728066147; c=relaxed/simple;
-	bh=AlL/cEzKLl15zkHTK7TgA36+mPFnbFkFmC/iRiGtAPs=;
+	s=arc-20240116; t=1728066325; c=relaxed/simple;
+	bh=L46bPyYoG91u3ZbZDaYScM15XmP2KiD6b35+UXfWRyU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DEAXnsibh1VrRFx77ziwM8a4pMHPYSak0CLH1Im9k2nPIAWUp2S7GEbl71V02W4GisyBOC5I6jmG9OT75H7pivRvSHsV9YSXw9ivubd0f6rk5Fi9hhByOuTXPLJ5R3ADWiFJms+xjDH2dZDiWNEuIjjOWE4N0wyGO0kvz+t/BhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bf6TL3ki; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7078C4CECC;
-	Fri,  4 Oct 2024 18:22:25 +0000 (UTC)
+	 MIME-Version; b=OaxQeM8KfRnnAlWjqPMXZ/K7JwusES1n+4Zma5sBJaQzk4WnZhDNPoODQjSwtZqFG5U+CPEZDNAWL00M1dU/Cy9hoGr7uPcmrFVCjIIeQov/QcRWLsaA8x8CRzMevyr7VW7ACLR354dr53FQJfgDm6SgZKlufJdgMohuiyKSGPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fH8lovuf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33D99C4CEC6;
+	Fri,  4 Oct 2024 18:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728066147;
-	bh=AlL/cEzKLl15zkHTK7TgA36+mPFnbFkFmC/iRiGtAPs=;
+	s=k20201202; t=1728066325;
+	bh=L46bPyYoG91u3ZbZDaYScM15XmP2KiD6b35+UXfWRyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bf6TL3kidBWcuOIxHkrbhpRdjtP4VPM9eZ0ok43S92nIfo5Tm8aleC6HkGvJn51Od
-	 ZoiXdpsyKfNjUg2eGhV1HnbnJUUdDMM/MgfSu3epRRDCO/bIjJxx7LfkhouSGO0m2K
-	 R17P01WfjQ3uPvawYtPalNlozBd+rv+/y3ZIrWDRy9DFiz/ZKS9tzHDjw8IfzORDA5
-	 6SJ6ItcVr00J6IIiVTCrXUGL9q2gwL7OcoJhG9mLp1g1pZTEUH0kv3oq3vWp+QXPBJ
-	 U+ZKs2lTy4FF05aK2S0YdLQLQRjRZ9/KLSnso+ov0i6jRLZjnl7Elss4bB4vacCh/k
-	 dY438iAdO1r/A==
+	b=fH8lovufw3UoGshs+nALrPfXvLkrqX7bZ4JFfep3kejJD8+8JqhNkhOjAA+cyCAJM
+	 2WUXonnvGhWT43S++j+R/d+y+O4LxGo4Jj5atyQh0JHKX4b9oV+hGi5MD5Radi2ZQz
+	 LqGlu/ad6niXJpFP54mkmSygHsEZgAfQYqDu7jgZsAPEdrgC3XMz5kLkYqio0iDGcr
+	 telbcwluYI2L70QJMS7rO9Pc7UrPEsvs3eQs8tNIh7RQs8s9dXa80S34akEYPILIzo
+	 cXC428ecJuvqXfyyOquhOwp8ZJTxLGg9C9mklTXjFo9GfheQk2ya2VMMwXeZQUKdsq
+	 n4nN713bs2ekQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Pankaj Raghav <p.raghav@samsung.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 14/70] iomap: fix iomap_dio_zero() for fs bs > system page size
-Date: Fri,  4 Oct 2024 14:20:12 -0400
-Message-ID: <20241004182200.3670903-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 12/58] iomap: fix iomap_dio_zero() for fs bs > system page size
+Date: Fri,  4 Oct 2024 14:23:45 -0400
+Message-ID: <20241004182503.3672477-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241004182200.3670903-1-sashal@kernel.org>
-References: <20241004182200.3670903-1-sashal@kernel.org>
+In-Reply-To: <20241004182503.3672477-1-sashal@kernel.org>
+References: <20241004182503.3672477-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.10.13
+X-stable-base: Linux 6.6.54
 Content-Transfer-Encoding: 8bit
 
 From: Pankaj Raghav <p.raghav@samsung.com>
@@ -99,10 +99,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 41 insertions(+), 8 deletions(-)
 
 diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index d465589902790..d505636035af3 100644
+index 975fd88c1f0f4..6b89b5589ba28 100644
 --- a/fs/iomap/buffered-io.c
 +++ b/fs/iomap/buffered-io.c
-@@ -1992,10 +1992,10 @@ iomap_writepages(struct address_space *mapping, struct writeback_control *wbc,
+@@ -1998,10 +1998,10 @@ iomap_writepages(struct address_space *mapping, struct writeback_control *wbc,
  }
  EXPORT_SYMBOL_GPL(iomap_writepages);
  
@@ -110,13 +110,13 @@ index d465589902790..d505636035af3 100644
 +static int __init iomap_buffered_init(void)
  {
  	return bioset_init(&iomap_ioend_bioset, 4 * (PAGE_SIZE / SECTOR_SIZE),
- 			   offsetof(struct iomap_ioend, io_bio),
+ 			   offsetof(struct iomap_ioend, io_inline_bio),
  			   BIOSET_NEED_BVECS);
  }
 -fs_initcall(iomap_init);
 +fs_initcall(iomap_buffered_init);
 diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index f3b43d223a46e..c02b266bba525 100644
+index bcd3f8cf5ea42..409a21144a555 100644
 --- a/fs/iomap/direct-io.c
 +++ b/fs/iomap/direct-io.c
 @@ -11,6 +11,7 @@
@@ -188,7 +188,7 @@ index f3b43d223a46e..c02b266bba525 100644
  	}
  
  	/*
-@@ -431,7 +449,8 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
+@@ -430,7 +448,8 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
  		/* zero out from the end of the write to the end of the block */
  		pad = pos & (fs_block_size - 1);
  		if (pad)
@@ -198,7 +198,7 @@ index f3b43d223a46e..c02b266bba525 100644
  	}
  out:
  	/* Undo iter limitation to current extent */
-@@ -753,3 +772,17 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+@@ -752,3 +771,17 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
  	return iomap_dio_complete(dio);
  }
  EXPORT_SYMBOL_GPL(iomap_dio_rw);
