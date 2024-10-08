@@ -1,111 +1,133 @@
-Return-Path: <linux-xfs+bounces-13688-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13677-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BC5599435C
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 11:03:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F104799434A
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 11:02:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C41E61F22D68
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 09:03:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BE7628EFD1
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 09:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70E4B1C1AB5;
-	Tue,  8 Oct 2024 09:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 344C877102;
+	Tue,  8 Oct 2024 08:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PxZZHbYx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWJrh66l"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDDF1C0DFA;
-	Tue,  8 Oct 2024 09:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7063185B5B
+	for <linux-xfs@vger.kernel.org>; Tue,  8 Oct 2024 08:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728378013; cv=none; b=S3LiLxt5k7Iy1qaQXT8IoF8um/NKsV5EcEBr+UhH2s40gDfFtpDeTIUYr9BNsBcmIff0n28mvr3TBBEU66FEdwJ5g07GOTPCudn/Qml55/MChKFxLSWfGEZ7D9AjtK8Q9ftAS31uBJyAAuVKHmBFQMwQE+N5NvFuo7KYuLBQ1c4=
+	t=1728377970; cv=none; b=MHWm/0D5i7wafcgehgIpYDOpqto4u+xZ3YazzHqbKUdFfWyiIC+Y4pO1UQFmR3OzNgtNaz//khcHpAyC76/AonvFrVykNefZlDKIsrJYP5oItINcitNvt3NUpCpMqX/WNV49xYY3yd2YVvnZe4l7f6Iwvi6GzfwMl8mjlBlKQQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728378013; c=relaxed/simple;
-	bh=eM4fkuNs74Wifu0SwS2UEDZaWem66XEq7FhtCToZNgU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UHq204h0mezXloa+Ed4IS3RSRxFxGoNdvs0lEcN845nZazgb9U74sazkj/LET0No3MG2mhl4OxrFidPFQ2U7f0BbC2tj1pIavFWId8TVZqDtf7CzzoZ0RGOnr9RpqsN7ItdR00A8ayUBpXLML5pMQiHvbQ6UHCX9XQwINRjVuUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PxZZHbYx; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=rcjb6y5lgHJS/KNA/ph5iqfIqPYUIGcWxQO2hMT29Tw=; b=PxZZHbYxhdgxlqnJXda5sIu+lb
-	18Tkd7g+MrZcnaRlzLMgo6HXx/xGAIF/LnPolWHGC5B/xmYp1nL1+mMs6DiWsnFTANt56QsBXg/l7
-	rISl6zKpGJlI8pEm7nZnvaKJ3fhuWWFiZfSvWVDYDYkaVceg0E6VbVm2+qgi9YH0vBJxdgWqquRb4
-	bvSKBE864SdUF/3aBV7XXLYGlZWF49zBkmzLaXOLH+P3uK4A/7DI96deZjFUgdNwJ8ej4Vgmj7JQn
-	UjNIcEPTV918j561KEtAovwBOrNw3BK5G79CQ/iRoNrSESAgXgaz/MBeRlnXB53EIUs59unZSLHmq
-	TTb3ovjw==;
-Received: from 2a02-8389-2341-5b80-a172-fba5-598b-c40c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:a172:fba5:598b:c40c] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1sy64g-00000005BkR-3aza;
-	Tue, 08 Oct 2024 09:00:11 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Carlos Maiolino <cem@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 10/10] xfs: punch delalloc extents from the COW fork for COW writes
-Date: Tue,  8 Oct 2024 10:59:21 +0200
-Message-ID: <20241008085939.266014-11-hch@lst.de>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241008085939.266014-1-hch@lst.de>
-References: <20241008085939.266014-1-hch@lst.de>
+	s=arc-20240116; t=1728377970; c=relaxed/simple;
+	bh=d8GBRYw9fxfWMEJX3NWuEL8Yb1+DsU5ohy27YqJo6zA=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bQv3kRa1j0WT+IZTxyUvfSZ3KBer9IriHJ7+YJAgRw8UEt4b6Fyzjn4ub6V+WQ5nYNz4IsBvLUDpKdyyhwsTCvGiBJXK1IsOg/v22tlOTUAZJ+AigaqIX5H8PJkUshHuHUnQD0MMM+6AxtlyGMqXz0Zv0xWGQEs8zTgbox/cYOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWJrh66l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75E4C4CEC7
+	for <linux-xfs@vger.kernel.org>; Tue,  8 Oct 2024 08:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728377969;
+	bh=d8GBRYw9fxfWMEJX3NWuEL8Yb1+DsU5ohy27YqJo6zA=;
+	h=Date:From:To:Subject:From;
+	b=FWJrh66lbW6K0ARIRtgGxOU2teeKVUQ3PA1xMAzH5V5UpP+Ado7d//B7qXYAla2iQ
+	 HGRYAbkHv5AXIWxRcXnEGE40m2JXsIHLRj/7D4YXXcH9d6YgXaWOgajnBJSjX/imDD
+	 3pwet6x9dvg9TJL0igEm8b7/obvTGAljicvTsRGGLAZukSJzvLLNTO1fXK5nI34D9A
+	 UV+o0l+QzC33dgnJL+g0k4UJH4kyiKT5699W3kjaqav6bpgyMcWM5fB/tuYhSGNG/k
+	 sujZgUu4cRplP1HcYggG5M1cf5HMNTHsmnjIaYZr00YCY2LP44HbRcwGNaOc2sLFVo
+	 tk+RNSk+gOX8Q==
+Date: Tue, 8 Oct 2024 10:59:25 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: linux-xfs@vger.kernel.org
+Subject: foo
+Message-ID: <ju73v7yffteh4abhp7liyyz6ta2thc7tkjimp25rosv6uaqzc7@swtwurbl7gnp>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-When ->iomap_end is called on a short write to the COW fork it needs to
-punch stale delalloc data from the COW fork and not the data fork.
+Subject: [ANNOUNCE] xfs-linux: for-next **rebased** to 44adde15022d
 
-Ensure that IOMAP_F_NEW is set for new COW fork allocations in
-xfs_buffered_write_iomap_begin, and then use the IOMAP_F_SHARED flag
-in xfs_buffered_write_delalloc_punch to decide which fork to punch.
+Hi folks,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_iomap.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+The for-next branch of the xfs-linux repository at:
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 0317bbfeeb38f3..916531d9f83c2f 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1196,7 +1196,7 @@ xfs_buffered_write_iomap_begin(
- 				imap.br_startoff - offset_fsb);
- 	}
- 
--	iomap_flags = IOMAP_F_SHARED;
-+	iomap_flags |= IOMAP_F_SHARED;
- 	seq = xfs_iomap_inode_sequence(ip, iomap_flags);
- 	xfs_iunlock(ip, lockmode);
- 	return xfs_bmbt_to_iomap(ip, iomap, &cmap, flags, iomap_flags, seq);
-@@ -1213,8 +1213,10 @@ xfs_buffered_write_delalloc_punch(
- 	loff_t			length,
- 	struct iomap		*iomap)
- {
--	xfs_bmap_punch_delalloc_range(XFS_I(inode), XFS_DATA_FORK, offset,
--			offset + length);
-+	xfs_bmap_punch_delalloc_range(XFS_I(inode),
-+			(iomap->flags & IOMAP_F_SHARED) ?
-+				XFS_COW_FORK : XFS_DATA_FORK,
-+			offset, offset + length);
- }
- 
- static int
--- 
-2.45.2
+	git@gitolite.kernel.org:/pub/scm/fs/xfs/xfs-linux.git
 
+has just been **REBASED**.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
+
+This is a rebase of the for-next push from past week, where due problems with
+testing the new patches to be included in the -rc, I needed to create a new tag
+with the whole series to be sent to Linus later this week.
+
+The patch list below contains the patches pushed past week + new patches that I
+managed to test this weekend.
+
+The new head of the for-next branch is commit:
+
+44adde15022d xfs: fix a typo
+
+15 new commits:
+
+Andrew Kreimer (1):
+      [44adde15022d] xfs: fix a typo
+
+Brian Foster (2):
+      [90a71daaf73f] xfs: skip background cowblock trims on inodes open for write
+      [df81db024ef7] xfs: don't free cowblocks from under dirty pagecache on unshare
+
+Chandan Babu R (1):
+      [ae6f70c66748] MAINTAINERS: add Carlos Maiolino as XFS release manager
+
+Christoph Hellwig (8):
+      [b1c649da15c2] xfs: merge xfs_attr_leaf_try_add into xfs_attr_leaf_addname
+      [346c1d46d4c6] xfs: return bool from xfs_attr3_leaf_add
+      [a5f73342abe1] xfs: distinguish extra split from real ENOSPC from xfs_attr3_leaf_split
+      [b3f4e84e2f43] xfs: distinguish extra split from real ENOSPC from xfs_attr_node_try_addname
+      [865469cd41bc] xfs: fold xfs_bmap_alloc_userdata into xfs_bmapi_allocate
+      [b611fddc0435] xfs: don't ifdef around the exact minlen allocations
+      [405ee87c6938] xfs: call xfs_bmap_exact_minlen_extent_alloc from xfs_bmap_btalloc
+      [6aac77059881] xfs: support lowmode allocations in xfs_bmap_exact_minlen_extent_alloc
+
+Uros Bizjak (1):
+      [20195d011c84] xfs: Use try_cmpxchg() in xlog_cil_insert_pcp_aggregate()
+
+Yan Zhen (1):
+      [6148b77960cc] xfs: scrub: convert comma to semicolon
+
+Zhang Zekun (1):
+      [f6225eebd76f] xfs: Remove empty declartion in header file
+
+Code Diffstat:
+
+ MAINTAINERS                   |   2 +-
+ fs/xfs/libxfs/xfs_alloc.c     |   7 +-
+ fs/xfs/libxfs/xfs_alloc.h     |   4 +-
+ fs/xfs/libxfs/xfs_attr.c      | 190 ++++++++++++++++++------------------------
+ fs/xfs/libxfs/xfs_attr_leaf.c |  40 +++++----
+ fs/xfs/libxfs/xfs_attr_leaf.h |   2 +-
+ fs/xfs/libxfs/xfs_bmap.c      | 140 ++++++++++---------------------
+ fs/xfs/libxfs/xfs_da_btree.c  |   5 +-
+ fs/xfs/scrub/ialloc_repair.c  |   4 +-
+ fs/xfs/xfs_icache.c           |  37 ++++----
+ fs/xfs/xfs_log.h              |   2 -
+ fs/xfs/xfs_log_cil.c          |  11 +--
+ fs/xfs/xfs_log_recover.c      |   2 +-
+ fs/xfs/xfs_reflink.c          |   3 +
+ fs/xfs/xfs_reflink.h          |  19 +++++
+ 15 files changed, 207 insertions(+), 261 deletions(-)
 
