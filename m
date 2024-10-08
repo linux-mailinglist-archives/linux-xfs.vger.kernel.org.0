@@ -1,68 +1,68 @@
-Return-Path: <linux-xfs+bounces-13700-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13703-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA129994E80
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 15:18:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C101994E25
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 15:13:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5CC6DB23684
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 13:13:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE9411C22E09
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Oct 2024 13:13:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24A5D1DF726;
-	Tue,  8 Oct 2024 13:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBEAF1DF96B;
+	Tue,  8 Oct 2024 13:12:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g5GiDe2M"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MzTO1uxs"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622C31DED65
-	for <linux-xfs@vger.kernel.org>; Tue,  8 Oct 2024 13:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB401DF724
+	for <linux-xfs@vger.kernel.org>; Tue,  8 Oct 2024 13:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728393158; cv=none; b=PWwCFjT2rLanww4QNBBod/MomQXb3pjxxYb8mb9xLc8M3kumIxcYoij/8749yJnJF6MDCdx1m8qkVMATBYYYJG+xlo1ESUpVjYJGSQjizPu0qwHW3DIm5jrS8DfIeZOvt7wbZlWRegPpvRNzTPyKLQtwGP3QGoQImrWcVww1GpM=
+	t=1728393161; cv=none; b=abDhzPJoaPx8pu8KgNlOS39OlIag3LMVUx3ZciO6nqGV3Yw2r1Vaar26XbiVc5y6Iwa//8VPR4Ga1NzHStRWuEuWK1BvKoxuhs6F3ykgxbiQzLYbhuX1DhxgZNlO1o9ap2XtJYaOk5iw/ylf4t1hZMMJZBKDvti8K4JatFCA46s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728393158; c=relaxed/simple;
-	bh=hUeN7W92QOM2EraopMPkibTQIShuHhxsbs8KiRFPiao=;
+	s=arc-20240116; t=1728393161; c=relaxed/simple;
+	bh=A9d3YbDlFpVoVmfCqHG5vyYLWAokbLZrXDxD/4ddOw0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qyeTJsATLsHTuT/Dppc5GztcUcn66vFH+kyZjCctcaB8S2y32jBxyynC15bYPpV0yNb8dA7dFXqU4D7RKjZ+UbD1vk4yDqiDMxF8whIHpMm0gn3KsAfIWGBpzkAYQSe9RxTY79ZCTz1X4PCOFHzasa2bpZFyw7uPdEetk2i7GUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g5GiDe2M; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=uusIuZ89LyUToG+58mBYgG2KI5OohfVcpb0wBGbRkw7SaorsGZTokvnkUv1fumFMcyebfJrtAqDA1e6STrJi4Sdfm2+eJGO5Yi+TfDTP2yBEv9rKrBKlcr1tO6rWa4HnW/qf0ThsoOKkRBkG3nXaVQbJ3UILaryMELKygX1m7+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MzTO1uxs; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728393156;
+	s=mimecast20190719; t=1728393159;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sf6PcHqbetRJQw90eD6WUXuq14rI51/uERSOmCHGjqY=;
-	b=g5GiDe2MT9mizTKNECrX9tCHjiTLsp4+seT83mLAE+rmcGqkPvW5DRPqodkkH0QEfuu1uT
-	fCMHis5wfUqnfMOyjMiq6uHr71m6WdMSbMve+got6i8cDQhQ9o2xTjHl5UWuHxuIvxIOqx
-	lYIBmaFu618ZFd4RNeLb1/SNRIkllH4=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=8RZv//V+dBGpG3JlqV80/E8nyvqMnJU3q3p26cnuGvw=;
+	b=MzTO1uxsVIiZ8FoFv23mSlkhUSbBWuW4Al08NPwLqXrhXEDxuuyZOHE/ZkMRnZyK3733i+
+	opbcYASyHEcRXdjzsNSatgfQPzJ0EZiRTNMA3ejfklMQ4w5otQ54+0qPHOfF9xk08eS6/4
+	67w7gFqTMsTupThfvBVXarDL3hy9B94=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-x0YtL9jAOHmBTaNw_yhMDw-1; Tue,
- 08 Oct 2024 09:12:35 -0400
-X-MC-Unique: x0YtL9jAOHmBTaNw_yhMDw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-680-YjNSmY9tNlyXRRrCxgin9g-1; Tue,
+ 08 Oct 2024 09:12:36 -0400
+X-MC-Unique: YjNSmY9tNlyXRRrCxgin9g-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 076821955D4C;
-	Tue,  8 Oct 2024 13:12:34 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 222E01956064;
+	Tue,  8 Oct 2024 13:12:35 +0000 (UTC)
 Received: from bfoster.redhat.com (unknown [10.22.32.133])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 296BB19560AA;
-	Tue,  8 Oct 2024 13:12:33 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4AB5519560AA;
+	Tue,  8 Oct 2024 13:12:34 +0000 (UTC)
 From: Brian Foster <bfoster@redhat.com>
 To: linux-xfs@vger.kernel.org
 Cc: djwong@kernel.org,
 	sandeen@sandeen.net
-Subject: [RFC 2/4] xfs: transaction support for sb_agblocks updates
-Date: Tue,  8 Oct 2024 09:13:46 -0400
-Message-ID: <20241008131348.81013-3-bfoster@redhat.com>
+Subject: [RFC 3/4] xfs: factor out a helper to calculate post-growfs agcount
+Date: Tue,  8 Oct 2024 09:13:47 -0400
+Message-ID: <20241008131348.81013-4-bfoster@redhat.com>
 In-Reply-To: <20241008131348.81013-1-bfoster@redhat.com>
 References: <20241008131348.81013-1-bfoster@redhat.com>
 Precedence: bulk
@@ -75,80 +75,80 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Support transactional changes to superblock agblocks and related
-fields.
+Factor out the new agcount calculation logic into a helper.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_shared.h |  1 +
- fs/xfs/xfs_trans.c         | 15 +++++++++++++++
- fs/xfs/xfs_trans.h         |  1 +
- 3 files changed, 17 insertions(+)
+ fs/xfs/xfs_fsops.c | 42 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-index 33b84a3a83ff..b8e80827a010 100644
---- a/fs/xfs/libxfs/xfs_shared.h
-+++ b/fs/xfs/libxfs/xfs_shared.h
-@@ -157,6 +157,7 @@ void	xfs_log_get_max_trans_res(struct xfs_mount *mp,
- #define	XFS_TRANS_SB_RBLOCKS		0x00000800
- #define	XFS_TRANS_SB_REXTENTS		0x00001000
- #define	XFS_TRANS_SB_REXTSLOG		0x00002000
-+#define	XFS_TRANS_SB_AGBLOCKS		0x00004000
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index 6401424303c5..3b95a368584e 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -80,6 +80,33 @@ xfs_resizefs_init_new_ags(
+ 	return error;
+ }
  
- /*
-  * Here we centralize the specification of XFS meta-data buffer reference count
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index bdf3704dc301..34a9896ec398 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -433,6 +433,9 @@ xfs_trans_mod_sb(
- 	case XFS_TRANS_SB_DBLOCKS:
- 		tp->t_dblocks_delta += delta;
- 		break;
-+	case XFS_TRANS_SB_AGBLOCKS:
-+		tp->t_agblocks_delta += delta;
-+		break;
- 	case XFS_TRANS_SB_AGCOUNT:
- 		ASSERT(delta > 0);
- 		tp->t_agcount_delta += delta;
-@@ -526,6 +529,16 @@ xfs_trans_apply_sb_deltas(
- 		be64_add_cpu(&sbp->sb_dblocks, tp->t_dblocks_delta);
- 		whole = 1;
- 	}
-+	if (tp->t_agblocks_delta) {
-+		xfs_agblock_t		agblocks;
++/*
++ * Calculate new AG count based on provided AG size. May adjust final nblocks
++ * count if necessary for a valid AG count.
++ */
++static xfs_agnumber_t
++xfs_growfs_calc_agcount(
++	struct xfs_mount	*mp,
++	xfs_agblock_t		nagblocks,
++	xfs_rfsblock_t		*nblocks)
++{
++	xfs_rfsblock_t		nb_div, nb_mod;
 +
-+		agblocks = be32_to_cpu(sbp->sb_agblocks);
-+		agblocks += tp->t_agblocks_delta;
++	nb_div = *nblocks;
++	nb_mod = do_div(nb_div, nagblocks);
++	if (nb_mod && nb_mod >= XFS_MIN_AG_BLOCKS)
++		nb_div++;
++	else if (nb_mod)
++		*nblocks = nb_div * nagblocks;
 +
-+		sbp->sb_agblocks = cpu_to_be32(agblocks);
-+		sbp->sb_agblklog = ilog2(roundup_pow_of_two(agblocks));
-+		whole = 1;
++	if (nb_div > XFS_MAX_AGNUMBER + 1) {
++		nb_div = XFS_MAX_AGNUMBER + 1;
++		*nblocks = nb_div * nagblocks;
 +	}
- 	if (tp->t_agcount_delta) {
- 		be32_add_cpu(&sbp->sb_agcount, tp->t_agcount_delta);
- 		whole = 1;
-@@ -657,6 +670,8 @@ xfs_trans_unreserve_and_mod_sb(
- 	 * incore reservations.
- 	 */
- 	mp->m_sb.sb_dblocks += tp->t_dblocks_delta;
-+	mp->m_sb.sb_agblocks += tp->t_agblocks_delta;
-+	mp->m_sb.sb_agblklog = ilog2(roundup_pow_of_two(mp->m_sb.sb_agblocks));
- 	mp->m_sb.sb_agcount += tp->t_agcount_delta;
- 	mp->m_sb.sb_imax_pct += tp->t_imaxpct_delta;
- 	mp->m_sb.sb_rextsize += tp->t_rextsize_delta;
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index f06cc0f41665..11462406988d 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -141,6 +141,7 @@ typedef struct xfs_trans {
- 	int64_t			t_frextents_delta;/* superblock freextents chg*/
- 	int64_t			t_res_frextents_delta; /* on-disk only chg */
- 	int64_t			t_dblocks_delta;/* superblock dblocks change */
-+	int64_t			t_agblocks_delta;/* superblock agblocks change */
- 	int64_t			t_agcount_delta;/* superblock agcount change */
- 	int64_t			t_imaxpct_delta;/* superblock imaxpct change */
- 	int64_t			t_rextsize_delta;/* superblock rextsize chg */
++
++	return nb_div;
++}
++
+ /*
+  * growfs operations
+  */
+@@ -93,7 +120,7 @@ xfs_growfs_data_private(
+ 	xfs_agblock_t		nagblocks;
+ 	xfs_agnumber_t		nagcount;
+ 	xfs_agnumber_t		nagimax = 0;
+-	xfs_rfsblock_t		nb, nb_div, nb_mod;
++	xfs_rfsblock_t		nb;
+ 	int64_t			delta;
+ 	bool			lastag_extended = false;
+ 	xfs_agnumber_t		oagcount;
+@@ -117,18 +144,7 @@ xfs_growfs_data_private(
+ 
+ 	nagblocks = mp->m_sb.sb_agblocks;
+ 
+-	nb_div = nb;
+-	nb_mod = do_div(nb_div, nagblocks);
+-	if (nb_mod && nb_mod >= XFS_MIN_AG_BLOCKS)
+-		nb_div++;
+-	else if (nb_mod)
+-		nb = nb_div * nagblocks;
+-
+-	if (nb_div > XFS_MAX_AGNUMBER + 1) {
+-		nb_div = XFS_MAX_AGNUMBER + 1;
+-		nb = nb_div * nagblocks;
+-	}
+-	nagcount = nb_div;
++	nagcount = xfs_growfs_calc_agcount(mp, nagblocks, &nb);
+ 	delta = nb - mp->m_sb.sb_dblocks;
+ 	/*
+ 	 * Reject filesystems with a single AG because they are not
 -- 
 2.46.2
 
