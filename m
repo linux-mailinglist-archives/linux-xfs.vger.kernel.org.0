@@ -1,236 +1,125 @@
-Return-Path: <linux-xfs+bounces-13736-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13738-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57C02997C0F
-	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 06:59:00 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EA2F997D7D
+	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 08:40:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 180AE281BE4
-	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 04:58:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F1EB1C23130
+	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 06:40:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28AB219DF8B;
-	Thu, 10 Oct 2024 04:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC3991A3BDE;
+	Thu, 10 Oct 2024 06:39:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YfFUKLer"
+	dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b="GKMXlb1b"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.flyingcircus.io (mail.flyingcircus.io [212.122.41.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D28C18F2FF;
-	Thu, 10 Oct 2024 04:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A3519DF95;
+	Thu, 10 Oct 2024 06:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.122.41.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728536334; cv=none; b=Lvo7YpxW+9BUPBaQPoYMGfmR6KlVvc3cgA88c+OZ/dXfbsuZ3eXDfhrgPcRTAdAEIwUYeHAW2E+J+K9crKK8mw3RtHKuaXUE3lzA1ZsA/8MjzYP0t9BFlDRXNOdse7yqqF8Hv4nrIa7VHsKUIe2rNoS5AVHE7GAMtFc1NmLPRnQ=
+	t=1728542386; cv=none; b=hL0XG0X/Y/Xdv29kmB8e19z+nSNfE5yHZhFJJk2xbmxscmraKhPtEF/v8eku/+JihAcv+zbXc+dI76p+89Fq+plYfV1uP6D90SiXhS3LdFk4Ppz2zr9M9P7nF/01IcjqDJq7WvwFkz21ATEEevLErWm6phgNhXQJUX+Epl/5vMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728536334; c=relaxed/simple;
-	bh=rvPvWpE0WNaL4hil9zTCJfZ9UGfGvYk05TegTskFXHQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rIqAdAH/tGQvJs3R25tY3OUQwBWmIahjCyYfyC2zhG5FdR3Dux6iqTCXoWnJ3iMSKdgavq6Q28Cn/gRl9YO8KYCmHB2tEKxQ2Wxa6SmDaIwmV1hrXheNjlFhSCHt4IGGegS007m5VyjUBt3GL8Ku228YiE4fVbUivLLevm2lLnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YfFUKLer; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-71df0dbee46so397349b3a.0;
-        Wed, 09 Oct 2024 21:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728536332; x=1729141132; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9e/VPAlIyAZCli/ofmVddbzqeYWWWHaTukcajHAji3A=;
-        b=YfFUKLeryAGFC/4v2XD5bWxCujaWW6K6nK3a9L8DPxgkuV2uY1uSLZOTcFz2GJhUAg
-         Xiw+K8n0VXPTs6t49mDvC3VMsS2UCqXn/O/ju4w7MK1N1MNDVpcGuGqO4iO73IRUJpdg
-         4cfsPfzPNeIm0KDl29nFb+ojbh0ZK/ksG+a2yN+40pzBM3iXXBLcIwHA97wXAz/p83mm
-         PCIXUZ4dbkTING2+53X6+418BmdbEAz7EDM5yIXf/Y/h/YLJYlHIYlNYDLxPrIpdhTKs
-         NNqNwIYjh2/m9QxUFrltefdUHDVnfkiZ4XNVEcXbEtPrJZGf9qxm9tzVdZQGrZW/KXHR
-         sj1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728536332; x=1729141132;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9e/VPAlIyAZCli/ofmVddbzqeYWWWHaTukcajHAji3A=;
-        b=VvEBWefcq3KHKKT6NuOrepZEbC47AvEzCw71gnMn13zhikXXL1UKt+BvI+V/HXInka
-         VxBJtpg5s0ZpsMqtEzyBrIOWXiYhJyB+fhszTAH6nauxkC134Emkw3zCZu7ZynFBUbNF
-         LtpfvpMwbiINYBALK/wHvTKKoMMZZLIrHlXWI3f2wKL2iLudxEkT2oWBfB1gfk54X+66
-         rtvFWrryxm5T7OjqUM5/+1HIFM8iUkqfQN3A0eRBeZSovh6U2DgoksFK9b7bd9J8FcKO
-         SU1+ag+KBKo9x3eLgCp5ai3xRYiUBm83bvfkEbaxmD2/vC5bsDaCL0uIEOjNSUBilf2B
-         iZMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaPTW015YYRlGZjKRa/onu0ARCHes90zvo0oytuvjTf6MdLvHuuVsGx3dZHbG6N3H+pcOiCW2yZfOmxJw=@vger.kernel.org, AJvYcCWc/OACV/Lvzoy0oT5oEqBYc7q4X3C46uWK4bPWaNVeWa8SlvVAsqlwteVIvuA1CFFWIHTsYpkb4IKk@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT9cnsiCuf0g09PUhvXjSpArKAnHwS0z6Zdy5RmwxRMA0hKlJ+
-	cDSDQjdN+CUS2LNbPCKCirz6NROMcwB42ZnhpGQsV+m0dnlPcTpa5IQcHkn77Pk=
-X-Google-Smtp-Source: AGHT+IG2nyCkFOO52IwqGEVeGZFUcEZh6aaC4IsBlYqOzlbxD2W9HXO0B7BsiNtsD8i3f6tY+uFRHg==
-X-Received: by 2002:a05:6a00:3e16:b0:71e:14c:8d31 with SMTP id d2e1a72fcca58-71e1db858d1mr8318997b3a.16.1728536332042;
-        Wed, 09 Oct 2024 21:58:52 -0700 (PDT)
-Received: from gmail.com ([24.130.68.0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e2ab0a50dsm262899b3a.195.2024.10.09.21.58.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 21:58:49 -0700 (PDT)
-From: Guo Xuenan <marcus.yu.56@gmail.com>
-X-Google-Original-From: Guo Xuenan <guoxuenan@huawei.com>
-Date: Wed, 9 Oct 2024 21:58:46 -0700
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org
-Cc: leah.rumancik@gmail.com, djwong@kernel.org, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-	marcus.yu.56@gmail.com
-Subject: [PATCH 5.15.y] xfs: fix super block buf log item UAF during force
- shutdown
-Message-ID: <ZwdfBhBsMEG2_1Tr@gmail.com>
+	s=arc-20240116; t=1728542386; c=relaxed/simple;
+	bh=A9aoV4pLUkmqg5hExqZjkeGcYEq4lkw5kEjIYiFUbCI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=n8X7xhj4EJD6k8K/VdEGAOSltnaIO/y1/eUlBhdWH/44TJx1na2FnheJN01rYfYTVwWoAGG39k5WDSC8qvsTymBXix1Q5NqlVBIviUiclUo7K6tplb67nq1ZDiOWYL0Nd3elN/a3xLJ8LHaelEUeusD9tKtVXmC8C8AmmNb2Jao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io; spf=pass smtp.mailfrom=flyingcircus.io; dkim=pass (1024-bit key) header.d=flyingcircus.io header.i=@flyingcircus.io header.b=GKMXlb1b; arc=none smtp.client-ip=212.122.41.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flyingcircus.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flyingcircus.io
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flyingcircus.io;
+	s=mail; t=1728541781;
+	bh=vOuCUK01oxy5k7JbXkIGuKuHjfVwEEjE3/abMmPSBdE=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=GKMXlb1b3NZjYTYbzmtz//XxClHYQHHhFh2EOhA8sM7KjLDSs/PVVrRoPZlK8PkVP
+	 g4WI2ufab656vcuQZ+2RXKLZKLs6T9PhaIlZ8SUVz5f27XBfim2UtKqvfgTaM4fApr
+	 mAIY80OovTFfuWA+9SYacshCY8KUljhCIdESO5Fc=
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3818.100.11.1.3\))
+Subject: Re: Known and unfixed active data loss bug in MM + XFS with large
+ folios since Dec 2021 (any kernel from 6.1 upwards)
+From: Christian Theune <ct@flyingcircus.io>
+In-Reply-To: <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
+Date: Thu, 10 Oct 2024 08:29:14 +0200
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Chinner <david@fromorbit.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Jens Axboe <axboe@kernel.dk>,
+ linux-mm@kvack.org,
+ "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Daniel Dao <dqminh@cloudflare.com>,
+ regressions@lists.linux.dev,
+ regressions@leemhuis.info
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E07B71C9-A22A-4C0C-B4AD-247CECC74DFA@flyingcircus.io>
+References: <CAHk-=wh5LRp6Tb2oLKv1LrJWuXKOvxcucMfRMmYcT-npbo0=_A@mail.gmail.com>
+ <Zud1EhTnoWIRFPa/@dread.disaster.area>
+ <CAHk-=wgY-PVaVRBHem2qGnzpAQJheDOWKpqsteQxbRop6ey+fQ@mail.gmail.com>
+ <74cceb67-2e71-455f-a4d4-6c5185ef775b@meta.com>
+ <ZulMlPFKiiRe3iFd@casper.infradead.org>
+ <52d45d22-e108-400e-a63f-f50ef1a0ae1a@meta.com>
+ <ZumDPU7RDg5wV0Re@casper.infradead.org>
+ <5bee194c-9cd3-47e7-919b-9f352441f855@kernel.dk>
+ <459beb1c-defd-4836-952c-589203b7005c@meta.com>
+ <ZurXAco1BKqf8I2E@casper.infradead.org>
+ <ZuuBs762OrOk58zQ@dread.disaster.area>
+ <CAHk-=wjsrwuU9uALfif4WhSg=kpwXqP2h1ZB+zmH_ORDsrLCnQ@mail.gmail.com>
+ <CAHk-=wgQ_OeAaNMA7A=icuf66r7Atz1-NNs9Qk8O=2gEjd=qTw@mail.gmail.com>
+ <E6728F3E-374A-4A86-A5F2-C67CCECD6F7D@flyingcircus.io>
+ <CAHk-=wgtHDOxi+1uXo8gJcDKO7yjswQr5eMs0cgAB6=mp+yWxw@mail.gmail.com>
+ <D49C9D27-7523-41C9-8B8D-82B2A7CBE97B@flyingcircus.io>
+ <02121707-E630-4E7E-837B-8F53B4C28721@flyingcircus.io>
+ <f8232f8b-06e0-4d1a-bee4-cfc2ac23194e@meta.com>
+To: Chris Mason <clm@meta.com>
 
-commit 575689fc0ffa6c4bb4e72fd18e31a6525a6124e0 upstream.
 
-xfs log io error will trigger xlog shut down, and end_io worker call
-xlog_state_shutdown_callbacks to unpin and release the buf log item.
-The race condition is that when there are some thread doing transaction
-commit and happened not to be intercepted by xlog_is_shutdown, then,
-these log item will be insert into CIL, when unpin and release these
-buf log item, UAF will occur. BTW, add delay before `xlog_cil_commit`
-can increase recurrence probability.
+> On 1. Oct 2024, at 02:56, Chris Mason <clm@meta.com> wrote:
+>=20
+> Not disagreeing with Linus at all, but given that you've got IO
+> throttling too, we might really just be waiting.  It's hard to tell
+> because the hung task timeouts only give you information about one =
+process.
+>=20
+> I've attached a minimal version of a script we use here to show all =
+the
+> D state processes, it might help explain things.  The only problem is
+> you have to actually ssh to the box and run it when you're stuck.
+>=20
+> The idea is to print the stack trace of every D state process, and =
+then
+> also print out how often each unique stack trace shows up.  When we're
+> deadlocked on something, there are normally a bunch of the same stack
+> (say waiting on writeback) and then one jerk sitting around in a
+> different stack who is causing all the trouble.
 
-The following call graph actually encountered this bad situation.
-fsstress                    io end worker kworker/0:1H-216
-                            xlog_ioend_work
-                              ->xlog_force_shutdown
-                                ->xlog_state_shutdown_callbacks
-                                  ->xlog_cil_process_committed
-                                    ->xlog_cil_committed
-                                      ->xfs_trans_committed_bulk
-->xfs_trans_apply_sb_deltas             ->li_ops->iop_unpin(lip, 1);
-  ->xfs_trans_getsb
-    ->_xfs_trans_bjoin
-      ->xfs_buf_item_init
-        ->if (bip) { return 0;} //relog
-->xlog_cil_commit
-  ->xlog_cil_insert_items //insert into CIL
-                                           ->xfs_buf_ioend_fail(bp);
-                                             ->xfs_buf_ioend
-                                               ->xfs_buf_item_done
-                                                 ->xfs_buf_item_relse
-                                                   ->xfs_buf_item_free
+I think I should be able to trigger this. I=E2=80=99ve seen around a 100 =
+of those issues over the last week and the chance of it happening =
+correlates with a certain workload that should be easy to trigger. Also, =
+the condition remains for at around 5 minutes, so I should be able to =
+trace it when I see the alert in an interactive session.
 
-when cil push worker gather percpu cil and insert super block buf log item
-into ctx->log_items then uaf occurs.
+I=E2=80=99ve verified I can run your script and I=E2=80=99ll get back to =
+you in the next days.
 
-==================================================================
-BUG: KASAN: use-after-free in xlog_cil_push_work+0x1c8f/0x22f0
-Write of size 8 at addr ffff88801800f3f0 by task kworker/u4:4/105
+Christian
 
-CPU: 0 PID: 105 Comm: kworker/u4:4 Tainted: G W
-6.1.0-rc1-00001-g274115149b42 #136
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.13.0-1ubuntu1.1 04/01/2014
-Workqueue: xfs-cil/sda xlog_cil_push_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x4d/0x66
- print_report+0x171/0x4a6
- kasan_report+0xb3/0x130
- xlog_cil_push_work+0x1c8f/0x22f0
- process_one_work+0x6f9/0xf70
- worker_thread+0x578/0xf30
- kthread+0x28c/0x330
- ret_from_fork+0x1f/0x30
- </TASK>
-
-Allocated by task 2145:
- kasan_save_stack+0x1e/0x40
- kasan_set_track+0x21/0x30
- __kasan_slab_alloc+0x54/0x60
- kmem_cache_alloc+0x14a/0x510
- xfs_buf_item_init+0x160/0x6d0
- _xfs_trans_bjoin+0x7f/0x2e0
- xfs_trans_getsb+0xb6/0x3f0
- xfs_trans_apply_sb_deltas+0x1f/0x8c0
- __xfs_trans_commit+0xa25/0xe10
- xfs_symlink+0xe23/0x1660
- xfs_vn_symlink+0x157/0x280
- vfs_symlink+0x491/0x790
- do_symlinkat+0x128/0x220
- __x64_sys_symlink+0x7a/0x90
- do_syscall_64+0x35/0x80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
-
-Freed by task 216:
- kasan_save_stack+0x1e/0x40
- kasan_set_track+0x21/0x30
- kasan_save_free_info+0x2a/0x40
- __kasan_slab_free+0x105/0x1a0
- kmem_cache_free+0xb6/0x460
- xfs_buf_ioend+0x1e9/0x11f0
- xfs_buf_item_unpin+0x3d6/0x840
- xfs_trans_committed_bulk+0x4c2/0x7c0
- xlog_cil_committed+0xab6/0xfb0
- xlog_cil_process_committed+0x117/0x1e0
- xlog_state_shutdown_callbacks+0x208/0x440
- xlog_force_shutdown+0x1b3/0x3a0
- xlog_ioend_work+0xef/0x1d0
- process_one_work+0x6f9/0xf70
- worker_thread+0x578/0xf30
- kthread+0x28c/0x330
- ret_from_fork+0x1f/0x30
-
-The buggy address belongs to the object at ffff88801800f388
- which belongs to the cache xfs_buf_item of size 272
-The buggy address is located 104 bytes inside of
- 272-byte region [ffff88801800f388, ffff88801800f498)
-
-The buggy address belongs to the physical page:
-page:ffffea0000600380 refcount:1 mapcount:0 mapping:0000000000000000
-index:0xffff88801800f208 pfn:0x1800e
-head:ffffea0000600380 order:1 compound_mapcount:0 compound_pincount:0
-flags: 0x1fffff80010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
-raw: 001fffff80010200 ffffea0000699788 ffff88801319db50 ffff88800fb50640
-raw: ffff88801800f208 000000000015000a 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88801800f280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88801800f300: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88801800f380: fc fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff88801800f400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88801800f480: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-Disabling lock debugging due to kernel taint
-
-Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Chang Yu <marcus.yu.56@gmail.com>
----
-
-The fix 575689fc0ffa ("xfs: fix super block buf log item UAF
-during force shutdown") was first introduced in v6.2-rc1. Syzkaller
-reports that the UAF bug is still present in linux-5.15.y
-(https://syzkaller.appspot.com/bug?extid=4d9a694803b65e21655b).
-I think a backport should be beneficial here.
-
----
-
- fs/xfs/xfs_buf_item.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index b1ab100c09e1..ffe318eb897f 100644
---- a/fs/xfs/xfs_buf_item.c
-+++ b/fs/xfs/xfs_buf_item.c
-@@ -1017,6 +1017,8 @@ xfs_buf_item_relse(
- 	trace_xfs_buf_item_relse(bp, _RET_IP_);
- 	ASSERT(!test_bit(XFS_LI_IN_AIL, &bip->bli_item.li_flags));
- 
-+	if (atomic_read(&bip->bli_refcount))
-+		return;
- 	bp->b_log_item = NULL;
- 	xfs_buf_rele(bp);
- 	xfs_buf_item_free(bip);
--- 
-2.46.2
+--=20
+Christian Theune =C2=B7 ct@flyingcircus.io =C2=B7 +49 345 219401 0
+Flying Circus Internet Operations GmbH =C2=B7 https://flyingcircus.io
+Leipziger Str. 70/71 =C2=B7 06108 Halle (Saale) =C2=B7 Deutschland
+HR Stendal HRB 21169 =C2=B7 Gesch=C3=A4ftsf=C3=BChrer: Christian Theune, =
+Christian Zagrodnick
 
 
