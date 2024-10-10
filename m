@@ -1,202 +1,100 @@
-Return-Path: <linux-xfs+bounces-13737-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-13739-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11EC7997D71
-	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 08:38:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9A30997D93
+	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 08:48:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AFDB1F229DF
-	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 06:38:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E9ADA1C224EA
+	for <lists+linux-xfs@lfdr.de>; Thu, 10 Oct 2024 06:48:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1947A1ACDE3;
-	Thu, 10 Oct 2024 06:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 620731A38C2;
+	Thu, 10 Oct 2024 06:48:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Nh7c8DBq"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JLXBKQfE"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5EE1A4E70;
-	Thu, 10 Oct 2024 06:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6CE64D;
+	Thu, 10 Oct 2024 06:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728542195; cv=none; b=I+W8IIiWijHDjyFFsKbkBeRIXWSecMzC8EtzuP+oWweoCdUeAdFPonpHU1ewuZQm8jKkv6aGazfLO4vJSFakYS1WHa//7Al3uTZYyH7H5UxwFOIlgwL8phAFstgP15E1i2rVoHRbb+81+NEZKcEQIZD/Sh9vJec1gRkV4E7zREk=
+	t=1728542915; cv=none; b=t1mM8M12ZMwBr9yQaiO6jfvOxoQUB+PqH15JcgjaTDDYC3UEFDEOuEw6zQW26jHnoc776CzjUDhex6fdw3hrbSLLkUJwMfvnjDyOw4/annYwBFPPmy0KUvlhDEgh7WWByTF6epb+PetRYTbRj0quQem4I9Y5Ux0Jde02Unf1yHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728542195; c=relaxed/simple;
-	bh=Z8fQrFMb1nC2PllT4QPZ4bs2pAcDaZjow0DEtkXPWf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RC5qzjJ9fxUENkJg1vEvWJBgkNRbQXMCclW6HFuVdgaIZDMsKWAGxoDDKIRg8fWTzXZOL99WoXpegiNv9F0n9lShaSkoOy+hsyvaKtoey3BHAKkZcYPvfXji75t28l2IErpCvvFTfYAWVP39xpM7Cula1MK74tFplMANrY/uXWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Nh7c8DBq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49A3pIoG010146;
-	Thu, 10 Oct 2024 06:36:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:content-transfer-encoding
-	:mime-version; s=pp1; bh=GNW3p+7Wz9sS0n4wzd7TtvZAPmM+ukeiwy0LXzh
-	ZIjk=; b=Nh7c8DBqoSt8QTan+QntAY49BRCH6ruGLSXjoe/hjnim/0qVba/F/tJ
-	q4XxIKxqFsSjNvaji5c1BiqU7v43nQiqe9DaUH6uknxPBgyqo/bpCvTmBMEF20hG
-	RWZLfFvENLyr5fK3DobVD7ruMw6h3xOq5480wHsifBHD/LkxPunjZFIzvOSiItsr
-	rgq7JIXfP8tfjXN2FgoopC2K7g8Ap5L2yq9twf1z650hrEYtcAT3exh+kRa5V110
-	7AnuvEdhmWDPdoje1r8miuJ1Y3tW9pNYLOc0kR8OLpr7Tr6AYOZLxqTX/AuyTf/6
-	BjNHwRY/rTiNv2E3uZH6RH3UwsSiREQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4267cmrnqq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Oct 2024 06:36:25 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49A6aOi9015491;
-	Thu, 10 Oct 2024 06:36:24 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4267cmrnqk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Oct 2024 06:36:24 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49A5c7LD030253;
-	Thu, 10 Oct 2024 06:36:23 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 423gsmx6rk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Oct 2024 06:36:23 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49A6aLEx50528516
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Oct 2024 06:36:21 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 31A6E20043;
-	Thu, 10 Oct 2024 06:36:21 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A52D920040;
-	Thu, 10 Oct 2024 06:36:19 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com.com (unknown [9.124.218.86])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 10 Oct 2024 06:36:19 +0000 (GMT)
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: linux-xfs@vger.kernel.org
-Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
-        "Darrick J . Wong" <djwong@kernel.org>, dchinner@redhat.com,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2] xfs: Check for deallayed allocations before setting extsize
-Date: Thu, 10 Oct 2024 12:06:17 +0530
-Message-ID: <20241010063617.563365-1-ojaswin@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: qidPp17v_4s5F_VQrIWY4jy3t4YuS-Hg
-X-Proofpoint-GUID: Q69WZaTvzXS055WeCCu9XuG0bpscRHNI
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1728542915; c=relaxed/simple;
+	bh=hdLGx4sCQY3IQTyyuCIwgMHT42pwdh2t3gFJVbsw4gY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c9puDM+jhgdIk5yzag5tEdR8KVLgXqVYj2/mTvbDlI7DUNUHRNT9bQmRmxhtPBX2KdAbWWVHC2J0GcZdmp9f5jxhjF6xi09N3hYu9/9To7YE5LLdesKgS7OtlLdF6nVZ4vx10aCkQ4xjJtxQX+c+o7hDXJkZTM/f4zeyJgFhRl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JLXBKQfE; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iVsCjrjUVGkyDrGz/5v9GR6eRnt67kS6CddzSgVmS5U=; b=JLXBKQfE//CMLG+4v+vSRYYqq4
+	qXW6K+XJAqGhvhZpV4tehgKXGKleOaDX9iLRcZY05OUAUmlM9/ZmjWLrwdSx5uYlsVkeWmdDfamaU
+	zFj2lbZni7Z2OGeSAAWhJ07AXkerPRvk6JQl4EFLRynLjImKbslZVGEZtx8vGCwvaP9FdT1Jk1XLW
+	czeyXl+CJ4hPF/V2Lg+8e5ct7y2B3lxxeAo1f6tfXVt5IrCLGVKE/DE/uLaX7NnkrkmKS9wFy1MD9
+	IimStoIqSWZs3Kn7UUijf2Ps0Ju2wLO3n1LK7rmXtU3vKAhoujPkuhiDyLG5uUnt4rnpPukjlTw92
+	TSUBx2yQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1symyN-0000000BjJc-1SeY;
+	Thu, 10 Oct 2024 06:48:31 +0000
+Date: Wed, 9 Oct 2024 23:48:31 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: syzbot <syzbot+8a8170685a482c92e86a@syzkaller.appspotmail.com>
+Cc: chandan.babu@oracle.com, djwong@kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	kasan-dev@googlegroups.com
+Subject: Re: [syzbot] [xfs?] KFENCE: memory corruption in xfs_idata_realloc
+Message-ID: <Zwd4vxcqoGi6Resh@infradead.org>
+References: <6705c39b.050a0220.22840d.000a.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-10_03,2024-10-09_02,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=811 mlxscore=0 spamscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410100040
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6705c39b.050a0220.22840d.000a.GAE@google.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Extsize is allowed to be set on files with no data in it. For this,
-we were checking if the files have extents but missed to check if
-delayed extents were present. This patch adds that check.
+[adding the kfence maintainers]
 
-While we are at it, also refactor this check into a helper since
-its used in some other places as well like xfs_inactive() or
-xfs_ioctl_setattr_xflags()
+On Tue, Oct 08, 2024 at 04:43:23PM -0700, syzbot wrote:
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8a8170685a482c92e86a
 
-**Without the patch (SUCCEEDS)**
+[...]
 
-$ xfs_io -c 'open -f testfile' -c 'pwrite 0 1024' -c 'extsize 65536'
+> XFS (loop2): Quotacheck: Done.
+> ==================================================================
+> BUG: KFENCE: memory corruption in krealloc_noprof+0x160/0x2e0
+> 
+> Corrupted memory at 0xffff88823bedafeb [ 0x03 0x00 0xd8 0x62 0x75 0x73 0x01 0x00 0x00 0x11 0x4c 0x00 0x00 0x00 0x00 0x00 ] (in kfence-#108):
+>  krealloc_noprof+0x160/0x2e0
+>  xfs_idata_realloc+0x116/0x1b0 fs/xfs/libxfs/xfs_inode_fork.c:523
 
-wrote 1024/1024 bytes at offset 0
-1 KiB, 1 ops; 0.0002 sec (4.628 MiB/sec and 4739.3365 ops/sec)
+I've tried to make sense of this report and failed.
 
-**With the patch (FAILS as expected)**
+Documentation/dev-tools/kfence.rst explains these messages as:
 
-$ xfs_io -c 'open -f testfile' -c 'pwrite 0 1024' -c 'extsize 65536'
+KFENCE also uses pattern-based redzones on the other side of an object's guard
+page, to detect out-of-bounds writes on the unprotected side of the object.
+These are reported on frees::
 
-wrote 1024/1024 bytes at offset 0
-1 KiB, 1 ops; 0.0002 sec (4.628 MiB/sec and 4739.3365 ops/sec)
-xfs_io: FS_IOC_FSSETXATTR testfile: Invalid argument
+But doesn't explain what "the other side of an object's guard page" is.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
----
-
-* Changes since v1 *
-
- - RVB by Christoph
- - Added a helper to check if inode has data instead of
-   open coding.
-	
-v1:
-https://lore.kernel.org/linux-xfs/Zv_cTc6cgxszKGy3@infradead.org/T/#mf949dafb2b2f63bea1f7c0ce5265a2527aaf22a9
-
- fs/xfs/xfs_inode.c | 2 +-
- fs/xfs/xfs_inode.h | 5 +++++
- fs/xfs/xfs_ioctl.c | 5 +++--
- 3 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index bcc277fc0a83..3d083a8fd8ed 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1409,7 +1409,7 @@ xfs_inactive(
- 
- 	if (S_ISREG(VFS_I(ip)->i_mode) &&
- 	    (ip->i_disk_size != 0 || XFS_ISIZE(ip) != 0 ||
--	     ip->i_df.if_nextents > 0 || ip->i_delayed_blks > 0))
-+	     xfs_inode_has_data(ip)))
- 		truncate = 1;
- 
- 	if (xfs_iflags_test(ip, XFS_IQUOTAUNCHECKED)) {
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 97ed912306fd..ae1ccf2a3c8b 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -292,6 +292,11 @@ static inline bool xfs_is_cow_inode(struct xfs_inode *ip)
- 	return xfs_is_reflink_inode(ip) || xfs_is_always_cow_inode(ip);
- }
- 
-+static inline bool xfs_inode_has_data(struct xfs_inode *ip)
-+{
-+	return (ip->i_df.if_nextents > 0 || ip->i_delayed_blks > 0);
-+}
-+
- /*
-  * Check if an inode has any data in the COW fork.  This might be often false
-  * even for inodes with the reflink flag when there is no pending COW operation.
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index a20d426ef021..88b9c8cf0272 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -481,7 +481,7 @@ xfs_ioctl_setattr_xflags(
- 
- 	if (rtflag != XFS_IS_REALTIME_INODE(ip)) {
- 		/* Can't change realtime flag if any extents are allocated. */
--		if (ip->i_df.if_nextents || ip->i_delayed_blks)
-+		if (xfs_inode_has_data(ip))
- 			return -EINVAL;
- 
- 		/*
-@@ -602,7 +602,8 @@ xfs_ioctl_setattr_check_extsize(
- 	if (!fa->fsx_valid)
- 		return 0;
- 
--	if (S_ISREG(VFS_I(ip)->i_mode) && ip->i_df.if_nextents &&
-+	if (S_ISREG(VFS_I(ip)->i_mode) &&
-+	    xfs_inode_has_data(ip) &&
- 	    XFS_FSB_TO_B(mp, ip->i_extsize) != fa->fsx_extsize)
- 		return -EINVAL;
- 
--- 
-2.43.5
+Either way this is in the common krealloc code, which is a bit special
+as it uses ksize to figure out what the actual underlying allocation
+size of an object is to make use of that.  Without understanding the
+actual error I wonder if that's something kfence can't cope with?
 
 
