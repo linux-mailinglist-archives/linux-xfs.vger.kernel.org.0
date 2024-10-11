@@ -1,119 +1,83 @@
-Return-Path: <linux-xfs+bounces-14058-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14056-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2390E999E93
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 09:54:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E18F8999E91
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 09:53:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF8DB1F24A6F
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 07:54:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7D5EDB22E1C
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 07:53:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9297D20A5F4;
-	Fri, 11 Oct 2024 07:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZQw6tHqR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F90B20ADE7;
+	Fri, 11 Oct 2024 07:53:21 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E069D207217;
-	Fri, 11 Oct 2024 07:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B65209F22
+	for <linux-xfs@vger.kernel.org>; Fri, 11 Oct 2024 07:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728633265; cv=none; b=JbEG9xroHKsR4O6yOV951jCueCVMKPozOMsxYLv/2FS2X5UJVVLUq/EfVcAcY4guTUY0iyGs+SoXLYpghfroDdC29uH5tYMHWSgdRgX2LubXSI0tBRSdi5JHXR8/nbjVitaJTAefs3J2GVeAj79fLWJNuTLabRSj9n65xQ2cL+c=
+	t=1728633200; cv=none; b=ZcIOyj7c/BH1KkQIUA8JJBtGuRQJT+um5JhEY7MbzVtRTXZDzeP4lEBCCdZfICyFi5GIWdtSncwJUcuWZzi9kDUNx6g7x3pRyICMXnznvtbaPSqWKl1s4gJZ8XJvgocqBBiueGTuFxvzSBCbVevfHNAvgkolXPXQveDeKgO4HKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728633265; c=relaxed/simple;
-	bh=6JeQyd0c8h6RtBAMrBtN4DSbkr16wXNlaw/MAJzuD2k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hcIKz5tzz09PRyFZaTdFJXBmed0bUBlWl9oN5Rk7dfubv+iikfGhfo434mxXPnm3UdftLt4RfxJo1WqdONRx0aoJlTN8irijK6f4C0hatDQW+zdd4KdH5vyjiGEeyOxf6bfAyyAxNr66pgdbYY3eOpojNy0gXfG4laY1xtg+tPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZQw6tHqR; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=U/CVm
-	t5l+frEnKIs1+WGrJXGajHa4xlTG6NHk14H6D4=; b=ZQw6tHqR199s8wqNxExcP
-	rBhMAORisON7XtHoQb94QxkJRMs5tTgBPgCZMGSVgr2RfYYwId/SbTYSxWGXjVO8
-	6dOBACI12pHdGxqhMy9yvzO5gZq6QCCw1a60+ravLNZFGrr8EWXnBqdwVXna6ltT
-	tnsnOSPMmuiZ2mmSer12n4=
-Received: from localhost.localdomain (unknown [111.48.69.246])
-	by gzsmtp1 (Coremail) with SMTP id sCgvCgA3yzug2Qhnj5xYAQ--.57305S2;
-	Fri, 11 Oct 2024 15:54:09 +0800 (CST)
-From: Chi Zhiling <chizhiling@163.com>
-To: cem@kernel.org,
-	djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chi Zhiling <chizhiling@kylinos.cn>
-Subject: [PATCH v2] xfs_logprint: Fix super block buffer interpretation issue
-Date: Fri, 11 Oct 2024 15:52:53 +0800
-Message-Id: <20241011075253.2369053-1-chizhiling@163.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1728633200; c=relaxed/simple;
+	bh=nRg5mkpgQlWPD3wvA6rNPzXVHxYblP3q/IQ1Bo+cE7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cUh7hZYjDIGn1t4sSbaSQpLAre6h7N8T9f/ybQJersCtHZNinHj96klsRwp/SkuELIbJFFnX8JU8z14OKRdvi0pNB8g+Rhk+VLfIMBELRO2ueDIdakLKDfeyIKE7tGOKR6hpMAi2+7FEDgaFBwA3ZhExG7YSRQy+WhID7lCPMVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id CBBB0227AB3; Fri, 11 Oct 2024 09:53:14 +0200 (CEST)
+Date: Fri, 11 Oct 2024 09:53:14 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Brian Foster <bfoster@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/7] xfs: pass the exact range to initialize to
+ xfs_initialize_perag
+Message-ID: <20241011075314.GA2749@lst.de>
+References: <20240930164211.2357358-1-hch@lst.de> <20240930164211.2357358-2-hch@lst.de> <ZwfeiYzopK-iD24Y@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:sCgvCgA3yzug2Qhnj5xYAQ--.57305S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar48Wr1DKw4xuw1ruF13CFg_yoW8Zr48pF
-	1Sga47XrZxZ34Yg3y7ZrWjvw4rGwn3Jr9rGrsFyr1rZr98Ar4Yvr9xua48AFy5GrWDtFs0
-	v345Kr909w4Du37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeYL9UUUUU=
-X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/1tbiTwh1nWcIzY7lhAAAsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZwfeiYzopK-iD24Y@bfoster>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-From: Chi Zhiling <chizhiling@kylinos.cn>
+On Thu, Oct 10, 2024 at 10:02:49AM -0400, Brian Foster wrote:
+> > -	error = xfs_initialize_perag(mp, sbp->sb_agcount, sbp->sb_dblocks,
+> > -			&mp->m_maxagi);
+> > +	error = xfs_initialize_perag(mp, old_agcount, sbp->sb_agcount,
+> > +			sbp->sb_dblocks, &mp->m_maxagi);
+> 
+> I assume this is because the superblock can change across recovery, but
+> code wise this seems kind of easy to misread into thinking the variable
+> is the same.
 
-When using xfs_logprint to interpret the buffer of the super block, the
-icount will always be 6360863066640355328 (0x5846534200001000). This is
-because the offset of icount is incorrect, causing xfs_logprint to
-misinterpret the MAGIC number as icount.
-This patch fixes the offset value of the SB counters in xfs_logprint.
+Which variable?
 
-Before this patch:
-icount: 6360863066640355328  ifree: 5242880  fdblks: 0  frext: 0
+> I think the whole old/new terminology is kind of clunky for
+> an interface that is not just for growfs. Maybe it would be more clear
+> to use start/end terminology for xfs_initialize_perag(), then it's more
+> straightforward that mount would init the full range whereas growfs
+> inits a subrange.
 
-After this patch:
-icount: 10240  ifree: 4906  fdblks: 37  frext: 0
+fine with me.
 
-Suggested-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
----
- logprint/log_misc.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+> A oneliner comment or s/old_agcount/orig_agcount/ wouldn't hurt here
+> either. Actually if that's the only purpose for this call and if you
+> already have to sample sb_agcount, maybe just lifting/copying the if
+> (old_agcount >= new_agcount) check into the caller would make the logic
+> more self-explanatory. Hm?
 
-diff --git a/logprint/log_misc.c b/logprint/log_misc.c
-index 8e86ac34..0da92744 100644
---- a/logprint/log_misc.c
-+++ b/logprint/log_misc.c
-@@ -282,22 +282,15 @@ xlog_print_trans_buffer(char **ptr, int len, int *i, int num_ops)
- 		if (be32_to_cpu(head->oh_len) < 4*8) {
- 			printf(_("Out of space\n"));
- 		} else {
--			__be64		 a, b;
-+			struct xfs_dsb *dsb = (struct xfs_dsb *) *ptr;
- 
- 			printf("\n");
--			/*
--			 * memmove because *ptr may not be 8-byte aligned
--			 */
--			memmove(&a, *ptr, sizeof(__be64));
--			memmove(&b, *ptr+8, sizeof(__be64));
- 			printf(_("icount: %llu  ifree: %llu  "),
--			       (unsigned long long) be64_to_cpu(a),
--			       (unsigned long long) be64_to_cpu(b));
--			memmove(&a, *ptr+16, sizeof(__be64));
--			memmove(&b, *ptr+24, sizeof(__be64));
-+			       (unsigned long long) be64_to_cpu(dsb->sb_icount),
-+			       (unsigned long long) be64_to_cpu(dsb->sb_ifree));
- 			printf(_("fdblks: %llu  frext: %llu\n"),
--			       (unsigned long long) be64_to_cpu(a),
--			       (unsigned long long) be64_to_cpu(b));
-+			       (unsigned long long) be64_to_cpu(dsb->sb_fdblocks),
-+			       (unsigned long long) be64_to_cpu(dsb->sb_frextents));
- 		}
- 		super_block = 0;
- 	} else if (be32_to_cpu(*(__be32 *)(*ptr)) == XFS_AGI_MAGIC) {
--- 
-2.43.0
+Sure.
 
 
