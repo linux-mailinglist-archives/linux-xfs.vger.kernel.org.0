@@ -1,45 +1,46 @@
-Return-Path: <linux-xfs+bounces-14057-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14059-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08542999E92
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 09:54:27 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4358999E9E
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 09:57:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC41E1F24519
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 07:54:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 531CFB215D7
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 07:57:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77494209F26;
-	Fri, 11 Oct 2024 07:54:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93DA020A5EC;
+	Fri, 11 Oct 2024 07:57:15 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87676207217
-	for <linux-xfs@vger.kernel.org>; Fri, 11 Oct 2024 07:54:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893FE209664
+	for <linux-xfs@vger.kernel.org>; Fri, 11 Oct 2024 07:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728633260; cv=none; b=LrYGZsBK62RUbylMvDhdccAthgoWxR3/98XurbTFC9dGv0dxXkn1XzjvpbYbmQv7k5KrvtRRTcl0pA1fCd+wXCarfkQ5bbsgbmrhwIGb78Ki4/heMr9l5HpiK9iu2rJgLAUcnAKHtsh2DWlyoFmixcEWdNa1iKlH55ubIyt3w8g=
+	t=1728633435; cv=none; b=PnVAm6g1jxMrOLLcvzJQUxIL7o4fcIS0UimlI1bnq7h8OL+hOrNrHbUT+e7IpnLgzTC5PpPsqZ4RaGptVIerbHYwZWJj7HunulvivORNNkmcooR481l8mqRSl9CmLe7dM6JShlsD2x0H1q6ghi0v7wGOapQrfyclRJMB2yna7L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728633260; c=relaxed/simple;
-	bh=lSDiw/HVpQL64ZF2N5Y4OZGPATWyX8GMjgAkpABxDmQ=;
+	s=arc-20240116; t=1728633435; c=relaxed/simple;
+	bh=6yyCNnSbPWK0ZSZWU2azYUrkSYLlli/8aKIN6/tQ6co=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YAtb7770CnxdldPCdwLJRbHeigDmOik/UTpQ8tsNhx4Do5+Z3sBuHPX1J+i6jA1RNF5RRMsf6llzfguwoLsRF9PkVrTaZWm9MeAHa6PVuy7NQrogRwR+I4SX73MgmqyUqA1P/w+p9atBpyLJn2P1UJAqJriTyoUoW7wDQLKwhks=
+	 Content-Type:Content-Disposition:In-Reply-To; b=hUI0aZ3wU/p0NpJJzrLOmORdrdJX4CqMR/kNCYY+9pCdFYQ3/hdrFijEWxCaVp739vAmeC9tX5Bjc9GjpNOUQGvjgcmZcR3vy7hGBvolgMqvyrKg8SbkTaoxCRuzIoJLV/ZHKIJEtvZSA2F1ZNzETuNsD/GQwerVB72S1NRy48Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id D173E227AB3; Fri, 11 Oct 2024 09:54:08 +0200 (CEST)
-Date: Fri, 11 Oct 2024 09:54:08 +0200
+	id E2F95227AB3; Fri, 11 Oct 2024 09:57:09 +0200 (CEST)
+Date: Fri, 11 Oct 2024 09:57:09 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: Brian Foster <bfoster@redhat.com>
 Cc: Christoph Hellwig <hch@lst.de>,
 	Chandan Babu R <chandan.babu@oracle.com>,
 	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 7/7] xfs: split xfs_trans_mod_sb
-Message-ID: <20241011075408.GB2749@lst.de>
-References: <20240930164211.2357358-1-hch@lst.de> <20240930164211.2357358-8-hch@lst.de> <ZwffV8BDDJjr5xvV@bfoster>
+Subject: Re: [PATCH 6/7] xfs: don't update file system geometry through
+ transaction deltas
+Message-ID: <20241011075709.GC2749@lst.de>
+References: <20240930164211.2357358-1-hch@lst.de> <20240930164211.2357358-7-hch@lst.de> <ZwffQQuVx_CyVgLc@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -48,18 +49,32 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZwffV8BDDJjr5xvV@bfoster>
+In-Reply-To: <ZwffQQuVx_CyVgLc@bfoster>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Oct 10, 2024 at 10:06:15AM -0400, Brian Foster wrote:
-> Seems Ok, but not sure I see the point personally. Rather than a single
-> helper with flags, we have multiple helpers, some of which still mix
-> deltas via an incrementally harder to read boolean param. This seems
-> sort of arbitrary to me. Is this to support some future work?
+On Thu, Oct 10, 2024 at 10:05:53AM -0400, Brian Foster wrote:
+> Ok, so we don't want geometry changes transactions in the same CIL
+> checkpoint as alloc related transactions that might depend on the
+> geometry changes. That seems reasonable and on a first pass I have an
+> idea of what this is doing, but the description is kind of vague.
+> Obviously this fixes an issue on the recovery side (since I've tested
+> it), but it's not quite clear to me from the description and/or logic
+> changes how that issue manifests.
+> 
+> Could you elaborate please? For example, is this some kind of race
+> situation between an allocation request and a growfs transaction, where
+> the former perhaps sees a newly added AG between the time the growfs
+> transaction commits (applying the sb deltas) and it actually commits to
+> the log due to being a sync transaction, thus allowing an alloc on a new
+> AG into the same checkpoint that adds the AG?
 
-I just find these multiplexers that have no common logic very confusing.
+This is based on the feedback by Dave on the previous version:
 
-And yes, I also have some changes to share more logic between the
-delalloc vs non-delalloc block accounting.
+https://lore.kernel.org/linux-xfs/Zut51Ftv%2F46Oj386@dread.disaster.area/
+
+Just doing the perag/in-core sb updates earlier fixes all the issues
+with my test case, so I'm not actually sure how to get more updates
+into the check checkpoint.  I'll try your exercisers if it could hit
+that.
 
 
