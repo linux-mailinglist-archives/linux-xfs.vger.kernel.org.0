@@ -1,81 +1,119 @@
-Return-Path: <linux-xfs+bounces-14055-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14058-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40A6B999E2D
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 09:45:02 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2390E999E93
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 09:54:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4ACDC28482A
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 07:45:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF8DB1F24A6F
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Oct 2024 07:54:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7685920A5CA;
-	Fri, 11 Oct 2024 07:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9297D20A5F4;
+	Fri, 11 Oct 2024 07:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XS7T/G6W"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZQw6tHqR"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F9C1CDA19
-	for <linux-xfs@vger.kernel.org>; Fri, 11 Oct 2024 07:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E069D207217;
+	Fri, 11 Oct 2024 07:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728632696; cv=none; b=GW91xOASndiCGuMOLXCs7NYnCXn6oapcwWSfihPoX1+jPfWabaN0aj150Grjj4dN/nhtaH9GVG8WOh0kKiwp/k9VT4aMgGF5iVEQZTzVHUMDy2d4UX+thuBS7xIa3/5hwKyKROFyUKDIWEyQ60csjqNqY0pJpfTZ9bUMkr6JylM=
+	t=1728633265; cv=none; b=JbEG9xroHKsR4O6yOV951jCueCVMKPozOMsxYLv/2FS2X5UJVVLUq/EfVcAcY4guTUY0iyGs+SoXLYpghfroDdC29uH5tYMHWSgdRgX2LubXSI0tBRSdi5JHXR8/nbjVitaJTAefs3J2GVeAj79fLWJNuTLabRSj9n65xQ2cL+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728632696; c=relaxed/simple;
-	bh=WoDgltAzSTOU+FpjCQ3cdnWLBuyoa+JYorj6KnpdPiE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IrZB4Uado87p+DkYpSs+8KN+bnsQqTzdrMEd/w1fYsyY8mGOkUup9CQ7dMgCoIM7FSX9pNPkECzvUsTy0YDixab7wB64Rrrnn1z0J+7sNhuLDrsiiwekUk16KUWfCmf4S5yth7fMqE7T5CoGtIcdcfsptdc4g5lr7F/6naciHaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XS7T/G6W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E252C4CEC3;
-	Fri, 11 Oct 2024 07:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728632696;
-	bh=WoDgltAzSTOU+FpjCQ3cdnWLBuyoa+JYorj6KnpdPiE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XS7T/G6W+XVo+AW5weWc1ze+r28piO2CnSiBP73fYajHIb4cl517grTSYFFObZpnS
-	 tswIhFzTYyEJz9dOqWi1E2ySwrY+tYwpksv5xbc8bXUYq6c4VP6VrUm/cd4SDplJce
-	 +HBZ4r4OwKwVNxN3/LqTGpWEhuVxnD/eAMJ+PSX1YyqG4dYjhm96H+rA8u7gR0dUSr
-	 KAOftNi6VBY1AkacVY/rNjFXJNDvZ9bA3BoD+OgE5b14lM3Nm3CgjD9kvYIkPgJQT7
-	 OJmGGKqtER3QWUrszaYzSuevEDN3aVEjj2Zg5t/26ZxUlaI+n/62TSrm8hcWpWg/sH
-	 9/exSITbePtAQ==
-From: Carlos Maiolino <cem@kernel.org>
-To: djwong@kernel.org, chandanbabu@kernel.org, 
- Long Li <leo.lilong@huawei.com>
-Cc: linux-xfs@vger.kernel.org, david@fromorbit.com, yi.zhang@huawei.com, 
- houtao1@huawei.com, yangerkun@huawei.com
-In-Reply-To: <20240930104217.2184941-1-leo.lilong@huawei.com>
-References: <20240930104217.2184941-1-leo.lilong@huawei.com>
-Subject: Re: [next] xfs: remove the redundant xfs_alloc_log_agf
-Message-Id: <172863269409.1112815.4154437152344391162.b4-ty@kernel.org>
-Date: Fri, 11 Oct 2024 09:44:54 +0200
+	s=arc-20240116; t=1728633265; c=relaxed/simple;
+	bh=6JeQyd0c8h6RtBAMrBtN4DSbkr16wXNlaw/MAJzuD2k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hcIKz5tzz09PRyFZaTdFJXBmed0bUBlWl9oN5Rk7dfubv+iikfGhfo434mxXPnm3UdftLt4RfxJo1WqdONRx0aoJlTN8irijK6f4C0hatDQW+zdd4KdH5vyjiGEeyOxf6bfAyyAxNr66pgdbYY3eOpojNy0gXfG4laY1xtg+tPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZQw6tHqR; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=U/CVm
+	t5l+frEnKIs1+WGrJXGajHa4xlTG6NHk14H6D4=; b=ZQw6tHqR199s8wqNxExcP
+	rBhMAORisON7XtHoQb94QxkJRMs5tTgBPgCZMGSVgr2RfYYwId/SbTYSxWGXjVO8
+	6dOBACI12pHdGxqhMy9yvzO5gZq6QCCw1a60+ravLNZFGrr8EWXnBqdwVXna6ltT
+	tnsnOSPMmuiZ2mmSer12n4=
+Received: from localhost.localdomain (unknown [111.48.69.246])
+	by gzsmtp1 (Coremail) with SMTP id sCgvCgA3yzug2Qhnj5xYAQ--.57305S2;
+	Fri, 11 Oct 2024 15:54:09 +0800 (CST)
+From: Chi Zhiling <chizhiling@163.com>
+To: cem@kernel.org,
+	djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chi Zhiling <chizhiling@kylinos.cn>
+Subject: [PATCH v2] xfs_logprint: Fix super block buffer interpretation issue
+Date: Fri, 11 Oct 2024 15:52:53 +0800
+Message-Id: <20241011075253.2369053-1-chizhiling@163.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:sCgvCgA3yzug2Qhnj5xYAQ--.57305S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar48Wr1DKw4xuw1ruF13CFg_yoW8Zr48pF
+	1Sga47XrZxZ34Yg3y7ZrWjvw4rGwn3Jr9rGrsFyr1rZr98Ar4Yvr9xua48AFy5GrWDtFs0
+	v345Kr909w4Du37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeYL9UUUUU=
+X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/1tbiTwh1nWcIzY7lhAAAsi
 
-On Mon, 30 Sep 2024 18:42:17 +0800, Long Li wrote:
-> There are two invocations of xfs_alloc_log_agf in xfs_alloc_put_freelist.
-> The AGF does not change between the two calls. Although this does not pose
-> any practical problems, it seems like a small mistake. Therefore, fix it
-> by removing the first xfs_alloc_log_agf invocation.
-> 
-> 
+From: Chi Zhiling <chizhiling@kylinos.cn>
 
-Applied to for-next, thanks!
+When using xfs_logprint to interpret the buffer of the super block, the
+icount will always be 6360863066640355328 (0x5846534200001000). This is
+because the offset of icount is incorrect, causing xfs_logprint to
+misinterpret the MAGIC number as icount.
+This patch fixes the offset value of the SB counters in xfs_logprint.
 
-[1/1] xfs: remove the redundant xfs_alloc_log_agf
-      (no commit info)
+Before this patch:
+icount: 6360863066640355328  ifree: 5242880  fdblks: 0  frext: 0
 
-Best regards,
+After this patch:
+icount: 10240  ifree: 4906  fdblks: 37  frext: 0
+
+Suggested-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
+---
+ logprint/log_misc.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
+
+diff --git a/logprint/log_misc.c b/logprint/log_misc.c
+index 8e86ac34..0da92744 100644
+--- a/logprint/log_misc.c
++++ b/logprint/log_misc.c
+@@ -282,22 +282,15 @@ xlog_print_trans_buffer(char **ptr, int len, int *i, int num_ops)
+ 		if (be32_to_cpu(head->oh_len) < 4*8) {
+ 			printf(_("Out of space\n"));
+ 		} else {
+-			__be64		 a, b;
++			struct xfs_dsb *dsb = (struct xfs_dsb *) *ptr;
+ 
+ 			printf("\n");
+-			/*
+-			 * memmove because *ptr may not be 8-byte aligned
+-			 */
+-			memmove(&a, *ptr, sizeof(__be64));
+-			memmove(&b, *ptr+8, sizeof(__be64));
+ 			printf(_("icount: %llu  ifree: %llu  "),
+-			       (unsigned long long) be64_to_cpu(a),
+-			       (unsigned long long) be64_to_cpu(b));
+-			memmove(&a, *ptr+16, sizeof(__be64));
+-			memmove(&b, *ptr+24, sizeof(__be64));
++			       (unsigned long long) be64_to_cpu(dsb->sb_icount),
++			       (unsigned long long) be64_to_cpu(dsb->sb_ifree));
+ 			printf(_("fdblks: %llu  frext: %llu\n"),
+-			       (unsigned long long) be64_to_cpu(a),
+-			       (unsigned long long) be64_to_cpu(b));
++			       (unsigned long long) be64_to_cpu(dsb->sb_fdblocks),
++			       (unsigned long long) be64_to_cpu(dsb->sb_frextents));
+ 		}
+ 		super_block = 0;
+ 	} else if (be32_to_cpu(*(__be32 *)(*ptr)) == XFS_AGI_MAGIC) {
 -- 
-Carlos Maiolino <cem@kernel.org>
+2.43.0
 
 
