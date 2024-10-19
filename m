@@ -1,325 +1,265 @@
-Return-Path: <linux-xfs+bounces-14465-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14468-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BD539A4CD5
-	for <lists+linux-xfs@lfdr.de>; Sat, 19 Oct 2024 12:17:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EE879A4DE4
+	for <lists+linux-xfs@lfdr.de>; Sat, 19 Oct 2024 14:52:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49952285D1B
-	for <lists+linux-xfs@lfdr.de>; Sat, 19 Oct 2024 10:17:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 111FE1F2686F
+	for <lists+linux-xfs@lfdr.de>; Sat, 19 Oct 2024 12:52:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC40419007E;
-	Sat, 19 Oct 2024 10:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FA9CD2E5;
+	Sat, 19 Oct 2024 12:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iQ11xl5H"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TNp7hxSz";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="LC+GwcoK"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4263318C34B
-	for <linux-xfs@vger.kernel.org>; Sat, 19 Oct 2024 10:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729333044; cv=none; b=Ae8xtDRREElkQB0vvmtCsEfGibPFX+MYxNX7iLWaty8M7Ca0RuKOCXQZJ5LimxtghJyzl7Z/fyTvXKeqrrESlcfRrVB1uo0zJOdIvz4XdrXaut+mbocflroeJhZbqfgcBQgmAo5Wy6TK1rwXKS324rj8n3zUXHphBZ+a3+mFiGQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729333044; c=relaxed/simple;
-	bh=HRw5qGfcRj9mHnjrF3NOAEiohGNIjkocSEUaZae4GJQ=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=J2iWpttIU9rPe6TLztD/r2kjYkxstfuWHjLyH3QmN3YgasfEDFmoL7zgBd9BFdsra0LwMdR4Igsl5idOJTMuGOL5QayzqWytT1Kq6cssrfFRYvKyY1gx5KLqO3MzTNINby/X214ntiMFxyZYEqTJyo2XmvKcM4Rqdua52b4C1s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iQ11xl5H; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729333041;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=5dS5T5sJYoJIZfjhKDfpYQPlvfha9YR1wvoRIatQAKg=;
-	b=iQ11xl5Hmy9BdN7BTAcsHTfnry7gXBYTKH8Q0guMsloTErUDPgbEbT+roQHI3jvwOr+/ZL
-	2YaB6LNf+VBa3pb0UhyR31smdCO0tl0k5nXAIRtVLy3EqtLouMuCaxU3hC1RCUKH+mwwz5
-	bHcMY8FViRRr1YCWvrXryeLSU2WA0KQ=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-SsXkWv6PM_Kf6aD4vH8vRg-1; Sat, 19 Oct 2024 06:17:19 -0400
-X-MC-Unique: SsXkWv6PM_Kf6aD4vH8vRg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a9a23eada74so170179666b.3
-        for <linux-xfs@vger.kernel.org>; Sat, 19 Oct 2024 03:17:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729333038; x=1729937838;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5dS5T5sJYoJIZfjhKDfpYQPlvfha9YR1wvoRIatQAKg=;
-        b=sKVhuVgpPwWOg/xwfrShl7chjJ91d7wKwmRo7dkP+/FjPgDl2nS3/WMPJSojgVF8Ud
-         g37+1ZGE3OXD/lTBLI51fzRQTLfMK1QDThtbqzTkcez1spBJnQkw5m6zIaTHYz8a+9sD
-         DcUWckFaWnJBdgoUT9kGgJ7MLGmU53pzLFCqyLjTjV7jxzAYuhdM5U96eNh2llsOui8M
-         b13RKtSN0jvwJZPgjkxlUbi5afjgqc8WqOa8aGOoExmuacGnPjJh15aFyOfQloArJRzr
-         +5c1cHhOQZWraKsSMVR+RYFlZ0GinmwnPMe4f1dc/wCspdVQ5KgZRnMk8gyHrCWUmwpx
-         7nbw==
-X-Gm-Message-State: AOJu0YzMbXjvsAKauomctEsB+Lk0MhnO7M051KZuiKorlqs1aHmdnKrj
-	AO7Y5rE9B6y/TYA8WnInANi8kPcARX6R4c+Y8Yrnfwo0qpkmjsOP/2p9WrkS9EFJFXO/4bdRMEG
-	aN40bqdubEH3IMp9q8sFdD2VXzpogEhghDap9DfJx9avT9FeWhRMzpbGOf+FOiqgaqF0vM2XGK6
-	h7M8USRZByP6bTBdxYLiSKAXfqGmTKh00Rir7iWAUU
-X-Received: by 2002:a05:6402:5203:b0:5be:f3ae:b9ce with SMTP id 4fb4d7f45d1cf-5ca0ae7fcbcmr3969151a12.27.1729333037722;
-        Sat, 19 Oct 2024 03:17:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHyvDwcSkYE9qsrDLFBAaUh9uHJoA3447e5MVzJCUgWKS89/Q2YTNNbfJS53blkPM4QKfE1FQ==
-X-Received: by 2002:a05:6402:5203:b0:5be:f3ae:b9ce with SMTP id 4fb4d7f45d1cf-5ca0ae7fcbcmr3969111a12.27.1729333036921;
-        Sat, 19 Oct 2024 03:17:16 -0700 (PDT)
-Received: from thinky (ip-217-030-065-002.aim-net.cz. [217.30.65.2])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ca0b0f958csm1674269a12.89.2024.10.19.03.17.15
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Oct 2024 03:17:16 -0700 (PDT)
-Date: Sat, 19 Oct 2024 12:17:14 +0200
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: linux-xfs@vger.kernel.org
-Subject: [ANNOUNCE] xfsprogs v6.11.0 released
-Message-ID: <3w6k7dcisoom4s2xm4vidlz2fjbxnplwvebpxi4jh2w64rs4cw@dzz3opqrzt6s>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E244B7485;
+	Sat, 19 Oct 2024 12:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729342315; cv=fail; b=ZYVMpMmLDyPDIa8EuemU+i5WnnkHGRSd8RE0J9MJrIX1K1+PUysIyeOatlbOsGcuihtEXAdFUIuUyxKMTN/x/Eyvk/YK1EAD1hBPa5T0wJbx9MoGrMgwQX8zld19IbBIrxAwXvEZ7z0l6w2PLBvomaMeyaM/POnT39Tb+BHLnnE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729342315; c=relaxed/simple;
+	bh=HRAzBXXkOvnnD3DO5apdwEHJcUieyFgKnpabMqqV1jA=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ocKPgOsd42AqvBikaEtIEoLfKoJuhTk1Tjewy0RbrMf/MCT9bAX6nMt1iTgNilNwTIIrihEEgQCYpJEDLyY3k6CjLBM1thITRbCVSvuYsdkAC68k8+QTX31VECAFt3d9mp7B7vM7DuTXnUiWLliSoXE1Xp8k9LpPBFCezk4zGzs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TNp7hxSz; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=LC+GwcoK; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49J6fGRf001909;
+	Sat, 19 Oct 2024 12:51:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=KTtSNlsSWyky7B5B
+	ea3QF5hv3qLwx4eL6+CpptOXu6A=; b=TNp7hxSzpLGwgeWFbLfbVJsmgfrHOLif
+	szTXY7isFdIfk1iz4QD8eHW0YLDV/I3QckVq2rYF3sb1BBUNBq3tJ5zw8Ftq236Z
+	fPXlb5l1tzshaxwTA7yrPYFrrliVPpk0V4qO2rE9cQd+as5E6ZL1yck8J7cM49MP
+	JjpRaXtHq+PX3m8JtI5ymrzdL70hcuMcp97DTMBWtFT0uoZ9SEbAd3qS44SiAr4p
+	q0xAJM2zzyiefPwAWzOgFF6ZJsS6OLQT5BH1Pviyp2vL9IYGyDDbZ3PLx/SO0E5E
+	2J2UHm8hv1SKOtQeMrGjHJ23I9yZqUwvw2Bupny+DA+bJ3JS9Lh0vg==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42c57q89j2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 19 Oct 2024 12:51:26 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49JBSCAa026309;
+	Sat, 19 Oct 2024 12:51:25 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2177.outbound.protection.outlook.com [104.47.73.177])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 42c374ssae-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 19 Oct 2024 12:51:25 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=edjDoV/D/pasTuHLUDuHIBxWBfFT1tfAcfbcg6m0DMaEBE8YLsTI4MdfPThqsFsDEa6o7RRklAFM5nPu5FgNPOgh6RyyE9Ette4vF8hU8vh+ovWVYZu/6pfAVfvEOVmvqCmVs8uxiVQPXZlKutzDRlo1Dm4EicYKGB4NktgKGioNU7TKvFdyVa0+0rNSWbBnIkyfqZgNvCCMsei3C5mZDsqHW/H4W/D1j+TYdGNvDCuPnxaDEIVu3NHYe24hVRNfDTsCBivAr2UkemaRZecYDyFqS9+Dxl54jDoxKZ8plAYiezPnuYxKiKLQ1fhgNYr5Gdhj/UYDROCGn6tLXybUsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KTtSNlsSWyky7B5Bea3QF5hv3qLwx4eL6+CpptOXu6A=;
+ b=Vo0Y8FcUWnJFtR5hdwPKtEcFZoRu6fJwhwiwdiCn3rFKq/nymCgT3gN6hFFGthJJuZPfoHUMoS7V4CsAJwZ1wtTlMnY89QPxig3sUJMLSOuVDCNTv5/BXewcxsx0l0dNPjwR4hPTlEnQnW9eAyKyfPJ50alsKIS31z9xsh/rQMimoCQRksVgBm6PsWcf1m4BCWLL+GHNABG/0qpcJieD/tSq0hAHMrE2HF0lXSXkFK+G5gn6933GLyLnqC7BU/IuC56zLWeRIVjkQScPIS99O+UeGml1DlaH+4gbHbbIWVsK/V6fBmsxj6lHo/tKUTPaIf8VQ1i/4E4YgtFBn8Jqgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KTtSNlsSWyky7B5Bea3QF5hv3qLwx4eL6+CpptOXu6A=;
+ b=LC+GwcoKBksBw9cTzyeVc3eA26psSMuQ1aCc6IZ99rUrf++hmgLfIboGAx+BVDPdQpkrP51F1h2E0HsL6pGjvoO/gCUj0budLPnLwPyiLDc/dGKqE4NucTAF09LuHyoebN5w2BQffct0rZxjx2LZFzC4xwISY0DYX2oOAajoJ1Q=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by PH0PR10MB6435.namprd10.prod.outlook.com (2603:10b6:510:21c::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Sat, 19 Oct
+ 2024 12:51:22 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%5]) with mapi id 15.20.8069.020; Sat, 19 Oct 2024
+ 12:51:22 +0000
+From: John Garry <john.g.garry@oracle.com>
+To: axboe@kernel.dk, brauner@kernel.org, djwong@kernel.org,
+        viro@zeniv.linux.org.uk, jack@suse.cz, dchinner@redhat.com, hch@lst.de,
+        cem@kernel.org
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, hare@suse.de,
+        martin.petersen@oracle.com, catherine.hoang@oracle.com,
+        mcgrof@kernel.org, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
+        John Garry <john.g.garry@oracle.com>
+Subject: [PATCH v10 0/8] block atomic writes for xfs
+Date: Sat, 19 Oct 2024 12:51:05 +0000
+Message-Id: <20241019125113.369994-1-john.g.garry@oracle.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL1PR13CA0320.namprd13.prod.outlook.com
+ (2603:10b6:208:2c1::25) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH0PR10MB6435:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce4e209f-30b1-4e43-a9f0-08dcf03cbc22
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?EE98wsK9Y9JOQ0x1G8wdXbGiRyN8ttr9iNfjcQ3pMT0m2kDsM2Djr10ONaZM?=
+ =?us-ascii?Q?jjvafoPAQ67SlbwZTxQhIq0tHzGyvm2sAAjA+bXpFm5VUFbe+IQYsnDRPjkg?=
+ =?us-ascii?Q?dFoB6EYoF1k+Rh1R5Ce6vV9wINs3HOv+G38FuwJPDUKYTWg3S3arZgkLfkI+?=
+ =?us-ascii?Q?PnPOLgQOw0/KIA0F1sFxYwVZUBpRK7r8mWx5aEpNHHSISjjHCa3bVZludm2u?=
+ =?us-ascii?Q?1lZXdD0Szfdhf2nAcOOLRDk5lzu2WQg0FpkYgoMEbskO3+Vz7Z0iOeKSLJEa?=
+ =?us-ascii?Q?WhwrcvbXa9Ncw7EgOQhGArznsnMTOJ97WQXiL/DycmaZ1Raf4s9WHVCGwX5P?=
+ =?us-ascii?Q?vnBVtwFaGl0webt1G7nos5RlHNx1nWhX7OCumvvZAJXXGeEQctBVBKqWZEy4?=
+ =?us-ascii?Q?iFILlFLZvRlUlBQhpA+wi50JEzwh9hsz10Q0jIvCJwES4LWUPqd2S3Z/Qj8Q?=
+ =?us-ascii?Q?cqEkGp38mMsYgnsaJDfFGHndOrGaFmHc2yX8YkahrdVmIiC/smmeSChSYCoe?=
+ =?us-ascii?Q?EXNRCt03VAB9r5+xFXOMEyUn3ii6Mnqqjqfey4lc4lDjGsrVjur7GyCQ3hOX?=
+ =?us-ascii?Q?34WC27e+rE62ZBSvL9uwpwkvGag1CrDv30wHGMutcLkE9jlRZnoreVhFgvKz?=
+ =?us-ascii?Q?bRdODasD+iBAADUUDYox3WDbeck1uL3e1aa6x3nl5L4h4mYef8UzsrNKKLyk?=
+ =?us-ascii?Q?ifKtc0Bc1IlWnKbLcGkUPkprDQYsPuLGtU0YVb706Jd7MYMpiYXPaDqnYCUV?=
+ =?us-ascii?Q?Ais6CnNrI/2pMRIAjQLcRE89ICU2L6Djj5HFwQNlIqOXOddxr1K/BtorJlXJ?=
+ =?us-ascii?Q?qItgqHiQ44LDkDyK7lHOldGAc40co1e/QDwUeN65Olh5Jz1Zo+Ay1lGOBkeh?=
+ =?us-ascii?Q?NA+Dp58PWbK3RrrJUx/Nw2cfu/bQ5g82tkEx8pnw61V1W4jomKlR0nAnpA5Y?=
+ =?us-ascii?Q?K2lelhCK38rH3BSEOvcptzBeqA0jXH/afGSsecD1OrvRG2r93gVMJthKUT3f?=
+ =?us-ascii?Q?U/bnVZy5K7+cYnZYNn7scyhGkhAXPNbVSqHs7nZk0+Jxg7npC/ev92qsRtkU?=
+ =?us-ascii?Q?dgI2gDQQsdYEFL8WiizvO4YiSCnZvYcK6I9EelhpGg6KP/Z9f+KStOLCg8tl?=
+ =?us-ascii?Q?fWSZDPBhpK4mYsyvmHoJwoMRPtR54BIQ313mhdGeTR/lNIJqeQrKfsqaEdVs?=
+ =?us-ascii?Q?DqK/erNzwSUGhUMV4zS/Qp9yEwu1BwSt/8SP1Y+JT99rluQvUdoMUw3KUiai?=
+ =?us-ascii?Q?F9+A78d47ZoMKoFRSC4Ph8MJ3mzWGfXq7Y0M3YKmB7nJ6eLpvGyD1PLVjAxp?=
+ =?us-ascii?Q?vOsD5E11jd7BP+BaC9QGIu42?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sg0e3m2xWfQ31YEv6hT5ZJCLVixUDFsmvAEeb7XhNLJxTG4g+CwpGtAVyH3G?=
+ =?us-ascii?Q?PNY3N/3yl8U6p4dL65F9W5gUCr39L1qXZpXOWpfG8aMI+W5KOP2VBEwE89PT?=
+ =?us-ascii?Q?CBXDEsIlMWb1geyj/hEkYjttjcyIkZCZkMYUvHRQaCpC71OA0DI091FAETM1?=
+ =?us-ascii?Q?xksqwBfD4Dxu7leSSettAiOyEpTeSBolwu2/3RnUDQLKfKVHQkRlPC6WYsa9?=
+ =?us-ascii?Q?q13d6OZA5N7vtw30/G1FtvlKLh4T3ENwxl2xshggtAA3V5HhwwbvuiiU+5T2?=
+ =?us-ascii?Q?t2uzmsZaw41tYVa9ytIO0+KsT0FnartiYENBp7qR+4/licthYI8g7tiiMy8u?=
+ =?us-ascii?Q?S8jC3ff1w/5EPZvM2PGC4Nwrg5nh5Yiyl96DtBQgyK8YQ12UlGUVlWEKzRzZ?=
+ =?us-ascii?Q?5+wYEUyIEhrSakwW84dEyJhpSqGRaJnLWKANVykoUAwUrzQI249wHrAtlj8c?=
+ =?us-ascii?Q?lE/cfbtF+4iXBROo10rlF3wK0CiLhlKum5gUfh0Rxnc9e9iKHW1ZHGkXkch1?=
+ =?us-ascii?Q?YubcBsPj9seDbJlDfs5nr/qq73IDFIa1WNP07438ybAyb3IHgbOkWlN4CJZ3?=
+ =?us-ascii?Q?LMYxT4r9B681SVjs4k3Ij8OorDBBGFf1PMOs2WBuoBK6MMC1sXPlzQYbLjqo?=
+ =?us-ascii?Q?bBMSV8cXeIi7c+69Hq4KIp4fWc/O86dQKIHQxsXh8vlFBONkoPJdOAuMT+sA?=
+ =?us-ascii?Q?WoXImcSVBnV2EOLT/ahvcXy2OmXRfQpMEv/5kHpI+ugXKw1mvi4UlLUSH3QT?=
+ =?us-ascii?Q?mycfIzP92hprQ8pRzqjivDPzQpAP7CNVBCleS2B7RS4g0KSHWDnDI0Ban9TP?=
+ =?us-ascii?Q?FV/38zx6rU7GaQKp6lWxlh/WkUBlm3a4wYd+MkfC8itrNgoh1PKgF6xegMU+?=
+ =?us-ascii?Q?l1qRlGTf81HZkx4BWwbMQOwV70AFuzaqvFEFgts3bx7H37n6TjY1/6aPOaJJ?=
+ =?us-ascii?Q?/O9PgOmQevI40EvFbgQWL5ljldejX+tinF1x+9OsrhPaHfK3Kv2wGdHoZQuX?=
+ =?us-ascii?Q?qri83Wis4JFKj9hnGPzMsQS8lY7sMAZr+zYO5jcW4WMA2oHB4ymCr2okbcgB?=
+ =?us-ascii?Q?XUX+MHuupGzItAuXXm3xV9mCdvi2uH1dQ1HaTBDIw7qnHFXPn6ccU5cV2Rm6?=
+ =?us-ascii?Q?CzUKfsQmNIRRo0ElGiN+9T/mUEE7apurEFf6QWRg8+K+444r0uikIpXK9Jiu?=
+ =?us-ascii?Q?tWGagWDiEeeTWy3CLAiJLwcGR4RI7M/cDe+NqQBg2Pl/SIXl+ASfAQEi5kwv?=
+ =?us-ascii?Q?lVt60oot8215lZxqTkWdPJZvQD5wUVUZ6R/3EV46ToMehuJgjeHUl1WREU94?=
+ =?us-ascii?Q?i90QvjJTO2u4xbmzBPdDgV3PqvUKCBrTAu4tSSiY5kx2xTY5+TL7rnTA+tNE?=
+ =?us-ascii?Q?YwddJgqWzXAbDHGVoqdGNhfvC42ec504GF7fl12LF8Iey2y4yTJnCAichyGj?=
+ =?us-ascii?Q?69a99IHV4cy9MyvmsvDXNw5PoEoAVIqfgFZ8TqjbxT1IwqZe/oZmtsgnxP7T?=
+ =?us-ascii?Q?MJXu4AWjWleYCZALLRtLKDYKcTaCKumktcxBeyjXGnqWHjRj+HYJunjkq/Mi?=
+ =?us-ascii?Q?ZGx3BBligKtEz90+PRti3xBTLGGHm9YB2g6sSB+hP+p8FyMQJx7yNx2V2eUw?=
+ =?us-ascii?Q?4w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	ztd7b4KwQhlw96CBkVUOI9N+xqdTNrRKfJs4g5mu9QOb3xx0SprcHtcXykiqWIu7JjKGUPFnu1w1Aw5/YbwZNcvqxTWfgmYSb3frD1FieivajhBqq17ny/knCDfTY+017cZ3YZHMKuxliTABeA3M3KsKYgl1c9xxnngC5Jgvhv8SScCIHnj+JsQihT+cEWnzgpK5eDLALwVr+GR43Po8sml6jQpZxf4xnmLR7A3McgDvIdYiDqJqgqKgE0uzrc+XmblHoE3KEj9ObNwcjqE0ZBv2DqfhWMOyaxpcf8CweIlFAEJmslylnq7GZtba6rc8m3FvL+84kuz9pqcjRHXkNZ8klyv4N77Wpd8Y8bd7ZqvDBU0u2GLQYyTGpwfZFqtYdgmp22kXsezxO4L/K/WqiCd8KW7r9kVkuAeYvdH+q1mHFZsxUNgAitls0Jlx+dkYPu6equ03Oau3LfGDq0UcnsqmD4GZj9FsK9Oa1NNYkxZL7/vDam9Nku9uXYj5HchAxRiimIjCByrjQ1oHctlkrNo/etjjFd3q8FkmZPsmqhRdtsAHyRomuzwSEcFt55BlZQeMMewokaQ9zmB3+dR9RwFE6CV91Gmda5HVCVuDLM8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce4e209f-30b1-4e43-a9f0-08dcf03cbc22
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2024 12:51:22.6215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: f6RtBtcKoDjkOJn0M3hMY6TtM3sOx6aafEP6+C6n6VNuBXrwmV6Trygq6DIB/yCsv3w9x167CEhPiP4STpCmHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB6435
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-19_10,2024-10-17_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ spamscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2410190094
+X-Proofpoint-ORIG-GUID: ut-XUS9-o4n1QWqhGP5rzqEwFEU2e-ua
+X-Proofpoint-GUID: ut-XUS9-o4n1QWqhGP5rzqEwFEU2e-ua
 
-Hi folks,
+This series expands atomic write support to filesystems, specifically
+XFS.
 
-The xfsprogs repository at:
+Initially we will only support writing exactly 1x FS block atomically.
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+Since we can now have FS block size > PAGE_SIZE for XFS, we can write
+atomically 4K+ blocks on x86.
 
-has just been updated.
+No special per-inode flag is required for enabling writing 1x F block.
+In future, to support writing more than one FS block atomically, a new FS
+XFLAG flag may then introduced - like FS_XFLAG_BIG_ATOMICWRITES. This
+would depend on a feature like forcealign.
 
-Patches often get missed, so if your outstanding patches are properly reviewed
-on the list and not included in this update, please let me know.
+So if we format the FS for 16K FS block size:
+mkfs.xfs -b size=16384 /dev/sda
 
-The for-next branch has also been updated to match the state of master.
+The statx reports atomic write unit min/max = FS block size:
+$xfs_io -c statx filename
+...
+stat.stx_atomic_write_unit_min = 16384
+stat.stx_atomic_write_unit_max = 16384
+stat.stx_atomic_write_segments_max = 1
+...
 
-The new head of the master branch is commit:
+Baseline is 77bfe1b11ea0 (tag: xfs-6.12-fixes-3, xfs/xfs-6.12-fixesC,
+xfs/for-next) xfs: fix a typo
 
-e503e1e38032e9c0e04368d5d9e1cbba099232c9
+Patches for this series can be found at:
+https://github.com/johnpgarry/linux/tree/atomic-writes-v6.12-fs-v10
 
-New commits:
+Changes since v9:
+- iomap doc fix (Darrick)
+- Add RB tags from Christoph and Darrick (Thanks!)
 
-Andrey Albershteyn (3):
-      [6b32423addd2] xfsprogs: fix permissions on files installed by libtoolize
-      [42523142959d] xfsprogs: update gitignore
-      [e503e1e38032] xfsprogs: Release v6.11.0
+Changes since v8:
+- Add bdev atomic write unit helpers (Christoph)
+- Add comment on FS block size limit (Christoph)
+- Stylistic improvements (Christoph)
+- Add RB tags from Christoph (thanks!)
 
-Bastian Germann (6):
-      [bb7c05552ac9] debian: Update debhelper-compat level
-      [5c68dee37faf] debian: Update public release key
-      [b3e43b35c298] debian: Prevent recreating the orig tarball
-      [ea75ca724ac8] debian: Add Build-Depends on pkg with systemd.pc
-      [1a608469c13f] debian: Modernize build script
-      [b92bf9bc2da7] debian: Correct the day-of-week on 2024-09-04
+Changes since v7:
+- Drop FS_XFLAG_ATOMICWRITES
+- Reorder block/fs patches and add fixes tags (Christoph)
+- Add RB tag from Christoph (Thanks!)
+- Rebase
 
-Bill O'Donnell (1):
-      [2f0fedf94c54] xfs_db: release ip resource before returning from get_next_unlinked()
+John Garry (8):
+  block/fs: Pass an iocb to generic_atomic_write_valid()
+  fs/block: Check for IOCB_DIRECT in generic_atomic_write_valid()
+  block: Add bdev atomic write limits helpers
+  fs: Export generic_atomic_write_valid()
+  fs: iomap: Atomic write support
+  xfs: Support atomic write for statx
+  xfs: Validate atomic writes
+  xfs: Support setting FMODE_CAN_ATOMIC_WRITE
 
-Carlos Maiolino (1):
-      [aa926341398f] xfs_io: Fix fscrypt macros ordering
+ .../filesystems/iomap/operations.rst          | 12 ++++++
+ block/fops.c                                  | 22 ++++++-----
+ fs/iomap/direct-io.c                          | 38 +++++++++++++++++--
+ fs/iomap/trace.h                              |  3 +-
+ fs/read_write.c                               | 16 +++++---
+ fs/xfs/xfs_buf.c                              |  7 ++++
+ fs/xfs/xfs_buf.h                              |  4 ++
+ fs/xfs/xfs_file.c                             | 16 ++++++++
+ fs/xfs/xfs_inode.h                            | 15 ++++++++
+ fs/xfs/xfs_iops.c                             | 22 +++++++++++
+ include/linux/blkdev.h                        | 16 ++++++++
+ include/linux/fs.h                            |  2 +-
+ include/linux/iomap.h                         |  1 +
+ 13 files changed, 152 insertions(+), 22 deletions(-)
 
-Catherine Hoang (1):
-      [ee6c5941352a] xfs_io: add RWF_ATOMIC support to pwrite
-
-Christoph Hellwig (8):
-      [c4bef0ef27b4] xfs: pass the fsbno to xfs_perag_intent_get
-      [611d0eaeb29e] xfs: add a xefi_entry helper
-      [328b29c975cc] xfs: reuse xfs_extent_free_cancel_item
-      [b52eaa2f6ee1] xfs: remove duplicate asserts in xfs_defer_extent_free
-      [02a830d4f89f] xfs: remove xfs_defer_agfl_block
-      [8c775051ce9c] xfs: add a ri_entry helper
-      [4b7979f5f4b9] xfs: reuse xfs_rmap_update_cancel_item
-      [b8c3f60e7c3d] xfs: simplify usage of the rcur local variable in xfs_rmap_finish_one
-
-Darrick J. Wong (61):
-      [71d2969be616] libxfs: dirty buffers should be marked uptodate too
-      [8554a59c8528] misc: clean up code around attr_list_by_handle calls
-      [2ed5318f360d] libfrog: emulate deprecated attrlist functionality in libattr
-      [643778e60849] xfs: avoid redundant AGFL buffer invalidation
-      [8a8799bba2d2] xfs: hoist extent size helpers to libxfs
-      [fadb819b464c] xfs: hoist inode flag conversion functions to libxfs
-      [0687669c9afc] xfs: hoist project id get/set functions to libxfs
-      [d490a1d34ef1] libxfs: put all the inode functions in a single file
-      [4c300905db8d] libxfs: pass IGET flags through to xfs_iread
-      [7ff05ce00ebb] xfs: pack icreate initialization parameters into a separate structure
-      [04fd15692ac8] libxfs: pack icreate initialization parameters into a separate structure
-      [f3c648be19ef] xfs: implement atime updates in xfs_trans_ichgtime
-      [3af8c427dc20] libxfs: rearrange libxfs_trans_ichgtime call when creating inodes
-      [5d1e5c013750] libxfs: set access time when creating files
-      [ff9ad30a7149] libxfs: when creating a file in a directory, set the project id based on the parent
-      [66ecea3e41d2] libxfs: pass flags2 from parent to child when creating files
-      [02df725889c0] xfs: split new inode creation into two pieces
-      [62c2477deae9] libxfs: split new inode creation into two pieces
-      [fdf7f98794ac] libxfs: backport inode init code from the kernel
-      [b47055a465de] libxfs: remove libxfs_dir_ialloc
-      [2e85cabb0ee9] libxfs: implement get_random_u32
-      [fa2f7708223e] xfs: hoist new inode initialization functions to libxfs
-      [0f1f674259e7] xfs: hoist xfs_iunlink to libxfs
-      [c8fa782f3856] xfs: hoist xfs_{bump,drop}link to libxfs
-      [a8d4daf12f58] xfs: separate the icreate logic around INIT_XATTRS
-      [7ce57cdc9ce7] xfs: create libxfs helper to link a new inode into a directory
-      [926504400091] xfs: create libxfs helper to link an existing inode into a directory
-      [45555b3d8f30] xfs: hoist inode free function to libxfs
-      [ffed33c5cf10] xfs: create libxfs helper to remove an existing inode/name from a directory
-      [273c0ead0234] xfs: create libxfs helper to exchange two directory entries
-      [706961634f6b] xfs: create libxfs helper to rename two directory entries
-      [2ab755da0ddd] xfs: move dirent update hooks to xfs_dir2.c
-      [6a692a500894] xfs: don't use the incore struct xfs_sb for offsets into struct xfs_dsb
-      [9cebfe7aacb3] xfs: clean up extent free log intent item tracepoint callsites
-      [ad2fb6bca516] xfs: convert "skip_discard" to a proper flags bitset
-      [fea60f70c810] xfs: move xfs_extent_free_defer_add to xfs_extfree_item.c
-      [ff6e47b35102] xfs: give rmap btree cursor error tracepoints their own class
-      [18c3bc7f6059] xfs: pass btree cursors to rmap btree tracepoints
-      [0e95442e45f0] xfs: clean up rmap log intent item tracepoint callsites
-      [1d056f92e5a0] xfs: don't bother calling xfs_rmap_finish_one_cleanup in xfs_rmap_finish_one
-      [f8a9e37d48d3] xfs: move xfs_rmap_update_defer_add to xfs_rmap_item.c
-      [7cc6344b4414] xfs: give refcount btree cursor error tracepoints their own class
-      [27bc4731311b] xfs: create specialized classes for refcount tracepoints
-      [eea5f0e26bc8] xfs: pass btree cursors to refcount btree tracepoints
-      [efee29abb3e8] xfs: clean up refcount log intent item tracepoint callsites
-      [62ae47e4ae8b] xfs: add a ci_entry helper
-      [8c9f8f6c8c43] xfs: reuse xfs_refcount_update_cancel_item
-      [a344868860be] xfs: don't bother calling xfs_refcount_finish_one_cleanup in xfs_refcount_finish_one
-      [21f95f3ac61f] xfs: simplify usage of the rcur local variable in xfs_refcount_finish_one
-      [11a046c05508] xfs: move xfs_refcount_update_defer_add to xfs_refcount_item.c
-      [7392aa2f6881] xfs: fix di_onlink checking for V1/V2 inodes
-      [6431fe69edb6] xfs_db: port the unlink command to use libxfs_droplink
-      [cca845516ea6] xfs_db/mkfs/xfs_repair: port to use XFS_ICREATE_UNLINKABLE
-      [34f035799f30] xfs_db/mdrestore/repair: don't use the incore struct xfs_sb for offsets into struct xfs_dsb
-      [a14190323836] xfs_db: port the iunlink command to use the libxfs iunlink function
-      [a91ec6679c52] xfs_repair: fix exchrange upgrade
-      [cb62b887de3e] xfs_repair: don't crash in get_inode_parent
-      [6dc93b8b56db] xfs_repair: use library functions to reset root/rbm/rsum inodes
-      [171c8eec8da3] xfs_repair: use library functions for orphanage creation
-      [968cbaf5ae9a] mkfs: clean up the rtinit() function
-      [4727b4ff8e09] mkfs: break up the rest of the rtinit() function
-
-Dave Chinner (3):
-      [153e35fef680] xfs: AIL doesn't need manual pushing
-      [922a67a8e957] xfs: background AIL push should target physical space
-      [b2f56fe57fe8] xfs: xfs_finobt_count_blocks() walks the wrong btree
-
-Gerald Yang (1):
-      [19dde7fac0f3] fsck.xfs: fix fsck.xfs run by different shells when fsck.mode=force is set
-
-John Garry (1):
-      [871d186c79f5] man: Update unit for fsx_extsize and fsx_cowextsize
-
-Julian Sun (1):
-      [d488f8152f47] xfs: remove unused parameter in macro XFS_DQUOT_LOGRES
-
-Julien Olivain (1):
-      [baf5cde86f22] libxfs: provide a memfd_create() wrapper if not present in libc
-
-Long Li (1):
-      [9ba014e2e650] xfs: get rid of xfs_ag_resv_rmapbt_alloc
-
-Wenchao Hao (1):
-      [06b712627e0c] xfs: Remove header files which are included more than once
-
-Zizhi Wo (1):
-      [6211801f306c] xfs: Avoid races with cnt_btree lastrec updates
-
-lei lu (1):
-      [6540c8ae3485] xfs: don't walk off the end of a directory data block
-
-Code Diffstat:
-
- .gitignore                      |  12 +-
- Makefile                        |   3 +
- VERSION                         |   4 +-
- configure.ac                    |   6 +-
- db/iunlink.c                    | 132 +------
- db/namei.c                      |  23 +-
- db/sb.c                         |   4 +-
- debian/changelog                |   8 +-
- debian/compat                   |   2 +-
- debian/control                  |   2 +-
- debian/rules                    |  81 ++---
- debian/upstream/signing-key.asc | 106 +++---
- doc/CHANGES                     |   5 +
- fsck/xfs_fsck.sh                |   4 +-
- include/builddefs.in            |   3 +-
- include/libxfs.h                |   1 +
- include/linux.h                 |   5 +
- include/xfs_inode.h             |  93 ++++-
- include/xfs_mount.h             |  11 +-
- include/xfs_trace.h             |  11 +-
- include/xfs_trans.h             |   2 +-
- io/encrypt.c                    |  67 ++--
- io/pwrite.c                     |   8 +-
- libfrog/Makefile                |   8 +-
- libfrog/fakelibattr.h           |  36 ++
- libfrog/fsprops.c               |  22 +-
- libxfs/Makefile                 |  13 +
- libxfs/defer_item.c             | 222 ++++++------
- libxfs/defer_item.h             |  16 +
- libxfs/inode.c                  | 254 ++++++++++++++
- libxfs/iunlink.c                | 163 +++++++++
- libxfs/iunlink.h                |  24 ++
- libxfs/libxfs_api_defs.h        |   5 +
- libxfs/libxfs_priv.h            |  26 +-
- libxfs/rdwr.c                   |  97 +-----
- libxfs/trans.c                  |   1 +
- libxfs/util.c                   | 336 +-----------------
- libxfs/xfile.c                  |  16 +
- libxfs/xfs_ag.c                 |   2 +-
- libxfs/xfs_ag_resv.h            |  19 -
- libxfs/xfs_alloc.c              | 235 +++++++------
- libxfs/xfs_alloc.h              |  18 +-
- libxfs/xfs_alloc_btree.c        |  64 ----
- libxfs/xfs_bmap.c               |  55 ++-
- libxfs/xfs_bmap.h               |   3 +
- libxfs/xfs_bmap_btree.c         |   2 +-
- libxfs/xfs_btree.c              |  51 ---
- libxfs/xfs_btree.h              |  16 +-
- libxfs/xfs_defer.c              |   2 +-
- libxfs/xfs_dir2.c               | 661 ++++++++++++++++++++++++++++++++++-
- libxfs/xfs_dir2.h               |  49 ++-
- libxfs/xfs_dir2_data.c          |  31 +-
- libxfs/xfs_dir2_priv.h          |   7 +
- libxfs/xfs_format.h             |   9 +-
- libxfs/xfs_ialloc.c             |  20 +-
- libxfs/xfs_ialloc_btree.c       |   4 +-
- libxfs/xfs_inode_buf.c          |  14 +-
- libxfs/xfs_inode_util.c         | 746 ++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_inode_util.h         |  62 ++++
- libxfs/xfs_ondisk.h             |   1 +
- libxfs/xfs_quota_defs.h         |   2 +-
- libxfs/xfs_refcount.c           | 156 +++------
- libxfs/xfs_refcount.h           |  11 +-
- libxfs/xfs_refcount_btree.c     |   2 +-
- libxfs/xfs_rmap.c               | 268 +++++----------
- libxfs/xfs_rmap.h               |  15 +-
- libxfs/xfs_rmap_btree.c         |   7 +-
- libxfs/xfs_shared.h             |   7 -
- libxfs/xfs_trans_inode.c        |   2 +
- libxfs/xfs_trans_resv.c         |  29 +-
- m4/package_attr.m4              |  25 --
- m4/package_libcdev.m4           |  33 ++
- man/man2/ioctl_xfs_fsgetxattr.2 |   6 +-
- man/man8/xfs_io.8               |   8 +-
- mdrestore/xfs_mdrestore.c       |   6 +-
- mkfs/proto.c                    | 294 +++++++++++-----
- repair/agheader.c               |  12 +-
- repair/bulkload.c               |   3 +-
- repair/incore_ino.c             |   2 +-
- repair/phase2.c                 |   2 +-
- repair/phase6.c                 | 226 ++++--------
- scrub/Makefile                  |   4 -
- scrub/phase5.c                  |  59 ++--
- 83 files changed, 3299 insertions(+), 1783 deletions(-)
- create mode 100644 libfrog/fakelibattr.h
- create mode 100644 libxfs/inode.c
- create mode 100644 libxfs/iunlink.c
- create mode 100644 libxfs/iunlink.h
- create mode 100644 libxfs/xfs_inode_util.c
- create mode 100644 libxfs/xfs_inode_util.h
- delete mode 100644 m4/package_attr.m4
+-- 
+2.31.1
 
 
