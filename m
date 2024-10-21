@@ -1,43 +1,43 @@
-Return-Path: <linux-xfs+bounces-14507-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14487-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FFA19A640F
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 12:42:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 01AB09A63F2
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 12:40:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0CA69B2A11A
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 10:40:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E0CE7B2950C
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 10:39:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E79681EF95C;
-	Mon, 21 Oct 2024 10:36:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A92A71E7C3D;
+	Mon, 21 Oct 2024 10:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iHmyx3Vf"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IDvGpTfx"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940881EF949;
-	Mon, 21 Oct 2024 10:36:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B241E7C34;
+	Mon, 21 Oct 2024 10:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729507010; cv=none; b=uKJxw8bmrvVS9nev4G2CFFiTvk2mX7cfrToJufr905Xtn0w/0v6RvFt5anzABCADfRKLJZWb4rkwBheoWYS6pkJyZY8rmI/eZsGpAQsJYnS39gnKY3o5g2LLkPJ9KxNo3zddTsaLaFx7RPlJnPrxM8QP/qwdDmcQZ6N2rYil6Jo=
+	t=1729506920; cv=none; b=beTalH5TOCeaA1Q4SvFlJ+AFFMHcoCUSjBk2EFuFq38Z5ude/gz+d/iACQR1U+K2aAkYPKCggRxwTrjGci+qCouhe/+McDlbZht3quOcNsHe0URNTgDKbG/dR7yU+kbGVYZppJg3ZDbi3HCdmx2z1Z6rdq5ug9TpPB/1FwEyTUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729507010; c=relaxed/simple;
-	bh=OLcUoQ4UHNnZnf+SEoiT46grZkCZE49PND2oo7IVlgY=;
+	s=arc-20240116; t=1729506920; c=relaxed/simple;
+	bh=dusvwWHZeY9kdD0iR9KFatieNIJOGPeSJsGUxj0uZt8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WIVAufTUBHYNA9PVL1paP7gKww+5h1B9wtOyUEzr9Qyb5BgrkBxOniajUBkbOx9Sjg4Gn5VuZV9BC4nBH1aX67X/OuQBXq9VsxjBpvsjgfRtZ34/H1fAgOkivbM64MiU1sZPtaz+ToVtvUXL+JxPH85C07gRk27Y4k6ViOC7VuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iHmyx3Vf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16056C4CEC3;
-	Mon, 21 Oct 2024 10:36:49 +0000 (UTC)
+	 MIME-Version; b=ieKt16lhlxHhSE0el6bNAaLWLqWwTny+XXcXkkZOMB1ICkqnDLcHsVQmHCywd2nEdzS59MUia+QLXFmc1u/+qISev5m0El6pCEWVRg2KZNFwmZSKmlIXM3OlBzX23yyFlnFeRan7xNr2mk1VYFXoM/Cn+M9MQNEfV7/hsoOt5h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IDvGpTfx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE86C4CEC7;
+	Mon, 21 Oct 2024 10:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1729507010;
-	bh=OLcUoQ4UHNnZnf+SEoiT46grZkCZE49PND2oo7IVlgY=;
+	s=korg; t=1729506920;
+	bh=dusvwWHZeY9kdD0iR9KFatieNIJOGPeSJsGUxj0uZt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iHmyx3VfomP9MP7nChUJrmHC7nemX07Y2gdek6aw0+TODbNsLHJZ3Y3VRWC9KIJWF
-	 eOmNky7kXU9LjV1SRgCzxIVETpMi8hg9MvEHoR4+adrf2bTcm85+PFnL7r9rH1uVMV
-	 AYs0OJJwP38016d9/IUcxpeQ7tGq8wvFIz0T5VtI=
+	b=IDvGpTfx9NjlBY++et4kG9zOMlfdkHiPWiD8zNrgJBTYrjXQSx1BQxW3HK9VyX00X
+	 eACwNiivM2He9NIN+k09PY4wdFZ39BvVMj/vz53syvtvLT2aRoJydsM8/5YogiLKce
+	 tqAqvyvOt9iB1Bk1ZVLFCqP5yhaCUoNufZa6xDD4=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Darrick J. Wong" <djwong@kernel.org>,
 	Christoph Hellwig <hch@lst.de>,
 	Catherine Hoang <catherine.hoang@oracle.com>
-Subject: [PATCH 6.6 029/124] xfs: fix missing check for invalid attr flags
-Date: Mon, 21 Oct 2024 12:23:53 +0200
-Message-ID: <20241021102257.853934929@linuxfoundation.org>
+Subject: [PATCH 6.6 030/124] xfs: check shortform attr entry flags specifically
+Date: Mon, 21 Oct 2024 12:23:54 +0200
+Message-ID: <20241021102257.892283414@linuxfoundation.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241021102256.706334758@linuxfoundation.org>
 References: <20241021102256.706334758@linuxfoundation.org>
@@ -69,85 +69,40 @@ Content-Transfer-Encoding: 8bit
 
 From: "Darrick J. Wong" <djwong@kernel.org>
 
-commit f660ec8eaeb50d0317c29601aacabdb15e5f2203 upstream.
+commit 309dc9cbbb4379241bcc9b5a6a42c04279a0e5a7 upstream.
 
-[backport: fix build errors in xchk_xattr_listent]
+While reviewing flag checking in the attr scrub functions, we noticed
+that the shortform attr scanner didn't catch entries that have the LOCAL
+or INCOMPLETE bits set.  Neither of these flags can ever be set on a
+shortform attr, so we need to check this narrower set of valid flags.
 
-The xattr scrubber doesn't check for undefined flags in shortform attr
-entries.  Therefore, define a mask XFS_ATTR_ONDISK_MASK that has all
-possible XFS_ATTR_* flags in it, and use that to check for unknown bits
-in xchk_xattr_actor.
-
-Refactor the check in the dabtree scanner function to use the new mask
-as well.  The redundant checks need to be in place because the dabtree
-check examines the hash mappings and therefore needs to decode the attr
-leaf entries to compute the namehash.  This happens before the walk of
-the xattr entries themselves.
-
-Fixes: ae0506eba78fd ("xfs: check used space of shortform xattr structures")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
 Acked-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/xfs/libxfs/xfs_da_format.h |    5 +++++
- fs/xfs/scrub/attr.c           |   13 +++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ fs/xfs/scrub/attr.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/fs/xfs/libxfs/xfs_da_format.h
-+++ b/fs/xfs/libxfs/xfs_da_format.h
-@@ -703,8 +703,13 @@ struct xfs_attr3_leafblock {
- #define XFS_ATTR_ROOT		(1u << XFS_ATTR_ROOT_BIT)
- #define XFS_ATTR_SECURE		(1u << XFS_ATTR_SECURE_BIT)
- #define XFS_ATTR_INCOMPLETE	(1u << XFS_ATTR_INCOMPLETE_BIT)
-+
- #define XFS_ATTR_NSP_ONDISK_MASK	(XFS_ATTR_ROOT | XFS_ATTR_SECURE)
- 
-+#define XFS_ATTR_ONDISK_MASK	(XFS_ATTR_NSP_ONDISK_MASK | \
-+				 XFS_ATTR_LOCAL | \
-+				 XFS_ATTR_INCOMPLETE)
-+
- /*
-  * Alignment for namelist and valuelist entries (since they are mixed
-  * there can be only one alignment value)
 --- a/fs/xfs/scrub/attr.c
 +++ b/fs/xfs/scrub/attr.c
-@@ -182,6 +182,11 @@ xchk_xattr_listent(
- 		return;
- 	}
+@@ -566,6 +566,15 @@ xchk_xattr_check_sf(
+ 			break;
+ 		}
  
-+	if (flags & ~XFS_ATTR_ONDISK_MASK) {
-+		xchk_fblock_set_corrupt(sx->sc, XFS_ATTR_FORK, args.blkno);
-+		goto fail_xref;
-+	}
++		/*
++		 * Shortform entries do not set LOCAL or INCOMPLETE, so the
++		 * only valid flag bits here are for namespaces.
++		 */
++		if (sfe->flags & ~XFS_ATTR_NSP_ONDISK_MASK) {
++			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
++			break;
++		}
 +
- 	if (flags & XFS_ATTR_INCOMPLETE) {
- 		/* Incomplete attr key, just mark the inode for preening. */
- 		xchk_ino_set_preen(sx->sc, context->dp->i_ino);
-@@ -463,7 +468,6 @@ xchk_xattr_rec(
- 	xfs_dahash_t			hash;
- 	int				nameidx;
- 	int				hdrsize;
--	unsigned int			badflags;
- 	int				error;
- 
- 	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
-@@ -493,10 +497,11 @@ xchk_xattr_rec(
- 
- 	/* Retrieve the entry and check it. */
- 	hash = be32_to_cpu(ent->hashval);
--	badflags = ~(XFS_ATTR_LOCAL | XFS_ATTR_ROOT | XFS_ATTR_SECURE |
--			XFS_ATTR_INCOMPLETE);
--	if ((ent->flags & badflags) != 0)
-+	if (ent->flags & ~XFS_ATTR_ONDISK_MASK) {
- 		xchk_da_set_corrupt(ds, level);
-+		return 0;
-+	}
-+
- 	if (ent->flags & XFS_ATTR_LOCAL) {
- 		lentry = (struct xfs_attr_leaf_name_local *)
- 				(((char *)bp->b_addr) + nameidx);
+ 		if (!xchk_xattr_set_map(sc, ab->usedmap,
+ 				(char *)sfe - (char *)sf,
+ 				sizeof(struct xfs_attr_sf_entry))) {
 
 
 
