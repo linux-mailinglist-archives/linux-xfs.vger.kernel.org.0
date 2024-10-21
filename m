@@ -1,240 +1,151 @@
-Return-Path: <linux-xfs+bounces-14501-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14508-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A7F89A63D9
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 12:40:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BE199A6A88
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 15:39:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2B591C21F1D
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 10:40:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C6911C24A67
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Oct 2024 13:39:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E461E908E;
-	Mon, 21 Oct 2024 10:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9866E1DFFB;
+	Mon, 21 Oct 2024 13:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sVSyEiLB"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="wRjhvAmJ"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1635195FEC;
-	Mon, 21 Oct 2024 10:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52993198E69
+	for <linux-xfs@vger.kernel.org>; Mon, 21 Oct 2024 13:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729506965; cv=none; b=CbK+pie5G7wm8+9o0CLDkNThIkvONe8jknPvPCI0VPC65HCaYTnYJScHWNdjPUeX6inTK2SvsNgMJnpW7kp1iJoaOa9jaWS0kBMJdb3IuRRMn0yn4bAFWIpa6JgPmOkBa7aC4u5XAl317QWA7QVYctFB5Wqwia7bw02VjUnMk/8=
+	t=1729517909; cv=none; b=NpfYAb8aWOVh6r1DcV9I3jsxL1hsULi5MyizaIwfuZHrNtXX+SC7xZr4AzxfOcQiZkLq4J4gqcdCjPe01vCmIbVrRqgULatfiDvFp3Z9TxLUUr9wh5INbOqmczFsnFOVOu/9sgNYiKgFof1UASuTbPoNNeAHrNELP1NeM4dsr7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729506965; c=relaxed/simple;
-	bh=1kKanxVfAf7S3DNaRMJuO0WGYYIOERHXK1WNkSXC7Rg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HFQsCtL5rKRi9ud2sY6r9hmxVlq07RcGSFoi9knHU7D0soTViA6KxivJKjnx2BTozx1u+p339vq0jMTNeaU5v7OhCeLPbXxx0RVrKumxCQajxldVgAml1qrW9LovYkRDP7mqsxdYxks4iSNzBMhDhEf5Mj/wmX+248xxW97PoUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sVSyEiLB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B8F1C4CEC3;
-	Mon, 21 Oct 2024 10:36:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1729506965;
-	bh=1kKanxVfAf7S3DNaRMJuO0WGYYIOERHXK1WNkSXC7Rg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sVSyEiLBc+CIIqL9MvcgVPJhyIMuVyuiB9f2vjVCBTYhzIEOoCHT02AoraN/2so+l
-	 K0UBqSLCBhEaRH8ahC88N203fTDifEkbesxSkGapsRe6LoHOtX5HfX62ojLVgiEY/W
-	 sRBchu1Q2bJQVoi5Gq47Pa0PpNAlROK2sgYK41L4=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-xfs@vger.kernel.org,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Chandan Babu R <chandanbabu@kernel.org>,
-	Catherine Hoang <catherine.hoang@oracle.com>
-Subject: [PATCH 6.6 044/124] xfs: restrict when we try to align cow fork delalloc to cowextsz hints
-Date: Mon, 21 Oct 2024 12:24:08 +0200
-Message-ID: <20241021102258.434209222@linuxfoundation.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241021102256.706334758@linuxfoundation.org>
-References: <20241021102256.706334758@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	s=arc-20240116; t=1729517909; c=relaxed/simple;
+	bh=hBtldOqD5y7+GEf2dMKwQy9HrMh4L7vHtm20CR/QEgY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eYI0x63VHmkCbXVGqT02KBoAQF++L4Jg4XwDMwqpTXDHsKRQFBwc7ge56a3NCrQt4p5wLw2bVATbDt6HyDOam94fYZUoUPWs0sEL6V7RJjvbtXuSjWl81clzD+ra/4KaYil/h3W0Nf1arsLnoqD1XGnOX8nIt2A1j9HZTGf1l04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=wRjhvAmJ; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2e56750bb0dso1927265a91.0
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Oct 2024 06:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1729517906; x=1730122706; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SJ1IZSVCxSaCKmddSG5e6jyPsoinCJbOGE3b4ynb4mo=;
+        b=wRjhvAmJmAhX7hAL9C30DhILnDiHxyjgyOO4L6gJrUxxh7TcWxBt8/R0ghIwQct28I
+         OyUNpaDuOHTsCUWEuWK43R1aHcJ1OoH76FeFXpkYKwdq5HHCg8XfOBfpDLdHsPiBh807
+         u6BHSVw8vo7fL+LT+GgKHenGklf2DUXTPZqp403Tcb4Oe4HYcwSxB0kxOan6r6vynJtv
+         EeHcIIVL2c0NFv0G2Xmazoi7iOf4yFnlFvcNGjK0h92LWpQsf5AZBd1Dzc/4L1Mt7VCL
+         8VFnvd0ROpWJUjdNXTue0bbqFhq5QGDGTXcu6fdxTNK1T7h4TCtP5qtEaywDnTKRHEl9
+         WoGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729517906; x=1730122706;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SJ1IZSVCxSaCKmddSG5e6jyPsoinCJbOGE3b4ynb4mo=;
+        b=SXDCepeTDbRECRdNSAnUDsXSb+LjvOeneMm1yyc69pnRRtVTYYw316GVIVEdtlZ/jE
+         oiEkGIz6N9qZ9B1NoCaAR82VRzqQL7HRTCM9Vo5WA98XLypp+z2vcIhYPZvcupA4cT+8
+         cN3cyms14Sz4PP9/ZjFkLBNhEBoYdtcw5Wqi6RMUCLBpRogplu58ifJ7VY6ymfZSRqpt
+         uqgRAR/5Waru3qZAdVk2d7xrlDemcLRcEoEmKsbxaK19WKyGh+/PFDxxi2M6eEV90jtD
+         utvdM8rjMoQqGXEZd3Z1yEfEVJDPkOGmnpAnnyJCG7dEWXUvYHCCnU3ZlbLtgqzL+SQa
+         i1tw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0WQaQfCFER9o5pW4bJo9SPtpTK2dOjFKmYQCj5R5I0JZZBCSJM9E3xuzNx96L4IJNL0z08KaUqkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy84xV2XnC6q6z9cRjQc2984nzK2W4jRiRPBRNjJAdF96apC8Yw
+	0NLEWEcA09YSZWHpCaZWPaXrG5H1xJ+XbQkqHIrPMJWbUcCifokRpBwOuPWS3aY=
+X-Google-Smtp-Source: AGHT+IFy4QDzquWLETlpiOQqDWi+DgBmBsIwiD4hqrRAX0F7x8ic6bL74xqPkzZLkK1gqQOowDb+Tg==
+X-Received: by 2002:a17:90a:7147:b0:2e5:5e95:b389 with SMTP id 98e67ed59e1d1-2e5619021f0mr12525055a91.35.1729517906486;
+        Mon, 21 Oct 2024 06:38:26 -0700 (PDT)
+Received: from dread.disaster.area (pa49-186-86-168.pa.vic.optusnet.com.au. [49.186.86.168])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e5ad510744sm3729024a91.48.2024.10.21.06.38.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2024 06:38:26 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1t2sc3-003pHb-1e;
+	Tue, 22 Oct 2024 00:38:23 +1100
+Date: Tue, 22 Oct 2024 00:38:23 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Brian Foster <bfoster@redhat.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 6/7] xfs: don't update file system geometry through
+ transaction deltas
+Message-ID: <ZxZZT0LpkINDmJOe@dread.disaster.area>
+References: <20240930164211.2357358-1-hch@lst.de>
+ <20240930164211.2357358-7-hch@lst.de>
+ <ZwffQQuVx_CyVgLc@bfoster>
+ <20241011075709.GC2749@lst.de>
+ <Zwkv6G1ZMIdE5vs2@bfoster>
+ <20241011171303.GB21853@frogsfrogsfrogs>
+ <ZwlxTVpgeVGRfuUb@bfoster>
+ <20241011231241.GD21853@frogsfrogsfrogs>
+ <Zw1n_bkugSs6oEI6@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zw1n_bkugSs6oEI6@bfoster>
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+On Mon, Oct 14, 2024 at 02:50:37PM -0400, Brian Foster wrote:
+> So for a hacky thought/example, suppose we defined a transaction mode
+> that basically implemented an exclusive checkpoint requirement (i.e.
+> this transaction owns an entire checkpoint, nothing else is allowed in
+> the CIL concurrently).
 
-------------------
+Transactions know nothing about the CIL, nor should they. The CIL
+also has no place in ordering transactions - it's purely an
+aggregation mechanism that flushes committed transactions to stable
+storage when it is told to. i.e. when a log force is issued.
 
-From: "Darrick J. Wong" <djwong@kernel.org>
+A globally serialised transaction requires ordering at the
+transaction allocation/reservation level, not at the CIL. i.e. it is
+essentially the same ordering problem as serialising against
+untracked DIO on the inode before we can run a truncate (lock,
+drain, do operation, unlock).
 
-commit 288e1f693f04e66be99f27e7cbe4a45936a66745 upstream.
+> Presumably that would ensure everything before
+> the grow would flush out to disk in one checkpoint, everything
+> concurrent would block on synchronous commit of the grow trans (before
+> new geometry is exposed), and then after that point everything pending
+> would drain into another checkpoint.
 
-xfs/205 produces the following failure when always_cow is enabled:
+Yup, that's high level transaction level ordering and really has
+nothing to do with the CIL. The CIL is mostly a FIFO aggregator; the
+only ordering it does is to preserve transaction commit ordering
+down to the journal.
 
-#  --- a/tests/xfs/205.out	2024-02-28 16:20:24.437887970 -0800
-#  +++ b/tests/xfs/205.out.bad	2024-06-03 21:13:40.584000000 -0700
-#  @@ -1,4 +1,5 @@
-#   QA output created by 205
-#   *** one file
-#  +   !!! disk full (expected)
-#   *** one file, a few bytes at a time
-#   *** done
+> It kind of sounds like overkill, but really if it could be implemented
+> simply enough then we wouldn't have to think too hard about auditing all
+> other relog scenarios. I'd probably want to see at least some reproducer
+> for this sort of problem to prove the theory though too, even if it
+> required debug instrumentation or something. Hm?
 
-This is the result of overly aggressive attempts to align cow fork
-delalloc reservations to the CoW extent size hint.  Looking at the trace
-data, we're trying to append a single fsblock to the "fred" file.
-Trying to create a speculative post-eof reservation fails because
-there's not enough space.
+It's relatively straight forward to do, but it seems like total
+overkill for growfs, as growfs only requires ordering
+between the change of size and new allocations. We can do that by
+not exposing the new space until after then superblock has been
+modifed on stable storage in the case of grow.
 
-We then set @prealloc_blocks to zero and try again, but the cowextsz
-alignment code triggers, which expands our request for a 1-fsblock
-reservation into a 39-block reservation.  There's not enough space for
-that, so the whole write fails with ENOSPC even though there's
-sufficient space in the filesystem to allocate the single block that we
-need to land the write.
+In the case of shrink, globally serialising the growfs
+transaction for shrink won't actually do any thing useful because we
+have to deny access to the free space we are removing before we
+even start the shrink transaction. Hence we need allocation vs
+shrink co-ordination before we shrink the superblock space, not a
+globally serialised size modification transaction...
 
-There are two things wrong here -- first, we shouldn't be attempting
-speculative preallocations beyond what was requested when we're low on
-space.  Second, if we've already computed a posteof preallocation, we
-shouldn't bother trying to align that to the cowextsize hint.
-
-Fix both of these problems by adding a flag that only enables the
-expansion of the delalloc reservation to the cowextsize if we're doing a
-non-extending write, and only if we're not doing an ENOSPC retry.  This
-requires us to move the ENOSPC retry logic to xfs_bmapi_reserve_delalloc.
-
-I probably should have caught this six years ago when 6ca30729c206d was
-being reviewed, but oh well.  Update the comments to reflect what the
-code does now.
-
-Fixes: 6ca30729c206d ("xfs: bmap code cleanup")
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
-Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
-Acked-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/xfs/libxfs/xfs_bmap.c |   31 +++++++++++++++++++++++++++----
- fs/xfs/xfs_iomap.c       |   34 ++++++++++++----------------------
- 2 files changed, 39 insertions(+), 26 deletions(-)
-
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -3974,20 +3974,32 @@ xfs_bmapi_reserve_delalloc(
- 	xfs_extlen_t		alen;
- 	xfs_extlen_t		indlen;
- 	int			error;
--	xfs_fileoff_t		aoff = off;
-+	xfs_fileoff_t		aoff;
-+	bool			use_cowextszhint =
-+					whichfork == XFS_COW_FORK && !prealloc;
- 
-+retry:
- 	/*
- 	 * Cap the alloc length. Keep track of prealloc so we know whether to
- 	 * tag the inode before we return.
- 	 */
-+	aoff = off;
- 	alen = XFS_FILBLKS_MIN(len + prealloc, XFS_MAX_BMBT_EXTLEN);
- 	if (!eof)
- 		alen = XFS_FILBLKS_MIN(alen, got->br_startoff - aoff);
- 	if (prealloc && alen >= len)
- 		prealloc = alen - len;
- 
--	/* Figure out the extent size, adjust alen */
--	if (whichfork == XFS_COW_FORK) {
-+	/*
-+	 * If we're targetting the COW fork but aren't creating a speculative
-+	 * posteof preallocation, try to expand the reservation to align with
-+	 * the COW extent size hint if there's sufficient free space.
-+	 *
-+	 * Unlike the data fork, the CoW cancellation functions will free all
-+	 * the reservations at inactivation, so we don't require that every
-+	 * delalloc reservation have a dirty pagecache.
-+	 */
-+	if (use_cowextszhint) {
- 		struct xfs_bmbt_irec	prev;
- 		xfs_extlen_t		extsz = xfs_get_cowextsz_hint(ip);
- 
-@@ -4006,7 +4018,7 @@ xfs_bmapi_reserve_delalloc(
- 	 */
- 	error = xfs_quota_reserve_blkres(ip, alen);
- 	if (error)
--		return error;
-+		goto out;
- 
- 	/*
- 	 * Split changing sb for alen and indlen since they could be coming
-@@ -4051,6 +4063,17 @@ out_unreserve_blocks:
- out_unreserve_quota:
- 	if (XFS_IS_QUOTA_ON(mp))
- 		xfs_quota_unreserve_blkres(ip, alen);
-+out:
-+	if (error == -ENOSPC || error == -EDQUOT) {
-+		trace_xfs_delalloc_enospc(ip, off, len);
-+
-+		if (prealloc || use_cowextszhint) {
-+			/* retry without any preallocation */
-+			use_cowextszhint = false;
-+			prealloc = 0;
-+			goto retry;
-+		}
-+	}
- 	return error;
- }
- 
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1127,33 +1127,23 @@ xfs_buffered_write_iomap_begin(
- 		}
- 	}
- 
--retry:
--	error = xfs_bmapi_reserve_delalloc(ip, allocfork, offset_fsb,
--			end_fsb - offset_fsb, prealloc_blocks,
--			allocfork == XFS_DATA_FORK ? &imap : &cmap,
--			allocfork == XFS_DATA_FORK ? &icur : &ccur,
--			allocfork == XFS_DATA_FORK ? eof : cow_eof);
--	switch (error) {
--	case 0:
--		break;
--	case -ENOSPC:
--	case -EDQUOT:
--		/* retry without any preallocation */
--		trace_xfs_delalloc_enospc(ip, offset, count);
--		if (prealloc_blocks) {
--			prealloc_blocks = 0;
--			goto retry;
--		}
--		fallthrough;
--	default:
--		goto out_unlock;
--	}
--
- 	if (allocfork == XFS_COW_FORK) {
-+		error = xfs_bmapi_reserve_delalloc(ip, allocfork, offset_fsb,
-+				end_fsb - offset_fsb, prealloc_blocks, &cmap,
-+				&ccur, cow_eof);
-+		if (error)
-+			goto out_unlock;
-+
- 		trace_xfs_iomap_alloc(ip, offset, count, allocfork, &cmap);
- 		goto found_cow;
- 	}
- 
-+	error = xfs_bmapi_reserve_delalloc(ip, allocfork, offset_fsb,
-+			end_fsb - offset_fsb, prealloc_blocks, &imap, &icur,
-+			eof);
-+	if (error)
-+		goto out_unlock;
-+
- 	/*
- 	 * Flag newly allocated delalloc blocks with IOMAP_F_NEW so we punch
- 	 * them out if the write happens to fail.
-
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
