@@ -1,40 +1,40 @@
-Return-Path: <linux-xfs+bounces-14609-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14611-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2A759AE3BF
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 13:23:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54DBE9AE3C0
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 13:23:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2DFD6B2248F
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 11:23:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D773F1F23B2D
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 11:23:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 121F41CB53A;
-	Thu, 24 Oct 2024 11:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B56881CF7BE;
+	Thu, 24 Oct 2024 11:23:33 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AD41CDA36;
-	Thu, 24 Oct 2024 11:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC31C1CF2B6;
+	Thu, 24 Oct 2024 11:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729769009; cv=none; b=WBBTvjhm4ok/7UP5jzJdV+bz2YDCeVkWUcP3ttvsUvd1dhfqBfPS++4Sf5G7HkbrkvtEXAe/FH/DJANnYMIKcyhS4MsPvwxXtLMRNGrPZHq4/6HvhBGzskvarDBsyGu+65WiEkZU+jKarNF5RnIMBYgABOwq58TD5o7SxAh/xi8=
+	t=1729769013; cv=none; b=Odbnx97yd9tEY9tCXYOEWbVPorRMgMC+ACNXM2MtnvypKhc3Aslpm7uZHD7u/kNCHpSPHI9gUZ3sghwq2jLBDtXozSBT9p+9LyA9qdk2cCAL7y2lD/fQz1d7eVFdrL6qaLrtOb+133Ryydk9+OYtCQ3gjPTfV8brLJslxcK5Kls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729769009; c=relaxed/simple;
-	bh=K8ZPDUBljMXSzirkFRhVR6nXpRAqCEN01KtJeoQX3PE=;
+	s=arc-20240116; t=1729769013; c=relaxed/simple;
+	bh=xjd0JkQl3cIa14sr08/ee2QTdXosFQBZjMFlrS9uD8s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IlZEOlu38jRNJqJ3/r4gBZfXWIAW8tYhTfjzlgWLzFz1DhWDGY+W7JS0/hX2wxzTsxDLL4mHF9XsvWnI+kdana7R9wr7N6vAbZCVsOYLi21vgrdkUQvrLDS0bclvkBrjCUAxZ3ESPmE7O2exApNU2DoyMUNSrFYbOmZR6UMM5mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.152
+	 MIME-Version; b=NBRlWrLJnOW2tukxo0BvkhsY6rhvb1xOMFANb4j/lpQ8Ww2AENc+0e8iup/ZJ3Ajwycc+5f9lb091uTiTC8bnlgWIwhqUC4JTub8521Et1NJed+tuGudwD3Unj4TpnuTPpTtbgxPh5Zt4fJiXawtnN6eaI5M1do8Y7pw9g6ta4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4XZ3SW3QFJz9t1s;
-	Thu, 24 Oct 2024 13:23:23 +0200 (CEST)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4XZ3Sb1F5Zz9smB;
+	Thu, 24 Oct 2024 13:23:27 +0200 (CEST)
 From: Pankaj Raghav <p.raghav@samsung.com>
 To: fstests@vger.kernel.org,
 	zlang@redhat.com
@@ -45,9 +45,9 @@ Cc: linux-xfs@vger.kernel.org,
 	kernel@pankajraghav.com,
 	david@fromorbit.com,
 	djwong@kernel.org
-Subject: [PATCH 1/2] generic/219: use filesystem blocksize while calculating the file size
-Date: Thu, 24 Oct 2024 13:23:10 +0200
-Message-ID: <20241024112311.615360-2-p.raghav@samsung.com>
+Subject: [PATCH 2/2] generic: increase file size to match CoW delayed allocation for XFS 64k bs
+Date: Thu, 24 Oct 2024 13:23:11 +0200
+Message-ID: <20241024112311.615360-3-p.raghav@samsung.com>
 In-Reply-To: <20241024112311.615360-1-p.raghav@samsung.com>
 References: <20241024112311.615360-1-p.raghav@samsung.com>
 Precedence: bulk
@@ -58,55 +58,197 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-generic/219 was failing for XFS with 32k and 64k blocksize. Even though
-we do only 48k IO, XFS will allocate blocks rounded to the nearest
-blocksize.
+generic/305,326,328 have been failing for 32k and 64k blocksizes.
+
+We do the following in the test 305 and 326 (highlighting only the part
+that is related to failure):
+
+- create a 1M test-1/file1
+- reflink test-1/file2 and test-1/file3 based on test-1/file1
+- Overwrite first half of test-1/file2 to do a CoW operation
+- Expect the size of the test-1 dir to be 3M
+
+The test is failing for 32k and 64k blocksizes as the number of blocks
+(direct + delayed) is higher than number of blocks allocated for
+blocksizes < 32k in XFS, resulting in size of test-1 to be more than 3M.
+Though generic/328 has a different IO pattern, the reason for failure is
+the same.
+
+This is the failure output :
+    --- tests/generic/305.out   2024-06-05 11:52:27.430262812 +0000
+    +++ /root/results//64k_4ks/generic/305.out.bad      2024-10-23 10:56:57.643986870 +0000
+    @@ -11,7 +11,7 @@
+     CoW one of the files
+     root 0 0 0
+     nobody 0 0 0
+    -fsgqa 3072 0 0
+    +fsgqa 4608 0 0
+     Remount the FS to see if accounting changes
+     root 0 0 0
+
+In these tests, XFS is doing a delayed allocation of
+XFS_DEFAULT_COWEXTSIZE_HINT(32). Increase the size of the file so that
+the CoW write(sz/2) matches the maximum size of the delayed allocation
+for the max blocksize of 64k. This will ensure that all parts of the
+delayed extents are converted to real extents for all blocksizes.
+
+Even though this is not the most complete solution to fix these tests,
+the objective of these tests are to test quota and not the effect of delayed
+allocations.
 
 Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 ---
- tests/generic/219 | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ tests/generic/305     |  2 +-
+ tests/generic/305.out | 12 ++++++------
+ tests/generic/326     |  2 +-
+ tests/generic/326.out | 12 ++++++------
+ tests/generic/328     |  2 +-
+ tests/generic/328.out | 16 +++++++++-------
+ 6 files changed, 24 insertions(+), 22 deletions(-)
 
-diff --git a/tests/generic/219 b/tests/generic/219
-index 940b902e..d72aa745 100755
---- a/tests/generic/219
-+++ b/tests/generic/219
-@@ -49,12 +49,24 @@ check_usage()
- 	fi
- }
+diff --git a/tests/generic/305 b/tests/generic/305
+index c89bd821..6ccbb3d0 100755
+--- a/tests/generic/305
++++ b/tests/generic/305
+@@ -32,7 +32,7 @@ quotaon $SCRATCH_MNT 2> /dev/null
+ testdir=$SCRATCH_MNT/test-$seq
+ mkdir $testdir
  
-+_round_up_to_fs_blksz()
-+{
-+	local n=$1
-+	local bs=$(_get_file_block_size "$SCRATCH_MNT")
-+	local bs_kb=$(( bs >> 10 ))
-+
-+	echo $(( (n + bs_kb - 1) & ~(bs_kb - 1) ))
-+}
-+
- test_accounting()
- {
--	echo "### some controlled buffered, direct and mmapd IO (type=$type)"
--	echo "--- initiating parallel IO..." >>$seqres.full
- 	# Small ios here because ext3 will account for indirect blocks too ...
- 	# 48k will fit w/o indirect for 4k blocks (default blocksize)
-+	io_sz=$(_round_up_to_fs_blksz 48)
-+	sz=$(( io_sz * 3 ))
-+
-+	echo "### some controlled buffered, direct and mmapd IO (type=$type)"
-+	echo "--- initiating parallel IO..." >>$seqres.full
- 	$XFS_IO_PROG -c 'pwrite 0 48k' -c 'fsync' \
- 					$SCRATCH_MNT/buffer >>$seqres.full 2>&1 &
- 	$XFS_IO_PROG -c 'pwrite 0 48k' -d \
-@@ -73,7 +85,7 @@ test_accounting()
- 	else
- 		id=$qa_group
- 	fi
--	repquota -$type $SCRATCH_MNT | grep "^$id" | check_usage 144 3
-+	repquota -$type $SCRATCH_MNT | grep "^$id" | check_usage $sz 3
- }
+-sz=1048576
++sz=4194304
+ echo "Create the original files"
+ $XFS_IO_PROG -f -c "pwrite -S 0x61 -b $sz 0 $sz" $testdir/file1 >> $seqres.full
+ _cp_reflink $testdir/file1 $testdir/file2 >> $seqres.full
+diff --git a/tests/generic/305.out b/tests/generic/305.out
+index fbd4e241..1c348d1e 100644
+--- a/tests/generic/305.out
++++ b/tests/generic/305.out
+@@ -1,22 +1,22 @@
+ QA output created by 305
+ Format and mount
+ Create the original files
+-root 3072 0 0
++root 12288 0 0
+ nobody 0 0 0
+ fsgqa 0 0 0
+ Change file ownership
+ root 0 0 0
+ nobody 0 0 0
+-fsgqa 3072 0 0
++fsgqa 12288 0 0
+ CoW one of the files
+ root 0 0 0
+ nobody 0 0 0
+-fsgqa 3072 0 0
++fsgqa 12288 0 0
+ Remount the FS to see if accounting changes
+ root 0 0 0
+ nobody 0 0 0
+-fsgqa 3072 0 0
++fsgqa 12288 0 0
+ Chown one of the files
+ root 0 0 0
+-nobody 1024 0 0
+-fsgqa 2048 0 0
++nobody 4096 0 0
++fsgqa 8192 0 0
+diff --git a/tests/generic/326 b/tests/generic/326
+index 1783fbf2..321e7dc6 100755
+--- a/tests/generic/326
++++ b/tests/generic/326
+@@ -33,7 +33,7 @@ quotaon $SCRATCH_MNT 2> /dev/null
+ testdir=$SCRATCH_MNT/test-$seq
+ mkdir $testdir
  
+-sz=1048576
++sz=4194304
+ echo "Create the original files"
+ $XFS_IO_PROG -f -c "pwrite -S 0x61 -b $sz 0 $sz" $testdir/file1 >> $seqres.full
+ _cp_reflink $testdir/file1 $testdir/file2 >> $seqres.full
+diff --git a/tests/generic/326.out b/tests/generic/326.out
+index de7f20b5..4ccb3250 100644
+--- a/tests/generic/326.out
++++ b/tests/generic/326.out
+@@ -1,22 +1,22 @@
+ QA output created by 326
+ Format and mount
+ Create the original files
+-root 3072 0 0
++root 12288 0 0
+ nobody 0 0 0
+ fsgqa 0 0 0
+ Change file ownership
+ root 0 0 0
+ nobody 0 0 0
+-fsgqa 3072 0 0
++fsgqa 12288 0 0
+ CoW one of the files
+ root 0 0 0
+ nobody 0 0 0
+-fsgqa 3072 0 0
++fsgqa 12288 0 0
+ Remount the FS to see if accounting changes
+ root 0 0 0
+ nobody 0 0 0
+-fsgqa 3072 0 0
++fsgqa 12288 0 0
+ Chown one of the files
+ root 0 0 0
+-nobody 1024 0 0
+-fsgqa 2048 0 0
++nobody 4096 0 0
++fsgqa 8192 0 0
+diff --git a/tests/generic/328 b/tests/generic/328
+index 0c8e1986..25e1f2a0 100755
+--- a/tests/generic/328
++++ b/tests/generic/328
+@@ -32,7 +32,7 @@ quotaon $SCRATCH_MNT 2> /dev/null
+ testdir=$SCRATCH_MNT/test-$seq
+ mkdir $testdir
  
+-sz=1048576
++sz=4194304
+ echo "Create the original files"
+ $XFS_IO_PROG -f -c "pwrite -S 0x61 -b $sz 0 $sz" $testdir/file1 >> $seqres.full
+ chown $qa_user $testdir/file1
+diff --git a/tests/generic/328.out b/tests/generic/328.out
+index b7fe9f8c..0167637e 100644
+--- a/tests/generic/328.out
++++ b/tests/generic/328.out
+@@ -2,24 +2,26 @@ QA output created by 328
+ Format and mount
+ Create the original files
+ root 0 0 0
+-fsgqa 3072 0 0
++fsgqa 12288 0 0
+ Set hard quota to prevent rewrite
+ root 0 0 0
+-fsgqa 3072 0 1024
++fsgqa 12288 0 1024
+ Try to dio write the whole file
+ pwrite: Disk quota exceeded
+ root 0 0 0
+-fsgqa 3072 0 1024
++fsgqa 12288 0 1024
+ Try to write the whole file
+ pwrite: Disk quota exceeded
+ root 0 0 0
+-fsgqa 3072 0 1024
++fsgqa 12288 0 1024
+ Set hard quota to allow rewrite
+ root 0 0 0
+-fsgqa 3072 0 8192
++fsgqa 12288 0 8192
+ Try to dio write the whole file
++pwrite: Disk quota exceeded
+ root 0 0 0
+-fsgqa 3072 0 8192
++fsgqa 12288 0 8192
+ Try to write the whole file
++pwrite: Disk quota exceeded
+ root 0 0 0
+-fsgqa 3072 0 8192
++fsgqa 12288 0 8192
 -- 
 2.44.1
 
