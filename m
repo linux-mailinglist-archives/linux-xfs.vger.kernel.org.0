@@ -1,137 +1,71 @@
-Return-Path: <linux-xfs+bounces-14601-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-14605-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3F99ADA21
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 04:52:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC9EB9ADC23
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 08:25:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 744721C21A3C
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 02:51:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A39BB1F21202
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Oct 2024 06:25:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4453915573D;
-	Thu, 24 Oct 2024 02:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="J5fxeqxg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01429185920;
+	Thu, 24 Oct 2024 06:24:52 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDF3156F30
-	for <linux-xfs@vger.kernel.org>; Thu, 24 Oct 2024 02:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D5A18990D;
+	Thu, 24 Oct 2024 06:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729738310; cv=none; b=K0Alfl37xrxsz0HeKm+I1psQ8aqoM96s+YFIwFExvHRDPOWPVUs4B0BjSUEGq+rPuy5T/eqDQ9BBPaDNwCZm1yDJrMXvhQxkEvbPVVh1JngCbeH4/gFcSZdodiTnnPKj08ogIsF3O6sd+yICDlGMOQow5UlAzHd6Z/pMXdZr0pU=
+	t=1729751091; cv=none; b=MTeSOfvH5M4ZTF6sixBoqaIQfAkmpLqvC8tRPVnfrIc2sMI9Jec7Wbg4ZL27WijocFTCTN76Ch/zTUcD0yTN+CeHnYr+gFDR/Sy+39ruXvQtA892bO+TLxpYs1gGiAEhSp2acemz5/UknUdWVOGHdDAHcrt+jaZI2bovQFIp5mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729738310; c=relaxed/simple;
-	bh=nyxaXjxibPLkxtfS15iO+RIFH200dLD8L047DHbKGE0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dA7YfsjDaddptuVq+PU8Ig+glHXZBJHm8trJB7UIblUc8gxuirULC323NnkQ6qFx29MGz7Tq7Z0PN2wbKSxljAKz7VvhLRE4JDM1yg+6t2ZTwxDvNA9GxVtqUeVANaXziNNPVv8rYhPbBqvJK4fu3B8VSu6VlzTVBChVxujwFLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=J5fxeqxg; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-20c803787abso3551815ad.0
-        for <linux-xfs@vger.kernel.org>; Wed, 23 Oct 2024 19:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1729738307; x=1730343107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FkRyxCjHYDM6g1n8M11Ib1ZjfR2KRFWOb8n4TyMPoGQ=;
-        b=J5fxeqxgElpj6nXNjT1hKBK2ncpAA/azTj55TnTyd2HAMzaV6li+HeObG9pgILrREq
-         R09RbMA7hvfuGWPAKhzvvnWJdqqYkbirdni5yvCYZ3/Dm3Hb9rGcM1SBqb1cdRX12a87
-         mSLz7/UcEmFNNkA1/DbbOhDNxzghejrvFBYkIKWFRWdexOe4wdvR6C/EXVXB5ioyjGlK
-         2ovmohMxqGZiaUylGx5YJNjTPlG5r6YDUL5j+buGK203SMNCTOpa/yxyhDS8vJqXskx/
-         OlXcpohGC3icNOBXBxAIhSXu1lDTrTg/HXIzYkyByurk5dAgNLBoLCw4jdJ+xFLWsURc
-         twVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729738307; x=1730343107;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FkRyxCjHYDM6g1n8M11Ib1ZjfR2KRFWOb8n4TyMPoGQ=;
-        b=ggcoO3O45GwTmC1CjDyE8hWpaVcA+YjeaDh+sQ2II73LHSlTAMblnpxCcYkMiS7XW3
-         CTjZuxm4+LvyZj1BmeLx1pCi821hun/hE5liWfujDJ9jX4ub8aoydvdCFEEjyS6hkUlq
-         LBKrFrTP9Kt3VBzHz8xmcRbXrDoXY14h/iC33HZZz2YOPE7JrpQHQmZIboc6FPDi0DEn
-         D17papgk/a53h+Bp6Q4WvKMo9VQqlZkBNUlaUFUPR89FwEvFYMsqb4s0NxhhqxdeqTSJ
-         tZgXoy8J9n9u9IewESfXP1Sd2aMIcoa0vWBTjjZh4LEd/to5im0shO7QsLgFqZqlesJ2
-         7mxg==
-X-Gm-Message-State: AOJu0YxM1P/eswzvJoX5l+PteFFndCG2AOU99X8Tgddcyb41uQ2BY+Cj
-	ei9Vz+A1fh/e5NmcaArj4Dggz90YFBsh2RDrD3ISvIICSFZQo1O9nvKFludGz7tJFX4AiF0jcJX
-	2
-X-Google-Smtp-Source: AGHT+IGdMgQwsXbKWAPTlElAjy5H6OV4BIorh3qmkYX0770YfkAwM/wyWHqqqwc0/qCmKh+qsgy8+g==
-X-Received: by 2002:a17:903:1cf:b0:20c:ad30:c891 with SMTP id d9443c01a7336-20fb88f3190mr7005045ad.10.1729738307416;
-        Wed, 23 Oct 2024 19:51:47 -0700 (PDT)
-Received: from dread.disaster.area (pa49-186-86-168.pa.vic.optusnet.com.au. [49.186.86.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0f3ff5sm63596405ad.280.2024.10.23.19.51.46
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 19:51:46 -0700 (PDT)
-Received: from [192.168.253.23] (helo=devoid.disaster.area)
-	by dread.disaster.area with esmtp (Exim 4.96)
-	(envelope-from <dave@fromorbit.com>)
-	id 1t3nwt-004xNv-2r
-	for linux-xfs@vger.kernel.org;
-	Thu, 24 Oct 2024 13:51:44 +1100
-Received: from dave by devoid.disaster.area with local (Exim 4.98)
-	(envelope-from <dave@devoid.disaster.area>)
-	id 1t3nwu-0000000H7zc-1T2r
-	for linux-xfs@vger.kernel.org;
-	Thu, 24 Oct 2024 13:51:44 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: linux-xfs@vger.kernel.org
-Subject: [PATCH 3/3] xfs: sb_spino_align is not verified
-Date: Thu, 24 Oct 2024 13:51:05 +1100
-Message-ID: <20241024025142.4082218-4-david@fromorbit.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241024025142.4082218-1-david@fromorbit.com>
-References: <20241024025142.4082218-1-david@fromorbit.com>
+	s=arc-20240116; t=1729751091; c=relaxed/simple;
+	bh=s8eN85HcmLW/r6O26hwWWNE6UzeE2XN+kpeQ5VquBHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWyHCpK0bhOXxYGiJXGqSr539zx+aLu+PiwxSPq+isuGUNr+2r6YbUxMb+J9Ojzv0q6QcQ3Q8Ik8z+QCUcIDZIhrBIYK5Sp7N7rrgCAhn9Q/F/mL7Xrq7xHCcDB04MLDTpq4EIhRC4sH7tF5ysFpOwaZKsDbMSCIw+gH5G4+t04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 555A6227A87; Thu, 24 Oct 2024 08:24:40 +0200 (CEST)
+Date: Thu, 24 Oct 2024 08:24:39 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Dave Chinner <david@fromorbit.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	zlang@kernel.org, dchinner@redhat.com, linux-xfs@vger.kernel.org,
+	fstests@vger.kernel.org
+Subject: Re: [PATCH] xfs: remove the post-EOF prealloc tests from the auto
+ and quick groups
+Message-ID: <20241024062439.GA32468@lst.de>
+References: <20241023103930.432190-1-hch@lst.de> <20241023172351.GG21853@frogsfrogsfrogs> <ZxltWrUxkeuRq2I8@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZxltWrUxkeuRq2I8@dread.disaster.area>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-From: Dave Chinner <dchinner@redhat.com>
+On Thu, Oct 24, 2024 at 08:40:42AM +1100, Dave Chinner wrote:
+> On Wed, Oct 23, 2024 at 10:23:51AM -0700, Darrick J. Wong wrote:
+> > On Wed, Oct 23, 2024 at 12:39:30PM +0200, Christoph Hellwig wrote:
+> > > These fail for various non-default configs like DAX, alwayscow and
+> > > small block sizes.
+> > 
+> > Shouldn't we selectively _notrun these tests for configurations where
+> > speculative/delayed allocations don't work?
+> 
+> Perhaps turning off speculative delalloc by adding the mount
+> option "-o allocsize=<1 fsb>" to these tests would result in them
+> always have the same behaviour?
 
-It's just read in from the superblock and used without doing any
-validity checks at all on the value.
-
-Fixes: fb4f2b4e5a82 ("xfs: add sparse inode chunk alignment superblock field")
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_sb.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index d95409f3cba6..0d181bc140f0 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -398,6 +398,20 @@ xfs_validate_sb_common(
- 					 sbp->sb_inoalignmt, align);
- 				return -EINVAL;
- 			}
-+
-+			if (!sbp->sb_spino_align ||
-+			    sbp->sb_spino_align > sbp->sb_inoalignmt ||
-+			    (sbp->sb_inoalignmt % sbp->sb_spino_align) != 0) {
-+				xfs_warn(mp,
-+				"Sparse inode alignment (%u) is invalid.",
-+					sbp->sb_spino_align);
-+				return -EINVAL;
-+			}
-+		} else if (sbp->sb_spino_align) {
-+			xfs_warn(mp,
-+				"Sparse inode alignment (%u) should be zero.",
-+				sbp->sb_spino_align);
-+			return -EINVAL;
- 		}
- 	} else if (sbp->sb_qflags & (XFS_PQUOTA_ENFD | XFS_GQUOTA_ENFD |
- 				XFS_PQUOTA_CHKD | XFS_GQUOTA_CHKD)) {
--- 
-2.45.2
+But it also kinda defeats what they are trying to test?  At least
+that's my understanding, but your wrote them, though..
 
 
