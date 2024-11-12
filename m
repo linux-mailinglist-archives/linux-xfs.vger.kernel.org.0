@@ -1,176 +1,134 @@
-Return-Path: <linux-xfs+bounces-15326-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15335-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8257D9C6279
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 21:23:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 176C49C61B8
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 20:46:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F3B2BE176A
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 18:00:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0B80285210
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 19:46:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 032C9219E22;
-	Tue, 12 Nov 2024 17:56:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AAF2218D7C;
+	Tue, 12 Nov 2024 19:46:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="xZh82DyE"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Lveu7iQI"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EE52194BD
-	for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 17:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FED20ADEC
+	for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 19:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731434211; cv=none; b=Hm8YQ8OitLxgAEjvezch8j/xm3sRzPbWxoCxmrTK/xuWyiqMMt6MD6lBW26EU9kBCX/GH/ihIWb3LDgXv6s/IxJXrMqtQiAYKyJqVyKdjV+iVMDkMW9blSO9QZnJBcmRNmo71vfhySJ1FGZkYygxsZTqAVLkWZGibDcCxQFEcuU=
+	t=1731440778; cv=none; b=MDX0RLw1OdMWJuXg2jj2fVzRXnhctaKPJa89PsqSIiK7sEZNQ+slDsehJTyKn3oKrFS2fYUcq8Dx2Zp3bsVARwzAA6BrUa99wAAp2qp0jp0pVj8VLluQ4TTGwmMEZCh2bdp6aCZH4ow+yxSQJRPhrPD9T3hdD6Fod29KVaquV6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731434211; c=relaxed/simple;
-	bh=0OfIuamYNVk+lhv7pqAeL2IG3+lqQpmr2GpFM9JML+4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BzNueklbmfYx5V6HZgdVWvDL0slAliToTY1OEP/ReQixGTROAjP4NNinJYHR7gqxr0fUb6BsQyqJUSgt2s8KBA3GB6INeO4vy3LOH3/kbLM0hsK3bc3qire7gBaFizO4SIfoNW03EEbPhuFCh6h23ynis8xbP4E0WhuhFJZhtvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=xZh82DyE; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e35e0543b07so931390276.2
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 09:56:49 -0800 (PST)
+	s=arc-20240116; t=1731440778; c=relaxed/simple;
+	bh=bna1DQ543WyJHuuqATngsHU2aVkAWd+Y+jUOxH+XtcE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UvtGPfhwof5QsjsRtZu343cSMHENhecedR/g1IWPoepz1SaG+lHZBXzWaILzyIs5fPRSxq0vTTipW9nwoz9jBkVn6Y+968joL5p+7SzDFj5okx7bN/qTg4Z8soHE7OxxNIHBnHzvxtOJpYNt4a3rW6oRcwRdJMYVq8snGNkJzkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Lveu7iQI; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-53d9ff8f1e4so80204e87.2
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 11:46:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731434208; x=1732039008; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RxllZcuqFsIN/uRNUgqvpvAOYGEhEd5YYx/k8ZgfJq8=;
-        b=xZh82DyEJFn9i4GSo5mjjRTQlX4unRAP1jtidGz1qErKc22xczvRgJBsmuZ/sKNgCZ
-         YThOmv3IyefDp31CGUsuWy7wOWP7RIZKfsD9k9lcJZMhVJEDPP7QUIJe52KPYbuCFMYX
-         s2/u/GLlYGgLr1vcJHBnASXRvDNd/INQTqxLoyH4o7kzNoqxyQP/K88JLHxdaUu8dxz9
-         pJ3kjQKZPY76aB1Dlga5DVGCbS9EaXw9GJCj6/6vKnSaQJ1761MW0ILyJTiXx6NH2SMl
-         zr3Q7ZRI2cAOrJDlRb8YPpOI5GAm1AOklQEIMOpwciLKVDePNfjt5PRj6lhP5jZkmePv
-         ZXqQ==
+        d=linux-foundation.org; s=google; t=1731440774; x=1732045574; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JlJJ+zcJgVAM09bT3idZLHPWsiy7qwqX02nyVSrJZ4I=;
+        b=Lveu7iQI7eX26SWfzv31kmpJusYUgmyr9TbpHaftVL0EWgProWcfr4eEhWRH5CzsgG
+         AN+aazW90Y/uSjWhxEhEhE95BWfK8MwatGvsJD+RfmSLIpN5eDr/UDj2r1l7OrqtNvPt
+         DgXPXc1IVEHK8r7OFZMPWvA6F3urRIpL1wiDU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731434208; x=1732039008;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RxllZcuqFsIN/uRNUgqvpvAOYGEhEd5YYx/k8ZgfJq8=;
-        b=Tgicb9ilksiXs7DtmQtOTc+z89K5U/O6zkN1+fFOgtdO8HgGWNpl5hAyJYq2dJcjT8
-         jirGHNvUo1vi5HsXP1peQELZEiuX0qiVmdTZmM/xNhLErWqtt1K2x2UDpv+tEWh9+Yy2
-         Gyx1rvcZsFoWNyatgDGfND5ewAYsq3X5B/8nYqYLT2jYhVCQbaMDePd5JCC04sSTiup3
-         99a1mBUaCoQ4wl/74h3MVQH3Z078urk8MFqSKu62A3RRL6EpjAvl+yqo0pjPYDgYEPPg
-         9klULXkjootsV00UU8FNUN2qUaOWagFk6Jo+w1y94WWEexOKbYvEE0/MaXaawGGbqXaH
-         Unag==
-X-Forwarded-Encrypted: i=1; AJvYcCVg8qd25ARs8uZzrLJ46e0/693x4V0wjmK+of4Nqc5eRy0y0nkaTv6enVO+f1T8K7qtyxy+XTqq8pU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvaxcGztwZMeCKxaylUTAMFcgamSIrvdtSOjx/JScZktLZH43m
-	apLLQ0NzfCQX9hAdCpzXr4Kq74wZN4DY+FmQpqITyQBypq/ZNXsDpjMgjrAyt8A=
-X-Google-Smtp-Source: AGHT+IHPp+fFKmqCSpROu5xxKnzv3LT3agPlNIkaHlSKePfsW7xMW1BrUYUNoa9bR5mHCiwMC/SWmQ==
-X-Received: by 2002:a05:6902:b1d:b0:e29:48ad:b845 with SMTP id 3f1490d57ef6-e35dc547994mr3050460276.22.1731434207100;
-        Tue, 12 Nov 2024 09:56:47 -0800 (PST)
-Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e336ef2652csm2885436276.22.2024.11.12.09.56.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2024 09:56:46 -0800 (PST)
-From: Josef Bacik <josef@toxicpanda.com>
-To: kernel-team@fb.com,
-	linux-fsdevel@vger.kernel.org,
-	jack@suse.cz,
-	amir73il@gmail.com,
-	brauner@kernel.org,
-	torvalds@linux-foundation.org,
-	linux-xfs@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-ext4@vger.kernel.org
-Subject: [PATCH v7 12/18] fanotify: add a helper to check for pre content events
-Date: Tue, 12 Nov 2024 12:55:27 -0500
-Message-ID: <44afe46517b379b6b998a35ba99dd2e1f55a2c7d.1731433903.git.josef@toxicpanda.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1731433903.git.josef@toxicpanda.com>
-References: <cover.1731433903.git.josef@toxicpanda.com>
+        d=1e100.net; s=20230601; t=1731440774; x=1732045574;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JlJJ+zcJgVAM09bT3idZLHPWsiy7qwqX02nyVSrJZ4I=;
+        b=tf8hr7qIZt3CWD0qRNs91RlJ5ilK6vuoyZVUyoCV38i8vXj+l8fpCqxNRHsV/lKQHd
+         0bWDllt7MTUsaM/vYOm9gA/x38cRTc6LQvX7BGAnFOmdajqqeG9SewJ9bgNyWfEyvgcU
+         gnh1C4gb+d0v0RXViGVcHX0FTPNkV/gppVyNXnR25mAbhZZtsCmyAoHN6uHhFF6TH8e7
+         m4Un0wBOQaUKbYYa45rvpSyWdweuU7fmTVhCAnaxqvNRVk6L/1saW9Xjq0ZbIO1hx9DO
+         f/C6A8ub0SIvZdkGj3E3hoRS7FmIwmM7qY2lvjzoodjxTnVM1bmiHE6AdaXSNTzfchAT
+         3/DA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUU8OW/2TdHnkAErZRh8UmJO6mKG/nLq841cBVIp89XZBiYzaZJwJkUlrf8lgZkyiDg0DdQvR4UPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpAhCajJwXSaoUJYJ2KCktp/RrxO/rZgK3fIQzKOjSLxE0Tdwq
+	Y2iuXGozSBaooW+KPHSY7H3MRB6cWlf6yscwrdBNsJ3xWDi6DETNelhHUsLbbnfq1bJqjNGQv89
+	oiWwNEA==
+X-Google-Smtp-Source: AGHT+IF+g84Dhh/qwmUiqDiT3lA1liQEvtfjRjR1313aHb6iImlD/FivkzoNxc1ZibKeW6dihAMdvg==
+X-Received: by 2002:a05:6512:2311:b0:533:43e2:6ac4 with SMTP id 2adb3069b0e04-53d86302e9fmr8219247e87.49.1731440773847;
+        Tue, 12 Nov 2024 11:46:13 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53d9ff8e03fsm13342e87.120.2024.11.12.11.46.12
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2024 11:46:13 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53d8c08cfc4so3484302e87.3
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 11:46:12 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU3DZDaRq/7deXHVI8b0UND2irauhcgr4SQXx1Df/Bf8o7cQa3FF1Q0e188UWJB7ldmquD1pBR0yoc=@vger.kernel.org
+X-Received: by 2002:a05:6512:3d89:b0:539:d870:9a51 with SMTP id
+ 2adb3069b0e04-53d86302f33mr8492323e87.48.1731440772062; Tue, 12 Nov 2024
+ 11:46:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1731433903.git.josef@toxicpanda.com> <8c8e9452d153a1918470cbe52a8eb6505c675911.1731433903.git.josef@toxicpanda.com>
+In-Reply-To: <8c8e9452d153a1918470cbe52a8eb6505c675911.1731433903.git.josef@toxicpanda.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 12 Nov 2024 11:45:55 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjFKgs-to95Op3p19Shy+EqW2ttSOwk2OadVN-e=eV73g@mail.gmail.com>
+Message-ID: <CAHk-=wjFKgs-to95Op3p19Shy+EqW2ttSOwk2OadVN-e=eV73g@mail.gmail.com>
+Subject: Re: [PATCH v7 01/18] fsnotify: opt-in for permission events at
+ file_open_perm() time
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: kernel-team@fb.com, linux-fsdevel@vger.kernel.org, jack@suse.cz, 
+	amir73il@gmail.com, brauner@kernel.org, linux-xfs@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-ext4@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-We want to emit events during page fault, and calling into fanotify
-could be expensive, so add a helper to allow us to skip calling into
-fanotify from page fault.  This will also be used to disable readahead
-for content watched files which will be handled in a subsequent patch.
+On Tue, 12 Nov 2024 at 09:56, Josef Bacik <josef@toxicpanda.com> wrote:
+>
+> @@ -119,14 +118,37 @@ static inline int fsnotify_file(struct file *file, __u32 mask)
+>          * handle creation / destruction events and not "real" file events.
+>          */
+>         if (file->f_mode & (FMODE_NONOTIFY | FMODE_PATH))
+> +               return false;
+> +
+> +       /* Permission events require that watches are set before FS_OPEN_PERM */
+> +       if (mask & ALL_FSNOTIFY_PERM_EVENTS & ~FS_OPEN_PERM &&
+> +           !(file->f_mode & FMODE_NOTIFY_PERM))
+> +               return false;
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
----
- fs/notify/fsnotify.c             | 12 ++++++++++++
- include/linux/fsnotify_backend.h | 26 ++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+This still all looks very strange.
 
-diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index cab5a1a16e57..17047c44cf91 100644
---- a/fs/notify/fsnotify.c
-+++ b/fs/notify/fsnotify.c
-@@ -203,6 +203,18 @@ static inline bool fsnotify_object_watched(struct inode *inode, __u32 mnt_mask,
- 	return mask & marks_mask & ALL_FSNOTIFY_EVENTS;
- }
- 
-+#ifdef CONFIG_FANOTIFY_ACCESS_PERMISSIONS
-+bool fsnotify_file_object_watched(struct file *file, __u32 mask)
-+{
-+	struct inode *inode = file_inode(file);
-+	__u32 mnt_mask = real_mount(file->f_path.mnt)->mnt_fsnotify_mask;
-+
-+	return fsnotify_object_watched(inode, mnt_mask, mask);
-+}
-+EXPORT_SYMBOL_GPL(fsnotify_file_object_watched);
-+#endif
-+
-+
- /*
-  * Notify this dentry's parent about a child's events with child name info
-  * if parent is watching or if inode/sb/mount are interested in events with
-diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
-index abd292edb48c..a92d59b66f93 100644
---- a/include/linux/fsnotify_backend.h
-+++ b/include/linux/fsnotify_backend.h
-@@ -896,6 +896,27 @@ static inline void fsnotify_init_event(struct fsnotify_event *event)
- 	INIT_LIST_HEAD(&event->list);
- }
- 
-+#ifdef CONFIG_FANOTIFY_ACCESS_PERMISSIONS
-+bool fsnotify_file_object_watched(struct file *file, __u32 mask);
-+
-+static inline bool fsnotify_file_has_pre_content_watches(struct file *file)
-+{
-+	if (!(file->f_mode & FMODE_NOTIFY_PERM))
-+		return false;
-+
-+	if (!(file_inode(file)->i_sb->s_iflags & SB_I_ALLOW_HSM))
-+		return false;
-+
-+	return fsnotify_file_object_watched(file, FSNOTIFY_PRE_CONTENT_EVENTS);
-+}
-+
-+#else
-+static inline bool fsnotify_file_has_pre_content_watches(struct file *file)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_FANOTIFY_ACCESS_PERMISSIONS */
-+
- #else
- 
- static inline int fsnotify(__u32 mask, const void *data, int data_type,
-@@ -934,6 +955,11 @@ static inline u32 fsnotify_get_cookie(void)
- static inline void fsnotify_unmount_inodes(struct super_block *sb)
- {}
- 
-+static inline bool fsnotify_file_has_pre_content_watches(struct file *file)
-+{
-+	return false;
-+}
-+
- #endif	/* CONFIG_FSNOTIFY */
- 
- #endif	/* __KERNEL __ */
--- 
-2.43.0
+As far as I can tell, there is exactly one user of FS_OPEN_PERM in
+'mask', and that's fsnotify_open_perm(). Which is called in exactly
+one place: security_file_open(), which is the wrong place to call it
+anyway and is the only place where fsnotify is called from the
+security layer.
 
+In fact, that looks like an active bug: if you enable FSNOTIFY, but
+you *don't* enable CONFIG_SECURITY, the whole fsnotify_open_perm()
+will never be called at all.
+
+And I just verified that yes, you can very much generate such a config.
+
+So the whole FS_OPEN_PERM thing looks like a special case, called from
+a (broken) special place, and now polluting this "fsnotify_file()"
+logic for no actual reason and making it all look unnecessarily messy.
+
+I'd suggest that the whole fsnotify_open_perm() simply be moved to
+where it *should* be - in the open path - and not make a bad and
+broken attempt at hiding inside the security layer, and not use this
+"fsnotify_file()" logic at all.
+
+The open-time logic is different. It shouldn't even attempt - badly -
+to look like it's the same thing as some regular file access.
+
+              Linus
 
