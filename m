@@ -1,182 +1,176 @@
-Return-Path: <linux-xfs+bounces-15312-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15309-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D83009C5EE3
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 18:28:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8523E9C5F7D
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 18:53:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 839541F2138A
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 17:28:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1962ABC4F2C
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 17:17:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8AE2101A9;
-	Tue, 12 Nov 2024 17:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB706215014;
+	Tue, 12 Nov 2024 17:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OKQBu4Yt"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="2hn4gktA"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1942123D9
-	for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 17:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B627B21500C
+	for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 17:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731432477; cv=none; b=M3rKdSbVzMjZCDqBvZ0lTdGk/jUPYr0XtlBSGXKKHtE5S5aiXrwXqMXAdsCpgs78zGEZr0d+U1uJzX7jWIKNX+i0EmwVArtwots7dIsNfxxWnDl3s6HyCCUGxIOEpZz8Kayvm5YD2LDF40cE+Gaz8u81Jc+mBlD5NIurV3FxIqQ=
+	t=1731431597; cv=none; b=DaXiydGmTsvbNH9zC+VBY9CRMckaxE+o0Bl6fxsr4VryPAt0Utyzs+b0DbYLo6H3yD9KaHqlRvvpoNJw4t3CQcwBoTEqUwQ4gKSJQ6kz6lch3zIV1P9dbC5+LqTsV2SwFAMeHRnhPsEVYOWTrfPOTdz0dnuMWtLRPVGL28dPduM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731432477; c=relaxed/simple;
-	bh=px+7a3QkMgWt8ftIDbqK58JaIp37LqLw6la2OdVdyBo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=seXAgJuIafSF3/45CISws+T4EnEOYd0YwYUcDc1Uei8AY+C/utIQDkSSbzg94aoNJ09ChFuqn7k5arylqdsAUoBHZRIjWmLQdPNmRQO/Rka269ecoboEcTVFDW2cjoHm/WLhvmv1z3x/yxKDbl7ochJE91m3MMLVNLzvT+dKs7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OKQBu4Yt; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a9ed49edd41so1024005266b.0
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 09:27:55 -0800 (PST)
+	s=arc-20240116; t=1731431597; c=relaxed/simple;
+	bh=OaIUNL4wDulYBWCeL52yflc/neDWNsACf3HqYi4lxlw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZXQMr7GLefgoxXDEdzuriviosZjvM7pqhY/5/2vaGatrnWyrLqDDeyyUz5r0aXlQe+0m/sPH7tRWIQW4TV3/bJBf4CLIpoGzrBjIRl1cpJSCF1Hmrcvj5C87g0m7vDgbT0CNcMiLJ9x4vi7Kmi4POt9GhSEuXRRWl37YnyD5kBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=2hn4gktA; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3e786167712so3750269b6e.3
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 09:13:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1731432474; x=1732037274; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dK/MMj0H2RSiPw19obXeOOxGeZ8Rb9qzE6d1Em7Vf64=;
-        b=OKQBu4YtH46CepSha2s9v9o3RfC6f6oyuyAlplrHLuu6gyNkwThaKF52NYjMfJuHYK
-         6ExDAo3v478lNVVOct11YIhvt/LrL13UP5yW9N8uqCZKEUeyhA+itIgJou0JNrGzQWqS
-         dk3YQDI3DvAe/Dh9J/5EU4mZGYTYqRE5QZVoQ=
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731431595; x=1732036395; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hhFc34QUIUtRmxEJib4/H+5a4T4gZgtNawOMUenBu5s=;
+        b=2hn4gktAu2bXg6QIK5HzUibtinBzYRFPoxDow1f3UmHelR9UGv5coMHakweqRMRIym
+         kp3Ga015gohmr3A+IxrgVH8dnCo2csTaFvWUMf81Ti2IrCbc/yMHzg5YN6HLaaj5a1X8
+         uznE2I9ayKEqXMbOkk4WKO+VkjGNDtd/OMJO64X6kiWttBuYwnCbBZ9F8g9YJRdr8Nz3
+         5yEy6F+lSNbK591sinNhYy6uUXmevNJLAvuMtADMuYMdCLGyeQBNsEua/OiHiT8VjBI0
+         BPdne/u4wIOZgLshPcZj9bHOYCn0Oj5an4xIpV3/yo0Yjz5h63XMyTXfGrRHxR5wUuaS
+         QIhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731432474; x=1732037274;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dK/MMj0H2RSiPw19obXeOOxGeZ8Rb9qzE6d1Em7Vf64=;
-        b=NXTbEEQ3RVvllIOKz20XYOVDgRHKiJ80YkR8YCovehPxOTQDwTcS66jYLxpnJs6IYC
-         +2bS6HRoCNdKWwEA3h5/tJhckItm/ijnn5HKwL4eakgVkXjWnMyLHUG3+BnKzFVys+XK
-         rMIxV17D0qYw/V6xQ4JoxRx4/pmW4WpyCYb8q/U0FRIFfSgDTUs+svNxjrzsVxyicRng
-         5rueyKI2B4AhcUinB0bJqQTxr2N/bVu0BjeqVTkJYBpTYvK+tUZ2c9HRDcs3kvaVu4AT
-         cbkqc4DlVRHf/nlOBS0Re3pG1k9aU+tjfxadDXC3DP08pdMBDhvlKdaHizzXrOfAI1wz
-         vc2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUj27FOfRp+gnPWGnmLwGZneO33HrGdXzrEQn7tiN/on1tRqJnx87wf2Nx6ddkIgdb/qSx8ccgRLHo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziG97dLCtPWLfm1WdhGk0MK4UzFRp2Zo2yVqHTzIeDyPp/zOIR
-	JHQVg8vWIm9sSS/O0tMhMYoGmM7huMw0FVsI+LRkyvPPak0S4NpVXL96ARq9XWnd4VtParQjtke
-	qtHOYKQ==
-X-Google-Smtp-Source: AGHT+IF3f0o0P/LV2S06xVCqP8DZkbAkq8jdoER+KDxc+hTmsyGDMVLEMFdC2bbtKUxxQkIqIjlk0w==
-X-Received: by 2002:a17:906:3d5:b0:a9f:508:5924 with SMTP id a640c23a62f3a-a9f05085c61mr1070556166b.43.1731432473872;
-        Tue, 12 Nov 2024 09:27:53 -0800 (PST)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9ee0dee9besm746198266b.149.2024.11.12.09.27.52
-        for <linux-xfs@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1731431595; x=1732036395;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hhFc34QUIUtRmxEJib4/H+5a4T4gZgtNawOMUenBu5s=;
+        b=Y1OrjwCT5ucD8XOA/VXw+1x1nm0ipXfYLA38SROKzYOSCfjUhULSNF4Whhih/3k384
+         yhquDvO87mWS+NBuEWDPemDPEOl124Squ9PQDpe20qmmf6xcg8FeiTgXGFQ5YP+4bsUd
+         oCe0Vdl6l5Pys8ItwFqwwTG7GiRbQqP02qQazlzPqZFv6O5WbVYMkWjmMSbQEyjyC88v
+         FPkp5K+2ienXsL3g6mu0WGgooY4bbKbdZlYs7/3a33KOXH4Wko3WWf2YoKt1LGmWz5fr
+         bOB+9FJgAImqW+XGM8fJVL9oYS3gOjjltZEQPhgO/GYU6ek/E/qT8ZcffNi2AcYdQLdK
+         tKjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDycnkSoMo1Fa8h11qMBeOmTUAy8xqfSrf7qcL/nSjmp6qjcNCBOqvOMwSq67nLd/OwQKtcE7FPQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn8kJgeip52BEKK9/G9jIszYoXfuWNVCLIh5iJtmHWnYFi3MBz
+	vkwaoJrOyRSIKNzwHONiuk3iQruGhmnjIuzIYbauGNJ1gHRmcUGG5jbM8MWZqbUSiAiLGDhPLeT
+	6W7A=
+X-Google-Smtp-Source: AGHT+IH644V99dOVg147q96OR3GJtIRC7XpOTmFUI9LGtr4TxaaFP6x3xC1BuVau04Ao7iJOTmXH6w==
+X-Received: by 2002:a05:6808:10c9:b0:3e6:60dc:5aee with SMTP id 5614622812f47-3e794654540mr13513708b6e.3.1731431594747;
+        Tue, 12 Nov 2024 09:13:14 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e78cca37c9sm2630818b6e.21.2024.11.12.09.13.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2024 09:27:52 -0800 (PST)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9ed49edd41so1023999466b.0
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 09:27:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWJxFHpR2s4wSLV9NmhPLxKjW9o9gKiw0k5ahniymknoTP43hIn6fXG7pp6ulQtE/M4SW74vWA0QEs=@vger.kernel.org
-X-Received: by 2002:a17:906:c112:b0:a9e:7ca7:78b1 with SMTP id
- a640c23a62f3a-a9eeff0ea38mr1725668166b.23.1731432472450; Tue, 12 Nov 2024
- 09:27:52 -0800 (PST)
+        Tue, 12 Nov 2024 09:13:14 -0800 (PST)
+Message-ID: <df2b9a81-3ebd-48fe-a205-2d4007fe73d1@kernel.dk>
+Date: Tue, 12 Nov 2024 10:13:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1731355931.git.josef@toxicpanda.com> <b509ec78c045d67d4d7e31976eba4b708b238b66.1731355931.git.josef@toxicpanda.com>
- <CAHk-=wh4BEjbfaO93hiZs3YXoNmV=YkWT4=OOhuxM3vD2S-1iA@mail.gmail.com>
- <CAEzrpqdtSAoS+p4i0EzWFr0Nrpw1Q2hphatV7Sk4VM49=L3kGw@mail.gmail.com>
- <CAHk-=wj8L=mtcRTi=NECHMGfZQgXOp_uix1YVh04fEmrKaMnXA@mail.gmail.com> <20241112152415.GA826972@perftesting>
-In-Reply-To: <20241112152415.GA826972@perftesting>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 12 Nov 2024 09:27:35 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgtGE9ZvqwJo8sUzX4Vzkke5O_sTFTGdQNwH1+TxOCyYQ@mail.gmail.com>
-Message-ID: <CAHk-=wgtGE9ZvqwJo8sUzX4Vzkke5O_sTFTGdQNwH1+TxOCyYQ@mail.gmail.com>
-Subject: Re: [PATCH v6 06/17] fsnotify: generate pre-content permission event
- on open
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: kernel-team@fb.com, linux-fsdevel@vger.kernel.org, jack@suse.cz, 
-	amir73il@gmail.com, brauner@kernel.org, linux-xfs@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-ext4@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/16] ext4: add RWF_UNCACHED write support
+To: Brian Foster <bfoster@redhat.com>
+Cc: linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, hannes@cmpxchg.org,
+ clm@meta.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+ kirill@shutemov.name, linux-btrfs@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org
+References: <20241111234842.2024180-1-axboe@kernel.dk>
+ <20241111234842.2024180-13-axboe@kernel.dk> <ZzOD_qV5tpv9nbw7@bfoster>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <ZzOD_qV5tpv9nbw7@bfoster>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 12 Nov 2024 at 07:24, Josef Bacik <josef@toxicpanda.com> wrote:
->
-> But this was an entirely inappropriate way to communicate your point, even with
-> people who have been here a while and are used to being yelled at.
+On 11/12/24 9:36 AM, Brian Foster wrote:
+> On Mon, Nov 11, 2024 at 04:37:39PM -0700, Jens Axboe wrote:
+>> IOCB_UNCACHED IO needs to prune writeback regions on IO completion,
+>> and hence need the worker punt that ext4 also does for unwritten
+>> extents. Add an io_end flag to manage that.
+>>
+>> If foliop is set to foliop_uncached in ext4_write_begin(), then set
+>> FGP_UNCACHED so that __filemap_get_folio() will mark newly created
+>> folios as uncached. That in turn will make writeback completion drop
+>> these ranges from the page cache.
+>>
+>> Now that ext4 supports both uncached reads and writes, add the fop_flag
+>> FOP_UNCACHED to enable it.
+>>
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> ---
+>>  fs/ext4/ext4.h    |  1 +
+>>  fs/ext4/file.c    |  2 +-
+>>  fs/ext4/inline.c  |  7 ++++++-
+>>  fs/ext4/inode.c   | 18 ++++++++++++++++--
+>>  fs/ext4/page-io.c | 28 ++++++++++++++++------------
+>>  5 files changed, 40 insertions(+), 16 deletions(-)
+>>
+> ...
+>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+>> index 54bdd4884fe6..afae3ab64c9e 100644
+>> --- a/fs/ext4/inode.c
+>> +++ b/fs/ext4/inode.c
+>> @@ -1138,6 +1138,7 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
+>>  	int ret, needed_blocks;
+>>  	handle_t *handle;
+>>  	int retries = 0;
+>> +	fgf_t fgp_flags;
+>>  	struct folio *folio;
+>>  	pgoff_t index;
+>>  	unsigned from, to;
+>> @@ -1164,6 +1165,15 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
+>>  			return 0;
+>>  	}
+>>  
+>> +	/*
+>> +	 * Set FGP_WRITEBEGIN, and FGP_UNCACHED if foliop contains
+>> +	 * foliop_uncached. That's how generic_perform_write() informs us
+>> +	 * that this is an uncached write.
+>> +	 */
+>> +	fgp_flags = FGP_WRITEBEGIN;
+>> +	if (*foliop == foliop_uncached)
+>> +		fgp_flags |= FGP_UNCACHED;
+>> +
+>>  	/*
+>>  	 * __filemap_get_folio() can take a long time if the
+>>  	 * system is thrashing due to memory pressure, or if the folio
+>> @@ -1172,7 +1182,7 @@ static int ext4_write_begin(struct file *file, struct address_space *mapping,
+>>  	 * the folio (if needed) without using GFP_NOFS.
+>>  	 */
+>>  retry_grab:
+>> -	folio = __filemap_get_folio(mapping, index, FGP_WRITEBEGIN,
+>> +	folio = __filemap_get_folio(mapping, index, fgp_flags,
+>>  					mapping_gfp_mask(mapping));
+>>  	if (IS_ERR(folio))
+>>  		return PTR_ERR(folio);
+> 
+> JFYI, I notice that ext4 cycles the folio lock here in this path and
+> thus follows up with a couple checks presumably to accommodate that. One
+> is whether i_mapping has changed, which I assume means uncached state
+> would have been handled/cleared externally somewhere..? I.e., if an
+> uncached folio is somehow truncated/freed without ever having been
+> written back?
+> 
+> The next is a folio_wait_stable() call "in case writeback began ..."
+> It's not immediately clear to me if that is possible here, but taking
+> that at face value, is it an issue if we were to create an uncached
+> folio, drop the folio lock, then have some other task dirty and
+> writeback the folio (due to a sync write or something), then have
+> writeback completion invalidate the folio before we relock it here?
 
-Fair enough.
+I don't either of those are an issue. The UNCACHED flag will only be set
+on a newly created folio, it does not get inherited for folios that
+already exist.
 
-I was probably way too frustrated, because I spent some of the last
-few weeks literally trying to remove two cache misses from the
-permission checking path.
-
-And those two cache misses were for features that are in POSIX made
-worse because of uid translations infrastructure used for containers.
-
-Those are both things that people actually *use* in major ways.
-Admittedly the particular optimization was exactly to _not_ bother
-with looking up the exact uid details when we could tell early that it
-was all unnecessary, but the point was that this was to optimize
-something real, something important, and not some special case.
-
-And here's an example of a profile I've been looking at (this is a
-real load: the profile is literally my "make allmodconfig" build with
-not a lot of actual rebuilding needed):
-
-  1.30%  avc_has_perm_noaudit
-  1.24%  selinux_inode_permission
-  1.18%  link_path_walk.part.0.constprop.0
-  0.99%  btrfs_getattr
-  0.82%  clear_page_rep
-  0.82%  security_inode_permission
-  0.60%  dput
-  0.60%  path_lookupat
-  0.60%  __check_object_size
-  0.54%  strncpy_from_user
-  0.51%  inode_permission
-  0.50%  generic_permission
-  0.47%  kmem_cache_alloc_noprof
-  0.47%  step_into
-  0.46%  btrfs_permission
-  0.45%  cp_new_stat
-  0.44%  filename_lookup
-
-and hey, you go "most of those are just around half a percent". Sure.
-But add those things up, and you'll see that they add up to about 12%.
-
-And yes, that 12% is 1/8th of the whole load. So it's not some "just
-12% of the kernel footprint". It's literally 12% of one of the main
-loads I run day-to-day, which is why I care about these paths so
-deeply.
-
-And look at the two top offenders. No, they aren't fsnotify. But guess
-what they are? They are hooks in the VFS layer that the VFS code
-cannot do anything about and cannot optimize as a result. They do
-ABSOLUTELY NOTHING on this load, and they add no actual value.
-
-If they had some kind of "I don't have any special security label"
-test, the two top offenders (and down that list you can find a third
-one) would likely just not exist at all. But they aren't "real" VFS
-functions, they are just hooks into a black hole with random semantics
-that is set by user-supplied tables, so we don't have that.
-
-So this is why I'm putting my foot down. No more badly coded and badly
-designed hooks that the VFS layer can't just optimize away for the
-common case.
-
-I can't fix the existing issues. But I can say "no more". If you want
-new hooks, they had better have effectively *ZERO* overhead when they
-aren't relevant.
-
-And yes, I was too forceful. Sorry. But my foot stays down.
-
-If you want a specialty hook for specialty uses, that hook needs to be
-so *fundamentally* low-cost that I simply don't need to worry about
-it.
-
-It needs to have a flag that doesn't take a cache miss that says
-"Nobody cares", and doesn't call out to random pointless functions
-that cause I$ misses either.
-
-I really wish I had made that requirement for the security people all
-those years ago. Because 99% of the time, all that stupid selinux
-noise is literally worthless and does nothing. But we don't have the
-flag that says "nothing to see".
-
-               Linus
+-- 
+Jens Axboe
 
