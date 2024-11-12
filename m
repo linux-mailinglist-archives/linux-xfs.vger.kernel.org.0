@@ -1,73 +1,72 @@
-Return-Path: <linux-xfs+bounces-15317-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15320-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B80719C636E
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 22:29:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D7F459C639B
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 22:40:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4623B220A6
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 17:57:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6005CB3D8A0
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 17:58:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D302217670;
-	Tue, 12 Nov 2024 17:56:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEFC0218335;
+	Tue, 12 Nov 2024 17:56:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="XMoQOzrv"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="TiqP3RUy"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2EA21733B
-	for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 17:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3A7217F37
+	for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 17:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731434197; cv=none; b=SxsASnrV6MDF2yjXavPX5Cq4LjQHPayg3ZR0aNiDIZQug4J+aFcs1L6TF0Xs9dPdZsLjVPmVRXhlNE6FAEZh3s2wjaFCIPbFuyjDTooG5S7pe0E0gDfjuHcZTS4STjT5Hv5ZHgePxUqMq4WqyXDQRtN/ugihPYo+9zTTws5iOrU=
+	t=1731434201; cv=none; b=LJzIyH8JPDrwqPfj6b+GDA2buLG4fTE8kRU5iPGynP6XGyNfqgStQzr5cGSIVEIwYasOweFQ8oZDqNkHHI5QiHHDjIFKbKtUF+tKo1/GzyXbZ8f/Ev4BfXoZLZZ5PYO1VT746ZXBsC7Igm7F/eWv0MkfbHtZaEsIYGcAEPHmNNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731434197; c=relaxed/simple;
-	bh=u0ZPC8RBKGOY//W0g1jPdakQ+vbKZNphZ2gNuJs6b/U=;
+	s=arc-20240116; t=1731434201; c=relaxed/simple;
+	bh=64cnq185QNR6dzOyatVzX6ysDD8I9dUVc8gWhEVGl4M=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CoOqGyt1zWcnOkwv9mm7wnXMT+Ux2gm1sp97hnj7815OiR6tcuV9ia/v35oNMKntHZ283GXTOQpvFqZhH2F7oXlzjUxDoSIn8730uRldHhK7Dqk/GutvGpIWFFpNEMyyoY62n2HAikiWpFJL5KvSaeHkxJYTtZ9lLXuhI0+P094=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=XMoQOzrv; arc=none smtp.client-ip=209.85.219.181
+	 MIME-Version; b=NiwWdQKjuJogUDPE9iy9K4B2mLwfINjUXWTLZEXF9Z/jCzLYIy3BFCnFLZ8i3zn+6EdBY1QpW2hMS7GTKUxM+cIAFkaCZEKOLyPIKqzPo5r0O4SJqDzDagXLYl+nLxAEFoDevQLnPCnL9ZMmdf0HooMTr54/SM8JG1afoh7gVIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=TiqP3RUy; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e30d821c3e0so5665583276.1
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 09:56:35 -0800 (PST)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6ecaa45af7bso8831417b3.3
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 09:56:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731434194; x=1732038994; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731434199; x=1732038999; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=c28yJdRjKgJn+HaLKJzmXzT/1RpIgNKOoAPY3XeErlk=;
-        b=XMoQOzrvEsYiOUnEsMfaTLSM58Yq9sb6Q8ID0Fj0l4cr1ivMfFEH0c+/Sg5bbWo+3W
-         uPK0vKSfZQM5YEOoD9mdZkdcQbDnigWN0dr7qUSmwFDwOhBqhrL0+K0K5cdDoG2Dve87
-         Nf1bBla/bLmsgx7JERwMIt3LMda4dXfViF43WZ3tR0P0bxptUdjKv8TIMkhUXwVgKIKZ
-         TkE02kc0y+hJlobk9S6CHZA32GoK83hZJRm7XIkJK5Bd34l/IjAofhVjSfp+9rgrhsNE
-         sY1NVPhqhipn8nU3s6Nj89aADj6zW1MCZOPR+wia7OAj8rF5wo29+8bWKE6GWJkT1rQO
-         2NIw==
+        bh=f/zk511lAvWJc9DDqLFXDlls0KrGnQ6iorjj31bM1x8=;
+        b=TiqP3RUywJbAy1kPokHMhca+SF0rkF32q8t2qs8tsECnuYHdBjgGetgIXhipYA0Tgj
+         dSjJxaO/0azpq6t5H5fnQhvFmJcjvtO0qq+6q4CJyttgUNFLAsSrDGGHqPmvrsiFKkGN
+         9+mtRjeS/dT4IV7J+SRTPV1bhcrwd81JSsg48IjMKr1JgTBqpMebC5iJRXkdLyP9aiuq
+         v76xRWQfXqL0c2IyeSLLuc/QFYZhMUvCnztKPebsPLmVZHsSB4l1hZHkVltjfHPL4SFJ
+         CKvjhq1zARR/d6kp6g3VR59X4lrYOYje6wcsRW62oa7Jo7jRE1l8T23CIqeYyMx7jNAn
+         JmIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731434194; x=1732038994;
+        d=1e100.net; s=20230601; t=1731434199; x=1732038999;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c28yJdRjKgJn+HaLKJzmXzT/1RpIgNKOoAPY3XeErlk=;
-        b=KB8lPlE9fuxl38dfejcxhqWV1C31xMZNSsG/3hf55xB87GKf5uXUsZvG8t0HXOow1q
-         84qlMdiTZn6BgtGgbpBChNVpv2LRtksAyfPF09d873vL3quaOhtPiQyZaoRR1hT42UNp
-         AnP9NKTOClhLP69Pxu84XPzBFbHrLK8Bt8AMniyEsGR6hLR+9yHrnCBD+/lqWEF+4yn1
-         GZsF05JijdUe8xtxabzkfGogDeDobU/OxI26yTRQblOxKRbujWzS5q8JbwiW7Q0dAg5g
-         MYSFrYAAquvtWv7GtYVSgM0BtHSKbvcB1iNg22XvcwABNokd3ume2b/rFjnQjEwfLFgy
-         pPag==
-X-Forwarded-Encrypted: i=1; AJvYcCUNTVAW9UcivGFv955nwoIQBYB6yQ+zRnW/dphpR/ebG5cnRHN97DXRGHMmwoTQ+U+Rci5WnY3QtpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMQygxnNSJn243hGsNCUlIb7oFnZEv/LAZWHpeI2zO93tgmPif
-	Pxt8pqBfUqANtWBnpGRwvxIn04sxeKVdm7+87pj8X66E69edxft1YiuzsS32Dz4U38czEf44obZ
-	t
-X-Google-Smtp-Source: AGHT+IGHOswKyJpRxtAUdSHm9RVyiLr7O2lKHvfik/aOxq8+Vnb458JxpogP2HSmvoOplu22cOYVQg==
-X-Received: by 2002:a05:6902:728:b0:e2b:dce5:9c93 with SMTP id 3f1490d57ef6-e337f844799mr17781398276.7.1731434194365;
-        Tue, 12 Nov 2024 09:56:34 -0800 (PST)
+        bh=f/zk511lAvWJc9DDqLFXDlls0KrGnQ6iorjj31bM1x8=;
+        b=xDiMwCJh/UYHv1eBj1Lck32AQgly8eut5OgT1w1lIlKuW30MIeBzbk5u87uaBPEeKG
+         mJSVPsUHibZcsPvXTbeo4txK6/ESFVgRqdGC7B9b3XuFu5KxD4O3uaE2D2nm//YXAz+r
+         4x5SFkmzAA2Xt4TftRSAPzuUQ3ds6NZlUoSNlyou0RdyflGO30Al1WYchLwKpddKZ48M
+         Kvk+5pwKn+F/b1JXBhIvdV3yazaWaGHIjotWwVE/o+ZiPh8wupWXu1zUOfAWahirH2FT
+         F+fCme2wyytKCJTSny2ViA8POBNz7Gx20BfwqiH9c/uPkzvBQJx85I66RNrwHM0uhRLq
+         Q5ig==
+X-Forwarded-Encrypted: i=1; AJvYcCWZJZf9bWlynOCCpG2rwxfK4Pm0b2NCUwAMb5Z4VyVPAIZZQGjefvbmSh2vX3UyFgcSdJZJwYWaTUY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz0Bq5Wur1J2Z9ngUntC5Q3wso43PRgGKgt+DkiyOCbcn0opTC
+	hGnffdEhamnJJcam7fQ1RDSDfed+GLKHnPEQa3LCEP9Tu3DLzFwimP7VmMJ3Mhk=
+X-Google-Smtp-Source: AGHT+IF3UHQJ040IIKGHttfPGwPkHcoNpKCF3umoPrbhTPK8Z7j1Ql7aKyWKk9X3oelY5giKEXNyJQ==
+X-Received: by 2002:a05:690c:314:b0:6e5:bca9:cb8f with SMTP id 00721157ae682-6eaddfa3b62mr164950927b3.38.1731434199260;
+        Tue, 12 Nov 2024 09:56:39 -0800 (PST)
 Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e336ef48465sm2752627276.31.2024.11.12.09.56.33
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6eace8d5133sm26365837b3.12.2024.11.12.09.56.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2024 09:56:33 -0800 (PST)
+        Tue, 12 Nov 2024 09:56:38 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: kernel-team@fb.com,
 	linux-fsdevel@vger.kernel.org,
@@ -79,9 +78,9 @@ To: kernel-team@fb.com,
 	linux-btrfs@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-ext4@vger.kernel.org
-Subject: [PATCH v7 04/18] fanotify: reserve event bit of deprecated FAN_DIR_MODIFY
-Date: Tue, 12 Nov 2024 12:55:19 -0500
-Message-ID: <22d02743468d137aeb73dfbc7bef44efd361785d.1731433903.git.josef@toxicpanda.com>
+Subject: [PATCH v7 07/18] fsnotify: generate pre-content permission event on open
+Date: Tue, 12 Nov 2024 12:55:22 -0500
+Message-ID: <60a2309da948dc81e4c66b9e5fe3f1e2faa2010e.1731433903.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1731433903.git.josef@toxicpanda.com>
 References: <cover.1731433903.git.josef@toxicpanda.com>
@@ -95,39 +94,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Amir Goldstein <amir73il@gmail.com>
 
-Avoid reusing it, because we would like to reserve it for future
-FAN_PATH_MODIFY pre-content event.
+Generate pre-content event on open in addition to FS_OPEN_PERM,
+but without sb_writers held and after file was truncated
+in case file was opened with O_CREAT and/or O_TRUNC.
+
+The event will have a range info of [0..0] to provide an opportunity
+to fill entire file content on open.
 
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 ---
- include/linux/fsnotify_backend.h | 1 +
- include/uapi/linux/fanotify.h    | 1 +
- 2 files changed, 2 insertions(+)
+ fs/namei.c               | 10 +++++++++-
+ include/linux/fsnotify.h |  4 +++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
-index 3ecf7768e577..53d5d0e02943 100644
---- a/include/linux/fsnotify_backend.h
-+++ b/include/linux/fsnotify_backend.h
-@@ -55,6 +55,7 @@
- #define FS_OPEN_PERM		0x00010000	/* open event in an permission hook */
- #define FS_ACCESS_PERM		0x00020000	/* access event in a permissions hook */
- #define FS_OPEN_EXEC_PERM	0x00040000	/* open/exec event in a permission hook */
-+/* #define FS_DIR_MODIFY	0x00080000 */	/* Deprecated (reserved) */
+diff --git a/fs/namei.c b/fs/namei.c
+index 9d30c7aa9aa6..a1a5b10893f6 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3836,7 +3836,15 @@ static int do_open(struct nameidata *nd,
+ 	}
+ 	if (do_truncate)
+ 		mnt_drop_write(nd->path.mnt);
+-	return error;
++	if (error)
++		return error;
++
++	/*
++	 * This permission hook is different than fsnotify_open_perm() hook.
++	 * This is a pre-content hook that is called without sb_writers held
++	 * and after the file was truncated.
++	 */
++	return fsnotify_file_area_perm(file, MAY_OPEN, &file->f_pos, 0);
+ }
+ 
+ /**
+diff --git a/include/linux/fsnotify.h b/include/linux/fsnotify.h
+index 7110bc2f5aa7..2d1c13df112c 100644
+--- a/include/linux/fsnotify.h
++++ b/include/linux/fsnotify.h
+@@ -193,6 +193,8 @@ static inline int fsnotify_pre_content(const struct file *file,
  
  /*
-  * Set on inode mark that cares about things that happen to its children.
-diff --git a/include/uapi/linux/fanotify.h b/include/uapi/linux/fanotify.h
-index 34f221d3a1b9..79072b6894f2 100644
---- a/include/uapi/linux/fanotify.h
-+++ b/include/uapi/linux/fanotify.h
-@@ -25,6 +25,7 @@
- #define FAN_OPEN_PERM		0x00010000	/* File open in perm check */
- #define FAN_ACCESS_PERM		0x00020000	/* File accessed in perm check */
- #define FAN_OPEN_EXEC_PERM	0x00040000	/* File open/exec in perm check */
-+/* #define FAN_DIR_MODIFY	0x00080000 */	/* Deprecated (reserved) */
+  * fsnotify_file_area_perm - permission hook before access of file range
++ *
++ * Called post open with access range [0..0].
+  */
+ static inline int fsnotify_file_area_perm(struct file *file, int perm_mask,
+ 					  const loff_t *ppos, size_t count)
+@@ -207,7 +209,7 @@ static inline int fsnotify_file_area_perm(struct file *file, int perm_mask,
+ 	/*
+ 	 * read()/write and other types of access generate pre-content events.
+ 	 */
+-	if (perm_mask & (MAY_READ | MAY_WRITE | MAY_ACCESS)) {
++	if (perm_mask & (MAY_READ | MAY_WRITE | MAY_ACCESS | MAY_OPEN)) {
+ 		int ret = fsnotify_pre_content(file, ppos, count);
  
- #define FAN_EVENT_ON_CHILD	0x08000000	/* Interested in child events */
- 
+ 		if (ret)
 -- 
 2.43.0
 
