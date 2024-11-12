@@ -1,257 +1,144 @@
-Return-Path: <linux-xfs+bounces-15339-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15342-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D21B99C6474
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 23:48:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BA069C6459
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 23:37:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 69E6DB33048
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 22:19:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1A4FB1F23319
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Nov 2024 22:37:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B34221A4CE;
-	Tue, 12 Nov 2024 22:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 852FD21B438;
+	Tue, 12 Nov 2024 22:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="OEZZtlwf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3/S7KMm"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9809121745E
-	for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 22:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC1721745E;
+	Tue, 12 Nov 2024 22:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731449968; cv=none; b=Big5J63ugQwzZTpub2z+RBgJN+uRy73RjOtlWoLyzytOittXgX+9dbero3iLtyprasifb0yrLM2ZQWhdd3t56QmjXTA2DE70VkrqLSqMyTbvTw0XEIyx4HMULkVXYmktEsNQDlFg/su6dxLqdGpjJFEgHVdYLtvlz/yHnNcHtN0=
+	t=1731451057; cv=none; b=WcLf241bycYHHyFZDdZ+zuo6LDALOR1Dl5Wn7ODUTAkf55lwi2OoeQyL0iKWVV/bKXen7oEDxTFSR3bF/sI7E/jjDy3MF8dVj64ch/mJmnYttZTyRJjywA6P+rB3AbD3j4ozgNUnezZ0Rqwjy/jgbDBbz+W33Yd+MKDv6DDg05Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731449968; c=relaxed/simple;
-	bh=kwD3/W5ggXA0vWwxSJ2QDeURLk92O7XRlo4/TAU/o8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G5e8Dvnk/tw2VVFHOv6m+PZm32/ERERi+VjRW0Z4x8KeISa9QwjWRWwsa3RehMnsA9VW9ZwbDU5iHOlYAm50n+4xw3Bb7C/CVEYjj3A64obHj1iFtl/uIuvbWGTtFLQRekvkbLSnuNrZP/vwB6aMIL+sHWwhSoER6SY0bEZYNDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=OEZZtlwf; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-720cb6ac25aso5695962b3a.3
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Nov 2024 14:19:26 -0800 (PST)
+	s=arc-20240116; t=1731451057; c=relaxed/simple;
+	bh=2Xgye9kLSVVbThxJiOuv4J9XrHzW3k7ZdKbuDsZUfQs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sPl2MeoBlXuQfg9jljcTgE9F/uWohrLsbNLxERkhBUHccHnaFf7UUcd7DlX/asn0y9BPqZev1F09PSiHjILgXzYIjzTySYf0FwY2Nb734TvdA9jjMAQVC/2FoK8PhxPhjlP56XfjITuVI775yb66CFGede9FMu/iNvgaGK+a6hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3/S7KMm; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-460ab1bc2aeso41740581cf.3;
+        Tue, 12 Nov 2024 14:37:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1731449966; x=1732054766; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1731451054; x=1732055854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NCrzX8DC94RIQ/x55wiqFNazWZKZh5c+Fo3m/s1Otro=;
-        b=OEZZtlwfxxZKwFhQJxZeDGCBE3/tJt72PhL9YAO4CjWBG4jAKYmZEoI/BqoByClWtn
-         IkAKeMMebbMohNFIAYOzgSA+LRdqeynjpCczQ93g4KlpXQf9rtk2wKQWkl8FCAw9+klH
-         kpV2GcUeWADMf5G+cx2XN/slW++4v0nGGHtZZ68sx0S8PJvPw9VyXyeQjvyY4cw/FTSs
-         6PBy3GGHNYnZoi3yRQTwv0JshwlHpzWNGpq5dMnjXMbPiRtbLtujcUPVSxh1Fl2Z6iz1
-         +m7fI69qN8xIisLJSDO8+fLcbvgwNBaYPC/cuPkmEMX9SXyon09tIc8hnz6mNALWZGOj
-         viPA==
+        bh=JsJ4qi0tKyd0z6dgveSDFEC/C40H7WEHG7mL/4zFsfM=;
+        b=Y3/S7KMmcXifxWWFnm6pb4z91esJ78yDboGLiFHhkNaw1EyvP7PcKjmru5Bl+FPXWT
+         /muGP73W25PQQnar+CIZUz69poDWzfIvkCpe6EmIWw990djrFdOEiXM9unaGxKzRaXjD
+         i02Z+uSNgfk2oJQ/I2mm7rDannqPci00QTkSZlhFFdZyr72hSjcfNibYCYQ+Sa73ISZG
+         x6Ii0Ku/e8ZhFSqvXiz83Lwr/IV9r7rd48b85wyjpRersB0hyvSJ7CcNfv6Sk6Ny8IUh
+         Sb1JC6IPDyF/g6cJlhAfUrNBzLQD+HUatUC905R7w44JwZT2dtuAv34tgwcZwZEHxDJ6
+         SngA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731449966; x=1732054766;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1731451054; x=1732055854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NCrzX8DC94RIQ/x55wiqFNazWZKZh5c+Fo3m/s1Otro=;
-        b=u2tfLskNWd3aHe3bBw8xTnmo5XF6QKRlfSjKRmNEza/TZucHQw79nhGTykVgp8vg0U
-         BR7vgz3HLxioRcUtTQgwR6emeRPUFfF4WzkWjrvqVQh09Dv3K5SuIrQBj+Ip8ZHJxOdc
-         IQTcGV81IhruGjYDf5Gq937UlnkMojQRGxbwf2//R0Gc7Fkr4+1YRCf6j7okyh6EN1KH
-         3RvpzduDLQXd489blaQVNED1ssMJfXI1YD+q9trc7cGfzqOxjCPdTbtFlddjbJUtKBfi
-         /Cd7o22mYQSRsK96VOThLX8sfEExga+uo9+hn9AoeW9FnqIrC7VFgVB9OEgLJGZgSj3v
-         +Gqg==
-X-Gm-Message-State: AOJu0YzMJI0E3Ne03bDXIRsMVDlvhOL8429e/U+ajN4ny7HHSuB1ucue
-	WRlNrMtwmBfJE9O8qVvLU8Dr4sx+QlCDcpz4GAEXXK9lKXw2IXi7WKo/KU2/lJROiYaolzvDCP+
-	D
-X-Google-Smtp-Source: AGHT+IHEeUzo9nKt/5sR0cdYOUrFcqbWpz3gHLqetTv5TASsV41P3ElhEzhLprJt5JjVORNdjOv48A==
-X-Received: by 2002:a05:6a20:3948:b0:1d8:a29b:8f6f with SMTP id adf61e73a8af0-1dc229440aemr28246599637.16.1731449965918;
-        Tue, 12 Nov 2024 14:19:25 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-86-168.pa.vic.optusnet.com.au. [49.186.86.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7f41f5b3f8fsm10974624a12.19.2024.11.12.14.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2024 14:19:25 -0800 (PST)
-Received: from [192.168.253.23] (helo=devoid.disaster.area)
-	by dread.disaster.area with esmtp (Exim 4.96)
-	(envelope-from <dave@fromorbit.com>)
-	id 1tAzEH-00Doox-0p;
-	Wed, 13 Nov 2024 09:19:21 +1100
-Received: from dave by devoid.disaster.area with local (Exim 4.98)
-	(envelope-from <dave@devoid.disaster.area>)
-	id 1tAzEH-00000004e87-2xWL;
-	Wed, 13 Nov 2024 09:19:21 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: linux-xfs@vger.kernel.org
-Cc: cem@kernel.org
-Subject: [PATCH 3/3] xfs: prevent mount and log shutdown race
-Date: Wed, 13 Nov 2024 09:05:16 +1100
-Message-ID: <20241112221920.1105007-4-david@fromorbit.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241112221920.1105007-1-david@fromorbit.com>
-References: <20241112221920.1105007-1-david@fromorbit.com>
+        bh=JsJ4qi0tKyd0z6dgveSDFEC/C40H7WEHG7mL/4zFsfM=;
+        b=o9L4Bu1zD1C8sbgBAoONgDosWmJxsn6r7DABPY3g/zzyuUGloZc/KgCcRoZzKG0y15
+         00U/1ddXY5Ka4vzwtnEYYFhzJ+6BXElP//TnIR0D79VodOND8Vbplxy5hZqNJP+3Y3Wn
+         r1Y7iBw9tCWGnW1sHoycUG4ERadJ6+7EXZo5bkjAUqyqWyZ7i3YdHHDDBh02UCL/8gmE
+         oaUoJ3z/PpiuCO71Erz1KOOPPxMphsIpvBkjCBDM1nmNE8viV1aLDpbpH0DLoEz7IsMp
+         ScvNsAixlwdSf/I+nyw16KqZ2mRFi+yYSOaD2Uyq6wS+zFIE+b3JAD5QR2sMjB8qT+NV
+         ROag==
+X-Forwarded-Encrypted: i=1; AJvYcCU9Kd5q6aRIgGG78AsfbXpJRyKkkQV9l6uHiM9iRX8xj1h1w2kGkod4XWEb2Cz087SyDekiS8tm7jBL/Q==@vger.kernel.org, AJvYcCVEoGhCm6uzrwupYQ0IZ0U7l4/CSL9KHK4z6j7V6jCcHLapWbeoOZ5UZjTP6+IDbKhvI6CalUPHTqC0cIwB3w==@vger.kernel.org, AJvYcCWA6Lf8YLuGLXe3X5FIh6WkqUDnvc0gAIU4O76CfJ4ZXc+RThmq48NDwTDQt0J2SBiFrqy2WGH5o6kY@vger.kernel.org, AJvYcCX5mV5xrbfSXGgxmPvVUi6jbHKYXutTedothY/YPB50OphDFlKfHY7HckNvlEo5oEWHwG9+Hp1Y9NVpRA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPVO2SlzO4MJ5rNUBy8R+FsZXVJIx+zxQjHulK9XekClQaJMcF
+	4ljbT0qL+KMBWv+n3OYiFUfwMCKxTdfVc1I0Ov+kVnpAGtKM2OVMqi348EwZIiclXVlTOBJGy86
+	OSRfwAK/yvAxROp2yKMrFqickFh2EjCt+NUU=
+X-Google-Smtp-Source: AGHT+IET/tFAIWy1NMuNPLTnj95HbAr/sGehV2uRf9hScSchtuK/dDofnhh+PiANipLY45hJp1UT5T5IJchyMZUuD0U=
+X-Received: by 2002:a05:622a:4c08:b0:45f:3b3:49e6 with SMTP id
+ d75a77b69052e-463093ef010mr274250321cf.41.1731451054504; Tue, 12 Nov 2024
+ 14:37:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1731433903.git.josef@toxicpanda.com> <8c8e9452d153a1918470cbe52a8eb6505c675911.1731433903.git.josef@toxicpanda.com>
+ <CAHk-=wjFKgs-to95Op3p19Shy+EqW2ttSOwk2OadVN-e=eV73g@mail.gmail.com>
+In-Reply-To: <CAHk-=wjFKgs-to95Op3p19Shy+EqW2ttSOwk2OadVN-e=eV73g@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 12 Nov 2024 23:37:23 +0100
+Message-ID: <CAOQ4uxjHXmYGH3wUO=w+tM+CiFWBjWvZEZZkSXA5FO8T+VP4mA@mail.gmail.com>
+Subject: Re: [PATCH v7 01/18] fsnotify: opt-in for permission events at
+ file_open_perm() time
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Josef Bacik <josef@toxicpanda.com>, kernel-team@fb.com, linux-fsdevel@vger.kernel.org, 
+	jack@suse.cz, brauner@kernel.org, linux-xfs@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, linux-mm@kvack.org, linux-ext4@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Dave Chinner <dchinner@redhat.com>
+On Tue, Nov 12, 2024 at 8:46=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, 12 Nov 2024 at 09:56, Josef Bacik <josef@toxicpanda.com> wrote:
+> >
+> > @@ -119,14 +118,37 @@ static inline int fsnotify_file(struct file *file=
+, __u32 mask)
+> >          * handle creation / destruction events and not "real" file eve=
+nts.
+> >          */
+> >         if (file->f_mode & (FMODE_NONOTIFY | FMODE_PATH))
+> > +               return false;
+> > +
+> > +       /* Permission events require that watches are set before FS_OPE=
+N_PERM */
+> > +       if (mask & ALL_FSNOTIFY_PERM_EVENTS & ~FS_OPEN_PERM &&
+> > +           !(file->f_mode & FMODE_NOTIFY_PERM))
+> > +               return false;
+>
+> This still all looks very strange.
+>
+> As far as I can tell, there is exactly one user of FS_OPEN_PERM in
+> 'mask', and that's fsnotify_open_perm(). Which is called in exactly
+> one place: security_file_open(), which is the wrong place to call it
+> anyway and is the only place where fsnotify is called from the
+> security layer.
+>
+> In fact, that looks like an active bug: if you enable FSNOTIFY, but
+> you *don't* enable CONFIG_SECURITY, the whole fsnotify_open_perm()
+> will never be called at all.
+>
+> And I just verified that yes, you can very much generate such a config.
+>
 
-I recently had an fstests hang where there were two internal tasks
-stuck like so:
+See: 1cda52f1b461 fsnotify, lsm: Decouple fsnotify from lsm
+in linux-next. This patch set is based on the fs-next branch.
 
-[ 6559.010870] task:kworker/24:45   state:D stack:12152 pid:631308 tgid:631308 ppid:2      flags:0x00004000
-[ 6559.016984] Workqueue: xfs-buf/dm-2 xfs_buf_ioend_work
-[ 6559.020349] Call Trace:
-[ 6559.022002]  <TASK>
-[ 6559.023426]  __schedule+0x650/0xb10
-[ 6559.025734]  schedule+0x6d/0xf0
-[ 6559.027835]  schedule_timeout+0x31/0x180
-[ 6559.030582]  wait_for_common+0x10c/0x1e0
-[ 6559.033495]  wait_for_completion+0x1d/0x30
-[ 6559.036463]  __flush_workqueue+0xeb/0x490
-[ 6559.039479]  ? mempool_alloc_slab+0x15/0x20
-[ 6559.042537]  xlog_cil_force_seq+0xa1/0x2f0
-[ 6559.045498]  ? bio_alloc_bioset+0x1d8/0x510
-[ 6559.048578]  ? submit_bio_noacct+0x2f2/0x380
-[ 6559.051665]  ? xlog_force_shutdown+0x3b/0x170
-[ 6559.054819]  xfs_log_force+0x77/0x230
-[ 6559.057455]  xlog_force_shutdown+0x3b/0x170
-[ 6559.060507]  xfs_do_force_shutdown+0xd4/0x200
-[ 6559.063798]  ? xfs_buf_rele+0x1bd/0x580
-[ 6559.066541]  xfs_buf_ioend_handle_error+0x163/0x2e0
-[ 6559.070099]  xfs_buf_ioend+0x61/0x200
-[ 6559.072728]  xfs_buf_ioend_work+0x15/0x20
-[ 6559.075706]  process_scheduled_works+0x1d4/0x400
-[ 6559.078814]  worker_thread+0x234/0x2e0
-[ 6559.081300]  kthread+0x147/0x170
-[ 6559.083462]  ? __pfx_worker_thread+0x10/0x10
-[ 6559.086295]  ? __pfx_kthread+0x10/0x10
-[ 6559.088771]  ret_from_fork+0x3e/0x50
-[ 6559.091153]  ? __pfx_kthread+0x10/0x10
-[ 6559.093624]  ret_from_fork_asm+0x1a/0x30
-[ 6559.096227]  </TASK>
+> So the whole FS_OPEN_PERM thing looks like a special case, called from
+> a (broken) special place, and now polluting this "fsnotify_file()"
+> logic for no actual reason and making it all look unnecessarily messy.
+>
+> I'd suggest that the whole fsnotify_open_perm() simply be moved to
+> where it *should* be - in the open path - and not make a bad and
+> broken attempt at hiding inside the security layer, and not use this
+> "fsnotify_file()" logic at all.
+>
+> The open-time logic is different. It shouldn't even attempt - badly -
+> to look like it's the same thing as some regular file access.
+>
 
-[ 6559.109304] Workqueue: xfs-cil/dm-2 xlog_cil_push_work
-[ 6559.112673] Call Trace:
-[ 6559.114333]  <TASK>
-[ 6559.115760]  __schedule+0x650/0xb10
-[ 6559.118084]  schedule+0x6d/0xf0
-[ 6559.120175]  schedule_timeout+0x31/0x180
-[ 6559.122776]  ? call_rcu+0xee/0x2f0
-[ 6559.125034]  __down_common+0xbe/0x1f0
-[ 6559.127470]  __down+0x1d/0x30
-[ 6559.129458]  down+0x48/0x50
-[ 6559.131343]  ? xfs_buf_item_unpin+0x8d/0x380
-[ 6559.134213]  xfs_buf_lock+0x3d/0xe0
-[ 6559.136544]  xfs_buf_item_unpin+0x8d/0x380
-[ 6559.139253]  xlog_cil_committed+0x287/0x520
-[ 6559.142019]  ? sched_clock+0x10/0x30
-[ 6559.144384]  ? sched_clock_cpu+0x10/0x190
-[ 6559.147039]  ? psi_group_change+0x48/0x310
-[ 6559.149735]  ? _raw_spin_unlock+0xe/0x30
-[ 6559.152340]  ? finish_task_switch+0xbc/0x310
-[ 6559.155163]  xlog_cil_process_committed+0x6d/0x90
-[ 6559.158265]  xlog_state_shutdown_callbacks+0x53/0x110
-[ 6559.161564]  ? xlog_cil_push_work+0xa70/0xaf0
-[ 6559.164441]  xlog_state_release_iclog+0xba/0x1b0
-[ 6559.167483]  xlog_cil_push_work+0xa70/0xaf0
-[ 6559.170260]  process_scheduled_works+0x1d4/0x400
-[ 6559.173286]  worker_thread+0x234/0x2e0
-[ 6559.175779]  kthread+0x147/0x170
-[ 6559.177933]  ? __pfx_worker_thread+0x10/0x10
-[ 6559.180748]  ? __pfx_kthread+0x10/0x10
-[ 6559.183231]  ret_from_fork+0x3e/0x50
-[ 6559.185601]  ? __pfx_kthread+0x10/0x10
-[ 6559.188092]  ret_from_fork_asm+0x1a/0x30
-[ 6559.190692]  </TASK>
+OK, we can move setting the FMODE_NOTIFY_PERM to the open path.
+I have considered that it may be better to unhide it, but wasn't sure.
 
-This is an ABBA deadlock where buffer IO completion is triggering a
-forced shutdown with the buffer lock held. It is waiting for the CIL
-to flush as part of the log force. The CIL flush is blocked doing
-shutdown processing of all it's objects, trying to unpin a buffer
-item. That requires taking the buffer lock....
-
-For the CIL to be doing shutdown processing, the log must be marked
-with XLOG_IO_ERROR, but that doesn't happen until after the log
-force is issued. Hence for xfs_do_force_shutdown() to be forcing
-the log on a shut down log, we must have had a racing
-xlog_force_shutdown and xfs_force_shutdown like so:
-
-p0			p1			CIL push
-
-   			<holds buffer lock>
-xlog_force_shutdown
-  xfs_log_force
-   test_and_set_bit(XLOG_IO_ERROR)
-   						xlog_state_release_iclog()
-						  sees XLOG_IO_ERROR
-						  xlog_state_shutdown_callbacks
-						    ....
-						    xfs_buf_item_unpin
-						    xfs_buf_lock
-						    <blocks on buffer p1 holds>
-
-   			xfs_force_shutdown
-			  xfs_set_shutdown(mp) wins
-			    xlog_force_shutdown
-			      xfs_log_force
-			        <blocks on CIL push>
-
-  xfs_set_shutdown(mp) fails
-  <shuts down rest of log>
-
-The deadlock can be mitigated by avoiding the log force on the
-second pass through xlog_force_shutdown. Do this by adding another
-atomic state bit (XLOG_OP_PENDING_SHUTDOWN) that is set on entry to
-xlog_force_shutdown() but doesn't mark the log as shutdown.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_log.c      | 11 +++++++++++
- fs/xfs/xfs_log_priv.h |  1 +
- 2 files changed, 12 insertions(+)
-
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 26b2f5887b88..05daad8a8d34 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -3455,6 +3455,16 @@ xlog_force_shutdown(
- 	if (!log)
- 		return false;
- 
-+	/*
-+	 * Ensure that there is only ever one log shutdown being processed.
-+	 * If we allow the log force below on a second pass after shutting
-+	 * down the log, we risk deadlocking the CIL push as it may require
-+	 * locks on objects the current shutdown context holds (e.g. taking
-+	 * buffer locks to abort buffers on last unpin of buf log items).
-+	 */
-+	if (test_and_set_bit(XLOG_SHUTDOWN_STARTED, &log->l_opstate))
-+		return false;
-+
- 	/*
- 	 * Flush all the completed transactions to disk before marking the log
- 	 * being shut down. We need to do this first as shutting down the log
-@@ -3487,6 +3497,7 @@ xlog_force_shutdown(
- 	spin_lock(&log->l_icloglock);
- 	if (test_and_set_bit(XLOG_IO_ERROR, &log->l_opstate)) {
- 		spin_unlock(&log->l_icloglock);
-+		ASSERT(0);
- 		return false;
- 	}
- 	spin_unlock(&log->l_icloglock);
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index b8778a4fd6b6..f3d78869e5e5 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -458,6 +458,7 @@ struct xlog {
- #define XLOG_IO_ERROR		2	/* log hit an I/O error, and being
- 				   shutdown */
- #define XLOG_TAIL_WARN		3	/* log tail verify warning issued */
-+#define XLOG_SHUTDOWN_STARTED	4	/* xlog_force_shutdown() exclusion */
- 
- static inline bool
- xlog_recovery_needed(struct xlog *log)
--- 
-2.45.2
-
+Thanks,
+Amir.
 
