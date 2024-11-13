@@ -1,227 +1,138 @@
-Return-Path: <linux-xfs+bounces-15377-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15386-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 066969C6BAB
-	for <lists+linux-xfs@lfdr.de>; Wed, 13 Nov 2024 10:44:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5E179C6BD9
+	for <lists+linux-xfs@lfdr.de>; Wed, 13 Nov 2024 10:48:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 408A4B21A21
-	for <lists+linux-xfs@lfdr.de>; Wed, 13 Nov 2024 09:44:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA69E285B1D
+	for <lists+linux-xfs@lfdr.de>; Wed, 13 Nov 2024 09:48:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04681F80B2;
-	Wed, 13 Nov 2024 09:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 790AB1F8F15;
+	Wed, 13 Nov 2024 09:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A19so0NV"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="snFQ0Z5P"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81942178CC8
-	for <linux-xfs@vger.kernel.org>; Wed, 13 Nov 2024 09:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4467118A951;
+	Wed, 13 Nov 2024 09:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731491053; cv=none; b=tAa5MjTCDyoNtr8HcPSYz3V5sxjanixdzAb84sSPaUC2SXOsCxf+t5kdNqDzR6WmOrWr7TOJWOe6IcQBq5hvj7QS3g6xdaZFQH7unLBTkY171A9xtJF6ftfLwYRtmD+kTh/DoO4W+caAmY8Eo+qIHPCYQVlyVKzlpFMyPsvUZ4o=
+	t=1731491256; cv=none; b=L7w8tPRe81sJ1knP2PHMvGvKd8W7Obw5Qk60TumPMb92wMvzWTmqP08I57rrRhWDfgVVAVWUvcUQIzjkJZsMEV6ObA+223kNvZxZ13ybhRFpIFSMCYVjysXfpR15lAoGeCrGT3Rn+EfRDczhsXNS/H9OUH2QWVGXwsVMf+mPLg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731491053; c=relaxed/simple;
-	bh=qxVFG05O6bEpT72Di4h98/KJnZOnAg0wpeBureoiRMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pELlf1iA4AmbLjLSJctcM3j6P48LEej5hG16YXLaCU4QWeTOu3LK/l9dexxATrA+NL6ToSpuZYmB5JqyIRYnnZgqIFaV4AGpLZ46iV5bvCYkyFXS8R3JqiqYW60Tju//nhrKFibrPj4bu/iStF4ghjF40whpWDXpSCjVtCexwdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A19so0NV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C176C4CECD;
-	Wed, 13 Nov 2024 09:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731491053;
-	bh=qxVFG05O6bEpT72Di4h98/KJnZOnAg0wpeBureoiRMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A19so0NVHn+NXdiCtkyqQAPfafAbA8qJq9HsUfv1wAEJMV4fFLeGKoIovEVp2/Dm3
-	 sW+2yXdJ7qAApn9cQxz77Lsl2AnOGUT86kf9nmn99Eqv4we0cvNxRl22pWvJMgMueT
-	 jcTt1ATmybHdZIbYepNV+ywDHbsD9JyK5xvA/CJAn76UHsrfhZWoxcAW020sUEYG27
-	 Gtiam6F5xRXKCwTu6jPlr9zx0dIR52DFGHdH74vfcImkB4Nx7MvUf2V7eJioDbAqgS
-	 UMiLOMYNGD/ZfFkYgQ5EkGJ/7rue2aL5ReR+6XIKQqH+a4+gg98VB1YJuYtTIJ2OIA
-	 8XpTfhP/OWHOA==
-Date: Wed, 13 Nov 2024 10:44:08 +0100
-From: Carlos Maiolino <cem@kernel.org>
-To: Long Li <leo.lilong@huawei.com>
-Cc: brauner@kernel.org, djwong@kernel.org, linux-xfs@vger.kernel.org, 
-	yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH v2 1/2] iomap: fix zero padding data issue in concurrent
- append writes
-Message-ID: <w4k3mpaiidxrzbbv3pfi3rilea32cm4r577bgkpq4jfm7rrg3k@zyhssogtpsmq>
-References: <20241113091907.56937-1-leo.lilong@huawei.com>
+	s=arc-20240116; t=1731491256; c=relaxed/simple;
+	bh=UzCj71djHnVlmhrgagbZpakgyKKeaOyqPK2azzUEczc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pp4NvZVyM+Ji/6dInbV3V4nRef2teni6oA1uw5RMOll8Uc2oig8N98Oe3LY1j4AJHyTOXNi/8ghuGJGd8dNxHi6bj2+W6nyieltpAvQnwovZLoLTK3xkcnRsq2C2PRXPjjBs5Oi7c/yKlGSV7YWlCG6ukH+LMf6z3Vh3/De68GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=snFQ0Z5P; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=NogMAPzoSN85DvPt0N/0Cgk6QQiG18HIcIcgH/liG3k=; b=snFQ0Z5PJlY9VkqMDtEFeSYgtD
+	yMAPbpE4RgPcakyuL+8kKQyVKgjQ4rrp1V3uqsOWk6Nl53SQ3BZMdGLPQwiYA3iPjoR6fCmd7DaMb
+	vamzErL4wJKX3d3LT5lvxfltNLq1g3j8gqFKiMbGhqsZV1s/RpohfYHIxH+luNGY7yMz0c1bs6kRe
+	cpNKeilWuyF4a2Q8OQEy+FsWwCnS6M4Ld4IzUL7OEpDir3YxTWYoqW4nXJYfFTC/kwanqtuOiPgNJ
+	zXhY/HPqdplSCnzxWhplwraESdUvvGzBj62+DaxWaV60NodWOsXDi7/YCaZ0XAkj1UoAlh/v+xh5N
+	KLakTrOw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tB9yC-00000006Hcw-32MC;
+	Wed, 13 Nov 2024 09:47:28 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: willy@infradead.org,
+	hch@lst.de,
+	hare@suse.de,
+	david@fromorbit.com,
+	djwong@kernel.org
+Cc: john.g.garry@oracle.com,
+	ritesh.list@gmail.com,
+	kbusch@kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [RFC 0/8] enable bs > ps for block devices
+Date: Wed, 13 Nov 2024 01:47:19 -0800
+Message-ID: <20241113094727.1497722-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241113091907.56937-1-leo.lilong@huawei.com>
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Wed, Nov 13, 2024 at 05:19:06PM +0800, Long Li wrote:
-> During concurrent append writes to XFS filesystem, zero padding data
-> may appear in the file after power failure. This happens due to imprecise
-> disk size updates when handling write completion.
-> 
-> Consider this scenario with concurrent append writes same file:
-> 
->   Thread 1:                  Thread 2:
->   ------------               -----------
->   write [A, A+B]
->   update inode size to A+B
->   submit I/O [A, A+BS]
->                              write [A+B, A+B+C]
->                              update inode size to A+B+C
->   <I/O completes, updates disk size to A+B+C>
->   <power failure>
-> 
-> After reboot, file has zero padding in range [A+B, A+B+C]:
-> 
->   |<         Block Size (BS)      >|
->   |DDDDDDDDDDDDDDDD0000000000000000|
->   ^               ^        ^
->   A              A+B      A+B+C (EOF)
-> 
->   D = Valid Data
->   0 = Zero Padding
-> 
-> The issue stems from disk size being set to min(io_offset + io_size,
-> inode->i_size) at I/O completion. Since io_offset+io_size is block
-> size granularity, it may exceed the actual valid file data size. In
-> the case of concurrent append writes, inode->i_size may be larger
-> than the actual range of valid file data written to disk, leading to
-> inaccurate disk size updates.
-> 
-> This patch changes the meaning of io_size to represent the size of
-> valid data in ioend, while the extent size of ioend can be obtained
-> by rounding up based on block size. It ensures more precise disk
-> size updates and avoids the zero padding issue.  Another benefit is
-> that it makes the xfs_ioend_is_append() check more accurate, which
-> can reduce unnecessary end bio callbacks of xfs_end_bio() in certain
-> scenarios, such as repeated writes at the file tail without extending
-> the file size.
-> 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Long Li <leo.lilong@huawei.com>
+The last time this was addressed was at LFSMM this year in May [0] and
+before LBS was on its way upstream. LBS is now on v6.12 and so the delta
+required is much smaller now.
 
+Before the turkey massacre slows part of the world down, here's a refresh.
 
-How does this differs from V1? Please, if you are sending a new version, add the
-changes you've made since the previous one, so nobody needs to keep comparing
-both.
+Although Hannes' patches were in PATCH form, testing showed quickly that
+it wasn't quite ready yet. I've only done cursory testing so far but have
+also incorporated all of the fixes and feedback we could accumulate over
+time. And so I'm sticking to RFC to reflect that this still needs thorough
+testing. It at least does not crash for me yet and its a major rebase
+onto v6.12-rc7.
 
-Carlos
- 
-> ---
->  fs/iomap/buffered-io.c | 21 +++++++++++++++------
->  include/linux/iomap.h  |  7 ++++++-
->  2 files changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index ce73d2a48c1e..a2a75876cda6 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -1599,6 +1599,8 @@ EXPORT_SYMBOL_GPL(iomap_finish_ioends);
->  static bool
->  iomap_ioend_can_merge(struct iomap_ioend *ioend, struct iomap_ioend *next)
->  {
-> +	size_t size = iomap_ioend_extent_size(ioend);
-> +
->  	if (ioend->io_bio.bi_status != next->io_bio.bi_status)
->  		return false;
->  	if ((ioend->io_flags & IOMAP_F_SHARED) ^
-> @@ -1607,7 +1609,7 @@ iomap_ioend_can_merge(struct iomap_ioend *ioend, struct iomap_ioend *next)
->  	if ((ioend->io_type == IOMAP_UNWRITTEN) ^
->  	    (next->io_type == IOMAP_UNWRITTEN))
->  		return false;
-> -	if (ioend->io_offset + ioend->io_size != next->io_offset)
-> +	if (ioend->io_offset + size != next->io_offset)
->  		return false;
->  	/*
->  	 * Do not merge physically discontiguous ioends. The filesystem
-> @@ -1619,7 +1621,7 @@ iomap_ioend_can_merge(struct iomap_ioend *ioend, struct iomap_ioend *next)
->  	 * submission so does not point to the start sector of the bio at
->  	 * completion.
->  	 */
-> -	if (ioend->io_sector + (ioend->io_size >> 9) != next->io_sector)
-> +	if (ioend->io_sector + (size >> 9) != next->io_sector)
->  		return false;
->  	return true;
->  }
-> @@ -1636,7 +1638,7 @@ iomap_ioend_try_merge(struct iomap_ioend *ioend, struct list_head *more_ioends)
->  		if (!iomap_ioend_can_merge(ioend, next))
->  			break;
->  		list_move_tail(&next->io_list, &ioend->io_list);
-> -		ioend->io_size += next->io_size;
-> +		ioend->io_size = iomap_ioend_extent_size(ioend) + next->io_size;
->  	}
->  }
->  EXPORT_SYMBOL_GPL(iomap_ioend_try_merge);
-> @@ -1736,7 +1738,7 @@ static bool iomap_can_add_to_ioend(struct iomap_writepage_ctx *wpc, loff_t pos)
->  		return false;
->  	if (wpc->iomap.type != wpc->ioend->io_type)
->  		return false;
-> -	if (pos != wpc->ioend->io_offset + wpc->ioend->io_size)
-> +	if (pos != wpc->ioend->io_offset + iomap_ioend_extent_size(wpc->ioend))
->  		return false;
->  	if (iomap_sector(&wpc->iomap, pos) !=
->  	    bio_end_sector(&wpc->ioend->io_bio))
-> @@ -1768,6 +1770,8 @@ static int iomap_add_to_ioend(struct iomap_writepage_ctx *wpc,
->  {
->  	struct iomap_folio_state *ifs = folio->private;
->  	size_t poff = offset_in_folio(folio, pos);
-> +	loff_t isize = i_size_read(inode);
-> +	struct iomap_ioend *ioend;
->  	int error;
->  
->  	if (!wpc->ioend || !iomap_can_add_to_ioend(wpc, pos)) {
-> @@ -1778,12 +1782,17 @@ static int iomap_add_to_ioend(struct iomap_writepage_ctx *wpc,
->  		wpc->ioend = iomap_alloc_ioend(wpc, wbc, inode, pos);
->  	}
->  
-> -	if (!bio_add_folio(&wpc->ioend->io_bio, folio, len, poff))
-> +	ioend = wpc->ioend;
-> +	if (!bio_add_folio(&ioend->io_bio, folio, len, poff))
->  		goto new_ioend;
->  
->  	if (ifs)
->  		atomic_add(len, &ifs->write_bytes_pending);
-> -	wpc->ioend->io_size += len;
-> +
-> +	ioend->io_size = iomap_ioend_extent_size(ioend) + len;
-> +	if (ioend->io_offset + ioend->io_size > isize)
-> +		ioend->io_size = isize - ioend->io_offset;
-> +
->  	wbc_account_cgroup_owner(wbc, folio, len);
->  	return 0;
->  }
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index f61407e3b121..2984eccfa213 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -330,7 +330,7 @@ struct iomap_ioend {
->  	u16			io_type;
->  	u16			io_flags;	/* IOMAP_F_* */
->  	struct inode		*io_inode;	/* file being written to */
-> -	size_t			io_size;	/* size of the extent */
-> +	size_t			io_size;	/* size of valid data */
->  	loff_t			io_offset;	/* offset in the file */
->  	sector_t		io_sector;	/* start sector of ioend */
->  	struct bio		io_bio;		/* MUST BE LAST! */
-> @@ -341,6 +341,11 @@ static inline struct iomap_ioend *iomap_ioend_from_bio(struct bio *bio)
->  	return container_of(bio, struct iomap_ioend, io_bio);
->  }
->  
-> +static inline size_t iomap_ioend_extent_size(struct iomap_ioend *ioend)
-> +{
-> +	return round_up(ioend->io_size, i_blocksize(ioend->io_inode));
-> +}
-> +
->  struct iomap_writeback_ops {
->  	/*
->  	 * Required, maps the blocks so that writeback can be performed on
-> -- 
-> 2.39.2
-> 
+The biggest changes now are these last patches:
+
+  - block/bdev: lift block size restrictions and use common definition
+  - nvme: remove superfluous block size check
+  - bdev: use bdev_io_min() for statx block size
+
+The buffer-head pathces I think should be ready.
+
+If the consolidation of the max block size is good, perhaps we just also use it
+for the iomap max zero page too. Note that in theory we should be able to get
+up to a block size of 1 << (PAGE_SHIFT + MAX_PAGECACHE_ORDER), in practice
+testing that shows we need much more love [1] although prospects indeed show
+we should be able to get up to 2 MiB on x86_64. And so I think we should first
+reduce scope up to 64k for now, test all this, and then embark on the next
+64k --> 2 MiB journey next.
+
+Thoughts?
+
+If you want this in a tree you can get this from the kdevops branch
+large-block-buffer-heads-for-next [2]
+
+[0] https://lore.kernel.org/all/20240514173900.62207-1-hare@kernel.org/
+[1] https://github.com/linux-kdevops/linux/commit/266f2c700be55bdb5626d521230597673c83c91d#diff-79b436371fdb3ddf0e7ad9bd4c9afe05160f7953438e650a77519b882904c56bL272
+[2] https://github.com/linux-kdevops/linux/tree/large-block-buffer-heads-for-next
+
+Hannes Reinecke (4):
+  fs/mpage: use blocks_per_folio instead of blocks_per_page
+  fs/mpage: avoid negative shift for large blocksize
+  fs/buffer: restart block_read_full_folio() to avoid array overflow
+  block/bdev: enable large folio support for large logical block sizes
+
+Luis Chamberlain (4):
+  fs/buffer fs/mpage: remove large folio restriction
+  block/bdev: lift block size restrictions and use common definition
+  nvme: remove superfluous block size check
+  bdev: use bdev_io_min() for statx block size
+
+ block/bdev.c             |  9 +++++---
+ drivers/nvme/host/core.c | 10 ---------
+ fs/buffer.c              | 21 ++++++++++++++----
+ fs/mpage.c               | 47 +++++++++++++++++++---------------------
+ fs/stat.c                |  2 +-
+ include/linux/blkdev.h   |  6 ++++-
+ 6 files changed, 51 insertions(+), 44 deletions(-)
+
+-- 
+2.43.0
+
 
