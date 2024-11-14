@@ -1,72 +1,72 @@
-Return-Path: <linux-xfs+bounces-15460-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15458-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D09759C8E78
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 16:42:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 047BB9C8FAB
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 17:26:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A42BB280E5
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 15:38:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8404CB35EBA
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 15:37:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A44371B4F32;
-	Thu, 14 Nov 2024 15:28:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F001B219F;
+	Thu, 14 Nov 2024 15:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ryPp7Zo/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WoVpXnI4"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1011B393B
-	for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 15:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247BB153803
+	for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 15:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731598109; cv=none; b=RfVko7h+/m+X/Vgk+/mlj0VLS7TyvbaBG4q6BEqprIj3zcSkqXmK8wphGnNO99qzE+/ywmrXXJA1T4vnBaLth/mq6plWn4ERq94YM/uP9DRJAmkVRwQatlUaftnOR7jIDJSvp84ilZLvn8pqhGemgShKvO5/8mNHdPpXAwCpVtQ=
+	t=1731598106; cv=none; b=DX3JnrhBr+L2UqEepu0CumGTvnABoxu1jjDLqbBqEcDYdzBXqFqr1zRS+de1F6bSzZXq4d0M46A1Lk5Q9kFelojpSdKVYXr85Ui6bTAuZUcWQEt2QaEfPjqVx3XvXha0D5v6kdERdbf3YQthHtOfBIzKczl+oPWa9vxiHx7FZzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731598109; c=relaxed/simple;
-	bh=KvrrsZd4o42w6FFEWFQ1mvoiCpBhCV2tMq6FGu3bD6I=;
+	s=arc-20240116; t=1731598106; c=relaxed/simple;
+	bh=JN6ziuaz3h3w93syhui0sSuROUWYBUO3x3xlg3f4CsA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZSqokaDkCNLdEjx9bpwy/581be/NUzosVQAfWe5LubyFrP+sc+Xj/V5S5I+ZAFkaoMIxf+dJ1dO9C1dEzc6vDPenSr6VEO78jL9iZTocoumBphRyv72MdaWVQXT57SYbOy2VAka4z0Sdal8+CUJ12nfWLOlG03vxNPvj3Ji/wME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ryPp7Zo/; arc=none smtp.client-ip=209.85.161.53
+	 MIME-Version; b=bW6uoHgfaEI+kxYYIz1XDT71fXNc+xnjb9XucYO9za0TLBwGonnc4Wd7IEx4+dL6lmef+XSriR4qA/+tgqYeQW4co14n5B1IXhLYtQPRNXeGoJb/auox09NKyZVROlBQ+omh2DQakS0g0qxz1uk16sQrpeINVOWjjdDZRAZRAOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WoVpXnI4; arc=none smtp.client-ip=209.85.161.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5ebc27fdc30so329721eaf.2
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 07:28:27 -0800 (PST)
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5ee3c2e79aaso340642eaf.3
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 07:28:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731598107; x=1732202907; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731598103; x=1732202903; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jsUz6pEpY+ox9az2F5q2xnny+koVz5fK77xTMpol5Tk=;
-        b=ryPp7Zo/FFxNM8nzscrCmwbmpbBbx3HBf2MkZTBwejmXhORSfWY2POIJp/oJbCIr82
-         XZcbAoorLW7+awt8LjNlVcKUFt3jjTlIhgnXQ1d9LrNPTFv7v6j34vob3JjxyObeceUx
-         jB7EjJE0ChVaIsXdSotebhjSYyNyCxhcHhlU9e3bgaBw0bzfjZ/AHs0aSRIcvsI31WV6
-         laM6ovcE4vCNzNS+kLK4+HI8UnYZN55+tSd085le9TNnKfZKjVgVuUJ7iLZyt89BvmXd
-         4SwEMBpWo0POPcqWo/OjRLDn9rCM4YU3NZHJBj/zjYbUHsKDAgZqw1NmyHyPPpBbgaZp
-         x8jg==
+        bh=LL88Qd2tMlsmBvcuEyGfQPoq7EBSjG4mmD1oB3CTmL4=;
+        b=WoVpXnI4R1Ju0TIEnacr+++McpiDpZpH9Q7rsPYH9SpUn9vMZESA2hvlpzAFb9slK5
+         kHIWPHr2fDItNhMzgknehqNQK8tLhPA9JEvW6hM73LhaRRy6P1wbF/oxMPPvvikdQ/Zo
+         3sMPrcD5h4Ji5j8LgRvmBHgma4Qs8y09MMpZ9DnC2FgWelnCb80ECIqLDA7SbF6FwbPl
+         5mw+If/NSXb+vofSMxXaNJ078D5LfKDV2JciLksbXBrH3M8HL0sYiVrD35w7uu0bImjQ
+         QiWj0Z+1VD54U37NAz28/FTSm3TmZ4IaXCvolffB+k3C6WtLklSP3aDYWTWP1lxSYnA9
+         eOgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731598107; x=1732202907;
+        d=1e100.net; s=20230601; t=1731598103; x=1732202903;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jsUz6pEpY+ox9az2F5q2xnny+koVz5fK77xTMpol5Tk=;
-        b=aDq/ixLwf4qZkPeAfMd4Jy6mMalRGnCZQGM5GXkRcAJPqtveI2Un5lkAa942Weasfg
-         Zb7O07yTv75A4fancsIfq9dXN5tYeUKDifIea1KN50IlgCGyBbggSsBRkpeHb+r+TYJb
-         71k5FfYchIASe5GMeGJXruApNibelP9ZEp6dF2j9k/s5M/pm9rjiY1h8caGACTCwF82P
-         yh3rrFu4pdFE+y0A+ZZdahFS/KIzfxVLxCkvKhBpatnUjSsOjiuiWKQSuLAowiNjjxTW
-         N5zvnQ2dIRFSuyjgBIHEmLbXinuKDtAHa7LaXcijj0WVrSPIx2qu4VxJTZMiadTPc31v
-         mVVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUq8M4uGsri7Le3mlo56gvCG9+km1oG7o7bJz5Rwyw355bUbe2FVGnlcUa4HjpErc5Pvpd4dg36BGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmLdxCHZWO4xhmIO5hrX63cRGY3+KtVlX5nbbhA5GgJpOCnOCJ
-	YnuG1oAT1FY4hpwljafgaP13UWd6Sk/nyzxdtxyyutYbc56DlN5HiGGeooQKKIY=
-X-Google-Smtp-Source: AGHT+IFc1nzkbPZXQe4aKtw+LtP2VNQBWJFtVjU1qLyGyhTsHecVf/ilzi9Wv0164LJAdz5N+SGBoQ==
-X-Received: by 2002:a05:6820:1b08:b0:5ee:a5b:d172 with SMTP id 006d021491bc7-5ee57c530cdmr17735794eaf.5.1731598106027;
-        Thu, 14 Nov 2024 07:28:26 -0800 (PST)
+        bh=LL88Qd2tMlsmBvcuEyGfQPoq7EBSjG4mmD1oB3CTmL4=;
+        b=kjD8eWwPbrbmXmZw+M2ynLR8jgsOqRaVpCnv4e7gga+yBdosYkluBNwVugl1v43RXp
+         QxNMhN4eU3RU7hrRlDV3s+OT9SzXl77aVR+HfRgQ7On7pmNUdihJT8i/krGXT/bM13Ex
+         keGBSZxKpii5PYvcgIC5Lm2cG6zFl0K84vpB3wqnRheqiOZmuuDgGr7D9g7qn0LHjEst
+         MuJWmQmEPUHUBfIVqS1ak/UWPkM/UWJthEDLjsEogihVkmcscgjM9oSMFILGdZbGmdQA
+         3nib9283AsaQVbJ22/AiXwgpYwUaP7hsS4FVqo3xFFwB5c57tNPrPO3gqtoL65NkHq1h
+         xWHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJd2/M9490yPs1bq+aEamSDJt40Gz5A/XfqbbQjm8ZjJbOsnOmLIxFQ1GJ565IhWlh2WwCoM9HlbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHrN1V4+TUNfr9z0BqQvjTqxuYtk44Ry1/JG8Cvyei3cXCNFXX
+	KJ7IfEoSEXQ8Zorcu6cnlo66demzlXpYzN6++yCyjbvYpm2kS1NQamV4VDLb86w=
+X-Google-Smtp-Source: AGHT+IGxBOidvnNn2woru7d3dY6RKyVHYMtr7QGUJGpSzdzZfL3L6KYNggyKAJszR8sQZicyWvWugQ==
+X-Received: by 2002:a4a:e90e:0:b0:5eb:88a5:20e8 with SMTP id 006d021491bc7-5ee9ecc2c38mr2597677eaf.1.1731598103136;
+        Thu, 14 Nov 2024 07:28:23 -0800 (PST)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5eea026eb41sm368250eaf.39.2024.11.14.07.28.24
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5eea026eb41sm368250eaf.39.2024.11.14.07.28.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 07:28:25 -0800 (PST)
+        Thu, 14 Nov 2024 07:28:22 -0800 (PST)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-mm@kvack.org,
 	linux-fsdevel@vger.kernel.org
@@ -80,9 +80,9 @@ Cc: hannes@cmpxchg.org,
 	linux-xfs@vger.kernel.org,
 	bfoster@redhat.com,
 	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 17/17] btrfs: add support for uncached writes
-Date: Thu, 14 Nov 2024 08:25:21 -0700
-Message-ID: <20241114152743.2381672-19-axboe@kernel.dk>
+Subject: [PATCH 15/17] xfs: punt uncached write completions to the completion wq
+Date: Thu, 14 Nov 2024 08:25:19 -0700
+Message-ID: <20241114152743.2381672-17-axboe@kernel.dk>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241114152743.2381672-2-axboe@kernel.dk>
 References: <20241114152743.2381672-2-axboe@kernel.dk>
@@ -94,128 +94,34 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The read side is already covered as btrfs uses the generic filemap
-helpers. For writes, just pass in FGP_UNCACHED if uncached IO is being
-done, then the folios created should be marked appropriately.
-
-For IO completion, ensure that writing back folios that are uncached
-gets punted to one of the btrfs workers, as task context is needed for
-that. Add an 'uncached_io' member to struct btrfs_bio to manage that.
-
-With that, add FOP_UNCACHED to the btrfs file_operations fop_flags
-structure, enabling use of RWF_UNCACHED.
+They need non-irq context guaranteed, to be able to prune ranges from
+the page cache. Treat them like unwritten extents and punt them to the
+completion workqueue.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- fs/btrfs/bio.c       | 4 ++--
- fs/btrfs/bio.h       | 2 ++
- fs/btrfs/extent_io.c | 8 +++++++-
- fs/btrfs/file.c      | 9 ++++++---
- 4 files changed, 17 insertions(+), 6 deletions(-)
+ fs/xfs/xfs_aops.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/bio.c b/fs/btrfs/bio.c
-index 7e0f9600b80c..253e1a656934 100644
---- a/fs/btrfs/bio.c
-+++ b/fs/btrfs/bio.c
-@@ -334,7 +334,7 @@ static void btrfs_end_bio_work(struct work_struct *work)
- 	struct btrfs_bio *bbio = container_of(work, struct btrfs_bio, end_io_work);
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index 559a3a577097..c86fc2b8f344 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -416,9 +416,12 @@ xfs_prepare_ioend(
  
- 	/* Metadata reads are checked and repaired by the submitter. */
--	if (is_data_bbio(bbio))
-+	if (bio_op(&bbio->bio) == REQ_OP_READ && is_data_bbio(bbio))
- 		btrfs_check_read_bio(bbio, bbio->bio.bi_private);
- 	else
- 		btrfs_bio_end_io(bbio, bbio->bio.bi_status);
-@@ -351,7 +351,7 @@ static void btrfs_simple_end_io(struct bio *bio)
- 	if (bio->bi_status)
- 		btrfs_log_dev_io_error(bio, dev);
+ 	memalloc_nofs_restore(nofs_flag);
  
--	if (bio_op(bio) == REQ_OP_READ) {
-+	if (bio_op(bio) == REQ_OP_READ || bbio->uncached_io) {
- 		INIT_WORK(&bbio->end_io_work, btrfs_end_bio_work);
- 		queue_work(btrfs_end_io_wq(fs_info, bio), &bbio->end_io_work);
- 	} else {
-diff --git a/fs/btrfs/bio.h b/fs/btrfs/bio.h
-index e2fe16074ad6..39b98326c98f 100644
---- a/fs/btrfs/bio.h
-+++ b/fs/btrfs/bio.h
-@@ -82,6 +82,8 @@ struct btrfs_bio {
- 	/* Save the first error status of split bio. */
- 	blk_status_t status;
- 
-+	bool uncached_io;
-+
- 	/*
- 	 * This member must come last, bio_alloc_bioset will allocate enough
- 	 * bytes for entire btrfs_bio but relies on bio being last.
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 872cca54cc6c..b97b21178ed7 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -760,8 +760,11 @@ static void submit_extent_folio(struct btrfs_bio_ctrl *bio_ctrl,
- 	ASSERT(bio_ctrl->end_io_func);
- 
- 	if (bio_ctrl->bbio &&
--	    !btrfs_bio_is_contig(bio_ctrl, folio, disk_bytenr, pg_offset))
-+	    !btrfs_bio_is_contig(bio_ctrl, folio, disk_bytenr, pg_offset)) {
-+		if (folio_test_uncached(folio))
-+			bio_ctrl->bbio->uncached_io = true;
- 		submit_one_bio(bio_ctrl);
-+	}
- 
- 	do {
- 		u32 len = size;
-@@ -779,6 +782,9 @@ static void submit_extent_folio(struct btrfs_bio_ctrl *bio_ctrl,
- 			len = bio_ctrl->len_to_oe_boundary;
- 		}
- 
-+		if (folio_test_uncached(folio))
-+			bio_ctrl->bbio->uncached_io = true;
-+
- 		if (!bio_add_folio(&bio_ctrl->bbio->bio, folio, len, pg_offset)) {
- 			/* bio full: move on to a new one */
- 			submit_one_bio(bio_ctrl);
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index 4fb521d91b06..cfee783f4c4d 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -919,7 +919,7 @@ static gfp_t get_prepare_gfp_flags(struct inode *inode, bool nowait)
- static noinline int prepare_pages(struct inode *inode, struct page **pages,
- 				  size_t num_pages, loff_t pos,
- 				  size_t write_bytes, bool force_uptodate,
--				  bool nowait)
-+				  bool nowait, bool uncached)
- {
- 	int i;
- 	unsigned long index = pos >> PAGE_SHIFT;
-@@ -928,6 +928,8 @@ static noinline int prepare_pages(struct inode *inode, struct page **pages,
- 	int ret = 0;
- 	int faili;
- 
-+	if (uncached)
-+		fgp_flags |= FGP_UNCACHED;
- 	for (i = 0; i < num_pages; i++) {
- again:
- 		pages[i] = pagecache_get_page(inode->i_mapping, index + i,
-@@ -1323,7 +1325,8 @@ ssize_t btrfs_buffered_write(struct kiocb *iocb, struct iov_iter *i)
- 		 * contents of pages from loop to loop
- 		 */
- 		ret = prepare_pages(inode, pages, num_pages,
--				    pos, write_bytes, force_page_uptodate, false);
-+				    pos, write_bytes, force_page_uptodate,
-+				    false, iocb->ki_flags & IOCB_UNCACHED);
- 		if (ret) {
- 			btrfs_delalloc_release_extents(BTRFS_I(inode),
- 						       reserve_bytes);
-@@ -3802,7 +3805,7 @@ const struct file_operations btrfs_file_operations = {
- 	.compat_ioctl	= btrfs_compat_ioctl,
- #endif
- 	.remap_file_range = btrfs_remap_file_range,
--	.fop_flags	= FOP_BUFFER_RASYNC | FOP_BUFFER_WASYNC,
-+	.fop_flags	= FOP_BUFFER_RASYNC | FOP_BUFFER_WASYNC | FOP_UNCACHED,
- };
- 
- int btrfs_fdatawrite_range(struct btrfs_inode *inode, loff_t start, loff_t end)
+-	/* send ioends that might require a transaction to the completion wq */
++	/*
++	 * Send ioends that might require a transaction or need blocking
++	 * context to the completion wq
++	 */
+ 	if (xfs_ioend_is_append(ioend) || ioend->io_type == IOMAP_UNWRITTEN ||
+-	    (ioend->io_flags & IOMAP_F_SHARED))
++	    (ioend->io_flags & (IOMAP_F_SHARED|IOMAP_F_UNCACHED)))
+ 		ioend->io_bio.bi_end_io = xfs_end_bio;
+ 	return status;
+ }
 -- 
 2.45.2
 
