@@ -1,72 +1,72 @@
-Return-Path: <linux-xfs+bounces-15457-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15459-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76BE69C8E8E
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 16:44:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1A5B9C8E57
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 16:37:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA3A4B35A4A
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 15:36:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7910C1F26B47
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Nov 2024 15:37:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1DD1B0F3E;
-	Thu, 14 Nov 2024 15:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9613B1B3938;
+	Thu, 14 Nov 2024 15:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rR9DGWuk"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Vqv0OtCw"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C78C1AF0C6
-	for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 15:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976561AF0CA
+	for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 15:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731598105; cv=none; b=M6zz0jPMN28cHKh9o+Bj5VBQfESVqPvlHhfd51tkxR8DSxLZmiwYC49AzMGjJQfl4cwnQjyABkihBoIuCg10Kb55ZyYad2rRUL7wvWWrUFGhfQmc6e9o14G7lHpQIyDmAc2hSWHMMNQY5CxB0XijEWzY9SzbzXM9weY3cINUsig=
+	t=1731598107; cv=none; b=q3iRX3hG0jEfZfAnbV2wsh8vWXIC0U+UaGHiQJjSELvOLsMFKnzuISpdM0B0X1Y3kXdpos75k9twuolbVLuiJkUZ78ZhCIRvNkB5htNbmM3hEAE3IvkAgc0Ua63gxjbmll8ZHNsbNVZOjfDyNFgmtvoBFbGXX02ncHeZYVBnStA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731598105; c=relaxed/simple;
-	bh=4XXew23gq3OoMMOZOjmCtGgMeRxntUp+Fg61kUdG93Y=;
+	s=arc-20240116; t=1731598107; c=relaxed/simple;
+	bh=EWturTTFhXmkkEY1vgH0sCBOxeoOqbPcFCX1D34ye48=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LeGrU9SH6mj9kEJmSnLP8JYaq3vhYsepzpppC3jNSWqNow8izTx+bZ19qmmUclUDnMgj3neRpgr14Wdso6bKE3iGDtk89P1CHPZmHn9BYBXfS/hi3uaoANa3NwHWVzxg9nESZN6i2HOg1V1euCZ+7JiQRJNoYu4HbZqCqnXDS9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rR9DGWuk; arc=none smtp.client-ip=209.85.160.42
+	 MIME-Version; b=GkIeApWHlD8csUWchm5OOZfudAKzjvWLybzY8Nu+j6athPjUEl8iVvdUZB6wl1ekHAvVkW4y/wXCVcjUerVCba3P8Llsfl64xtd6Q4m9aud/PZlDM+qeehJx6sVaaoMANDOlUxoG2f6K0DtlIuFjy6Ij9+KvvY/G6HFlO08opZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Vqv0OtCw; arc=none smtp.client-ip=209.85.210.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-295eb32566dso458107fac.1
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 07:28:22 -0800 (PST)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-718078c7f53so318712a34.1
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Nov 2024 07:28:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731598101; x=1732202901; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1731598104; x=1732202904; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JnydZ5ahnoTDPrjopxRhuD9AlpgfRxt1ZJ34FZKhxI0=;
-        b=rR9DGWuknEzGNqxGZH8Mcf0el13yrZ8xjZUBdN2I07qYtdGuKwk4Swbs+uU4K5pFuD
-         GDj+muRTfHfnOkFG+a5VLKPByoEelfPv4ch4QaA1TOviM3IXSVId0fAd4+foDltKO9HR
-         v/izHstC3jCHfbc0gbMDAeOBCBaMaXBZ+CD987zHFcNm2f9qJxhXsNYUIizvt+oWGjxC
-         OKiJGwLBqrOfmwAPv9tDY82rPiK1HjH/PPkL45+Wl6MOPvAdxuI/rnnTGVDgtbGT2iov
-         F0fSvTrNi3gfhu44gZrTR4SRFx/a7uwtINZpmAvRau03e8esVC7cXBSPuuAahtXvS0+u
-         DCkQ==
+        bh=NyBHBKICHAilzWbXxQX4w3ArnCN9Xkn7LoXdkHxZ+NE=;
+        b=Vqv0OtCwgRDqsZtuQe08cRI5AEU4os8/ta0n4eX/9ZzESqQr69CLPRaiNzfcALUAMb
+         aCHuZLxROp6xGe2OFYherg9GVvtPc4ZPytYRlb7ZAU1YXLo73tMCG8+XXwbnEdRC2apn
+         F7FVPaW6JyU6pWRUOovA9Wsor71N2l3XfSmtTGH9Wlaov6WWbD8BrbVgtJutLcEn+kS8
+         iffYTdAD3JeLbC6yYgcbX+1+CWmxard7f0dv66gi42wzXTfeawuVkxuMUFVygJRVBlWy
+         WrBfOK2BNxRfRDtbZujF1cDTeAzQWfWRinS1A8GeBXJY6qE0+I6Sx52yGTaII0XUT6rW
+         n7uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731598101; x=1732202901;
+        d=1e100.net; s=20230601; t=1731598104; x=1732202904;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JnydZ5ahnoTDPrjopxRhuD9AlpgfRxt1ZJ34FZKhxI0=;
-        b=cbKMKFBL2aysyB0f+rlziPiJjtAZ+KDxxIv6eZ1cqLV3QSWGZPwEGLHdpioiFGXTJl
-         ZuHJVtsfNTp01w5hZm9bFvrBez8scw8AYvHD0Vc7crFyWjQBlDDj9jWlyBIaMMqJeJqA
-         R2gmCsamhmuWgcb8wAYot5mx5TcKBCNHXt+Hc/ssNVL83zN5+NWkRD8z2YGuQfH2ShKL
-         nvh39DKmetNWOhZvDuk42Pz91mKE0/PvL19Eaq/Hd5PxhYIaR9TCd/blzANhq4Bf3hLb
-         /j6zh21InDWXgaf5AQP76yMIWub068Sqm3p6uTFkJtAU72aSmsJ/JYSbyBbHjc4Sk8ZM
-         Shuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVx6czKANjhGVm8UZIOZD7/N5hVB2K9abM+EwhNV2b2p2KbnbhZUyzd0ShAqB2GBQ0j7m3s03O3fwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUc/IDm1DBOMab0TLwxXnT6ppWPIDF0+AaN1dYAGYf/cvuKWKk
-	UicW3VnrTYhcyy6eefJLHLgkrUS/LBWqONSQpX9sOwHhbG0T0LtJxb1Xkpe7Wig=
-X-Google-Smtp-Source: AGHT+IGNabSsCKonQoe8b+3leqigUS1MxYLou4wkGKabmMMQ9sy0zqR8b1138Alaw/M4bLorq8cnFg==
-X-Received: by 2002:a05:6870:e2d5:b0:288:2fb6:a385 with SMTP id 586e51a60fabf-295600dc985mr21855599fac.20.1731598101550;
-        Thu, 14 Nov 2024 07:28:21 -0800 (PST)
+        bh=NyBHBKICHAilzWbXxQX4w3ArnCN9Xkn7LoXdkHxZ+NE=;
+        b=v0o9RLGAdbYnfS3cIvehGOqKOfQ8CblKTbzaTp7n+65DvSEhAScdEFgm6ToCIILXxT
+         R3vns8gcPEQnTMD3szswQyxYcGV7zzIqS8yKvA0GeF3NOUOqOQ3aN1Oe7SpCK3oQMEzH
+         jDmpL6XW2LTQj177n4ESOF8+wBf8CHOsoXVgCmle3JmzoYPaSQ8bkuugnUJqNgJbVaLX
+         PNI9NTpimchbzAD1w70oSeH260vCknGuaBOVRZGUMUdN9RXefZE2+NH/elqwBVRWp2dr
+         7lHUII+TY1DvFMh75Ycac2oTFJ6STS7ZEn3XSOiL8bcL+kq3z2ADdpjUBk8u+v+0SF0c
+         /kIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUs371bGZikdhDPkL9GXKEU3SKQbY49jzc20+LWagRe07QV2V71ooOMwqOQ3/N9RTkbWHZoN3xwQTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkoO+Jl7t5FhV9johWkD6dCsggCwD4Wurq2HxuHJ0tKehYQqjm
+	E4PP935+Tw9+m7bZvQNanJyIXAwJh8OcZvs1gd2oeVdW6S38nTovKenQe7l4+cU=
+X-Google-Smtp-Source: AGHT+IGTccgjkWiSk1+iFGbOjrOkQSSEn+5BvJmTbBLfatp4glFbzMa7kfcy1vSIijdABdXFBUl4NQ==
+X-Received: by 2002:a05:6830:7101:b0:718:8ce4:6912 with SMTP id 46e09a7af769-71a6af419f8mr3092006a34.14.1731598104601;
+        Thu, 14 Nov 2024 07:28:24 -0800 (PST)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5eea026eb41sm368250eaf.39.2024.11.14.07.28.20
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5eea026eb41sm368250eaf.39.2024.11.14.07.28.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 07:28:20 -0800 (PST)
+        Thu, 14 Nov 2024 07:28:23 -0800 (PST)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-mm@kvack.org,
 	linux-fsdevel@vger.kernel.org
@@ -80,9 +80,9 @@ Cc: hannes@cmpxchg.org,
 	linux-xfs@vger.kernel.org,
 	bfoster@redhat.com,
 	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 14/17] iomap: make buffered writes work with RWF_UNCACHED
-Date: Thu, 14 Nov 2024 08:25:18 -0700
-Message-ID: <20241114152743.2381672-16-axboe@kernel.dk>
+Subject: [PATCH 16/17] xfs: flag as supporting FOP_UNCACHED
+Date: Thu, 14 Nov 2024 08:25:20 -0700
+Message-ID: <20241114152743.2381672-18-axboe@kernel.dk>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241114152743.2381672-2-axboe@kernel.dk>
 References: <20241114152743.2381672-2-axboe@kernel.dk>
@@ -94,101 +94,30 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add iomap buffered write support for RWF_UNCACHED. If RWF_UNCACHED is
-set for a write, mark the folios being written as uncached. Then
-writeback completion will drop the pages. The write_iter handler simply
-kicks off writeback for the pages, and writeback completion will take
-care of the rest.
-
-This still needs the user of the iomap buffered write helpers to call
-iocb_uncached_write() upon successful issue of the writes.
+Read side was already fully supported, and with the write side
+appropriately punted to the worker queue, all that's needed now is
+setting FOP_UNCACHED in the file_operations structure to enable full
+support for read and write uncached IO.
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- fs/iomap/buffered-io.c | 15 +++++++++++++--
- include/linux/iomap.h  |  8 +++++++-
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_file.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index ef0b68bccbb6..2f2a5db04a68 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -603,6 +603,8 @@ struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos, size_t len)
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index b19916b11fd5..4fe593896bc5 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -1595,7 +1595,8 @@ const struct file_operations xfs_file_operations = {
+ 	.fadvise	= xfs_file_fadvise,
+ 	.remap_file_range = xfs_file_remap_range,
+ 	.fop_flags	= FOP_MMAP_SYNC | FOP_BUFFER_RASYNC |
+-			  FOP_BUFFER_WASYNC | FOP_DIO_PARALLEL_WRITE,
++			  FOP_BUFFER_WASYNC | FOP_DIO_PARALLEL_WRITE |
++			  FOP_UNCACHED,
+ };
  
- 	if (iter->flags & IOMAP_NOWAIT)
- 		fgp |= FGP_NOWAIT;
-+	if (iter->flags & IOMAP_UNCACHED)
-+		fgp |= FGP_UNCACHED;
- 	fgp |= fgf_set_order(len);
- 
- 	return __filemap_get_folio(iter->inode->i_mapping, pos >> PAGE_SHIFT,
-@@ -1023,8 +1025,9 @@ ssize_t
- iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *i,
- 		const struct iomap_ops *ops, void *private)
- {
-+	struct address_space *mapping = iocb->ki_filp->f_mapping;
- 	struct iomap_iter iter = {
--		.inode		= iocb->ki_filp->f_mapping->host,
-+		.inode		= mapping->host,
- 		.pos		= iocb->ki_pos,
- 		.len		= iov_iter_count(i),
- 		.flags		= IOMAP_WRITE,
-@@ -1034,9 +1037,14 @@ iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *i,
- 
- 	if (iocb->ki_flags & IOCB_NOWAIT)
- 		iter.flags |= IOMAP_NOWAIT;
-+	if (iocb->ki_flags & IOCB_UNCACHED)
-+		iter.flags |= IOMAP_UNCACHED;
- 
--	while ((ret = iomap_iter(&iter, ops)) > 0)
-+	while ((ret = iomap_iter(&iter, ops)) > 0) {
-+		if (iocb->ki_flags & IOCB_UNCACHED)
-+			iter.iomap.flags |= IOMAP_F_UNCACHED;
- 		iter.processed = iomap_write_iter(&iter, i);
-+	}
- 
- 	if (unlikely(iter.pos == iocb->ki_pos))
- 		return ret;
-@@ -1770,6 +1778,9 @@ static int iomap_add_to_ioend(struct iomap_writepage_ctx *wpc,
- 	size_t poff = offset_in_folio(folio, pos);
- 	int error;
- 
-+	if (folio_test_uncached(folio))
-+		wpc->iomap.flags |= IOMAP_F_UNCACHED;
-+
- 	if (!wpc->ioend || !iomap_can_add_to_ioend(wpc, pos)) {
- new_ioend:
- 		error = iomap_submit_ioend(wpc, 0);
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index f61407e3b121..0a88043676f2 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -74,9 +74,14 @@ struct vm_fault;
-  * IOMAP_F_STALE indicates that the iomap is not valid any longer and the file
-  * range it covers needs to be remapped by the high level before the operation
-  * can proceed.
-+ *
-+ * IOMAP_F_UNCACHED is set to indicate that writes to the page cache (and
-+ * hence writeback) will result in folios being evicted as soon as the
-+ * updated bytes are written back to the storage.
-  */
- #define IOMAP_F_SIZE_CHANGED	(1U << 8)
- #define IOMAP_F_STALE		(1U << 9)
-+#define IOMAP_F_UNCACHED	(1U << 10)
- 
- /*
-  * Flags from 0x1000 up are for file system specific usage:
-@@ -173,8 +178,9 @@ struct iomap_folio_ops {
- #define IOMAP_NOWAIT		(1 << 5) /* do not block */
- #define IOMAP_OVERWRITE_ONLY	(1 << 6) /* only pure overwrites allowed */
- #define IOMAP_UNSHARE		(1 << 7) /* unshare_file_range */
-+#define IOMAP_UNCACHED		(1 << 8) /* uncached IO */
- #ifdef CONFIG_FS_DAX
--#define IOMAP_DAX		(1 << 8) /* DAX mapping */
-+#define IOMAP_DAX		(1 << 9) /* DAX mapping */
- #else
- #define IOMAP_DAX		0
- #endif /* CONFIG_FS_DAX */
+ const struct file_operations xfs_dir_file_operations = {
 -- 
 2.45.2
 
