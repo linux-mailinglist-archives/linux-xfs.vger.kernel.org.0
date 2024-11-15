@@ -1,72 +1,72 @@
-Return-Path: <linux-xfs+bounces-15501-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15504-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03BA29CF12E
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 17:13:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34C639CF0FB
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 17:05:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D90C2B3941A
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:37:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4CD7B3BDAB
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:38:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB8F1F427C;
-	Fri, 15 Nov 2024 15:31:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8DC71F584D;
+	Fri, 15 Nov 2024 15:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="oBe0EtWQ"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="L/iy3LQa"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47621D5ACF
-	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B4D1F7079
+	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731684715; cv=none; b=GLIXEB4S1K+jEfiAxIwiVR3lHShpVAOQ0mFXhUXT+vKhf4O9CR/oETheRkFWIESfz67KbZAVQrE5coTUskpFn0VLZDosKjrxE5ZT3K6/CrE0dvrgrDizXvvAiyqZVAIAF21Gp0C+rg9Lvtf4wZuIOhE45NXzIt8uE4vgkGI4jWE=
+	t=1731684719; cv=none; b=L3Z6I1wcPw66JUs0U36jmt3PgwfKdWldyDjw91uHu9/1bZf4/hcLVlhsbMsTB/3gHEHLsHPBf1E/V7jzwW98YNIoYNAApgYt/gynLOzKkbESy2lqxfAVASCVh7sT2fXLpOMtKZotBPYV2TC9Y5jLL2LDQylRtis+/8PMcm/OTqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731684715; c=relaxed/simple;
-	bh=PPbePcs2WGvhpmWcX89Tq9aMCCGa8+t1geWVk1JQ/rg=;
+	s=arc-20240116; t=1731684719; c=relaxed/simple;
+	bh=6I0DlDU7r6h299w7wCYMACFg3R+68ox0OBCaPPO6OWw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TbM9RP8vwHTHFuua75Yco/ptY9POmi84lGPlN1jbCqP1LXSAdvYEDe1I6UrXnr89rxR9X1yrqs3WIV645IG4Sh5YsHF2Emt22346QTXJXE8CQYGQ7ZmB47LMWz0T5bB/e5BNw5YanfWi+zVrT9uWdL9Qt5/e/pm9E+0LzW9ARVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=oBe0EtWQ; arc=none smtp.client-ip=209.85.210.54
+	 MIME-Version; b=k5f1e74jvXCSm/8kCt6bFol8pVPCLAzG6R/Injxx+P4MHQfRonhi2PeAmYd/AEgoycqhBKNinYiYo3tMpzGhf4tz3jCn2Sks0lGlO6Lz383k5c5EfM+JNP4+zzjntjEOwiYHy5BESNesYSKzuvm78Acz4dXWPjRZzNZjOxSSvoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=L/iy3LQa; arc=none smtp.client-ip=209.85.128.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7183a3f3beaso924710a34.1
-        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:31:53 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6ea7c9227bfso21913527b3.2
+        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:31:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684713; x=1732289513; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684717; x=1732289517; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UmMh2R9TaZZeTO+3Pa04+NECyzvSza2nfFK0oCoLtcs=;
-        b=oBe0EtWQuwl88cCU5pTvTDkB/94N5XzWzaD3zlA6XpaCdsxhM9FEYAhy7NFj6hJ/5e
-         fPoANvxD874ilkta+gRbLOycSq8Rdaoivm4Hy50CyqpEtUUESWkaxNykV8O8dToXo8d0
-         YDe8QLamWU2B7rEIrcz+HMJwOKXUBmdWCXEk5Gr/qhWRRGUjKjI2yaE7TfzhVSR/w8tN
-         Nij/ncSEtuB0ENvFeh1P7Y3CT23ad9PRgF2yoiy8KUUOukcSCpU5/CN1CQDXWjJJnaJf
-         iOxKK3OyEOObXKi1CRQotq77wT9aYZfj/Z6zi5UZxrK9AmCH21ivYJknNi7HPbd4NdsA
-         ycZg==
+        bh=SVlCssk7TvFYg+mPz0+epJww2XrJywW98H8fNg6oZ9s=;
+        b=L/iy3LQaJK51zfKZy836wWqkdRDua/qu5MWDwfT8I+E560K7SSexHUFmeDq26/zUrn
+         h3KOdqsG9twRzlUB4bV2Nq2HJynSF/gfw2d8JSFEQAK5/9W6UZhfou3tLH1og64avY/J
+         Al9XK1PhX/dtHA3RzLGasw9+49kqMcgj2JnPqB38Y6LkIe+lMiQN0PXvIr7yOdO8agL6
+         6STMChfP/Z54ueyAO40XQ+EIECZbAI8QivqPPmKrO+2+9PQus8SboVJ5LJjwauCVsou2
+         3x15CjQZiEa/h92ZZTZ0gwOxHvYIa37dpkfhLsrXitqxCpUoNwqZUx4okJMzBlTVDtAL
+         vA6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731684713; x=1732289513;
+        d=1e100.net; s=20230601; t=1731684717; x=1732289517;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UmMh2R9TaZZeTO+3Pa04+NECyzvSza2nfFK0oCoLtcs=;
-        b=aIbd40Iu0YLJqI/2YsaLGHN0rQWeHkdS0cbAOZFd/aRejDQSYRDKvwphVOtx559kzR
-         4gzDxjrkBSdOOQjEtXQdFSHnmXK+0LE6VkWlEo4gtzZUpizkNwfAMQc8ahNkQrigIs9v
-         3bXvKkJHOpQwITOtbWXblwO19BbX860kMswU+/X8B91M2Qpae1+6VfDMX/NQXDYNBuFE
-         USf8vg0ObgDTI/77OZJSqJOvrDOR8b6a0AsPfUJMoow8FelVhiMQcXbar3u81GtFpRpp
-         YI+3Ti8OteREaQuedsCrlAaEjks6wS8K3o0pibYdjwCp4PATLWg3Ysv10FWW26pX8oxY
-         4wDA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKoAhw6t0+/1JC2/6Qa8N9h7i4njOJQSOJwpUmoG75orKflPJ4sx53b67d//spJx3mq+L+p0EaqRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl7uBTD6jt7WqEdqhXjiRsLNZ1PXjGszupS6jEWRO3n+QU8JS5
-	MAJpzakRwg5qPR3Zulg/FAM+IrStHAhRNvBsRxEAVBaQjt462YiKH/wirc+JTho=
-X-Google-Smtp-Source: AGHT+IHtKZ3WiG2a6Yh90R7O7Da3Go40IEKMQxser6w6wpGF8sO84iqOBIyuVxo5A9VSaCx3/txhnw==
-X-Received: by 2002:a05:6830:d8c:b0:718:9df:997f with SMTP id 46e09a7af769-71a779b2c25mr3850260a34.14.1731684712917;
-        Fri, 15 Nov 2024 07:31:52 -0800 (PST)
+        bh=SVlCssk7TvFYg+mPz0+epJww2XrJywW98H8fNg6oZ9s=;
+        b=Lk4S5QPO29LZkYKJtssxE/r7Hvth7EJufZ49FtfjwJ9EB9q7nn6b6TeONoVGh/nS5L
+         U5L8OUagtVwhB5Dk23C+S1tX6Ab4RDB8uGZRKf3PgmwlXRr673Q3EijZBBc3vv1qbEQT
+         ThQW6m/W+ZfQr1/6RbMFMQdp+2ydszeWwW5Zoesu6era3ZGuL9rbOZ7rEPvn5v6OBfkn
+         5ewFoJ8j4p2HhVcMtbRDCTWiHTbi6LUtX3kWDeMP92Am/tAW/Gyt+1EKtp+G+QtVf8gU
+         roICU4Zqa9dAa8cAfo2Xk3cuy1PomYCGvHoeoXtJtlCIidbVQFcOa6085Zpl1Vv7Tb2l
+         9PpA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHfhaiLVEH+X8ehDS9w0vq+QkeTJzfIIXN+ilDtBmYJU9ScWhbSO9mBVIbZMHmP9figD37qjStpqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8EDE2wPv+iP6lJvROKyefKuHd/VQmqlhxgq3ERqFw09HCFxPt
+	uBmb/ypfCOrzdPlbZtXlA7omTAsOSqXCx2CkRloNXuKmJ7JmW6/PFTwzoRHOfrA=
+X-Google-Smtp-Source: AGHT+IHB7s7jP8NWV/O0FcTu86HRGJSs7P0wkOPC0j5cMuO18DrwRH2o+5qB1EsHLQ8UmBf4vwq9wQ==
+X-Received: by 2002:a05:690c:62c5:b0:6ea:8a23:7673 with SMTP id 00721157ae682-6ee55bbae6amr38804727b3.8.1731684717148;
+        Fri, 15 Nov 2024 07:31:57 -0800 (PST)
 Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ee4400c6e6sm7807317b3.9.2024.11.15.07.31.52
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ee44075016sm7768367b3.63.2024.11.15.07.31.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 07:31:52 -0800 (PST)
+        Fri, 15 Nov 2024 07:31:56 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: kernel-team@fb.com,
 	linux-fsdevel@vger.kernel.org,
@@ -79,9 +79,9 @@ To: kernel-team@fb.com,
 	linux-btrfs@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-ext4@vger.kernel.org
-Subject: [PATCH v8 15/19] mm: don't allow huge faults for files with pre content watches
-Date: Fri, 15 Nov 2024 10:30:28 -0500
-Message-ID: <9035b82cff08a3801cef3d06bbf2778b2e5a4dba.1731684329.git.josef@toxicpanda.com>
+Subject: [PATCH v8 18/19] btrfs: disable defrag on pre-content watched files
+Date: Fri, 15 Nov 2024 10:30:31 -0500
+Message-ID: <4cc5bcea13db7904174353d08e85157356282a59.1731684329.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1731684329.git.josef@toxicpanda.com>
 References: <cover.1731684329.git.josef@toxicpanda.com>
@@ -93,96 +93,39 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There's nothing stopping us from supporting this, we could simply pass
-the order into the helper and emit the proper length.  However currently
-there's no tests to validate this works properly, so disable it until
-there's a desire to support this along with the appropriate tests.
+We queue up inodes to be defrag'ed asynchronously, which means we do not
+have their original file for readahead.  This means that the code to
+skip readahead on pre-content watched files will not run, and we could
+potentially read in empty pages.
 
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+Handle this corner case by disabling defrag on files that are currently
+being watched for pre-content events.
+
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- mm/memory.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ fs/btrfs/ioctl.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index bdf77a3ec47b..843ad75a4148 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -78,6 +78,7 @@
- #include <linux/ptrace.h>
- #include <linux/vmalloc.h>
- #include <linux/sched/sysctl.h>
-+#include <linux/fsnotify.h>
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index c9302d193187..1e5913f276be 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -2635,6 +2635,15 @@ static int btrfs_ioctl_defrag(struct file *file, void __user *argp)
+ 			goto out;
+ 		}
  
- #include <trace/events/kmem.h>
- 
-@@ -5637,8 +5638,17 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
- static inline vm_fault_t create_huge_pmd(struct vm_fault *vmf)
- {
- 	struct vm_area_struct *vma = vmf->vma;
-+	struct file *file = vma->vm_file;
- 	if (vma_is_anonymous(vma))
- 		return do_huge_pmd_anonymous_page(vmf);
-+	/*
-+	 * Currently we just emit PAGE_SIZE for our fault events, so don't allow
-+	 * a huge fault if we have a pre content watch on this file.  This would
-+	 * be trivial to support, but there would need to be tests to ensure
-+	 * this works properly and those don't exist currently.
-+	 */
-+	if (fsnotify_file_has_pre_content_watches(file))
-+		return VM_FAULT_FALLBACK;
- 	if (vma->vm_ops->huge_fault)
- 		return vma->vm_ops->huge_fault(vmf, PMD_ORDER);
- 	return VM_FAULT_FALLBACK;
-@@ -5648,6 +5658,7 @@ static inline vm_fault_t create_huge_pmd(struct vm_fault *vmf)
- static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf)
- {
- 	struct vm_area_struct *vma = vmf->vma;
-+	struct file *file = vma->vm_file;
- 	const bool unshare = vmf->flags & FAULT_FLAG_UNSHARE;
- 	vm_fault_t ret;
- 
-@@ -5662,6 +5673,9 @@ static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf)
- 	}
- 
- 	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
-+		/* See comment in create_huge_pmd. */
-+		if (fsnotify_file_has_pre_content_watches(file))
-+			goto split;
- 		if (vma->vm_ops->huge_fault) {
- 			ret = vma->vm_ops->huge_fault(vmf, PMD_ORDER);
- 			if (!(ret & VM_FAULT_FALLBACK))
-@@ -5681,9 +5695,13 @@ static vm_fault_t create_huge_pud(struct vm_fault *vmf)
- #if defined(CONFIG_TRANSPARENT_HUGEPAGE) &&			\
- 	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
- 	struct vm_area_struct *vma = vmf->vma;
-+	struct file *file = vma->vm_file;
- 	/* No support for anonymous transparent PUD pages yet */
- 	if (vma_is_anonymous(vma))
- 		return VM_FAULT_FALLBACK;
-+	/* See comment in create_huge_pmd. */
-+	if (fsnotify_file_has_pre_content_watches(file))
-+		return VM_FAULT_FALLBACK;
- 	if (vma->vm_ops->huge_fault)
- 		return vma->vm_ops->huge_fault(vmf, PUD_ORDER);
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-@@ -5695,12 +5713,16 @@ static vm_fault_t wp_huge_pud(struct vm_fault *vmf, pud_t orig_pud)
- #if defined(CONFIG_TRANSPARENT_HUGEPAGE) &&			\
- 	defined(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)
- 	struct vm_area_struct *vma = vmf->vma;
-+	struct file *file = vma->vm_file;
- 	vm_fault_t ret;
- 
- 	/* No support for anonymous transparent PUD pages yet */
- 	if (vma_is_anonymous(vma))
- 		goto split;
- 	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
-+		/* See comment in create_huge_pmd. */
-+		if (fsnotify_file_has_pre_content_watches(file))
-+			goto split;
- 		if (vma->vm_ops->huge_fault) {
- 			ret = vma->vm_ops->huge_fault(vmf, PUD_ORDER);
- 			if (!(ret & VM_FAULT_FALLBACK))
++		/*
++		 * Don't allow defrag on pre-content watched files, as it could
++		 * populate the page cache with 0's via readahead.
++		 */
++		if (fsnotify_file_has_pre_content_watches(file)) {
++			ret = -EINVAL;
++			goto out;
++		}
++
+ 		if (argp) {
+ 			if (copy_from_user(&range, argp, sizeof(range))) {
+ 				ret = -EFAULT;
 -- 
 2.43.0
 
