@@ -1,72 +1,72 @@
-Return-Path: <linux-xfs+bounces-15489-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15491-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAE519CF00C
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 16:34:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23D989CF016
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 16:35:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C4431F24762
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:34:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DAEF72884A5
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36FC51D90BD;
-	Fri, 15 Nov 2024 15:31:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D73751E261E;
+	Fri, 15 Nov 2024 15:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="MdOweBIp"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="WgCxMT83"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7791D514B
-	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1431E2304
+	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731684689; cv=none; b=R6dL18bFrIZzIqeVTUyrKwVxm9fBtilpxPNjycRPFlGz7EfPRt/51Rk8qxiqj1QPi4ToU3rVsy0W2atGBqDUjeEVcmHcsLjpIGR7LeO5M4mecFl7sTWx9ADqmqFVAwPPFFLfaz6NPLITpY4Jhl01+sYpRLFDc2MoJpbf1dJcA+M=
+	t=1731684691; cv=none; b=jIE5bw0lgpEutIZA2r4i4X+pUiWts2Bq2DJuDCrlJiSg8v7hNcA+H0t5+hSSu7ZcMm3jkTnfnOyquSEtOUH2QdRnrN13MnL+fC4cNNIMmu0OcP1jHMXSBPEaYfbba7m3kwXef9x8cOWsEzvz+EQ8JNBu5a8OqnXRGJhneHJCHBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731684689; c=relaxed/simple;
-	bh=1WvRI87ybBbAcRK4/nzciaftKH4dEBSZtNpGXoA1brQ=;
+	s=arc-20240116; t=1731684691; c=relaxed/simple;
+	bh=lJOFXxVHcZLI+SjVd+0f1jV7QzcPV4Ai9MyZQsFymWc=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WtBgF/2/77IW1WvCBINVDp1gEcDRAf4S0AWZEUCOZAfe9PQ9dfVfYygbdf1tF5PYj22Uy65oUb5L31VA7Kzz5CyykNn0X4SRbfojGevGJkL6dhFqVKxM2MpYqrR5UpAz5BRfkp7YmebUqT6yrrSOaxINokSCNIQdryACI7KfsJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=MdOweBIp; arc=none smtp.client-ip=209.85.128.179
+	 MIME-Version; b=FMzGb+y43jGFv9ftNz179CuFeeCgq49zZEPmR2LydNTAy7X9ucYnIf6KPyoue9vmUU1OJ6gU5mAiFSdO+kXGj6uWt7M63MisWIxrDeUvZip3y3yB1AJRj33H4Np+CP8j7WEwiJ/CnRveUTN0VG3S2m4eJN2Fn1ipMh2czIC9ARo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=WgCxMT83; arc=none smtp.client-ip=209.85.219.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6e9ed5e57a7so7411147b3.1
-        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:31:27 -0800 (PST)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e38193093a7so1569125276.0
+        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:31:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684686; x=1732289486; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684688; x=1732289488; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6KY5fZdmP1liuAXJOZsCM4eyAqIeREr5VHEr0FLOlUs=;
-        b=MdOweBIplt7nuQIKikOwYXqEJ8g90ibqCZfv9yHf0UnFqfKXC5EGqjIpp63xZDwLzo
-         O4s2h0iIBRc1+cgz4z3XxTUnZQKnKQfN68E+3Ukakjd9JhMDoZwHw4CVHcc9c3WRvFpR
-         z8nXNdSkV2UH2wOwtqiT8nq21zb4oSDc6ZsTbxOvT8oyE65unjqx2D79/X54aRKpSr1D
-         nSFgfDD6Rk2cICVoqSid9mcz8xn7/pUQ7Xntn0T6Vx+iXPZidCX8IJ0Ap3ECQYNY88pz
-         UWb4pYUTKGQZwoMAypNwllBebf8OPaa3vOOHEWM+eUBymHRVPG5aUmGriY/ZXVoMeOSK
-         Gwpw==
+        bh=5jVczlJ/TW6EECuU4gj9yYFP++VZ/oJUqPiY9P+PdPU=;
+        b=WgCxMT83OJndjUPd1bpnut4k1njFzRSZT+45Xv3MOuEfIXNhQ8xGLPxT0GqdDQHzNP
+         3FAWKaE95mHY8cUM+/Z5QrkWB0K2NYjSpt+ynKmwctxgJinxlfalSnXxa8fOhVKxfb/r
+         tf9/isOH+Yy4aOI396zxw1OlUitAZJj1uMr/FmQMmtcFWRgeXhdZF1/+5AnF88+K0ilc
+         MC9tIpVfjIx/NdV9UCRqJaDktOuFLyAn5ypGjSbY6Kzd8xez0CWvSR9ZXhOdtDojIykm
+         hIY+HUEro6Ry3Z00n1ne4KcwAg4GG0CxfnafkIR/PjPfO5G+FTo/yMRJ4Yjgj1LodC5Q
+         NxSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731684686; x=1732289486;
+        d=1e100.net; s=20230601; t=1731684688; x=1732289488;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6KY5fZdmP1liuAXJOZsCM4eyAqIeREr5VHEr0FLOlUs=;
-        b=wWijYyxz04p0OPdJUdlEG6qAzAm3bOBgKTmy51UD/++MKGS1BU2NuUs+wUGWCY6rdz
-         Gt6fiJ5UO+3Fn85I1p9qGNcEx/P9RDHVWIhX1S53OnuwP8Y+5R8e2A1ExzMRubwSks06
-         G4wd2oBzBz7QjIlvcq3Nv6hStI6/d0u48N6Y2GR8+VJioHb/Amnn2/7SXgfa/MjEYKgV
-         0rOoaSE9sOekLrrZvMdGY4pCQVjuE/wptZ47goz3iHQx4m1lNt+N7kKzZEDrIwSv3bi5
-         v3H8tl71xXb/Rjnaf2dUDsIVMph5t3aZOPukrV8bCaasbKiTwZO/hC3qj5Cetwim7vR2
-         N77Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVn0/UCf2egwrZI83Dg33Jd/vvHr4j63rJ0HieME7Ln27FyMACcxPZTkLFnp0HKMJWUSMasV5o5A2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLrVPcmBp3SEQNPijnaGXyqTpQsb0XrEb6GjXDrfWAA3bjuB3D
-	eXsfNiOJCBda03DtlBjeI4oVEY/el8wPPr6jWKa4E1dxEBSMkPAtpV2pyA9HuRY=
-X-Google-Smtp-Source: AGHT+IHdSr7sIuKVmbedcInH94EUveWdRZ8jZfw4hoXsU2FWCk1ayn1ufjs9+AX7MxAWuqGyDVgHDQ==
-X-Received: by 2002:a05:690c:360b:b0:6ea:34b1:62e3 with SMTP id 00721157ae682-6ee55a2f60cmr35106257b3.7.1731684686563;
-        Fri, 15 Nov 2024 07:31:26 -0800 (PST)
+        bh=5jVczlJ/TW6EECuU4gj9yYFP++VZ/oJUqPiY9P+PdPU=;
+        b=gfJNfygSSPupptOdNTcIXO1S1UUfZ6+FcgLVtmsOioaNMons/9Ls53IRlw9b/yRSsi
+         liLQwhu1jmE+P+/jnjGebdOiBJciPtUA/lwvGuPVI+GG4iTuQ5BPEwx8RclTgaeBsBoM
+         /vg+pwMFZVmTKozKWVkVHSAHglglSy/B0iGDVO8fzL2AIPMSIvMJZfFu1m4sM+QL67dq
+         NIspXcknLPhCQFbGhuJDgxYUZmAccoZwANwhT3IqA3mgFmqULzQb37PPNPlkFxd/gtfx
+         Uk4z4mAxHRyHW2ARN3vck4c/Rg9oMet66cw84b7l3YNS0S0Cv7PEcgMwGLjCVAzCAZmW
+         7Bmw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4PUGzmeJdOsSwYVXqaIeaDoAasVecfjRt+ODet7kiFmysFsjzfrD2QjNcGk0pkTURSCXN+iycKRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqeDQJZBbaULnB/Nj8pFOtwaFwDTfD2pVOc1QojInflxldJ483
+	yd4ZTxhmFyGDeg0TEyIgOo9Ossc2wRaDayJabFgehS91LUSPW9OCSueWG2xT/mE=
+X-Google-Smtp-Source: AGHT+IEWEdrPnRli1gv+jVnLYsORdUcuZyTi/FsZKRBYcdcM64Io8ydfsi1gmscyy1vF3dAQcsDh6w==
+X-Received: by 2002:a05:690c:4c02:b0:6ea:2ac4:9df6 with SMTP id 00721157ae682-6ee55bbade0mr37073597b3.3.1731684688405;
+        Fri, 15 Nov 2024 07:31:28 -0800 (PST)
 Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ee44070647sm7648387b3.53.2024.11.15.07.31.25
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ee4449516asm7602087b3.124.2024.11.15.07.31.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 07:31:25 -0800 (PST)
+        Fri, 15 Nov 2024 07:31:27 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: kernel-team@fb.com,
 	linux-fsdevel@vger.kernel.org,
@@ -79,9 +79,9 @@ To: kernel-team@fb.com,
 	linux-btrfs@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-ext4@vger.kernel.org
-Subject: [PATCH v8 03/19] fsnotify: add helper to check if file is actually being watched
-Date: Fri, 15 Nov 2024 10:30:16 -0500
-Message-ID: <2ddcc9f8d1fde48d085318a6b5a889289d8871d8.1731684329.git.josef@toxicpanda.com>
+Subject: [PATCH v8 04/19] fanotify: don't skip extra event info if no info_mode is set
+Date: Fri, 15 Nov 2024 10:30:17 -0500
+Message-ID: <afcbc4e4139dee076ef1757918b037d3b48c3edb.1731684329.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1731684329.git.josef@toxicpanda.com>
 References: <cover.1731684329.git.josef@toxicpanda.com>
@@ -95,116 +95,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Amir Goldstein <amir73il@gmail.com>
 
-So far, we set FMODE_NONOTIFY_ flags at open time if we know that there
-are no permission event watchers at all on the filesystem, but lack of
-FMODE_NONOTIFY_ flags does not mean that the file is actually watched.
+Previously we would only include optional information if you requested
+it via an FAN_ flag at fanotify_init time (FAN_REPORT_FID for example).
+However this isn't necessary as the event length is encoded in the
+metadata, and if the user doesn't want to consume the information they
+don't have to.  With the PRE_ACCESS events we will always generate range
+information, so drop this check in order to allow this extra
+information to be exported without needing to have another flag.
 
-To make the flags more accurate we add a helper that checks if the
-file's inode, mount, sb or parent are being watched for a set of events.
-
-This is going to be used for setting FMODE_NONOTIFY_HSM only when the
-specific file is actually watched for pre-content events.
-
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- fs/notify/fsnotify.c             | 36 +++++++++++++++++++++++++-------
- include/linux/fsnotify_backend.h |  7 +++++++
- 2 files changed, 36 insertions(+), 7 deletions(-)
+ fs/notify/fanotify/fanotify_user.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/fs/notify/fsnotify.c b/fs/notify/fsnotify.c
-index f976949d2634..33576a848a9f 100644
---- a/fs/notify/fsnotify.c
-+++ b/fs/notify/fsnotify.c
-@@ -193,16 +193,38 @@ static bool fsnotify_event_needs_parent(struct inode *inode, __u32 mnt_mask,
- 	return mask & marks_mask;
- }
+diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+index 919ff59cb802..8fca5ec442e4 100644
+--- a/fs/notify/fanotify/fanotify_user.c
++++ b/fs/notify/fanotify/fanotify_user.c
+@@ -158,9 +158,6 @@ static size_t fanotify_event_len(unsigned int info_mode,
+ 	int fh_len;
+ 	int dot_len = 0;
  
--/* Are there any inode/mount/sb objects that are interested in this event? */
--static inline bool fsnotify_object_watched(struct inode *inode, __u32 mnt_mask,
--					   __u32 mask)
-+/* Are there any inode/mount/sb objects that watch for these events? */
-+static inline __u32 fsnotify_object_watched(struct inode *inode, __u32 mnt_mask,
-+					    __u32 events_mask)
- {
- 	__u32 marks_mask = READ_ONCE(inode->i_fsnotify_mask) | mnt_mask |
- 			   READ_ONCE(inode->i_sb->s_fsnotify_mask);
+-	if (!info_mode)
+-		return event_len;
+-
+ 	if (fanotify_is_error_event(event->mask))
+ 		event_len += FANOTIFY_ERROR_INFO_LEN;
  
--	return mask & marks_mask & ALL_FSNOTIFY_EVENTS;
-+	return events_mask & marks_mask;
- }
+@@ -754,12 +751,10 @@ static ssize_t copy_event_to_user(struct fsnotify_group *group,
+ 	buf += FAN_EVENT_METADATA_LEN;
+ 	count -= FAN_EVENT_METADATA_LEN;
  
-+/* Are there any inode/mount/sb/parent objects that watch for these events? */
-+__u32 fsnotify_file_object_watched(struct file *file, __u32 events_mask)
-+{
-+	struct dentry *dentry = file->f_path.dentry;
-+	struct dentry *parent;
-+	__u32 marks_mask, mnt_mask =
-+		READ_ONCE(real_mount(file->f_path.mnt)->mnt_fsnotify_mask);
-+
-+	marks_mask = fsnotify_object_watched(d_inode(dentry), mnt_mask,
-+					     events_mask);
-+
-+	if (likely(!(dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED)))
-+		return marks_mask;
-+
-+	parent = dget_parent(dentry);
-+	marks_mask |= fsnotify_inode_watches_children(d_inode(parent));
-+	dput(parent);
-+
-+	return marks_mask & events_mask;
-+}
-+EXPORT_SYMBOL_GPL(fsnotify_file_object_watched);
-+
- /*
-  * Notify this dentry's parent about a child's events with child name info
-  * if parent is watching or if inode/sb/mount are interested in events with
-@@ -221,7 +243,7 @@ int __fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
- 	struct dentry *parent;
- 	bool parent_watched = dentry->d_flags & DCACHE_FSNOTIFY_PARENT_WATCHED;
- 	bool parent_needed, parent_interested;
--	__u32 p_mask;
-+	__u32 p_mask, test_mask = mask & ALL_FSNOTIFY_EVENTS;
- 	struct inode *p_inode = NULL;
- 	struct name_snapshot name;
- 	struct qstr *file_name = NULL;
-@@ -229,7 +251,7 @@ int __fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
+-	if (info_mode) {
+-		ret = copy_info_records_to_user(event, info, info_mode, pidfd,
+-						buf, count);
+-		if (ret < 0)
+-			goto out_close_fd;
+-	}
++	ret = copy_info_records_to_user(event, info, info_mode, pidfd,
++					buf, count);
++	if (ret < 0)
++		goto out_close_fd;
  
- 	/* Optimize the likely case of nobody watching this path */
- 	if (likely(!parent_watched &&
--		   !fsnotify_object_watched(inode, mnt_mask, mask)))
-+		   !fsnotify_object_watched(inode, mnt_mask, test_mask)))
- 		return 0;
- 
- 	parent = NULL;
-@@ -248,7 +270,7 @@ int __fsnotify_parent(struct dentry *dentry, __u32 mask, const void *data,
- 	 * Include parent/name in notification either if some notification
- 	 * groups require parent info or the parent is interested in this event.
- 	 */
--	parent_interested = mask & p_mask & ALL_FSNOTIFY_EVENTS;
-+	parent_interested = p_mask & test_mask;
- 	if (parent_needed || parent_interested) {
- 		/* When notifying parent, child should be passed as data */
- 		WARN_ON_ONCE(inode != fsnotify_data_inode(data, data_type));
-diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
-index 3ecf7768e577..99d81c3c11d7 100644
---- a/include/linux/fsnotify_backend.h
-+++ b/include/linux/fsnotify_backend.h
-@@ -855,8 +855,15 @@ static inline void fsnotify_init_event(struct fsnotify_event *event)
- 	INIT_LIST_HEAD(&event->list);
- }
- 
-+__u32 fsnotify_file_object_watched(struct file *file, __u32 mask);
-+
- #else
- 
-+static inline __u32 fsnotify_file_object_watched(struct file *file, __u32 mask)
-+{
-+	return 0;
-+}
-+
- static inline int fsnotify(__u32 mask, const void *data, int data_type,
- 			   struct inode *dir, const struct qstr *name,
- 			   struct inode *inode, u32 cookie)
+ 	if (f)
+ 		fd_install(fd, f);
 -- 
 2.43.0
 
