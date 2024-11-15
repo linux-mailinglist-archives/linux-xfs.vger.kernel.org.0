@@ -1,73 +1,73 @@
-Return-Path: <linux-xfs+bounces-15506-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15497-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 171249CF068
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 16:42:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC3629CF1A0
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 17:37:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB314B35B8A
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:39:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C10FB2E803
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA5351F77B3;
-	Fri, 15 Nov 2024 15:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AEBB1E9099;
+	Fri, 15 Nov 2024 15:31:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="OhbvR0D9"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="Sq+4zBoF"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E451D5AC0
-	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5651E6310
+	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731684731; cv=none; b=QvYX44Hksv8nOJppwxpQSRM4Bf/l7nCYiYYbC8/cMmtSOof9DDwuYrZ/+5RYVo047S/AEUTUS43UtiSqWBNLSd8BXoimWqBoQMjS7d5iVIEFbtkQ7xRTMwXmPZWo3qj+vINfmViz65aDVCqu69/xSaNRdwZkzzRIpTZ/mHO+1hg=
+	t=1731684704; cv=none; b=DHeaHx2R+FyV1Z/g5RCfeaakVVXc8iJfi+RdmnoyhQFlK0+ciPx1CyYukNXf12aXn+Ht25v24iJCp53IEAv1mlSLW8dyrkk4xh3NlWZwpY4ZRxthN9IJPJ38PlEOFSaJeH5O9EFE3qRXlmDpLb63mtve7newu5eyM7KiDzxo2zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731684731; c=relaxed/simple;
-	bh=nFXm/L4ae8YekLwpIFurgFERbAtgq26xVgDJzO6g1yM=;
+	s=arc-20240116; t=1731684704; c=relaxed/simple;
+	bh=wJBpuZKjarBs8HwRCSHfMpMBiZ+HVYWNz5ARDhZnhyo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fNS+JjwXbrKgVK4JZ7o/YNprqHd/Mn0pkKck1XNZ9EFUBGrVnePlf65FuGosAqiHLPugU92c6yXC9FRp8vGp4ONd8jJGVq6dq42HEImaS/BWU3HaJokPl1IzWID9A6HU8nFozaPJtTiS20SQwqmpEsHuC77GaUHfRnOpK89HeOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=OhbvR0D9; arc=none smtp.client-ip=209.85.210.54
+	 MIME-Version; b=sGFT7obEaAzlAZDuyajHIgjDkmQ32XMh1lrdcCXr1X80fJdk+qwYgT03N3+JRoSVwsUwmKT7btvEFd4UNb4AzRVmSgVzbhIMLu1w2bxs/Zv52DFJKGbI3RpeQMKl7mbI/bQJnOUmYSTJ/7beOUycW7fnGLuWtHiZUPlp2RnKpmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=Sq+4zBoF; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7180cc146d8so978749a34.0
-        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:32:10 -0800 (PST)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e38234cd4e0so919070276.2
+        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:31:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684729; x=1732289529; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684701; x=1732289501; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Gek1GO8SPggpZ3MPgZMTTjA2lPqNZurY73wIWpdWbQQ=;
-        b=OhbvR0D9Mpu/eExRINZ6D2YTBSWBQVN4I77aTxH725JB6v1OtP4PbqsiIJcMqulLzD
-         PioDrpuYnRgl9mDwb6vPK3upyetHSr+oINmPkdr8QxCWDft025bwE4nU3PV0fKHGOF9Y
-         5jOq9a9PK96V3MqsEnD3wir6nk5nC8fc/gqPbhtSXB7le1fxkIAjBC45RlNpGY+45tDU
-         XMmI3hV/8/jQl38viODdYYbaJgzz/pYCsFFKRRupoBk31k8KIXEw609yC47pR2cZF7RP
-         YsaPDpH3DUsL3DttGA4nSsC4i3av1T7si5+F8NTv0l4/R6xLtQeB6iMtfXeb3MKT/OGg
-         brEg==
+        bh=QSuoTi14zhdgmEJ2e8nj/BNpHIFoytvzNxhl/LStwJg=;
+        b=Sq+4zBoFR0URvFIUh05vyK1u/Sos3Fl7p0V25nCVbtRGaI1ZZ7MPG0l8yIpnHG2xku
+         hLsR7o/CU2RIeJ1No5o1TdseUV+3KMkg1Nc7Ql7jrN008rcQUxmyWxjU3cTuiIoidMAp
+         x1eOLg94bBNx+Zlzh+cfuYLHv1tQs20aWLioiHWnLzVRZCEMpTSQgXK1Gp+ew+hQsE4n
+         rQz+uKar0RBr6XWNqwX8wUg4pHOXvBq4RM6oxBY0l9ocs1RFxLSWsgKZ+Iq3FvGw4Pxv
+         tn6DKnzq3wDApu9o08yxEmIgKLVA28TLcfr2Qd3mqOLXriFVUs79/tKIf0sqPh5lReY+
+         PUNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731684729; x=1732289529;
+        d=1e100.net; s=20230601; t=1731684701; x=1732289501;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gek1GO8SPggpZ3MPgZMTTjA2lPqNZurY73wIWpdWbQQ=;
-        b=obVIbXGV7j/RYhpajoakzjxFvh/MoUC3zJ22zaTcgPfELDN8UECT8NPCTdjKuBjuyp
-         w5JppEabC3CBoC51xRpiydPvItmp5Fysk9N54P6Y8G2n0FqfNCnvaQnabOCSfpwtHQNn
-         8dN0d5Xvgr5xCUTC2m9jr5dF0ahaZcnQMH/ao5bVIlT3rnqGOrQmmzHNmbHWUZdvPJsu
-         yJejsljL5zaIABWkGphH0kpBSOgA95aIP2eHpmAKiHxQp+g/AfUey2zcnto1sVzG2sdF
-         auVcK87H0v2smNRoLor6mXI7I/6q2WigRtFtPGa9YmJpYo/k+CTLsqXrY/4SdfludIsP
-         yG2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzLFymgpsmiJF6lfk9uo20I0GnNg+VeXHvrihHXNTB2FcMWm+W1u9mPsG4/xFgD/3qE3g3EtuYpa0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZfcf/+yEXLtej4syid8snSDDx87WTaq0qvSV5TgqOqosPA0xv
-	b24gmMOljUI5HVM9IBVPVF7w4APaKKBe7IlGxpWeNxL1Zvewj4IDfPQux1ul9aILFfzXugw3sak
-	3
-X-Google-Smtp-Source: AGHT+IEUcKBXNGC+FquadsfHiR9BI4UoMJrmZkBZaObeXyKm9EGd5wreVNWR6wH/jakvp0EFNSF0lA==
-X-Received: by 2002:a05:6902:1209:b0:e30:c977:a360 with SMTP id 3f1490d57ef6-e38261291fdmr3157574276.5.1731684719039;
-        Fri, 15 Nov 2024 07:31:59 -0800 (PST)
+        bh=QSuoTi14zhdgmEJ2e8nj/BNpHIFoytvzNxhl/LStwJg=;
+        b=U6EWLDxhzNhPNVFL2GeeFEuoEuYdKJuYmW/iWLNv5mh5jddzX+uF1r5APyb9Tgyj+W
+         Y1lUI3+J4Wcfn22haZxuXUHpTN+fiDuemq5H991HcPg9RljFqUzibl1idu5D5kEiInrZ
+         1Es2QZ0wSyY5lraYH3W+FOV/Fpf/J9cjPf3vyDrgNrwfb51ojT+EHgHnkbo3I2DlqjjN
+         Z/LC/RHO9r75w68WnON5u2/4n9NyrZVFIPLn54jHh/oP5AE2kX8NHeGBTL0qFP2tEZ1q
+         15+GBfLGkjbNhRsW8M70FTGOxnOCcC9MgyOnOPRgwG11JeXLYBRzj/hWPsqLHeHARZiK
+         KRsg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7k5VjZgfogFQE6pZHH62Hxk5Vl27m2eq4VxjuJn+QpZYgn7C7YfqM892IqX4r4I9IQObPLxPXJgA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2Lnz0GZ0sQZdcnuYZBehs6oqv27g/WXftP5WH+CU7WuvPp1Ib
+	kUzcrzAXUVBNi/OEy4TZB+Vw8EkKlANEPBmfDNLuOm9cBO/HKiEEyca/pIc2IotIAcfU21NIsle
+	w
+X-Google-Smtp-Source: AGHT+IHJEyVOG62NvWa9d1qggTtMCjzt+EKNCXFckK971VFGqKmUTAI/9H3Oo1mgh59gFKizdUDdeA==
+X-Received: by 2002:a05:6902:1242:b0:e35:e173:3341 with SMTP id 3f1490d57ef6-e3825bdd813mr3265588276.0.1731684690002;
+        Fri, 15 Nov 2024 07:31:30 -0800 (PST)
 Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e384121a605sm296041276.52.2024.11.15.07.31.57
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e38152c61d4sm989132276.5.2024.11.15.07.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 07:31:58 -0800 (PST)
+        Fri, 15 Nov 2024 07:31:29 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: kernel-team@fb.com,
 	linux-fsdevel@vger.kernel.org,
@@ -80,9 +80,9 @@ To: kernel-team@fb.com,
 	linux-btrfs@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-ext4@vger.kernel.org
-Subject: [PATCH v8 19/19] fs: enable pre-content events on supported file systems
-Date: Fri, 15 Nov 2024 10:30:32 -0500
-Message-ID: <46960dcb2725fa0317895ed66a8409ba1c306a82.1731684329.git.josef@toxicpanda.com>
+Subject: [PATCH v8 05/19] fanotify: rename a misnamed constant
+Date: Fri, 15 Nov 2024 10:30:18 -0500
+Message-ID: <8776ab90fe538225aeb561c560296bafd16b97c4.1731684329.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1731684329.git.josef@toxicpanda.com>
 References: <cover.1731684329.git.josef@toxicpanda.com>
@@ -94,57 +94,55 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that all the code has been added for pre-content events, and the
-various file systems that need the page fault hooks for fsnotify have
-been updated, add SB_I_ALLOW_HSM to the supported file systems.
+From: Amir Goldstein <amir73il@gmail.com>
 
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+FANOTIFY_PIDFD_INFO_HDR_LEN is not the length of the header.
+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 ---
- fs/btrfs/super.c   | 2 +-
- fs/ext4/super.c    | 3 +++
- fs/xfs/xfs_super.c | 2 +-
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ fs/notify/fanotify/fanotify_user.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 97a85d180b61..fe6ecc3f1cab 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -961,7 +961,7 @@ static int btrfs_fill_super(struct super_block *sb,
- #endif
- 	sb->s_xattr = btrfs_xattr_handlers;
- 	sb->s_time_gran = 1;
--	sb->s_iflags |= SB_I_CGROUPWB;
-+	sb->s_iflags |= SB_I_CGROUPWB | SB_I_ALLOW_HSM;
- 
- 	err = super_setup_bdi(sb);
- 	if (err) {
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index b3512d78b55c..13b9d67a4eec 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5306,6 +5306,9 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
- 	/* i_version is always enabled now */
- 	sb->s_flags |= SB_I_VERSION;
- 
-+	/* HSM events are allowed by default. */
-+	sb->s_iflags |= SB_I_ALLOW_HSM;
-+
- 	err = ext4_check_feature_compatibility(sb, es, silent);
- 	if (err)
- 		goto failed_mount;
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index fda75db739b1..2d1e9db8548d 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1713,7 +1713,7 @@ xfs_fs_fill_super(
- 		sb->s_time_max = XFS_LEGACY_TIME_MAX;
+diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+index 8fca5ec442e4..456cc3e92c88 100644
+--- a/fs/notify/fanotify/fanotify_user.c
++++ b/fs/notify/fanotify/fanotify_user.c
+@@ -117,7 +117,7 @@ struct kmem_cache *fanotify_perm_event_cachep __ro_after_init;
+ #define FANOTIFY_EVENT_ALIGN 4
+ #define FANOTIFY_FID_INFO_HDR_LEN \
+ 	(sizeof(struct fanotify_event_info_fid) + sizeof(struct file_handle))
+-#define FANOTIFY_PIDFD_INFO_HDR_LEN \
++#define FANOTIFY_PIDFD_INFO_LEN \
+ 	sizeof(struct fanotify_event_info_pidfd)
+ #define FANOTIFY_ERROR_INFO_LEN \
+ 	(sizeof(struct fanotify_event_info_error))
+@@ -172,14 +172,14 @@ static size_t fanotify_event_len(unsigned int info_mode,
+ 		dot_len = 1;
  	}
- 	trace_xfs_inode_timestamp_range(mp, sb->s_time_min, sb->s_time_max);
--	sb->s_iflags |= SB_I_CGROUPWB;
-+	sb->s_iflags |= SB_I_CGROUPWB | SB_I_ALLOW_HSM;
  
- 	set_posix_acl_flag(sb);
+-	if (info_mode & FAN_REPORT_PIDFD)
+-		event_len += FANOTIFY_PIDFD_INFO_HDR_LEN;
+-
+ 	if (fanotify_event_has_object_fh(event)) {
+ 		fh_len = fanotify_event_object_fh_len(event);
+ 		event_len += fanotify_fid_info_len(fh_len, dot_len);
+ 	}
  
++	if (info_mode & FAN_REPORT_PIDFD)
++		event_len += FANOTIFY_PIDFD_INFO_LEN;
++
+ 	return event_len;
+ }
+ 
+@@ -501,7 +501,7 @@ static int copy_pidfd_info_to_user(int pidfd,
+ 				   size_t count)
+ {
+ 	struct fanotify_event_info_pidfd info = { };
+-	size_t info_len = FANOTIFY_PIDFD_INFO_HDR_LEN;
++	size_t info_len = FANOTIFY_PIDFD_INFO_LEN;
+ 
+ 	if (WARN_ON_ONCE(info_len > count))
+ 		return -EFAULT;
 -- 
 2.43.0
 
