@@ -1,72 +1,73 @@
-Return-Path: <linux-xfs+bounces-15502-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15506-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ABF49CF039
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 16:38:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 171249CF068
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 16:42:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BAD8F1F2916B
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:38:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB314B35B8A
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 15:39:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48AFF1F7095;
-	Fri, 15 Nov 2024 15:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA5351F77B3;
+	Fri, 15 Nov 2024 15:32:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="eC0cYIic"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="OhbvR0D9"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977651F473C
-	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E451D5AC0
+	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 15:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731684718; cv=none; b=kLl35xfmTUJgS/G376LFeO7CflCPCnzas/hWthwdK1VoFpiWeconqcyw7/Y08nRy0ZyNZXqFYpUFDqacQsJzZ/mSv9La3whHh3H0fb6HScZMgmI3Nnv6iX2u48rfzrxqcPHLYBG+1p7oM9rpO2H3wgzxO43Kp7d6P1VCilDB3uk=
+	t=1731684731; cv=none; b=QvYX44Hksv8nOJppwxpQSRM4Bf/l7nCYiYYbC8/cMmtSOof9DDwuYrZ/+5RYVo047S/AEUTUS43UtiSqWBNLSd8BXoimWqBoQMjS7d5iVIEFbtkQ7xRTMwXmPZWo3qj+vINfmViz65aDVCqu69/xSaNRdwZkzzRIpTZ/mHO+1hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731684718; c=relaxed/simple;
-	bh=2N0bizMEg0czxuSX0Hl7S5FVpQVRVn9Mf1MRV8yCr7o=;
+	s=arc-20240116; t=1731684731; c=relaxed/simple;
+	bh=nFXm/L4ae8YekLwpIFurgFERbAtgq26xVgDJzO6g1yM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LaMRvAgtZc4wA9fh2UBNG1gvLQI2MBQG8QC48tq0/bsreu0QGVhJgZn1mwRveWMnOrEFJFtjtzwHnAUXSLUmkhLBgh+7k7+kz8TBff/t/u4m9GB1jQZBFEIzD85fMgZXP4RaNmfttl7hJX8Fp/J/6nnawRlb5REgziyrlaGovl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=eC0cYIic; arc=none smtp.client-ip=209.85.128.178
+	 MIME-Version; b=fNS+JjwXbrKgVK4JZ7o/YNprqHd/Mn0pkKck1XNZ9EFUBGrVnePlf65FuGosAqiHLPugU92c6yXC9FRp8vGp4ONd8jJGVq6dq42HEImaS/BWU3HaJokPl1IzWID9A6HU8nFozaPJtTiS20SQwqmpEsHuC77GaUHfRnOpK89HeOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=OhbvR0D9; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6ea5003deccso21569027b3.0
-        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:31:56 -0800 (PST)
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7180cc146d8so978749a34.0
+        for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 07:32:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684716; x=1732289516; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1731684729; x=1732289529; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3nbIBZPU5mMiQBH7fH9PUjd6pvpSRIo6Q0oL6vGrX38=;
-        b=eC0cYIicdKHGAKWmNkEFoUITofha1lNixX70BShTKVQVY9e3K9rBoMn6DWQp3kqlbP
-         dpkBv0NLvDUbcG+MRDBxbLVklABB9YUa5oPLnk5u9szWMwn8QUspmsNqUXyV+dYrt0At
-         8l7cdttDXn/lVGSGvJJN+neqoBkH2ADhP4Qz9mT1Gt2O1Yra10BV7mMLn4nsJYZgTl+Y
-         vTWtQKV0Zx30w4Q6jiXGwljA8/HQD9dqxYQLHjZA9L7BVVXbccbrvS8lQW/DWtOkNuMi
-         kT979D0Y3YYxjZORHK16QThmQlQt/dkuaw5g9nx/3jFdQt4BmpBHv8/j6R6Y1Ia8P2Ro
-         7U/g==
+        bh=Gek1GO8SPggpZ3MPgZMTTjA2lPqNZurY73wIWpdWbQQ=;
+        b=OhbvR0D9Mpu/eExRINZ6D2YTBSWBQVN4I77aTxH725JB6v1OtP4PbqsiIJcMqulLzD
+         PioDrpuYnRgl9mDwb6vPK3upyetHSr+oINmPkdr8QxCWDft025bwE4nU3PV0fKHGOF9Y
+         5jOq9a9PK96V3MqsEnD3wir6nk5nC8fc/gqPbhtSXB7le1fxkIAjBC45RlNpGY+45tDU
+         XMmI3hV/8/jQl38viODdYYbaJgzz/pYCsFFKRRupoBk31k8KIXEw609yC47pR2cZF7RP
+         YsaPDpH3DUsL3DttGA4nSsC4i3av1T7si5+F8NTv0l4/R6xLtQeB6iMtfXeb3MKT/OGg
+         brEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731684716; x=1732289516;
+        d=1e100.net; s=20230601; t=1731684729; x=1732289529;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3nbIBZPU5mMiQBH7fH9PUjd6pvpSRIo6Q0oL6vGrX38=;
-        b=eC0YAGsw69KEMVMDxYOEIZqE6fDBBm+WMRzC0+5gaG6G2hRINOu8z153Cxq6ki+8TI
-         xoVL7KUPwIngPeqiF6q4LU/NDu4xAUHr04o3P4BaSAoviO92OZIH/U7N7g5ch3WxRHJn
-         9yIRD1jpwZVXeA2Mti2l2cy7/TBV2uiZYdOyPRyf4nhnbdGZCf2ZAaNr5EuFwFRXsY7P
-         O7ZXxhtwHRU3RXCzY2cp0vmjcp3nenR/x/iOP2V2kA3WuMaS+4WHGoNTKqN+s4cbkgJC
-         b2faMd8zfaEteU4H42eRvv8C/qe8F1coA57YGCC8jkDYGloPRW0EZEeqR+S8MN5MNAPA
-         VUhw==
-X-Forwarded-Encrypted: i=1; AJvYcCU10Y1a4N3jq/UhaK2E8uSgcWYgEF+fd1Oa1zYjRdinPqRFaKBxEzNtrggq20TZLoguL5ggfYghPQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyItcy1rfqdQJE4sQ8WjQj9r2F8cF96E7JJ8RYyQbAQakY9UKyj
-	nucMLbn7VQrUpJ6ddxSO9ziztyWHL8dpTb9mMvCO+zC3nJjjZcy6Cz1jnA0zjJ8=
-X-Google-Smtp-Source: AGHT+IF2kfSK7avJhhme8jmNEknNmwYth/OIHi/JSJVRuMCWaSMr+rN1yucoeC0+W4HJkwXlrHqqNQ==
-X-Received: by 2002:a05:690c:688a:b0:6ea:7c46:8c23 with SMTP id 00721157ae682-6ee55ef8021mr42068567b3.35.1731684715691;
-        Fri, 15 Nov 2024 07:31:55 -0800 (PST)
+        bh=Gek1GO8SPggpZ3MPgZMTTjA2lPqNZurY73wIWpdWbQQ=;
+        b=obVIbXGV7j/RYhpajoakzjxFvh/MoUC3zJ22zaTcgPfELDN8UECT8NPCTdjKuBjuyp
+         w5JppEabC3CBoC51xRpiydPvItmp5Fysk9N54P6Y8G2n0FqfNCnvaQnabOCSfpwtHQNn
+         8dN0d5Xvgr5xCUTC2m9jr5dF0ahaZcnQMH/ao5bVIlT3rnqGOrQmmzHNmbHWUZdvPJsu
+         yJejsljL5zaIABWkGphH0kpBSOgA95aIP2eHpmAKiHxQp+g/AfUey2zcnto1sVzG2sdF
+         auVcK87H0v2smNRoLor6mXI7I/6q2WigRtFtPGa9YmJpYo/k+CTLsqXrY/4SdfludIsP
+         yG2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUzLFymgpsmiJF6lfk9uo20I0GnNg+VeXHvrihHXNTB2FcMWm+W1u9mPsG4/xFgD/3qE3g3EtuYpa0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZfcf/+yEXLtej4syid8snSDDx87WTaq0qvSV5TgqOqosPA0xv
+	b24gmMOljUI5HVM9IBVPVF7w4APaKKBe7IlGxpWeNxL1Zvewj4IDfPQux1ul9aILFfzXugw3sak
+	3
+X-Google-Smtp-Source: AGHT+IEUcKBXNGC+FquadsfHiR9BI4UoMJrmZkBZaObeXyKm9EGd5wreVNWR6wH/jakvp0EFNSF0lA==
+X-Received: by 2002:a05:6902:1209:b0:e30:c977:a360 with SMTP id 3f1490d57ef6-e38261291fdmr3157574276.5.1731684719039;
+        Fri, 15 Nov 2024 07:31:59 -0800 (PST)
 Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ee440709dbsm7729117b3.54.2024.11.15.07.31.54
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e384121a605sm296041276.52.2024.11.15.07.31.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 07:31:55 -0800 (PST)
+        Fri, 15 Nov 2024 07:31:58 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: kernel-team@fb.com,
 	linux-fsdevel@vger.kernel.org,
@@ -79,9 +80,9 @@ To: kernel-team@fb.com,
 	linux-btrfs@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-ext4@vger.kernel.org
-Subject: [PATCH v8 17/19] xfs: add pre-content fsnotify hook for write faults
-Date: Fri, 15 Nov 2024 10:30:30 -0500
-Message-ID: <9eccdf59a65b72f0a1a5e2f2b9bff8eda2d4f2d9.1731684329.git.josef@toxicpanda.com>
+Subject: [PATCH v8 19/19] fs: enable pre-content events on supported file systems
+Date: Fri, 15 Nov 2024 10:30:32 -0500
+Message-ID: <46960dcb2725fa0317895ed66a8409ba1c306a82.1731684329.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1731684329.git.josef@toxicpanda.com>
 References: <cover.1731684329.git.josef@toxicpanda.com>
@@ -93,29 +94,56 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-xfs has it's own handling for write faults, so we need to add the
-pre-content fsnotify hook for this case.  Reads go through filemap_fault
-so they're handled properly there.
+Now that all the code has been added for pre-content events, and the
+various file systems that need the page fault hooks for fsnotify have
+been updated, add SB_I_ALLOW_HSM to the supported file systems.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- fs/xfs/xfs_file.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/super.c   | 2 +-
+ fs/ext4/super.c    | 3 +++
+ fs/xfs/xfs_super.c | 2 +-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index ca47cae5a40a..4fe89770ecb5 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1458,6 +1458,10 @@ xfs_write_fault(
- 	unsigned int		lock_mode = XFS_MMAPLOCK_SHARED;
- 	vm_fault_t		ret;
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 97a85d180b61..fe6ecc3f1cab 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -961,7 +961,7 @@ static int btrfs_fill_super(struct super_block *sb,
+ #endif
+ 	sb->s_xattr = btrfs_xattr_handlers;
+ 	sb->s_time_gran = 1;
+-	sb->s_iflags |= SB_I_CGROUPWB;
++	sb->s_iflags |= SB_I_CGROUPWB | SB_I_ALLOW_HSM;
  
-+	ret = filemap_fsnotify_fault(vmf);
-+	if (unlikely(ret))
-+		return ret;
+ 	err = super_setup_bdi(sb);
+ 	if (err) {
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index b3512d78b55c..13b9d67a4eec 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -5306,6 +5306,9 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+ 	/* i_version is always enabled now */
+ 	sb->s_flags |= SB_I_VERSION;
+ 
++	/* HSM events are allowed by default. */
++	sb->s_iflags |= SB_I_ALLOW_HSM;
 +
- 	sb_start_pagefault(inode->i_sb);
- 	file_update_time(vmf->vma->vm_file);
+ 	err = ext4_check_feature_compatibility(sb, es, silent);
+ 	if (err)
+ 		goto failed_mount;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index fda75db739b1..2d1e9db8548d 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1713,7 +1713,7 @@ xfs_fs_fill_super(
+ 		sb->s_time_max = XFS_LEGACY_TIME_MAX;
+ 	}
+ 	trace_xfs_inode_timestamp_range(mp, sb->s_time_min, sb->s_time_max);
+-	sb->s_iflags |= SB_I_CGROUPWB;
++	sb->s_iflags |= SB_I_CGROUPWB | SB_I_ALLOW_HSM;
+ 
+ 	set_posix_acl_flag(sb);
  
 -- 
 2.43.0
