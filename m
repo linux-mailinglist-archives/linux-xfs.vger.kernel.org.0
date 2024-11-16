@@ -1,163 +1,96 @@
-Return-Path: <linux-xfs+bounces-15517-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15519-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFE659CF561
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 21:00:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 42E1C9D0097
+	for <lists+linux-xfs@lfdr.de>; Sat, 16 Nov 2024 20:08:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 428691F22331
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Nov 2024 20:00:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6E8D1F21995
+	for <lists+linux-xfs@lfdr.de>; Sat, 16 Nov 2024 19:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F5E1E202D;
-	Fri, 15 Nov 2024 20:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BA731946AA;
+	Sat, 16 Nov 2024 19:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g56CB636"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVC+WmyQ"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CA712F585
-	for <linux-xfs@vger.kernel.org>; Fri, 15 Nov 2024 20:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80C919306F;
+	Sat, 16 Nov 2024 19:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731700832; cv=none; b=XW28RnVHJbia2/dmvHSYB6fH1Hz/6/5XUDKqTpDM8IKlQattisgZPkJSskcO6xL6Rhkigtv+UHCZtZkb8Jhuo33KHgdBPcJWt27/oMZg6FKTuULAlfg8FkyeSEbquZHReBYZU8ed1Y7Os2G5cCWP/pkwgrQ/5IldOFab+jSW/y4=
+	t=1731784084; cv=none; b=mVsWZ0wJlnNI0Oa0qtUDRmkFaaDD4QoT3emoRTDJixylr72dvJBCmZWLa23DLMpuS//kSNJXKcNQZDpvNuvdldXYAL0WZWvC68yIPP0IdzZXjD5x/axucVi8ulkgqcEtEqBhK9R8loV3QL/wtRqbJXAHYrd4S/VlaCike6yg+qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731700832; c=relaxed/simple;
-	bh=8129lvCoehHbVeWMqtCkLCo3szkRv9egHG1cvUW5eQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WXxjJtNPMg0JA9iP1NZndpEhH9fUMng0Kf1X7JF/DCEMFd/QO+RRePaMBSKdulW1QXHlVxbzs9Fm/v9QgxAZaf2YCn5de99rCj7BKfIPL2HqaA9h5ulhPw31BRxVh7L82vxV9eyvbTW8a0eSky1+1KHNqnXHHQq21fyNuyL2w4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g56CB636; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731700830;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m4AtfWKt2DgYvqWiXDtkXrgtOeibviw4I8ze21URWtQ=;
-	b=g56CB636ejCT0x10sficSwWIkvG3YweUpsjDswcpFIs/tbfuhKjCq9XVbqhLUMIRUQJ5jK
-	Nvt+cqpCnhw+YXt0wimI5NKREPVWswTpqYrnrNZ2AdyvLA1ka1z2frq7TRiiPblID7NmO7
-	aoWzVs3+ShwePL8i1t+JoWVxyVFKz4g=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-576-zETjAVFYPquJz0GqyXsoDw-1; Fri,
- 15 Nov 2024 15:00:28 -0500
-X-MC-Unique: zETjAVFYPquJz0GqyXsoDw-1
-X-Mimecast-MFC-AGG-ID: zETjAVFYPquJz0GqyXsoDw
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ECEC71954B02;
-	Fri, 15 Nov 2024 20:00:26 +0000 (UTC)
-Received: from bfoster.redhat.com (unknown [10.22.80.120])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DD55E1953880;
-	Fri, 15 Nov 2024 20:00:25 +0000 (UTC)
-From: Brian Foster <bfoster@redhat.com>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	hch@infradead.org,
-	djwong@kernel.org
-Subject: [PATCH v4 3/3] iomap: elide flush from partial eof zero range
-Date: Fri, 15 Nov 2024 15:01:55 -0500
-Message-ID: <20241115200155.593665-4-bfoster@redhat.com>
-In-Reply-To: <20241115200155.593665-1-bfoster@redhat.com>
-References: <20241115200155.593665-1-bfoster@redhat.com>
+	s=arc-20240116; t=1731784084; c=relaxed/simple;
+	bh=w3rJ00GC+6ol5by0IWnf4bDDfDamd7ILQOdlYKQu4Vk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k/vaMQeN4WVTPXKtjuOmouU7KsLvU3BNzKY5Xk6ol9/tKSx9053HoABmiDA7lYU1dPRgGNPH9Sx/VJPGdG0MjWD3Ghhg2RCaUZZe44bP1pmkJQly9GBaEEPnDRe97Ssa+NKzZrdVw7FHuEEXLcAxi91OkTlYbxJFwtitxkV9X44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVC+WmyQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE80C4CEC3;
+	Sat, 16 Nov 2024 19:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731784083;
+	bh=w3rJ00GC+6ol5by0IWnf4bDDfDamd7ILQOdlYKQu4Vk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZVC+WmyQeuodc9/WYTLXBlu1lBL8U9fhZVKvCJ8M3UVeKSSWqB1lBmZcv53i7m/l4
+	 r7oU4cOPLn/M7ViX1mfue3ljaUtExv0eWRjDsByjQIhS/4thSnDhLq0qdp/uH0yxYm
+	 7TjqksdYreZ3W6Q2r183wSN70P3pTQXuB0eAY/ySiX+kUHchgfUB0KiZvhWHOxx6Sm
+	 4jX3yAQP7EjQmdNUxkrY8Gi6DA262oqSRleRJuHCSau3KckGHdLaHDxdMYPGMp0vu6
+	 xA6sjkpFVbDYF+1OzJDSGcFc/b/gt+mhBIqoaGxvzm2gYdBlUoMZEqKuJIKxQ1BlcI
+	 IzoFIQBONxO0Q==
+From: Zorro Lang <zlang@kernel.org>
+To: fstests@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Subject: [PATCH 0/2] fstests: fix test issue of xfs/157
+Date: Sun, 17 Nov 2024 03:07:58 +0800
+Message-ID: <20241116190800.1870975-1-zlang@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-iomap zero range flushes pagecache in certain situations to
-determine which parts of the range might require zeroing if dirty
-data is present in pagecache. The kernel robot recently reported a
-regression associated with this flushing in the following stress-ng
-workload on XFS:
+xfs/157 started to fail since 2f7e1b8a6f09 ("xfs/157,xfs/547,xfs/548: switch to
+using _scratch_mkfs_sized") was merged.
 
-stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --metamix 64
+  FSTYP         -- xfs (non-debug)
+  PLATFORM      -- Linux/x86_64
+  MKFS_OPTIONS  -- -f -m rmapbt=1 /dev/sda3
+  MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/sda3 /mnt/scratch
 
-This workload involves repeated small, strided, extending writes. On
-XFS, this produces a pattern of post-eof speculative preallocation,
-conversion of preallocation from delalloc to unwritten, dirtying
-pagecache over newly unwritten blocks, and then rinse and repeat
-from the new EOF. This leads to repetitive flushing of the EOF folio
-via the zero range call XFS uses for writes that start beyond
-current EOF.
+  xfs/157 7s ... - output mismatch (see /root/git/xfstests/results//xfs/157.out.bad)
+      --- tests/xfs/157.out       2024-11-01 01:05:03.664543576 +0800  
+      +++ /root/git/xfstests/results//xfs/157.out.bad     2024-11-01 02:56:47.994007900 +0800
+      @@ -6,10 +6,10 @@
+       label = "oldlabel"
+       label = "newlabel"
+       S3: Check that setting with rtdev works
+      -label = "oldlabel"
+      +label = ""
+       label = "newlabel"
+       S4: Check that setting with rtdev + logdev works
+      ...
+      (Run 'diff -u /root/git/xfstests/tests/xfs/157.out /root/git/xfstests/results//xfs/157.out.bad'  to see the entire diff)
+  Ran: xfs/157
+  Failures: xfs/157
+  Failed 1 of 1 tests
 
-To mitigate this problem, special case EOF block zeroing to prefer
-zeroing the folio over a flush when the EOF folio is already dirty.
-To do this, split out and open code handling of an unaligned start
-offset. This brings most of the performance back by avoiding flushes
-on zero range calls via write and truncate extension operations. The
-flush doesn't occur in these situations because the entire range is
-post-eof and therefore the folio that overlaps EOF is the only one
-in the range.
+Before that change, the _scratch_mkfs can drop "rmapbt=1" option from $MKFS_OPTIONS,
+only keep the "-L label" option. That's why this test never failed before. To fix
+this failure, this patchset does:
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/buffered-io.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+The [PATCH 1/2] helps _scratch_mkfs_sized to support extra argument, then the
+extra argument can be sent to _scratch_mkfs, which will try to "protect"
+the extra argument from being dropped.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 9c1aa0355c71..af2f59817779 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1401,6 +1401,10 @@ iomap_zero_range(struct inode *inode, loff_t pos, loff_t len, bool *did_zero,
- 		.len		= len,
- 		.flags		= IOMAP_ZERO,
- 	};
-+	struct address_space *mapping = inode->i_mapping;
-+	unsigned int blocksize = i_blocksize(inode);
-+	unsigned int off = pos & (blocksize - 1);
-+	loff_t plen = min_t(loff_t, len, blocksize - off);
- 	int ret;
- 	bool range_dirty;
- 
-@@ -1410,12 +1414,28 @@ iomap_zero_range(struct inode *inode, loff_t pos, loff_t len, bool *did_zero,
- 	 * mapping converts on writeback completion and so must be zeroed.
- 	 *
- 	 * The simplest way to deal with this across a range is to flush
--	 * pagecache and process the updated mappings. To avoid an unconditional
--	 * flush, check pagecache state and only flush if dirty and the fs
--	 * returns a mapping that might convert on writeback.
-+	 * pagecache and process the updated mappings. To avoid excessive
-+	 * flushing on partial eof zeroing, special case it to zero the
-+	 * unaligned start portion if already dirty in pagecache.
-+	 */
-+	if (off &&
-+	    filemap_range_needs_writeback(mapping, pos, pos + plen - 1)) {
-+		iter.len = plen;
-+		while ((ret = iomap_iter(&iter, ops)) > 0)
-+			iter.processed = iomap_zero_iter(&iter, did_zero);
-+
-+		iter.len = len - (iter.pos - pos);
-+		if (ret || !iter.len)
-+			return ret;
-+	}
-+
-+	/*
-+	 * To avoid an unconditional flush, check pagecache state and only flush
-+	 * if dirty and the fs returns a mapping that might convert on
-+	 * writeback.
- 	 */
- 	range_dirty = filemap_range_needs_writeback(inode->i_mapping,
--					pos, pos + len - 1);
-+					iter.pos, iter.pos + iter.len - 1);
- 	while ((ret = iomap_iter(&iter, ops)) > 0) {
- 		const struct iomap *srcmap = iomap_iter_srcmap(&iter);
- 
--- 
-2.47.0
+The [PATCH 2/2] invokes the new _scratch_mkfs_sized in xfs/157 to fix the
+test failure of it.
 
+Thanks,
+Zorro
 
