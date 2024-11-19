@@ -1,103 +1,111 @@
-Return-Path: <linux-xfs+bounces-15609-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15613-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 188EC9D2A0D
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Nov 2024 16:48:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C84189D2A10
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Nov 2024 16:48:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BA8E71F2377A
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Nov 2024 15:48:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82C8D1F213E9
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Nov 2024 15:48:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E856D1CF7A0;
-	Tue, 19 Nov 2024 15:45:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E2EE1D1E69;
+	Tue, 19 Nov 2024 15:45:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pUjOAVbi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWy4Nnns"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC701D14FB;
-	Tue, 19 Nov 2024 15:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750501D14FB
+	for <linux-xfs@vger.kernel.org>; Tue, 19 Nov 2024 15:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732031121; cv=none; b=gT0r7dlcdS47pay5qq7Jd7fCvV4wEBKvOyQ4DlVvOaH+ZuIN06vvMnD8TE2RnV//vv8atGeXzJJ94tykokasFenG17yyKmHTtav4HOhLybYzYNFjMWt7ECNrBWHq5ACeAl+cxxJQ32IauvC/8gZusKoReXIvlvwTpjPRlW+LCkg=
+	t=1732031133; cv=none; b=FzVH2z6hr8X6OUa0w+rddZZkkqvmnzVXCY26a/ZW4S3hy2m9UnI1iXEEpArxaXhlCVg8VJ9L/3KvNkIF13O/74iXQLHdHbFigx/879+VKcuaLMT7F1xeIxKBCkBZMiplK1m5TgaR5rlkEflZZloa0odb3dnd4M9SpInYYTxBoGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732031121; c=relaxed/simple;
-	bh=mgVaw/gaBpEwRQJg7OQipi80mdgppv5nbX6a4IWxIOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kctg17+ZNgcxhAepCVJFxh4wh2yYYJod9xVTwSl8lCJ5rUOagxJZWxzJrpK8NjbBA/FClRvTMEyOcDd3iX+oz67Og+7fVjZ3xJ+elnuz5MQKYoT/3/yB2rb8f71Z/8Xn+Cr27Ne3aPeB6ABWc59A1dRPA/eBqPGSlOGaA99pU+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pUjOAVbi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD27C4CED2;
+	s=arc-20240116; t=1732031133; c=relaxed/simple;
+	bh=uXa3GNCk4+aFvMxdlZDkyJ47Ip4E24kVOh9sGLv24X8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=btXfSwGv+8/J9Exnsb2k79jZsqacrJ+xY2TgE1/Mck6XIqxahfctXwm6PmRq9K5fUoeOtyRSoi6pGvOY5zCOzdgqcNYsm/vgz1a+3IVZfMQSZHpEOcmjGqfjeNWIHg5Z+lf6c/vQrXSslNiBQmcNYpYNtA7Pfl1dyHuuHh8+EEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YWy4Nnns; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732031129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=D58nFfd1UxCC7UJee48pdA41F8/AUZLtav09tMWCaOA=;
+	b=YWy4Nnnsl8U8wV4KEo/kCx8hLx6xzEYaaa7H+GI2pbCSsTFU0936+cVtglZExvLXkf7qX4
+	NTzin1/PBGNMlo/Hz7UQ54zbEhIYMoICCiVLU6tNy6CB/YQpZYNywvoOc1JkOIBDRB0RE/
+	f7+hyVHZJ0UsA5T4i0FpV8N6iW9Hc/0=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-205-VjQUdmsJNiqIK03a2mPqNg-1; Tue,
+ 19 Nov 2024 10:45:24 -0500
+X-MC-Unique: VjQUdmsJNiqIK03a2mPqNg-1
+X-Mimecast-MFC-AGG-ID: VjQUdmsJNiqIK03a2mPqNg
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6DE8B1955EE8;
+	Tue, 19 Nov 2024 15:45:22 +0000 (UTC)
+Received: from bfoster.redhat.com (unknown [10.22.80.120])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C69851956054;
 	Tue, 19 Nov 2024 15:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732031121;
-	bh=mgVaw/gaBpEwRQJg7OQipi80mdgppv5nbX6a4IWxIOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pUjOAVbi5v3vlF5TVcJpEg63HpKxbVrW1ByFJsz5swQ4mOf9QbCzNvQ5Dep5pj7zd
-	 y5A5kU+i+CY12D7V5rYcIkmJmy2E1af+Ak6eXwJFMem/Z5RngRho3ZINvfAyhX4CYW
-	 SpPkosJO8w6IZ9HNbS4b20svOafhDIvvRYlJh4WX0dMogt5olByPoKBaefKz5OEIdj
-	 Kx+PGU1pI8I5qREvGsZ+xucRAKLLZADqef/iQ7nO/SpaqcEZWbBQqbFBnGi+LGit9f
-	 QYw7bvn0QzkJEjRxRZApbmBdeSu/Y8TPZYstAjyhz212F2IfSNWe3Wf3UYSCGYhzoz
-	 ysR4uDkjSjzqg==
-Date: Tue, 19 Nov 2024 07:45:20 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Dave Chinner <david@fromorbit.com>, zlang@redhat.com,
-	linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 09/12] generic/251: constrain runtime via time/load/soak
- factors
-Message-ID: <20241119154520.GM9425@frogsfrogsfrogs>
-References: <173197064408.904310.6784273927814845381.stgit@frogsfrogsfrogs>
- <173197064562.904310.6083759089693476713.stgit@frogsfrogsfrogs>
- <ZzvtoVID2ASv4IM2@dread.disaster.area>
- <Zzwsgzu81kiv5JPB@infradead.org>
+From: Brian Foster <bfoster@redhat.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Subject: [PATCH RFC 0/4] iomap: zero range folio batch processing prototype
+Date: Tue, 19 Nov 2024 10:46:52 -0500
+Message-ID: <20241119154656.774395-1-bfoster@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zzwsgzu81kiv5JPB@infradead.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon, Nov 18, 2024 at 10:13:23PM -0800, Christoph Hellwig wrote:
-> On Tue, Nov 19, 2024 at 12:45:05PM +1100, Dave Chinner wrote:
-> > Question for you: Does your $here directory contain a .git subdir?
-> > 
-> > One of the causes of long runtime for me has been that $here might
-> > only contain 30MB of files, but the .git subdir balloons to several
-> > hundred MB over time, resulting is really long runtimes because it's
-> > copying GBs of data from the .git subdir.
-> 
-> Or the results/ directory when run in a persistent test VM like the
-> one for quick runs on my laptop.  I currently need to persistently
-> purge that for just this test.
-> 
-> > 
-> > I have this patch in my tree:
-> > 
-> > --- a/tests/generic/251
-> > +++ b/tests/generic/251
-> > @@ -175,9 +175,12 @@ nproc=20
-> >  # Copy $here to the scratch fs and make coipes of the replica.  The fstests
-> >  # output (and hence $seqres.full) could be in $here, so we need to snapshot
-> >  # $here before computing file checksums.
-> > +#
-> > +# $here/* as the files to copy so we avoid any .git directory that might be
-> > +# much, much larger than the rest of the fstests source tree we are copying.
-> >  content=$SCRATCH_MNT/orig
-> >  mkdir -p $content
-> > -cp -axT $here/ $content/
-> > +cp -ax $here/* $content/
-> 
-> Maybe we just need a way to generate more predictable file system
-> content?
+Hi all,
 
-How about running fsstress for ~50000ops or so, to generate some test
-files and directory tree?
+Here's a first pass prototype of dirty folio batch processing for zero
+range. The idea here is that the fs can avoid pagecache flushing or
+wonky ordering/racing issues by passing in a batch of dirty folios that
+might exist over unwritten mappings at lookup time.
 
---D
+This is only lightly tested so far, but works well enough to demonstrate
+the idea. The biggest open question in my mind is how to better define
+the interface. For now I just stuffed the folio_batch in the struct
+iomap, but I don't really like it there due to confusion between iomap
+and srcmap and because it bloats the structure.
+
+I thought about using ->private along with a custom ->get_folio(), but I
+don't think that really fits the idea of a built-in mechanism. It might
+be more appropriate to attach to the iter, but that currently isn't
+accessible to ->iomap_begin(). I suppose we could define an
+iomap_to_iter() or some such helper that the fill helper could use to
+populate the batch, but maybe there are other thoughts/ideas?
+
+Brian
+
+Brian Foster (4):
+  iomap: allow passing a folio into write begin path
+  iomap: optional zero range dirty folio processing
+  xfs: always trim mapping to requested range for zero range
+  xfs: fill dirty folios on zero range of unwritten mappings
+
+ fs/iomap/buffered-io.c | 93 ++++++++++++++++++++++++++++++++++++++----
+ fs/iomap/iter.c        |  2 +
+ fs/xfs/xfs_iomap.c     | 28 ++++++++-----
+ include/linux/iomap.h  |  5 +++
+ 4 files changed, 109 insertions(+), 19 deletions(-)
+
+-- 
+2.47.0
+
 
