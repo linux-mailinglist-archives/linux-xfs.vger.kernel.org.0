@@ -1,93 +1,69 @@
-Return-Path: <linux-xfs+bounces-15824-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15826-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E83C39D7A1D
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Nov 2024 03:36:29 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC85A9D7AFC
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Nov 2024 06:10:21 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A537B281D58
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Nov 2024 02:36:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1622F162C85
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Nov 2024 05:10:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C89EAF1;
-	Mon, 25 Nov 2024 02:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5274013A26D;
+	Mon, 25 Nov 2024 05:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uRjkTABN"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5647FD;
-	Mon, 25 Nov 2024 02:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CF613CFA6;
+	Mon, 25 Nov 2024 05:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732502184; cv=none; b=QrSvvoyuJ6nAXF9LtnlTUNcM8pUof7Ew6UxOqIC8kKDTVRFE5VMyGI53enNvrNwC9j8u6qvh3mroUf63JJS4ObH4R+P8QjNuyVCtCgYigJ1mqW7Oyta4XWDRCGeX4KuR5t/T6GD9JsdtMZPxa2L8ItDsddxnObngLbQ2RkREi4w=
+	t=1732511412; cv=none; b=Z/1FvUVAhW2vi/QHktsQDXHkpD+gGvSJ1TVNqwBszJPuGIkFQ/Z1ILZDLGhtAONlneV55FCVbRB/i+MX/inoYk9RxdWdwUa5WEKoNlpWvWIumClE837ALSfcoOivEqE0A3nhCxNtQXLqsZfhP3l0/M5T7omeMINz4+HhU/TT9H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732502184; c=relaxed/simple;
-	bh=ln2xQbsDgxry7xvsk4Jkh2KiNDjup73L+4tEY9llPmU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=luGDVGoH3v/Dd4bWWGM3l9MvBJ/2LA3RxNXwaQcNCb8e3DlFauasXAEk2QVVVNmB1pyzwTyCWc4+lW+MsTnd1b6xJCfM+fJK3ow2fEKqzeCp+oXkKiiNc+qDyVYODCgArVknySQYJJhCigJmZGVLczt14aVDDGSfqzmxAUjqIP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XxVC51j3Hz2GbhP;
-	Mon, 25 Nov 2024 10:34:09 +0800 (CST)
-Received: from dggpemf500017.china.huawei.com (unknown [7.185.36.126])
-	by mail.maildlp.com (Postfix) with ESMTPS id 32430180042;
-	Mon, 25 Nov 2024 10:36:14 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by dggpemf500017.china.huawei.com
- (7.185.36.126) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 25 Nov
- 2024 10:36:13 +0800
-From: Long Li <leo.lilong@huawei.com>
-To: <brauner@kernel.org>, <djwong@kernel.org>, <cem@kernel.org>
-CC: <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<yi.zhang@huawei.com>, <houtao1@huawei.com>, <leo.lilong@huawei.com>,
-	<yangerkun@huawei.com>
-Subject: [PATCH v4 2/2] xfs: clean up xfs_end_ioend() to reuse local variables
-Date: Mon, 25 Nov 2024 10:33:41 +0800
-Message-ID: <20241125023341.2816630-2-leo.lilong@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241125023341.2816630-1-leo.lilong@huawei.com>
-References: <20241125023341.2816630-1-leo.lilong@huawei.com>
+	s=arc-20240116; t=1732511412; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MaG9NiPLw5735TdIIIX+jOBc9nWqLuLk+AHLqKQeCCQZbffw7LRweqUpn54lh9JEkTlJwFcKjP3ic6aiT39uCnwFqXcpQDtKoAU9IFBLW45TQUAviknHoWTszWopZi+vt57uFm0KYRzUfOFrWs9y0DeHxNt+4hNhmLRbHUyrEEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uRjkTABN; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=uRjkTABNl4FwYVUDSFbpN5xUT6
+	+/RiOOqUEpAylRA/B5PZXYMpEgSIjCNZXnQbdq+h5Bz3tCgeu0Jf6AQ1/HWI4SQpNb0ndCRABTH5p
+	dZxUVKgB65JElLJppySV/9EkAq1nvH4yLWsGdW2+hPayZ1LhLvxZarm8HQYUTXsdikPgxvUvndz+c
+	90yJD4ysU41/R0BWhK3axb0nmRNkq0UbworlOBejyQ9yzanqeA9GJ9BDziFFDqZcy9HEBw7x+3zBd
+	0cMamaOJaofDglNNs99V74vel4dKpyAJ2i6Ca9U+bJ0vQFLWcLQrMuuJikuLr96pR1TDw2wScxVR/
+	xdgjAlSA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tFRMP-000000074Tv-2ZaV;
+	Mon, 25 Nov 2024 05:10:09 +0000
+Date: Sun, 24 Nov 2024 21:10:09 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: zlang@redhat.com, fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 02/17] generic/757: convert to thinp
+Message-ID: <Z0QGsVNRO5o0NhPY@infradead.org>
+References: <173229419991.358248.8516467437316874374.stgit@frogsfrogsfrogs>
+ <173229420045.358248.13209894180925094165.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemf500017.china.huawei.com (7.185.36.126)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173229420045.358248.13209894180925094165.stgit@frogsfrogsfrogs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Use already initialized local variables 'offset' and 'size' instead
-of accessing ioend members directly in xfs_setfilesize() call.
+Looks good:
 
-This is just a code cleanup with no functional changes.
-
-Signed-off-by: Long Li <leo.lilong@huawei.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
----
-v3->v4: No changes.
-
- fs/xfs/xfs_aops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 559a3a577097..67877c36ed11 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -131,7 +131,7 @@ xfs_end_ioend(
- 		error = xfs_iomap_write_unwritten(ip, offset, size, false);
- 
- 	if (!error && xfs_ioend_is_append(ioend))
--		error = xfs_setfilesize(ip, ioend->io_offset, ioend->io_size);
-+		error = xfs_setfilesize(ip, offset, size);
- done:
- 	iomap_finish_ioends(ioend, error);
- 	memalloc_nofs_restore(nofs_flag);
--- 
-2.39.2
-
 
