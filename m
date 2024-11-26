@@ -1,133 +1,161 @@
-Return-Path: <linux-xfs+bounces-15891-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-15893-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 267CF9D8FF6
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2024 02:29:46 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23A3A9D8FF9
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2024 02:30:03 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0602288A8A
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2024 01:29:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEED51647FC
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Nov 2024 01:29:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC95EDDCD;
-	Tue, 26 Nov 2024 01:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 466B0C2ED;
+	Tue, 26 Nov 2024 01:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P+mIVVkO"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dIxrQJhc"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D533D531
-	for <linux-xfs@vger.kernel.org>; Tue, 26 Nov 2024 01:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBE2C2C6
+	for <linux-xfs@vger.kernel.org>; Tue, 26 Nov 2024 01:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732584580; cv=none; b=T2wrdGRGiYcXarbsg6EQEMpGg08sclfBScCpokuSJsgAZ+3P+0AgxNIh12i4K2o9S7sUdHOAt9zhpQqIy59DeDj9VdITTHhAuwdnRskwFC2wr/Mvaqc1Wx1f6bK36Q8kOkALFEd4f0nGUWZH0r34q1UGoyYg/W1b6RLRZOqgU9E=
+	t=1732584601; cv=none; b=qm4EwxDHCPPdXjfOE8kpwqZqe0NpulUvHq/YwaGoD4aJ1hTctJ5GsKLe80KqZdfPtnyMv8i4IUFJscv7CnZMrjDVGsPIABjEzdCIQ0HQkyB+FBBkP9TK2An9cLk+m+I/12fS5tZ7yclXtAVoBsy8+1/WEKk7A/ba2nrPCCgeTls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732584580; c=relaxed/simple;
-	bh=9XEqeucVOzgibdufI0pmJr9ghGoD5zeYFVoGtKEkOuc=;
-	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a0NaqoASF2sPT27219PdoVnfkVWSKPoECSPAv/DWFeuhh55fJr3Sag9CCH1G3Ai6bPR8XhbHpTMIokmHzMK9sFdXMjZamHXoeBdSu1kxtN6it595AKcjs93GXRIdQSgvyMpslcpP8b5sZDKTl1ZzYD4jz1DxDo5X5i7bfyCSiPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P+mIVVkO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 574FBC4CECE;
-	Tue, 26 Nov 2024 01:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732584580;
-	bh=9XEqeucVOzgibdufI0pmJr9ghGoD5zeYFVoGtKEkOuc=;
-	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=P+mIVVkOmERnvj2U+o8SxL/5wnpap/W0SRIaknGuz12P963P3667VF00/B5XbLXmU
-	 dTE+JIWVgm7g0a4IkqRsAjmZCrACfrZIGSPSDX9sZ2sVkpmzWPuvegkXH4Z6y2ig9x
-	 S4mUraLePirT7dG9chLIbm/P9bkVCoT/XIyhvhSBPIMXhOZ4oy7be58FLzRK7cYUOE
-	 THsLQsQJu1tZeoVWzsf7pc8InswHXm+L1PdHfC2Cm/l4+9L5/qJzPCfNSWSYXiBzTh
-	 t2JWXWUocgSds9nbpXhd70lNCiToVGXiu90V1LKDwlOQLF/Jr3zUGhmaC4grsuszD2
-	 HdLwYvdaGJ7/g==
-Date: Mon, 25 Nov 2024 17:29:39 -0800
-Subject: [PATCH 19/21] xfs: clean up log item accesses in
- xfs_qm_dqflush{,_done}
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-Message-ID: <173258398125.4032920.10688788085648644743.stgit@frogsfrogsfrogs>
-In-Reply-To: <173258397748.4032920.4159079744952779287.stgit@frogsfrogsfrogs>
-References: <173258397748.4032920.4159079744952779287.stgit@frogsfrogsfrogs>
+	s=arc-20240116; t=1732584601; c=relaxed/simple;
+	bh=9sV8YBHJXyrkhyZQsOTPxXHj3uD9DLHpK6RGzk0TURY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XakMlQELkzaOr4iTZ8znRr0UnYO9bL9/zJwTnKntdRd5JOMyknx/ygqztX4uM6ve2efHZUl4LJHQo/pMLhpjCvWRYXIcFTH2dMs8K98wsvAOdNQnv2aWMQDAWVs/Css7Z3joiut2s/Xhd/TZbu1BDfDawWdbK/9NFGRoIzHWuXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=dIxrQJhc; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e3882273bc8so4670325276.1
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Nov 2024 17:29:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1732584598; x=1733189398; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=AS1vcyzPenwGSUXYgsTAdALJscT7l6zsDHUyoHaZinY=;
+        b=dIxrQJhce5vcU4hRtDEhSZsMxxN/0HMlUcjJpmqzVGdZzzg5Um9exez+dMQQXerBIj
+         bVdWWhue662Bn/3W18MgSXMXkBdiWnhG4YauNAwGcVZGc5VLjJUR2XinZKwtiNoaNWoH
+         Wea8x+leazUlq5WtK3pqgEVQjQIL3EdJFGv0o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732584598; x=1733189398;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AS1vcyzPenwGSUXYgsTAdALJscT7l6zsDHUyoHaZinY=;
+        b=VU/nRFMCyfdnac/foMD/HyFNqRYUFzpQHSjMQyBUqNZjKMFImvdLjB+cLVI+EbpHJM
+         BssYd6PvcC9rh5Y4NrsLqBcxiAlSNDilxqUIOm2C5CQAWCfEIEqpnlrIORtGLH2U2Px6
+         LoaL7eg53AR1kiE1L6UINiuSl/xJsWkCMYqH9RXI48a8B3pBY4l3PDzjbDWZnIEEfEqm
+         r/4XNIQpO8Kkpy0JDDh4L/Hr/Co+PfAK0qBW3lOAQd+Q64P65sJJVPS9UFEvZszS5EFS
+         6xVohgApSklL9kBvFaY8CfTf08lnnqg/F1qzjxrk5dMQdCdzAkWz4jZ9P6yGUTSOU5V2
+         b2cQ==
+X-Gm-Message-State: AOJu0YzzKTImc4140E4sKqhZKSzs4/zgfZv2oECuvDjzj/mFe1/oAZZD
+	zQtB0IjIKJliMF7DpNPgtLQbo58cmfZjpZYgnc0ipDgt2znucyzmMr7UC9dHrQ==
+X-Gm-Gg: ASbGncugKMs9gs9VP2TXgSnzvzfehJeYofPAhnlurPqZcVW3kzuoSopFzIASp6Gn8nK
+	9Si1h1DYRFw1oMW7DuUQfgRHBhiq0liJt0FyfbwjehvoR5z1YYwYbzTlY8sELAfr2u6y5lzooqk
+	iqTYEQD8VHsapWRtwZ6w2zoRNMMik34wWNl4TWuqa88LSzuS+l/Vw3rAG8fAhDfqSxqbcVXT4Mn
+	PgAZt72z8iyrXHX1pubbL+3jphuTDEVjiLzUK4W0ipJvHEYGo5AgAbWkN5v395lev/pd89D+gDd
+	AhmxrECB6QIc2w==
+X-Google-Smtp-Source: AGHT+IEsPx4eovYXZzLlAlpkJE8n33OnOEtntWNQIdQ/8r3YLVjlA93BLeDkxqnBfJ57KuK9hXd5ag==
+X-Received: by 2002:a05:6902:18c6:b0:e29:769b:453a with SMTP id 3f1490d57ef6-e38f8bd8fb0mr12247790276.35.1732584598255;
+        Mon, 25 Nov 2024 17:29:58 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-466a174606esm7745001cf.79.2024.11.25.17.29.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Nov 2024 17:29:56 -0800 (PST)
+Message-ID: <2101455d-090f-4549-a423-81e30adf3645@broadcom.com>
+Date: Mon, 25 Nov 2024 17:29:54 -0800
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xfs_io: Avoid using __kernel_rwf_t for older kernels
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org, mmayer@broadcom.com, justin.chen@broadcom.com,
+ catherine.hoang@oracle.com
+References: <20241125222618.1276708-1-florian.fainelli@broadcom.com>
+ <20241126012224.GJ9438@frogsfrogsfrogs>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20241126012224.GJ9438@frogsfrogsfrogs>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-From: Darrick J. Wong <djwong@kernel.org>
+On 11/25/24 17:22, Darrick J. Wong wrote:
+> On Mon, Nov 25, 2024 at 02:26:18PM -0800, Florian Fainelli wrote:
+>> __kernel_rwf_t was defined with upstream Linux commit
+>> ddef7ed2b5cbafae692d1d580bb5a07808926a9c ("annotate RWF_... flags")
+>> which has been included in Linux v4.14 and newer. When building xfsprogs
+> 
+> /methinks you should upgrade your kernel, 4.14 is quite dead now, and
+> you're not even running something /that/ new.
 
-Clean up these functions a little bit before we move on to the real
-modifications, and make the variable naming consistent for dquot log
-items.
+For sure, we happen to build a root filesystem against old (4.9) kernel 
+headers and this is how we caught it. It was good to see that thought 
+had been put into defining RWF_ATOMIC is not already defined, not having 
+a type for __kernel_rwf_t was the next thing.
 
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
----
- fs/xfs/xfs_dquot.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+>> against older kernel headers, this type is not defined, leading to the
+>> following build error:
+>>
+>> pwrite.c: In function 'pwrite_f':
+>> ../include/xfs/linux.h:236:22: error: '__kernel_rwf_t' undeclared (first use in this function); did you mean '__kernel_off_t'?
+>>   #define RWF_ATOMIC ((__kernel_rwf_t)0x00000040)
+>>                        ^~~~~~~~~~~~~~
+>> pwrite.c:329:22: note: in expansion of macro 'RWF_ATOMIC'
+>>      pwritev2_flags |= RWF_ATOMIC;
+>>
+>> Fixes: ee6c5941352a ("xfs_io: add RWF_ATOMIC support to pwrite")
+>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> 
+> That said, if this doesn't break anything with a ~2020s distro then I
+> don't have any objections to this, so:
+> 
+> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
-
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 6ec4087e38dfc8..4ba042786cfb7b 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1142,8 +1142,9 @@ static void
- xfs_qm_dqflush_done(
- 	struct xfs_log_item	*lip)
- {
--	struct xfs_dq_logitem	*qip = (struct xfs_dq_logitem *)lip;
--	struct xfs_dquot	*dqp = qip->qli_dquot;
-+	struct xfs_dq_logitem	*qlip =
-+			container_of(lip, struct xfs_dq_logitem, qli_item);
-+	struct xfs_dquot	*dqp = qlip->qli_dquot;
- 	struct xfs_ail		*ailp = lip->li_ailp;
- 	xfs_lsn_t		tail_lsn;
- 
-@@ -1156,12 +1157,12 @@ xfs_qm_dqflush_done(
- 	 * holding the lock before removing the dquot from the AIL.
- 	 */
- 	if (test_bit(XFS_LI_IN_AIL, &lip->li_flags) &&
--	    ((lip->li_lsn == qip->qli_flush_lsn) ||
-+	    ((lip->li_lsn == qlip->qli_flush_lsn) ||
- 	     test_bit(XFS_LI_FAILED, &lip->li_flags))) {
- 
- 		spin_lock(&ailp->ail_lock);
- 		xfs_clear_li_failed(lip);
--		if (lip->li_lsn == qip->qli_flush_lsn) {
-+		if (lip->li_lsn == qlip->qli_flush_lsn) {
- 			/* xfs_ail_update_finish() drops the AIL lock */
- 			tail_lsn = xfs_ail_delete_one(ailp, lip);
- 			xfs_ail_update_finish(ailp, tail_lsn);
-@@ -1319,7 +1320,7 @@ xfs_qm_dqflush(
- 	dqp->q_flags &= ~XFS_DQFLAG_DIRTY;
- 
- 	xfs_trans_ail_copy_lsn(mp->m_ail, &dqp->q_logitem.qli_flush_lsn,
--					&dqp->q_logitem.qli_item.li_lsn);
-+			&lip->li_lsn);
- 
- 	/*
- 	 * copy the lsn into the on-disk dquot now while we have the in memory
-@@ -1331,7 +1332,7 @@ xfs_qm_dqflush(
- 	 * of a dquot without an up-to-date CRC getting to disk.
- 	 */
- 	if (xfs_has_crc(mp)) {
--		dqblk->dd_lsn = cpu_to_be64(dqp->q_logitem.qli_item.li_lsn);
-+		dqblk->dd_lsn = cpu_to_be64(lip->li_lsn);
- 		xfs_update_cksum((char *)dqblk, sizeof(struct xfs_dqblk),
- 				 XFS_DQUOT_CRC_OFF);
- 	}
-@@ -1341,7 +1342,7 @@ xfs_qm_dqflush(
- 	 * the AIL and release the flush lock once the dquot is synced to disk.
- 	 */
- 	bp->b_flags |= _XBF_DQUOTS;
--	list_add_tail(&dqp->q_logitem.qli_item.li_bio_list, &bp->b_li_list);
-+	list_add_tail(&lip->li_bio_list, &bp->b_li_list);
- 
- 	/*
- 	 * If the buffer is pinned then push on the log so we won't
-
+Thanks!
+-- 
+Florian
 
