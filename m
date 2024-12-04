@@ -1,52 +1,53 @@
-Return-Path: <linux-xfs+bounces-16001-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-16002-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD96F9E31BA
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Dec 2024 04:03:26 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3388F9E31BC
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Dec 2024 04:03:38 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A72AF1662EC
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Dec 2024 03:03:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECF6D28459F
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Dec 2024 03:03:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C251C43ABC;
-	Wed,  4 Dec 2024 03:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C53E4757F3;
+	Wed,  4 Dec 2024 03:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtBwwnxM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bn32eHC+"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5B5FC1D;
-	Wed,  4 Dec 2024 03:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737054AEE0;
+	Wed,  4 Dec 2024 03:03:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733281397; cv=none; b=vCRTMbsb1lxcIO9/yVIY01AnhCpxWnfzWmTNFY+NdaGIiyLMV3bb+OFVo/0H9l+XozCn4QoUKHPW3PMgLHUm6A2fFcjZm/QTeiK5sbf3REaQ3m2txEnpveDQ/FDmtpZFfb3cYpGT2bV9DSuFqGWKN9kklUNqLUDYSmH/3md1Lsc=
+	t=1733281413; cv=none; b=C440fAbx79VsYG0NVoGYlzWl2MYGtOBc4s/rqmgrpQEoY2dz370TSzD3dP3eTqEzYoSywHO1p6USUOBVbXaE0q+TN8JcfRFTA/13EHTOi5ZcijNa+2iIJDPhC0SMHSuVA/EHy+ZKSxklW+2KFX/zW3zzh6CsVQfYKev7Wxl91mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733281397; c=relaxed/simple;
-	bh=an7p+4u86RlIlN3+7Wcv/Bu85sUwKbDRmU/gF7pb5Qc=;
+	s=arc-20240116; t=1733281413; c=relaxed/simple;
+	bh=V7+JaeiFYvZqcYmfwV1i+rnP6fIdiZn/TJxuQ2qNsbo=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IVloXLiQAJXjvdaN3OR/NfUWY0aRumnGwPtTdZaYEe8LpZcPJuq0sN1AesWMBFvakRFaLW0pDKYnwdehkJ+1U0vXL4+A7VRrHS+4zGADI1iFTDFn5qkWjklb8pIuaSq4R7ViTmbn5Jkzg5qyFA58SpvuzVVGPsboYp5wuQjmFqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtBwwnxM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07349C4CEDC;
-	Wed,  4 Dec 2024 03:03:16 +0000 (UTC)
+	 MIME-Version:Content-Type; b=UcPO52dj/J4MtIoqIU8c38e5UXJj9fN3RN5OnhJT3uKKtlzpG+6PUb+dxnmUVfz/WwS8qVFMdazSpR+aREjZx/lhWtPNTFSYiA7FmeW08bmtlU7GoTTJgMyen5Yrqyg9eaRbKiQhb07TNjUDFg5DWuYOfA5F4ZCWGu6skNO09CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bn32eHC+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D19C4CEDC;
+	Wed,  4 Dec 2024 03:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733281397;
-	bh=an7p+4u86RlIlN3+7Wcv/Bu85sUwKbDRmU/gF7pb5Qc=;
+	s=k20201202; t=1733281412;
+	bh=V7+JaeiFYvZqcYmfwV1i+rnP6fIdiZn/TJxuQ2qNsbo=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=TtBwwnxMC2JlrD0KYo9kLdrGWO400Gt63qh8nkQ8chKnO1s4e8XXE87Nz39AcVv+T
-	 NWsBilf5olWpInXZvmwcR4t6h6pcibGeCkbgJohHJDzVhEnZl3/CWi0X49wSB/Ce23
-	 LInC8QWxHwtG8p2IwGQ5Wh9pwV9yaGsLz2iI+yp4vJ3L1Jyz04+WtFvobuHjiPHL+l
-	 aCQ2Wy9Nm1y60PDVl8AD2Pti7dFIg0X7KrcDPoclrWIhRHxAbT9ER7nWBM/WF4triN
-	 gmVa8/AyV5y07EBrMgX76hXaEkhXKgGlFT0cjL+LN+95CzAa/SmZQ4+5xFp7qbrI+n
-	 +BA47r8Z1qUCg==
-Date: Tue, 03 Dec 2024 19:03:16 -0800
-Subject: [PATCH 4/6] xfs: fix zero byte checking in the superblock scrubber
+	b=Bn32eHC+7fZdlAEmWGBtvDgv7g8gRvoLrB/yZoiCt1Yrl94pXVlS9r2mOHNzzlzzk
+	 aQglaTZY0v5Lbd1LaKNUUaEi4Ey3ykdkBdMOV0Mo0DW/QsQ9OY20JK5VVQ7pJwnOkE
+	 z1LhbDdE7NMmES3hj8tPKNd3JZGIRsJ9kV74iRDj9cOoM3tgjfXwH3ePo4+gsOWX1W
+	 FudG1RW8WQITz148AQ/g+JR3m0iIihG74USGYLU48kTAsw6rjFIAvIoLG0yQXqaw8J
+	 TpScgjxV3x9u1LBPjzP+8zUIzt/h+0emFoIDWvwbD3pkJMWHZtwl69eKVVb5KRFeOr
+	 oCKv1c12/Rnlg==
+Date: Tue, 03 Dec 2024 19:03:32 -0800
+Subject: [PATCH 5/6] xfs: return from xfs_symlink_verify early on V4
+ filesystems
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, cem@kernel.org
 Cc: stable@vger.kernel.org, linux-xfs@vger.kernel.org, hch@lst.de
-Message-ID: <173328106652.1145623.7325198732846866757.stgit@frogsfrogsfrogs>
+Message-ID: <173328106668.1145623.12239868718203963494.stgit@frogsfrogsfrogs>
 In-Reply-To: <173328106571.1145623.3212405760436181793.stgit@frogsfrogsfrogs>
 References: <173328106571.1145623.3212405760436181793.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -60,73 +61,32 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The logic to check that the region past the end of the superblock is all
-zeroes is wrong -- we don't want to check only the bytes past the end of
-the maximally sized ondisk superblock structure as currently defined in
-xfs_format.h; we want to check the bytes beyond the end of the ondisk as
-defined by the feature bits.
+V4 symlink blocks didn't have headers, so return early if this is a V4
+filesystem.
 
-Port the superblock size logic from xfs_repair and then put it to use in
-xfs_scrub.
-
-Cc: <stable@vger.kernel.org> # v4.15
-Fixes: 21fb4cb1981ef7 ("xfs: scrub the secondary superblocks")
+Cc: <stable@vger.kernel.org> # v5.1
+Fixes: 39708c20ab5133 ("xfs: miscellaneous verifier magic value fixups")
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- fs/xfs/scrub/agheader.c |   26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_symlink_remote.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/scrub/agheader.c b/fs/xfs/scrub/agheader.c
-index 88063d67cb5fd4..190d56f8134463 100644
---- a/fs/xfs/scrub/agheader.c
-+++ b/fs/xfs/scrub/agheader.c
-@@ -59,6 +59,27 @@ xchk_superblock_xref(
- 	/* scrub teardown will take care of sc->sa for us */
- }
+diff --git a/fs/xfs/libxfs/xfs_symlink_remote.c b/fs/xfs/libxfs/xfs_symlink_remote.c
+index f228127a88ff26..fb47a76ead18c2 100644
+--- a/fs/xfs/libxfs/xfs_symlink_remote.c
++++ b/fs/xfs/libxfs/xfs_symlink_remote.c
+@@ -92,8 +92,10 @@ xfs_symlink_verify(
+ 	struct xfs_mount	*mp = bp->b_mount;
+ 	struct xfs_dsymlink_hdr	*dsl = bp->b_addr;
  
-+/* Calculate the ondisk superblock size in bytes */
-+STATIC size_t
-+xchk_superblock_ondisk_size(
-+	struct xfs_mount	*mp)
-+{
-+	if (xfs_has_metadir(mp))
-+		return offsetofend(struct xfs_dsb, sb_pad);
-+	if (xfs_has_metauuid(mp))
-+		return offsetofend(struct xfs_dsb, sb_meta_uuid);
-+	if (xfs_has_crc(mp))
-+		return offsetofend(struct xfs_dsb, sb_lsn);
-+	if (xfs_sb_version_hasmorebits(&mp->m_sb))
-+		return offsetofend(struct xfs_dsb, sb_bad_features2);
-+	if (xfs_has_logv2(mp))
-+		return offsetofend(struct xfs_dsb, sb_logsunit);
-+	if (xfs_has_sector(mp))
-+		return offsetofend(struct xfs_dsb, sb_logsectsize);
-+	/* only support dirv2 or more recent */
-+	return offsetofend(struct xfs_dsb, sb_dirblklog);
-+}
++	/* no verification of non-crc buffers */
+ 	if (!xfs_has_crc(mp))
+-		return __this_address;
++		return NULL;
 +
- /*
-  * Scrub the filesystem superblock.
-  *
-@@ -75,6 +96,7 @@ xchk_superblock(
- 	struct xfs_buf		*bp;
- 	struct xfs_dsb		*sb;
- 	struct xfs_perag	*pag;
-+	size_t			sblen;
- 	xfs_agnumber_t		agno;
- 	uint32_t		v2_ok;
- 	__be32			features_mask;
-@@ -388,8 +410,8 @@ xchk_superblock(
- 	}
- 
- 	/* Everything else must be zero. */
--	if (memchr_inv(sb + 1, 0,
--			BBTOB(bp->b_length) - sizeof(struct xfs_dsb)))
-+	sblen = xchk_superblock_ondisk_size(mp);
-+	if (memchr_inv((char *)sb + sblen, 0, BBTOB(bp->b_length) - sblen))
- 		xchk_block_set_corrupt(sc, bp);
- 
- 	xchk_superblock_xref(sc, bp);
+ 	if (!xfs_verify_magic(bp, dsl->sl_magic))
+ 		return __this_address;
+ 	if (!uuid_equal(&dsl->sl_uuid, &mp->m_sb.sb_meta_uuid))
 
 
