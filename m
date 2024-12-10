@@ -1,507 +1,239 @@
-Return-Path: <linux-xfs+bounces-16413-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-16415-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 586409EB0C8
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Dec 2024 13:28:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 576BE9EB15D
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Dec 2024 13:58:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12909188B711
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Dec 2024 12:28:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ACDF816AFAC
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Dec 2024 12:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1350F1A2860;
-	Tue, 10 Dec 2024 12:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D348C1A76BB;
+	Tue, 10 Dec 2024 12:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VA9meHmG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fYG2d2vP";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="HzsnZWk3"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A281A704C
-	for <linux-xfs@vger.kernel.org>; Tue, 10 Dec 2024 12:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733833681; cv=none; b=faKUHF0lh69ue5gQu7YnuBirvLQvOVpJrj8upTRwIU+PqHZDyeaNdMV5+RdcNZPeNhh8FabI30iJYmgqBu8b5/Zo9CiGPrbkux1g2AejPrwGIis+MJM2oNpHhk3FspeOL2U4ZdC7bix84dLQ6JZYca+5Hi4CeGJsOgIJYGv6zbU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733833681; c=relaxed/simple;
-	bh=P85MgTGjhikp/BBe/dAgrGd9pQpBVwfx5U7C/GYtf0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHuwsAPe9xi6EQpbdagCwXFpZqgG7JMMygg0WWAxOEuOFnyEGgGj8QvbffWsK/IFTLjy6z6e7YSkGNNWJCbRFp7KP42jrVgSIyQb1Na2mn0Sb+b6yVt5cSj1cHcAeJIAGmO3C7miiU+1sjlS6A1sMIrq3IUBstiHHh5Yf/wI2v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VA9meHmG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733833678;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pcIlZ/z8LYTZaR1VE0Qv0GsFxWRa+2SuH7DRQHzbJCk=;
-	b=VA9meHmGJkBIu1nBAAkxkQDgJNXpfABkcSoyE66rTsMDT2FA8S7gzQiaXVODJAe4v04uRH
-	urIVRT1ZrLx2JCaSxZNXRAeMtco76bXen8XPfsLUt15Zs8YbbO5W6dvI4uF5B2ZFjPdvky
-	r1K6AkOgi8nm5BVS1s/QOogZP2++QW0=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-643-3H5zw7QhMW2SZOkgAR8umw-1; Tue,
- 10 Dec 2024 07:27:55 -0500
-X-MC-Unique: 3H5zw7QhMW2SZOkgAR8umw-1
-X-Mimecast-MFC-AGG-ID: 3H5zw7QhMW2SZOkgAR8umw
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E3CD1955D5A;
-	Tue, 10 Dec 2024 12:27:54 +0000 (UTC)
-Received: from bfoster (unknown [10.22.90.12])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6BAB2195605A;
-	Tue, 10 Dec 2024 12:27:53 +0000 (UTC)
-Date: Tue, 10 Dec 2024 07:29:39 -0500
-From: Brian Foster <bfoster@redhat.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/21] xfs: create incore realtime group structures
-Message-ID: <Z1g0MxNmVKpFgXsU@bfoster>
-References: <173084396885.1871025.10467232711863188560.stgit@frogsfrogsfrogs>
- <173084396972.1871025.1072909621633581351.stgit@frogsfrogsfrogs>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5F278F44;
+	Tue, 10 Dec 2024 12:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733835488; cv=fail; b=DlCzPf9e7geMpd51qcVfJIUQm91hSnm9AwrgUB8LR5buUJw86cRpsdWza/orb9lqoh0wTsuOdhD0RC0aU/hKYBCngUY3a3tr8rEQrmXA8HYRZzzJ0tvQQiDiMXBKCxcoAI4bLRs8QC9xSjgX2AgcOlxGxrRs4Qh4uVDJY9jeGCQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733835488; c=relaxed/simple;
+	bh=Yiwsw8Zuh0HkkxLPgw5D/CexS7DWkT7IPoPSlz3eC4E=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Qg+wxVFE/87xPHmCSISf3SN+W2TIdlx/hRJXDRDPirMGYvKA10+IASr/GLpLDwxX6WvKOjmb7K9OSNz4ErP26bLYSefgcoEL+WHL4xHQlfJhoMWOhL0d8oF5Csvq7EQe7LMQwU8Uc0PLgoZNsNJChbjn0sTtIGED5vz1OR1Y5Z4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fYG2d2vP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=HzsnZWk3; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BACBXGg028674;
+	Tue, 10 Dec 2024 12:57:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=bOQww3l3vqxs9ATe
+	OzTXyj/fG23tbwJAqtmMAza7AnM=; b=fYG2d2vP3GuBkHHMyB9aDobF4EbYsBtz
+	GfPvKwxQ1nnL8W2NzIDLsvCNsQGBzn6D0oQnfg3gXEvUqpq4x8VuWK/lKXpS/huC
+	H/2WPKi5UVGUlzyhOy2gqtyLDYwlN3Nd48uBO43Jwj/n8FV1dx9l7YasX2ugo53+
+	f3QYmCJdXVagdMBy76hBuFhvktxfVPTp9Dc1fMH9myjRT74NbdPwUhswxi1uP7Fy
+	YHqQrrxFturf+ne/mDzdFMBH9txTLOqL3pEFHCbAPYNVWvKQifUm4LHcm1c7GQfE
+	5U7MVDjCAWYaqmXdhoQdaAIyo+z2vSSrIBrRd37RP+5iebS/+wmKcw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43ccy05se3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Dec 2024 12:57:53 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BAC36vC020734;
+	Tue, 10 Dec 2024 12:57:52 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2044.outbound.protection.outlook.com [104.47.51.44])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43cct89b2r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Dec 2024 12:57:51 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v4YHCip3/jn2qr+BEwxaPmsNONkPutfdOjwH7mhYWk1heK2kSqgtKqKzk19yVBCAWSC/AndZBLYCiF0zwrwqOUf6IVhfH6YGLBP3bntqP/ZHj1oZJgDA47UWXBKWRDoGl9YVfzkP2MnNZT5IbIoZFeILfiD1YwW+3CpdvK38xHzG8D45KRNdfPsChr7u98xzpWP7dQg/lfljlFcnVaHrVghd2RjN5FC1WXUHDwJLJW23x+Y7Fmh8C6Dpwnog9uK/HuJNpOOdkeh/1fAnWv9NvBOHoU9ayGoNqm+uaPeP9mhJ0rfGqXPAsrc9MMGDSworMx47E03cv6kHFGRRH4przA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bOQww3l3vqxs9ATeOzTXyj/fG23tbwJAqtmMAza7AnM=;
+ b=naG2XOimOsUor3sxc3Uk/haPKqeKBuTqzjv1gKPvwPWwU2NzG153yzEtJIEl/jNDNT1Nq5JXKiLURjUAFxD7kqPnEmZWVBq4uqdIyl34V0gCFPLuqBkgPXw0CRkxsSJGYMxo6RpF9LgwwG94vRtY/HeU+X4kHCrmpODiOXTey3XvzjxWW8een+l3q+lHSzV4zbvJQ6jqCkcxY6A0JaGLI5PqxwLhWu1rIB9t25L0xiuMjFJDeaIHYrnhLSZpjhp7DN4G0OUlegM7R4NPnWRf0OJDNDr0beJ+gjS2eXzPsZhKqvZfwBvtiSf4bvBzmmHKourPx1mRPKF3zZLSPCcEFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bOQww3l3vqxs9ATeOzTXyj/fG23tbwJAqtmMAza7AnM=;
+ b=HzsnZWk3jmpCE92GGlSrbZfp166G6walzdnkwF00ibHfA/dW/zkmkiprkvYWr5MlCrUCqe1/nXhq9y/y8pgE07HUEp8r49mj5Md4E3ZNLXcJoJ3bE/ymYcGc4sKPYTi2PRzm9zqpO84Y2JUYt2+hgFy28IKRngRzpU5jZswUFdk=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SJ0PR10MB4669.namprd10.prod.outlook.com (2603:10b6:a03:2ae::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.18; Tue, 10 Dec
+ 2024 12:57:49 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%4]) with mapi id 15.20.8230.016; Tue, 10 Dec 2024
+ 12:57:49 +0000
+From: John Garry <john.g.garry@oracle.com>
+To: brauner@kernel.org, djwong@kernel.org, cem@kernel.org, dchinner@redhat.com,
+        hch@lst.de, ritesh.list@gmail.com
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
+        John Garry <john.g.garry@oracle.com>
+Subject: [PATCH v2 0/7] large atomic writes for xfs
+Date: Tue, 10 Dec 2024 12:57:30 +0000
+Message-Id: <20241210125737.786928-1-john.g.garry@oracle.com>
+X-Mailer: git-send-email 2.31.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0520.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:272::16) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173084396972.1871025.1072909621633581351.stgit@frogsfrogsfrogs>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SJ0PR10MB4669:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e687f90-91c9-4884-fb08-08dd191a4047
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?sobAXcmCIZ+zg3D6T+CD3KM5tq03t33pmedlo34l+oWXVpxjohc/tYwfcH53?=
+ =?us-ascii?Q?DYRmAWb1xZGMrO5GjICsfZA/rdrq4gaQW9767QQNXHa/tSojRDNlI6fhFxFd?=
+ =?us-ascii?Q?xdmBICfUywIIitpOekPu/HV9LqpfZaKK4jb7hIfiq6FY07ANr2RTYkuKRe6/?=
+ =?us-ascii?Q?FxDbtaNq9pap8FwRz5DzeWbCIkqPIU9vYen5DLcyk6mnPViEe7uEyBU4qrhP?=
+ =?us-ascii?Q?gjpJOubZt80nLoJnbQsSgf+9ykpH9nR1hwXEy3hczKM63BDRf/1Nt8Ai83Oq?=
+ =?us-ascii?Q?BMMHxkws1vMAMuFoL2R3cPfK3z2Yh4Xqkw5doi9TC4M7ryUD9xa1VsfVbmwu?=
+ =?us-ascii?Q?fY2C8DMWkBCiejd4gY79PQDPQzVoaRpqe3jds0j8DYJ8bJOa5xPX08Al6QBA?=
+ =?us-ascii?Q?tt5ZfbWiJnfTKOF7wM4qUZstYCmpPXCoscf/fK2Wo3kTNCrTC5PHE3c8wFIQ?=
+ =?us-ascii?Q?8w9KyDjNi9omGGhA+XJU6M20WsiAJ7UpGND6/WKM1+2k6mPVHlHEdWL3tGXK?=
+ =?us-ascii?Q?O/ouZsWOdcJO6i/phwurZS8Oq0f8B6hc0yWKcEOFTQTucU/4EE6rcnYj4mxc?=
+ =?us-ascii?Q?9hIai0TkvZo6ipmvC8u1NP70woCclwb9j30nne58JbbL+BLva/WcJH7WF4xz?=
+ =?us-ascii?Q?SyiLNqdpnGvPUjT0q+n/7rp/oSS5uXHUNubExq/knTAuFQ/uZvqVWAYYRFRy?=
+ =?us-ascii?Q?+SywBGxYMQDqoCP7yFpHDxEP/Wy4ylPadavUj31v7hvO67E8xmvWm1wTruGT?=
+ =?us-ascii?Q?tj3zqxMfSZfwb3wKKKEly2+r15eIjy+xbgI7ZADhFciz8Yx4px/KXWXSYwIN?=
+ =?us-ascii?Q?qA8tjEACJY3ayrvwpFLxdgISLJMrd1AMzhBiFXYKsSNT2+dUpjZRBRpamqH7?=
+ =?us-ascii?Q?gpq5THUQ6uWC/Qd6ZOP2t0TOOqajbRDWWLeOhPXreepO43zM33InLcN8faDo?=
+ =?us-ascii?Q?L3/p4BLfBZRp8h8z6NwUxjb96j5hgE8b5yebsOnhQ9Qf5H0yQM+RFgKdjVFr?=
+ =?us-ascii?Q?86yYITudWh7Ha93sqcMhKye+YEIk4c4aVz05kb8FFeY1HXjaFNGBrLeuhYt/?=
+ =?us-ascii?Q?67zkjaWOzfFouDpBJLHpVZbgiT+nPIcCA9TunfV0cbw+2PKKbhnpPQzWnQhy?=
+ =?us-ascii?Q?vGv1pTquvZxYh6FNUFdKhh9xKqX29exvmteUptg57j2ZrIxnnMGtWTO1sGsj?=
+ =?us-ascii?Q?aw9lS05EC4JKA2Xl0xOlN/H1/+937LJURu3aYudS3Cq2/MTVe0xRO30pdXzs?=
+ =?us-ascii?Q?KF/Nr0eN1TTVELjn/DOD7SPHTk+wlaZ+W4FIouYSQ2Sw32jjjZ1mxorJh96k?=
+ =?us-ascii?Q?thuFnxrS5AosPlOJoqbWOn5oBk5DV+oCB31sbWaZrBYK8yhCJIfOTDNjffAP?=
+ =?us-ascii?Q?nPdpiBQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?O0INz+ccURtoQgG3gq+l8lGdX9oNOp7d3ZGw/jPI4kauIdYH19mikj6/Hz4A?=
+ =?us-ascii?Q?zzerhX6bmEM1yZVMtz8m8Oixr2Ubjmt4wJIjB/Bsq5KMlvOuFyjI2IlIeW6+?=
+ =?us-ascii?Q?+yVR8YS47WtKdzNmAweyWcvXPvDaAcyRp5N4jyi75R0FiGyTrXowTMoha0Db?=
+ =?us-ascii?Q?MV9ASS6ILeVqYWouFh9fANZ1gB6CzYsB7S8+I80XtTHr9hoZ5Rg7T6j1NyVc?=
+ =?us-ascii?Q?CLA6n5Uiv1u3twjr65eb4uTPLJPKEtk4ZAPbls0BHQfOxedKMOkFaTA+jTuD?=
+ =?us-ascii?Q?gTMcbTGob/JE8e2A8ozjeaeXZKBrMrao2LNj2k/YaCnb106PkOdFuItQtEqA?=
+ =?us-ascii?Q?4p9WqFip0JQ5wTeTxbLAyGTa+TRnRXGRB8+x5/K1RD3JrZ/3GNFuoAqUgLQf?=
+ =?us-ascii?Q?w3DdheMqUh5HQVStht/9ulSl3OyTW46Xx+fQrRPctqx62hlpIDiuaFyuz1p3?=
+ =?us-ascii?Q?Zx2iLIcQQe0qdP69/yqRZLTObZ0utkI/qrHU1400pRfZWQRWQBQQssmbEzB/?=
+ =?us-ascii?Q?/58TU7tkQCiWCYW7ibB8lBxw8ttZcHeZvbhcoqvP5LYPMnbUMdGfLROyGuAs?=
+ =?us-ascii?Q?j/RCZ80F/rnKzL3j+3IqLEiwTrNQ1ZQYa6scKBatu3AZ7kt1Prhy2f7VaMHK?=
+ =?us-ascii?Q?M+d4CAAB1DMYKTkIusPHvbVqaEh6Gx1+vPd2V60nK096qOyKs0t0fJRnlnW/?=
+ =?us-ascii?Q?nXGhefHQ5VEbkMEnO2Rz/vqUhAbSNsimM3DsZhDMaigyzpxGuaZ6w/RIi0Tu?=
+ =?us-ascii?Q?L/tEMmP56Kk7lVURRVkFDEb83CUoL7/QeVr2UZoYUIW3uW/cx6Uc1apG56Ol?=
+ =?us-ascii?Q?xDxoHAumxil5DuMTcR7fgS5N1tJc3RR05pdTLe6VCRIEEFk+PwsQk3t5LpZa?=
+ =?us-ascii?Q?sexWwlIDxWQbBdQuPLxE+gW5eaE1NGlKauvZtXCOWPePtakN62WulS5VfCz9?=
+ =?us-ascii?Q?IKAW5jdMDzKGVwKxqZsmKvY7ljY6t9A2LXYcK3m3Ne5JokWrlrmXeFp5n+Xy?=
+ =?us-ascii?Q?SgU6DqNpfsRZQ9+XmLhWsSZIXlQbKWw+rnq/4QMMcV0sIAbVhdG/S8s+d/bq?=
+ =?us-ascii?Q?t9xE6s6ohluwMttN/5RZBc7dvRjEtn7Ihe8O9Oy8U7EkJVz9E4xQy/Jikfo8?=
+ =?us-ascii?Q?M7QbqbDKY+1GRzaF0v+F3pQk3aR4ejj/xpmZbYq6NzLcUoOv6VvQGjLC2zQ9?=
+ =?us-ascii?Q?DLTEz2kSkEVC+VcwVz0+yqCag5NMwC+GttBc0j3KJHkFtgCkGvpMbb47Ps9N?=
+ =?us-ascii?Q?p0yUqTEl5usD34nxw9lxdWwK41m5Ze/4kAnJwurPp5+XRpWRxR9OKJUKn9Mu?=
+ =?us-ascii?Q?HAhJ2j9HDIrdQsUYfWJIO9CKiaqZDiyRePpX7DxSMbtzsLCGv2wnbWyGDM18?=
+ =?us-ascii?Q?WIxeI1U7lARE07wB5kWfbyp/0zKvH+6ycDNrBahuSK0AUhOTeTqop7i/qtz4?=
+ =?us-ascii?Q?TZUDCozghyZXGOW6NWEJrInSX8UtluOW0K9zZLQwBemQBQrKcrMb5B4bTpqb?=
+ =?us-ascii?Q?rnSg5np3wYHktuyBqpkqodiIWYN0cFJHX+zEiO7JwIvjkG7EiVlCB8m9j2pP?=
+ =?us-ascii?Q?A75n/kPFoTRz5Y9m9EUv2fYH+IqdtmgHik/sJeM9D+o50fH4+18BFawhwE50?=
+ =?us-ascii?Q?zg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	E+Nwhqadekm15rwDN3LQnB30zAYokGbx+M6DCU2QRvTTkoLNpLViaZTU7EQ6r3KOFMnZ/sBq0js5tBt/uKNqo3iSX26URU9iRvvZ3cYKl7o5PjD4EKbqP+9DVHTFmG3FUcvfd5vB9FWrbaT+9fBvx1Xp3HlkeEir9GRwM5Is8WeH71CVQ91NRb8QlgTzXrO4gjKHGBC5ekGG5r6e1olVNzXtkJRcTcrkFpe3if3nk5hzWnR0sOlhCGkyc1VLafZxlrtW307MB5Ik5+oQNTKF37vm26MAiOBsTcAwMxXdt4cVNZuvMWgl3J+W9TzdDiLyy4dibQEurT3dLuoWtyDLPDCuG0/fiWK7N0kSGwkuI9D5qb2xHbDzaqVeFEzIh09bzthDMgB0OKQY3c+GtH0wNU/vONaH5PXpz0qohC2kAnaN3E6DP5TJa2O0zAZg++5SujNKd3svyBaehBbv6IY0JJyfyT/Ty2VNlWBicBprJKGvedzj6aP8MuYGvjw+uUCqYctA7H5savmOllspCXVQJ1yymFRfowhPMax4qlGNVQSHmhHBEykkxlImLj0JtmfdZUqHFnganBzWUFmrmGWMl33TFQShd9R5wRTcw3afRNI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e687f90-91c9-4884-fb08-08dd191a4047
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Dec 2024 12:57:49.6843
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VsMffiZ7jbOR7zqhAgdjG8k+bUj+PReRe3GRiEJuxKwRmzb/D3nxKY0vXlOHtVhroEtcyc09zLzsa9FJxV1XzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4669
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-10_06,2024-12-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
+ phishscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2412100096
+X-Proofpoint-GUID: uhCEECT_gK0iTMpEGaUF-Ql4Mi2nk7qd
+X-Proofpoint-ORIG-GUID: uhCEECT_gK0iTMpEGaUF-Ql4Mi2nk7qd
 
-On Tue, Nov 05, 2024 at 02:24:26PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Create an incore object that will contain information about a realtime
-> allocation group.  This will eventually enable us to shard the realtime
-> section in a similar manner to how we shard the data section, but for
-> now just a single object for the entire RT subvolume is created.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/Makefile               |    1 
->  fs/xfs/libxfs/xfs_format.h    |    3 +
->  fs/xfs/libxfs/xfs_rtgroup.c   |  151 +++++++++++++++++++++++++++++
->  fs/xfs/libxfs/xfs_rtgroup.h   |  217 +++++++++++++++++++++++++++++++++++++++++
->  fs/xfs/libxfs/xfs_sb.c        |   13 ++
->  fs/xfs/libxfs/xfs_types.h     |    8 +-
->  fs/xfs/xfs_bmap_util.c        |    3 -
->  fs/xfs/xfs_buf_item_recover.c |   25 +++++
->  fs/xfs/xfs_fsmap.c            |    5 +
->  fs/xfs/xfs_mount.c            |   13 ++
->  fs/xfs/xfs_mount.h            |   13 ++
->  fs/xfs/xfs_rtalloc.c          |    5 +
->  fs/xfs/xfs_trace.c            |    1 
->  fs/xfs/xfs_trace.h            |    1 
->  14 files changed, 454 insertions(+), 5 deletions(-)
->  create mode 100644 fs/xfs/libxfs/xfs_rtgroup.c
->  create mode 100644 fs/xfs/libxfs/xfs_rtgroup.h
-> 
-> 
-...
-> diff --git a/fs/xfs/libxfs/xfs_rtgroup.h b/fs/xfs/libxfs/xfs_rtgroup.h
-> new file mode 100644
-> index 00000000000000..8872c27a9585fd
-> --- /dev/null
-> +++ b/fs/xfs/libxfs/xfs_rtgroup.h
-> @@ -0,0 +1,217 @@
-...
-> +#ifdef CONFIG_XFS_RT
-> +int xfs_rtgroup_alloc(struct xfs_mount *mp, xfs_rgnumber_t rgno,
-> +		xfs_rgnumber_t rgcount, xfs_rtbxlen_t rextents);
-> +void xfs_rtgroup_free(struct xfs_mount *mp, xfs_rgnumber_t rgno);
-> +
-> +void xfs_free_rtgroups(struct xfs_mount *mp, xfs_rgnumber_t first_rgno,
-> +		xfs_rgnumber_t end_rgno);
-> +int xfs_initialize_rtgroups(struct xfs_mount *mp, xfs_rgnumber_t first_rgno,
-> +		xfs_rgnumber_t end_rgno, xfs_rtbxlen_t rextents);
-> +
-> +xfs_rtxnum_t __xfs_rtgroup_extents(struct xfs_mount *mp, xfs_rgnumber_t rgno,
-> +		xfs_rgnumber_t rgcount, xfs_rtbxlen_t rextents);
-> +xfs_rtxnum_t xfs_rtgroup_extents(struct xfs_mount *mp, xfs_rgnumber_t rgno);
-> +
-> +int xfs_update_last_rtgroup_size(struct xfs_mount *mp,
-> +		xfs_rgnumber_t prev_rgcount);
-> +#else
-> +static inline void xfs_free_rtgroups(struct xfs_mount *mp,
-> +		xfs_rgnumber_t first_rgno, xfs_rgnumber_t end_rgno)
-> +{
-> +}
-> +
-> +static inline int xfs_initialize_rtgroups(struct xfs_mount *mp,
-> +		xfs_rgnumber_t first_rgno, xfs_rgnumber_t end_rgno,
-> +		xfs_rtbxlen_t rextents)
-> +{
-> +	return 0;
-> +}
-> +
-> +# define xfs_rtgroup_extents(mp, rgno)		(0)
-> +# define xfs_update_last_rtgroup_size(mp, rgno)	(-EOPNOTSUPP)
-> +#endif /* CONFIG_XFS_RT */
+Currently the atomic write unit min and max is fixed at the FS blocksize
+for xfs and ext4.
 
-This patch appears to cause a regression with CONFIG_XFS_RT disabled. On
-generic/034 or generic/039, I see a mount failure and hang with the
-following in dmesg:
+This series expands support to allow multiple FS blocks to be written
+atomically.
 
-[  522.627881] XFS (dm-2): Mounting V5 Filesystem c984a654-8653-430a-9042-b59f26132eb6
-[  522.676496] XFS (dm-2): Starting recovery (logdev: internal)
-[  522.693551] XFS (dm-2): log mount/recovery failed: error -95
-[  522.701508] XFS (dm-2): log mount failed
+To allow multiple blocks be written atomically, the fs must ensure blocks
+are allocated with some alignment and granularity. For xfs, today only
+rtvol provides this through rt_extsize. So initial support for large
+atomic writes will be for rtvol here. Support can easily be expanded to
+regular files through the proposed forcealign feature.
 
-It seems to be related to the xfs_update_last_rtgroup_size() definition
-above in that the issue goes away if I replace the error code with zero,
-but I've not looked further into it than that. I'm also not clear on if
-the hang behavior is related or just a separate, latent issue triggered
-by the injected error.
+An atomic write which spans mixed unwritten and mapped extents will be
+required to have the unwritten extents pre-zeroed, which will be supported
+in iomap.
 
-Brian
+Based on v6.13-rc2.
 
-> +
-> +#endif /* __LIBXFS_RTGROUP_H */
-> diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-> index 4516824e3b9994..21891aa10ada02 100644
-> --- a/fs/xfs/libxfs/xfs_sb.c
-> +++ b/fs/xfs/libxfs/xfs_sb.c
-> @@ -696,6 +696,9 @@ __xfs_sb_from_disk(
->  		to->sb_metadirino = be64_to_cpu(from->sb_metadirino);
->  	else
->  		to->sb_metadirino = NULLFSINO;
-> +
-> +	to->sb_rgcount = 1;
-> +	to->sb_rgextents = 0;
->  }
->  
->  void
-> @@ -980,8 +983,18 @@ xfs_mount_sb_set_rextsize(
->  	struct xfs_mount	*mp,
->  	struct xfs_sb		*sbp)
->  {
-> +	struct xfs_groups	*rgs = &mp->m_groups[XG_TYPE_RTG];
-> +
->  	mp->m_rtxblklog = log2_if_power2(sbp->sb_rextsize);
->  	mp->m_rtxblkmask = mask64_if_power2(sbp->sb_rextsize);
-> +
-> +	mp->m_rgblocks = 0;
-> +	mp->m_rgblklog = 0;
-> +	mp->m_rgblkmask = (uint64_t)-1;
-> +
-> +	rgs->blocks = 0;
-> +	rgs->blklog = 0;
-> +	rgs->blkmask = (uint64_t)-1;
->  }
->  
->  /*
-> diff --git a/fs/xfs/libxfs/xfs_types.h b/fs/xfs/libxfs/xfs_types.h
-> index 25053a66c225ed..bf33c2b1e43e5f 100644
-> --- a/fs/xfs/libxfs/xfs_types.h
-> +++ b/fs/xfs/libxfs/xfs_types.h
-> @@ -9,10 +9,12 @@
->  typedef uint32_t	prid_t;		/* project ID */
->  
->  typedef uint32_t	xfs_agblock_t;	/* blockno in alloc. group */
-> +typedef uint32_t	xfs_rgblock_t;	/* blockno in realtime group */
->  typedef uint32_t	xfs_agino_t;	/* inode # within allocation grp */
->  typedef uint32_t	xfs_extlen_t;	/* extent length in blocks */
->  typedef uint32_t	xfs_rtxlen_t;	/* file extent length in rtextents */
->  typedef uint32_t	xfs_agnumber_t;	/* allocation group number */
-> +typedef uint32_t	xfs_rgnumber_t;	/* realtime group number */
->  typedef uint64_t	xfs_extnum_t;	/* # of extents in a file */
->  typedef uint32_t	xfs_aextnum_t;	/* # extents in an attribute fork */
->  typedef int64_t		xfs_fsize_t;	/* bytes in a file */
-> @@ -53,7 +55,9 @@ typedef void *		xfs_failaddr_t;
->  #define	NULLFILEOFF	((xfs_fileoff_t)-1)
->  
->  #define	NULLAGBLOCK	((xfs_agblock_t)-1)
-> +#define NULLRGBLOCK	((xfs_rgblock_t)-1)
->  #define	NULLAGNUMBER	((xfs_agnumber_t)-1)
-> +#define	NULLRGNUMBER	((xfs_rgnumber_t)-1)
->  
->  #define NULLCOMMITLSN	((xfs_lsn_t)-1)
->  
-> @@ -214,11 +218,13 @@ enum xbtree_recpacking {
->  
->  enum xfs_group_type {
->  	XG_TYPE_AG,
-> +	XG_TYPE_RTG,
->  	XG_TYPE_MAX,
->  } __packed;
->  
->  #define XG_TYPE_STRINGS \
-> -	{ XG_TYPE_AG,	"ag" }
-> +	{ XG_TYPE_AG,	"ag" }, \
-> +	{ XG_TYPE_RTG,	"rtg" }
->  
->  /*
->   * Type verifier functions
-> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> index edaf193dbd5ccc..1ac0b0facb7fd3 100644
-> --- a/fs/xfs/xfs_bmap_util.c
-> +++ b/fs/xfs/xfs_bmap_util.c
-> @@ -29,6 +29,7 @@
->  #include "xfs_iomap.h"
->  #include "xfs_reflink.h"
->  #include "xfs_rtbitmap.h"
-> +#include "xfs_rtgroup.h"
->  
->  /* Kernel only BMAP related definitions and functions */
->  
-> @@ -41,7 +42,7 @@ xfs_daddr_t
->  xfs_fsb_to_db(struct xfs_inode *ip, xfs_fsblock_t fsb)
->  {
->  	if (XFS_IS_REALTIME_INODE(ip))
-> -		return XFS_FSB_TO_BB(ip->i_mount, fsb);
-> +		return xfs_rtb_to_daddr(ip->i_mount, fsb);
->  	return XFS_FSB_TO_DADDR(ip->i_mount, fsb);
->  }
->  
-> diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-> index c627ad3a3bbbfd..c8259ee482fd86 100644
-> --- a/fs/xfs/xfs_buf_item_recover.c
-> +++ b/fs/xfs/xfs_buf_item_recover.c
-> @@ -25,6 +25,7 @@
->  #include "xfs_alloc.h"
->  #include "xfs_ag.h"
->  #include "xfs_sb.h"
-> +#include "xfs_rtgroup.h"
->  
->  /*
->   * This is the number of entries in the l_buf_cancel_table used during
-> @@ -704,6 +705,7 @@ xlog_recover_do_primary_sb_buffer(
->  {
->  	struct xfs_dsb			*dsb = bp->b_addr;
->  	xfs_agnumber_t			orig_agcount = mp->m_sb.sb_agcount;
-> +	xfs_rgnumber_t			orig_rgcount = mp->m_sb.sb_rgcount;
->  	int				error;
->  
->  	xlog_recover_do_reg_buffer(mp, item, bp, buf_f, current_lsn);
-> @@ -722,6 +724,11 @@ xlog_recover_do_primary_sb_buffer(
->  		xfs_alert(mp, "Shrinking AG count in log recovery not supported");
->  		return -EFSCORRUPTED;
->  	}
-> +	if (mp->m_sb.sb_rgcount < orig_rgcount) {
-> +		xfs_warn(mp,
-> + "Shrinking rtgroup count in log recovery not supported");
-> +		return -EFSCORRUPTED;
-> +	}
->  
->  	/*
->  	 * If the last AG was grown or shrunk, we also need to update the
-> @@ -731,6 +738,17 @@ xlog_recover_do_primary_sb_buffer(
->  	if (error)
->  		return error;
->  
-> +	/*
-> +	 * If the last rtgroup was grown or shrunk, we also need to update the
-> +	 * length in the in-core rtgroup structure and values depending on it.
-> +	 * Ignore this on any filesystem with zero rtgroups.
-> +	 */
-> +	if (orig_rgcount > 0) {
-> +		error = xfs_update_last_rtgroup_size(mp, orig_rgcount);
-> +		if (error)
-> +			return error;
-> +	}
-> +
->  	/*
->  	 * Initialize the new perags, and also update various block and inode
->  	 * allocator setting based off the number of AGs or total blocks.
-> @@ -744,6 +762,13 @@ xlog_recover_do_primary_sb_buffer(
->  		return error;
->  	}
->  	mp->m_alloc_set_aside = xfs_alloc_set_aside(mp);
-> +
-> +	error = xfs_initialize_rtgroups(mp, orig_rgcount, mp->m_sb.sb_rgcount,
-> +			mp->m_sb.sb_rextents);
-> +	if (error) {
-> +		xfs_warn(mp, "Failed recovery rtgroup init: %d", error);
-> +		return error;
-> +	}
->  	return 0;
->  }
->  
-> diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
-> index 6cf4f00636a2d6..40beb8d75f26b1 100644
-> --- a/fs/xfs/xfs_fsmap.c
-> +++ b/fs/xfs/xfs_fsmap.c
-> @@ -25,6 +25,7 @@
->  #include "xfs_alloc_btree.h"
->  #include "xfs_rtbitmap.h"
->  #include "xfs_ag.h"
-> +#include "xfs_rtgroup.h"
->  
->  /* Convert an xfs_fsmap to an fsmap. */
->  static void
-> @@ -735,7 +736,7 @@ xfs_getfsmap_rtdev_rtbitmap_helper(
->  		frec.start_daddr = info->end_daddr;
->  	} else {
->  		rtbno = xfs_rtx_to_rtb(mp, rec->ar_startext);
-> -		frec.start_daddr = XFS_FSB_TO_BB(mp, rtbno);
-> +		frec.start_daddr = xfs_rtb_to_daddr(mp, rtbno);
->  	}
->  
->  	rtbno = xfs_rtx_to_rtb(mp, rec->ar_extcount);
-> @@ -770,7 +771,7 @@ xfs_getfsmap_rtdev_rtbitmap(
->  
->  	/* Adjust the low key if we are continuing from where we left off. */
->  	if (keys[0].fmr_length > 0) {
-> -		info->low_daddr = XFS_FSB_TO_BB(mp, start_rtb);
-> +		info->low_daddr = xfs_rtb_to_daddr(mp, start_rtb);
->  		if (info->low_daddr >= eofs)
->  			return 0;
->  	}
-> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> index 2dd2606fc7e3e4..9464eddf9212e9 100644
-> --- a/fs/xfs/xfs_mount.c
-> +++ b/fs/xfs/xfs_mount.c
-> @@ -36,6 +36,7 @@
->  #include "xfs_ag.h"
->  #include "xfs_rtbitmap.h"
->  #include "xfs_metafile.h"
-> +#include "xfs_rtgroup.h"
->  #include "scrub/stats.h"
->  
->  static DEFINE_MUTEX(xfs_uuid_table_mutex);
-> @@ -834,10 +835,17 @@ xfs_mountfs(
->  		goto out_free_dir;
->  	}
->  
-> +	error = xfs_initialize_rtgroups(mp, 0, sbp->sb_rgcount,
-> +			mp->m_sb.sb_rextents);
-> +	if (error) {
-> +		xfs_warn(mp, "Failed rtgroup init: %d", error);
-> +		goto out_free_perag;
-> +	}
-> +
->  	if (XFS_IS_CORRUPT(mp, !sbp->sb_logblocks)) {
->  		xfs_warn(mp, "no log defined");
->  		error = -EFSCORRUPTED;
-> -		goto out_free_perag;
-> +		goto out_free_rtgroup;
->  	}
->  
->  	error = xfs_inodegc_register_shrinker(mp);
-> @@ -1072,6 +1080,8 @@ xfs_mountfs(
->  	if (mp->m_logdev_targp && mp->m_logdev_targp != mp->m_ddev_targp)
->  		xfs_buftarg_drain(mp->m_logdev_targp);
->  	xfs_buftarg_drain(mp->m_ddev_targp);
-> + out_free_rtgroup:
-> +	xfs_free_rtgroups(mp, 0, mp->m_sb.sb_rgcount);
->   out_free_perag:
->  	xfs_free_perag_range(mp, 0, mp->m_sb.sb_agcount);
->   out_free_dir:
-> @@ -1156,6 +1166,7 @@ xfs_unmountfs(
->  	xfs_errortag_clearall(mp);
->  #endif
->  	shrinker_free(mp->m_inodegc_shrinker);
-> +	xfs_free_rtgroups(mp, 0, mp->m_sb.sb_rgcount);
->  	xfs_free_perag_range(mp, 0, mp->m_sb.sb_agcount);
->  	xfs_errortag_del(mp);
->  	xfs_error_sysfs_del(mp);
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index 71ed04ddd737de..d491e31d33aac3 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -155,6 +155,7 @@ typedef struct xfs_mount {
->  	uint8_t			m_agno_log;	/* log #ag's */
->  	uint8_t			m_sectbb_log;	/* sectlog - BBSHIFT */
->  	int8_t			m_rtxblklog;	/* log2 of rextsize, if possible */
-> +	int8_t			m_rgblklog;	/* log2 of rt group sz if possible */
->  	uint			m_blockmask;	/* sb_blocksize-1 */
->  	uint			m_blockwsize;	/* sb_blocksize in words */
->  	uint			m_blockwmask;	/* blockwsize-1 */
-> @@ -183,12 +184,14 @@ typedef struct xfs_mount {
->  	int			m_logbsize;	/* size of each log buffer */
->  	uint			m_rsumlevels;	/* rt summary levels */
->  	xfs_filblks_t		m_rsumblocks;	/* size of rt summary, FSBs */
-> +	uint32_t		m_rgblocks;	/* size of rtgroup in rtblocks */
->  	int			m_fixedfsid[2];	/* unchanged for life of FS */
->  	uint			m_qflags;	/* quota status flags */
->  	uint64_t		m_features;	/* active filesystem features */
->  	uint64_t		m_low_space[XFS_LOWSP_MAX];
->  	uint64_t		m_low_rtexts[XFS_LOWSP_MAX];
->  	uint64_t		m_rtxblkmask;	/* rt extent block mask */
-> +	uint64_t		m_rgblkmask;	/* rt group block mask */
->  	struct xfs_ino_geometry	m_ino_geo;	/* inode geometry */
->  	struct xfs_trans_resv	m_resv;		/* precomputed res values */
->  						/* low free space thresholds */
-> @@ -391,6 +394,16 @@ __XFS_HAS_FEAT(large_extent_counts, NREXT64)
->  __XFS_HAS_FEAT(exchange_range, EXCHANGE_RANGE)
->  __XFS_HAS_FEAT(metadir, METADIR)
->  
-> +static inline bool xfs_has_rtgroups(struct xfs_mount *mp)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline bool xfs_has_rtsb(struct xfs_mount *mp)
-> +{
-> +	return false;
-> +}
-> +
->  /*
->   * Some features are always on for v5 file systems, allow the compiler to
->   * eliminiate dead code when building without v4 support.
-> diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-> index 46a920b192d191..917c1a5e8f3180 100644
-> --- a/fs/xfs/xfs_rtalloc.c
-> +++ b/fs/xfs/xfs_rtalloc.c
-> @@ -27,6 +27,7 @@
->  #include "xfs_health.h"
->  #include "xfs_da_format.h"
->  #include "xfs_metafile.h"
-> +#include "xfs_rtgroup.h"
->  
->  /*
->   * Return whether there are any free extents in the size range given
-> @@ -1136,6 +1137,7 @@ xfs_rtmount_inodes(
->  {
->  	struct xfs_trans	*tp;
->  	struct xfs_sb		*sbp = &mp->m_sb;
-> +	struct xfs_rtgroup	*rtg = NULL;
->  	int			error;
->  
->  	error = xfs_trans_alloc_empty(mp, &tp);
-> @@ -1166,6 +1168,9 @@ xfs_rtmount_inodes(
->  	if (error)
->  		goto out_rele_summary;
->  
-> +	while ((rtg = xfs_rtgroup_next(mp, rtg)))
-> +		rtg->rtg_extents = xfs_rtgroup_extents(mp, rtg_rgno(rtg));
-> +
->  	error = xfs_alloc_rsum_cache(mp, sbp->sb_rbmblocks);
->  	if (error)
->  		goto out_rele_summary;
-> diff --git a/fs/xfs/xfs_trace.c b/fs/xfs/xfs_trace.c
-> index 1b9d75a54c5ea2..8f530e69c18ae7 100644
-> --- a/fs/xfs/xfs_trace.c
-> +++ b/fs/xfs/xfs_trace.c
-> @@ -48,6 +48,7 @@
->  #include "xfs_refcount.h"
->  #include "xfs_metafile.h"
->  #include "xfs_metadir.h"
-> +#include "xfs_rtgroup.h"
->  
->  /*
->   * We include this last to have the helpers above available for the trace
-> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> index 0f3704f3c2e4e3..f66e5b590d7597 100644
-> --- a/fs/xfs/xfs_trace.h
-> +++ b/fs/xfs/xfs_trace.h
-> @@ -219,6 +219,7 @@ DEFINE_PERAG_REF_EVENT(xfs_perag_clear_inode_tag);
->  DEFINE_PERAG_REF_EVENT(xfs_reclaim_inodes_count);
->  
->  TRACE_DEFINE_ENUM(XG_TYPE_AG);
-> +TRACE_DEFINE_ENUM(XG_TYPE_RTG);
->  
->  DECLARE_EVENT_CLASS(xfs_group_class,
->  	TP_PROTO(struct xfs_group *xg, unsigned long caller_ip),
-> 
-> 
+Patches available at the following:
+https://github.com/johnpgarry/linux/tree/atomic-write-large-atomics-v6.13-v2
+
+Changes since v1:
+- Add extent zeroing support
+- Rebase
+
+John Garry (6):
+  iomap: Increase iomap_dio_zero() size limit
+  iomap: Add zero unwritten mappings dio support
+  xfs: Add extent zeroing support for atomic writes
+  xfs: Switch atomic write size check in xfs_file_write_iter()
+  xfs: Add RT atomic write unit max to xfs_mount
+  xfs: Update xfs_get_atomic_write_attr() for large atomic writes
+
+Ritesh Harjani (IBM) (1):
+  iomap: Lift blocksize restriction on atomic writes
+
+ fs/iomap/direct-io.c   | 100 +++++++++++++++++++++++++++++++++++++----
+ fs/xfs/libxfs/xfs_sb.c |   3 ++
+ fs/xfs/xfs_file.c      |  97 ++++++++++++++++++++++++++++++++++++---
+ fs/xfs/xfs_iops.c      |  21 ++++++++-
+ fs/xfs/xfs_iops.h      |   2 +
+ fs/xfs/xfs_mount.h     |   1 +
+ fs/xfs/xfs_rtalloc.c   |  25 +++++++++++
+ fs/xfs/xfs_rtalloc.h   |   4 ++
+ include/linux/iomap.h  |   3 ++
+ 9 files changed, 239 insertions(+), 17 deletions(-)
+
+-- 
+2.31.1
 
 
