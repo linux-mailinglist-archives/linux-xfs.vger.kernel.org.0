@@ -1,58 +1,58 @@
-Return-Path: <linux-xfs+bounces-16480-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-16481-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6ED679EC80E
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2024 09:58:31 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA1CF9EC80F
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2024 09:58:32 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82073160512
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2024 08:58:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C96128A620
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Dec 2024 08:58:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F8E61E9B2A;
-	Wed, 11 Dec 2024 08:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA7CD1F2368;
+	Wed, 11 Dec 2024 08:58:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IQtLm+rK"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TipeL72h"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7291EC4D9
-	for <linux-xfs@vger.kernel.org>; Wed, 11 Dec 2024 08:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AC11EC4D9
+	for <linux-xfs@vger.kernel.org>; Wed, 11 Dec 2024 08:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733907502; cv=none; b=hTPnEJYyLMIy/1mg1SV6j13TJuPLSc2Uq4Lf1BAYhiHzX4hA69VbkehIN+Oq9v7j6Y2E54TNgBBh7J8Er7507DbIi/jRFx7MG2J5vkKZ691txmH68YbSHErPEzKvquDaESiP6zkXrgMUoBT4iopTKECvy7Mj9QoxEi2BvHLw5y4=
+	t=1733907505; cv=none; b=ODVRyEk5nfAj0zOWMKqdWZlKS6QwreTW0m2Vc7EszCmynvpvfgZThlh+q5oX1VY0KDkDldNxFK1rcv3oXqPALhVwzeFwcLNiMdZXt/2wbE1sHWMWagCsvJqAlVUeStt2jqSpZXZDtiXNqSxk++K95f7lSd5gkyzr8w5Ep6Z30t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733907502; c=relaxed/simple;
-	bh=FvddXUtHQgRUJjh8pInZ94IoSCakxtDkWJ4YCoopjcs=;
+	s=arc-20240116; t=1733907505; c=relaxed/simple;
+	bh=s6HsAr0ZX6uI224Du3ISFGFcgT/oP1VB61i0bFpwoac=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NWEWbiwEhVo2Y9d8krhRSqH5eiBXs8g+CIm9VctURf/zTvvrbq+GPUYNDBDc3oP/tEp2Z2v24gKx2ounoWP31ukhZwC8NkSqjtICyiVmYeqSQrcSCRWycdpLUoafPRzlm05SQg8DUX/zSNJwM2p4DlwT39oNgt8HeLqUFAme33E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IQtLm+rK; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=gz1yeQTEGPEQQV+hevPSHy7iKj/V+xNJbec6a6E2IHfAC1QIs/XXz0uJrSddYUjhxkDAzPAXIbwPyJhc/OGAv1i+ULNUJqhp8jM4mHJEEnoKPQ6kAVuaIlbnOgDgamimutthVGLZvEzE0Ne8ZqhKv4BXgQPHBzDlqAP5NRLU9EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TipeL72h; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=yi5lVA9lBBZ99VvU4n8+Y04KKLGwSePu1XbXypOF6nk=; b=IQtLm+rKpJZso+UEckrZuz+Whf
-	u1TRjnDjHnCTLWUp1HIB82A41gMXYzOPUTl+0nxBw8bsj30Ai8jxyTg2EfG1zswouiR4/f6ErEBVh
-	KdaKnwbbk46ljLuw8647s0vBPvhOiX3djuuLmVdMsJ/0DKLMyuqyXTM7Z/pDaeVg7Y/g50ubL1E2P
-	VOfIw1uPP5B/iIdJX6Z5j0Fy8shMQU+ICFfSt/KrKhGnha44Jzm3Cas9R7TQ7lmxGZD88mxIHmyZa
-	d0+8PZmPPFwFEnbd3I9TOe+oPONvhd9ZrF9NmzWXRypSXAowBD2zuTlMYRqjr7S94KHy04Z+ANTwA
-	eEGwDlqg==;
+	bh=EGlvub2akN5hAuktlvM1hOgHlSHrkDe+WZdcVhNOCdU=; b=TipeL72hY0ctni7s1LZEyDu6Jx
+	XSWVCwdx2AxHiui/lOZ3tPw65k4GDmBCIRyxnSKTsfzf4KCDZqX3Pc3bJyVO5GANTgAyoHXExLUrW
+	LBRdSR7Cvw3mjYKncpEd+AuegHi8UHEUefhyq30DZGEFPkDr8X5ec6dm/k6AAbl+b2k5MEfuDRRqO
+	ygHs8o456x3tat8grv1tIIBEA5Xw/30K6eo/TT+FM8IGLClBbzoOlkuegR9Qxe2oHcBvG2eMaPEjZ
+	JRdNHQapYLNioChgaJT1olbU3Z1z/AjFoNkEgUPuhSQygllEyKq2I4LKuLZ5DOzaNPluFvF+Bc3GJ
+	Vt5yNpLQ==;
 Received: from [2001:4bb8:2ae:8817:935:3eb8:759c:c417] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tLIY0-0000000EJTk-3jxv;
-	Wed, 11 Dec 2024 08:58:21 +0000
+	id 1tLIY3-0000000EJUH-2jCj;
+	Wed, 11 Dec 2024 08:58:24 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	Hans Holmberg <hans.holmberg@wdc.com>,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 36/43] xfs: disable reflink for zoned file systems
-Date: Wed, 11 Dec 2024 09:55:01 +0100
-Message-ID: <20241211085636.1380516-37-hch@lst.de>
+Subject: [PATCH 37/43] xfs: disable rt quotas for zoned file systems
+Date: Wed, 11 Dec 2024 09:55:02 +0100
+Message-ID: <20241211085636.1380516-38-hch@lst.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241211085636.1380516-1-hch@lst.de>
 References: <20241211085636.1380516-1-hch@lst.de>
@@ -65,33 +65,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-While the zoned on-disk format supports reflinks, the GC code currently
-always unshares reflinks when moving blocks to new zones, thus making the
-feature unusuable.  Disable reflinks until the GC code is refcount aware.
+They'll need a little more work.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_super.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/xfs/xfs_qm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 59998aac7ed7..690bb068a23a 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1818,6 +1818,13 @@ xfs_fs_fill_super(
- 			goto out_filestream_unmount;
- 		}
- 
-+		if (xfs_has_zoned(mp)) {
-+			xfs_alert(mp,
-+	"reflink not compatible with zoned RT device!");
-+			error = -EINVAL;
-+			goto out_filestream_unmount;
-+		}
-+
- 		/*
- 		 * always-cow mode is not supported on filesystems with rt
- 		 * extent sizes larger than a single block because we'd have
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index e1ba5af6250f..417439b58785 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -1711,7 +1711,8 @@ xfs_qm_mount_quotas(
+ 	 * immediately.  We only support rtquota if rtgroups are enabled to
+ 	 * avoid problems with older kernels.
+ 	 */
+-	if (mp->m_sb.sb_rextents && !xfs_has_rtgroups(mp)) {
++	if (mp->m_sb.sb_rextents &&
++	    (!xfs_has_rtgroups(mp) || xfs_has_zoned(mp))) {
+ 		xfs_notice(mp, "Cannot turn on quotas for realtime filesystem");
+ 		mp->m_qflags = 0;
+ 		goto write_changes;
 -- 
 2.45.2
 
