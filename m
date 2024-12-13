@@ -1,88 +1,86 @@
-Return-Path: <linux-xfs+bounces-16713-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-16714-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 228119F02A5
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Dec 2024 03:31:39 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAF3B9F03E6
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Dec 2024 05:50:42 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73B09188C371
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Dec 2024 02:31:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7352B2844AC
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Dec 2024 04:50:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C0A2374CB;
-	Fri, 13 Dec 2024 02:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FA4F154BE3;
+	Fri, 13 Dec 2024 04:50:38 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from pinero.vault24.org (pinero.vault24.org [69.164.212.126])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6155FB95
-	for <linux-xfs@vger.kernel.org>; Fri, 13 Dec 2024 02:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.164.212.126
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC0363D;
+	Fri, 13 Dec 2024 04:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734057094; cv=none; b=WtgiOs4AzfhfcH5COSqw1c8ObTAE+uWgxiANgKGYM2hfUT3p9aRncQAqCGxfLBeIRIB1nn4Nz5/6fYazojug/5ssrfTOyL/ofYsoFIhrA2a6iXEq146EDxoHhpNwIIZJ4CLiwxXpirb4tNDvzWP60kJNkciSXW9wLO19nP1bPws=
+	t=1734065438; cv=none; b=ngoBE/3zNpS47gvqf6pQ8jVK/1SKnjGiFyw7NWRwlC+Cy9ak2Z7Eba3eqjUIZt5xHpj1nc9nCYSJqqx7iU59T2tDIlq7/DbEAChcym/6S64SJitHYi3k5qanCfUq59PSRzeAflkPMdyIH2AA2BD3XGbeQA3E8wdO/xdjeaDKKRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734057094; c=relaxed/simple;
-	bh=FBPgmwhdcRiYbsjCxT/Du5FBcC+yoBT+LgzUSoMJzCU=;
+	s=arc-20240116; t=1734065438; c=relaxed/simple;
+	bh=lJBmq1Osd4wHwFS0x6g/24foZUyQvb6cjPRsBe4nhW0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RzOcAclFfsK1lzpUBV1Q3TAOoe/keoF47miVIeD71fKOPOTRqLGMTo29lpddGGI5zPDx5XyXSyCXZ0GRoNZlNM0q9Y9Hsmy2pAxWnFfH2hEhD609fEWVdIQE+iwWW+wVOCdnsq0JszehklsZR4v/7byCbMrzIZSn4bfvw0wEifs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vault24.org; spf=pass smtp.mailfrom=vault24.org; arc=none smtp.client-ip=69.164.212.126
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vault24.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vault24.org
-Received: from feynman.vault24.org (unknown [IPv6:2601:40f:4000:c7d8::14])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by pinero.vault24.org (Postfix) with ESMTPS id 090E260AF;
-	Thu, 12 Dec 2024 21:22:30 -0500 (EST)
-Received: by feynman.vault24.org (Postfix, from userid 1000)
-	id 7C57069C4F; Thu, 12 Dec 2024 21:22:29 -0500 (EST)
-Date: Thu, 12 Dec 2024 21:22:29 -0500
-From: Jon DeVree <nuxi@vault24.org>
-To: Eric Sandeen <sandeen@redhat.com>
-Cc: grub-devel@gnu.org,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	Anthony Iliopoulos <ailiop@suse.com>,
-	Marta Lewandowska <mlewando@redhat.com>,
-	Andrey Albershteyn <aalbersh@redhat.com>
-Subject: Re: [PATCH GRUB] fs/xfs: fix large extent counters incompat feature
- support
-Message-ID: <Z1uaZbUUptETLjWH@feynman.vault24.org>
-Mail-Followup-To: Eric Sandeen <sandeen@redhat.com>, grub-devel@gnu.org,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	Anthony Iliopoulos <ailiop@suse.com>,
-	Marta Lewandowska <mlewando@redhat.com>,
-	Andrey Albershteyn <aalbersh@redhat.com>
-References: <985816b8-35e6-4083-994f-ec9138bd35d2@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ha8/bJyln0vHQ6qIVntngBZHE60GCiH9K6W/wL3SvBjgAMgbIc3Sks0i8DQ7WdzJrse3+T9Lm8devQmGruR7/1PZMF5njvxQJ1eUokAaIcjqLHYM4gYbcH70a+upAPqfMd5im3VLHDr0LDO/bExbd/VuSz9U6i9Sdo5/wByxujQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id BBF1368BEB; Fri, 13 Dec 2024 05:50:32 +0100 (CET)
+Date: Fri, 13 Dec 2024 05:50:32 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>,
+	Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 4/8] iomap: split bios to zone append limits in the
+ submission handlers
+Message-ID: <20241213045032.GD5281@lst.de>
+References: <20241211085420.1380396-1-hch@lst.de> <20241211085420.1380396-5-hch@lst.de> <20241212195149.GH6678@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <985816b8-35e6-4083-994f-ec9138bd35d2@redhat.com>
+In-Reply-To: <20241212195149.GH6678@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Dec 04, 2024 at 07:50:28 -0600, Eric Sandeen wrote:
-> When large extent counter / NREXT64 support was added to grub, it missed
-> a couple of direct reads of nextents which need to be changed to the new
-> NREXT64-aware helper as well. Without this, we'll have mis-reads of some
-> directories with this feature enabled.
+On Thu, Dec 12, 2024 at 11:51:49AM -0800, Darrick J. Wong wrote:
+> > +struct iomap_ioend *iomap_split_ioend(struct iomap_ioend *ioend, bool is_append,
 > 
-> (The large extent counter fix likely raced on merge with
-> 07318ee7e ("fs/xfs: Fix XFS directory extent parsing") which added the new
-> direct nextents reads just prior, causing this issue.)
+> Can you determine is_append from (ioend->io_flags & ZONE_APPEND)?
+
+That would require us to add that flag first :)  As we don't really
+need that as persistent per-iomap that it's probably not worth it.
+
+> Also it's not clear to me what the initial and output state of
+> *alloc_len is supposed to be?  I guess you set it to the number of bytes
+> the @ioend covers?
+
+It gets set to the number of blocks that the allocator could find,
+and iomap_split_ioend decrements the amount of that it used for the
+ioend returned, which is min(*alloc_len, max_zone_append_sectors) for
+sequential zones, or *alloc_len for conventional zones.
+
+> > +++ b/include/linux/iomap.h
+> > @@ -354,6 +354,9 @@ struct iomap_ioend {
+> >  	struct list_head	io_list;	/* next ioend in chain */
+> >  	u16			io_flags;	/* IOMAP_IOEND_* */
+> >  	struct inode		*io_inode;	/* file being written to */
+> > +	atomic_t		io_remaining;	/* completetion defer count */
+> > +	int			io_error;	/* stashed away status */
+> > +	struct iomap_ioend	*io_parent;	/* parent for completions */
 > 
-> Fixes: aa7c1322671e ("fs/xfs: Add large extent counters incompat feature support")
-> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> I guess this means ioends can chain together, sort of like how bios can
+> when you split them?
 
-Good catch.
+Exactly.
 
-Reviewed-by: Jon DeVree <nuxi@vault24.org>
-
--- 
-Jon
-Doge Wrangler
-X(7): A program for managing terminal windows. See also screen(1) and tmux(1).
 
