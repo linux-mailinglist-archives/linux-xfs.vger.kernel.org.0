@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-16904-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-16905-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F89B9F2247
-	for <lists+linux-xfs@lfdr.de>; Sun, 15 Dec 2024 06:27:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D75A9F2248
+	for <lists+linux-xfs@lfdr.de>; Sun, 15 Dec 2024 06:31:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3754D164C6C
-	for <lists+linux-xfs@lfdr.de>; Sun, 15 Dec 2024 05:27:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65DCF1635BD
+	for <lists+linux-xfs@lfdr.de>; Sun, 15 Dec 2024 05:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2933D2FB;
-	Sun, 15 Dec 2024 05:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67BB99450;
+	Sun, 15 Dec 2024 05:31:42 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95081FDD
-	for <linux-xfs@vger.kernel.org>; Sun, 15 Dec 2024 05:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F43C2C8
+	for <linux-xfs@vger.kernel.org>; Sun, 15 Dec 2024 05:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734240439; cv=none; b=OvfeVijszHnI8CE/nT7LTuPvSqe9msjVHhjqMfAtXMC1Rw7eLeTHWlvqoPQUOmuBtVyMBwJ/jomoduL6v2WAzQiJayBztUzIqMEw5Y0KFcKR1p+qwSVzNq8ePf60Qmn9P58rPEhkwdhvXzYYZyuTEIH4u1oohrj1rt7rlhSSV0c=
+	t=1734240702; cv=none; b=lpo7cmnBBqPWy47SMhR1itMgelRVEMrFajNrCg21KhU02WW9FxNlIWXL/ahFoZDJKbrnssZ0pG3Q3YipgQVn/ldvfqnN58uSnIA2m5UkQcJg1/hHBDXa6fyn7vBGMfi9hfIbkGFOuSCqHFkYI3gxj4tGlgxXa+5/KoSNkJU3Aog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734240439; c=relaxed/simple;
-	bh=4r2CdP+QcXedKOKoL+GpkS6TeU9JVBr2AGc0LUfSHkw=;
+	s=arc-20240116; t=1734240702; c=relaxed/simple;
+	bh=2JeJd5YTr/1q484oUFWenwmDacvUnUX2aCj2jn9oDew=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gASH/rk636oY+WxPmkx5FfNxcd/JX2+ckOEFa94VoWGtizwo0O7dCUnOR+esuXSwE9yONXzj5gCZIhC+FYmzIgPk7+oLJ2UuTy9r2pKtx38M6au3BlxvMiTnRsjA8LIu3JSFD2kxD7eUJx6GAQK/gceaRw5f6msS3qraInzzyss=
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zi0hjPHEDAmeRGw+26tksVq4K7TJV//9dZOMGTt9N+G9jh7FRQnGm/mdUQrKkQ93vcRFAA7aZpq+ypzq+vIOBLtfVPAQlMkBHEZaATpmUoD/JoFw4VJibfjuw8YUwErICWZgSrrCFZsEHbvrQc9nONTNeRLPGj21S03YmWYoI6w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6A45C68C7B; Sun, 15 Dec 2024 06:27:13 +0100 (CET)
-Date: Sun, 15 Dec 2024 06:27:12 +0100
+	id 962A468C7B; Sun, 15 Dec 2024 06:31:35 +0100 (CET)
+Date: Sun, 15 Dec 2024 06:31:35 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
 	Hans Holmberg <hans.holmberg@wdc.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 24/43] xfs: add the zoned space allocator
-Message-ID: <20241215052712.GD10051@lst.de>
-References: <20241211085636.1380516-1-hch@lst.de> <20241211085636.1380516-25-hch@lst.de> <20241213183304.GN6678@frogsfrogsfrogs>
+Subject: Re: [PATCH 25/43] xfs: add support for zoned space reservations
+Message-ID: <20241215053135.GE10051@lst.de>
+References: <20241211085636.1380516-1-hch@lst.de> <20241211085636.1380516-26-hch@lst.de> <20241213210140.GO6678@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,51 +47,72 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241213183304.GN6678@frogsfrogsfrogs>
+In-Reply-To: <20241213210140.GO6678@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Dec 13, 2024 at 10:33:04AM -0800, Darrick J. Wong wrote:
-> > +	struct xfs_mount	*mp = tp->t_mountp;
-> > +	xfs_rgblock_t		rgbno = xfs_rtb_to_rgbno(mp, fsbno);
-> > +	struct xfs_inode	*rmapip;
-> > +	struct xfs_open_zone	*oz;
-> > +	struct xfs_rtgroup	*rtg;
-> > +	int			error = 0;
-> > +
-> > +	rtg = xfs_rtgroup_get(mp, xfs_rtb_to_rgno(mp, fsbno));
-> > +	if (WARN_ON_ONCE(!rtg))
-> > +		return -EIO;
-> > +	rmapip = rtg_rmap(rtg);
-> > +
-> > +	xfs_ilock(rmapip, XFS_ILOCK_EXCL);
+On Fri, Dec 13, 2024 at 01:01:40PM -0800, Darrick J. Wong wrote:
+> > +#define XFS_ZR_GREEDY		(1U << 0)
+> > +#define XFS_ZR_NOWAIT		(1U << 1)
+> > +#define XFS_ZR_RESERVED		(1U << 2)
 > 
-> xfs_rtgroup_lock?
+> What do these flag values mean?  Can we put that into comments?
 
-Yeah, I'll do an audit for using the proper helpers.
+Sure.
 
+> > + * For XC_FREE_RTAVAILABLE only the smaller reservation required for GC and
+> > + * block zeroing is excluded from the user capacity, while XC_FREE_RTEXTENTS
+> > + * is further restricted by at least one zone as well as the optional
+> > + * persistently reserved blocks.  This allows the allocator to run more
+> > + * smoothly by not always triggering GC.
 > 
-> > +
-> > +	/*
-> > +	 * There is a reference on the oz until all blocks were written, and it
-> > +	 * is only dropped below with the rmapip ILOCK held.  Thus we don't need
-> > +	 * to grab an extra reference here.
-> > +	 */
-> > +	oz = READ_ONCE(rtg->rtg_open_zone);
-> > +	if (WARN_ON_ONCE(!oz)) {
+> Hmm, so _RTAVAILABLE really means _RTNOGC?  That makes sense.
+
+Yes, it means block available without doing further work.
+I can't say _RTNOGC is very descriptive either, but I would not mind
+a better name if someone came up with a good one :)
+
+> > +		spin_unlock(&zi->zi_reservation_lock);
+> > +		schedule();
+> > +		spin_lock(&zi->zi_reservation_lock);
+> > +	}
+> > +	list_del(&reservation.entry);
+> > +	spin_unlock(&zi->zi_reservation_lock);
 > 
-> I wonder if this should be using XFS_IS_CORRUPT() instead of
-> WARN_ON_ONCE?
+> Hmm.  So if I'm understanding correctly, threads wanting to write to a
+> file try to locklessly reserve space from RTAVAILABLE.
 
-Probably.
+At least if there are no waiters yet, yes.
 
-> > +}
-> > +
-> > +static int
-> > +xfs_zoned_end_extent(
+> If they can't
+> get space because the zone is nearly full / needs gc / etc then everyone
+> gets to wait FIFO style in the reclaim_reservations list.
+
+Yes (In a way modelled after the log grant waits).
+
+> They can be
+> woken up from the wait if either (a) someone gives back reserved space
+> or (b) the copygc empties out this zone.
 > 
-> xfs_zoned_remap_extent?
+> Or if the thread isn't willing to wait, we skip the fifo and either fail
+> up to userspace
 
-It doesn't really remap much, right?  It maps, so I guess I could
-use that.
+Yes.
+
+> or just move on to the next zone?
+
+No other zone to move to.
+
+> I think I understand the general idea, but I don't quite know when we're
+> going to use the greedy algorithm.  Later I see XFS_ZR_GREEDY gets used
+> from the buffered write path, but there doesn't seem to be an obvious
+> reason why?
+
+Posix/Linux semantics for buffered writes require us to implement
+short writes.  That is if a single (p)write(v) syscall for say 10MB
+only find 512k of space it should write those instead of failing
+with ENOSPC.  The XFS_ZR_GREEDY implements that by backing down to
+what we can allocate (and the current implementation for that is
+a little ugly, I plan to find some time for changes to the core
+percpu_counters to improve this after the code is merged).
 
 
