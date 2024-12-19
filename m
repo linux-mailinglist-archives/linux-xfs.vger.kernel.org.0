@@ -1,132 +1,182 @@
-Return-Path: <linux-xfs+bounces-17115-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-17118-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9018D9F7B98
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Dec 2024 13:40:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DB29B9F7CB9
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Dec 2024 14:59:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E45EE189546B
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Dec 2024 12:40:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1F75188B3F5
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Dec 2024 13:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CD22225403;
-	Thu, 19 Dec 2024 12:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFEDC224B04;
+	Thu, 19 Dec 2024 13:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZNka8ei/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1ClcavD"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915412253F8;
-	Thu, 19 Dec 2024 12:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D22224AE3
+	for <linux-xfs@vger.kernel.org>; Thu, 19 Dec 2024 13:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734611982; cv=none; b=FM7bfY9U6x0l50LHYF26UNkcS9AbpzMevlAxE0hKgfvva4qbVXmSedBPKuLxA1DlUzU/WWpL8413e8wIM5VlM2fPj8n6s5P6s0uEtg9dtJHXDDxaTEDUXQTuHKdw7H9/ewGkO2KDCSaec5DGq6RODg5zDxVw4EikCxDtnGypoeY=
+	t=1734616719; cv=none; b=JC9b/wiN5gM2NnO+rmD9JcOB56f15rCGBSS5CgErI/AmTbPX/GafqXWg2NhcUo3yf5v1ScDqkHwHJQjsKAX0U1ldy2jVSC2c9vqxi19o/haLP5JTC6xiUCkkikMo0HaHkiwQ4Jm8885lhSOKU5+vlccp32SFI1niAGgL+tUnIAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734611982; c=relaxed/simple;
-	bh=pfGkfSRbBeBZe2pfv8FMlZ/K7pb4YLUhiD7uHI13nsM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s3g8U5KWyoq8OJ23oRMLkxJewIUg48uxQ5D/zKXaTRDX9XSjf0cM34bKxZj1A7y38ixTkjC3EqXzKamkPKeviFvXe71Pda8OvfaQAO/4lyKqOrG4NWgxjfV8BC8DkAgNSEIPm/FQ8tdRVenfLPzj3joF8g+HE8Pz1JrssoYaBRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZNka8ei/; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJ3qMCj012952;
-	Thu, 19 Dec 2024 12:39:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=56iEWu45x5ZogUIJ3
-	B7E3Njw8FYRxDwCN46dpTp1gNM=; b=ZNka8ei/DdSx3P8jezCG1BFdPAkkxYG7n
-	rPIP9FoCBG4TUCZ2VpWIhnAq+LnQxazYU8HBIgzM4ERPpE9ZIKYBfiKlXEvYFGg4
-	OcuBvyt6ABMftRPJtgnmmTkMoE9bc5TIImwIqvhYo24s72X2/JcRyZ7RZMqUYfcm
-	XCX1NMG0lo2mIbIA2WYNQAQHTOAbKRU3EmACJzHQ2SNbhIXr2WsOURwgxgWSYABj
-	QCjfRfJ4Jya8zHI9tuPpSUjmAfTNe8Hb8t5K8KwYeXIHPgiJMvjZxhjnfd30EtkM
-	mpACQgwqFmI+uZ5gkF8UeccMnbLqDxf9xCVVVo0ohgmsNiMib8eKA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43mbyc242v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Dec 2024 12:39:38 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4BJCc9vV025819;
-	Thu, 19 Dec 2024 12:39:37 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43mbyc242t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Dec 2024 12:39:37 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4BJAhP5E014391;
-	Thu, 19 Dec 2024 12:39:36 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 43hq21vqy3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Dec 2024 12:39:36 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4BJCdZmk30605656
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Dec 2024 12:39:35 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2456F20043;
-	Thu, 19 Dec 2024 12:39:35 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5791620040;
-	Thu, 19 Dec 2024 12:39:33 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com.com (unknown [9.124.219.143])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 19 Dec 2024 12:39:33 +0000 (GMT)
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org
-Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Andrey Albershteyn <aalbersh@kernel.org>,
-        "Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH v2 3/3] xfs_io: add extsize command support
-Date: Thu, 19 Dec 2024 18:09:15 +0530
-Message-ID: <931b3f0da15da34cfd9d6460e930ce301e721cf5.1734611784.git.ojaswin@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <cover.1734611784.git.ojaswin@linux.ibm.com>
-References: <cover.1734611784.git.ojaswin@linux.ibm.com>
+	s=arc-20240116; t=1734616719; c=relaxed/simple;
+	bh=a3gABU68ZHg7WBjOKd2l1+bqSv81PQ3BEBi/YdbDUM8=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=n1/4xkGaA6KcXa0PPNWKtBWoAlHhDkXR0//aEUYOmVjyHB7/ejqPZ1lPqsME2vuiRRg5txIzlqnQNMBCMzs/z5K9IbRM5DqADGSdGHoajGbnUuAw3ew8G2pB9WpmAoYgwD2H0vCEV1L7g9HsXEGKxr89FiqSManG7ijd1kdms/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1ClcavD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3AA6FC4CEDF
+	for <linux-xfs@vger.kernel.org>; Thu, 19 Dec 2024 13:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734616719;
+	bh=a3gABU68ZHg7WBjOKd2l1+bqSv81PQ3BEBi/YdbDUM8=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=S1ClcavD4kIZsu3Q1LUoPzn8Sd97I2j+e+AmCbEw7BNLhlihpyaSggBbDm1tMzJAa
+	 y7z00dgwFDB9CrQ1K1smGWPUz3zZb7K/UCGX/s7kiogN8oWWav/ypoQYMC5pARbNME
+	 UQkLXSkt73sGX2048MHDOUhxvxw3NiD5WNkHpvxERxrPHYDrfC7EmkGeF+gVD0YvJA
+	 GwBGyvL/odi4BE+t7d7XNAMBmPR0Ts3KbUnejV6iKPdddfkTpKY75NnOd/xdxOax+j
+	 8CTgtvK+mp+cJKVSVGTgrx6PEFC7UztPDYPi533torCj7DefyehYBZieLBK3MX7+gn
+	 a8gSbFiIsC7mA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 348E9C3279E; Thu, 19 Dec 2024 13:58:39 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: linux-xfs@vger.kernel.org
+Subject: [Bug 219504] XFS crashes with kernel Version > 6.1.91. Perhaps
+ Changes in kernel 6.1.92 for XFS/iomap causing the problems?
+Date: Thu, 19 Dec 2024 13:58:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: IO/Storage
+X-Bugzilla-Component: Other
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: speedcracker@hotmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: component cf_kernel_version product
+Message-ID: <bug-219504-201763-muHGWZfemd@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-219504-201763@https.bugzilla.kernel.org/>
+References: <bug-219504-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZWVJrq1aX-NeksQ9JZSwX-1sLjowNjnx
-X-Proofpoint-ORIG-GUID: o3FufTq2-XpEVn0_9XQTSF2ILr_HfmXq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- adultscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 priorityscore=1501 suspectscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412190100
 
-extsize command is currently only supported with XFS filesystem.
-Lift this restriction now that ext4 is also supporting extsize hints.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D219504
 
-Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
----
- io/open.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Mike-SPC (speedcracker@hotmail.com) changed:
 
-diff --git a/io/open.c b/io/open.c
-index a30dd89a1fd5..2582ff9b862e 100644
---- a/io/open.c
-+++ b/io/open.c
-@@ -997,7 +997,7 @@ open_init(void)
- 	extsize_cmd.args = _("[-D | -R] [extsize]");
- 	extsize_cmd.argmin = 0;
- 	extsize_cmd.argmax = -1;
--	extsize_cmd.flags = CMD_NOMAP_OK;
-+	extsize_cmd.flags = CMD_NOMAP_OK | CMD_FOREIGN_OK;
- 	extsize_cmd.oneline =
- 		_("get/set preferred extent size (in bytes) for the open file");
- 	extsize_cmd.help = extsize_help;
--- 
-2.43.5
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+          Component|XFS                         |Other
+     Kernel Version|6.1.92 and up               |since 6.1.92 and up
+            Product|File System                 |IO/Storage
 
+--- Comment #3 from Mike-SPC (speedcracker@hotmail.com) ---
+Hi there,
+
+rechecked the newest kernel version 6.1.120.
+
+Get the same problem.
+
+Here is the kernel-backtrace:
+
+[Thu Dec 19 14:03:21 2024] ------------[ cut here ]------------
+[Thu Dec 19 14:03:21 2024] WARNING: CPU: 0 PID: 24318 at
+fs/iomap/buffered-io.c:980 iomap_file_buffered_write_punch_delalloc+0x398/0=
+x440
+[Thu Dec 19 14:03:21 2024] Modules linked in: iscsi_scst(O) scst_vdisk(O)
+scst(O) dlm quota_v2 quota_tree autofs4 tcp_bbr sch_fq udf crc_itu_t ses
+enclosure hid_generic wmi_bmof usbhid edac_mce_amd uas crc32_pclmul aesni_i=
+ntel
+hid crypto_simd usb_storage rapl bnx2 i2c_piix4 r8169 pcspkr k10temp ccp
+i2c_core sha1_generic video mpt3sas backlight wmi
+[Thu Dec 19 14:03:21 2024] CPU: 0 PID: 24318 Comm: disk014_0 Tainted: G S=
+=20=20=20=20=20=20
+  O       6.1.120_LFS_FILE01 #1
+[Thu Dec 19 14:03:21 2024] Hardware name: To Be Filled By O.E.M. X370 Pro4/=
+X370
+Pro4, BIOS P10.08 01/22/2024
+[Thu Dec 19 14:03:21 2024] EIP:
+iomap_file_buffered_write_punch_delalloc+0x398/0x440
+[Thu Dec 19 14:03:21 2024] Code: 84 8d 00 00 00 8b 45 e0 8b 40 20 83 c0 10 =
+e8
+2f 31 e0 ff 83 c4 44 89 f0 5b 5e 5f 5d e9 f5 31 8e 00 90 0f 0b e9 13 fe ff =
+ff
+90 <0f> 0b e9 fd fd ff ff 90 0f 0b e9 6b fe ff ff 90 0f 0b 8d b6 00 00
+[Thu Dec 19 14:03:21 2024] EAX: bb68e000 EBX: ffffff85 ECX: bb68f000 EDX:
+0000007b
+[Thu Dec 19 14:03:21 2024] ESI: bb68f000 EDI: 00000000 EBP: 5137fbd0 ESP:
+5137fb80
+[Thu Dec 19 14:03:21 2024] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFL=
+AGS:
+00010293
+[Thu Dec 19 14:03:21 2024] CR0: 80050033 CR2: 0175a2d0 CR3: 03d1b720 CR4:
+00350ef0
+[Thu Dec 19 14:03:21 2024] Call Trace:
+[Thu Dec 19 14:03:21 2024]  ? show_regs.cold+0x16/0x1b
+[Thu Dec 19 14:03:21 2024]  ?
+iomap_file_buffered_write_punch_delalloc+0x398/0x440
+[Thu Dec 19 14:03:21 2024]  ? __warn+0x87/0xe0
+[Thu Dec 19 14:03:21 2024]  ?
+iomap_file_buffered_write_punch_delalloc+0x398/0x440
+[Thu Dec 19 14:03:21 2024]  ?
+iomap_file_buffered_write_punch_delalloc+0x398/0x440
+[Thu Dec 19 14:03:21 2024]  ? report_bug+0xe5/0x170
+[Thu Dec 19 14:03:21 2024]  ? exc_overflow+0x60/0x60
+[Thu Dec 19 14:03:21 2024]  ? handle_bug+0x2a/0x50
+[Thu Dec 19 14:03:21 2024]  ? exc_invalid_op+0x1e/0x70
+[Thu Dec 19 14:03:21 2024]  ? handle_exception+0x101/0x101
+[Thu Dec 19 14:03:21 2024]  ? exc_overflow+0x60/0x60
+[Thu Dec 19 14:03:21 2024]  ?
+iomap_file_buffered_write_punch_delalloc+0x398/0x440
+[Thu Dec 19 14:03:21 2024]  ? exc_overflow+0x60/0x60
+[Thu Dec 19 14:03:21 2024]  ?
+iomap_file_buffered_write_punch_delalloc+0x398/0x440
+[Thu Dec 19 14:03:21 2024]  ? xfs_dax_write_iomap_end+0xa0/0xa0
+[Thu Dec 19 14:03:21 2024]  ? xfs_buffered_write_iomap_end+0x52/0xc0
+[Thu Dec 19 14:03:21 2024]  ? xfs_buffered_write_iomap_end+0xc0/0xc0
+[Thu Dec 19 14:03:21 2024]  ? iomap_iter+0xce/0x4b0
+[Thu Dec 19 14:03:21 2024]  ? xfs_dax_write_iomap_end+0xa0/0xa0
+[Thu Dec 19 14:03:21 2024]  ? iomap_file_buffered_write+0xa9/0x420
+[Thu Dec 19 14:03:21 2024]  ? xfs_file_buffered_write+0x9d/0x2e0
+[Thu Dec 19 14:03:21 2024]  ? xfs_file_write_iter+0xc9/0x100
+[Thu Dec 19 14:03:21 2024]  ? fileio_exec_async+0x25e/0x3a0 [scst_vdisk]
+[Thu Dec 19 14:03:21 2024]  ? fileio_exec_write+0x2ce/0x400 [scst_vdisk]
+[Thu Dec 19 14:03:21 2024]  ? vdev_do_job+0x36/0xe0 [scst_vdisk]
+[Thu Dec 19 14:03:21 2024]  ? fileio_exec+0x1f/0x30 [scst_vdisk]
+[Thu Dec 19 14:03:21 2024]  ? scst_do_real_exec+0x51/0x130 [scst]
+[Thu Dec 19 14:03:21 2024]  ? scst_exec_check_blocking+0xa8/0x220 [scst]
+[Thu Dec 19 14:03:21 2024]  ? scst_process_active_cmd+0x200/0x18f0 [scst]
+[Thu Dec 19 14:03:21 2024]  ? scst_cmd_thread+0x15c/0x500 [scst]
+[Thu Dec 19 14:03:21 2024]  ? prepare_to_wait_event+0x160/0x160
+[Thu Dec 19 14:03:21 2024]  ? kthread+0xd2/0x100
+[Thu Dec 19 14:03:21 2024]  ? scst_cmd_done_local+0x90/0x90 [scst]
+[Thu Dec 19 14:03:21 2024]  ? kthread_complete_and_exit+0x20/0x20
+[Thu Dec 19 14:03:21 2024]  ? ret_from_fork+0x1c/0x28
+[Thu Dec 19 14:03:21 2024] ---[ end trace 0000000000000000 ]---
+
+Thanks in advance and for investigation,
+Mike
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
 
