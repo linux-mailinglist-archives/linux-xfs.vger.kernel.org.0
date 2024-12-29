@@ -1,84 +1,84 @@
-Return-Path: <linux-xfs+bounces-17653-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-17649-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5C039FDF06
-	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 14:39:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14B419FDEFF
+	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 14:39:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 132B57A11B5
-	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 13:39:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9102316175A
+	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 13:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FCB917D358;
-	Sun, 29 Dec 2024 13:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3F22158858;
+	Sun, 29 Dec 2024 13:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/cuE3r1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WI8YwiMU"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457C017B50A
-	for <linux-xfs@vger.kernel.org>; Sun, 29 Dec 2024 13:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F361531C8
+	for <linux-xfs@vger.kernel.org>; Sun, 29 Dec 2024 13:38:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735479542; cv=none; b=DKqWvUyZ9IuhadNruk/lqkpDsW1VUyFoSUNPwM9ESvLBg92f+iLSYb4s16d3lO9rED8ETGVW7r3zltdEgLzllX7fzEQOBNlnwAHnLRAftkeFlhlNx9BkVCvsZp2P+HFjDoqxAq1IdoJ+mym/UerwPI6upuk/UFWm69ugnk7ecOM=
+	t=1735479536; cv=none; b=nAndZkrzcL84FGzKIgqUOGLD7cgRTtThfZSHQWCi3pa+8MLwOH0EohYqz6HoRWi8FavXyvSUCIE7jNxYfEl3JxZLmynTa9v1kTHws0a7oUJy7orO4FL3jSG4UHm9UCavDIm1oHBcqrMdDw7jnRVb0mg7+1yAQjLG9oRg2I1xlAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735479542; c=relaxed/simple;
-	bh=C+Wv6tdJioRtfTE3kEjHgLGIfn0vVJJ9/ADqf0uxJZY=;
+	s=arc-20240116; t=1735479536; c=relaxed/simple;
+	bh=kxPe4iVy8cfXDJreWP8Pt1QLN8EVveJqg39cW/XQiHs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QTwphuz3A/E2iwUedRzJNhYooECxbbshrk5IOBy8DLYMmllecdgPO+O2uFPicV/aut+/p5GaO8ncQIMsur/V6tT+JZATqwsggBCduaHBO06RLNdUTbWsPsavFAVtZotk/yusl48E33CgLCC6Cv6EQHOV7CuFZqxzWVKo1keXTuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C/cuE3r1; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=ge3qcu+OpDRI3iZfAsqXrK19g9ks9qA8VV5BM9DtdswmJdK4bZtdWUnBbcjV2y7UMf2sWaw2Ks5DBlYt7MyIXKg0G9+1kWgTxgbQOdTFhAkTNDlnRvuURz+ZN+QZJpB9tmuyXdFcC4LzTbU/Y2lvncpKC2Msh9kcNpi2NLl8b0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WI8YwiMU; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735479537;
+	s=mimecast20190719; t=1735479533;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nWsspl0D0zo/uny5TfF8vLjKyVWpS+/wqpOlGGYSR9o=;
-	b=C/cuE3r1jmmXasdxAiPBJ8KBD5594rrIslfPldc4djvCBM+Sb2lkwl1ra8M/qrPJzJS2Jw
-	yZqWw4VqDK0M4q+/sCjqopaLx1vk7RRUnRpCGoHEwcxeoC1DJJD3wk02DMktpmDP4kVhUg
-	oe7Xgvcc9SVQ1cjDiiggNj3Svjm6bXA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=/zZXrzyOsl6xfQYeEnalw30bjT7COLAi5eAiBDs0mSE=;
+	b=WI8YwiMUYBo1JWvf9UKDGcwbmTLanTvpmOEXdQNoBtBuxZ89Z5G4gHtwx9R9d5NPQGjGH4
+	uBfHB54YQl28o1OG2a2RR8SPuoyErSW1fTOFChec4CfoaoNBGnnJfXAgbceEhwzbVB7ScG
+	n4rywXooUzd1OQPLwl3yiA8BhfQP+vA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-206-czrnvJt2MiS-4-pGWCgHUA-1; Sun, 29 Dec 2024 08:38:51 -0500
-X-MC-Unique: czrnvJt2MiS-4-pGWCgHUA-1
-X-Mimecast-MFC-AGG-ID: czrnvJt2MiS-4-pGWCgHUA
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-385dcadffebso4267173f8f.0
+ us-mta-558--ekqFzJLPxmm-F3RpL8C5A-1; Sun, 29 Dec 2024 08:38:52 -0500
+X-MC-Unique: -ekqFzJLPxmm-F3RpL8C5A-1
+X-Mimecast-MFC-AGG-ID: -ekqFzJLPxmm-F3RpL8C5A
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4359206e1e4so67762635e9.2
         for <linux-xfs@vger.kernel.org>; Sun, 29 Dec 2024 05:38:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735479529; x=1736084329;
+        d=1e100.net; s=20230601; t=1735479530; x=1736084330;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nWsspl0D0zo/uny5TfF8vLjKyVWpS+/wqpOlGGYSR9o=;
-        b=aIRDzqFBtKQJkfSdnSnKYc7MRWGjU0oV3VwpBAqcXkG5NUNfCVRjX1nq9Rt0cwCE/4
-         OK/qCC2bSdJDf/G0eZBZLpfeV4g8cTKbCKpF+midbvvR4m84oErpM7f6j/z9ztY6e0eQ
-         zPdy/UnmKlmgEqlH494EEZ9U5sw/VRiw6dWBkKTYMPxHK2HogImy9v/LMyKqxCAcf2No
-         6mheRSbIvO7WztJWwZMonr9okc+lr0SZHj/Kt0yd8WmXON33+5YEIFiPBjAVfZAUkoFF
-         IamQ2TRr4VsnveNPDXbbiZlNDzb329hqlmb7WVooHYh0AYxvjP2svslzOmQtu5wd2D5P
-         VuDA==
-X-Gm-Message-State: AOJu0YyzeZ/jVV01S7YUANNewrTJUW692KFVg8F/fDNCzuqYwbzhPELo
-	L7rFTfWbHWwsaXSsd9+F15dX+QUHdyO86NHwTJGK6G2yRd6E6jGAStHAL6pTAbnh4pSTUpXQ8V2
-	8gMZoceT3Foi4cP8U36tV54DufBNEwoG9krAXilMivxM7gn/GEoe/AU3VN0G33LBN+KArcawIMc
-	ZMpOUFooLlS/S5T0YNeQM9ZKDMCLrDSZ9PmwTG9oAP
-X-Gm-Gg: ASbGncucjtL9knfgX6fOvgtFJ2s2Yh3VI0MNwokDOU7s2RW4aOHAT6cpsl9SOl6mBa/
-	JNyZjk4UwCSN+IhfUiaVb2zW9lG9Iq66EIBMSzi7wqChZUqD2SmbqAwpUBsslV9uM9wbsvXRLbv
-	QAE1ItQpZa+hd74VWD0FQTrtjpKTbkTA6w1Q5xViNDxeTvVNMSVDBjKMq3ho8KV8g5tNv/mfRRv
-	/DS73/ZBWkiHrZriZI6cNmCnqLvz16OWRTt7RJHrlqiV6xBijgNoxWXIEbttWmINjebkOq8CUsV
-	Whe+bpvL6WM2X+k=
-X-Received: by 2002:a5d:6d84:0:b0:385:d7f9:f169 with SMTP id ffacd0b85a97d-38a221e1461mr27306101f8f.12.1735479529317;
-        Sun, 29 Dec 2024 05:38:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGkVU4PvUm0Dx09MnvQna+7KAIledFkyzpMhyzZV4w4BXRZ+zEc0DtjGfhU1gvgQWW/41+vJg==
-X-Received: by 2002:a5d:6d84:0:b0:385:d7f9:f169 with SMTP id ffacd0b85a97d-38a221e1461mr27306088f8f.12.1735479528956;
-        Sun, 29 Dec 2024 05:38:48 -0800 (PST)
+        bh=/zZXrzyOsl6xfQYeEnalw30bjT7COLAi5eAiBDs0mSE=;
+        b=hxCPvzqpxy0TddJ1SUuZTKaX3fUQJE/K02sa0lEmp9lR2GTnYBwUXlRLO17qkILaGc
+         Ap3j1AC6gWKLe5rHugVgeYYK2Im9Rka2kTaVFH51qMPpaF4riH+7W3G37C1iP/euzeGp
+         HfVF5DNMOBcg03xbcbQeUYiZn38oyND7QshR0UcePN6ol9Bq5jGvJZr9bx+7MgWl3bJ4
+         rTt5gE21FaBDmc20hR46NsNFnFPbU+pdhYXgZXY2ekJPtTZKAS+qvd2jCXmHlUvYNKot
+         Hd8kpwPltxLEe0H+vO2s3vyHGycuXtD47COS3YjJmqtY2tNh+j8h9wJ/ghfegV5cJt9o
+         LSmg==
+X-Gm-Message-State: AOJu0YwgvDHeyjf4+VpbS7xdGwO+PuXrLXPIkXpH38OSn+1VAzl0LoEr
+	1K6aaDS6ZPaL2SWstLpbG9oOT/2ZQvdvI91epokVA96RYJqdrga/tHEut7FHnb+SEVK+0ihCy6Q
+	dvxNIWprk8tw8VE97jqZU/jdPk6nBP6eAqbOt3qNNrljckQn1h2FrpeDLQGB5Rzf8c2eIs6qVW4
+	ExLtCjFwhSf4Pb6UM4JlVR+IlWV8/CZWyiKSSstP4B
+X-Gm-Gg: ASbGncuzHULHfLlwMwfO1RABI96ipIEbQmMs8p/g1ytf6wB3o4tPDV9hnoCr/VBgAEZ
+	8lrN8MXu229OCVizHjhkkgivcDZgx8j0u5h3akEOcdMFJioBFx0qRkt/QC7OI/QqSrNg0NZNbnR
+	7WYFFeL89Ysw/7M/zvJ85DaVjPAymDnrsONFjdP4J4hTIgBiJoHhdbxK1ZVHJIsWBONZBz4wYUt
+	LA+d36w9MRx/FRB8eb/6TuVVoiCHakAgZEHvKb1hUl17fvS5yaDi5xNFhtu672dwCiKtdHvlFdd
+	aGqPw4KRras9xFw=
+X-Received: by 2002:a05:600c:4709:b0:436:1ac2:1acf with SMTP id 5b1f17b1804b1-43668a3a35dmr247083475e9.20.1735479530551;
+        Sun, 29 Dec 2024 05:38:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHHtf7A57Lm/8C8shYrRZeaxy4+osMFkjjSCIKKSDFZ2bFlMclRie5Wi2KENF6Snjko31IZKw==
+X-Received: by 2002:a05:600c:4709:b0:436:1ac2:1acf with SMTP id 5b1f17b1804b1-43668a3a35dmr247083285e9.20.1735479530160;
+        Sun, 29 Dec 2024 05:38:50 -0800 (PST)
 Received: from thinky.redhat.com (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8474c2sm27093127f8f.55.2024.12.29.05.38.48
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8474c2sm27093127f8f.55.2024.12.29.05.38.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2024 05:38:48 -0800 (PST)
+        Sun, 29 Dec 2024 05:38:49 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
 To: linux-xfs@vger.kernel.org
@@ -86,12 +86,13 @@ Cc: djwong@kernel.org,
 	david@fromorbit.com,
 	hch@lst.de,
 	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: [PATCH 00/14] Direct mapped extended attribute data
-Date: Sun, 29 Dec 2024 14:38:22 +0100
-Message-ID: <20241229133836.1194272-1-aalbersh@kernel.org>
+Subject: [PATCH 01/14] iomap: add wrapper to pass readpage_ctx to read path
+Date: Sun, 29 Dec 2024 14:38:23 +0100
+Message-ID: <20241229133836.1194272-2-aalbersh@kernel.org>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241229133350.1192387-1-aalbersh@kernel.org>
+In-Reply-To: <20241229133836.1194272-1-aalbersh@kernel.org>
 References: <20241229133350.1192387-1-aalbersh@kernel.org>
+ <20241229133836.1194272-1-aalbersh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -100,70 +101,175 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset introduces new format for extended attribute leafs.
-The main difference is that data block doesn't have any header and
-that data has to be written through page cache.
+Make filesystems able to create readpage context, similar as
+iomap_writepage_ctx in write path. This will allow filesystem to
+pass _ops to iomap for ioend configuration (->prepare_ioend) which
+in turn can be used to set BIO end callout (bio->bi_end_io).
 
-The most useful part of the header, necessary for metadata
-verification, is rm_crc. This field is moved into DA tree and
-doubled in size as rm_crc[2].
+Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+---
+ fs/iomap/buffered-io.c | 76 ++++++++++++++++++++++++------------------
+ include/linux/iomap.h  | 12 +++++++
+ 2 files changed, 55 insertions(+), 33 deletions(-)
 
-rm_crc[2] stores both CRCs for data before IO completion (old data)
-and after IO completion (new written data). This allow us to
-transactionally update CRC in the DA block while updating attribute
-data with writeback.
-
-So far, the interface isn't useful by itself as it requires
-additional iomap_begin callbacks. These are implemented by fsverity,
-for example.
-
-Andrey Albershteyn (13):
-  iomap: add wrapper to pass readpage_ctx to read path
-  iomap: add read path ioends for filesystem read verification
-  iomap: introduce IOMAP_F_NO_MERGE for non-mergable ioends
-  xfs: add incompat directly mapped xattr flag
-  libxfs: add xfs_calc_chsum()
-  libxfs: pass xfs_sb to xfs_attr3_leaf_name_remote()
-  xfs: introduce XFS_DA_OP_EMPTY
-  xfs: introduce workqueue for post read processing
-  xfs: add interface to set CRC on leaf attributes
-  xfs: introduce XFS_ATTRUPDATE_FLAGS operation
-  xfs: add interface for page cache mapped remote xattrs
-  xfs: parse both remote attr name on-disk formats
-  xfs: enalbe XFS_SB_FEAT_INCOMPAT_DXATTR
-
-Darrick J. Wong (1):
-  xfs: do not use xfs_attr3_rmt_hdr for remote value blocks for dxattr
-
- fs/iomap/buffered-io.c          | 111 +++++++++++------
- fs/xfs/libxfs/xfs_attr.c        | 212 +++++++++++++++++++++++++++++++-
- fs/xfs/libxfs/xfs_attr.h        |  11 ++
- fs/xfs/libxfs/xfs_attr_leaf.c   | 135 +++++++++++++++-----
- fs/xfs/libxfs/xfs_attr_leaf.h   |   1 +
- fs/xfs/libxfs/xfs_attr_remote.c |  83 ++++++++++---
- fs/xfs/libxfs/xfs_attr_remote.h |   8 +-
- fs/xfs/libxfs/xfs_cksum.h       |  12 ++
- fs/xfs/libxfs/xfs_da_btree.h    |   5 +-
- fs/xfs/libxfs/xfs_da_format.h   |  18 ++-
- fs/xfs/libxfs/xfs_format.h      |   4 +-
- fs/xfs/libxfs/xfs_log_format.h  |   1 +
- fs/xfs/libxfs/xfs_ondisk.h      |   9 +-
- fs/xfs/libxfs/xfs_sb.c          |   2 +
- fs/xfs/libxfs/xfs_shared.h      |   1 +
- fs/xfs/scrub/attr.c             |   2 +-
- fs/xfs/scrub/attr_repair.c      |   3 +-
- fs/xfs/scrub/listxattr.c        |   3 +-
- fs/xfs/xfs_attr_inactive.c      |   4 +-
- fs/xfs/xfs_attr_item.c          |   6 +
- fs/xfs/xfs_attr_item.h          |   1 +
- fs/xfs/xfs_attr_list.c          |   3 +-
- fs/xfs/xfs_mount.h              |   3 +
- fs/xfs/xfs_stats.h              |   1 +
- fs/xfs/xfs_super.c              |   9 ++
- fs/xfs/xfs_trace.h              |   1 +
- include/linux/iomap.h           |  34 +++++
- 27 files changed, 580 insertions(+), 103 deletions(-)
-
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 0f33ac975209..0d9291719d75 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -320,14 +320,6 @@ static void iomap_read_end_io(struct bio *bio)
+ 	bio_put(bio);
+ }
+ 
+-struct iomap_readpage_ctx {
+-	struct folio		*cur_folio;
+-	bool			cur_folio_in_bio;
+-	struct bio		*bio;
+-	struct readahead_control *rac;
+-	int			flags;
+-};
+-
+ /**
+  * iomap_read_inline_data - copy inline data into the page cache
+  * @iter: iteration structure
+@@ -461,28 +453,27 @@ static loff_t iomap_read_folio_iter(const struct iomap_iter *iter,
+ 	return done;
+ }
+ 
+-int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops)
++int iomap_read_folio_ctx(struct iomap_readpage_ctx *ctx,
++		const struct iomap_ops *ops)
+ {
++	struct folio *folio = ctx->cur_folio;
+ 	struct iomap_iter iter = {
+ 		.inode		= folio->mapping->host,
+ 		.pos		= folio_pos(folio),
+ 		.len		= folio_size(folio),
+ 	};
+-	struct iomap_readpage_ctx ctx = {
+-		.cur_folio	= folio,
+-	};
+ 	int ret;
+ 
+ 	trace_iomap_readpage(iter.inode, 1);
+ 
+ 	while ((ret = iomap_iter(&iter, ops)) > 0)
+-		iter.processed = iomap_read_folio_iter(&iter, &ctx);
++		iter.processed = iomap_read_folio_iter(&iter, ctx);
+ 
+-	if (ctx.bio) {
+-		submit_bio(ctx.bio);
+-		WARN_ON_ONCE(!ctx.cur_folio_in_bio);
++	if (ctx->bio) {
++		submit_bio(ctx->bio);
++		WARN_ON_ONCE(!ctx->cur_folio_in_bio);
+ 	} else {
+-		WARN_ON_ONCE(ctx.cur_folio_in_bio);
++		WARN_ON_ONCE(ctx->cur_folio_in_bio);
+ 		folio_unlock(folio);
+ 	}
+ 
+@@ -493,6 +484,16 @@ int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops)
+ 	 */
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(iomap_read_folio_ctx);
++
++int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops)
++{
++	struct iomap_readpage_ctx ctx = {
++		.cur_folio	= folio,
++	};
++
++	return iomap_read_folio_ctx(&ctx, ops);
++}
+ EXPORT_SYMBOL_GPL(iomap_read_folio);
+ 
+ static loff_t iomap_readahead_iter(const struct iomap_iter *iter,
+@@ -520,6 +521,30 @@ static loff_t iomap_readahead_iter(const struct iomap_iter *iter,
+ 	return done;
+ }
+ 
++void iomap_readahead_ctx(struct iomap_readpage_ctx *ctx,
++		const struct iomap_ops *ops)
++{
++	struct readahead_control *rac = ctx->rac;
++	struct iomap_iter iter = {
++		.inode	= rac->mapping->host,
++		.pos	= readahead_pos(rac),
++		.len	= readahead_length(rac),
++	};
++
++	trace_iomap_readahead(rac->mapping->host, readahead_count(rac));
++
++	while (iomap_iter(&iter, ops) > 0)
++		iter.processed = iomap_readahead_iter(&iter, ctx);
++
++	if (ctx->bio)
++		submit_bio(ctx->bio);
++	if (ctx->cur_folio) {
++		if (!ctx->cur_folio_in_bio)
++			folio_unlock(ctx->cur_folio);
++	}
++}
++EXPORT_SYMBOL_GPL(iomap_readahead_ctx);
++
+ /**
+  * iomap_readahead - Attempt to read pages from a file.
+  * @rac: Describes the pages to be read.
+@@ -537,26 +562,11 @@ static loff_t iomap_readahead_iter(const struct iomap_iter *iter,
+  */
+ void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops)
+ {
+-	struct iomap_iter iter = {
+-		.inode	= rac->mapping->host,
+-		.pos	= readahead_pos(rac),
+-		.len	= readahead_length(rac),
+-	};
+ 	struct iomap_readpage_ctx ctx = {
+ 		.rac	= rac,
+ 	};
+ 
+-	trace_iomap_readahead(rac->mapping->host, readahead_count(rac));
+-
+-	while (iomap_iter(&iter, ops) > 0)
+-		iter.processed = iomap_readahead_iter(&iter, &ctx);
+-
+-	if (ctx.bio)
+-		submit_bio(ctx.bio);
+-	if (ctx.cur_folio) {
+-		if (!ctx.cur_folio_in_bio)
+-			folio_unlock(ctx.cur_folio);
+-	}
++	iomap_readahead_ctx(&ctx, ops);
+ }
+ EXPORT_SYMBOL_GPL(iomap_readahead);
+ 
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 3297ed36c26b..b5ae08955c87 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -296,9 +296,21 @@ static inline bool iomap_want_unshare_iter(const struct iomap_iter *iter)
+ 		iter->srcmap.type == IOMAP_MAPPED;
+ }
+ 
++struct iomap_readpage_ctx {
++	struct folio			*cur_folio;
++	bool				cur_folio_in_bio;
++	struct bio			*bio;
++	struct readahead_control	*rac;
++	int				flags;
++};
++
+ ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
+ 		const struct iomap_ops *ops, void *private);
++int iomap_read_folio_ctx(struct iomap_readpage_ctx *ctx,
++		const struct iomap_ops *ops);
+ int iomap_read_folio(struct folio *folio, const struct iomap_ops *ops);
++void iomap_readahead_ctx(struct iomap_readpage_ctx *ctx,
++		const struct iomap_ops *ops);
+ void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops);
+ bool iomap_is_partially_uptodate(struct folio *, size_t from, size_t count);
+ struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos, size_t len);
 -- 
 2.47.0
 
