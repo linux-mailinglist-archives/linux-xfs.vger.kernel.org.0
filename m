@@ -1,94 +1,95 @@
-Return-Path: <linux-xfs+bounces-17659-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-17661-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D63B59FDF08
-	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 14:39:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 136F79FDF0B
+	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 14:39:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 317E83A18B6
-	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 13:39:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44806188239D
+	for <lists+linux-xfs@lfdr.de>; Sun, 29 Dec 2024 13:39:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20955172767;
-	Sun, 29 Dec 2024 13:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564E217B50A;
+	Sun, 29 Dec 2024 13:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LdYVTDgT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DBLF4jP4"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479A41531C8
-	for <linux-xfs@vger.kernel.org>; Sun, 29 Dec 2024 13:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DF415820C
+	for <linux-xfs@vger.kernel.org>; Sun, 29 Dec 2024 13:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735479549; cv=none; b=bWmhlA8UY2E63PGNC9JEQUUHFcPGiT1by8sa4KarQg69DKTr/ufe9njzEgSWv+rOjnjQExAbOLjxFOmF6JiwZ5KXkdtrzHaRozNC3cY2FeLPQAIkKOd6cuWB4Q1Gg6EtQN8vXaWF5l0TKSqkGXg/sVrR0yYmaYVUB69i5/oeRlY=
+	t=1735479554; cv=none; b=RHfOo9PuwA701y9jOfz4PnCtfJhcm4SIuxweQO5mlhq9xE2GpR1gfLMZS4m5+ytHEQYiS7JYg6QWFr2tNMI9DMFsSFXvgznEQjhD5yqsCfjb84lyQNk/z/PjyX6tUyJ1mBy9dFGvAPdRkRLc0IZPE17Ty7aVfw9cH1Mu5+X+afY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735479549; c=relaxed/simple;
-	bh=ZhcZFHd5JVEpVLlW9VMPmicx5F+tcNphNkg/aZjNQRo=;
+	s=arc-20240116; t=1735479554; c=relaxed/simple;
+	bh=0zWKacQlc9i9XxUkmK5NkdmAjIlpKZFQcR90rYZAxm8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sNbSQ3IqEOFMLjo5XdlQldv+SNHT9IgPycFOq3F5b4S2bB637SpDVjxMBx+NSxKGYU3eMRbfGsSHtyJ5XSd5VgsjxyE7JTH+4EmVVuZF6lmDI46MPlpAKbtv9p09nhv1WYsBDCw9rHvE/HRLeia0yPPyglM2cUv7l/7ieYc7ATA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LdYVTDgT; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=K7TQd1KTS6U2ojTj8Xyso3cJXNokvieYZZvAZS0Bo4aPElsLP+PcTmPB2gqdyBzt+mA6Wt8sdkpucGMEigwhAlHWnWT++jatzpEMghp6NU/d93hOtZToVrNrycKww2/uVCnokzOL6oGig2LG+YsDpATJdGf2pAOYbusxft7ZwZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DBLF4jP4; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735479547;
+	s=mimecast20190719; t=1735479551;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Nur/MaXbNbep0nGfnpuQnIYAkWa+dhGBZo7ukzuAicY=;
-	b=LdYVTDgTKAYdiO2hmTyZhgC/dvcJVryKl0CHnq9vKgYzFZwksavdXv7EsXE/iQwpmrd6V5
-	PiIV/IGaqlgwjc3p69F844mLntWS20NqgShJ+wuzWzAzlhaelZ2OcsiJhh71IEuulL1pdW
-	jcIbYg66bf96GKJpr1FtyJJwAu4J7IY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=1Na2m5UMPWh3vwqiIBEvQcu/97KImYI+t91MlSg7cSc=;
+	b=DBLF4jP48p1kZqNyHXUqYrkKdIdz4PSPFM2UP27voKdgrQIO+94E21aqJNyZA3wBiWuf3g
+	4jkEII5EWEsFH9a+LuMPVSGh00IMbaTixZ8mZbgZTd09dB9Ar50/iW13r8OQFHamY8Mjrj
+	lth7f9PpRAcnaq9XRO0/YygCU24t4oo=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-278-OgvfQQnbPpe4j-6uKxBuhw-1; Sun, 29 Dec 2024 08:39:06 -0500
-X-MC-Unique: OgvfQQnbPpe4j-6uKxBuhw-1
-X-Mimecast-MFC-AGG-ID: OgvfQQnbPpe4j-6uKxBuhw
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38a2140a400so5204000f8f.0
-        for <linux-xfs@vger.kernel.org>; Sun, 29 Dec 2024 05:39:06 -0800 (PST)
+ us-mta-398-iBfegatJNCiu-MABES_NNA-1; Sun, 29 Dec 2024 08:39:09 -0500
+X-MC-Unique: iBfegatJNCiu-MABES_NNA-1
+X-Mimecast-MFC-AGG-ID: iBfegatJNCiu-MABES_NNA
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-385d52591d6so4009162f8f.1
+        for <linux-xfs@vger.kernel.org>; Sun, 29 Dec 2024 05:39:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735479544; x=1736084344;
+        d=1e100.net; s=20230601; t=1735479548; x=1736084348;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Nur/MaXbNbep0nGfnpuQnIYAkWa+dhGBZo7ukzuAicY=;
-        b=Xxk5q6VRG1JQbXo/RKyvYDfoQJBzTGqDjHycBMxp6JS/OG+gdyXxjVaBLwppN7UatX
-         ENVGAtTTFuPVem9gN7YQ/t9NQG3+GQ3VBkSl6tuITeTfQWGKo2dkNFMIv7cECyZKjBXJ
-         eV6bfZqjsj7zohtFDSyCrS2bt090f4DIpgGQyfBlUalnsocv+grIwIgxsQ5PEaS8zFUK
-         QfbhEo1+fqwX52+Hrojdsb6tEftWOhk1Tl88bc0Vtgg2dmUMBIk3lDxzXybklWUS88uP
-         8hjdm/z4K322ggiedH1741Kbh60M93sSPmgIK+BO5rmjVSCymeb2TW57maXp82OVNjqU
-         pOrg==
-X-Gm-Message-State: AOJu0Ywe6htLwqUjcx6l6AlNr01lpbg40OVn4b66Xr+FY6h98wpiv+Ve
-	EE/LQv5ozhhX794uhD5FC4NmG+wE4chw1xYEeH7WOmyY9QvnDWLPT5HuXdehZBU3/5peGtJc2BK
-	GC9NwebQuc4TfgE/QIEXAqhVvfn8+/3H98cEuigYOW39GP5NFJkx/6vo7iZ+m5nO5RCZhW/fpgx
-	Pa0s7cRUoN57cgNDv5yiJpDlIkLlWQxkBC8wwnnkJd
-X-Gm-Gg: ASbGncsB+79Mw+iQ77sch2T2vrPKp/6k1C+ydCf8SQZ6gxnrWaV5xoh6PO12n2sHLWt
-	xXxO7ysBYUtn25SxyyjUVUhiv4SB+RkEuSkYYNrqzKs5MD4chAisZdZQSKUy9FKtSVuMfEV/09k
-	wJdZZjrg6hLtPe/lv/3cusqPkVP56bftL9ugcLLiUK188NyCIeSN3ESoQ9aO/59u5rpPUTPXqV5
-	7j7UQJkWdsB1JnjQyC6kwfmgGxa6hVCA8pZeeu9pQFMmSPUxrRLznKBu1milTgjLEd+0ulFqJX4
-	HJztX9asBFFmQ+A=
-X-Received: by 2002:a5d:5e09:0:b0:385:f72a:a3b0 with SMTP id ffacd0b85a97d-38a223fd417mr34649027f8f.55.1735479544330;
-        Sun, 29 Dec 2024 05:39:04 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGt2JiTI+52hRdXTVo5j6kOA5o+ypnN61iCqRRoxRIF0zz5icEqvzhm8ZXrPqoWhScTWqZrKw==
-X-Received: by 2002:a5d:5e09:0:b0:385:f72a:a3b0 with SMTP id ffacd0b85a97d-38a223fd417mr34649013f8f.55.1735479543968;
-        Sun, 29 Dec 2024 05:39:03 -0800 (PST)
+        bh=1Na2m5UMPWh3vwqiIBEvQcu/97KImYI+t91MlSg7cSc=;
+        b=aeQJ4Y4Gf277w7V/e1sXuQFJ9PMA6i11gVOv0DxWNu7KWIsWTqD5YuP8Z5WMfTQFNu
+         ngFICVcF3AKHqKC/iZdoQVBCAJ/7b03KaTgvwiHaSY6YAr1JuyaWXpPDYk60UOdbieIf
+         XbpJm8LuRrlVIeHh1xDCZml/hKFeaWSVACORGNjX+z5eACD6RfFIp/gjwwy/oSdphdqv
+         zi4yUNFpccPsfVjHybJlS1qvWJkRCOlwWyFJfYEWlc6kHm18KozVgAAOJVavrFF0A9Ox
+         nvEu7El5nnz5uytOyeiUfkZrKTNY5e88xwLugKADAutr7RQYD1L1KXnRciysz2WA+zkk
+         o/xw==
+X-Gm-Message-State: AOJu0YzF4A1rCYVo0oZE9YjkG//G26nOQy/6UMccY8key53g6AuYZwvc
+	OFxwCD2ucWv/43rhjdFYztLISm0rxe5Wh55rlo67ODN/qBXmEwR1Q5YNJK5Gq4HB+9s68Fkqru8
+	tS04VnxsII2cnZLHUacVsKEZU//NgOig4HfA6HVQKyVn1rDdVnTU6MgRLHXXONMz5VNFJEZQAWM
+	/rqWS2ogAnCJDelw8pcjI6CNBsRgEu0DCjoN8PSBhI
+X-Gm-Gg: ASbGnctochbxfXvckFC2L1psgL/8HDer9S5DcEt+2CrqPT2WdV65UYKzt5op7A3zOMi
+	wy2uZ9RCQcPc03tF8L68uDsA1M7QZnKb8FPZFqDM8mfj4mstkmWiuu77sqfDFnadVjAaYDORrlq
+	mr1gM6QTComVgo5nWP+SUNQTyc87fGiaNpJMhN4sn21zOMi853RxwVqrD8RkaoQl8hXCUbdeRjQ
+	njnDadm8ROVCkgOezj3Z6OfaI/YrJYIOvt94Niu9J5wP9Nt7Zf1U39hwpjagMDDmi5/VZSQUiH6
+	zwAwWekXk5c7odw=
+X-Received: by 2002:a05:6000:18a5:b0:386:3672:73e4 with SMTP id ffacd0b85a97d-38a1a2746a3mr31667310f8f.26.1735479546415;
+        Sun, 29 Dec 2024 05:39:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFHFM47AA0b3ZWvyliS/St2aNASRxqmSACTqLZRz0sidCnI0meOHabfaEgNjGexLisPtRzYWQ==
+X-Received: by 2002:a05:6000:18a5:b0:386:3672:73e4 with SMTP id ffacd0b85a97d-38a1a2746a3mr31667289f8f.26.1735479545976;
+        Sun, 29 Dec 2024 05:39:05 -0800 (PST)
 Received: from thinky.redhat.com (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8474c2sm27093127f8f.55.2024.12.29.05.39.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c8474c2sm27093127f8f.55.2024.12.29.05.39.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2024 05:39:03 -0800 (PST)
+        Sun, 29 Dec 2024 05:39:04 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
 To: linux-xfs@vger.kernel.org
 Cc: djwong@kernel.org,
 	david@fromorbit.com,
 	hch@lst.de,
+	Andrey Albershteyn <aalbersh@redhat.com>,
 	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: [PATCH 10/14] xfs: introduce XFS_ATTRUPDATE_FLAGS operation
-Date: Sun, 29 Dec 2024 14:38:32 +0100
-Message-ID: <20241229133836.1194272-11-aalbersh@kernel.org>
+Subject: [PATCH 11/14] xfs: add interface for page cache mapped remote xattrs
+Date: Sun, 29 Dec 2024 14:38:33 +0100
+Message-ID: <20241229133836.1194272-12-aalbersh@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241229133836.1194272-1-aalbersh@kernel.org>
 References: <20241229133350.1192387-1-aalbersh@kernel.org>
@@ -101,160 +102,408 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The extended attributes mapped through page cache need a way to
-reset XFS_ATTR_INCOMPLETE flag and set data CRC when data IO is
-complete. Introduce this new operation which now applies only to
-leaf attributes.
+From: Andrey Albershteyn <aalbersh@redhat.com>
+
+Leafs of the remote attributes contain xfs_attr3_rmt_hdr with CRC
+of the extended attribute and owner info. Each block of the extent
+has this header.
+
+Due to this fact we can not easily map the content of extended
+attribute to the page. This would be very helpful for fsverity as we
+can use extended attributes to store merkle tree and map these
+blocks to the page cache.
+
+This commit changes format of the leafs by shifting CRC the btree
+name struct. This however creates inconsistency problem as CRC
+update could not happen even though data is updated.
+
+This is solved by storing both CRCs - for old data and for the new
+one. Attribute flag points to the correct CRC.
 
 Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr.c       | 19 ++++++++++++++++++-
- fs/xfs/libxfs/xfs_attr.h       |  3 +++
- fs/xfs/libxfs/xfs_log_format.h |  1 +
- fs/xfs/xfs_attr_item.c         |  6 ++++++
- fs/xfs/xfs_attr_item.h         |  1 +
- fs/xfs/xfs_stats.h             |  1 +
- 6 files changed, 30 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_attr.c        | 189 +++++++++++++++++++++++++++++++-
+ fs/xfs/libxfs/xfs_attr.h        |   8 ++
+ fs/xfs/libxfs/xfs_attr_remote.c |  12 --
+ fs/xfs/libxfs/xfs_da_btree.h    |   1 +
+ fs/xfs/libxfs/xfs_da_format.h   |   3 +
+ fs/xfs/libxfs/xfs_ondisk.h      |   9 +-
+ fs/xfs/libxfs/xfs_sb.c          |   2 +
+ fs/xfs/xfs_mount.h              |   2 +
+ 8 files changed, 207 insertions(+), 19 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 5060c266f776..55b18ec8bc10 100644
+index 55b18ec8bc10..d357405f22ee 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -855,6 +855,13 @@ xfs_attr_set_iter(
- 			attr->xattri_dela_state++;
- 		break;
+@@ -27,6 +27,7 @@
+ #include "xfs_attr_item.h"
+ #include "xfs_xattr.h"
+ #include "xfs_parent.h"
++#include "xfs_iomap.h"
  
-+	case XFS_DAS_LEAF_FLAGS_UPDATE:
-+		error = xfs_attr3_leaf_setcrc(args);
-+		if (error)
-+			return error;
-+		attr->xattri_dela_state = XFS_DAS_DONE;
-+		break;
+ struct kmem_cache		*xfs_attr_intent_cache;
+ 
+@@ -344,6 +345,175 @@ xfs_attr_set_resv(
+ 	return ret;
+ }
+ 
++/*
++ * Find attribute specified in args and return iomap pointing to the attribute
++ * data
++ */
++int
++xfs_attr_read_iomap(
++	struct xfs_da_args	*args,
++	struct iomap		*iomap)
++{
++	struct xfs_inode	*ip = args->dp;
++	struct xfs_mount	*mp = ip->i_mount;
++	int			error;
++	struct xfs_bmbt_irec	map[1];
++	int			nmap = 1;
++	int			seq;
++	unsigned int		lockmode = XFS_ILOCK_SHARED;
++	int			ret;
++	uint64_t		pos = xfs_attr_get_position(args);
 +
- 	case XFS_DAS_LEAF_SET_RMT:
- 	case XFS_DAS_NODE_SET_RMT:
- 		error = xfs_attr_rmtval_find_space(attr);
-@@ -1093,6 +1100,11 @@ xfs_attr_set(
- 		tres = M_RES(mp)->tr_attrrm;
- 		total = XFS_ATTRRM_SPACE_RES(mp);
- 		break;
-+	case XFS_ATTRUPDATE_FLAGS:
-+		XFS_STATS_INC(mp, xs_attr_flags);
-+		tres = M_RES(mp)->tr_attrrm;
-+		total = XFS_ATTRRM_SPACE_RES(mp);
-+		break;
++	ASSERT(!args->region_offset);
++
++	if (xfs_is_shutdown(mp))
++		return -EIO;
++
++	/* We just need to find the attribute and block it's pointing
++	 * to. The reading of data would be done by iomap */
++	args->valuelen = 0;
++	error = xfs_attr_get(args);
++	if (error)
++		return error;
++
++	if (xfs_need_iread_extents(&ip->i_af))
++		lockmode = XFS_ILOCK_EXCL;
++	xfs_ilock(ip, lockmode);
++	error = xfs_bmapi_read(ip, (xfs_fileoff_t)args->rmtblkno,
++			       args->rmtblkcnt, map, &nmap,
++			       XFS_BMAPI_ATTRFORK);
++	xfs_iunlock(ip, lockmode);
++	if (error)
++		return error;
++
++	map[0].br_startoff = XFS_B_TO_FSB(mp, pos | args->region_offset);
++
++	seq = xfs_iomap_inode_sequence(ip, IOMAP_F_XATTR);
++	trace_xfs_iomap_found(ip, pos, args->valuelen, XFS_ATTR_FORK, map);
++	ret = xfs_bmbt_to_iomap(ip, iomap, map, 0, IOMAP_F_XATTR, seq);
++	/* Attributes are at args->region_offset in cache, beyond EOF of the
++	 * file */
++	iomap->flags |= IOMAP_F_BEYOND_EOF;
++
++	return ret;
++}
++
++int
++xfs_attr_read_end_io(
++		struct xfs_da_args		*args)
++{
++	struct xfs_inode			*ip = args->dp;
++	struct xfs_attr_leafblock		*leaf;
++	struct xfs_attr_leaf_entry		*entry;
++	struct xfs_attr_leaf_name_remote	*name_rmt;
++	struct xfs_buf				*bp;
++	struct xfs_mount			*mp = args->dp->i_mount;
++	uint32_t				crc;
++	int					error;
++	unsigned int				whichcrc;
++
++	xfs_ilock(ip, XFS_ILOCK_SHARED);
++
++	if (!xfs_inode_hasattr(args->dp)) {
++		error = -ENOATTR;
++		goto out_unlock;
++	}
++
++	error = xfs_iread_extents(args->trans, args->dp, XFS_ATTR_FORK);
++	if (error)
++		goto out_unlock;
++
++	error = xfs_attr3_leaf_read(args->trans, args->dp, args->owner,
++			args->blkno, &bp);
++	if (error)
++		goto out_unlock;
++
++	leaf = bp->b_addr;
++	entry = &xfs_attr3_leaf_entryp(leaf)[args->index];
++
++	whichcrc = (entry->flags & XFS_ATTR_RMCRC_SEL) != 0;
++	name_rmt = xfs_attr3_leaf_name_remote(&(mp->m_sb), leaf,
++					      args->index);
++
++	xfs_calc_cksum(args->value, args->valuelen, &crc);
++	error = name_rmt->crc[whichcrc] != crc;
++	if (error) {
++		if (name_rmt->crc[~whichcrc & 1] != crc) {
++			error = -EFSCORRUPTED;
++			goto out_buf_relse;
++		} else {
++			error = -EFSBADCRC;
++			goto out_buf_relse;
++		}
++	}
++
++out_buf_relse:
++	xfs_buf_relse(bp);
++out_unlock:
++	xfs_iunlock(args->dp, XFS_ILOCK_SHARED);
++	return error;
++}
++
++/*
++ * Create an attribute described in args and return iomap pointing to the extent
++ * where attribute data has to be written.
++ *
++ * Created attribute has XFS_ATTR_INCOMPLETE set, and doesn't have any data CRC.
++ * Therefore, when IO is complete xfs_attr_write_end_ioend() need to be called.
++ */
++int
++xfs_attr_write_iomap(
++	struct xfs_da_args	*args,
++	struct iomap		*iomap)
++{
++	struct xfs_inode	*ip = args->dp;
++	struct xfs_mount	*mp = ip->i_mount;
++	int			error;
++	int			nmap = 1;
++	int			seq;
++	struct xfs_bmbt_irec	imap[1];
++	uint64_t		pos = xfs_attr_get_position(args);
++	unsigned int		blksize = mp->m_attr_geo->blksize;
++
++	ASSERT(!args->region_offset);
++
++	if (xfs_is_shutdown(mp))
++		return -EIO;
++
++	/* We just want to allocate blocks without copying any data there */
++	args->op_flags |= XFS_DA_OP_EMPTY;
++	args->valuelen = round_up(min_t(int, args->valuelen, blksize), blksize);
++
++	error = xfs_attr_set(args, XFS_ATTRUPDATE_UPSERT, false);
++	if (error)
++		return error;
++
++	ASSERT(args->dp->i_af.if_format != XFS_DINODE_FMT_LOCAL);
++	xfs_ilock(ip, XFS_ILOCK_SHARED);
++	error = xfs_bmapi_read(ip, (xfs_fileoff_t)args->rmtblkno,
++			       args->rmtblkcnt, imap, &nmap,
++			       XFS_BMAPI_ATTRFORK);
++	xfs_iunlock(ip, XFS_ILOCK_SHARED);
++	if (error)
++		return error;
++
++	/* Instead of xattr extent offset, which will be over data, we need
++	 * merkle tree offset in page cache */
++	imap[0].br_startoff = XFS_B_TO_FSBT(mp, pos | args->region_offset);
++
++	seq = xfs_iomap_inode_sequence(ip, IOMAP_F_XATTR);
++	xfs_bmbt_to_iomap(ip, iomap, imap, 0, IOMAP_F_XATTR, seq);
++
++	return 0;
++}
++
++int
++xfs_attr_write_end_ioend(
++		struct xfs_da_args	*args)
++{
++	return xfs_attr_set(args, XFS_ATTRUPDATE_FLAGS, false);
++}
++
+ /*
+  * Add an attr to a shortform fork. If there is no space,
+  * xfs_attr_shortform_addname() will convert to leaf format and return -ENOSPC.
+@@ -642,11 +812,15 @@ xfs_attr_rmtval_alloc(
+ 			goto out;
  	}
  
- 	/*
-@@ -1119,6 +1131,11 @@ xfs_attr_set(
- 			break;
- 		}
+-	if (!(args->op_flags & XFS_DA_OP_EMPTY)) {
++	if (args->op_flags & XFS_DA_OP_EMPTY) {
++		/* Set XFS_ATTR_INCOMLETE flag as attribute doesn't have a value
++		 * yet (which should be written by iomap). */
++		error = xfs_attr3_leaf_setflag(args);
++	} else {
+ 		error = xfs_attr_rmtval_set_value(args);
+-		if (error)
+-			return error;
+ 	}
++	if (error)
++		return error;
  
-+		if (op == XFS_ATTRUPDATE_FLAGS) {
-+			xfs_attr_defer_add(args, XFS_ATTR_DEFER_FLAGS);
-+			break;
-+		}
+ 	attr->xattri_dela_state = xfs_attr_complete_op(attr,
+ 						++attr->xattri_dela_state);
+@@ -1613,3 +1787,12 @@ xfs_attr_intent_destroy_cache(void)
+ 	kmem_cache_destroy(xfs_attr_intent_cache);
+ 	xfs_attr_intent_cache = NULL;
+ }
 +
- 		/* Pure create fails if the attr already exists */
- 		if (op == XFS_ATTRUPDATE_CREATE)
- 			goto out_trans_cancel;
-@@ -1126,7 +1143,7 @@ xfs_attr_set(
- 		break;
- 	case -ENOATTR:
- 		/* Can't remove what isn't there. */
--		if (op == XFS_ATTRUPDATE_REMOVE)
-+		if (op == XFS_ATTRUPDATE_REMOVE || op == XFS_ATTRUPDATE_FLAGS)
- 			goto out_trans_cancel;
- 
- 		/* Pure replace fails if no existing attr to replace. */
++/* Retrieve attribute position from the attr data */
++uint64_t
++xfs_attr_get_position(
++	struct xfs_da_args	*args)
++{
++	ASSERT(args->namelen == sizeof(uint64_t));
++	return be64_to_cpu(*(uint64_t*)args->name);
++}
 diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-index 0e51d0723f9a..b851e2e4b63c 100644
+index b851e2e4b63c..3d137117154e 100644
 --- a/fs/xfs/libxfs/xfs_attr.h
 +++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -448,6 +448,7 @@ enum xfs_delattr_state {
+@@ -6,6 +6,8 @@
+ #ifndef __XFS_ATTR_H__
+ #define	__XFS_ATTR_H__
  
- 	XFS_DAS_LEAF_ADD,		/* Initial leaf add state */
- 	XFS_DAS_LEAF_REMOVE,		/* Initial leaf replace/remove state */
-+	XFS_DAS_LEAF_FLAGS_UPDATE,	/* Update leaf XFS_ATTR_* flags and CRC */
- 
- 	XFS_DAS_NODE_ADD,		/* Initial node add state */
- 	XFS_DAS_NODE_REMOVE,		/* Initial node replace/remove state */
-@@ -477,6 +478,7 @@ enum xfs_delattr_state {
- 	{ XFS_DAS_SF_REMOVE,		"XFS_DAS_SF_REMOVE" }, \
- 	{ XFS_DAS_LEAF_ADD,		"XFS_DAS_LEAF_ADD" }, \
- 	{ XFS_DAS_LEAF_REMOVE,		"XFS_DAS_LEAF_REMOVE" }, \
-+	{ XFS_DAS_LEAF_FLAGS_UPDATE,	"XFS_DAS_LEAF_FLAGS_UPDATE" }, \
- 	{ XFS_DAS_NODE_ADD,		"XFS_DAS_NODE_ADD" }, \
- 	{ XFS_DAS_NODE_REMOVE,		"XFS_DAS_NODE_REMOVE" }, \
- 	{ XFS_DAS_LEAF_SET_RMT,		"XFS_DAS_LEAF_SET_RMT" }, \
-@@ -556,6 +558,7 @@ enum xfs_attr_update {
- 	XFS_ATTRUPDATE_UPSERT,	/* set value, replace any existing attr */
- 	XFS_ATTRUPDATE_CREATE,	/* set value, fail if attr already exists */
- 	XFS_ATTRUPDATE_REPLACE,	/* set value, fail if attr does not exist */
-+	XFS_ATTRUPDATE_FLAGS,	/* update attribute flags and metadata */
- };
- 
- int xfs_attr_set(struct xfs_da_args *args, enum xfs_attr_update op, bool rsvd);
-diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
-index 15dec19b6c32..9f1b02a599d2 100644
---- a/fs/xfs/libxfs/xfs_log_format.h
-+++ b/fs/xfs/libxfs/xfs_log_format.h
-@@ -1035,6 +1035,7 @@ struct xfs_icreate_log {
- #define XFS_ATTRI_OP_FLAGS_PPTR_SET	4	/* Set parent pointer */
- #define XFS_ATTRI_OP_FLAGS_PPTR_REMOVE	5	/* Remove parent pointer */
- #define XFS_ATTRI_OP_FLAGS_PPTR_REPLACE	6	/* Replace parent pointer */
-+#define XFS_ATTRI_OP_FLAGS_FLAGS_UPDATE	7	/* Update attribute flags */
- #define XFS_ATTRI_OP_FLAGS_TYPE_MASK	0xFF	/* Flags type mask */
++#include <linux/iomap.h>
++
+ struct xfs_inode;
+ struct xfs_da_args;
+ struct xfs_attr_list_context;
+@@ -569,6 +571,10 @@ bool xfs_attr_namecheck(unsigned int attr_flags, const void *name,
+ 		size_t length);
+ int xfs_attr_calc_size(struct xfs_da_args *args, int *local);
+ struct xfs_trans_res xfs_attr_set_resv(const struct xfs_da_args *args);
++int xfs_attr_read_iomap(struct xfs_da_args *args, struct iomap *iomap);
++int xfs_attr_read_end_io(struct xfs_da_args *args);
++int xfs_attr_write_iomap(struct xfs_da_args *args, struct iomap *iomap);
++int xfs_attr_write_end_ioend(struct xfs_da_args *args);
  
  /*
-diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-index f683b7a9323f..f392c95905b5 100644
---- a/fs/xfs/xfs_attr_item.c
-+++ b/fs/xfs/xfs_attr_item.c
-@@ -908,6 +908,9 @@ xfs_attr_defer_add(
- 		else
- 			log_op = XFS_ATTRI_OP_FLAGS_REMOVE;
- 		break;
-+	case XFS_ATTR_DEFER_FLAGS:
-+		log_op = XFS_ATTRI_OP_FLAGS_FLAGS_UPDATE;
-+		break;
- 	default:
- 		ASSERT(0);
- 		break;
-@@ -931,6 +934,9 @@ xfs_attr_defer_add(
- 	case XFS_ATTRI_OP_FLAGS_REMOVE:
- 		new->xattri_dela_state = xfs_attr_init_remove_state(args);
- 		break;
-+	case XFS_ATTRI_OP_FLAGS_FLAGS_UPDATE:
-+		new->xattri_dela_state = XFS_DAS_LEAF_FLAGS_UPDATE;
-+		break;
- 	}
+  * Check to see if the attr should be upgraded from non-existent or shortform to
+@@ -652,4 +658,6 @@ void xfs_attr_intent_destroy_cache(void);
+ int xfs_attr_sf_totsize(struct xfs_inode *dp);
+ int xfs_attr_add_fork(struct xfs_inode *ip, int size, int rsvd);
  
- 	xfs_defer_add(args->trans, &new->xattri_list, &xfs_attr_defer_type);
-diff --git a/fs/xfs/xfs_attr_item.h b/fs/xfs/xfs_attr_item.h
-index e74128cbb722..f6f169631eb7 100644
---- a/fs/xfs/xfs_attr_item.h
-+++ b/fs/xfs/xfs_attr_item.h
-@@ -57,6 +57,7 @@ enum xfs_attr_defer_op {
- 	XFS_ATTR_DEFER_SET,
- 	XFS_ATTR_DEFER_REMOVE,
- 	XFS_ATTR_DEFER_REPLACE,
-+	XFS_ATTR_DEFER_FLAGS,
- };
++uint64_t xfs_attr_get_position(struct xfs_da_args *args);
++
+ #endif	/* __XFS_ATTR_H__ */
+diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
+index 4c44ce1c8a64..17125e2e6c51 100644
+--- a/fs/xfs/libxfs/xfs_attr_remote.c
++++ b/fs/xfs/libxfs/xfs_attr_remote.c
+@@ -62,13 +62,6 @@ xfs_attr3_rmt_blocks(
+ 	struct xfs_mount	*mp,
+ 	unsigned int		attrlen)
+ {
+-	/*
+-	 * Each contiguous block has a header, so it is not just a simple
+-	 * attribute length to FSB conversion.
+-	 */
+-	if (xfs_has_crc(mp))
+-		return howmany(attrlen, xfs_attr3_rmt_buf_space(mp));
+-
+ 	return XFS_B_TO_FSB(mp, attrlen);
+ }
  
- void xfs_attr_defer_add(struct xfs_da_args *args, enum xfs_attr_defer_op op);
-diff --git a/fs/xfs/xfs_stats.h b/fs/xfs/xfs_stats.h
-index a61fb56ed2e6..007c22e2cad2 100644
---- a/fs/xfs/xfs_stats.h
-+++ b/fs/xfs/xfs_stats.h
-@@ -96,6 +96,7 @@ struct __xfsstats {
- 	uint32_t		xs_attr_get;
- 	uint32_t		xs_attr_set;
- 	uint32_t		xs_attr_remove;
-+	uint32_t		xs_attr_flags;
- 	uint32_t		xs_attr_list;
- 	uint32_t		xs_iflush_count;
- 	uint32_t		xs_icluster_flushcnt;
+@@ -467,11 +460,6 @@ xfs_attr_rmt_find_hole(
+ 	unsigned int		blkcnt;
+ 	xfs_fileoff_t		lfileoff = 0;
+ 
+-	/*
+-	 * Because CRC enable attributes have headers, we can't just do a
+-	 * straight byte to FSB conversion and have to take the header space
+-	 * into account.
+-	 */
+ 	blkcnt = xfs_attr3_rmt_blocks(mp, args->rmtvaluelen);
+ 	error = xfs_bmap_first_unused(args->trans, args->dp, blkcnt, &lfileoff,
+ 						   XFS_ATTR_FORK);
+diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
+index 2428a3a466cb..81e3426ccb77 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.h
++++ b/fs/xfs/libxfs/xfs_da_btree.h
+@@ -85,6 +85,7 @@ typedef struct xfs_da_args {
+ 	int		rmtblkcnt2;	/* remote attr value block count */
+ 	int		rmtvaluelen2;	/* remote attr value length in bytes */
+ 	enum xfs_dacmp	cmpresult;	/* name compare result for lookups */
++	loff_t		region_offset;	/* offset of the iomapped attr region */
+ } xfs_da_args_t;
+ 
+ /*
+diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+index afc25b6d805e..bf0f73624446 100644
+--- a/fs/xfs/libxfs/xfs_da_format.h
++++ b/fs/xfs/libxfs/xfs_da_format.h
+@@ -645,6 +645,7 @@ typedef struct xfs_attr_leaf_name_local {
+ } xfs_attr_leaf_name_local_t;
+ 
+ typedef struct xfs_attr_leaf_name_remote {
++	__be32	crc[2];			/* CRC of the xattr data */
+ 	__be32	valueblk;		/* block number of value bytes */
+ 	__be32	valuelen;		/* number of bytes in value */
+ 	__u8	namelen;		/* length of name bytes */
+@@ -715,11 +716,13 @@ struct xfs_attr3_leafblock {
+ #define	XFS_ATTR_ROOT_BIT	1	/* limit access to trusted attrs */
+ #define	XFS_ATTR_SECURE_BIT	2	/* limit access to secure attrs */
+ #define	XFS_ATTR_PARENT_BIT	3	/* parent pointer attrs */
++#define	XFS_ATTR_RMCRC_SEL_BIT	4	/* which CRC field is primary */
+ #define	XFS_ATTR_INCOMPLETE_BIT	7	/* attr in middle of create/delete */
+ #define XFS_ATTR_LOCAL		(1u << XFS_ATTR_LOCAL_BIT)
+ #define XFS_ATTR_ROOT		(1u << XFS_ATTR_ROOT_BIT)
+ #define XFS_ATTR_SECURE		(1u << XFS_ATTR_SECURE_BIT)
+ #define XFS_ATTR_PARENT		(1u << XFS_ATTR_PARENT_BIT)
++#define XFS_ATTR_RMCRC_SEL	(1u << XFS_ATTR_RMCRC_SEL_BIT)
+ #define XFS_ATTR_INCOMPLETE	(1u << XFS_ATTR_INCOMPLETE_BIT)
+ 
+ #define XFS_ATTR_NSP_ONDISK_MASK	(XFS_ATTR_ROOT | \
+diff --git a/fs/xfs/libxfs/xfs_ondisk.h b/fs/xfs/libxfs/xfs_ondisk.h
+index ad0dedf00f18..2617081bf989 100644
+--- a/fs/xfs/libxfs/xfs_ondisk.h
++++ b/fs/xfs/libxfs/xfs_ondisk.h
+@@ -96,10 +96,11 @@ xfs_check_ondisk_structs(void)
+ 	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_local, valuelen,	0);
+ 	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_local, namelen,	2);
+ 	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_local, nameval,	3);
+-	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, valueblk,	0);
+-	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, valuelen,	4);
+-	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, namelen,	8);
+-	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, name,	9);
++	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, crc,		0);
++	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, valueblk,	8);
++	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, valuelen,	12);
++	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, namelen,	16);
++	XFS_CHECK_OFFSET(struct xfs_attr_leaf_name_remote, name,	17);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_attr_leafblock,		32);
+ 	XFS_CHECK_STRUCT_SIZE(struct xfs_attr_sf_hdr,		4);
+ 	XFS_CHECK_OFFSET(struct xfs_attr_sf_hdr, totsize,	0);
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 3b5623611eba..20395ba66b94 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -183,6 +183,8 @@ xfs_sb_version_to_features(
+ 		features |= XFS_FEAT_PARENT;
+ 	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_METADIR)
+ 		features |= XFS_FEAT_METADIR;
++	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_DXATTR)
++		features |= XFS_FEAT_DXATTR;
+ 
+ 	return features;
+ }
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index d772d908ba3c..1fa4a57421c3 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -330,6 +330,7 @@ typedef struct xfs_mount {
+ #define XFS_FEAT_NREXT64	(1ULL << 26)	/* large extent counters */
+ #define XFS_FEAT_EXCHANGE_RANGE	(1ULL << 27)	/* exchange range */
+ #define XFS_FEAT_METADIR	(1ULL << 28)	/* metadata directory tree */
++#define XFS_FEAT_DXATTR		(1ULL << 29)	/* directly mapped xattrs */
+ 
+ /* Mount features */
+ #define XFS_FEAT_NOATTR2	(1ULL << 48)	/* disable attr2 creation */
+@@ -386,6 +387,7 @@ __XFS_HAS_FEAT(needsrepair, NEEDSREPAIR)
+ __XFS_HAS_FEAT(large_extent_counts, NREXT64)
+ __XFS_HAS_FEAT(exchange_range, EXCHANGE_RANGE)
+ __XFS_HAS_FEAT(metadir, METADIR)
++__XFS_HAS_FEAT(dxattr, DXATTR)
+ 
+ static inline bool xfs_has_rtgroups(struct xfs_mount *mp)
+ {
 -- 
 2.47.0
 
