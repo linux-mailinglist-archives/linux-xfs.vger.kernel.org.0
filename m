@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-18222-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-18223-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0297A0C018
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 Jan 2025 19:39:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEAE8A0C040
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 Jan 2025 19:41:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAF3016A436
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 Jan 2025 18:39:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C55D83A801F
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 Jan 2025 18:41:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003A11F9F5F;
-	Mon, 13 Jan 2025 18:35:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FFA22066EA;
+	Mon, 13 Jan 2025 18:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nb8w4+YE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qan7dPNe"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C151FA14B;
-	Mon, 13 Jan 2025 18:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C22C1CB501;
+	Mon, 13 Jan 2025 18:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736793307; cv=none; b=HEkLbnxNUejkmntW9VBjILgRIxWRabCya0Ay/nuK1e2pT9xrmBFzJdD4IX0trSIX8IFANS8uxYvanYWjDEfsPpXm8iY6K0UjoUvsy1FCVptqBst8gDswJV+LozpZGe0nvMHUX1qPe9AQtVdBcT2HNX4bfFgngIV+6MRUCooDoik=
+	t=1736793334; cv=none; b=ln0BnL+hm70jmYhv3UEpCumOnnNU70agO4pjrpjU/qalQiNq7tG94kpdXk9WYFAi4+lFgL2UWbKb+oFfXArQADiR17vJ6qDbu3DjJ4J7H7RqB2iGqK+Y+k5BB1bRAx+PX+Cad0aBOuLnu8BWClhvZPhjB+w28XtugBgaqcLwgQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736793307; c=relaxed/simple;
-	bh=Ysprb739drFzTtogLb4Hu958yP+s7LORgliv06VIJlM=;
+	s=arc-20240116; t=1736793334; c=relaxed/simple;
+	bh=QsA1Krjmg5wmxGv8YXarj+7ikJ4Flrmg1BcZiU71ZW8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C4S2HthaTaONW4eQGf798RmeQ/f9yzxlUDiZn/zrO731O108pM4llznF1a5XQoQcDLzzewuIx64KdbCFSe8SFN08CA5eey8M/3gQVxaxMFCA09ELQfzGCQBTDOLBaCNxJCvcShzg82bBXEmA7pssHE5zra4fKwLSyMd0ab2mWLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nb8w4+YE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38317C4CEE2;
-	Mon, 13 Jan 2025 18:35:06 +0000 (UTC)
+	 MIME-Version; b=ncvdoz4Xm8yBcTKLw5FxATCrnSB/wudCez3VZxWj9aFWl9Pua9GaImK/JLhrR337xmmPiqyZx6OE1JFUfu6xqGu1o1ez9AtB5rCfIy+bUAbCvBqoM56IC3a5ZTL/fTwt+mPV/zy2840cpsFP4UhmDvrsYr0U2+biWaS0G3+vBww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qan7dPNe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFAF9C4CEE1;
+	Mon, 13 Jan 2025 18:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736793307;
-	bh=Ysprb739drFzTtogLb4Hu958yP+s7LORgliv06VIJlM=;
+	s=k20201202; t=1736793333;
+	bh=QsA1Krjmg5wmxGv8YXarj+7ikJ4Flrmg1BcZiU71ZW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nb8w4+YEUJ2zLJvGt8s63F7wdhafrfaNwbOZOcBcKDnlyELsmJuuG/d55VRSiBhbO
-	 1Tjg+qCj325X22pqTEECJUWQ+MYJEVAAeSiQFri1aLUoMMhM6wf4zTQl82AlF/hbk/
-	 WkBRsL340D7auTXKWR0y/rF44/S3erZOx+JC7FT1PBxP3yBoDyw+WixlnadxBEn+20
-	 X7JQRLu0SBxhb8BsshDwulBGsQOee7XjmwPs9Hduk76tDznA4XoCGSpaX+mZfjCN8p
-	 bpLX5Be6RWJ2W/hITwfdyH1RMaI2cdrqCQOu53f3TfrU4s1OrqRGBicB7lW0IXSoMh
-	 fwysefMvCqPhQ==
+	b=Qan7dPNe/Q6F1+SekSueUxEJM+3zBaqz4kqVdygfKeKIWfCXi2vktleiHq5QEZ4Pn
+	 WXIUFX0ln9onwdG39fi7qHSzIEdZ7AD9PZJEjuXWw2sE0yB7d2h72Nfo2ddgZfP+Ls
+	 W5MrU324kGFq2gG4SbuksH4+foem8lGpKHOf4wtPswiC2RHDW++HWUQQWJ3ZpqTHkK
+	 A2nzkzV7abuQieNLjY7PRGUpuQ8gIhFyaWPqMFDsw5xGuEdZC1fMm+BUV9rFGexDqo
+	 cpw6iGFAaaLPGbivFydtpXwKJFQIvQJ/yCLchFOz3T1oAc9fjpvG3GIwH7iH5GNHqm
+	 K7HR7z7JBbJKw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -51,12 +51,12 @@ Cc: Marco Nelissen <marco.nelissen@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 18/20] iomap: avoid avoid truncating 64-bit offset to 32 bits
-Date: Mon, 13 Jan 2025 13:34:23 -0500
-Message-Id: <20250113183425.1783715-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 09/10] iomap: avoid avoid truncating 64-bit offset to 32 bits
+Date: Mon, 13 Jan 2025 13:35:10 -0500
+Message-Id: <20250113183511.1783990-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250113183425.1783715-1-sashal@kernel.org>
-References: <20250113183425.1783715-1-sashal@kernel.org>
+In-Reply-To: <20250113183511.1783990-1-sashal@kernel.org>
+References: <20250113183511.1783990-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.9
+X-stable-base: Linux 6.6.71
 Content-Transfer-Encoding: 8bit
 
 From: Marco Nelissen <marco.nelissen@gmail.com>
@@ -87,11 +87,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 3ffd9937dd51..49da74539fb3 100644
+index a05ee2cbb779..e7e6701806ad 100644
 --- a/fs/iomap/buffered-io.c
 +++ b/fs/iomap/buffered-io.c
-@@ -1138,7 +1138,7 @@ static void iomap_write_delalloc_scan(struct inode *inode,
- 				start_byte, end_byte, iomap, punch);
+@@ -1095,7 +1095,7 @@ static int iomap_write_delalloc_scan(struct inode *inode,
+ 		}
  
  		/* move offset to start of next folio in range */
 -		start_byte = folio_next_index(folio) << PAGE_SHIFT;
