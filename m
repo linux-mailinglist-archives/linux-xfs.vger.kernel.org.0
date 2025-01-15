@@ -1,44 +1,44 @@
-Return-Path: <linux-xfs+bounces-18292-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-18293-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79A1DA118DF
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2025 06:21:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E05E4A118E0
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2025 06:22:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 913961685DF
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2025 05:21:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B2823A7D61
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jan 2025 05:22:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E96EB1547D5;
-	Wed, 15 Jan 2025 05:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3051522E40A;
+	Wed, 15 Jan 2025 05:22:02 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284804C6C
-	for <linux-xfs@vger.kernel.org>; Wed, 15 Jan 2025 05:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B002F4C6C
+	for <linux-xfs@vger.kernel.org>; Wed, 15 Jan 2025 05:21:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736918465; cv=none; b=CVx2N7DE/VVRU9JZIXAZXU/4u1DyhSKhKMgCkpEWkw1dYAhZGf5ka1npGaoEzd0FoZ+Wle3A43Y8E6UMS4p4Fn85/r5t1VMF+rAqaH/F2kivQLw1hH1yVBS0odcb0A9TZQx/WfyMoLlGHVIhqPf5wHHnBYoAeo8bJppfnkUaSnA=
+	t=1736918522; cv=none; b=KCrnrZdjtVmwsX1zM1zVMzQpM+pDLaDpPfWi4f/Wmm5xIS0kKuDEeJdZ9v9+j+2zdjVn+28i4iPW5uYBOkAoQx8fuFjW9RgeEKgPKGgKUDXCCBKInA2jlUjc3VUFD+k4rv67417uK4gR86DSGKuYdSggNbhNdptBITMqZAo18M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736918465; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	s=arc-20240116; t=1736918522; c=relaxed/simple;
+	bh=jvMxghZJpuS7cYYn7GEZO5NLYleQfjO93tZDiR/+EjE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hkkZ5kqU5KjAiamZru//Sr6Sp1M45OFnpdUKW5fRsZtP8l9H3WDVpQda3GG1ZpVbeWJNi4OGGBjOqL/VYApTyBOzdSZGrb5XCJT/AYUcE2qLblLGoc/s9eziJAX3CsEV7y9YUrTkzoRUZxuq5qOae8RHSljmcYNJfjztIBlOSag=
+	 Content-Type:Content-Disposition:In-Reply-To; b=TbpfHAjwQzIJWoa6uucrdBMu7fUb7qQASdr56DuSijASvrpoPzJ0gk9ZVG7dj2VKbvgaqaunswWwLLfJ9AawgULi2MW++i3yuMsA2094RCqkhDGDSMAbWNlDa5wobcPC9+qwafXP0I/eCdPPT3xP0XKTtEzIvhR5rroxJjnjWe4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 32E7368B05; Wed, 15 Jan 2025 06:21:00 +0100 (CET)
-Date: Wed, 15 Jan 2025 06:20:59 +0100
+	id 112CE68B05; Wed, 15 Jan 2025 06:21:56 +0100 (CET)
+Date: Wed, 15 Jan 2025 06:21:55 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: aalbersh@kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/5] m4: fix statx override selection if /usr/include
- doesn't define it
-Message-ID: <20250115052059.GC28609@lst.de>
-References: <173689081879.3476119.15344563789813181160.stgit@frogsfrogsfrogs> <173689081926.3476119.12874616172883806766.stgit@frogsfrogsfrogs>
+Cc: aalbersh@kernel.org, linux-xfs@vger.kernel.org, hch@lst.de
+Subject: Re: [PATCH 4/5] build: initialize stack variables to zero by
+ default
+Message-ID: <20250115052155.GD28609@lst.de>
+References: <173689081879.3476119.15344563789813181160.stgit@frogsfrogsfrogs> <173689081941.3476119.6143322419702468919.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,11 +47,22 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <173689081926.3476119.12874616172883806766.stgit@frogsfrogsfrogs>
+In-Reply-To: <173689081941.3476119.6143322419702468919.stgit@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Looks good:
+On Tue, Jan 14, 2025 at 01:41:25PM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> Newer versions of gcc and clang can include the ability to zero stack
+> variables by default.  Let's enable it so that we (a) reduce the risk of
+> writing stack contents to disk somewhere and (b) try to reduce
+> unpredictable program behavior based on random stack contents.  The
+> kernel added this 6 years ago, so I think it's mature enough for
+> xfsprogs.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Hmm, this tends to paper of bugs quite badly.  But I guess we'd better
+paper over bugs in the same way as the kernel code.
+
+Reluctantly-Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 
