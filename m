@@ -1,154 +1,90 @@
-Return-Path: <linux-xfs+bounces-18796-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-18798-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA296A2735D
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Feb 2025 14:53:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B11DFA273B7
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Feb 2025 15:01:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5002F3A85B4
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Feb 2025 13:52:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1E4D164D79
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Feb 2025 14:00:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6013D21D003;
-	Tue,  4 Feb 2025 13:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D50A21519B;
+	Tue,  4 Feb 2025 13:47:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cf3HIXM0"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VW0iAcOe"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9618E21CA0D
-	for <linux-xfs@vger.kernel.org>; Tue,  4 Feb 2025 13:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D17821517F;
+	Tue,  4 Feb 2025 13:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738675717; cv=none; b=XWm9/PO/EaUo2TcBiA8msVICBiESkCWP7Kvm0812LChV7IC9ttKOsDeqBnqMok9C1rODYDh4ThRiQ4kp57N+iXoBo6PcOFOO1QJqGdEouUlFZuZcclS+hQrEQOqCve4vRdts8aXW0kpRZZ0s7sNMvYavyng8LbVkJC2oMZ5ZlhA=
+	t=1738676833; cv=none; b=hSzHv1DiKtPRgNzrEBiSSrkIlCaHgUExDcYpyWCh8S30A/E5RzGE1jylJHsPIFdW0L0iQzV/8+c9OFVF0FJvLel2faGVec/Eej0XzggaOzURSgHZTxq6JwFUuIJX9RVgSkdELtIhyxAWDU6B7pm0da0F5TQQFQc/XaGoTD3HB04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738675717; c=relaxed/simple;
-	bh=zraEEfNQ3ArGB0nGvfMFCm3U1T176Q7X/YF0k1f5JkY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CNNrlcSKssS+YvfSFIduM+oaqoldmKstKJRiPFjt7ytGzeFBfJZ0tYBqfVQ6CqaRLUV0RK/yUdJnX8uvlykDidFGUh5RDwycin2z041hr2N4fHHTcmx4u44pjTEnEy8TFLVosvPQVJD91mrWTt/9ZTFQq1ktWE+2VhoRnvt+rsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cf3HIXM0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738675714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f7DdODgECWcSB3qyzQ5ca2LfaMHp0/sX+MHStd0UA4Y=;
-	b=cf3HIXM05mEt98m4pwYgvIn4xlZQahRvAruubpg73rX27swcT5JzvjfovVP5kEbcdFWMsk
-	Y5xDpCvg9z70iQW6ghz4irmXIw7QaZOHG/0jVcssqzgMVQpjhQeLQnbV2M4H0qQvK7pVSf
-	9ZqECtu3oL5L7tbvU+I7Fjz3Lx8/gQY=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-538-jmdsCxMCOQeR-amGVh-ovw-1; Tue,
- 04 Feb 2025 08:28:31 -0500
-X-MC-Unique: jmdsCxMCOQeR-amGVh-ovw-1
-X-Mimecast-MFC-AGG-ID: jmdsCxMCOQeR-amGVh-ovw
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8CF311956087;
-	Tue,  4 Feb 2025 13:28:30 +0000 (UTC)
-Received: from bfoster.redhat.com (unknown [10.22.88.48])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C18E619560AD;
-	Tue,  4 Feb 2025 13:28:29 +0000 (UTC)
-From: Brian Foster <bfoster@redhat.com>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v4 10/10] iomap: advance the iter directly on zero range
-Date: Tue,  4 Feb 2025 08:30:44 -0500
-Message-ID: <20250204133044.80551-11-bfoster@redhat.com>
-In-Reply-To: <20250204133044.80551-1-bfoster@redhat.com>
-References: <20250204133044.80551-1-bfoster@redhat.com>
+	s=arc-20240116; t=1738676833; c=relaxed/simple;
+	bh=6Naro2S2YtYNyi9jSZQxTHKviwXfveZD6BhjN6kleS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LPXvG1FDUOrrAdDbFVYO1aTLyIzPcy47zgcRrEl3hvRiGvYulmMqM1liH/K8Tf6uPaNsNDw7l8c+AzaRaWd4o2ktCltgHx5AXMzIwXpAxPr5/hG7Xpi0D+kQsBtYos2y7RkRg7AODJHNqmLM7z1ytBnKjOS5PFo+vj9JEqkgkKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VW0iAcOe; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=BJ9+BszIOx09MEga1tesbN83E+W6kAf+GSIza1SIthQ=; b=VW0iAcOeKmjlryZbA4n930tkdy
+	SsL6Pbc+5XBG+0U8xJvQlmt0iPjwYBYapAG0a6KQNluOHyBSW9Vxv3HzrrYd8FTlMNhjnSWHz1BeK
+	9X2LVxU1kCO2jfWh0a2CSHzhIiMSDVnteJqZAryX3C6+/HmPgYOyTOe613laVlGb7uCmrmZC07RvH
+	itfLRUBKwSIKRFnldZ7AYeTZRkwyHH4kRY3NbC08gqVhIKehz5oDhaHnaz+N1/5J3XftoQA3FHnP2
+	BPInOP/gCR5sUzF9+F3ng03Wd381xq1MRm/dWsaXBvk4ydv547iiee+mQoTq8fZS2hVffgCbRff6R
+	k+Y/3Grg==;
+Received: from 2a02-8389-2341-5b80-c653-ac45-db09-df54.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:c653:ac45:db09:df54] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfJGg-00000000ZcK-12ey;
+	Tue, 04 Feb 2025 13:47:10 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: zlang@kernel.org,
+	djwong@kernel.org
+Cc: fstests@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: [PATCH 1/2] xfs/614: query correct direct I/O alignment
+Date: Tue,  4 Feb 2025 14:46:54 +0100
+Message-ID: <20250204134707.2018526-1-hch@lst.de>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Modify zero range to advance the iter directly. Replace the local pos
-and length calculations with direct advances and loop based on iter
-state instead.
+When creating XFS file systems on files, mkfs will query the file system
+for the minimum alignment, which can be larger than that of the
+underlying device.  Do the same to link the right output file.
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/iomap/buffered-io.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ tests/xfs/614 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index f953bf66beb1..ec227b45f3aa 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1345,17 +1345,16 @@ static inline int iomap_zero_iter_flush_and_stale(struct iomap_iter *i)
+diff --git a/tests/xfs/614 b/tests/xfs/614
+index 0f8952e50b9a..06cc2384f38c 100755
+--- a/tests/xfs/614
++++ b/tests/xfs/614
+@@ -26,7 +26,7 @@ _require_loop
+ $MKFS_XFS_PROG 2>&1 | grep -q concurrency || \
+ 	_notrun "mkfs does not support concurrency options"
  
- static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- {
--	loff_t pos = iter->pos;
--	loff_t length = iomap_length(iter);
--	loff_t written = 0;
-+	u64 bytes = iomap_length(iter);
-+	int status;
+-test_dev_lbasize=$(blockdev --getss $TEST_DEV)
++test_dev_lbasize=$($here/src/min_dio_alignment $TEST_DIR $TEST_DEV)
+ seqfull=$0
+ _link_out_file "lba${test_dev_lbasize}"
  
- 	do {
- 		struct folio *folio;
--		int status;
- 		size_t offset;
--		size_t bytes = min_t(u64, SIZE_MAX, length);
-+		loff_t pos = iter->pos;
- 		bool ret;
- 
-+		bytes = min_t(u64, SIZE_MAX, bytes);
- 		status = iomap_write_begin(iter, pos, bytes, &folio);
- 		if (status)
- 			return status;
-@@ -1376,14 +1375,14 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 		if (WARN_ON_ONCE(!ret))
- 			return -EIO;
- 
--		pos += bytes;
--		length -= bytes;
--		written += bytes;
--	} while (length > 0);
-+		status = iomap_iter_advance(iter, &bytes);
-+		if (status)
-+			break;
-+	} while (bytes > 0);
- 
- 	if (did_zero)
- 		*did_zero = true;
--	return written;
-+	return status;
- }
- 
- int
-@@ -1436,11 +1435,14 @@ iomap_zero_range(struct inode *inode, loff_t pos, loff_t len, bool *did_zero,
- 
- 		if (srcmap->type == IOMAP_HOLE ||
- 		    srcmap->type == IOMAP_UNWRITTEN) {
--			loff_t proc = iomap_length(&iter);
-+			s64 proc;
- 
- 			if (range_dirty) {
- 				range_dirty = false;
- 				proc = iomap_zero_iter_flush_and_stale(&iter);
-+			} else {
-+				u64 length = iomap_length(&iter);
-+				proc = iomap_iter_advance(&iter, &length);
- 			}
- 			iter.processed = proc;
- 			continue;
 -- 
-2.48.1
+2.45.2
 
 
