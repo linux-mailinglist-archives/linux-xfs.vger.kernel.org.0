@@ -1,83 +1,103 @@
-Return-Path: <linux-xfs+bounces-19411-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19413-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48B66A30622
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 09:44:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0286A30625
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 09:44:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F8793A259F
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 08:44:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EE763A2C40
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 08:44:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 175591F03E8;
-	Tue, 11 Feb 2025 08:44:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1468A1F03DC;
+	Tue, 11 Feb 2025 08:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dfQY3daj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHl86sKU"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC691F03EE
-	for <linux-xfs@vger.kernel.org>; Tue, 11 Feb 2025 08:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B841E5734
+	for <linux-xfs@vger.kernel.org>; Tue, 11 Feb 2025 08:44:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739263477; cv=none; b=cS4RDTR7izrMGIUVqqiUL2x16tjsPxok+PnsN3WYYpOF7jjXQcdjPB4tPqidnZJMOmRbxDZMPgiOTMnOVCAEwzOdRR4pHMoJhdMslqryYj+NX1llWLFshdpd/fGS4RS6xSPg/M9BRU7atyzk/dUAMtFMa1fJybtD6X9NPmivB+E=
+	t=1739263481; cv=none; b=EAZOdC6Mv4pKIF32kI1L4Vavo6/KbxL9yngnibFJuiTLBI777E3NRlQRhn7CuOthKW9FoXXASufWmdEdsSpexfALNmnEQ0JaiCVxjE+emre+pJId8MTwKN7sJiglx1AmOAqq59agy/yJRpY/8Gkfd+giOTaBBQuvTO47CCGglJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739263477; c=relaxed/simple;
-	bh=DULCZe2riRLMeAEZLXid5mt2Ws2PaFmQ/9tpEDfOluw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Wy+ejrBPGc4+2TFDuRSuC9Y/EtSub/ovCi9rv5vcOVu9eVQEbSkwsg/CTF9TElJXtWYwsDKTH0MatBjUOYdc3yVOXZSAmOLZwvltNRNhNx3p0AVDU5XzND4BoEQtEJ4jUY0kVcBawmBnkoBPDaS2/UI1gzY+lpgPD5qVPJvhEuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dfQY3daj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4825C4CEDD;
-	Tue, 11 Feb 2025 08:44:35 +0000 (UTC)
+	s=arc-20240116; t=1739263481; c=relaxed/simple;
+	bh=5XMHUbddiiU6PWOBVesb8NMdwLkxYcB9Jh0opzorLw8=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pINeu1ud7EE1DSrJn9XqOgnH2vCMHZC/xPsUFx8k7JQdkggBfcISSfsOdKnGFxU9pGZkpq/F71vUyR1V4YJPzrhb72ZbgwVHvFP9/2V2uHihEa+nQK+Zbnvp5io8OEYqA22rYqpSBlWPcICcMXXozrGuFua7xgWEg7DmAbCb2aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHl86sKU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D774C4CEDD
+	for <linux-xfs@vger.kernel.org>; Tue, 11 Feb 2025 08:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739263477;
-	bh=DULCZe2riRLMeAEZLXid5mt2Ws2PaFmQ/9tpEDfOluw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=dfQY3daj6xlGxz6fCq+cxokyay+GVUEPg/cpOnGqwbsFuSnI/efWwHhfY7mblapbM
-	 aluSxnKBRykSyc/s3fFuLtW+RYx9TYy6OuoelHvEmEUUefq1ujBLSt3mT5+V89Nzkc
-	 aoTJXbJGTzsbjpWdszbQSs1bCvEjsf1tYTLQ2ANqn6j1Tpj9EHvic23ivIxIBynNN1
-	 +pH8liVVl6XfAdmTttNfd7zbMfFa4dIBuS3bkTBylwfdIE7WwvtWmMOrGY605qGCP0
-	 8bnRwuo9bNwuovvl03nJN1qshzCFRI55FpwBIKHnlgN0ereTco90sCeEH0Qvs929zR
-	 P6CFobsTMkdVw==
+	s=k20201202; t=1739263481;
+	bh=5XMHUbddiiU6PWOBVesb8NMdwLkxYcB9Jh0opzorLw8=;
+	h=Date:From:To:Subject:From;
+	b=LHl86sKUcrCdq/JYssCdSZ2kR3TqJcz66QpHyq1AN020gGDhG+FY0W93k9vu+5Lqx
+	 nPrrqZNzXHB/M/m7B6bbvSceNrjAjkwqBFXxxcmOg1CAKPnqsLU6gBucMS7gpyCFEO
+	 rmfTrvxIit5ez9bopb03SH+uKtve9HjvqAvugy0JwZwrCI+n+qJDcOv2kCWSb0+7EB
+	 bNJsn9qyqG1pnGlpDotRSXwlbnTU9fYGOdp92u7OUP21g0D7+kl8VR4gdrG9Adxvqd
+	 8y/WGI06jh0RXvoLEbJRlX6kVidiL+eKg6wU/RM/73h7I0A4I4hXlqqdy7VWWtVDin
+	 R1f2taCeY3jag==
+Date: Tue, 11 Feb 2025 09:44:36 +0100
 From: Carlos Maiolino <cem@kernel.org>
-To: linux-xfs@vger.kernel.org, cem@kernel.org
-Cc: djwong@kernel.org, david@fromorbit.com, dchinner@redhat.com, hch@lst.de
-In-Reply-To: <20250203130513.213225-1-cem@kernel.org>
-References: <20250203130513.213225-1-cem@kernel.org>
-Subject: Re: [PATCH V3] xfs: Do not allow norecovery mount with quotacheck
-Message-Id: <173926347551.43797.14508478442986566587.b4-ty@kernel.org>
-Date: Tue, 11 Feb 2025 09:44:35 +0100
+To: linux-xfs@vger.kernel.org
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 35010cc72acc
+Message-ID: <ibywlmce6lhsmkgbil2m2ltkz4cmqqaaihkejahdlmkq4qlydi@seoyagz2usal>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 03 Feb 2025 14:04:57 +0100, cem@kernel.org wrote:
-> Mounting a filesystem that requires quota state changing will generate a
-> transaction.
-> 
-> We already check for a read-only device; we should do that for
-> norecovery too.
-> 
-> A quotacheck on a norecovery mount, and with the right log size, will cause
-> the mount process to hang on:
-> 
-> [...]
 
-Applied to for-next, thanks!
+Hi folks,
 
-[1/1] xfs: Do not allow norecovery mount with quotacheck
-      commit: 18df3ca14c34e9fd6e12189a24238a12b064fbac
+The for-next branch of the xfs-linux repository at:
 
-Best regards,
--- 
-Carlos Maiolino <cem@kernel.org>
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
+has just been updated.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
+
+The new head of the for-next branch is commit:
+
+35010cc72acc xfs: flush inodegc before swapon
+
+7 new commits:
+
+Carlos Maiolino (2):
+      [84ea4c9d978b] Merge tag 'fixes-6.14_2025-02-03' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into next-rc
+      [18df3ca14c34] xfs: Do not allow norecovery mount with quotacheck
+
+Christoph Hellwig (2):
+      [6f7ce473cca4] xfs: rename xfs_iomap_swapfile_activate to xfs_vm_swap_activate
+      [35010cc72acc] xfs: flush inodegc before swapon
+
+Darrick J. Wong (2):
+      [bc0651d93a7b] xfs: fix online repair probing when CONFIG_XFS_ONLINE_REPAIR=n
+      [0ab5a2b9378b] xfs: fix data fork format filtering during inode repair
+
+Lukas Herbolt (1):
+      [263b984ae26b] xfs: do not check NEEDSREPAIR if ro,norecovery mount.
+
+Code Diffstat:
+
+ fs/xfs/scrub/common.h       |  5 -----
+ fs/xfs/scrub/inode_repair.c | 12 ++++++++--
+ fs/xfs/scrub/repair.h       | 11 ++++++++-
+ fs/xfs/scrub/scrub.c        | 12 ++++++++++
+ fs/xfs/xfs_aops.c           | 41 +++++++++++++++++++++++++++++----
+ fs/xfs/xfs_qm_bhv.c         | 55 ++++++++++++++++++++++++++++++++-------------
+ fs/xfs/xfs_super.c          |  8 +++++--
+ 7 files changed, 114 insertions(+), 30 deletions(-)
 
