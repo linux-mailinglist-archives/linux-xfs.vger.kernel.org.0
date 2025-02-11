@@ -1,224 +1,184 @@
-Return-Path: <linux-xfs+bounces-19427-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19429-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7227A314A3
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 20:09:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D325A3153B
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 20:28:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8493B3A183E
-	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 19:09:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CFB03A33A9
+	for <lists+linux-xfs@lfdr.de>; Tue, 11 Feb 2025 19:27:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 865BA26215A;
-	Tue, 11 Feb 2025 19:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1463E267F65;
+	Tue, 11 Feb 2025 19:24:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y+GetweM"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ymfhP0lW";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ommBzpk+"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45597261594
-	for <linux-xfs@vger.kernel.org>; Tue, 11 Feb 2025 19:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1CC267F4E;
+	Tue, 11 Feb 2025 19:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739300990; cv=none; b=m/aWXcrEiYuTTpTqy1qkVlhK0Ro1Qjk6pGFLipVgwRLOa4eToMC4TdnZn5zIQuTrnD6CWtIvym7RMbBCk1AjPxlHBmmtxzxDkloMN7s6O+44MCEfHJrk6VYIonFSxV23R2l6tnn4RKMLtynEWUTA9qRsqGtYAZjgT4Vl+KVxhyg=
+	t=1739301867; cv=none; b=hIwEYhyeVLe2XYTVALrhruYWp7tRHIqZvfvw+Sc/hw6KTP8recxu6TobJzk4jauAbd9LocuvxffeC7PnOrfZzmdodXbgugv1bwGhg3w1rZiyQBKct+1TaxnRhg1gx2TgqM2cdi3eVSPOrZOBcLpcjvSwsPCdY4EtTOdgki4vvSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739300990; c=relaxed/simple;
-	bh=kHlk44ejz4nHFwJsq3U5wG5Ojuaemd2J59hk0t6eKCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mjaOf4NOk03WKrfE8ahItqJzzKfuu7Ux8J6bHzdyKvoClPcvqgKP3kvfh5tfqGPLgkahN5g9eQ2SbvSz45L1Z3qwbmJXdRBPZE1ACk9x6DmZRlrUvSJ06yXqv7ABn8B0F5Hzkj1+W5BPqYiWaZvQdCmWFlk6tJ2zJVpe2zk/j08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y+GetweM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A792AC4CEDD;
-	Tue, 11 Feb 2025 19:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739300989;
-	bh=kHlk44ejz4nHFwJsq3U5wG5Ojuaemd2J59hk0t6eKCE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y+GetweMOT/kIslteun/W4N4BL9kMkx99Y2PgJhI8gyabkMdpPE1YxMVYgt1XoJhb
-	 /ZtDEl9pKNuk3IDU2CQkt4RTiWe/XD7luVH5uAQDrhjII83IDkAo0fNiL7JKvQNc3e
-	 PB7abcJds5PeivVzFHHfQSznwoEr5W6GyuZuV2x8Mpo7In8XgTh1oE+F5eS4cdNwRA
-	 5xBNFc7UZP8ICarUIso6Him8KRgBBCM4BeTN+msdo+sm4PN5nDkoC3Afy5tJhEmy3T
-	 9vHjJ+6inVQnxZ6LJEOVH1fcOdJAMORal7RE2pDbXBGNYJLpUXPR7q4JUStBLcEKYd
-	 9I4ngXhiy8nSw==
-Date: Tue, 11 Feb 2025 11:09:49 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v3 8/8] release.sh: add -f to generate for-next update
- email
-Message-ID: <20250211190949.GF21808@frogsfrogsfrogs>
-References: <20250211-update-release-v3-0-7b80ae52c61f@kernel.org>
- <20250211-update-release-v3-8-7b80ae52c61f@kernel.org>
+	s=arc-20240116; t=1739301867; c=relaxed/simple;
+	bh=c3d2vNEaLKWV5MP/R/ATr1E1H0RvMwxHYf1Cp5qlV3I=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Nla1km1WvPDrH5QY9q2OXM8nHmOzVJu5ZJyVLTA+hXjv1amQ8EaF/GRDElg+gzF+lTzPMjXhm8cBg+3eKeRQhjeXl4wk6dPR8IJYG4MQDerGPYJVDkPrRYSHnH4B1m5p0Xwd4V1incQfBvyeB6dniKVZYyWpIeW/8uXZNRFPbAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ymfhP0lW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ommBzpk+; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 2D05911401CB;
+	Tue, 11 Feb 2025 14:24:24 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-10.internal (MEProxy); Tue, 11 Feb 2025 14:24:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1739301864;
+	 x=1739388264; bh=c3d2vNEaLKWV5MP/R/ATr1E1H0RvMwxHYf1Cp5qlV3I=; b=
+	ymfhP0lWFnruH6o3PlWj4VEX4QrXdMxvUy7kxrWyyD8mMENQyn/vLNmodJRw/3xq
+	Omk028RmEf41WjgvyzWOAu/AfMPPsintWTjNI74AkpxwwMvZKmKfcHPIhjKvC3DJ
+	97yK0QGLE5VIh48ThNS55BNOAsqK0PwFwASgnamzQ6fw6BsiAuRRbV65Q+CbzH7/
+	jusO1PuR1RfNZ2fGcB6FVzh3z6ZEmWLLi2s/tutocUhmy8q/s2Avq+GzKJprHyJS
+	/4ftJpOWt0eWs9HRG0XQpRWhabmHL73YqFv3yBMSFIHmbrtOUR7bmIDZ1zNYwz5H
+	+N9o8FnJ4P3CsNsjoP7TnA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739301864; x=
+	1739388264; bh=c3d2vNEaLKWV5MP/R/ATr1E1H0RvMwxHYf1Cp5qlV3I=; b=o
+	mmBzpk+/yYw5E+45xbH1XxyEJJsdrId5cufG2ZsIL7jptyYyQs+SStXqDYbtEro4
+	4gRO1kL4bM9PsyxghVCr/HBSoZ+4QQOl1h0DtmR/Pt9vHyNjj6wmVUoawgbBNZCj
+	2wCEwZ9RRJxaz3AOcxm9PoVEEdZosAsztxgJWFcL3Ir5bwlSelXvRYxms0HuVlXf
+	5wfhYEk2q6J6FzYV8zScDrOAl2aiDPCj9AphSRsdALL2fD0hEZEOHOXPEz48fK6A
+	j+GlKy7VWJ82O5+ReyX2gAhuGN8wCoArCorCLmlfSDtau1bYlzvD7qIa81u6CM6L
+	MevptyIHLlfWt6D+5sZzw==
+X-ME-Sender: <xms:56OrZ35fmlgQspCET-mmihyL-weUnVlPuoCZwasWS1xXMcaxOWKWmw>
+    <xme:56OrZ874o_-Fn0a8noveZxvP1odRydiwhJI8EwFuilSFGZEdmKSjdPIm9CsyetRM0
+    7hse0vS9ZPSDxKHkg0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegudekfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeh
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrh
+    drkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhprghrtghlihhnuhigsehvghgvrhdr
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhrhhishesiigrnhhkvghlrdhnvghtpd
+    hrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphht
+    thhopehhphgrseiihihtohhrrdgtohhm
+X-ME-Proxy: <xmx:56OrZ-dboiOXOyiwtEA0fs-voQa90FN_SYp_LvAiX52d9RvECiLkGQ>
+    <xmx:56OrZ4IXilq7f6fEV9RrulAGNF0Q8Q7FlKvS0fM4MyN9bCAbnu9p-Q>
+    <xmx:56OrZ7KSBkLEZBF0vQ2oId6Gbm5JxDsGhW79Z6Z5m0PP-zMLG3suWA>
+    <xmx:56OrZxz-lh27awnRcQM6JBgbeuIDaM54vvjMzyGPcZk-05oX4y6KFQ>
+    <xmx:6KOrZ4G2STdlXeRTSnIWJhIgK_S9TIyt1tJ2WrQ6YRSXg2Sp_JW_QRcF>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6103B2220072; Tue, 11 Feb 2025 14:24:23 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250211-update-release-v3-8-7b80ae52c61f@kernel.org>
+Date: Tue, 11 Feb 2025 20:24:02 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andrey Albershteyn" <aalbersh@redhat.com>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Matt Turner" <mattst88@gmail.com>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Michal Simek" <monstr@monstr.eu>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Helge Deller" <deller@gmx.de>,
+ "Madhavan Srinivasan" <maddy@linux.ibm.com>,
+ "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Naveen N Rao" <naveen@kernel.org>, "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+ "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Andy Lutomirski" <luto@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Chris Zankel" <chris@zankel.net>,
+ "Max Filippov" <jcmvbkbc@gmail.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
+Cc: linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-api@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-xfs@vger.kernel.org
+Message-Id: <f4276a02-57cd-4703-be3c-4210e4a033a9@app.fastmail.com>
+In-Reply-To: <20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org>
+References: <20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org>
+Subject: Re: [PATCH v3] fs: introduce getfsxattrat and setfsxattrat syscalls
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 11, 2025 at 06:27:00PM +0100, Andrey Albershteyn wrote:
-> Add --for-next/-f to generate ANNOUNCE email for for-next branch
-> update. This doesn't require new commit/tarball/tags, so skip it.
-> 
-> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-> ---
->  release.sh | 92 ++++++++++++++++++++++++++++++++++++++++----------------------
->  1 file changed, 59 insertions(+), 33 deletions(-)
-> 
-> diff --git a/release.sh b/release.sh
-> index 3d272aebdb1fe7a3b47689b9dc129a26d6a9eb20..863c2c5e061b73e232c0bb01e879a115b6dd55bb 100755
-> --- a/release.sh
-> +++ b/release.sh
-> @@ -14,12 +14,14 @@ set -e
->  KUP=0
->  COMMIT=1
->  LAST_HEAD=""
-> +FOR_NEXT=0
->  
->  help() {
->  	echo "$(basename) - create xfsprogs release"
->  	printf "\t[--kup|-k] upload final tarball with KUP\n"
->  	printf "\t[--no-commit|-n] don't create release commit\n"
->  	printf "\t[--last-head|-l] commit of the last release\n"
-> +	printf "\t[--for-next|-f] generate announce email for for-next update\n"
->  }
->  
->  update_version() {
-> @@ -42,6 +44,48 @@ update_version() {
->  	sed -i "1s/^/xfsprogs (${version}-1) unstable; urgency=low\n/" ./debian/changelog
->  }
->  
-> +prepare_mail() {
+On Tue, Feb 11, 2025, at 18:22, Andrey Albershteyn wrote:
+> From: Andrey Albershteyn <aalbersh@redhat.com>
+>
+> Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
+> extended attributes/flags. The syscalls take parent directory fd and
+> path to the child together with struct fsxattr.
+>
+> This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
+> that file don't need to be open as we can reference it with a path
+> instead of fd. By having this we can manipulated inode extended
+> attributes not only on regular files but also on special ones. This
+> is not possible with FS_IOC_FSSETXATTR ioctl as with special files
+> we can not call ioctl() directly on the filesystem inode using fd.
+>
+> This patch adds two new syscalls which allows userspace to get/set
+> extended inode attributes on special files by using parent directory
+> and a path - *at() like syscall.
+>
+> Also, as vfs_fileattr_set() is now will be called on special files
+> too, let's forbid any other attributes except projid and nextents
+> (symlink can have an extent).
+>
+> CC: linux-api@vger.kernel.org
+> CC: linux-fsdevel@vger.kernel.org
+> CC: linux-xfs@vger.kernel.org
+> Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 
-Hoisting this to a function probably ought to be done in the patch that
-adds the email message body creation in the first place, so that the
-changes for --for-next are more obvious.
+I checked the syscall.tbl additions and the ABI to ensure that
+it follows the usual guidelines and is portable across
+all architectures, this looks good. Thanks for addressing
+my v1 comments:
 
-The end result looks ok at least, so
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
---D
-
-> +	branch="$1"
-> +	mail_file=$(mktemp)
-> +	if [ -n "$LAST_HEAD" ]; then
-> +		if [ $branch == "master" ]; then
-> +			reason="$(git describe --abbrev=0 $branch) released"
-> +		else
-> +			reason="for-next updated to $(git log --oneline --format="%h" -1 $branch)"
-> +		fi;
-> +		cat << EOF > $mail_file
-> +To: linux-xfs@vger.kernel.org
-> +Cc: $(./tools/git-contributors.py $LAST_HEAD..$branch --delimiter ' ')
-> +Subject: [ANNOUNCE] xfsprogs: $reason
-> +
-> +Hi folks,
-> +
-> +The xfsprogs $branch branch in repository at:
-> +
-> +	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
-> +
-> +has just been updated.
-> +
-> +Patches often get missed, so if your outstanding patches are properly reviewed
-> +on the list and not included in this update, please let me know.
-> +
-> +The for-next branch has also been updated to match the state of master.
-> +
-> +The new head of the $branch branch is commit:
-> +
-> +$(git log --oneline --format="%H" -1 $branch)
-> +
-> +New commits:
-> +
-> +$(git shortlog --format="[%h] %s" $LAST_HEAD..$branch)
-> +
-> +Code Diffstat:
-> +
-> +$(git diff --stat --summary -C -M $LAST_HEAD..$branch)
-> +EOF
-> +	fi
-> +}
-> +
->  while [ $# -gt 0 ]; do
->  	case "$1" in
->  		--kup|-k)
-> @@ -54,6 +98,9 @@ while [ $# -gt 0 ]; do
->  			LAST_HEAD=$2
->  			shift
->  			;;
-> +		--for-next|-f)
-> +			FOR_NEXT=1
-> +			;;
->  		--help|-h)
->  			help
->  			exit 0
-> @@ -66,6 +113,17 @@ while [ $# -gt 0 ]; do
->  	shift
->  done
->  
-> +if [ $FOR_NEXT -eq 1 ]; then
-> +	echo "Push your for-next branch:"
-> +	printf "\tgit push origin for-next:for-next\n"
-> +	prepare_mail "for-next"
-> +	if [ -n "$LAST_HEAD" ]; then
-> +		echo "Command to send ANNOUNCE email"
-> +		printf "\tneomutt -H $mail_file\n"
-> +	fi
-> +	exit 0
-> +fi
-> +
->  if [ -z "$EDITOR" ]; then
->  	EDITOR=$(command -v vi)
->  fi
-> @@ -128,39 +186,7 @@ if [ $KUP -eq 1 ]; then
->  		pub/linux/utils/fs/xfs/xfsprogs/
->  fi;
->  
-> -mail_file=$(mktemp)
-> -if [ -n "$LAST_HEAD" ]; then
-> -	cat << EOF > $mail_file
-> -To: linux-xfs@vger.kernel.org
-> -Cc: $(./tools/git-contributors.py $LAST_HEAD.. --delimiter ' ')
-> -Subject: [ANNOUNCE] xfsprogs $(git describe --abbrev=0) released
-> -
-> -Hi folks,
-> -
-> -The xfsprogs repository at:
-> -
-> -	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
-> -
-> -has just been updated.
-> -
-> -Patches often get missed, so if your outstanding patches are properly reviewed
-> -on the list and not included in this update, please let me know.
-> -
-> -The for-next branch has also been updated to match the state of master.
-> -
-> -The new head of the master branch is commit:
-> -
-> -$(git log --oneline --format="%H" -1)
-> -
-> -New commits:
-> -
-> -$(git shortlog --format="[%h] %s" $LAST_HEAD..HEAD)
-> -
-> -Code Diffstat:
-> -
-> -$(git diff --stat --summary -C -M $LAST_HEAD..HEAD)
-> -EOF
-> -fi
-> +prepare_mail "master"
->  
->  echo ""
->  echo "Done. Please remember to push out tags and the branch."
-> 
-> -- 
-> 2.47.2
-> 
-> 
+Disclaimer: I have no idea if the new syscalls are a good
+idea or if they are fit for the purpose, I trust the
+VFS maintainers will take care of reviewing that.
 
