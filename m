@@ -1,93 +1,83 @@
-Return-Path: <linux-xfs+bounces-19474-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19481-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA2B1A320BC
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Feb 2025 09:17:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02DFEA32692
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Feb 2025 14:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7CC97A1EA8
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Feb 2025 08:16:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BAFA31635E7
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Feb 2025 13:08:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56FCD1EE013;
-	Wed, 12 Feb 2025 08:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 130FB20E021;
+	Wed, 12 Feb 2025 13:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="UHUWZyCi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zj33Cmmj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SoMnpL3+"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E6F13C9B3
-	for <linux-xfs@vger.kernel.org>; Wed, 12 Feb 2025 08:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A488F209F4B
+	for <linux-xfs@vger.kernel.org>; Wed, 12 Feb 2025 13:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739348245; cv=none; b=DK14VALxEggih5GkeJPCi2WANaX72UnjXVsW66jbFSPbbQBS2T8Rn7PG1wjTw++Yrl5N1vjC316PsSqAsuhgyOO9mp+mUBIuLVAycMsvSuaRu+VPjQJe+egRuusTGPb2AXYCn5mE5QePSbGgKt0StdzrQFKQAgh44R0pKLiAGWI=
+	t=1739365685; cv=none; b=JO4N4Iyb1jdYbbsK6ebTldty7EEF2VP1SRC/WQhha2vLUTN2zx0uWFErkaZiywvaF3rwotNpCvihhvvwabJGQOk/WGndqQ+1kAmUBny61ckC49vou0LagABXgOjzsApbXi+7r3U4RSxvJnuQrbkaCHfvN7MxnCkRxqtkq7EfwIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739348245; c=relaxed/simple;
-	bh=9Ajt+F3BAWaHerxMDeQTh/SHVxBxatCvYCb6eBCGFn4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=hILFgMzLaQw+/K65yWa4PYMRfidZtTjMUr399NkTPwQb6sLp7UzxFrQb4TC7quZ+Nim4SEtIhSkRa6rjGUaWcPuyMp59g9CPOh3luJ8lvyPj8ByPE/uRkh7zuI9fWQ/NJ1Nv+EO+Z//OPSFhsA8S/LYHMQiWwoGmO621kSbE+oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=UHUWZyCi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zj33Cmmj; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfout.phl.internal (Postfix) with ESMTP id 4A8FB13809C6
-	for <linux-xfs@vger.kernel.org>; Wed, 12 Feb 2025 03:17:18 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Wed, 12 Feb 2025 03:17:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
-	:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1739348238; x=1739434638; bh=VrKsbHMZABL83IKzrvn7H
-	W1GAe3Gd8Ij46KZdpDTg0Y=; b=UHUWZyCieYvTTc4t+L2C6nKbeV2UmYyWJYLpT
-	4tHzbqTuHlnYOb8+VBYxmd0UGPw0kxSo2ue4RNe3k1dC4toPkuWcD2XxaeunxqHN
-	Ka9R9WjrbD8Pw7hBme+KRVD7FQOBgozjA5XobcihOlqG4jWKO0GlNyyKTR3/s27Y
-	oZ3/5/qTFu9ABq7+qOaJ9JzpH14Q6pPfrF4MeSNC4DXNGVFO18K4cco0aDBGNFP9
-	ncjZ2mnzlYEG9OoRVm8EK324XtqLSwZETPVsQykWUMWcZfdJwHwOG9a8HVavBc2V
-	Ar0LiL9dBvqMafHaRywyyqGfUoHV/dnREna+leViIyEWcqOWw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:date:date:feedback-id:feedback-id:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1739348238; x=1739434638; bh=VrKsbHMZABL83IKzrvn7HW1GAe3Gd8Ij46K
-	ZdpDTg0Y=; b=zj33CmmjBSlvRashYEQ15Ph9RX5sk9OujdhJt+mgRmQ2Oxzpa5P
-	44VP7OdN6zgEScE0oAVWWrBIpsUBKtxwtxwajskQAIPGsiZ3sYVR0KfmDluSUF08
-	+vnOEBxGLJjpCo9UL1AY1rmVY3r9t66iJxgWIK68RXsW/ysmlXgtzuvQQc2NhHKW
-	Jj6utmfjUUKXHAM/u64mCcgkj2aXIKfBgEi7AoRBZ6m8q19KDNr+1nwQVe+KmZGI
-	QsWKTuPhOrt6OKuf97cStZ8fDMokJ1tDDcdj+M8m1BdnEciuTo9aJbbpCzIBuC1P
-	z+wFGDuJ/iB0eN9ND3X36df+fQyNixXTDCw==
-X-ME-Sender: <xms:DVmsZ0rCSBDOnippjd65rQeAfOfF9mTXYLFbMLGgydLrhvpzlW5rAQ>
-    <xme:DVmsZ6pRt91aJi_ICRzhOi8CdOcCHodDUiIF_srwK56JTIif59ar_gUcz0zdvfjue
-    bSswSzQRu3ukqkJSA>
-X-ME-Received: <xmr:DVmsZ5PZhMYNOZsDf28ng3FJVGTMQTM3Uak5vsrUXs3_ltU1YOooIo5wHEkaBPckOI4HpSURwAQ3sKE0cfG0r9z3nAM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegfeefjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvuf
-    ffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetlhihshhsrgcutfhoshhsuceohhhi
-    segrlhihshhsrgdrihhsqeenucggtffrrghtthgvrhhnpeeihefhveevheelhffhgfehtd
-    dtueeufeevveegffdvleefteegtedtkeefteekveenucffohhmrghinhepfhgvughorhgr
-    phhrohhjvggtthdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehhihesrghlhihsshgrrdhishdpnhgspghrtghpthhtohepuddpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqgihfshesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:DVmsZ74hcjRZxZC44OQQt-IhRWhyPFueCe17OMj2Cy5xLgghDE_cVA>
-    <xmx:DVmsZz7WVPqASaqmj_spxdBj-BC-bk_o6eBlDcVH0K8xvkPPrUG88w>
-    <xmx:DVmsZ7iIqZTSec5qJS2gMA_Gv8hfm1hIR8Z8fq7_D2rdP5K7PTQ4Uw>
-    <xmx:DVmsZ94XQqmiWoSf17pQ0P5pGKaDkcUg7XxfjKaZQdWHF_107bmlRw>
-    <xmx:DlmsZ9RmeKMG-_gvG4CBaAV322hjvNg--gdfxyIgV2Oacd96lNvABgvw>
-Feedback-ID: i12284293:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA for
- <linux-xfs@vger.kernel.org>; Wed, 12 Feb 2025 03:17:17 -0500 (EST)
-Received: by sf.qyliss.net (Postfix, from userid 1000)
-	id 95F9F4B9908F; Wed, 12 Feb 2025 09:17:15 +0100 (CET)
-From: Alyssa Ross <hi@alyssa.is>
-To: linux-xfs@vger.kernel.org
-Subject: [PATCH xfsprogs] configure: additionally get icu-uc from pkg-config
-Date: Wed, 12 Feb 2025 09:16:49 +0100
-Message-ID: <20250212081649.3502717-1-hi@alyssa.is>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1739365685; c=relaxed/simple;
+	bh=Xlz7lh5nb4tKA4hMucrgKfSq16jZXHPDVgIo0xXrdQ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=Y5IYVwQtTYyD4PLb1jaE7DNzoUI7POyV9f0033XxGB7W2/5W1F5BC0pz56pkMQejS38hzxQzi3KdF7/m5qxwlYPkxU5uWWKjAD3VKv2DeFazLJTsiIKx8zy9U5nVG+0Rax7sSRvE0ph1AcPf3M4jL5njCpcIb/pI97EKHCKYjn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SoMnpL3+; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250212130755epoutp045b73746b37970c7db2fe607881fe3ad4~jd93Qp-Xh1861818618epoutp04g
+	for <linux-xfs@vger.kernel.org>; Wed, 12 Feb 2025 13:07:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250212130755epoutp045b73746b37970c7db2fe607881fe3ad4~jd93Qp-Xh1861818618epoutp04g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1739365675;
+	bh=kgwjPTJeDp+dDmaPIcMkbT3oy9GS8B0AWN3rKWEtzaU=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=SoMnpL3+6bg3oMwbL4zKoUbMAou3/ZhXpjcDDgf7J0ogv5MQbTUDSEtgizznw0ego
+	 qWMOCQdE9XYTn04ah9/wY6gtIqz8DChCmKQDQPMcMidN66yPnM0w8HXm7xChAcqftq
+	 70pCzpdaTflKcZVefqR2EENLpekHDrUxydQAuTt8=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250212130755epcas5p21568f3e10b8b94889e5a0ddc5bb5a821~jd92tgxN11394313943epcas5p2S;
+	Wed, 12 Feb 2025 13:07:55 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4YtJWs3nLwz4x9Pw; Wed, 12 Feb
+	2025 13:07:53 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3C.04.19710.92D9CA76; Wed, 12 Feb 2025 22:07:53 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250212104507epcas5p18722b26bd022151979418508eae99065~jcBLs-P-T1039910399epcas5p1M;
+	Wed, 12 Feb 2025 10:45:07 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250212104507epsmtrp1dc77ed69ffc94892e6b9022d7f864de7~jcBLsLQUl0677306773epsmtrp1s;
+	Wed, 12 Feb 2025 10:45:07 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-53-67ac9d296b0e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	19.36.18949.3BB7CA76; Wed, 12 Feb 2025 19:45:07 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250212104505epsmtip2112d1f4ce9e93a19b821fd17dd30191f~jcBJjOjo41728317283epsmtip2X;
+	Wed, 12 Feb 2025 10:45:05 +0000 (GMT)
+From: Kundan Kumar <kundan.kumar@samsung.com>
+To: david@fromorbit.com, mcgrof@kernel.org, jack@suse.cz, hch@lst.de
+Cc: linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	anuj20.g@samsung.com, axboe@kernel.dk, clm@meta.com, willy@infradead.org,
+	gost.dev@samsung.com, vishak.g@samsung.com, amir73il@gmail.com,
+	brauner@kernel.org, Kundan Kumar <kundan.kumar@samsung.com>
+Subject: [RFC 0/3] Parallelizing filesystem writeback
+Date: Wed, 12 Feb 2025 16:06:31 +0530
+Message-Id: <20250212103634.448437-1-kundan.kumar@samsung.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -95,36 +85,123 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAJsWRmVeSWpSXmKPExsWy7bCmuq7m3DXpBqenSlpcWLea0aJpwl9m
+	i9V3+9ksXh/+xGix5ZK9xZZj9xgtbh7YyWSxcvVRJovZ05uZLLZ++cpqsWfvSRaLXX92sFvc
+	mPCU0eL8rDnsFr9/zGFz4Pc4tUjCY+esu+wem1doeVw+W+qxaVUnm8fumw1sHucuVnj0bVnF
+	6HFmwRF2j8+b5AK4orJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22V
+	XHwCdN0yc4BeUFIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevl
+	pZZYGRoYGJkCFSZkZ2zb+JO14IJYRUfLDfYGxq+CXYycHBICJhIzru9g7WLk4hAS2M0osW7x
+	JzYI5xOjxOf7D1ggnG+MEt0fjjLDtCxdcoQdIrGXUeLT8jaols+MEu9/dQA5HBxsAroSP5pC
+	QRpEBFwkDi3vA9vBLNDJJPF+6w42kISwgKnEo4XLmUBsFgFViV2fdjOC2LwCdhJvWo+yQGyT
+	l5h56Ts7RFxQ4uTMJ2BxZqB489bZzCBDJQSWckhcubefDaLBRWLS44dQzcISr45vYYewpSRe
+	9rdB2dkShxo3MEHYJRI7jzRAxe0lWk/1M4M8wCygKbF+lz5EWFZi6ql1TBB7+SR6fz+BauWV
+	2DEPxlaTmPNuKtRaGYmFl2ZAxT0kpj+5zApiCwnEStzfN4d5AqP8LCTvzELyziyEzQsYmVcx
+	SqYWFOempyabFhjmpZbDYzY5P3cTIzgpa7nsYLwx/5/eIUYmDsZDjBIczEoivBLT1qQL8aYk
+	VlalFuXHF5XmpBYfYjQFhvFEZinR5HxgXsgriTc0sTQwMTMzM7E0NjNUEudt3tmSLiSQnliS
+	mp2aWpBaBNPHxMEp1cDk7fL+wMW1M6XvqtVt+pv2aL7k0xm/9X2+nw9ZNl3Eha38+BXBwvhb
+	lUePzX2xXzShRuzchKTIW7fz7KS8mh6bi2580z/TgcWDo39PceLUzokvPtxiKT0ctpmXZydn
+	5uJJeVcilbUZvuZq9b0JeLFiC8uXzuajFpXa76QWzDggIp3T6J7u1yKwMFDR+jCnvprX0T3R
+	XUs5Z73Ve37wn5hC1wIRjyNWc2uuzdONLdxwUkf27C4OY+87kkmTeBU4xAJNtEOtnDa/mnDM
+	lZXX9oOw0KrbqmVZD+pMnrHp/HwdoCUTpT31itzSiWd+SX1OLj94ynrZXJV9f7NK07csfxJ9
+	jFHiBmuhm2HQfLES7j4lluKMREMt5qLiRADyNp2WUwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNLMWRmVeSWpSXmKPExsWy7bCSvO7m6jXpBvN3KltcWLea0aJpwl9m
+	i9V3+9ksXh/+xGix5ZK9xZZj9xgtbh7YyWSxcvVRJovZ05uZLLZ++cpqsWfvSRaLXX92sFvc
+	mPCU0eL8rDnsFr9/zGFz4Pc4tUjCY+esu+wem1doeVw+W+qxaVUnm8fumw1sHucuVnj0bVnF
+	6HFmwRF2j8+b5AK4orhsUlJzMstSi/TtErgytm38yVpwQayio+UGewPjV8EuRk4OCQETiaVL
+	jrB3MXJxCAnsZpT4vO4qE0RCRmL33Z2sELawxMp/z6GKPjJKrPi4CMjh4GAT0JX40RQKUiMi
+	4CVxcdMHsBpmgelMElO2nGcHSQgLmEo8WrgcbCiLgKrErk+7GUFsXgE7iTetR1kgFshLzLz0
+	nR0iLihxcuYTsDgzULx562zmCYx8s5CkZiFJLWBkWsUomVpQnJueW2xYYJSXWq5XnJhbXJqX
+	rpecn7uJERwfWlo7GPes+qB3iJGJg/EQowQHs5IIr8nCFelCvCmJlVWpRfnxRaU5qcWHGKU5
+	WJTEeb+97k0REkhPLEnNTk0tSC2CyTJxcEo1MKlxz231Eju2gVuPQ6Ln+0HeB5//Xi515J7k
+	e/56DN/znRmSifeKfL03lj2S3fn5gFP+jx8OTwU1tdiv/Km1Lp8vOG1hTS3XgjqR9nv/JdJs
+	1Rc+PmxfnxuTXuU6+aDZRs61px0OP9XZprNyaZpOp+DD12cyslcduLJgql1c5+lVsttZquJU
+	IxMcilt7NPStcn8yRhqK1d/a63V8ntqxw91rj0mLGl7YtP/dIQ/nJ687tRYyPDCxdPIQE4w6
+	Iv0555ekt+QTvawTgassb6usO6sl+drdyZUtIO7jspsqEzZenhCl8Vi2lN1qj/fEPxrnnKYH
+	RN67mCeRmZOwrMxtUeNJ6aC/S3YFB6xSW3XXX4mlOCPRUIu5qDgRAHsiSkH+AgAA
+X-CMS-MailID: 20250212104507epcas5p18722b26bd022151979418508eae99065
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250212104507epcas5p18722b26bd022151979418508eae99065
+References: <CGME20250212104507epcas5p18722b26bd022151979418508eae99065@epcas5p1.samsung.com>
 
-This fixes the following build error with icu 76, also seen by
-Fedora[1]:
+This RFC is an attempt to share a POC for our LSFMM'25[0] proposal.
+We initially prepared it based on the percpu writeback context design.
+But based on feedback received initially, we moved towards a more
+FS-geometry aware design. The patches are still clumsy, and there is
+softlockup issue while running fstests as well(mentioned below).
+Yet, we would like to gather feedback which will help in ironing
+out the infra.
 
-	/nix/store/9g4gsby96w4cx1i338kplaap0x37apdf-binutils-2.43.1/bin/ld: unicrash.o: undefined reference to symbol 'uiter_setString_76'
-	/nix/store/9g4gsby96w4cx1i338kplaap0x37apdf-binutils-2.43.1/bin/ld: /nix/store/jbnm36wq89c7iws6xx6xvv75h0drv48x-icu4c-76.1/lib/libicuuc.so.76: error adding symbols: DSO missing from command line
-	collect2: error: ld returned 1 exit status
-	make[2]: *** [../include/buildrules:65: xfs_scrub] Error 1
-	make[1]: *** [include/buildrules:35: scrub] Error 2
+Kernel tree:
+https://github.com/SamsungDS/linux/tree/priv/pw/rfc
 
-Link: https://src.fedoraproject.org/rpms/xfsprogs/c/624b0fdf7b2a31c1a34787b04e791eee47c97340 [1]
-Signed-off-by: Alyssa Ross <hi@alyssa.is>
----
- m4/package_icu.m4 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Design
+==========================
+- A new "wb_ctx" structure is introduced that represents a writeback
+  context/thread.
+  A new "wb_ctx_list" field is introduced in bdi_writeback that describes
+  a wb_ctx array, which gets initialized during wb_init.
 
-diff --git a/m4/package_icu.m4 b/m4/package_icu.m4
-index 3ccbe0cc..6b89c874 100644
---- a/m4/package_icu.m4
-+++ b/m4/package_icu.m4
-@@ -1,5 +1,5 @@
- AC_DEFUN([AC_HAVE_LIBICU],
--  [ PKG_CHECK_MODULES([libicu], [icu-i18n], [have_libicu=yes], [have_libicu=no])
-+  [ PKG_CHECK_MODULES([libicu], [icu-i18n icu-uc], [have_libicu=yes], [have_libicu=no])
-     AC_SUBST(have_libicu)
-     AC_SUBST(libicu_CFLAGS)
-     AC_SUBST(libicu_LIBS)
+- Writeback handling is modified to use "wb_ctx_list[0]" writeback
+  context, so it continues to remain single threaded.
 
-base-commit: 90d6da68ee54e6d4ef99eca4a82cac6036a34b00
+- In xfs, during AG initialization, we try to assign a different writeback
+  context to each AG from the wb_ctx_list.
+
+- During writeback, a "get_wb_ctx" handler is introduced in
+  super_operations to fetch the writeback context from the inode, which
+  gets used for writeback handling. Currently this handler is implemented
+  only by xfs, so writeback handling is parallelized (per AG) for xfs
+  only. It can be easily extended to other filesystems.
+
+Discussion
+==========================
+- Design for API that would be used for deciding the number of writeback
+  contexts by FS (suggested by Dave).
+
+TBDs
+==========================
+- Need to explore cgroup related writeback handling.
+
+- Add a list_lock field in struct wb_ctx for protecting pctx_b_* lists.
+  Currently there is a "bdi_writeback->list_lock" for protecting per
+  writeback context list.
+
+- Ability to create writeback contexts dynamically. Currently, NR_WB_CTX
+  number of writeback contexts are present in bdi_writeback and get
+  initialized during wb_init.
+
+Testing
+==========================
+- Encountered a softlockup issue while running fstests (test generic/051).
+  Investigating the same.
+
+[0] https://lore.kernel.org/all/20250129102627.161448-1-kundan.kumar@samsung.com/
+
+
+Kundan Kumar (3):
+  writeback: add parallel writeback infrastructure
+  fs: modify writeback infra to work with wb_ctx
+  xfs: use the parallel writeback infra per AG
+
+ fs/fs-writeback.c                | 507 ++++++++++++++++++++-----------
+ fs/xfs/libxfs/xfs_ag.c           |  16 +
+ fs/xfs/libxfs/xfs_ag.h           |   1 +
+ fs/xfs/xfs_super.c               |  20 ++
+ include/linux/backing-dev-defs.h |  67 +++-
+ include/linux/backing-dev.h      |  34 ++-
+ include/linux/fs.h               |   1 +
+ mm/backing-dev.c                 |  68 +++--
+ mm/page-writeback.c              |  82 ++---
+ 9 files changed, 551 insertions(+), 245 deletions(-)
+
+
+base-commit: 57d357a7663c4025c68ae07974b679d84e2d5d1a
 -- 
-2.47.0
+2.25.1
 
 
