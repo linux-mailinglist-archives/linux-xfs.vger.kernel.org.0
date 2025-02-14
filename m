@@ -1,105 +1,146 @@
-Return-Path: <linux-xfs+bounces-19604-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19606-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 264E4A3592A
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Feb 2025 09:44:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67D02A35947
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Feb 2025 09:46:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C265B1889CE1
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Feb 2025 08:44:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20E5F1891179
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Feb 2025 08:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAF2F224AF8;
-	Fri, 14 Feb 2025 08:44:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDB7189B9D;
+	Fri, 14 Feb 2025 08:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3Q6E7oL"
+	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="TW1FFHJK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VBQXa8o2"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C494275401
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Feb 2025 08:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A404421CC53
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Feb 2025 08:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739522641; cv=none; b=snnUvv3p0z/ns8RJPzArCFztH+0mQE9aLIbCkxI3asuJu3vjeeQkp2wAy4ip7KsDn51uTYTbCC9s+uaOUyIBmvN570Hh9uA6uHztZGMLLHVq35kTosCGO3k3p19BjKMuigtr8w0sewNIcT1nW0s+DOIuxRyLBu6zd539n6CiF3g=
+	t=1739522794; cv=none; b=ORqaQb8bllwsTPKEcSyj/2AGRIlU2I7MfHdXC2JI9UqB+C8kYXCs428RDdTeuv6Ya0sFE3isquxJWROuJS+2qpLPnnJARLfbf92+pt21EfFwGRazmNcOpoQlzF7h4BVjrkSIzu9Vhx5JiJOrfwjdpVQLIvouAkKmZe0MTF83JA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739522641; c=relaxed/simple;
-	bh=f9iXJxbNqMhFk13UbpLbRmO4zc6JznRDc82AcCdtqV4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dofRrd1Y4h70pre5z6U3iy6Zls/iKY6NXBah/agbq2IuX1aUu2I0KT/bfW53f3ui4z5w68Vrm792a3JcViB8f64o3+9ZO3+RFtMTTQk5GVM7N1Kv8a4YnWaHkHUQUobSbnNe3Wcb0ieIL+yU8CADWhDH447OUuN3M+1edVYQIZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3Q6E7oL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72BEBC4CED1
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Feb 2025 08:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739522641;
-	bh=f9iXJxbNqMhFk13UbpLbRmO4zc6JznRDc82AcCdtqV4=;
-	h=Date:From:To:Subject:From;
-	b=g3Q6E7oLY/olQiZmVAtpneJomszfddYr/64sE2qwSfC7kYrptC8zDbofTvotI/bkM
-	 WqkYZk0kmnHOFnvZiXFGxSBNbHsEmWnR4iqdjkawn23R+8byzvFnS1RlbDvT6M525u
-	 217mXvc3hFhEde/3+5SYscKIIXyTPo9n9CVx1E08KmGdQG2VEU4bG8p2z7vnsF4gpE
-	 0jMxrwpBZJlrMxMg5xuEgk61L9qF0eamvWJDphg9DTCpc7lLZY54MFMHspO+cYhYzJ
-	 Ti16vpvgloxeQtUoxc2XkTOgfuGWLJFrblpZq1XSmE3qqFHLItIm79B6otm4PWM9db
-	 cVLPwiI4cQBjw==
-Date: Fri, 14 Feb 2025 09:43:56 +0100
-From: Carlos Maiolino <cem@kernel.org>
+	s=arc-20240116; t=1739522794; c=relaxed/simple;
+	bh=Nqpx0/3SZp7FX5waNQp3oVh2+nK1H4D+1P9hLy9crZI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tEfIdT9oX//PNeZtlYenMYvIllqyLV/zo8jAcsZr4R6h0EIqMUWu4KFPDen3JtU1TH8mC1j8s79j/Tesdpr124TbBKcR6yfZQ7Fx96jVNFxPCoTm7s8/sN/CWpBuFLjZYlGfiK5+xkWLY7nO50pRRQHZvq9DQVRbMX1bsO3fPTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is; spf=pass smtp.mailfrom=alyssa.is; dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b=TW1FFHJK; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VBQXa8o2; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alyssa.is
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alyssa.is
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id 8318E1380418;
+	Fri, 14 Feb 2025 03:46:30 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Fri, 14 Feb 2025 03:46:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1739522790; x=1739609190; bh=nFrngLo81eI4IrKosLxc6
+	gLdBjgkF8kY1wHyapW57N0=; b=TW1FFHJKR8pgPa3Bgmev763K1rUpbZbwPVWrh
+	1YTQSXz9b3sujs+VTdPY8bwQoXrjxvn9pWboMBf4gBVmmN6ZWvEP5JOvxJ3bvq2T
+	NZ5MXcwPfPr5mgYoa9WXVVqxuU1HfMwmCzdrc95HohVGXdkMhOkzxH1WYVRWqTwd
+	A5LjWrWzIxeIn7UqQKNeWPFlTUmcDQZ3OS8F/CRTmfU3zV2sK382C/JWBYZqmOHe
+	l0Y/RJVApNfpzo9AN6MCWASUsSuxKaZYgb7s9mwWZjgZzUvl8757OwXlEjA2iKZ9
+	UNsbe9A+v2yUvGQhgFIo4qQM0u6q3h2CxenOoycOSMweciBig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739522790; x=1739609190; bh=nFrngLo81eI4IrKosLxc6gLdBjgkF8kY1wH
+	yapW57N0=; b=VBQXa8o2xSu/jy6rrO+uESjyC143iiWR5Zukdr1KGTRqO2FonuB
+	lMqZG6EG4qRzlV6qkwKCASbwxbjHQestgTQvJ1LZx2OVaNDxfD6mGw+dvk/oA/rJ
+	4lcZn/FR3u9acU8UA/0+G8ZqCfuzLDT5XZpY7eZ0ZIsyKxEDATmmFO0ZWQuUOUO9
+	i0Rm+Rdm1V0FmXldNMndP4k8q0Zln1IuyEzCejq1enkoZMbrbtvVsQ+8wbVxIjPu
+	h9UpiCbGJO+tbKUKK91b83bAp7RLv1cn3Gllbh1u47lefCGkoiGfs65ERgRmeloV
+	XJo6OEnwkbJzJ39+8uqOFvjppf4M5y/unNA==
+X-ME-Sender: <xms:5gKvZxRv2sIqnvZpfDddLmicxXAS9GolZQKDs_yUpYK-cO0Gkj18MQ>
+    <xme:5gKvZ6xfMz3k02_lqO3N_AxgPsmuyldxuPd5Y4G1MrVT9E6pSaGvAXbHPvc7FPbV9
+    LCWzRYHc_Wbk5uJfg>
+X-ME-Received: <xmr:5gKvZ22cxIixM8nLbv-R1LokLJPivkDWLynv0FRX1UBEcBqBCK8ZfVgYh2_kKckdJQBxC1FBJcBT9HhAEQAWacqPYjI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegledvudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecu
+    hfhrohhmpeetlhihshhsrgcutfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenucggtf
+    frrghtthgvrhhnpeefteekteehtdfhfedvieevvdehgfdvjeeitdfggeevjeeftdeludet
+    gfetgedujeenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhfvgguohhrrghprhhojh
+    gvtghtrdhorhhgpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpehhihesrghlhihsshgrrdhishdpnhgspghrtghpth
+    htohepvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughjfihonhhgsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhg
+X-ME-Proxy: <xmx:5gKvZ5D0n9-mJvBdSIii3Qwlt3GbppQGFjd5sBFAmL00SuwQhC2LoA>
+    <xmx:5gKvZ6hF2H2jG2wJBmUF31g-fCjBVRdgRuERVE2WBdTFcNvY40ICfw>
+    <xmx:5gKvZ9o0cUu-Xmg8V1m_lX1HyQqwRuBU7qP4NYmG8RJKWFiFreLTMQ>
+    <xmx:5gKvZ1juRAyEQpFHS0rEiIH_67FEiy3q-yapefsaw6_-CAjujB9BGw>
+    <xmx:5gKvZ9tfN7IMq7gcB-50L5LcY5ytMhLuJZQBQK_nvYTM2MoHUUVUJLeO>
+Feedback-ID: i12284293:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 14 Feb 2025 03:46:29 -0500 (EST)
+Received: by sf.qyliss.net (Postfix, from userid 1000)
+	id 4490B505E71A; Fri, 14 Feb 2025 09:46:28 +0100 (CET)
+From: Alyssa Ross <hi@alyssa.is>
 To: linux-xfs@vger.kernel.org
-Subject: [ANNOUNCE] xfs-linux: for-next *REBASED* to 2d873efd174b
-Message-ID: <avxz3qh3j3bm4nrhjcrgwrmhkbbkv57vwplhivsnuot7uq6hqn@tv3oc6vpkxg4>
+Cc: "Darrick J. Wong" <djwong@kernel.org>
+Subject: [PATCH xfsprogs v2] configure: additionally get icu-uc from pkg-config
+Date: Fri, 14 Feb 2025 09:45:10 +0100
+Message-ID: <20250214084509.833013-2-hi@alyssa.is>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
+Upstream libicu changed its pkgconfig files[0] in version 76 to require
+callers to call out to each .pc file they need for the libraries they
+want to link against.  This apparently reduces overlinking, at a cost of
+needing the world to fix themselves up.
 
-Hi folks,
+This patch fixes the following build error with icu 76, also seen by
+Fedora[1]:
 
-The for-next branch of the xfs-linux repository at:
+	    /bin/ld: unicrash.o: undefined reference to symbol 'uiter_setString_76'
+	    /bin/ld: /lib/libicuuc.so.76: error adding symbols: DSO missing from command line
+	    collect2: error: ld returned 1 exit status
+	    make[2]: *** [../include/buildrules:65: xfs_scrub] Error 1
+	    make[1]: *** [include/buildrules:35: scrub] Error 2
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+Link: https://github.com/unicode-org/icu/commit/199bc827021ffdb43b6579d68e5eecf54c7f6f56 [0]
+Link: https://src.fedoraproject.org/rpms/xfsprogs/c/624b0fdf7b2a31c1a34787b04e791eee47c97340 [1]
+Signed-off-by: Alyssa Ross <hi@alyssa.is>
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+---
+Changes since v1:
 
-has just been *REBASED*.
+ • Expand patch description with Darrick's suggestion.
 
-This has no patch changes from the previous state, the rebase was needed to fix
-a tag in one of the patches. No code changes.
+v1: https://lore.kernel.org/linux-xfs/20250212081649.3502717-1-hi@alyssa.is/
 
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.
+ m4/package_icu.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The new head of the for-next branch is commit:
+diff --git a/m4/package_icu.m4 b/m4/package_icu.m4
+index 3ccbe0cc..6b89c874 100644
+--- a/m4/package_icu.m4
++++ b/m4/package_icu.m4
+@@ -1,5 +1,5 @@
+ AC_DEFUN([AC_HAVE_LIBICU],
+-  [ PKG_CHECK_MODULES([libicu], [icu-i18n], [have_libicu=yes], [have_libicu=no])
++  [ PKG_CHECK_MODULES([libicu], [icu-i18n icu-uc], [have_libicu=yes], [have_libicu=no])
+     AC_SUBST(have_libicu)
+     AC_SUBST(libicu_CFLAGS)
+     AC_SUBST(libicu_LIBS)
 
-2d873efd174b xfs: flush inodegc before swapon
+base-commit: 90d6da68ee54e6d4ef99eca4a82cac6036a34b00
+-- 
+2.47.0
 
-6 new commits:
-
-Carlos Maiolino (1):
-      [9f0902091c33] xfs: Do not allow norecovery mount with quotacheck
-
-Christoph Hellwig (2):
-      [3cd6a8056f5a] xfs: rename xfs_iomap_swapfile_activate to xfs_vm_swap_activate
-      [2d873efd174b] xfs: flush inodegc before swapon
-
-Darrick J. Wong (2):
-      [66314e9a57a0] xfs: fix online repair probing when CONFIG_XFS_ONLINE_REPAIR=n
-      [6e33017c3276] xfs: fix data fork format filtering during inode repair
-
-Lukas Herbolt (1):
-      [9e00163c3167] xfs: do not check NEEDSREPAIR if ro,norecovery mount.
-
-Code Diffstat:
-
- fs/xfs/scrub/common.h       |  5 -----
- fs/xfs/scrub/inode_repair.c | 12 ++++++++--
- fs/xfs/scrub/repair.h       | 11 ++++++++-
- fs/xfs/scrub/scrub.c        | 12 ++++++++++
- fs/xfs/xfs_aops.c           | 41 +++++++++++++++++++++++++++++----
- fs/xfs/xfs_qm_bhv.c         | 55 ++++++++++++++++++++++++++++++++-------------
- fs/xfs/xfs_super.c          |  8 +++++--
- 7 files changed, 114 insertions(+), 30 deletions(-)
 
