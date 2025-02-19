@@ -1,52 +1,52 @@
-Return-Path: <linux-xfs+bounces-19776-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19778-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CD4FA3AE4A
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:02:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 534D3A3AE52
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:03:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAB77177B5C
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:01:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D24091892740
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:01:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC631B87DB;
-	Wed, 19 Feb 2025 00:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFC1E1A08A8;
+	Wed, 19 Feb 2025 00:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m97RZ45y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ttjaa0F8"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE78146B8;
-	Wed, 19 Feb 2025 00:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9D625761;
+	Wed, 19 Feb 2025 00:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739926533; cv=none; b=oOptAd1Y4mk5MxGPCn4xrGhX7MxOacOOHJcWz04wwdfqqkwgYEWndC7Hl/reKGZIo7+Uet6n6/RYrRg5G7+PvuYds+oWhNLKJg4YdVx4Ojk8BQhsSPcALtIFlIfVeWAXr6L0z2+b14ipdHQnWp7f1Pl2+3yfPI5MizIJGemSSjA=
+	t=1739926564; cv=none; b=RCj1Oj0gofSZdQOxu7is0twudYnnDeE00bF2AkykWItKl+iJiyk6zhdR/+sqxXw9NJGp6NaaqwDwpaA1ll/A9f1RZ3TmLBSIHn0DAeKEBC3buF098XXIy5aOcdM19m3UXCkpU6DMywjjIjf47Pt0UxRsZODSFsiGdu018N2TN/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739926533; c=relaxed/simple;
-	bh=IifR8vjFBLOTcIWgGqWJQLnSreQDquGjh+9n+9XMPuQ=;
+	s=arc-20240116; t=1739926564; c=relaxed/simple;
+	bh=Q8Njvk8D6kDQ3abzvEziLAnEihgS+6Zk+gKkrxLSflw=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a0VwFnuQV0eDV1DROl1LuYkMOC7tL5tjbRbtI4VI5PQ7CL5n2qyHGNsI5q9PwnLUVMCyS0yMbpnL2FRpdDSDH6N7tDhFqZ1rXhL8R7nfvKLqkzRTuDps9+n0OmzPUaoMHeXX8o9w8gWuOnAw7Vi+0kYYDr6gH0XdZ1u2w7AjBIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m97RZ45y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B236BC4CEE2;
-	Wed, 19 Feb 2025 00:55:32 +0000 (UTC)
+	 MIME-Version:Content-Type; b=W+TMnTJ41vDqouXI6RUaaXtL3WAS/+lQS6wra4ue2NFdZRL2qSIPBKhGnWSupjRDpN8owsUy9as1v+6c/wUkYTdvVG4YmEC7VFv6xXbcQntoSG2mwZFsQ0DyoYS4aF/q3iVprDifGd6Jj4cWePP2orbXNOAXcOdSpRpgwjP0Jds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ttjaa0F8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85A4C4CEE2;
+	Wed, 19 Feb 2025 00:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739926532;
-	bh=IifR8vjFBLOTcIWgGqWJQLnSreQDquGjh+9n+9XMPuQ=;
+	s=k20201202; t=1739926564;
+	bh=Q8Njvk8D6kDQ3abzvEziLAnEihgS+6Zk+gKkrxLSflw=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=m97RZ45yD0hdQzUwEuJqvfu+zPfkhMzxeuVfH5sA8G4pN6j/B1HpXSFrZIW0qUsT9
-	 ELnqPalER0TxhLT1BJr8gmZrTK7HLPbV7Pu7S0VISvLLmzuPkQA/KyicpqxIZcfqMU
-	 7dhEKsIhc538BAqkVCsCDbIohgEdTXrKoWYP6J7rTmFUIpMP8o5q5bwHIYDg3XW8EM
-	 8LuZSU+RIFIZc1UoDtrAC2TT4I3UpIO0iEWqUV42awpe2exsoHXFSfLbr9VBAz9mB4
-	 3XMCj8QOnegGqYiRNNyDfT6mzhpI07+MgzF2oxeKAFTsz+BsSVAk5KM2FWR6W86qFW
-	 nOQ6IX+URQckg==
-Date: Tue, 18 Feb 2025 16:55:32 -0800
-Subject: [PATCH 08/12] xfs/163: bigger fs for metadir
+	b=Ttjaa0F8TKL1+NQamXGeZT+9/Uf+H80frri32bkFdzKyu8xpV4XR5I5Yc58djWowF
+	 hcmsIxcu8MIcLnW7FMYXa6VTPlGk8SrIEJriwFHFx9llbH4w1Z35kHyrWREctBUCXz
+	 3jIvmYwyrR9AR0s1RgrX0Ja9TSpLtDZb9hMdeFF8VYB8SE003q8lGXRs0X/Bc0BBVT
+	 8es8k6chJOj9vRWtuPVWXqa1t0dfvKb1nju7EPzvh75eL5vr10r9dr1AnlSBJrNXsj
+	 2uYQfyZ/B51mcSvZdJjPV68Fy0bEGwFNbw2mmAKzJ2XJyuULQjCXqbteJThVQ2W+hk
+	 2GEhTNHdgh6ig==
+Date: Tue, 18 Feb 2025 16:56:03 -0800
+Subject: [PATCH 10/12] common/populate: label newly created xfs filesystems
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: zlang@redhat.com, djwong@kernel.org
 Cc: hch@lst.de, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <173992588208.4078751.16040969808269964576.stgit@frogsfrogsfrogs>
+Message-ID: <173992588245.4078751.18091181818919832636.stgit@frogsfrogsfrogs>
 In-Reply-To: <173992588005.4078751.14049444240868988139.stgit@frogsfrogsfrogs>
 References: <173992588005.4078751.14049444240868988139.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -56,31 +56,45 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Adjust filesystem size up so we can pass this test even with metadir
-and rtgroups enabled.
+When we're creating fully populated filesystems, add an obviously weird
+label to the filesystem images so that it's obvious that it's a test
+filesystem.
 
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- tests/xfs/163 |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ common/populate |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 
-diff --git a/tests/xfs/163 b/tests/xfs/163
-index 75c3113dc2fd03..015a82cdffaa68 100755
---- a/tests/xfs/163
-+++ b/tests/xfs/163
-@@ -42,7 +42,7 @@ echo "Format and mount"
+diff --git a/common/populate b/common/populate
+index c907e04efd0ea9..7690f269df8e79 100644
+--- a/common/populate
++++ b/common/populate
+@@ -280,6 +280,10 @@ _scratch_xfs_populate() {
+ 		esac
+ 	done
  
- # agcount = 1 is forbidden on purpose, and need to ensure shrinking to
- # 2 AGs isn't feasible yet. So agcount = 3 is the minimum number now.
--_scratch_mkfs -dsize="$((512 * 1024 * 1024))" -dagcount=3 2>&1 | \
-+_scratch_mkfs -dsize="$((900 * 1024 * 1024))" -dagcount=3 2>&1 | \
- 	tee -a $seqres.full | _filter_mkfs 2>$tmp.mkfs >/dev/null
- . $tmp.mkfs
- t_dblocks=$dblocks
++	# fill the fs label with obvious emoji because nobody uses them in prod
++	# and blkid throws a fit
++	_scratch_xfs_admin -L 'I❤🐸s'
++
+ 	_populate_xfs_qmount_option
+ 	_scratch_mount
+ 
+@@ -537,6 +541,10 @@ _scratch_ext4_populate() {
+ 		esac
+ 	done
+ 
++	# fill the fs label with obvious emoji because nobody uses them in prod
++	# and blkid throws a fit
++	$TUNE2FS_PROG -L 'I❤🐸s' $SCRATCH_DEV
++
+ 	_scratch_mount
+ 	blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
+ 	dblksz="${blksz}"
 
 
