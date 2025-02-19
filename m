@@ -1,55 +1,54 @@
-Return-Path: <linux-xfs+bounces-19855-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19856-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A444A3B102
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 06:45:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F352FA3B108
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 06:47:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2212318944E5
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 05:45:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF0ED173CC6
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 05:47:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 243D91AAA1C;
-	Wed, 19 Feb 2025 05:45:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65292A934;
+	Wed, 19 Feb 2025 05:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7UgvPPW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K34G4urc"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5556A934
-	for <linux-xfs@vger.kernel.org>; Wed, 19 Feb 2025 05:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2337C26ACB
+	for <linux-xfs@vger.kernel.org>; Wed, 19 Feb 2025 05:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739943916; cv=none; b=MpmM0/KU8hQqlVPASZ+oBJasn5arRGRjsaSIipOhREpbq4zwdGs3w/EqwT6mVtk6pivK5PWkl9V/nrNqO0Pm96FF1igkKnlPASeJ57Tx1Jk4S5PsQirQRGChXusWzlv9mGI6AGctajApNpueW7u1Lp7E0YPhMPO40sZwXxOdH58=
+	t=1739944020; cv=none; b=mSITGJ4Kpe6x3P6lTKYPUIIfBpQM3PbjdaYGGkoD0hwTb5EPGIhjFtYY65vfrYPhe/WOQq/Y4qz+vfUJgnxOIEm8e8971C8B04/0chk5xrkePi0+geF1Y9wI2ADLdJQ+33bsUGBm++lDtUmpwTScBnciw8cteDVdptrlEX6EXGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739943916; c=relaxed/simple;
-	bh=XUB2EmvWltgWzxNDdYVxKUQ0g/Bres6/96y1zuxdSFY=;
+	s=arc-20240116; t=1739944020; c=relaxed/simple;
+	bh=m/TRXXH/QORfP5Waen24LSo8h0rJFhLcL1nQFNKce/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/BRaF/fnaejuFHcX7Nb5oqqTNnF4f2bMd0rBTK19yZsnHgSynlDHPnI4zt5ivqYrkIBXjpHmv3XhZf2DxeqUXx4tFI0eJart7ZUg46P5zfCWVvZvKr6G9mwuwg6eBxhLQaVqRPzL7W4uAWieq/6HryG5zRcVJr5SCtVsM1YcMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7UgvPPW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B966C4CED1;
-	Wed, 19 Feb 2025 05:45:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=uTyknlwANdenThGeIOifqMW0419yTg3gHJ2Pid/Ot59VXSnat25O2kB5ojo+t2f57NuX6R+fO6H0vDy1Q4KkMJqMUOn7WDEt/gCJNQ8ltr5eotfmxNHvjrBnhzaQl0957fecB4xanpTH4Ej8Uleh9nAt5xE/pOTT1/32KCv5wB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K34G4urc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A9AC4CED1;
+	Wed, 19 Feb 2025 05:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739943916;
-	bh=XUB2EmvWltgWzxNDdYVxKUQ0g/Bres6/96y1zuxdSFY=;
+	s=k20201202; t=1739944019;
+	bh=m/TRXXH/QORfP5Waen24LSo8h0rJFhLcL1nQFNKce/w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V7UgvPPWiOMD2fgrmI7dSGrmLalGW3Z8+wcyiwdC61aNnQQGVCoK7CFWzu7parezh
-	 GLzNek6OgX3X4OZV/wliUt/9Wy2fLMNQcbtG3bEQje1otnMKC480cdPDxaiv+CSM72
-	 Fdwr22tJ/8Apvm0MU5JqUhc5tfq8xrtWhssSpNoE2lmSeXRGbyBaU3P37zX51d3rbw
-	 hss0BMBfQkdl8jgYw027/amQJQzy2neRQDA0o88RaOzzNIVUBRf/SnkrqD6JZD/IfN
-	 ZtGdp8fSFsSipCLZxBT9BIQdytMcypd7kvGJgOSgwaPLAaKSZauwc6dz4KNNl9zt+y
-	 AdpqWOPjLvkBw==
-Date: Tue, 18 Feb 2025 21:45:15 -0800
+	b=K34G4urcu/sLH8ssqJuZ6okPndRnjgwjyWcKBKXk9DXDCOrK1CgAF6yVVsbvPkDTQ
+	 mQW7dcl0g3i6h5Nq/Gps/zQliOjhsjHkK9i1aOxPeMIVedlZxxeRxESbeVlren0dCv
+	 x891Nv1Ex4VbaFWsax3ypTpZxUfBWBXmKwtmhAOVSUeN4TeRWh+6aymOa7msWqFi4l
+	 kbp+TH98MxSPcbD4yeQN9m0ZFpk9+2iPmV3jwnhy9sBoDul10yqOT7E5s73RWihw99
+	 JtAXOhLD4yhWTpCB1mpHRDwki+Y4SKNjfAPB/BszlBMivyvrOlDeNO8A/tzMqfDqAh
+	 Wr8zUABsdFSiA==
+Date: Tue, 18 Feb 2025 21:46:59 -0800
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] mkfs,xfs_repair: don't pass a daddr as the flags
+To: Andrey Albershteyn <aalbersh@kernel.org>
+Cc: linux-xfs@vger.kernel.org, hch@lst.de
+Subject: [PATCH v1.1 1/2] mkfs,xfs_repair: don't pass a daddr as the flags
  argument
-Message-ID: <20250219054515.GT3028674@frogsfrogsfrogs>
+Message-ID: <20250219054659.GO21808@frogsfrogsfrogs>
 References: <20250219040813.GL21808@frogsfrogsfrogs>
- <20250219053717.GD10173@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -58,26 +57,48 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250219053717.GD10173@lst.de>
+In-Reply-To: <20250219040813.GL21808@frogsfrogsfrogs>
 
-On Wed, Feb 19, 2025 at 06:37:17AM +0100, Christoph Hellwig wrote:
-> On Tue, Feb 18, 2025 at 08:08:13PM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > libxfs_buf_get_uncached doesn't take a daddr argument, so don't pass one
-> > as the flags argument.  Also take the opportunity to use
-> > xfs_buf_set_daddr to set the actual disk address.
-> 
-> Should it take a daddr argument?  I've been wondering that a bit as the
-> interface that doesn't pass one seems a bit odd.
+From: Darrick J. Wong <djwong@kernel.org>
 
-We'd have to change the kernel first, there are libxfs callers with that
-signature.
+libxfs_buf_get_uncached doesn't take a daddr argument, so don't pass one
+as the flags argument.
 
-> The patch itself looks fine, although I don't really see the point in
-> the xfsprogs-only xfs_buf_set_daddr (including the current two callers).
+Cc: <linux-xfs@vger.kernel.org> # v6.13.0
+Fixes: 0d7c490474e5e5 ("mkfs: format realtime groups")
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+---
+v1.1: drop the xfs_buf_set_addr change
+---
+ mkfs/xfs_mkfs.c |    3 +--
+ repair/rt.c     |    2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-Eh, yeah.  Want me to resend with those bits cut out?
-
---D
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index f5556fcc4040ed..86bc9865b1071e 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -4989,8 +4989,7 @@ write_rtsb(
+ 	}
+ 
+ 	error = -libxfs_buf_get_uncached(mp->m_rtdev_targp,
+-				XFS_FSB_TO_BB(mp, 1), XFS_RTSB_DADDR,
+-				&rtsb_bp);
++				XFS_FSB_TO_BB(mp, 1), 0, &rtsb_bp);
+ 	if (error) {
+ 		fprintf(stderr,
+  _("%s: couldn't grab realtime superblock buffer\n"), progname);
+diff --git a/repair/rt.c b/repair/rt.c
+index 5ba04919bc3ccf..e0a4943ee3b766 100644
+--- a/repair/rt.c
++++ b/repair/rt.c
+@@ -616,7 +616,7 @@ rewrite_rtsb(
+  _("couldn't grab primary sb to update realtime sb\n"));
+ 
+ 	error = -libxfs_buf_get_uncached(mp->m_rtdev_targp,
+-			XFS_FSB_TO_BB(mp, 1), XFS_RTSB_DADDR, &rtsb_bp);
++			XFS_FSB_TO_BB(mp, 1), 0, &rtsb_bp);
+ 	if (error)
+ 		do_error(
+  _("couldn't grab realtime superblock\n"));
 
