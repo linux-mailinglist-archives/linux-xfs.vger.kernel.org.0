@@ -1,57 +1,58 @@
-Return-Path: <linux-xfs+bounces-19875-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19876-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67117A3B157
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 07:04:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53EE6A3B15B
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 07:05:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C8D81188AA2D
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 06:03:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 817B516C4F7
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 06:03:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAA371BD00A;
-	Wed, 19 Feb 2025 06:01:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415EC1BBBEA;
+	Wed, 19 Feb 2025 06:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PbKETibu"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tIj7Yqed"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816A18C0B;
-	Wed, 19 Feb 2025 06:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE911BBBCC;
+	Wed, 19 Feb 2025 06:02:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739944880; cv=none; b=Fy1DF7+a+CkWyaJtSyNCcg0kEr3xjiZdFTyOH5Y2mjZrb8jTjhXX9X9JlyF38bn/QxW7jX7KqT49blFb+i584Oxmr76DE/fN2iE2d+x0XvwVoJkOhbPoexHcJVEnykTWqy9RsPenRDf7Ig9rZ+Y8kJQo4e44GFo5N7gQdMqdRl0=
+	t=1739944956; cv=none; b=LsLuRdQPerWD8uKPM31F6cfQOaGLpXM2Sy0WCq0oLpCysddpZAi95FL9l/EoEcVQSRTcqw1gc2jjKynBBJsTncR21SgmxlRZuK9/f4n9QAZpGtmJuo8A+PtB/oYEFL9w0es+EJBgt+47sUgZCReh2X6ZINBOZNPDxROQA5/d/QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739944880; c=relaxed/simple;
+	s=arc-20240116; t=1739944956; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qcifbH1zrr56D4BXz/R2qyUP9lhcAJ+xUq7t13RP6Epp+V9989imO/aGGnPgKNBCKG8JWMktXbEzYhmiyuXXe7UicQzPGTFi/VRnwgkzKyuX/+0ekcvwGG5mWTR1gqR44fJJALPuXPski/an2MeOGW5Fz7B4jqgQQR5iZeYVJ6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PbKETibu; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=NzPS8oQOJluNv36q8T8HU+GlooqREY53aPieTvc4C+Swr88R2o4a5KuGpfdBrT+lMHUTOrbJKc2c/PmFnwAMdAaw8mc3+JmVo3rNTCnmQ0RV+h3aib9f1L6cdo/5B0OYKI6O952BbDcGrR8CT45iWV5KdZGas33JgntMd1lu3IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tIj7Yqed; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=PbKETibuf+GR1eJTlT2JsnJ65c
-	xfoZmAx5l/y3nlv3/pVqckNZ+nMF56h/c3klKY8GJmoEQEke2yUCryLthcRtUf5UsEc7UcE5mwDQg
-	FmeeccfJjkfaHDBTaltRu6c3X19fD1NiuKSSH/mLwnF+876yl03uc1OGith+it+LbyyjBn6HfQuWY
-	pAD2zqogYUin5gJ41me11JO8gvgkdeF2AMU4nIl1Eeo9dFODzQuaq1RnBEnQ/Pku5ydY9iNJ0ZtUs
-	KRbrEgdokdMcOij5OReQ7C7arhypjdMgP8JE+dpiQdkAWQSR0KoE3nbfX0Hn1ZKsJ4CGFoDrny62D
-	J/RKj+Yg==;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=tIj7Yqeddhj9fynNE9K+VKFr+A
+	qKWLmOKgTIuKJAQFNa5hEDn6RrXCqPHFqEhICw8xBk6lad4VNFdfYN8BmBs3/aODPu9VSID0HTDN/
+	1D33vm3GR1ob4yNTfZfT9BzpidEuWD1IgXoEr/ftlUUy7gTgpzAcjxUFgCMZ14x7z+RH8LYV9cjEx
+	q8AeLeM0wa/wfvT4xg6W/zAIQFtIFuEIgWG02Ron3LFNnZqlhpSTlq1Fy09M6sTdvu3SAg+SQ9lSR
+	+mq6o2S2p9YJysj07+Y43WcnTWfJy9qS8k6q8qMFPYkD5GljGlLb/Xavb80lV21m6mAZmTJLQSJo8
+	0jmu2fZQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tkd95-0000000Aynl-0mWM;
-	Wed, 19 Feb 2025 06:01:19 +0000
-Date: Tue, 18 Feb 2025 22:01:19 -0800
+	id 1tkdAI-0000000Az2B-17Ww;
+	Wed, 19 Feb 2025 06:02:34 +0000
+Date: Tue, 18 Feb 2025 22:02:34 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: zlang@redhat.com, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 12/12] xfs/349: reclassify this test as not dangerous
-Message-ID: <Z7Vzr37dSInM08z5@infradead.org>
-References: <173992587345.4078254.10329522794097667782.stgit@frogsfrogsfrogs>
- <173992587625.4078254.2974311211127532100.stgit@frogsfrogsfrogs>
+Subject: Re: [PATCH 01/12] various: fix finding metadata inode numbers when
+ metadir is enabled
+Message-ID: <Z7Vz-t-8E2rvBcMd@infradead.org>
+References: <173992588005.4078751.14049444240868988139.stgit@frogsfrogsfrogs>
+ <173992588079.4078751.10255522611762331320.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -60,7 +61,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <173992587625.4078254.2974311211127532100.stgit@frogsfrogsfrogs>
+In-Reply-To: <173992588079.4078751.10255522611762331320.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
 Looks good:
