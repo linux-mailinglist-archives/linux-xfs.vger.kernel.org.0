@@ -1,54 +1,55 @@
-Return-Path: <linux-xfs+bounces-19783-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19788-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 562C4A3AE75
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:05:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C123A3AE7A
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:05:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51D373B6139
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:01:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B3753B64D1
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:01:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D79CF1BCA0F;
-	Wed, 19 Feb 2025 00:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 682FA19DF99;
+	Wed, 19 Feb 2025 00:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEnKk2kK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IovLG2Ds"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C6C1BC094;
-	Wed, 19 Feb 2025 00:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A5C3F9D5;
+	Wed, 19 Feb 2025 00:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739926642; cv=none; b=b8CEXs19AJedmS7JZA7YOSv+u+JSZNgmaebFujZwVmmCDg7QuG8Auld0tDEb7EQECrtrI3b5UJRmfCJR2dZhWGhAWQ+kjfLZ/ZY68ueVSF8cUg8S3erNIe7XhL6vdHjndAEzetfM/a8mOfC+jeKgOtd3lcJ+qDwQHj8pkFfu+Ps=
+	t=1739926721; cv=none; b=npHFW3AofPbimMXyrgk4p6UjXrD4iP/vLV5X3pStolom0V6ACYAqCS4pXbzfqBnWQgAboAAs0W3k0vLwlI3o73YbiulO1Nj8NA26wjefJ2ZYSiBdIyWR4P/kpjIWZA3G4GpFxH77gacVTG6v6UrqwbmrQfyRpbF2ZB/Bq9CLFP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739926642; c=relaxed/simple;
-	bh=nS/b5UpQ2XQSEk4en6oAUikBAu7RzUS1iB1OGcXPbrs=;
+	s=arc-20240116; t=1739926721; c=relaxed/simple;
+	bh=56Iuf6Y4DdIz5SsfapY9i66r/jNm7mXYmbj5M+hTGrc=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QnpmVVIL+TumCKgzyOW7aIBZGkHwSqbRzkysCiAhy+tJSL7DmNSNHP2tKrVqeIePdpEImd2H4qxapFKhes1RZE7GbeKfhBKxv5QfrRbusW9vsieZ3Mq/zz7MTrTHYBQTQLQDv32LE59cz95JUqZruLfYk139jQgvYnlTA38W5Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEnKk2kK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63CD7C4CEE2;
-	Wed, 19 Feb 2025 00:57:22 +0000 (UTC)
+	 MIME-Version:Content-Type; b=imNwsj0DL4X2H6Y3qgyX6uV5dSWCFZv4JpQZ1LGxqfIGry6dQ9MVaPfP6wc3pdrp33/hbBYmDip2PbsOieeB5m0jFDSdt6T2zqbh5W9q7aNM2uVE9w69mUREnRhAPc2kxlCp4Piv0YQqrrhEfVmJOVKduEbe3xdkqJlJf3jXBaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IovLG2Ds; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A86C4CEE2;
+	Wed, 19 Feb 2025 00:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739926642;
-	bh=nS/b5UpQ2XQSEk4en6oAUikBAu7RzUS1iB1OGcXPbrs=;
+	s=k20201202; t=1739926720;
+	bh=56Iuf6Y4DdIz5SsfapY9i66r/jNm7mXYmbj5M+hTGrc=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=HEnKk2kKwVotZJ9ErtFqAwfATCwYB9sTYrnep0v4RfLEmmOQfNDlTEgEp0JWAmFgG
-	 st78QoHK6FpCsiiDwmdMRiKoL++4zf3JtvXyPFUnMo0f0bWv3uh5q1AUdM5aQWw3fT
-	 6R4VgS4iwAdNWMyksdiLci54icNnj9QqQrWgN/P2IJ3z0QJS68NtUe3xLf3Mq0IJwC
-	 EW77qoVZMyNb9tVDO2519FdJI1vti2KneO1g+bHa6Izh/PF3AAFkVQDN3GfQvD75oZ
-	 Kk/6ioI0pOMdRgyIXrpkAw5iQt+Wxrin++Wv2KzusSK4x0P3WQX2DzyaYv9PKLCTY8
-	 OCrwhPb+NvyDg==
-Date: Tue, 18 Feb 2025 16:57:21 -0800
-Subject: [PATCH 3/4] xfs: test filesystem creation with xfs_protofile
+	b=IovLG2DsXgO688vA2/3wvkvdcGWqbx5oMBXEmmXOKd34kl/xeArsD4hcRUwTsHMpn
+	 F51lFFArsw2LPTnKp+TvaIJqgVu7+bkxQhqba2IE4BsouFzhIGKAzsulUVGS05WPHI
+	 BEO2y/sYRUlyMovcXKurPhGww3FsYiIldoswTg379qAYAnr0AUHtQYsZpGWeUGs4b8
+	 RBoN1rzqhr4UhHESO8lnGmTZZzptWRPUV0nux5Ky7vJ5Bd1LJ+cNPVcaf3AfZLbxbJ
+	 iPgYlF6EnKBVsW+i/j4j3ql36akASfnXP0TBiRN578b5IBQFxGr5j3dQaWjDfW6TN4
+	 4s/t49nPXQulg==
+Date: Tue, 18 Feb 2025 16:58:40 -0800
+Subject: [PATCH 04/15] fuzzy: run fsx on data and rt sections of xfs
+ filesystems equally
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: zlang@redhat.com, djwong@kernel.org
 Cc: hch@lst.de, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <173992588705.4079248.17487544777085276923.stgit@frogsfrogsfrogs>
-In-Reply-To: <173992588634.4079248.2264341183528984054.stgit@frogsfrogsfrogs>
-References: <173992588634.4079248.2264341183528984054.stgit@frogsfrogsfrogs>
+Message-ID: <173992589254.4079457.10498287265932477514.stgit@frogsfrogsfrogs>
+In-Reply-To: <173992589108.4079457.2534756062525120761.stgit@frogsfrogsfrogs>
+References: <173992589108.4079457.2534756062525120761.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -60,155 +61,112 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Test how well we can format a fully populated filesystem with a
-protofile that was generated with xfs_protofile.
+If we're stress-testing scrub on a realtime filesystem, make sure that
+we run fsx on separate files for data and realtime workouts.
 
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- common/config      |    1 
- tests/xfs/1894     |  109 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1894.out |    4 ++
- 3 files changed, 114 insertions(+)
- create mode 100755 tests/xfs/1894
- create mode 100644 tests/xfs/1894.out
+ common/fuzzy |   53 ++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 40 insertions(+), 13 deletions(-)
 
 
-diff --git a/common/config b/common/config
-index 193b7af432dc2b..da12399da421c7 100644
---- a/common/config
-+++ b/common/config
-@@ -161,6 +161,7 @@ export MKSWAP_PROG="$(type -P mkswap)"
- MKSWAP_PROG="$MKSWAP_PROG -f"
+diff --git a/common/fuzzy b/common/fuzzy
+index 39efdb22c71627..1548f372fac58a 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -955,6 +955,14 @@ ___stress_scrub_duration()
+ 	echo "--duration=$delta"
+ }
  
- export XFS_LOGPRINT_PROG="$(type -P xfs_logprint)"
-+export XFS_PROTOFILE_PROG="$(type -P xfs_protofile)"
- export XFS_REPAIR_PROG="$(type -P xfs_repair)"
- export XFS_DB_PROG="$(type -P xfs_db)"
- export XFS_METADUMP_PROG="$(type -P xfs_metadump)"
-diff --git a/tests/xfs/1894 b/tests/xfs/1894
-new file mode 100755
-index 00000000000000..2f6beea2c433bf
---- /dev/null
-+++ b/tests/xfs/1894
-@@ -0,0 +1,109 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2025 Oracle, Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 1894
-+#
-+# Populate a XFS filesystem, use xfs_protofile to recreate the filesystem, and
-+# compare the contents.
-+#
-+. ./common/preamble
-+_begin_fstest auto scrub
-+
-+_cleanup()
-+{
-+	command -v _kill_fsstress &>/dev/null && _kill_fsstress
-+	cd /
-+	test -e "$testfiles" && _unmount $testfiles/mount &>/dev/null
-+	test -e "$testfiles" && rm -r -f $testfiles
++# Run fsx and record outcome
++___scrub_run_fsx() {
++	$FSX_PROG "$@" >> $seqres.full
++	local res=$?
++	echo "fsx $* exits with $res at $(date)" >> $seqres.full
++	test "$res" -ne 0 && touch "$tmp.killfsx"
 +}
 +
-+_register_cleanup "_cleanup" BUS
+ # Run fsx while we're testing online fsck.
+ __stress_scrub_fsx_loop() {
+ 	local end="$1"
+@@ -963,14 +971,33 @@ __stress_scrub_fsx_loop() {
+ 	local stress_tgt="$4"	# ignored
+ 	local focus=(-q -X)	# quiet, validate file contents
+ 	local duration
+-	local res
++	local has_rt
++	local d_args r_args
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
++	test $FSTYP = "xfs" && _xfs_has_feature "$SCRATCH_MNT" realtime && \
++		has_rt=1
+ 
+ 	focus+=(-o $((128000 * LOAD_FACTOR)) )
+ 	focus+=(-l $((600000 * LOAD_FACTOR)) )
+ 
+-	local args="$FSX_AVOID ${focus[@]} ${SCRATCH_MNT}/fsx.$seq"
+-	echo "Running $FSX_PROG $args" >> $seqres.full
++	if [ -n "$has_rt" ]; then
++		local rdir="$SCRATCH_MNT/rt"
++		local ddir="$SCRATCH_MNT/data"
+ 
++		mkdir -p "$rdir" "$ddir"
++		$XFS_IO_PROG -c 'chattr +rt' "$rdir"
++		$XFS_IO_PROG -c 'chattr -rt' "$ddir"
 +
-+_require_command "$XFS_PROTOFILE_PROG" xfs_protofile
-+_require_test
-+_require_scratch
-+_require_scrub
-+_require_populate_commands
-+
-+make_md5()
-+{
-+	(cd $1 ; find . -type f -print0 | xargs -0 md5sum) > $tmp.md5.$2
-+}
-+
-+cmp_md5()
-+{
-+	(cd $1 ; md5sum --quiet -c $tmp.md5.$2)
-+}
-+
-+make_stat()
-+{
-+	# columns:	raw mode in hex,
-+	# 		major rdev for special
-+	# 		minor rdev for special
-+	# 		uid of owner
-+	# 		gid of owner
-+	# 		file type
-+	# 		total size
-+	# 		name
-+	# We can't directly control directory sizes so filter them.
-+	(cd $1 ; find . -print0 |
-+		xargs -0 stat -c '%f %t:%T %u %g %F %s %n' |
-+		sed -e 's/ directory [1-9][0-9]* / directory SIZE /g' |
-+		sort) > $tmp.stat.$2
-+}
-+
-+cmp_stat()
-+{
-+	diff -u $tmp.stat.$1 $tmp.stat.$2
-+}
-+
-+testfiles=$TEST_DIR/$seq
-+mkdir -p $testfiles/mount
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill >> $seqres.full 2>&1
-+_scratch_mount
-+
-+_run_fsstress -n 1000 -d $SCRATCH_MNT/newfiles
-+
-+make_stat $SCRATCH_MNT before
-+make_md5 $SCRATCH_MNT before
-+
-+kb_needed=$(du -k -s $SCRATCH_MNT | awk '{print $1}')
-+img_size=$((kb_needed * 2))
-+test "$img_size" -lt $((300 * 1024)) && img_size=$((300 * 1024))
-+
-+echo "Clone image with protofile"
-+$XFS_PROTOFILE_PROG $SCRATCH_MNT > $testfiles/protofile
-+
-+truncate -s "${img_size}k" $testfiles/image
-+if ! _try_mkfs_dev -p $testfiles/protofile $testfiles/image &> $tmp.mkfs; then
-+	cat $tmp.mkfs >> $seqres.full
-+
-+	# mkfs.xfs' protofile parser has some limitations in what it can copy
-+	# in from the prototype files.  If a source file has more than 64k
-+	# worth of xattr names then formatting will fail because listxattr
-+	# cannot return that much information.
-+	if grep -q 'Argument list too long' $tmp.mkfs; then
-+		_notrun "source filesystem was too large"
++		r_args="$FSX_AVOID ${focus[*]} $rdir/fsx"
++		d_args="$FSX_AVOID ${focus[*]} $ddir/fsx"
++		echo "Running $FSX_PROG $d_args" >> $seqres.full
++		echo "Running $FSX_PROG $r_args" >> $seqres.full
++	else
++		d_args="$FSX_AVOID ${focus[*]} $SCRATCH_MNT/fsx"
++		echo "Running $FSX_PROG $d_args" >> $seqres.full
 +	fi
-+	cat $tmp.mkfs
-+fi
 +
-+_mount $testfiles/image $testfiles/mount
-+
-+echo "Check file contents"
-+make_stat $testfiles/mount after
-+cmp_stat before after
-+cmp_md5 $testfiles/mount before
-+_unmount $testfiles/mount
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1894.out b/tests/xfs/1894.out
-new file mode 100644
-index 00000000000000..5dd46993549187
---- /dev/null
-+++ b/tests/xfs/1894.out
-@@ -0,0 +1,4 @@
-+QA output created by 1894
-+Format and populate
-+Clone image with protofile
-+Check file contents
++	rm -f "$tmp.killfsx"
+ 	if [ -n "$remount_period" ]; then
+ 		local mode="rw"
+ 		local rw_arg=""
+@@ -980,10 +1007,10 @@ __stress_scrub_fsx_loop() {
+ 			test "$mode" = "rw" && __stress_scrub_clean_scratch && continue
+ 
+ 			duration=$(___stress_scrub_duration "$end" "$remount_period")
+-			$FSX_PROG $duration $args $rw_arg >> $seqres.full
+-			res=$?
+-			echo "$mode fsx exits with $res at $(date)" >> $seqres.full
+-			test "$res" -ne 0 && break
++			___scrub_run_fsx $duration $d_args $rw_arg &
++			test -n "$has_rt" && ___scrub_run_fsx $duration $r_args $rw_arg &
++			wait
++			test -e "$tmp.killfsx" && break
+ 
+ 			if [ "$mode" = "rw" ]; then
+ 				mode="ro"
+@@ -999,7 +1026,7 @@ __stress_scrub_fsx_loop() {
+ 				sleep 0.2
+ 			done
+ 		done
+-		rm -f "$runningfile"
++		rm -f "$runningfile" "$tmp.killfsx"
+ 		return 0
+ 	fi
+ 
+@@ -1007,12 +1034,12 @@ __stress_scrub_fsx_loop() {
+ 		# Need to recheck running conditions if we cleared anything
+ 		__stress_scrub_clean_scratch && continue
+ 		duration=$(___stress_scrub_duration "$end" "$remount_period")
+-		$FSX_PROG $duration $args >> $seqres.full
+-		res=$?
+-		echo "fsx exits with $res at $(date)" >> $seqres.full
+-		test "$res" -ne 0 && break
++		___scrub_run_fsx $duration $d_args &
++		test -n "$has_rt" && ___scrub_run_fsx $duration $r_args &
++		wait
++		test -e "$tmp.killfsx" && break
+ 	done
+-	rm -f "$runningfile"
++	rm -f "$runningfile" "$tmp.killfsx"
+ }
+ 
+ # Run fsstress and record outcome
 
 
