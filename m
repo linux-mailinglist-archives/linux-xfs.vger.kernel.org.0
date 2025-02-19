@@ -1,53 +1,53 @@
-Return-Path: <linux-xfs+bounces-19787-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19789-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD3D8A3AE5E
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:03:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 879C3A3AE45
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:02:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E21F21899FF7
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:01:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C15637A4DFA
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:00:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B366B3597C;
-	Wed, 19 Feb 2025 00:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CCC282D91;
+	Wed, 19 Feb 2025 00:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9VkWzQt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+ZbsAKi"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F183DDD3;
-	Wed, 19 Feb 2025 00:58:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444B881724;
+	Wed, 19 Feb 2025 00:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739926705; cv=none; b=nMv9SVvNk7yQaT7gXXNcJQt4KM6jwEfBH5vou4Ri5v1qv59muUOfwndrWHijsVtgo9KZ4VdR5DaWiV0XAInVNxNrOgG28x6/yAXK7lqx7rLGMFOhOAMhvij45bIZUwwyg54o5X+XBZ3tm3xXzCCygUIdYEJsd5YEKKhgeqtJLG4=
+	t=1739926736; cv=none; b=ZRfOVcyVq0h4TsnaexgTLM2qCqCH+Toq5eHs1By9WycE4z+qda+53Kh4eprRxRmQnKFXMrVvk4R2zZnZROLpqRj1/odfzeb+JTfTVibEtZ2QSvKapka1oADxb9ThIoloUgD32jN92PQSrxeK8kE/Sl0tNpD2+oQ+0ky9fAfjkoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739926705; c=relaxed/simple;
-	bh=yw01JJVhph53oetXG5itZyW4BHx7L0yOGTwNLg7grRQ=;
+	s=arc-20240116; t=1739926736; c=relaxed/simple;
+	bh=ofR2nfAv6ZdrOoUdpGDrZifQWcILDaZXQ3B7wGvAI/k=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j7ereotZjgzSTaOE//FwDHndidsDH/yCSL60znI8DQxeUg3dZ/kfYWeNRlaUenAIEQyBKmModvooX4LWbI/JVChhfX0ktpYTwyPl4rP1cQ9tJx2nxuOoPRnnD4f0ra12XhrDA9oTMSJcn8zJc7JqS9MpDvRxah0UiX9ZL/LjNYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9VkWzQt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59D8C4CEE2;
-	Wed, 19 Feb 2025 00:58:24 +0000 (UTC)
+	 MIME-Version:Content-Type; b=Nw9VSP80TJr+6kATusXhvZrarxJirSXyyt57IZ4H8wGiaj64wiyc2pKIdvlygNmy7IncapLiSLCrb3doXcNgixGFMbZTlYCVA0U8xd415V3Wwgnu0rpGM/WAO8pQeJwjOcK1JWnW0kHSRN5y+pIXTIozHQclKsOtu+BlUL/pM6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+ZbsAKi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1572AC4CEE2;
+	Wed, 19 Feb 2025 00:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739926704;
-	bh=yw01JJVhph53oetXG5itZyW4BHx7L0yOGTwNLg7grRQ=;
+	s=k20201202; t=1739926736;
+	bh=ofR2nfAv6ZdrOoUdpGDrZifQWcILDaZXQ3B7wGvAI/k=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=q9VkWzQtnE0fMKCGb+VQ7UpRigRV3dsyMifCFP+Xcnro706fJxxyViOX0kbZs8KnL
-	 9gG0k3iuH3agcgvgbWTaKoE9O8NzOxFo4if7mUhIA6jIcKCWdI5Rc3bKxilcBD5NkM
-	 K+tbuenARg+7Pkj7xvi+hnF8YdHQbLxPFGtGxWiiZapMCeuygkP5Yzi0j/BUaIPjHH
-	 8l1C5gmM/6tVTYzF/BtoqThrW/TeLUyGyFBsWeg05xDPKbh+/DHeJtFDhQU+oumpLl
-	 JtCbrFwhUPFQ0azYxthoqPl/7/hl5J+JYfdf7OkiK9Mkio/tOwjGB/Ixm1j5GK1qPg
-	 MUS7bY4+KEunQ==
-Date: Tue, 18 Feb 2025 16:58:24 -0800
-Subject: [PATCH 03/15] fuzzy: stress data and rt sections of xfs filesystems
- equally
+	b=e+ZbsAKi3bU3Juewi29FkhRAEJZSb6SfBkWBZ6HSOl/ALC95v9s7dHDt4vLTV2U+k
+	 O6b6v6XE8+Ak0by/f0PWMUIHlIBKP4To5VmnMLziP2sXMVF1zLWOLfd1o1VlNVGgRi
+	 OpeO8XRL85tjxshbrFVb/StQ4SujsaFZdmLl/fXBMo7jbJZKcx8JXDCQMitbmOr8D+
+	 6PawGWG3i+MeP8WgZIP8HPa+Bd0KjaQgFa7KrcMQjvUz9+kxwP7Y6kmk5TjCCfTcSR
+	 1ZX+9gwRLP4hQKd7+J5rSns0EzeFyl1krQX2XXzTbAJA6vAhGEfE7fqQIpYTsI1r4p
+	 V866YEksmSzGQ==
+Date: Tue, 18 Feb 2025 16:58:55 -0800
+Subject: [PATCH 05/15] common/ext4: reformat external logs during mdrestore
+ operations
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: zlang@redhat.com, djwong@kernel.org
 Cc: hch@lst.de, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <173992589235.4079457.2842406217553234453.stgit@frogsfrogsfrogs>
+Message-ID: <173992589272.4079457.17538661785920086668.stgit@frogsfrogsfrogs>
 In-Reply-To: <173992589108.4079457.2534756062525120761.stgit@frogsfrogsfrogs>
 References: <173992589108.4079457.2534756062525120761.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -61,119 +61,85 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If we're stress-testing scrub on a realtime filesystem, make sure that
-we run fsstress on separate directory trees for data and realtime
-workouts.
+The e2image file format doesn't support the capture of external log
+devices, which means that mdrestore ought to reformat the external log
+to get the restored filesystem to work again.  The common/populate code
+could already do this, so push it to the common ext4 helper.
+
+While we're at it, fix the uncareful usage of SCRATCH_LOGDEV in the
+populate code.
 
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- common/fuzzy |   56 ++++++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 42 insertions(+), 14 deletions(-)
+ common/ext4     |   17 ++++++++++++++++-
+ common/populate |   18 +++++-------------
+ 2 files changed, 21 insertions(+), 14 deletions(-)
 
 
-diff --git a/common/fuzzy b/common/fuzzy
-index ee9fe75609e603..39efdb22c71627 100644
---- a/common/fuzzy
-+++ b/common/fuzzy
-@@ -1015,15 +1015,28 @@ __stress_scrub_fsx_loop() {
- 	rm -f "$runningfile"
+diff --git a/common/ext4 b/common/ext4
+index 13921bb8165a4d..e1b336d3d20cba 100644
+--- a/common/ext4
++++ b/common/ext4
+@@ -134,7 +134,8 @@ _ext4_mdrestore()
+ {
+ 	local metadump="$1"
+ 	local device="$2"
+-	shift; shift
++	local logdev="$3"
++	shift; shift; shift
+ 	local options="$@"
+ 
+ 	# If we're configured for compressed dumps and there isn't already an
+@@ -148,6 +149,20 @@ _ext4_mdrestore()
+ 	test -r "$metadump" || return 1
+ 
+ 	$E2IMAGE_PROG $options -r "${metadump}" "${SCRATCH_DEV}"
++	res=$?
++	test $res -ne 0 && return $res
++
++	# ext4 cannot e2image external logs, so we have to reformat the log
++	# device to match the restored fs
++	if [ "${logdev}" != "none" ]; then
++		local fsuuid="$($DUMPE2FS_PROG -h "${SCRATCH_DEV}" 2>/dev/null | \
++				grep 'Journal UUID:' | \
++				sed -e 's/Journal UUID:[[:space:]]*//g')"
++		$MKFS_EXT4_PROG -O journal_dev "${logdev}" \
++				-F -U "${fsuuid}"
++		res=$?
++	fi
++	return $res
  }
  
-+# Run fsstress and record outcome
-+___scrub_run_fsstress() {
-+	_run_fsstress "$@"
-+	local res=$?
-+	echo "fsstress $* exits with $res at $(date)" >> $seqres.full
-+	test "$res" -ne 0 && touch "$tmp.killstress"
-+}
-+
- # Run fsstress while we're testing online fsck.
- __stress_scrub_fsstress_loop() {
- 	local end="$1"
- 	local runningfile="$2"
- 	local remount_period="$3"
- 	local stress_tgt="$4"
--	local focus=()
--	local res
-+	local focus=(-p 4)
-+	local res res2
- 	local duration
-+	local has_rt
-+	local d_args r_args
-+
-+	test $FSTYP = "xfs" && _xfs_has_feature "$SCRATCH_MNT" realtime && \
-+		has_rt=1
+ # this test requires the ext4 kernel support crc feature on scratch device
+diff --git a/common/populate b/common/populate
+index e6804cbc6114ba..32dc5275e2debd 100644
+--- a/common/populate
++++ b/common/populate
+@@ -1034,20 +1034,12 @@ _scratch_populate_restore_cached() {
+ 		return $?
+ 		;;
+ 	"ext2"|"ext3"|"ext4")
+-		_ext4_mdrestore "${metadump}" "${SCRATCH_DEV}"
+-		ret=$?
+-		test $ret -ne 0 && return $ret
++		local logdev=none
++		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
++			logdev=$SCRATCH_LOGDEV
  
- 	case "$stress_tgt" in
- 	"parent")
-@@ -1113,9 +1126,24 @@ __stress_scrub_fsstress_loop() {
+-		# ext4 cannot e2image external logs, so we have to reformat
+-		# the scratch device to match the restored fs
+-		if [ -n "${SCRATCH_LOGDEV}" ]; then
+-			local fsuuid="$($DUMPE2FS_PROG -h "${SCRATCH_DEV}" 2>/dev/null | \
+-					grep 'Journal UUID:' | \
+-					sed -e 's/Journal UUID:[[:space:]]*//g')"
+-			$MKFS_EXT4_PROG -O journal_dev "${SCRATCH_LOGDEV}" \
+-					-F -U "${fsuuid}"
+-		fi
+-		return 0
++		_ext4_mdrestore "${metadump}" "${SCRATCH_DEV}" "${logdev}"
++		return $?
  		;;
  	esac
- 
--	local args=$(_scale_fsstress_args -p 4 -d $SCRATCH_MNT "${focus[@]}")
--	echo "Running $FSSTRESS_PROG $args" >> $seqres.full
-+	if [ -n "$has_rt" ]; then
-+		local rdir="$SCRATCH_MNT/rt"
-+		local ddir="$SCRATCH_MNT/data"
- 
-+		mkdir -p "$rdir" "$ddir"
-+		$XFS_IO_PROG -c 'chattr +rt' "$rdir"
-+		$XFS_IO_PROG -c 'chattr -rt' "$ddir"
-+
-+		r_args=$(_scale_fsstress_args -d "$rdir" "${focus[@]}")
-+		d_args=$(_scale_fsstress_args -d "$ddir" "${focus[@]}")
-+		echo "Running $FSSTRESS_PROG $d_args" >> $seqres.full
-+		echo "Running $FSSTRESS_PROG $r_args" >> $seqres.full
-+	else
-+		d_args=$(_scale_fsstress_args -d $SCRATCH_MNT "${focus[@]}")
-+		echo "Running $FSSTRESS_PROG $d_args" >> $seqres.full
-+	fi
-+
-+	rm -f "$tmp.killstress"
- 	if [ -n "$remount_period" ]; then
- 		local mode="rw"
- 		local rw_arg=""
-@@ -1125,10 +1153,10 @@ __stress_scrub_fsstress_loop() {
- 			test "$mode" = "rw" && __stress_scrub_clean_scratch && continue
- 
- 			duration=$(___stress_scrub_duration "$end" "$remount_period")
--			_run_fsstress $duration $args $rw_arg >> $seqres.full
--			res=$?
--			echo "$mode fsstress exits with $res at $(date)" >> $seqres.full
--			[ "$res" -ne 0 ] && break;
-+			___scrub_run_fsstress $duration $d_args $rw_arg &
-+			test -n "$has_rt" && ___scrub_run_fsstress $duration $r_args $rw_arg &
-+			wait
-+			test -e "$tmp.killstress" && break
- 
- 			if [ "$mode" = "rw" ]; then
- 				mode="ro"
-@@ -1144,7 +1172,7 @@ __stress_scrub_fsstress_loop() {
- 				sleep 0.2
- 			done
- 		done
--		rm -f "$runningfile"
-+		rm -f "$runningfile" "$tmp.killstress"
- 		return 0
- 	fi
- 
-@@ -1152,12 +1180,12 @@ __stress_scrub_fsstress_loop() {
- 		# Need to recheck running conditions if we cleared anything
- 		__stress_scrub_clean_scratch && continue
- 		duration=$(___stress_scrub_duration "$end" "$remount_period")
--		_run_fsstress $duration $args >> $seqres.full
--		res=$?
--		echo "$mode fsstress exits with $res at $(date)" >> $seqres.full
--		[ "$res" -ne 0 ] && break;
-+		___scrub_run_fsstress $duration $d_args &
-+		test -n "$has_rt" && ___scrub_run_fsstress $duration $r_args &
-+		wait
-+		test -e "$tmp.killstress" && break
- 	done
--	rm -f "$runningfile"
-+	rm -f "$runningfile" "$tmp.killstress"
- }
- 
- # Make sure we have everything we need to run stress and scrub
+ 	return 1
 
 
