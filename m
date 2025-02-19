@@ -1,55 +1,55 @@
-Return-Path: <linux-xfs+bounces-19796-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-19777-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5240A3AE66
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:04:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE0CCA3AE6D
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 02:04:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50BA816B550
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:02:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D90F63B5496
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Feb 2025 01:00:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA54518FDAF;
-	Wed, 19 Feb 2025 01:00:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C89351B87E4;
+	Wed, 19 Feb 2025 00:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHKy2fyz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6hPZN5y"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8208E7DA95;
-	Wed, 19 Feb 2025 01:00:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8281846B8;
+	Wed, 19 Feb 2025 00:55:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739926846; cv=none; b=Fh9bVsbnfzkM9HLYjFcXKLM30Px4mWBhrUmfmsK5Z84Ii66v4dkU0Gj4jzOxqHiruASfYBQjE4TPebrleizBpWX09c3F03M4LOgW/VfJlUkaNbawuW9fry3aAPgYlBPy3KRBpwDQTrpKlmGJTdQjxeZ2owNYgYkgH5lZsQGMptQ=
+	t=1739926548; cv=none; b=Fi4sITOa8wI3tAlUnYIIZyB9qBRXlogFf16+Y4ZCC8MM74gC5E1h2TCVrnKnUF0UAIebmWiP5ex0L519fpkSZVsPJ/75fZnCiXNZJwFwWA0+r2AHnhy6umx7gHTekEWoBVIKRoLNKavIc3DydeJCiMJLhiCe5krMCcTzuvCmG0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739926846; c=relaxed/simple;
-	bh=PJ0wG4kzUFFDoIBvAW8Lc76GLCxurPmCxMq5cRuW8Ok=;
+	s=arc-20240116; t=1739926548; c=relaxed/simple;
+	bh=3QbeNl/V+p/fnJ42oucvesTX9fQDE5vnBewFl9gkrBg=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qbv9BX/mSNNb8yJVxSy2ToxDROyldjEBps6iGSSFMc47uxX+3fACAKc1SYySUGA+DdfNHCFGd1/MJMiXmulmjdTNEXzsbT/epFT6zAnV27pirYmvrWH/xs0tGv9udAh7EpmGlnZAETqEa/Ch7DBIfmj9YqQy+8MU3I0CzAl+Zro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHKy2fyz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE6FC4CEE2;
-	Wed, 19 Feb 2025 01:00:45 +0000 (UTC)
+	 MIME-Version:Content-Type; b=qH1Mt1InIJSOmICNUJ3E+bc0cpa0C9qyedpTL6K4gEKLlVAdkiW3qg9uT4wd3xo6Gz8OUhSIOhRX5chvzO36xrfdZO8DYytFJYGj/8MFyZdWgZOs4f19Qdxjo58LHh4/ocHwWVu/FTWCauFM3rujmZR6tofxV+RVqaqkR42mjlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6hPZN5y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 587D8C4CEE2;
+	Wed, 19 Feb 2025 00:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739926845;
-	bh=PJ0wG4kzUFFDoIBvAW8Lc76GLCxurPmCxMq5cRuW8Ok=;
+	s=k20201202; t=1739926548;
+	bh=3QbeNl/V+p/fnJ42oucvesTX9fQDE5vnBewFl9gkrBg=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=HHKy2fyzWHiRMs7NGBBgEK4RRKzeVb3B4DLA2xnefzg6/Fg0XPTlXuxwTC0SFNrTu
-	 qnJjy9HwLrOIFOsTDg/0V2mnio0/5WZ2jbshlb1FbTI5j4L7dbyc+1ksEqXFmTt2f9
-	 4h+xb+nbN5CRZkV1Sz05BRcf5wPtbWG7nZHwZs5fCpzRGfOMUjBFGdbYz5j5i7Hr7Y
-	 Y1TzMUQ0DmjBNq7JT9edRI+DzEhnaMCq8PBdbSIbWnnbmqXaOAZ5Hbmxvs7iK8U47a
-	 9N2p1ImRWwe7IiBgNFf7JzH0lZeIIb1shiKBQOvGrk3hZ3Lyhf6d3K/V0bTY8IMAPS
-	 oDKAOMsLGbkwg==
-Date: Tue, 18 Feb 2025 17:00:45 -0800
-Subject: [PATCH 12/15] xfs/271,xfs/556: fix tests to deal with rtgroups output
- in bmap/fsmap commands
+	b=Q6hPZN5yLBybfmbOKIQmdXdcPu1aaVObz+w/+BW6mUqskMOp490GwhNG2w8jliibX
+	 Itjnqt/nyBlAfUqjLHnAGcvyeyHU4txnO//pL1i3wwoY8+5GkGSNkVI6qZr/PwTtAN
+	 rgXWLQFYfPI4nMRC6FEdkB/9g6wN1orj5AW1jeYKF/gXNkak9gfJwqPrQKC645HyeC
+	 zercdjEAfxkh5claluHBAeRF8tLrhxRj1FNlNu/6PntGHMeYtBjGv9lvfXBC4maBMF
+	 gnR6gzXCRuFYjZuiJLV1dGMxrJ/95PK3KmYvzY1cZYArLS58pF0okAGu+IbyHrEfrP
+	 ccSv+Uz7kHKDQ==
+Date: Tue, 18 Feb 2025 16:55:47 -0800
+Subject: [PATCH 09/12] xfs/122: disable this test for any codebase that knows
+ about metadir
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: zlang@redhat.com, djwong@kernel.org
 Cc: hch@lst.de, linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Message-ID: <173992589400.4079457.7456085852406287416.stgit@frogsfrogsfrogs>
-In-Reply-To: <173992589108.4079457.2534756062525120761.stgit@frogsfrogsfrogs>
-References: <173992589108.4079457.2534756062525120761.stgit@frogsfrogsfrogs>
+Message-ID: <173992588226.4078751.3774851302421682128.stgit@frogsfrogsfrogs>
+In-Reply-To: <173992588005.4078751.14049444240868988139.stgit@frogsfrogsfrogs>
+References: <173992588005.4078751.14049444240868988139.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -61,87 +61,33 @@ Content-Transfer-Encoding: 7bit
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fix these tests to deal with the xfs_io bmap and fsmap commands printing
-out realtime group numbers if the feature is enabled.
+All of the ondisk structure size checks from this test were copied to
+the build time checks in xfs_ondisk.h.  This means that the kernel and
+xfsprogs build processes check the structure sizes, which means that
+fstests no longer needs to do that.
 
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- common/xfs    |    7 +++++++
- tests/xfs/271 |    4 +++-
- tests/xfs/556 |   16 ++++++++++------
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ tests/xfs/122 |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
 
-diff --git a/common/xfs b/common/xfs
-index 547e91167718e9..5a829637dc1cfb 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -419,6 +419,13 @@ _xfs_has_feature()
- 		feat="rtextents"
- 		feat_regex="[1-9][0-9]*"
- 		;;
-+	"rtgroups")
-+		# any fs with rtgroups enabled will have a nonzero rt group
-+		# size, even if there is no rt device (and hence zero actual
-+		# groups)
-+		feat="rgsize"
-+		feat_regex="[1-9][0-9]*"
-+		;;
- 	esac
+diff --git a/tests/xfs/122 b/tests/xfs/122
+index a968948841de14..e96ef2fe93042b 100755
+--- a/tests/xfs/122
++++ b/tests/xfs/122
+@@ -15,6 +15,12 @@ _begin_fstest other auto quick clone realtime
  
- 	local answer="$($XFS_INFO_PROG "$fs" 2>&1 | grep -E -w -c "$feat=$feat_regex")"
-diff --git a/tests/xfs/271 b/tests/xfs/271
-index 420f4e7479220a..8a71746d6eaede 100755
---- a/tests/xfs/271
-+++ b/tests/xfs/271
-@@ -29,6 +29,8 @@ _scratch_mkfs > "$seqres.full" 2>&1
- _scratch_mount
+ _require_command "$INDENT_PROG" indent
  
- agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
-+agcount_wiggle=0
-+_xfs_has_feature $SCRATCH_MNT rtgroups && agcount_wiggle=1
- 
- # mkfs lays out btree root blocks in the order bnobt, cntbt, inobt, finobt,
- # rmapbt, refcountbt, and then allocates AGFL blocks.  Since GETFSMAP has the
-@@ -46,7 +48,7 @@ cat $TEST_DIR/fsmap >> $seqres.full
- 
- echo "Check AG header" | tee -a $seqres.full
- grep 'static fs metadata[[:space:]]*[0-9]*[[:space:]]*(0\.\.' $TEST_DIR/fsmap | tee -a $seqres.full > $TEST_DIR/testout
--_within_tolerance "AG header count" $(wc -l < $TEST_DIR/testout) $agcount 0 -v
-+_within_tolerance "AG header count" $(wc -l < $TEST_DIR/testout) $agcount $agcount_wiggle -v
- 
- echo "Check freesp/rmap btrees" | tee -a $seqres.full
- grep 'per-AG metadata[[:space:]]*[0-9]*[[:space:]]*([0-9]*\.\.' $TEST_DIR/fsmap | tee -a $seqres.full > $TEST_DIR/testout
-diff --git a/tests/xfs/556 b/tests/xfs/556
-index 79e03caf40a0a5..83d5022e700c8b 100755
---- a/tests/xfs/556
-+++ b/tests/xfs/556
-@@ -45,16 +45,20 @@ victim=$SCRATCH_MNT/a
- file_blksz=$(_get_file_block_size $SCRATCH_MNT)
- $XFS_IO_PROG -f -c "pwrite -S 0x58 0 $((4 * file_blksz))" -c "fsync" $victim >> $seqres.full
- unset errordev
--_xfs_is_realtime_file $victim && errordev="RT"
++# We ported all the ondisk size checks to xfs_ondisk.h in both the kernel and
++# xfsprogs libxfs when we added the metadir feature.  If mkfs supports metadir
++# then we don't have to run this test anymore.
++$MKFS_XFS_PROG --help 2>&1 | grep -q metadir && \
++	_notrun "struct size checks moved to libxfs/xfs_ondisk.h"
 +
-+awk_len_prog='{print $6}'
-+if _xfs_is_realtime_file $victim; then
-+	if ! _xfs_has_feature $SCRATCH_MNT rtgroups; then
-+		awk_len_prog='{print $4}'
-+	fi
-+	errordev="RT"
-+fi
- bmap_str="$($XFS_IO_PROG -c "bmap -elpv" $victim | grep "^[[:space:]]*0:")"
- echo "$errordev:$bmap_str" >> $seqres.full
- 
- phys="$(echo "$bmap_str" | $AWK_PROG '{print $3}')"
--if [ "$errordev" = "RT" ]; then
--	len="$(echo "$bmap_str" | $AWK_PROG '{print $4}')"
--else
--	len="$(echo "$bmap_str" | $AWK_PROG '{print $6}')"
--fi
-+len="$(echo "$bmap_str" | $AWK_PROG "$awk_len_prog")"
-+
- fs_blksz=$(_get_block_size $SCRATCH_MNT)
- echo "file_blksz:$file_blksz:fs_blksz:$fs_blksz" >> $seqres.full
- kernel_sectors_per_fs_block=$((fs_blksz / 512))
+ # Starting in Linux 6.1, the EFI log formats were adjusted away from using
+ # single-element arrays as flex arrays.
+ _wants_kernel_commit 03a7485cd701 \
 
 
