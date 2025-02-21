@@ -1,101 +1,157 @@
-Return-Path: <linux-xfs+bounces-20042-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20048-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE06BA4012F
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2025 21:39:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53953A402E0
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2025 23:39:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80B1A3ADA3C
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2025 20:39:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 711ED1899B49
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2025 22:39:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99A0B200121;
-	Fri, 21 Feb 2025 20:39:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4D4A255E36;
+	Fri, 21 Feb 2025 22:38:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJB+txSt"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I+efmKN9"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A571D7E2F;
-	Fri, 21 Feb 2025 20:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03C0205510;
+	Fri, 21 Feb 2025 22:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740170368; cv=none; b=Z56giF0Egro0XHIrrfimtBRQaBmUWGiIhoykDHb5QrT97YwcPjZkFAxlMbxtvYTFdg4tV5UyrBP/Kkk7TdTcS0ct8kZzBAR7jumfZ/Y19PRIw9Si4CtrDo7cA6kCTxMb+43uMuxHumPo3Cg7CKDVbDoX5SOYKJxW31bOZoGb9qQ=
+	t=1740177512; cv=none; b=aas2LEGcSZg70lY8QMWmr0ofKukUvw+HOeAiLU5nHYupj4KJRWARL/Yhe7wLldxbMw+ISQrQVC0ldzUWBMSuf620KNi2e345R4B2DjrGSp+RMjJmrug+i/db+iRJdbZovVefaN0Y+oPrXVmGWB1uOnkjdpc0B/WZsg7j/QwhBkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740170368; c=relaxed/simple;
-	bh=AaAq8ScKNC8Uf0VCPH0436/Qy7v9E5DOBbn/7rwwYEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d3gjGSIRJKW548sbidg7GXNC35+m4vpICybpPZhcuOR26egaXs3bYX98B6iFnATwiD7F7GOqCPF36MdmU48SJiuDwidZUd0kCZ51fimKeWS7geO08G2Oaha6UvA0MqQfRpvcQIAh1ZpdKhthYwf56IWy8mEXrCMHCSmrbWWfBMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJB+txSt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A91C4CED6;
-	Fri, 21 Feb 2025 20:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740170367;
-	bh=AaAq8ScKNC8Uf0VCPH0436/Qy7v9E5DOBbn/7rwwYEI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EJB+txStwZOOPjF/n00d8dhU+GyXoQAD+7dp35olNNHVeOnt47wVzTVoQuMXbJ2YN
-	 00atFNwAuUKOGCTVvn6UOerfW/7aur8/rUOCERu0bIVPHI/1a140Nx34b2tkiZAji4
-	 +vFwSP/8MnQPR4BpA84R4f9IRfFwWR6vRxtDyTk20GEzTuGQzTMqB3M94A0wbcA5/D
-	 nLLGMYX5K00ZVzNiZjLCbcwj1QZEDMNV2rEH/ZK4GQeQE/CBsQZ5JRNc31Dr9FAFCs
-	 xo+/DYO8Y5IEBXql++0SaRztis/tJgsKAc1iJ0c1D4cuNhE/pk8x6i2F4Iz+U/EP7g
-	 zoWsASugxLc3w==
-Date: Fri, 21 Feb 2025 12:39:24 -0800
+	s=arc-20240116; t=1740177512; c=relaxed/simple;
+	bh=SzJwHUlL6vPv0BoUlO8UoQfRW+eugmww/taSYEPPiTw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XSIJjiejCin1UwZnRhm/mmpyevV6QceIcCXATntxgLiOk6bg9gzHgsJbSR0tw58FChJ0oR+i4Jn79X2JOrIxs5dCmnSXkKeDcqQQBQ2a9vvHFSys0H2flmmhQNN4YHzKr2sTzNfuslA5rQ57gyzPnpK2VysIHZ3K9JHuXMMRYHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=I+efmKN9; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=4Yzv/nSyDkCuldaOJn0MRJPjn/HMn3cvqTHPYuyv38A=; b=I+efmKN9OQCcGMEyHthsbQDodd
+	lZLSZKT0tO4FzvqHV1I37zMGOjMWCHzKDjPZKtDkbfMvFiEQ5BXu26z5VPoAbZ3f0O9uA8BgPmRiN
+	8pAEucPSBRrj/WzfrQ91Fj029tRUwPtVDPLNrw3DSKQHp5JF1VJ+Hgk5BaXy/38+dd+NFW9U8NZ74
+	BucdYgHzeJUhzBg2bgFskls3/ch0wtkGZBnTcLr3Ry065+jZE2GGN5gvu8dBoZkw/gzsFLt1C5zQS
+	fQz7vo0RMWl6FtbOQHWJsM/XnJr/bDiSbdqNnzpqXZUo2wYddolsnJHwJ35eB2zRbo7objkbYCgKk
+	PYJ9v0pQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tlbf7-000000073Cy-2vQ2;
+	Fri, 21 Feb 2025 22:38:25 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Hannes Reinecke <hare@suse.de>, dave@stgolabs.net, david@fromorbit.com,
-	djwong@kernel.org, kbusch@kernel.org, john.g.garry@oracle.com,
-	hch@lst.de, ritesh.list@gmail.com, linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-	linux-block@vger.kernel.org, gost.dev@samsung.com,
-	p.raghav@samsung.com, da.gomez@samsung.com, kernel@pankajraghav.com
-Subject: Re: [PATCH v2 4/8] fs/mpage: use blocks_per_folio instead of
- blocks_per_page
-Message-ID: <Z7jkfD6IK5KVPrPK@bombadil.infradead.org>
-References: <20250204231209.429356-1-mcgrof@kernel.org>
- <20250204231209.429356-5-mcgrof@kernel.org>
- <Z7Ow_ib2GDobCXdP@casper.infradead.org>
- <a4ba2d82-1f42-4d70-bf66-56ef9c037cca@suse.de>
- <Z7jM8p5boAOOxz_j@bombadil.infradead.org>
- <Z7jhpdQfygJ1AAwp@casper.infradead.org>
+To: brauner@kernel.org,
+	akpm@linux-foundation.org,
+	hare@suse.de,
+	willy@infradead.org,
+	dave@stgolabs.net,
+	david@fromorbit.com,
+	djwong@kernel.org,
+	kbusch@kernel.org
+Cc: john.g.garry@oracle.com,
+	hch@lst.de,
+	ritesh.list@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-block@vger.kernel.org,
+	gost.dev@samsung.com,
+	p.raghav@samsung.com,
+	da.gomez@samsung.com,
+	kernel@pankajraghav.com,
+	mcgrof@kernel.org
+Subject: [PATCH v3 0/8] enable bs > ps for block devices
+Date: Fri, 21 Feb 2025 14:38:15 -0800
+Message-ID: <20250221223823.1680616-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7jhpdQfygJ1AAwp@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Fri, Feb 21, 2025 at 08:27:17PM +0000, Matthew Wilcox wrote:
-> On Fri, Feb 21, 2025 at 10:58:58AM -0800, Luis Chamberlain wrote:
-> > +++ b/fs/mpage.c
-> > @@ -152,6 +152,7 @@ static struct bio *do_mpage_readpage(struct mpage_readpage_args *args)
-> >  {
-> >  	struct folio *folio = args->folio;
-> >  	struct inode *inode = folio->mapping->host;
-> > +	const unsigned min_nrpages = mapping_min_folio_nrpages(folio->mapping);
-> >  	const unsigned blkbits = inode->i_blkbits;
-> >  	const unsigned blocks_per_folio = folio_size(folio) >> blkbits;
-> >  	const unsigned blocksize = 1 << blkbits;
-> > @@ -172,6 +173,8 @@ static struct bio *do_mpage_readpage(struct mpage_readpage_args *args)
-> >  
-> >  	/* MAX_BUF_PER_PAGE, for example */
-> >  	VM_BUG_ON_FOLIO(folio_test_large(folio), folio);
-> > +	VM_BUG_ON_FOLIO(args->nr_pages < min_nrpages, folio);
-> > +	VM_BUG_ON_FOLIO(!IS_ALIGNED(args->nr_pages, min_nrpages), folio);
-> >  
-> >  	if (args->is_readahead) {
-> >  		opf |= REQ_RAHEAD;
-> 
-> Also, I don't think these assertions add any value; we already assert
-> these things are true in other places.
+Christian, Andrew,
 
-Sure, it may not have been clear to others but that doesn't mean we
-need to be explicit about that in code, the commit log can justify this
-alone. Will remove.
+This v3 series addresses the feedback from the v2 series [0]. The only
+patch which was mofified was the patch titled "fs/mpage: use blocks_per_folio
+instead of blocks_per_page". The motivation for this series is to mainly
+start supporting block devices with logical block sizes larger than 4k,
+we do this by addressing buffer-head support required for the block
+device cache.
 
-  Luis
+In the future these changes can be leveraged to also start experimenting
+with LBS support for filesystems which support only buffer-heads. This
+paves the way for that work.
+
+Its perhaps is surprising to some but since this also lifts the block
+device cache sector size support to 64k, devices which support up to
+64k sector sizes can also leverage this to enable filesystems created with
+larger sector sizes up to 64k sector sizes. The filesystem sector size
+is used or documented in a bit of obscurity except for few filesystems,
+but in short it ensures that the filesystem itself will not generate
+writes iteslef smaller than the specified sector size. In practice this
+means you can constrain metadata writes as well to a minimum size, and
+so be completely deterministic with regards to the specified sector size
+for min IO writes. For example since XFS can supports up to 32k sector size,
+it means with these changes enable filesystems to also be created on x86_64
+with both the filesystem block size and sector size to 32k, now that the block
+device cache limitation is lifted.
+
+Since this touches buffer-heads I've ran this through fstests on ext4
+and found no new regressions. I've also used blktests against a kernel
+built with these changes to test block devices with different larger logical
+block sizes than 4k on x86_64. All changes to be able to test block
+devices with a logical block size support > 4k are now merged on
+upstream blktests.  I've tested the block layer with blktests with block
+devices with logical block sizes up to 64k which is the max we are
+currently supporting and found no new regressions.
+
+Detailed changes in this series:
+
+  - Modifies the commit log for "fs/buffer: remove batching from async
+    read" as per Willy's request and collects his SOB.
+  - Collects Reviewed-by tags
+  - The patch titled "fs/mpage: use blocks_per_folio instead of blocks_per_page"
+    received more love to account for Willy's point
+    that we should keep accounting in order for nr_pages on mpage. This
+    does this by using folio_nr_pages() on the args passed and adjusts
+    the last_block accounting accordingly.
+  - Through code inspection fixed folio_zero_segment() use to use
+    folio_size() as we move to suppor large folios for unmapped
+    folio segments on do_mpage_readpage(), this is dealt with on the
+    patch titled "fs/mpage: use blocks_per_folio instead of blocks_per_page"
+    as that's when we start accounting large folios into the picture.
+
+[0] https://lkml.kernel.org/r/20250204231209.429356-1-mcgrof@kernel.org
+
+Hannes Reinecke (2):
+  fs/mpage: avoid negative shift for large blocksize
+  block/bdev: enable large folio support for large logical block sizes
+
+Luis Chamberlain (5):
+  fs/buffer: simplify block_read_full_folio() with bh_offset()
+  fs/mpage: use blocks_per_folio instead of blocks_per_page
+  fs/buffer fs/mpage: remove large folio restriction
+  block/bdev: lift block size restrictions to 64k
+  bdev: use bdev_io_min() for statx block size
+
+Matthew Wilcox (1):
+  fs/buffer: remove batching from async read
+
+ block/bdev.c           | 11 ++++----
+ fs/buffer.c            | 58 +++++++++++++++++-------------------------
+ fs/mpage.c             | 49 +++++++++++++++++------------------
+ include/linux/blkdev.h |  8 +++++-
+ 4 files changed, 59 insertions(+), 67 deletions(-)
+
+-- 
+2.47.2
+
 
