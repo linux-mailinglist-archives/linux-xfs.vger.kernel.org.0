@@ -1,189 +1,127 @@
-Return-Path: <linux-xfs+bounces-20046-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20052-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 430C5A402DB
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2025 23:39:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C13ECA40432
+	for <lists+linux-xfs@lfdr.de>; Sat, 22 Feb 2025 01:34:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D5B3189360F
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Feb 2025 22:38:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51B117003B1
+	for <lists+linux-xfs@lfdr.de>; Sat, 22 Feb 2025 00:34:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DE4B254B07;
-	Fri, 21 Feb 2025 22:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF60035948;
+	Sat, 22 Feb 2025 00:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qfI+6CVA"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="OUaLZ8oR"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DDE2054EC;
-	Fri, 21 Feb 2025 22:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A443D97A
+	for <linux-xfs@vger.kernel.org>; Sat, 22 Feb 2025 00:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740177512; cv=none; b=vGBKeR9Aa4HIeu9Zd8eMPNXtXKGlYxESaKhoWbaEpZG1OONCjiSh0Y82m1tUg9qx8hdx9VNbgst/O2jzucHVI96/MBiqpGbovVF8UxtQwjvWr0eIea3urhEh65oRpSb3tycV0Hp4El/LST2Q+J7+qtMamHE9L3VfLkro1xkQ3lo=
+	t=1740184453; cv=none; b=lWqO6vdvp3ZLCCg5aZj0z12zAB39a0+tTGawNJ7yskr9wHAry22RC3pxXqGQIAQhLS+cFdK+HSSM7FqGRsf/9uci2uKSGauHYavPcp1JT+oW5h56uwoOm3dw3HmbSjsJFvq/IvTfJcZpjSOi8ypR+sD9qzjBqM7kV1aMT3FDAIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740177512; c=relaxed/simple;
-	bh=cpFeSl7V1siK2jIrJWc8/1O6vqPGiI+x+UOItHwJfNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q7JeKQAjLg3SAFJ9iZUz5PLDT6Bins2GYXh5LyA1EZFmKoT4wGv/cUB34CFb+0lu9JVM7uYykghzBqzydcLBqCV9PPCrdd+m26yUoce3cAHFVyr+UWivd06RT35Yaackk7U4smIwiIeLUS0CnV6SeCaZmoVVnLTR7JkYLYMcURc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qfI+6CVA; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=dPYsaEMRasFiFhMNTtOpkluc57HIzwvU4rUiMYmi9nk=; b=qfI+6CVA3tipgW2HoFB+Sph6kC
-	ojVbYPteH2HN9YNIRQNgabxVOxbyu3vzNyWvcv3QbydCSqjtYEdETy6GhjYsXGmXOCgLRADt5Riul
-	gId1AxDN9dF2oJR5t3/LL0ik7MU+eLrERaAhdwNDmE+OwEgiGDfgIepYOT7kwkzzJ7oOkWQt5vtyx
-	f9kws4SbOJoxp26AbIBPJq6lE0zge4Mc3mCg891tFx45dI0gbb4dw2do/e3cbtflZ1JWK7hmP3Fxk
-	oeIUsxXFbB/ahkHzLQcFsLTsiMgkf978tsMNCly6+41cEHR4AljXIfdUIbUuP0CE6LZ+QsyN1B5cn
-	gBsm3zOQ==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tlbf7-000000073DH-49mH;
-	Fri, 21 Feb 2025 22:38:25 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: brauner@kernel.org,
-	akpm@linux-foundation.org,
-	hare@suse.de,
-	willy@infradead.org,
-	dave@stgolabs.net,
-	david@fromorbit.com,
-	djwong@kernel.org,
-	kbusch@kernel.org
-Cc: john.g.garry@oracle.com,
-	hch@lst.de,
-	ritesh.list@gmail.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-block@vger.kernel.org,
-	gost.dev@samsung.com,
-	p.raghav@samsung.com,
-	da.gomez@samsung.com,
-	kernel@pankajraghav.com,
-	mcgrof@kernel.org
-Subject: [PATCH v3 8/8] bdev: use bdev_io_min() for statx block size
-Date: Fri, 21 Feb 2025 14:38:23 -0800
-Message-ID: <20250221223823.1680616-9-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250221223823.1680616-1-mcgrof@kernel.org>
-References: <20250221223823.1680616-1-mcgrof@kernel.org>
+	s=arc-20240116; t=1740184453; c=relaxed/simple;
+	bh=VBQHljTSYFVCaj1bbqPfTOtZckZuFzfefk82naOnO1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pgB9Aa4MFSsxZeqNhYj0iBUIDZhM2RzE1ofgaLq4R6oTi0LjKXv+lbz2sKffcyVEGuqNNKy5YrvworrcjBuiPfmeZZ6VmLeXaVtBt2y9pQ41xw0sCDQQwPDtx2fN2D1/tLjHXekd3WIb7PVwupz5Ba2Fq4bJTr47/QIE1qkcplE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=OUaLZ8oR; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6ef60e500d7so23714497b3.0
+        for <linux-xfs@vger.kernel.org>; Fri, 21 Feb 2025 16:34:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1740184450; x=1740789250; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vwm1CmURc5ve7fRU7CIVjr3XJe8XTIamKjt5b8I2oxA=;
+        b=OUaLZ8oRu1P66C9ZZZkX3ynr5GVCRqOCfxm+eS10iyjZ/PQSQVzJcOLZ6xUj2SVdYN
+         M4K8v7SJJNGtsVfIa8UAf/TytFgQB7jB17v0YqxAZeaJ0z7poxTRKJtsLNNfDGLEzCtl
+         seyhz1IBRRwX+if/gK7lWjT9j8r22Ve4Q5tw8y7tH4v0VO86On+zdAarH3tOUkuAZpC+
+         42QHcKAyfH9frZU0Zmd2KD7X742j4GBihhNWnbrr+XZUDJUe8nnJrCAFuMuLqqZIBe++
+         7xlE0daBQ4baD0AJRZFXYr9quFZHlK3q3UVtm8HMqcrK9PO0mdFobh1wMMbzoIxycBMQ
+         K8pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740184450; x=1740789250;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vwm1CmURc5ve7fRU7CIVjr3XJe8XTIamKjt5b8I2oxA=;
+        b=PtTrdQgbOF+ma8/0bMoM7039mfEE53JYUcfCqidsdsOXY0LGfeNYgbFbePCxuJwtof
+         tDG2s8hjKl/2UpNiEaIK/USf7O4wwpjBaXymBpqrGml5ZEqZjob5fBOz8IRj/rbNMfMj
+         GAmlScjqYzlVuOl06smO0OubgvpEzVgXribcl9hCsoIDWHpys6j4fyYufIjlv8PLUz5/
+         w2iW2tyQfQjc3mvwtUyazCpptutqoT+ujGLaqiTuKuIFw8jpwyXBtBiTtat9hFZULjH3
+         Z0jj7rnkZqodOd4RP2hJ/TqbBmE8xcGYrJpF+/vnwUa6c4Pko/SgrhfDHG+sSE1qz6c1
+         gJrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVR9zuhQyVynMXGJ0ONwDBH4uuu8nF9+30GWH5bfT7nMQeeeBmecVhIG9GEW5bM+HoLdv3twPTpE2A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye8PQhxKztcL3ZMLoWRRipQMXiiVPihHZ82tbYqIcJF/wJmUMz
+	omf/bKHrub5SsBhqVIKePMnl/W2kDlWPgS2P5LYJQ4/bQo7OXmaO95BqA7G46InhCmRS5ge0/tn
+	1Uya9mxvNdT/DTE5MhLFzSfBRl6f3UWkr2lww
+X-Gm-Gg: ASbGnctpg6kGOxpJnpNEk5ZvJUuSX01HK886AFYYxYO8bEHF/XvjYWIm5KiAq/6Zhdf
+	hkchJnqvsUEot46LLUaRkFzKp9YB/JVAspN0SR+wXkEpXMlIaqF0khXeHAQSWlteDGYPJolrfmM
+	4EiqQWBdU=
+X-Google-Smtp-Source: AGHT+IHU8mqrXQveakYlLhZ7AQnDt8Huldya+naR0jPDiYuZo2FksnUyR3yBLKwefOB052PduAKRpiO/vKqO0ObiYCs=
+X-Received: by 2002:a05:690c:3506:b0:6f6:c937:2cf4 with SMTP id
+ 00721157ae682-6fbcc81835dmr37934927b3.23.1740184450404; Fri, 21 Feb 2025
+ 16:34:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+References: <20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org> <20250221.ahB8jei2Chie@digikod.net>
+In-Reply-To: <20250221.ahB8jei2Chie@digikod.net>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 21 Feb 2025 19:33:59 -0500
+X-Gm-Features: AWEUYZkJvdf7eQZPTJrwhKnqZP-Y8wnVSUpipQ3Me6WvrrB1wQej040Y9lsHrww
+Message-ID: <CAHC9VhSnP=j_T30ctVmzQ8TwhD6YFcrWhLbqa_oG3WSAPUPOaA@mail.gmail.com>
+Subject: Re: [PATCH v3] fs: introduce getfsxattrat and setfsxattrat syscalls
+To: Andrey Albershteyn <aalbersh@redhat.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Cc: Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-You can use lsblk to query for a block device block device block size:
+On Fri, Feb 21, 2025 at 10:08=E2=80=AFAM Micka=C3=ABl Sala=C3=BCn <mic@digi=
+kod.net> wrote:
+>
+> It looks security checks are missing.  With IOCTL commands, file
+> permissions are checked at open time, but with these syscalls the path
+> is only resolved but no specific access seems to be checked (except
+> inode_owner_or_capable via vfs_fileattr_set).
 
-lsblk -o MIN-IO /dev/nvme0n1
-MIN-IO
- 4096
+Thanks for reviewing the patch and catching this Micka=C3=ABl.  I agree
+with the hooks identified and their placement; it should be fairly
+straightforward with only a few lines added in each case.
 
-The min-io is the minimum IO the block device prefers for optimal
-performance. In turn we map this to the block device block size.
-The current block size exposed even for block devices with an
-LBA format of 16k is 4k. Likewise devices which support 4k LBA format
-but have a larger Indirection Unit of 16k have an exposed block size
-of 4k.
-
-This incurs read-modify-writes on direct IO against devices with a
-min-io larger than the page size. To fix this, use the block device
-min io, which is the minimal optimal IO the device prefers.
-
-With this we now get:
-
-lsblk -o MIN-IO /dev/nvme0n1
-MIN-IO
- 16384
-
-And so userspace gets the appropriate information it needs for optimal
-performance. This is verified with blkalgn against mkfs against a
-device with LBA format of 4k but an NPWG of 16k (min io size)
-
-mkfs.xfs -f -b size=16k  /dev/nvme3n1
-blkalgn -d nvme3n1 --ops Write
-
-     Block size          : count     distribution
-         0 -> 1          : 0        |                                        |
-         2 -> 3          : 0        |                                        |
-         4 -> 7          : 0        |                                        |
-         8 -> 15         : 0        |                                        |
-        16 -> 31         : 0        |                                        |
-        32 -> 63         : 0        |                                        |
-        64 -> 127        : 0        |                                        |
-       128 -> 255        : 0        |                                        |
-       256 -> 511        : 0        |                                        |
-       512 -> 1023       : 0        |                                        |
-      1024 -> 2047       : 0        |                                        |
-      2048 -> 4095       : 0        |                                        |
-      4096 -> 8191       : 0        |                                        |
-      8192 -> 16383      : 0        |                                        |
-     16384 -> 32767      : 66       |****************************************|
-     32768 -> 65535      : 0        |                                        |
-     65536 -> 131071     : 0        |                                        |
-    131072 -> 262143     : 2        |*                                       |
-Block size: 14 - 66
-Block size: 17 - 2
-
-     Algn size           : count     distribution
-         0 -> 1          : 0        |                                        |
-         2 -> 3          : 0        |                                        |
-         4 -> 7          : 0        |                                        |
-         8 -> 15         : 0        |                                        |
-        16 -> 31         : 0        |                                        |
-        32 -> 63         : 0        |                                        |
-        64 -> 127        : 0        |                                        |
-       128 -> 255        : 0        |                                        |
-       256 -> 511        : 0        |                                        |
-       512 -> 1023       : 0        |                                        |
-      1024 -> 2047       : 0        |                                        |
-      2048 -> 4095       : 0        |                                        |
-      4096 -> 8191       : 0        |                                        |
-      8192 -> 16383      : 0        |                                        |
-     16384 -> 32767      : 66       |****************************************|
-     32768 -> 65535      : 0        |                                        |
-     65536 -> 131071     : 0        |                                        |
-    131072 -> 262143     : 2        |*                                       |
-Algn size: 14 - 66
-Algn size: 17 - 2
-
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- block/bdev.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/block/bdev.c b/block/bdev.c
-index 22806ce11e1d..3bd948e6438d 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -1276,9 +1276,6 @@ void bdev_statx(struct path *path, struct kstat *stat,
- 	struct inode *backing_inode;
- 	struct block_device *bdev;
- 
--	if (!(request_mask & (STATX_DIOALIGN | STATX_WRITE_ATOMIC)))
--		return;
--
- 	backing_inode = d_backing_inode(path->dentry);
- 
- 	/*
-@@ -1305,6 +1302,8 @@ void bdev_statx(struct path *path, struct kstat *stat,
- 			queue_atomic_write_unit_max_bytes(bd_queue));
- 	}
- 
-+	stat->blksize = bdev_io_min(bdev);
-+
- 	blkdev_put_no_open(bdev);
- }
- 
--- 
-2.47.2
-
+--=20
+paul-moore.com
 
