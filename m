@@ -1,121 +1,83 @@
-Return-Path: <linux-xfs+bounces-20085-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20092-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E07A3A4251D
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2025 16:04:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCD15A42600
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2025 16:18:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA6BC3B8715
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2025 14:46:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D739189A8B8
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Feb 2025 15:12:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72F1915442C;
-	Mon, 24 Feb 2025 14:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D774A17C21C;
+	Mon, 24 Feb 2025 15:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jQGzbz0c"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fY6buU8b"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9571E24EF8F
-	for <linux-xfs@vger.kernel.org>; Mon, 24 Feb 2025 14:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66F018BC36
+	for <linux-xfs@vger.kernel.org>; Mon, 24 Feb 2025 15:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408338; cv=none; b=fhcvKNm/rqTCUQEpqBdtdwNBcJxLxUxfAOvY+56xSv3XApPdXPs2bpO7Vc6ZfG4uWW+6162kpuuyJhYDyjFYJt9HLYXoRMj3D1n78jchp0kNH6VYSDFYGHthosyMPWP9X1clS+MTWtMJ80QHQ+sM29kZg13PlVj9oPtzG/HyQ4A=
+	t=1740409908; cv=none; b=T7st08Dbqva3EI5jV0mcVoAgNej2uXekguOw95Xh5VOorXXxvtoLtC0sURWJOenJRGg34/320O4baH5ejG147ue1ha2nhBVn3hDy+nkEl9TQl9029QsKhrtE5nOl9lL1lY3FOfqqFNA+sgqka3tvs1o9zNtqaiy2QuxKq7m0j6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408338; c=relaxed/simple;
-	bh=j2Z1IZLlvSar+KKw/lOOG5Nj2051ElfgVGncxY0sfEU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dcbc7u871IePNMbyxUB66kU2gcqk3s3G/Qx5cCZ6ydbic1ybcNovwik/D4YoHnfk/balyWRVGrOO6aOsAW/3ZiZoeJo6Rp4GwtJEOJ1JrjNhbOrrubweUyDYLuuYpmfzXijvYEDOGHFXvv/yXECxpYem8IQJYne7Fu7ViYuhsQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jQGzbz0c; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740408335;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/50YoxcClbm8VBalwlKPG61QNGbv8mkZkX5giUEfsyw=;
-	b=jQGzbz0cGlPOf8rzoDfc3swNj8o7ZWek9kRZAQ3A+ZHyrC22v5jQKkgfX3ig9+lp5vt6vS
-	cNtY7nUI5WBRLRl4rW1NexOOQF57Bh0zrDLV5o+0jsmv8SjVpNqcGRSRwAJ+ldT0lrnE8t
-	DYEE3m46z+dOK5DE7SpRh8440fI3Ku0=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-85-kB37VTtWOjuAJVDz6AM7og-1; Mon,
- 24 Feb 2025 09:45:29 -0500
-X-MC-Unique: kB37VTtWOjuAJVDz6AM7og-1
-X-Mimecast-MFC-AGG-ID: kB37VTtWOjuAJVDz6AM7og_1740408329
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF03D190F9EA;
-	Mon, 24 Feb 2025 14:45:28 +0000 (UTC)
-Received: from bfoster.redhat.com (unknown [10.22.88.79])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EE77A19560AA;
-	Mon, 24 Feb 2025 14:45:27 +0000 (UTC)
-From: Brian Foster <bfoster@redhat.com>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	Christoph Hellwig <hch@infradead.org>,
-	"Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH v3 07/12] dax: advance the iomap_iter on unshare range
-Date: Mon, 24 Feb 2025 09:47:52 -0500
-Message-ID: <20250224144757.237706-8-bfoster@redhat.com>
-In-Reply-To: <20250224144757.237706-1-bfoster@redhat.com>
-References: <20250224144757.237706-1-bfoster@redhat.com>
+	s=arc-20240116; t=1740409908; c=relaxed/simple;
+	bh=zFwM3LHW2RSUgL9d76I0AOQONskat8pZyFEYBTxUnBI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fZWChPCRAc3v7Zd9qFENciXPnNezEkRVJ5ji+c4hUI6uWSRr582KXpYdiBdyBtewRYIxhEL7A/0GeoYVt93R6cxTGiyJmWkFhbopMTvl+hnTl411WO5uj5PukD/+ytqe1RvSr/Fnj/w+DUzbCWYMrlupe2gGRXArS+k6uAHJrcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fY6buU8b; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=rmUauIIAR8V9NC9ZsM4fxL4bHhkpcW3ro06fkxt0XFc=; b=fY6buU8bNK7GHY708sjtNadgQN
+	jQsfx1oS7t14CFtVMQzwTcpKd/p3iDRdmmNsafFvfbZ9TA/V2ZjXRJalZWL1JzpclFJiW6LGtN30P
+	PHT2WqbzSat6u6o3MWhSlIsg91mvlqLY48MPilZdFDP+qlhGNSk7z3CIoAtQCt/ax+9jkv0px/txG
+	zDsge1YYt1zQGfK1LIOIvZe4TftSacTUgAtC+2fMlO/fSAFAMJVavWpMQoV31H85TOhGHG4kxgEKC
+	FhceRrLA9z7hX6l8/GeYiqJThCfadXH9iNZwvDDPb985wQXId5OgCCl3+2FJc35FEkT5IvFZ3k1DO
+	4Fboa9ZQ==;
+Received: from syn-035-131-028-085.biz.spectrum.com ([35.131.28.85] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tma7W-0000000EEfj-0xf1;
+	Mon, 24 Feb 2025 15:11:46 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Carlos Maiolino <cem@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	linux-xfs@vger.kernel.org
+Subject: buffer cache simplifications v2
+Date: Mon, 24 Feb 2025 07:11:34 -0800
+Message-ID: <20250224151144.342859-1-hch@lst.de>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Advance the iter and return 0 or an error code for success or
-failure.
+Hi all,
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
----
- fs/dax.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+this series reduces some superlfous work done in the buffer cache.  Most
+notable an extra workqueue context switch for synchronous I/O, and
+tracking of in-flight I/O for buffers where that is not needed.
 
-diff --git a/fs/dax.c b/fs/dax.c
-index f4d8c8c10086..c0fbab8c66f7 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1266,11 +1266,11 @@ static s64 dax_unshare_iter(struct iomap_iter *iter)
- 	u64 copy_len = iomap_length(iter);
- 	u32 mod;
- 	int id = 0;
--	s64 ret = 0;
-+	s64 ret = iomap_length(iter);
- 	void *daddr = NULL, *saddr = NULL;
- 
- 	if (!iomap_want_unshare_iter(iter))
--		return iomap_length(iter);
-+		return iomap_iter_advance(iter, &ret);
- 
- 	/*
- 	 * Extend the file range to be aligned to fsblock/pagesize, because
-@@ -1307,7 +1307,9 @@ static s64 dax_unshare_iter(struct iomap_iter *iter)
- 
- out_unlock:
- 	dax_read_unlock(id);
--	return dax_mem2blk_err(ret);
-+	if (ret < 0)
-+		return dax_mem2blk_err(ret);
-+	return iomap_iter_advance(iter, &ret);
- }
- 
- int dax_file_unshare(struct inode *inode, loff_t pos, loff_t len,
--- 
-2.48.1
+Changes since v1:
+ - add a comment explaining the __xfs_buf_ioend return value
+ - fix a function name reference in a commit message
 
+Diffstat:
+ xfs_buf.c         |  182 ++++++++++++++++++------------------------------------
+ xfs_buf.h         |    7 --
+ xfs_buf_mem.c     |    2 
+ xfs_log_recover.c |    2 
+ xfs_mount.c       |    7 --
+ xfs_rtalloc.c     |    2 
+ xfs_trace.h       |    1 
+ 7 files changed, 71 insertions(+), 132 deletions(-)
 
