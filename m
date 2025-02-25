@@ -1,233 +1,191 @@
-Return-Path: <linux-xfs+bounces-20180-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20182-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AD5FA449B3
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2025 19:10:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3C84A44C8F
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2025 21:22:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC575424AD8
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2025 18:08:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D99FA3ADF04
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Feb 2025 20:21:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8274918C035;
-	Tue, 25 Feb 2025 18:08:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC04221540;
+	Tue, 25 Feb 2025 20:17:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LlCb/xCw";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="avmPtxSc"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OJWfAvqA"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7617B1891AA;
-	Tue, 25 Feb 2025 18:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740506880; cv=fail; b=DHKL2lWy69HlbVLiJgKQoheuB9JqSU8cRJTvdHJqP6G1H763v9Qfd9kwCBkYvcLZQuWQK7bBSNGs/J/+7xM7bma/Xms0niYzolh0KTTeARAxcxonnoK51ldOz/pwD9jgneQpBOYBIkAL93nwbbJ4OcDfFkuEGop4ohIjtyOoz4Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740506880; c=relaxed/simple;
-	bh=ap4Wh+OWGpq1Slk1UO7Yv7l+IXtnh53tmKEkmhD1vv4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OECAzSa9k57ChkziCEJ/B/KfZ3PxA+vH7Oly+eoIOijnkK3j0Kwrs0R5FfJpPIzvovBdrUGj4JuGDwtf73zaxF0LEQ1dHFuNcecN8mwPxUGdbF32IBe4X5LFCR9f3a5YhBz9KvGzWuu5Zc4cIsjt781oG/imn4UVHVU88g8zOxQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LlCb/xCw; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=avmPtxSc; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PHtaRq008556;
-	Tue, 25 Feb 2025 18:07:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=mcTKyLO5IBKmwSJPRhEnTjGeAvrx4IL4ASGGNFqpCPY=; b=
-	LlCb/xCwtLL7RHZu7koV3GUbRAfN3WvQtf18qkNRvQhEd2WLWpT6Te/fjF5PSnMi
-	YDe7iJebFxhDiTSxJW2OjbSJ2eYxehoqA0Xg8fq5cA5iip01U9mPCIZOg9GxyHnD
-	2sA42fV3hj4cSkzrWAalghIoNBryjMEYm9ELEk4Jb+gboIlTo7TF2lH4G98WQcUE
-	XDwLcYJJOVuU6Zddw38caSjWoThEZf0gqEMIx5lbCdJIFnuQ6bPk3jbjba/ZNuVA
-	/Qq+QB9Lnh+DCfJRJTyAtBFFXZ1aBgkH7zPgJFeGsRGvW/F+yAhQfHPlp+2wKgSR
-	CKsU6tvRkKxnKm+rdOR+vQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y5c2e0h8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 18:07:49 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51PHnqDT024414;
-	Tue, 25 Feb 2025 18:07:48 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2042.outbound.protection.outlook.com [104.47.55.42])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y519mnnm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 18:07:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u+06C4emhu8yPJnqCUUMlb+m9N1f3jviZG+vFpaomPacAz0NbcDS5cjgWQrjtC+Dyera/A0eoFe1rjwTLREooCGSNe5OQ8MdVqoRMkFrvO8/cPqX7d+Gt+23QrBRsjl6Xgy7jRmY3bGXHGH9Sm8VqsSiy87Qm8Vay15F3s/tj+vw08OtO9G5e0C+cvgVOvEELGaUh4HvNbu/+w+qdXPIesqSlsMIvb5OH89W9H3o8LP4cjes0qMdjDuioz/RW93zYpFq0DZoNsZiSpYCNcHnhz5qKlce/oWnsRgayQPImY1HWgAmvrPiRN1cYYruLepKQdZEbOtOQWviO/Eoq71q2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mcTKyLO5IBKmwSJPRhEnTjGeAvrx4IL4ASGGNFqpCPY=;
- b=Tq3aMqONxAzRlrRB5FDah9OFTb2xb4oWSahXvQUKyW7o5lcaA3C2+6LJcBT+trD2tkMmx0nhXSvrimBjSIKuiLwlMaMCmH3lt6vVXHy+WCBwdrQEg/fnWPGVaJ68GMOeaLdrLiN8uZo9Z3bJqGjspYQekhADHv4N7g1pra0sqRZmCEPtORk5CwGKaXK6R/nqMwND1c03uplmLN6OTLVlZ9P/rHGdEJoo0kmv4a2oBc5T2mQrVVrM9E/y/vUTMkutBBqRIwfGSXM/mKPbVgZ0pkV40clxHL6EGyST8LvDqIcHdPXj8YLdkObPckeEbkfCMOHA6nTKRD7FWGPyS2w4NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mcTKyLO5IBKmwSJPRhEnTjGeAvrx4IL4ASGGNFqpCPY=;
- b=avmPtxScQrZTCh1NN2+aFWPaKZqszCO9h62CwyzLkyB60qMFo+/nHQ05UN1W4HqWoIse6cx+Onln2dhLICmCZTD4WTu4OIjjOqmK9OqfCFg3Jdb5Ud/Vtok04RkVOdj911W3elEEM/N6dkCxChcuGnjsGUx86SaPeM9NBjdHwMk=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by DM4PR10MB7507.namprd10.prod.outlook.com (2603:10b6:8:187::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Tue, 25 Feb
- 2025 18:07:44 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.8466.020; Tue, 25 Feb 2025
- 18:07:44 +0000
-Message-ID: <d022ac8c-6ef5-4f3e-8788-d3e2a5d4bc7c@oracle.com>
-Date: Tue, 25 Feb 2025 18:07:41 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/11] xfs: Commit CoW-based atomic writes atomically
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
-        ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu,
-        linux-ext4@vger.kernel.org
-References: <20250213135619.1148432-1-john.g.garry@oracle.com>
- <20250213135619.1148432-10-john.g.garry@oracle.com>
- <20250224202034.GE21808@frogsfrogsfrogs>
- <b2ba8b64-be86-474d-874c-273bbeb4df00@oracle.com>
- <20250225175014.GG6242@frogsfrogsfrogs>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20250225175014.GG6242@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4PR0302CA0024.eurprd03.prod.outlook.com
- (2603:10a6:205:2::37) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FB4D20F094;
+	Tue, 25 Feb 2025 20:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740514642; cv=none; b=KK4jxZUkaiBLNJOls5BVl2G4A2EYBVPyqBMskkeJaESrT4CZxCXSv3EfdTDYEAmXx2UcSXmBgbD2moUwS81i2iq+n4bUeY5BtTE75RM+vawXlyAHLNIYeoOBNHU6b2HO8+0ZAw51av3qmoLzP/ORXgFP3riZgQxFClAOygiNz3I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740514642; c=relaxed/simple;
+	bh=QWXk938u1ZUtRQ0fT2TND4jKL/fO2qpP0R5WJKK3KXc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jZ0gu8yg+jKmKTVfiM6psDY6m4Q3K7OPUjzvmDy4zaz9C8ZaU8VwQpub6rEl2pNOPtkfMuxij+C8RNqFhSHizShePgbSApQwXr1iCAOWn0XsSE7Whfw13WsAiMPGSaLswLEOkZqsPSo3n6/dOIqBo5tyAllHvwlzUCKR6vEhLQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OJWfAvqA; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from eahariha-devbox.internal.cloudapp.net (unknown [40.91.112.99])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 920F4203CDFC;
+	Tue, 25 Feb 2025 12:17:19 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 920F4203CDFC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740514639;
+	bh=pRPTMwC85c4lYLBd5/aEkvEtme0QilCw7nKJr8ytgmI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OJWfAvqAxjSS6nUkULU00Pa8nQ9u9kKy42lXSCjyZ4ZUUOElAuQC0IJLL8YdgMxy4
+	 fRHYXp6qo5lzLvyA3yVmWt3cKN1fewJPyBbSi8i8x+l37gp4hdCbMSActzutlKgtXo
+	 djKAYQpE3vAmx4Iwoj2HThNeFrxgkdmyOVA8YA+8=
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Subject: [PATCH v3 00/16] Converge on using secs_to_jiffies() part two
+Date: Tue, 25 Feb 2025 20:17:14 +0000
+Message-Id: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DM4PR10MB7507:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a34cc33-b45e-4581-69fb-08dd55c74da6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?USsxN3RCTmlRbXZkNC9mL0RHMGZiRnN6cnNNTmI5R1FhZkpRV2FnR2R3dEdh?=
- =?utf-8?B?S2lTM1dDYW96VmkweFNpUHY3OXBSYm05K09odUdvdGI1dGRGTlY1ZUZ0bVBm?=
- =?utf-8?B?OXg0b3FueVJic1Q4YTRlbzd6cTJyeVNJRklGR09ya2ZQMXNEUjlBZDlmUzJ1?=
- =?utf-8?B?ZlhBUjdTRDQ4NFU5WGhDSmFXdmJRenpXd2g0UEVNbUlOSUh5cHFJNnpkWjd5?=
- =?utf-8?B?ajl2Y2R6Q3RsWjFQdkRxakMwdlhUUE12ZjE3a21mZGdDcnpITVRUVXlVdmZ6?=
- =?utf-8?B?bDBUdnY5UXo4ODlhaG1TVnpDYXRGc2lKNzFMSlFZR0lreDBlNWNNbVN6QWRl?=
- =?utf-8?B?SkE2V3F1dGRPanZTQXBxY1g4aXJXRjZ3alNpYmdLQW1WQUxJS2xyTDhWbkk3?=
- =?utf-8?B?SjRkZHlheGxmODZnQzMwcmZyMzVWSGNaZ04vSGs2WkhzbVNQcnptbTBhSHdU?=
- =?utf-8?B?RDQ3ZmVoeTlBNDNqZGo4N1RFU0RGSjJsdmlPeGkxdGpUWEhTV1VzNVNwdTRE?=
- =?utf-8?B?NmpQZmtydTVCdy9WNGFoQURWU3IwTzFDemVPcjM0NmZtcXBJWlVHYmRyMWNI?=
- =?utf-8?B?Nnd0T0c3Mm5YT3lCek1uNE9ENlVJR2lndThNeHVxUE5vNzJoVzhWcTJaRWU1?=
- =?utf-8?B?d0tFMnAxYVZWYWFPUzlpdFNDa0JhOGladXJubENzU0JITFdoQ25CLzh3bmVO?=
- =?utf-8?B?SFJrT1lNeTBTNklJenhjWWp3eVJWK3Q1bVU5REZqL0tBc255amtXelFRQWNs?=
- =?utf-8?B?b1pWZU5xSTYwQjB5dGpFOFplTmVseHpTRGhPaHpoYnJ4dVBEU1FUUTBiVlBN?=
- =?utf-8?B?WVNQS05GSVJmVi93K0NPaVJ6YkdvZ0kzL3ZraTFTRENxaXZ5ZHhLcGNWZmpN?=
- =?utf-8?B?UDFXUDE0UElxZGdod1duNzVyVzI2bHAzVVRLT2FKaUpzRnBEN1RDOGdIeXdD?=
- =?utf-8?B?WEJkSWxuUDcyRFlLRWdkaEc5VDdBd0RnZC9DdEo4RzJ4VkNtazVvS1ZUTllv?=
- =?utf-8?B?R1JWMk9Ocm5HUEhEcis1UTh2T1pHQ252MnlKcWtaNElFd2QrNUlMeE9Sek01?=
- =?utf-8?B?NHNlVlJYQ05Tb25DMTBUNlJ1cXZJZVdHbnhrUXJEbkNYTmh6bTBDQTRFbkta?=
- =?utf-8?B?NUQyK09GQjR6OUZJcUFpYXJVaG1IWFhMckZHS25Sa2RZMHl3OHJxTWRuaGxX?=
- =?utf-8?B?YXRRNWdFWVloTmMydXVmNzZ0WGZoa2MvbWIzYXZEeWZlamFkUW9oMTZtejhQ?=
- =?utf-8?B?bGhmaUwyTTNNWERvUnlXZFZRZFZGKzBnWXJXRWRvVS9vYlU1M1FBc3BjbnRP?=
- =?utf-8?B?L0ZOZElBdW1zUVNnSm9PTlRHL1BQK2g3ejBvOHVyeXg1QlRuaFVGL3d2dC9z?=
- =?utf-8?B?SkxvbTl4OTBtQmRPSmFheDFoWUE0YTJnUHd2VEI1Z3dFREorbUdyVmlNNDgz?=
- =?utf-8?B?OGVWOUp5L2ZtS3dCdUJ1TGNLYk9seW9QZ05aNUpJQ2M1NUlqV3o2SENJYUI4?=
- =?utf-8?B?Mlg3Q3Yza3hxSUhJUWl5ekxxL21LSVAwb0pDbjQwa0F5NW00TjYwWXhOdjMy?=
- =?utf-8?B?MjNyMzBNMVdxcFZRRFlaWDcwRmsvVjU5NzVrbGZhMDM2S29BQ3hBaDdpS3VU?=
- =?utf-8?B?d1ZYNUdqbjIwQjBCbCt5TTFrME12NHdGZmM3WkcvWWEya3FVT1VmV25va1ph?=
- =?utf-8?B?L0Z2aExURGt1Qy8rRkYwMUlJNFdSNG5IMWNONFIrK1JIU1VwczFTN3lvNjcz?=
- =?utf-8?B?elFuemc3ZTZlWlI5MmRVSHZlY0NEM2tucDFNOFo4elQwRFoybnRQOWtxUVB5?=
- =?utf-8?B?a2dpcStwcEtXTGpoMUFTSDlMNXhuZWNVVWNnME52WHJ0OFdPRUM0ais4bURL?=
- =?utf-8?Q?ecqGqorcDvXZD?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MzQvd1pTbDVreldjZG9OSUxvb1IwOUNvY0RFUC8wUDY1bVNmR1dFWXBPZGZD?=
- =?utf-8?B?aHdXSjRqWVgwOC9hdUJyZmQwWGNvbzFZcUN1NUFFSUU0YVUzM1hCN3lTM2hr?=
- =?utf-8?B?bW5SaGhTNWNkNXphd1dPVkhqVkNsb3ExbTdTWGdUMnM1bGVoWUJVaUE4dEtY?=
- =?utf-8?B?RUFaQkRFcUN5TGpYNmEwdnhsWktRRWtrRUU3RjA0anByQmU0Q09RSDVZbUxO?=
- =?utf-8?B?NGlIcDdTcXhMdkN2K3FFczFVV3N5V01EdG5rL0NKRmxoZFFySTNMRnRpQ1Jp?=
- =?utf-8?B?ZjdJWlRPcS9DYzNlU25MYVd6cG9yUmVDYlF1UmNNQnJiOC93NFhwS0pmS3Vi?=
- =?utf-8?B?MFV0OWphc2s4bVlQMXZKRWp6cGpEaG5uanhMRmFxS0pXL0NuNitWT2M0djlP?=
- =?utf-8?B?Y1I5czFYY3lrTnozdFA0R0RJWnRNYWV1NFAybzQ5c1Z5VFZ2a1ZVaVUzemdD?=
- =?utf-8?B?L1U2Q0hTNGVUZ3RSQWxUdlNWc2hRY1NNK1Npd1BqekpXU0F3OEtZVmV4RGt0?=
- =?utf-8?B?UlFSQi9hbnY1VXIwSGpQUVdWb1JVeVZFMDZlVkRUUUZxWlc4TWJnazhaellL?=
- =?utf-8?B?R0lldVNFV1V4YVhzOUJrTiszVkdiemZFUy9rY3loUFpuOWJlMzU1MnFiUXR1?=
- =?utf-8?B?V3huNnV5QkFndTlzVDcyMmJsR1EvVEx3NWtWTmxRZXhRK1hSaDFCTGYxcGlC?=
- =?utf-8?B?QzBQU09UZjJRYnRFZ1Q0VW9rTEtRckFYMFRVOXFuZkhVV0RhOU51d2FycEN6?=
- =?utf-8?B?dndkaFZ5eU5Za3ZUeXNtd3QzV3M1dStQamY2dFpNN2NwNWJSY01JelVuOXFM?=
- =?utf-8?B?L29ndVdSV1dyVkFTMHVXcXFqa2FsUjZmVGgvakxLVGlMbERqZEk3bnVjeFN0?=
- =?utf-8?B?ZzZrWnByR0FyNE9TMUh6SGtIOGl1bU03WnRURmEyZXdIUVBzLzd5NUhlWGFk?=
- =?utf-8?B?VmVCUWgxbXVXclhVZWdoOXpISkZGSTYrSndQUHZxdmNhMWk5dHJEUDUzK05l?=
- =?utf-8?B?Si8wMFgyVkZzYlBGN1VBNWdWcXhOUUFNTTlyVzVjMEdqVVVDYWpXWUhVN1hI?=
- =?utf-8?B?WTZOUDRoaFovRW80UDZIUDF3VEtqZ0h4ZXZyMlpXaENhUGFrTWI0ekpPcy9Q?=
- =?utf-8?B?Ym51ZlJOVEp6Ukd6OHJtNVVSQWVpc1h4azI1elNKNGhaQ1NhSzFWU3IyUFpP?=
- =?utf-8?B?cWkrNElyRDE5VGhVTkwzV2xKbVVpbkMzbjlBU1VIQTJFMmUxNFgxN2d5c1k4?=
- =?utf-8?B?WW9TMHdpcGw2dkNHRUFBN09uajlxY0o4QlR4UXpTcVN5cmxiZTdVUGh1Y3Iv?=
- =?utf-8?B?WFdkMHNGTm9kOU85ZG5CZHpweWFtR1NVT3R0N2YydS9CS2R6M1IrSjI3VThq?=
- =?utf-8?B?SUo0akQwdHRSRE5IdlloZ0JqQU55UTBDU2ZmYVNMZElUSlkvMHVDcHZ2anpG?=
- =?utf-8?B?WFIyTzRHcnRpdnJybFVvVTdlZVJUSy8wZEU0NmYxcTZpSzlBNlVKL0p5Rmh0?=
- =?utf-8?B?YncrZy9xcW04ajFDcXZlQ01zb1BWdUtUTWRyNnRsS3dkTUZ4SklCVFNpWU1I?=
- =?utf-8?B?UjlXWHluVjVLSE5TUkVITWtpRHIvUHVyWnhiNzdrWEQrVVhqUDVRSTI5SGtr?=
- =?utf-8?B?MEdPdEVkNGl0MUh2WXNBSnErejM3S3dQbnVuN2VaY1dVaERCWG9ad1hVR3Fa?=
- =?utf-8?B?b1htQnhwSHdiTXNwM1g3U2xKY1VtNldmSUhCTWV1V0VPNWtvMUdrY09waWIw?=
- =?utf-8?B?WGdYTmF4T3l0OXZsd0tuNDNnN3drT1A5Qk5ueWxqelhDK1JBTUFHdXI0eThS?=
- =?utf-8?B?ZWZ4aEZGMERxcTNXQWFGQTNkQk4yWVV1QzlwMUFqR3VQdGVQYUN3R3dsaUN1?=
- =?utf-8?B?M3FoTFliVGtDQTVKWUF0TmJBd2tUcTVHNjNCSUtFKzNTVVkwNlNJanJZWitp?=
- =?utf-8?B?TFY1bDByR2tYTGhBQmNrbzdzTjNBT283ZThZYm1YRjlaRXh4b1dMWWdvQnIy?=
- =?utf-8?B?eVJ1d1pqK0FzaXB1dElLUkxoSXJpMXJySGI2enBHYllEa2RuZWVDcmJiK1Zm?=
- =?utf-8?B?eHp3Q2hySlZnbTZvK3JYbm04TnQrUE8wQjhqamg4eXcyNXBoK1hVU2JVNTlF?=
- =?utf-8?B?MDQ2eU1qVVh1bGdzeXgycFdaS3pvR015ZHg1RUJOMzUvTTE5cXQ3QW1WUWpH?=
- =?utf-8?B?MlE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	jd+2JSSztr08Zthzqs3LPkQh0Xx3yppcS680G16hyssSfA35LRjtSOCB5h4sIANTB2jvxMOajNJSjgQNnhLSeiDoa+KN0EORAmpIl37lkmCdVNfiZMAEuLwBWuzZdW8MdpkcIjYs3gTBSqFhO4VXukyUmCUVNi5TeuhSDq2cL/v3hHXZiKegWsYsavmaVgX81ojPojGGc3Iao4jPdZx2KQ9/dK6HLobQxpvHsTnih+2zjEBYv6CwwL5aJrKaTdNE3x3UY/IQ3v7Z0lz53ea75+2uDavGTbt+LsNF+mb4p5nUXPXkp8PJ69+yP/XHajtN0y3wqB/qYi63UZr/16qpN74ORQT990RtXkDENHOSSlob8oQFgiFJQgpTvDw3xbAuf5ooj5/z6J7uzlvsZCs790DSoKR+YquZJ/3oW+651yLbdlOJTvI4YTIwI07tCf2eqgMM1imuWYrmsQ49B+RBhydfD0MD4ucLvf2KybU64co26N6D3HVb5HXhRdV5eeBh3K6rlK7wuGM25aHBDpl+QB9tFp+WH3gJ31FmnSyVbIyiMt3qCEOB2Azv/cvkUnmYSMsqAxd67RDAzWj2sQKb2I8YHZKue3RlwJz8nyfYvKc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a34cc33-b45e-4581-69fb-08dd55c74da6
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 18:07:44.8199
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IsQ6lL7DGuSTPTTc9Y02FUDY4BZEZ9pTTaVp5M5HIt3iUI8vJNEgETzM7xFjpdAnAfeuaLLqSg574JuJWG1ULA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7507
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_05,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2502250114
-X-Proofpoint-ORIG-GUID: XcIsRZJxwIFp8JetWTJHWf90k38XSAfl
-X-Proofpoint-GUID: XcIsRZJxwIFp8JetWTJHWf90k38XSAfl
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEslvmcC/43NMRKCMBCF4aswqV1nExDQyns4FjFsZB0hThKjj
+ sPdDTY2FpT/K773FoE8UxC74i08JQ7sxhzlqhCm1+OZgLvcQqGqpJINGDcm8nkPZAJEBxe2Ngt
+ w0z5CfDiwVYWy0bq2dSOyc/Nk+fn9OBxz9xyi86/vZZLzOusblKpdoCcJCFtdk7F4UiW2+yuP9
+ +d6YONdcDaujRvE/JPUz1ZYLrFVtrsGN61GaTuk//Y0TR+h+4siOAEAAA==
+X-Change-ID: 20241217-converge-secs-to-jiffies-part-two-f44017aa6f67
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
+ Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
+ James Smart <james.smart@broadcom.com>, 
+ Dick Kennedy <dick.kennedy@broadcom.com>, 
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+ David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
+ Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, 
+ Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>, 
+ Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Selvin Xavier <selvin.xavier@broadcom.com>, 
+ Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Cc: cocci@inria.fr, linux-kernel@vger.kernel.org, 
+ linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+ ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+ ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org, 
+ Easwar Hariharan <eahariha@linux.microsoft.com>, 
+ Takashi Iwai <tiwai@suse.de>, Carlos Maiolino <cmaiolino@redhat.com>
+X-Mailer: b4 0.14.2
 
-On 25/02/2025 17:50, Darrick J. Wong wrote:
->> Can you please check this versus what you suggested in
->> https://lore.kernel.org/linux- 
->> xfs/20250206215014.GX21808@frogsfrogsfrogs/#t
-> Ah, yeah, that ^^ is correct.  This needs a better comment then:
-> 
-> 	/*
-> 	 * Each remapping operation could cause a btree split, so in
-> 	 * the worst case that's one for each block.
-> 	 */
-> 	resblks = (end_fsb - offset_fsb) *
-> 			XFS_NEXTENTADD_SPACE_RES(mp, 1, XFS_DATA_FORK);
+This is the second series (part 1*) that converts users of msecs_to_jiffies() that
+either use the multiply pattern of either of:
+- msecs_to_jiffies(N*1000) or
+- msecs_to_jiffies(N*MSEC_PER_SEC)
 
-ok, fine.
+where N is a constant or an expression, to avoid the multiplication.
 
-Cheers
+The conversion is made with Coccinelle with the secs_to_jiffies() script
+in scripts/coccinelle/misc. Attention is paid to what the best change
+can be rather than restricting to what the tool provides.
+
+Andrew has kindly agreed to take the series through mm.git modulo the
+patches maintainers want to pick through their own trees.
+
+This series is based on next-20250225
+
+Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+
+* https://lore.kernel.org/all/20241210-converge-secs-to-jiffies-v3-0-ddfefd7e9f2a@linux.microsoft.com/
+
+---
+Changes in v3:
+- Change commit message prefix from libata: zpodd to ata: libata-zpodd: in patch 8 (Damien)
+- Split up overly long line in patch 9 (Christoph)
+- Fixup unnecessary line break in patch 14 (Ilpo)
+- Combine v1 and v2
+- Fix some additional hunks in patch 2 (scsi: lpfc) which the more concise script missed
+- msecs_to_jiffies -> msecs_to_jiffies() in commit messages throughout
+- Bug in secs_to_jiffies() uncovered by LKP merged in 6.14-rc2: bb2784d9ab4958 ("jiffies: Cast to unsigned long in secs_to_jiffies() conversion")
+- Link to v2: https://lore.kernel.org/r/20250203-converge-secs-to-jiffies-part-two-v2-0-d7058a01fd0e@linux.microsoft.com
+
+Changes in v2:
+- Remove unneeded range checks in rbd and libceph. While there, convert some timeouts that should have been fixed in part 1. (Ilya)
+- Fixup secs_to_jiffies.cocci to be a bit more verbose
+- Link to v1: https://lore.kernel.org/r/20250128-converge-secs-to-jiffies-part-two-v1-0-9a6ecf0b2308@linux.microsoft.com
+
+---
+Easwar Hariharan (16):
+      coccinelle: misc: secs_to_jiffies: Patch expressions too
+      scsi: lpfc: convert timeouts to secs_to_jiffies()
+      accel/habanalabs: convert timeouts to secs_to_jiffies()
+      ALSA: ac97: convert timeouts to secs_to_jiffies()
+      btrfs: convert timeouts to secs_to_jiffies()
+      rbd: convert timeouts to secs_to_jiffies()
+      libceph: convert timeouts to secs_to_jiffies()
+      ata: libata-zpodd: convert timeouts to secs_to_jiffies()
+      xfs: convert timeouts to secs_to_jiffies()
+      power: supply: da9030: convert timeouts to secs_to_jiffies()
+      nvme: convert timeouts to secs_to_jiffies()
+      spi: spi-fsl-lpspi: convert timeouts to secs_to_jiffies()
+      spi: spi-imx: convert timeouts to secs_to_jiffies()
+      platform/x86/amd/pmf: convert timeouts to secs_to_jiffies()
+      platform/x86: thinkpad_acpi: convert timeouts to secs_to_jiffies()
+      RDMA/bnxt_re: convert timeouts to secs_to_jiffies()
+
+ .../accel/habanalabs/common/command_submission.c   |  2 +-
+ drivers/accel/habanalabs/common/debugfs.c          |  2 +-
+ drivers/accel/habanalabs/common/device.c           |  2 +-
+ drivers/accel/habanalabs/common/habanalabs_drv.c   |  2 +-
+ drivers/ata/libata-zpodd.c                         |  3 +-
+ drivers/block/rbd.c                                |  8 ++---
+ drivers/infiniband/hw/bnxt_re/qplib_rcfw.c         |  2 +-
+ drivers/nvme/host/core.c                           |  6 ++--
+ drivers/platform/x86/amd/pmf/acpi.c                |  2 +-
+ drivers/platform/x86/thinkpad_acpi.c               |  2 +-
+ drivers/power/supply/da9030_battery.c              |  3 +-
+ drivers/scsi/lpfc/lpfc.h                           |  3 +-
+ drivers/scsi/lpfc/lpfc_els.c                       | 11 +++---
+ drivers/scsi/lpfc/lpfc_hbadisc.c                   |  2 +-
+ drivers/scsi/lpfc/lpfc_init.c                      | 10 +++---
+ drivers/scsi/lpfc/lpfc_scsi.c                      | 12 +++----
+ drivers/scsi/lpfc/lpfc_sli.c                       | 41 +++++++++-------------
+ drivers/scsi/lpfc/lpfc_vport.c                     |  2 +-
+ drivers/spi/spi-fsl-lpspi.c                        |  2 +-
+ drivers/spi/spi-imx.c                              |  2 +-
+ fs/btrfs/disk-io.c                                 |  6 ++--
+ fs/xfs/xfs_icache.c                                |  2 +-
+ fs/xfs/xfs_sysfs.c                                 |  8 ++---
+ include/linux/ceph/libceph.h                       | 12 +++----
+ net/ceph/ceph_common.c                             | 18 ++++------
+ net/ceph/osd_client.c                              |  3 +-
+ scripts/coccinelle/misc/secs_to_jiffies.cocci      | 10 ++++++
+ sound/pci/ac97/ac97_codec.c                        |  3 +-
+ 28 files changed, 82 insertions(+), 99 deletions(-)
+---
+base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
+change-id: 20241217-converge-secs-to-jiffies-part-two-f44017aa6f67
+
+Best regards,
+-- 
+Easwar Hariharan <eahariha@linux.microsoft.com>
+
 
