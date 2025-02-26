@@ -1,138 +1,118 @@
-Return-Path: <linux-xfs+bounces-20254-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20256-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C789A46703
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 17:49:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 048E3A46739
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:00:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 025FF7A9315
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 16:47:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 035F87A04AB
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 16:59:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42EAC22488E;
-	Wed, 26 Feb 2025 16:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65A87223333;
+	Wed, 26 Feb 2025 17:00:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJBntMAW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8+Oo3p8"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF34719005F;
-	Wed, 26 Feb 2025 16:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E7421C9E9
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 17:00:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740588501; cv=none; b=I+mQysjTGt4b+S7ACdPplboWQPFwdFh1NXs5S0a5TIPd1e5xyNVfhk1/82M2cqw9FyMl32KC1RVMx4JIkFzckWNYE0FIapAPrLdqUwSBcLFjwGDJWB/xEyJhXUIamR34TU+iV9Iye5dgVnYSFinr0Ux7qIrVZIWFNYwxK7mpYw0=
+	t=1740589218; cv=none; b=Rz9gvJ4TdvJxmq8jfB2sdtnhm+SOg46l2lKjSJcVrF8WF/QBUHOKbWreIhaGIl3GbjfW3Ghm2i0KU9hmYdTK9PtrhJYeIUfYr0q4LgqOVEO2tgJVfudYWU1+dj2160cjbOg60oRAYDGiJvp2retScZQ78PKMFALEzbxFCcOxcKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740588501; c=relaxed/simple;
-	bh=FxcvaHDtQk+aPNgLOpA1kKCuwEvZ/n4I9xwMBDMNjMM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=G6cSdDMH+kKrbp5h0yk1/gCnKsMqBxy2ckyOK9U5FReF51pl1TRRtgEi8hceP1PT8BoHYJM7KML1QUFdCbKVqbDxCdUL7k8WtzTp1mFA8hge8eeWLlQoWYdv1YrAFSwsX/mVMe57ZNeR+84hCtsjDVfs1nwI3tfyw2Jf0saa3X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJBntMAW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F78BC4CED6;
-	Wed, 26 Feb 2025 16:48:07 +0000 (UTC)
+	s=arc-20240116; t=1740589218; c=relaxed/simple;
+	bh=XTX9mCPDKoUfFWRntaEhP7z1+TnTyLP8Fa96jl6ov64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8dT2leoZvK6tPX5YgElxMmIBKwiqNoYGqmubQIOxzogYopZ5sWfr3wNtNS8p2QIywUgy0DlMrHMBkB3/VyzsWk8aGkfAqPr44LfjIASqZypFywnk0GWTA5kUjGvpxC1q4AZoLUHxMy+tgrpgGpryN7kxX/7gk7651tjWM++6o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8+Oo3p8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED6AFC4CED6;
+	Wed, 26 Feb 2025 17:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740588501;
-	bh=FxcvaHDtQk+aPNgLOpA1kKCuwEvZ/n4I9xwMBDMNjMM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gJBntMAWa9qiB6go6MBAYuIpUQmIV8zM3P7hOz/BcMP2byX2P+MCVmwTOF8y59cTA
-	 /dmsi2YnkvFk7WCs/BqmuQVZJqyuuK6B2L34n/nlGh5Fb/IjbLtuJF7xfHrd7ckNHI
-	 3aOmoTcDg9MwCwDV+lRzSbk3kKgtk7sY2T2rRnxcQXeSOKkWWTO2TN5iDQ7y45VEK4
-	 FrA2VRbWMMiI+WJDNW4z9L9r47+ekdDK20fY6zi5lQvVIKVd30Jsj0qJQM2+iV2vYy
-	 04RjgTb6SA4Au/0pUEMYaZh350XZsbrokrKevACKRy5XTZGyf9486J5GRsNNv9vMzQ
-	 71NtfIvQwN7Lw==
-From: Mark Brown <broonie@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
- Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
- James Smart <james.smart@broadcom.com>, 
- Dick Kennedy <dick.kennedy@broadcom.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
- David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
- Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
- Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, 
- Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>, 
- "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Selvin Xavier <selvin.xavier@broadcom.com>, 
- Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
- Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: cocci@inria.fr, linux-kernel@vger.kernel.org, 
- linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
- ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
- linux-spi@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
- ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org, 
- Takashi Iwai <tiwai@suse.de>, Carlos Maiolino <cmaiolino@redhat.com>
-In-Reply-To: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
-Subject: Re: (subset) [PATCH v3 00/16] Converge on using secs_to_jiffies()
- part two
-Message-Id: <174058848717.58970.18340675342808865020.b4-ty@kernel.org>
-Date: Wed, 26 Feb 2025 16:48:07 +0000
+	s=k20201202; t=1740589218;
+	bh=XTX9mCPDKoUfFWRntaEhP7z1+TnTyLP8Fa96jl6ov64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i8+Oo3p8TSsBZp2kPErYaoG+qh680uDRy2QCbDAQ4OxeLujJuAUIgEVSQOg3jnjAc
+	 O9/kpxR5yatdSDilKmB3vN1mLarEzq2RHd9iJVUkFYv1YaIwayCv+QFW2/W9VTs53l
+	 yWCaW8ydFqMnIuV6eBg7JLaAQJgISBynkGJU/lHGVDxjX655JkcGFcRDNX5Q5FEJwj
+	 Hy0fjTkzT2Ky4AphXdvwdoWZ2bth6hlPaL06RUJOtN7DfL0VNJAO9TwUFZ3asd1hxF
+	 N8ngeVt8Khrpk/xLtiXMlIgsLwuqKZlV0rT2AjZE7IPpKp1fT/MVN0Rb8lH3Yft4rB
+	 XVDXKI0n/Wr4w==
+Date: Wed, 26 Feb 2025 09:00:17 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Carlos Maiolino <cem@kernel.org>, Dave Chinner <dchinner@redhat.com>,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 03/12] xfs: remove xfs_buf.b_offset
+Message-ID: <20250226170017.GN6242@frogsfrogsfrogs>
+References: <20250226155245.513494-1-hch@lst.de>
+ <20250226155245.513494-4-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226155245.513494-4-hch@lst.de>
 
-On Tue, 25 Feb 2025 20:17:14 +0000, Easwar Hariharan wrote:
-> This is the second series (part 1*) that converts users of msecs_to_jiffies() that
-> either use the multiply pattern of either of:
-> - msecs_to_jiffies(N*1000) or
-> - msecs_to_jiffies(N*MSEC_PER_SEC)
+On Wed, Feb 26, 2025 at 07:51:31AM -0800, Christoph Hellwig wrote:
+> b_offset is only set for slab backed buffers and always set to
+> offset_in_page(bp->b_addr), which can be done just as easily in the only
+> user of b_offset.
 > 
-> where N is a constant or an expression, to avoid the multiplication.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Wooo space savings!
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+
+--D
+
+> ---
+>  fs/xfs/xfs_buf.c | 3 +--
+>  fs/xfs/xfs_buf.h | 2 --
+>  2 files changed, 1 insertion(+), 4 deletions(-)
 > 
-> [...]
-
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[12/16] spi: spi-fsl-lpspi: convert timeouts to secs_to_jiffies()
-        commit: 32fcd1b9c397ccca7fde2fcbcf4fc7e0ec8f34aa
-[13/16] spi: spi-imx: convert timeouts to secs_to_jiffies()
-        commit: 1d2e01d53a8ebfffb49e8cc656f8c85239121b26
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+> index 9e0c64511936..ee678e13d9bd 100644
+> --- a/fs/xfs/xfs_buf.c
+> +++ b/fs/xfs/xfs_buf.c
+> @@ -336,7 +336,6 @@ xfs_buf_alloc_kmem(
+>  		bp->b_addr = NULL;
+>  		return -ENOMEM;
+>  	}
+> -	bp->b_offset = offset_in_page(bp->b_addr);
+>  	bp->b_pages = bp->b_page_array;
+>  	bp->b_pages[0] = kmem_to_page(bp->b_addr);
+>  	bp->b_page_count = 1;
+> @@ -1528,7 +1527,7 @@ xfs_buf_submit_bio(
+>  
+>  	if (bp->b_flags & _XBF_KMEM) {
+>  		__bio_add_page(bio, virt_to_page(bp->b_addr), size,
+> -				bp->b_offset);
+> +				offset_in_page(bp->b_addr));
+>  	} else {
+>  		for (p = 0; p < bp->b_page_count; p++)
+>  			__bio_add_page(bio, bp->b_pages[p], PAGE_SIZE, 0);
+> diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+> index 3b4ed42e11c0..dc41b617b067 100644
+> --- a/fs/xfs/xfs_buf.h
+> +++ b/fs/xfs/xfs_buf.h
+> @@ -197,8 +197,6 @@ struct xfs_buf {
+>  	int			b_map_count;
+>  	atomic_t		b_pin_count;	/* pin count */
+>  	unsigned int		b_page_count;	/* size of page array */
+> -	unsigned int		b_offset;	/* page offset of b_addr,
+> -						   only for _XBF_KMEM buffers */
+>  	int			b_error;	/* error code on I/O */
+>  	void			(*b_iodone)(struct xfs_buf *bp);
+>  
+> -- 
+> 2.45.2
+> 
+> 
 
