@@ -1,88 +1,88 @@
-Return-Path: <linux-xfs+bounces-20230-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20233-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA044A463C1
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 15:52:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 573FDA463C4
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 15:52:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BEA219C0094
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 14:51:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A991B189FCBD
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 14:51:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EFDD22332E;
-	Wed, 26 Feb 2025 14:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC24C222584;
+	Wed, 26 Feb 2025 14:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RgRohG9S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EOtSSbHg"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AEF222566
-	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 14:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DA72222A1
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 14:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581454; cv=none; b=YAoUPcgbotkQaDl8/f/TPQu3zRHyghCQAkMHF//gpYZpnagqr4hDqEkkaO/FjjO0r22pH/Mqc4Cxg5n9SARCr+TnWoC3gVcZoOEZpH6/k34u5UODwin3MEVWLOOHbJb8GgqZEeE2DMSp9H0MAEMUSJ/sYy/UxF2jJXhzS89uwKs=
+	t=1740581457; cv=none; b=kkTWwNHU0F7u5l/fOKs5sqdu5JJVIk8IWP+Ry8aAYwBeVaYEyf14wrT4a5RkArnERt+G6Qfw8RWYjwUNjvppky4R4CWhhfRxjBWfxLMDS0quNVQwb41kWL/6FXKSKIWb/vfnZcI0/yz0B1A1SdxY4aQZFeL+bv/zBj3YjcRGqfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581454; c=relaxed/simple;
-	bh=HU9n5NvoPomLXLF6LgaJXXpRdjxvBbILUZwTjWna110=;
+	s=arc-20240116; t=1740581457; c=relaxed/simple;
+	bh=peniH+DoGXFkb53GxKcQx5eQOqXnoRSKLDoia0Z9haM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VlYLiq85P4DMzCWdXEJxDJ263k/atswOUknqWOdvqNj/7og0hl1xSagfdK0n0FE05i2917pmXUz9N1f6xCnYXtIFnW8bMSTbGv8ml/o/3iutnrv6H/2ddpiPmn+2Deo25xsmVq0NLazYJCX0Heb21AbRgBQZkm5Re02q1L2BUSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RgRohG9S; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:To:Cc; b=MMQvmDQNGxdpty8oDIeoB34cFZ8etHMPyeTHjjVWsTsR9bc8572y7noARRnRs8h6pwBa5XPvt0donU3DdCbrgHav6CY03uPhVrxrbNinA4DMBiDbLAQrYxrCvsvcCt5wcdMuf0U7CADH1lHMG9DVTuAYYvO/QXcLDTAm7umMxn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EOtSSbHg; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740581451;
+	s=mimecast20190719; t=1740581454;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8Dwzp/NU0ujGgiL6wnczWrvsNXVl+Zg+N3jt2/uSQpM=;
-	b=RgRohG9STbpZRL/9lmkyNyLgZ35RAR2zq+IMY8X0Oqev/9YZXEyakTN2dV3j8BJUIkDiVq
-	03Ijri6D4lQbLd/3VSVPkfofwvXVON7oMg2ug5nfIE8hfgJj54uxgl7U1H/0PD9c2t3OvC
-	jvvAIQr5te4h2+tKli3v8feZWymKYek=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=DKpCQd9SYnqagMEVbWdcxpNkMgcZ1ncGzrsX/EvMtTE=;
+	b=EOtSSbHg/ISprvO7y/X5VqKAvrMceIxcvLnF5S5qL14XQP7/aWxInyIa/MxUtPiOoNg2OL
+	q8Wu3dmlRvt6Z7xEz1hYsFGEqWGjweUkf0ozVV+yFIekyt6edWW6DEYOlaWQsKSYVl/xzG
+	QoALFvePIUzrv+XKzqzroXHgt7/3XUw=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-578-Cf1zXvD2OvGWkDRFuymXqg-1; Wed, 26 Feb 2025 09:50:50 -0500
-X-MC-Unique: Cf1zXvD2OvGWkDRFuymXqg-1
-X-Mimecast-MFC-AGG-ID: Cf1zXvD2OvGWkDRFuymXqg_1740581449
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4399a5afcb3so63351365e9.3
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 06:50:50 -0800 (PST)
+ us-mta-606-oFExS77OO2eTksGtb6X6Fw-1; Wed, 26 Feb 2025 09:50:52 -0500
+X-MC-Unique: oFExS77OO2eTksGtb6X6Fw-1
+X-Mimecast-MFC-AGG-ID: oFExS77OO2eTksGtb6X6Fw_1740581452
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e067bbd3bcso7099510a12.3
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 06:50:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740581449; x=1741186249;
+        d=1e100.net; s=20230601; t=1740581451; x=1741186251;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8Dwzp/NU0ujGgiL6wnczWrvsNXVl+Zg+N3jt2/uSQpM=;
-        b=HccVV6ssBnDowgFAgbrL4I+17iR6KA7tIkCamBIZ6VBLmHZa3emO3lCo9uGB5W9w4U
-         MgL4eA/01d2JgCfrjabqk7aiM/qewXNHySAajlhO4cp2SzJ1oCtLHC5TK3wbLr55HvrZ
-         J+nAZNPvKTAR1B2y0LPgY7CDcvwDqEKIBzCF7lODXYG/+wlRedBvAhzJ2Y/vjD96W+Ie
-         YrRNB0O85uU9wjq9EH33Z5JgYUN3rdDVw8RduOfzDBBvJK0VBe/39SElMveElVATNLGT
-         oa44D+/MvFPe0+gWlTBeaCfjYsxrjOkRai7KGA6HrvH153c/pRAUjiYeRqQAa9tuUT3s
-         cNZw==
-X-Gm-Message-State: AOJu0YxzZlqnfC8XUUG8079lk2SXhOtHqmMnVOK86lDQ13pDguWRx2Rz
-	L+FokzMjrOsWnODR6wPEkx/RzBTWh+PmHtdDbfhgjI+JTDk2n2axGffjnYLEm1X/zbo1sp5iA4/
-	VcacodvV/U654BkP+Ay8i7mv1l7x7+Ym8zXyj/grumbD/Wjn1OFc0L6wN
-X-Gm-Gg: ASbGncuauOO1Wm8F4u+h5SAm1d082Dp/vU51KTX1AfeIKrmVpy1x+/a5GC6l8M8GLgf
-	XP1NhsXftX0v305TgXOWqEOJ30p/MsrfMTvvd86lSS/FZ6T56VdqQ01FSPB/CLs6b0JkFCJVp4t
-	SjOjCS52ymh0zNrci9CrFJ/GCl+YEUA0eycP0IZ2LcOSRGNR7FjN8a7GuiD1OYweeLx4a3mTK1j
-	AOpGz0jOj1xW3HSC3pFKqZQeu2P8yJFO0D5X848P9SwhO4VeI70+LVL+TUEjUHGhjJS4+jtQES8
-	iV8ZQ7aRkEq/C/+ZZDmKqgfiJGr2XFhtKk3EvrE/7g==
-X-Received: by 2002:a05:6000:1f8f:b0:38e:48a6:280b with SMTP id ffacd0b85a97d-390cc631ac9mr7594973f8f.34.1740581449019;
-        Wed, 26 Feb 2025 06:50:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFeFD/DQPsHaVSdJ/tUgQmtYO/WuEoPN1w+SH0YcoiPxMkH/5DSVMqE15RMqgMP+komvViUhw==
-X-Received: by 2002:a05:6000:1f8f:b0:38e:48a6:280b with SMTP id ffacd0b85a97d-390cc631ac9mr7594936f8f.34.1740581448559;
-        Wed, 26 Feb 2025 06:50:48 -0800 (PST)
+        bh=DKpCQd9SYnqagMEVbWdcxpNkMgcZ1ncGzrsX/EvMtTE=;
+        b=SIsy2f8MHXXmRIAGYldQ9knAhOmwsiYaMUbHM36GqWorMm6OEfsXtUHUZhZfNudMkh
+         BKEhDYeHt35FPNfFLJ36DH3MI894RtrLt32Jd3/xDyJG6DFuCZaGuDEYj6Q2XNWSmWy/
+         IeF16IbrjcZ8GlGCdsUzzh0K86WbzP5LOWWtq6y2g2yO39Wcg0ln3zVqRLBcglP14JFR
+         y2AnG8M39+5WJ0Rud4QIJMjt6arkpC+zQRa1sT142/qWJm2P+yQaEmTpz4xuPleYx4Te
+         g1sbbF2ZlCCSpSlZzsgSxSmqZsnpMW7WOhTvrfNhIibdZxTXWo7GCU8dKA/xS6L340oj
+         o6KA==
+X-Gm-Message-State: AOJu0YzhQGP8hYRwuzET3JWkHgB+FCxeNIOnBjaGQNOx7Q3HkAo0Ehrg
+	dpbohx0bsBI1x7dkZrgjF9UiWOjgmMNiqeG+KGZuhN6AwbmRuGeaTlt38yC9YH1UFPiUm8aNLtA
+	FKNj7pm08o8Nm52B2SezqXij0VLLc/VMjtzdz0qYav5I9jyFV73ApnGzy
+X-Gm-Gg: ASbGncunEN7802LPeTtJ3MmsIdvK1mcuuFzkTRFV9vfZbY5KulYKXFDS/pR+3gVZLh9
+	9Eh7D4XIzGmtZCQoj6S5WSuSz8ExjItoPu0m/PFTo6BpXfp9D8e9FBKhmyzHIq5up1olU8+EVL0
+	+FultIpxEXtlOGgYgq4WJeB5RI229HxSBOoSIPf8KcmXw+M4GCDy4v5hZSLKL8SHibuuLX4UNLi
+	KdwLbhCovlbamCMHC/NRGhI6kBWHEJdNEROBIgkyxkmQgGZoTGHULIwEYqUzCNmS8l8UvBSLo0L
+	tpfs2/yb4cDyRlIqjybWxqR5BrPd4IXdNjO46kYrpw==
+X-Received: by 2002:a17:906:3081:b0:ab7:fc9a:28e2 with SMTP id a640c23a62f3a-abed1068fafmr747038866b.47.1740581451551;
+        Wed, 26 Feb 2025 06:50:51 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG2pTtCfXtsrDPD11Mmq827lwbTroShh8zdKbUE+ErRya7j0cWOEej+b0XdfewXOUMnFLV6IA==
+X-Received: by 2002:a17:906:3081:b0:ab7:fc9a:28e2 with SMTP id a640c23a62f3a-abed1068fafmr747036166b.47.1740581451136;
+        Wed, 26 Feb 2025 06:50:51 -0800 (PST)
 Received: from [127.0.0.2] (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cd564esm337731666b.21.2025.02.26.06.50.47
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cd564esm337731666b.21.2025.02.26.06.50.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:50:47 -0800 (PST)
+        Wed, 26 Feb 2025 06:50:48 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Wed, 26 Feb 2025 15:50:29 +0100
-Subject: [PATCH v5 04/10] Add git-contributors script to notify about
- merges
+Date: Wed, 26 Feb 2025 15:50:30 +0100
+Subject: [PATCH v5 05/10] git-contributors: better handling of hash
+ mark/multiple emails
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -91,140 +91,162 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-update-release-v5-4-481914e40c36@kernel.org>
+Message-Id: <20250226-update-release-v5-5-481914e40c36@kernel.org>
 References: <20250226-update-release-v5-0-481914e40c36@kernel.org>
 In-Reply-To: <20250226-update-release-v5-0-481914e40c36@kernel.org>
 To: linux-xfs@vger.kernel.org
 Cc: "Darrick J. Wong" <djwong@kernel.org>, 
  Andrey Albershteyn <aalbersh@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4032; i=aalbersh@kernel.org;
- h=from:subject:message-id; bh=HU9n5NvoPomLXLF6LgaJXXpRdjxvBbILUZwTjWna110=;
- b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIY0vdrOX8VjZQ8U8gbETk902NrQWZ0G+Odb9MCOZutQ
- 5Zyp+mEvu8oZWEQ42KQFVNkWSetNTWpSCr/iEGNPMwcViaQIQxcnAIwkY1iDP+DWWwWXdrvxXNt
- 7WK95evdKrzMHY0nrOZ8M1vmgu7bj75ODP9sd599qngtPDuC117hvpLUU9e+FyorL1QUyKsFPRP
- wv8sCAL1eQ7I=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5847; i=aalbersh@kernel.org;
+ h=from:subject:message-id; bh=peniH+DoGXFkb53GxKcQx5eQOqXnoRSKLDoia0Z9haM=;
+ b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIY0vdrOespCu7RClbzzmhz2nthzbV7Ky6+nJ8gdKnGf
+ pOJLsOXrY4dpSwMYlwMsmKKLOuktaYmFUnlHzGokYeZw8oEMoSBi1MAJnLoH8P/ki6zyv7kZZl+
+ +rkaBX43PuVHn47se3zub53j/Dv8U76wMzK0Sv6QXmLys7BCQC7503PTrrlehqsyfat6/kpt3xU
+ RksUKAPDrR1o=
 X-Developer-Key: i=aalbersh@kernel.org; a=openpgp;
  fpr=AE1B2A9562721A6FC4307C1F46A7EA18AC33E108
 
-Add python script used to collect emails over all changes merged in
-the next release.
+Better handling of hash mark, tags with multiple emails and not
+quoted names in emails. See comments in the script.
 
-CC: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 ---
- tools/git-contributors.py | 101 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 101 insertions(+)
+ tools/git-contributors.py | 109 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 90 insertions(+), 19 deletions(-)
 
 diff --git a/tools/git-contributors.py b/tools/git-contributors.py
-new file mode 100755
-index 0000000000000000000000000000000000000000..70ac8abb26c8ce65de336c5ae48abcfee39508b2
---- /dev/null
+index 70ac8abb26c8ce65de336c5ae48abcfee39508b2..1a0f2b80e3dad9124b86b29f8507389ef91fe813 100755
+--- a/tools/git-contributors.py
 +++ b/tools/git-contributors.py
-@@ -0,0 +1,101 @@
-+#!/usr/bin/python3
+@@ -37,35 +37,106 @@ class find_developers(object):
+ 
+         self.r1 = re.compile(regex1, re.I)
+ 
++        # regex to guess if this is a list of multiple addresses.
++        # Not sure why the initial "^.*" is needed here.
++        self.r2 = re.compile(r'^.*,[^,]*@[^@]*,[^,]*@', re.I)
 +
-+# List all contributors to a series of git commits.
-+# Copyright(C) 2025 Oracle, All Rights Reserved.
-+# Licensed under GPL 2.0 or later
++        # regex to match on anything inside a pair of angle brackets
++        self.r3 = re.compile(r'^.*<(.+)>', re.I)
 +
-+import re
-+import subprocess
-+import io
-+import sys
-+import argparse
-+import email.utils
++    def _handle_addr(self, addr):
++        # The next split removes everything after an octothorpe (hash
++        # mark), because someone could have provided an improperly
++        # formatted email address:
++        #
++        # Cc: stable@vger.kernel.org # v6.19+
++        #
++        # This, according to my reading of RFC5322, is allowed because
++        # octothorpes can be part of atom text.  However, it is
++        # interepreted as if there weren't any whitespace
++        # ("stable@vger.kernel.org#v6.19+").  The grammar allows for
++        # this form, even though this is not a correct Internet domain
++        # name.
++        #
++        # Worse, if you follow the format specified in the kernel's
++        # SubmittingPatches file:
++        #
++        # Cc: <stable@vger.kernel.org> # v6.9
++        #
++        # emailutils will not know how to parse this, and returns empty
++        # strings.  I think this is because the angle-addr
++        # specification allows only whitespace between the closing
++        # angle bracket and the CRLF.
++        #
++        # Hack around both problems by ignoring everything after an
++        # octothorpe, no matter where it occurs in the string.  If
++        # someone has one in their name or the email address, too bad.
++        a = addr.split('#')[0]
 +
-+DEBUG = False
++        # emailutils can extract email addresses from headers that
++        # roughly follow the destination address field format:
++        #
++        # Reviewed-by: Bogus J. Simpson <bogus@simpson.com>
++        # Reviewed-by: "Bogus J. Simpson" <bogus@simpson.com>
++        # Reviewed-by: bogus@simpson.com
++        #
++        # Use it to extract the email address, because we don't care
++        # about the display name.
++        (name, addr) = email.utils.parseaddr(a)
++        if DEBUG:
++            print(f'A:{a}:NAME:{name}:ADDR:{addr}:')
++        if len(addr) > 0:
++            return addr
 +
-+def backtick(args):
-+    '''Generator function that yields lines of a program's stdout.'''
-+    if DEBUG:
-+        print(' '.join(args))
-+    p = subprocess.Popen(args, stdout = subprocess.PIPE)
-+    for line in io.TextIOWrapper(p.stdout, encoding="utf-8"):
-+        yield line
++        # If emailutils fails to find anything, let's see if there's
++        # a sequence of characters within angle brackets and hope that
++        # is an email address.  This works around things like:
++        #
++        # Reported-by: Xu, Wen <wen.xu@gatech.edu>
++        #
++        # Which should have had the name in quotations because there's
++        # a comma.
++        m = self.r3.match(a)
++        if m:
++            addr = m.expand(r'\g<1>')
++            if DEBUG:
++                print(f"M3:{addr}:M:{m}:")
++            return addr
 +
-+class find_developers(object):
-+    def __init__(self):
-+        tags = '%s|%s|%s|%s|%s|%s|%s|%s' % (
-+            'signed-off-by',
-+            'acked-by',
-+            'cc',
-+            'reviewed-by',
-+            'reported-by',
-+            'tested-by',
-+            'suggested-by',
-+            'reported-and-tested-by')
-+        # some tag, a colon, a space, and everything after that
-+        regex1 = r'^(%s):\s+(.+)$' % tags
++        # No idea, just spit the whole thing out and hope for the best.
++        return a
 +
-+        self.r1 = re.compile(regex1, re.I)
-+
-+    def run(self, lines):
-+        addr_list = []
-+
-+        for line in lines:
-+            l = line.strip()
-+
-+            # emailutils can handle abominations like:
-+            #
-+            # Reviewed-by: Bogus J. Simpson <bogus@simpson.com>
-+            # Reviewed-by: "Bogus J. Simpson" <bogus@simpson.com>
-+            # Reviewed-by: bogus@simpson.com
-+            # Cc: <stable@vger.kernel.org> # v6.9
-+            # Tested-by: Moo Cow <foo@bar.com> # powerpc
-+            m = self.r1.match(l)
-+            if not m:
-+                continue
-+            (name, addr) = email.utils.parseaddr(m.expand(r'\g<2>'))
-+
-+            # This last split removes anything after a hash mark,
-+            # because someone could have provided an improperly
-+            # formatted email address:
-+            #
-+            # Cc: stable@vger.kernel.org # v6.19+
-+            #
-+            # emailutils doesn't seem to catch this, and I can't
-+            # fully tell from RFC2822 that this isn't allowed.  I
-+            # think it is because dtext doesn't forbid spaces or
-+            # hash marks.
-+            addr_list.append(addr.split('#')[0])
-+
-+        return sorted(set(addr_list))
-+
-+def main():
-+    global DEBUG
-+
-+    parser = argparse.ArgumentParser(description = "List email addresses of contributors to a series of git commits.")
-+    parser.add_argument("revspec", nargs = '?', default = None, \
-+            help = "git revisions to process.")
-+    parser.add_argument("--separator", type = str, default = '\n', \
-+            help = "Separate each email address with this string.")
-+    parser.add_argument('--debug', action = 'store_true', default = False, \
-+            help = argparse.SUPPRESS)
-+    args = parser.parse_args()
-+
-+    if args.debug:
-+        DEBUG = True
-+
-+    fd = find_developers()
-+    if args.revspec:
-+        # read git commits from repo
-+        contributors = fd.run(backtick(['git', 'log', '--pretty=medium',
-+                  args.revspec]))
-+    else:
-+        # read patch from stdin
-+        contributors = fd.run(sys.stdin.readlines())
-+
-+    print(args.separator.join(sorted(contributors)))
-+    return 0
-+
-+if __name__ == '__main__':
-+    sys.exit(main())
-+
+     def run(self, lines):
+         addr_list = []
+ 
+         for line in lines:
+             l = line.strip()
+ 
+-            # emailutils can handle abominations like:
+-            #
+-            # Reviewed-by: Bogus J. Simpson <bogus@simpson.com>
+-            # Reviewed-by: "Bogus J. Simpson" <bogus@simpson.com>
+-            # Reviewed-by: bogus@simpson.com
+-            # Cc: <stable@vger.kernel.org> # v6.9
+-            # Tested-by: Moo Cow <foo@bar.com> # powerpc
++            # First, does this line match any of the headers we
++            # know about?
+             m = self.r1.match(l)
+             if not m:
+                 continue
+-            (name, addr) = email.utils.parseaddr(m.expand(r'\g<2>'))
++            rightside = m.expand(r'\g<2>')
+ 
+-            # This last split removes anything after a hash mark,
+-            # because someone could have provided an improperly
+-            # formatted email address:
+-            #
+-            # Cc: stable@vger.kernel.org # v6.19+
+-            #
+-            # emailutils doesn't seem to catch this, and I can't
+-            # fully tell from RFC2822 that this isn't allowed.  I
+-            # think it is because dtext doesn't forbid spaces or
+-            # hash marks.
+-            addr_list.append(addr.split('#')[0])
++            n = self.r2.match(rightside)
++            if n:
++                # Break the line into an array of addresses,
++                # delimited by commas, then handle each
++                # address.
++                addrs = rightside.split(',')
++                if DEBUG:
++                    print(f"0LINE:{rightside}:ADDRS:{addrs}:M:{n}")
++                for addr in addrs:
++                    a = self._handle_addr(addr)
++                    addr_list.append(a)
++            else:
++                # Otherwise treat the line as a single email
++                # address.
++                if DEBUG:
++                    print(f"1LINE:{rightside}:M:{n}")
++                a = self._handle_addr(rightside)
++                addr_list.append(a)
+ 
+         return sorted(set(addr_list))
+ 
 
 -- 
 2.47.2
