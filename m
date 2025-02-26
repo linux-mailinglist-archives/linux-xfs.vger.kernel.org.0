@@ -1,58 +1,58 @@
-Return-Path: <linux-xfs+bounces-20267-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20269-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 953BEA46A55
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:57:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1FDBA46A56
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:57:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 755643AE49A
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:57:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 390423AD8B2
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09D32237701;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B5792376F4;
 	Wed, 26 Feb 2025 18:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="30UIiReT"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fnyv81CZ"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2811B236451
-	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4080E236A73
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596247; cv=none; b=aagl3wv5CQfaX0Vw4Gr6SzWJZea6BpBb5ovC8PVuHF0I+aNuaajphaYMocp5fSP+FZlSunr3Pa/coMrl+yZpi9PtVYAm2vRujQtEUHquZh1xE/6tpABbTaEezghWgAtkDP66WH0WP7aefvpdfhs4nzryBDqHfUO2TSvdH9fRg4s=
+	t=1740596247; cv=none; b=HWf/pHEI8VVp9H2UokFGvRG/6gr3t225Hjo5ninLAnPKOO31PGhe+lyk2Hz8D8XD01BxdoNPJOr2yq0R5l1wjUJQ2L2xBIHUCsslpVKY7Ro3RlHJbPqD3PxoD0wMGl2eQtcgQ4pgANZUz9zvLlyYdj6yoW9liqbyf1gZOPaqhmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740596247; c=relaxed/simple;
-	bh=vwb/UmeLjYpiJ2NlWaNZq2vPWszMa+68nL39t/pwcRA=;
+	bh=8RuZmjrHohduWzVaBHuj0mMqR3rxIx7OJYV1qQh1h/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Uj4g5YTSvpwX2e8+Uk/l1MLmIEH1Na76cabY/fNuvg5VajMidlynfPDcdTPyJp8CGc7G7mxy1WN7BnFEKv9GtyfAPmTLjC8e6jBAw6LIYEXXbgd+LyicVuZ3B4p7Q50z/yMbHbbMGKzOQ/k/TyjBn0f5eDV6YVOcxFJcL8Y8UX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=30UIiReT; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=HGPm6fpSNu8xviZ05w0NCexqTwTi6T6MZnMeApYgALvvjrglWfSYtK62KjWLwG8W8VZLcLJ8ieIXKOr+c/3goEr2txJcbhpAvD8AZd+9QBzpkWusK4wx5tybfzfmcKt84z1ht+VNlbG002ELqB9coRVoOZsj04bU2fSjB1iKOyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fnyv81CZ; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=eFZNB9CnmP5cFi4f92BaRXgPolojF8cX12zu2iXMq14=; b=30UIiReT69wlr4mB8LoULjlaaW
-	oKMQLwRGm3P2ur/8cQc/aSbYwABcjFg71+/Ga8DHR8rnS0tn+YcZOmuQm/+00Man+ahPa8VZjcfEF
-	jajFsgJOgc205+j2zQrUYkxVGGx0oWx77r2q2UHbbVqWClMQAuAmNzQpGKibiKEldJBFFDXcu7kwD
-	lr60LKgF8oAgJVRco50rxhPHEv0YXO0reoxG+EyVdwH97Qat7eer7J+lHltae9M6TmuelBlPSefrb
-	HiePqS+JR60zn6U9ko0072eYPwVFjcDlqhVfIWsrpEdCJoEMxWq1VVLqojJfe/CV7JTAjkO1UTUx/
-	WiXBJBnA==;
+	bh=M5oX5JoDrVwOIiuMKStfI4dNeUlpsHD6UBaUrMdPfyY=; b=fnyv81CZMLYqSpIJFRbUZEF76p
+	kTgV5HQkPwVY3/Se9o9h+sYhQ5WYgaeSAus7NVmXXmCH0hTzfKMrhRnWRKALk55IX9KjqiaxATUyA
+	LoIBNaCblJ9R6FfEe786YLbnIPOPAEgm/tysgF+B36C7C/pYidrl/+B0lz1d7d7Ty0M6NvBpQbpgP
+	PW5jn8XgiN3W6M78Pm820p5h4dMDcgfSk15VCdgcrc7IpYvPTLJdLcuoPKeWKR+aKcrrcUQ1Q2ieN
+	gv6HNTG1XsSlNUeVSuPapjfRTkGfDh0f7O+ZlhFMq+qtkr4g1yjU/mBXTqIUDaGhB0j8EwQADCw6N
+	7VBLPmDA==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnMaz-000000053rP-2Lsk;
+	id 1tnMaz-000000053rl-3Wty;
 	Wed, 26 Feb 2025 18:57:25 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	Hans Holmberg <hans.holmberg@wdc.com>,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 04/44] xfs: trace in-memory freecounter reservations
-Date: Wed, 26 Feb 2025 10:56:36 -0800
-Message-ID: <20250226185723.518867-5-hch@lst.de>
+Subject: [PATCH 05/44] xfs: fixup the metabtree reservation in xrep_reap_metadir_fsblocks
+Date: Wed, 26 Feb 2025 10:56:37 -0800
+Message-ID: <20250226185723.518867-6-hch@lst.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250226185723.518867-1-hch@lst.de>
 References: <20250226185723.518867-1-hch@lst.de>
@@ -65,86 +65,140 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Add two tracepoints when the freecounter dips into the reserved pool
-and when it is entirely out of space.
+All callers of xrep_reap_metadir_fsblocks need to fix up the metabtree
+reservation, otherwise they'd leave the reservations in an incoherent
+state.  Move the call to xrep_reset_metafile_resv into
+xrep_reap_metadir_fsblocks so it always is taken care of, and remove
+now superfluous helper functions in the callers.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- fs/xfs/xfs_mount.c |  2 ++
- fs/xfs/xfs_trace.h | 39 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
+ fs/xfs/scrub/reap.c              |  9 ++++++---
+ fs/xfs/scrub/rtrefcount_repair.c | 34 ++++++--------------------------
+ fs/xfs/scrub/rtrmap_repair.c     | 29 +++++----------------------
+ 3 files changed, 17 insertions(+), 55 deletions(-)
 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 097e7315ba66..6b80fd55c787 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -1344,6 +1344,7 @@ xfs_dec_freecounter(
- 			goto fdblocks_enospc;
- 		}
- 		counter->res_avail -= delta;
-+		trace_xfs_freecounter_reserved(mp, ctr, delta, _RET_IP_);
- 		spin_unlock(&mp->m_sb_lock);
- 	}
+diff --git a/fs/xfs/scrub/reap.c b/fs/xfs/scrub/reap.c
+index b32fb233cf84..8703897c0a9c 100644
+--- a/fs/xfs/scrub/reap.c
++++ b/fs/xfs/scrub/reap.c
+@@ -935,10 +935,13 @@ xrep_reap_metadir_fsblocks(
+ 	if (error)
+ 		return error;
  
-@@ -1351,6 +1352,7 @@ xfs_dec_freecounter(
- 	return 0;
+-	if (xreap_dirty(&rs))
+-		return xrep_defer_finish(sc);
++	if (xreap_dirty(&rs)) {
++		error = xrep_defer_finish(sc);
++		if (error)
++			return error;
++	}
  
- fdblocks_enospc:
-+	trace_xfs_freecounter_enospc(mp, ctr, delta, _RET_IP_);
- 	spin_unlock(&mp->m_sb_lock);
- 	return -ENOSPC;
+-	return 0;
++	return xrep_reset_metafile_resv(sc);
  }
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 7fdcb519cf2f..cdaf8fdf6310 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -5668,6 +5668,45 @@ TRACE_EVENT(xfs_growfs_check_rtgeom,
- );
- #endif /* CONFIG_XFS_RT */
  
-+TRACE_DEFINE_ENUM(XC_FREE_BLOCKS);
-+TRACE_DEFINE_ENUM(XC_FREE_RTEXTENTS);
-+
-+DECLARE_EVENT_CLASS(xfs_freeblocks_resv_class,
-+	TP_PROTO(struct xfs_mount *mp, enum xfs_free_counter ctr,
-+		 uint64_t delta, unsigned long caller_ip),
-+	TP_ARGS(mp, ctr, delta, caller_ip),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(enum xfs_free_counter, ctr)
-+		__field(uint64_t, delta)
-+		__field(uint64_t, avail)
-+		__field(uint64_t, total)
-+		__field(unsigned long, caller_ip)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = mp->m_super->s_dev;
-+		__entry->ctr = ctr;
-+		__entry->delta = delta;
-+		__entry->avail = mp->m_free[ctr].res_avail;
-+		__entry->total = mp->m_free[ctr].res_total;
-+		__entry->caller_ip = caller_ip;
-+	),
-+	TP_printk("dev %d:%d ctr %s delta %llu avail %llu total %llu caller %pS",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __print_symbolic(__entry->ctr, XFS_FREECOUNTER_STR),
-+		  __entry->delta,
-+		  __entry->avail,
-+		  __entry->total,
-+		  (char *)__entry->caller_ip)
-+)
-+#define DEFINE_FREEBLOCKS_RESV_EVENT(name) \
-+DEFINE_EVENT(xfs_freeblocks_resv_class, name, \
-+	TP_PROTO(struct xfs_mount *mp, enum xfs_free_counter ctr, \
-+		 uint64_t delta, unsigned long caller_ip), \
-+	TP_ARGS(mp, ctr, delta, caller_ip))
-+DEFINE_FREEBLOCKS_RESV_EVENT(xfs_freecounter_reserved);
-+DEFINE_FREEBLOCKS_RESV_EVENT(xfs_freecounter_enospc);
-+
- #endif /* _TRACE_XFS_H */
+ /*
+diff --git a/fs/xfs/scrub/rtrefcount_repair.c b/fs/xfs/scrub/rtrefcount_repair.c
+index 257cfb24beb4..983362447826 100644
+--- a/fs/xfs/scrub/rtrefcount_repair.c
++++ b/fs/xfs/scrub/rtrefcount_repair.c
+@@ -697,32 +697,6 @@ xrep_rtrefc_build_new_tree(
+ 	return error;
+ }
  
- #undef TRACE_INCLUDE_PATH
+-/*
+- * Now that we've logged the roots of the new btrees, invalidate all of the
+- * old blocks and free them.
+- */
+-STATIC int
+-xrep_rtrefc_remove_old_tree(
+-	struct xrep_rtrefc	*rr)
+-{
+-	int			error;
+-
+-	/*
+-	 * Free all the extents that were allocated to the former rtrefcountbt
+-	 * and aren't cross-linked with something else.
+-	 */
+-	error = xrep_reap_metadir_fsblocks(rr->sc,
+-			&rr->old_rtrefcountbt_blocks);
+-	if (error)
+-		return error;
+-
+-	/*
+-	 * Ensure the proper reservation for the rtrefcount inode so that we
+-	 * don't fail to expand the btree.
+-	 */
+-	return xrep_reset_metafile_resv(rr->sc);
+-}
+-
+ /* Rebuild the rt refcount btree. */
+ int
+ xrep_rtrefcountbt(
+@@ -769,8 +743,12 @@ xrep_rtrefcountbt(
+ 	if (error)
+ 		goto out_bitmap;
+ 
+-	/* Kill the old tree. */
+-	error = xrep_rtrefc_remove_old_tree(rr);
++	/*
++	 * Free all the extents that were allocated to the former rtrefcountbt
++	 * and aren't cross-linked with something else.
++	 */
++	error = xrep_reap_metadir_fsblocks(rr->sc,
++			&rr->old_rtrefcountbt_blocks);
+ 	if (error)
+ 		goto out_bitmap;
+ 
+diff --git a/fs/xfs/scrub/rtrmap_repair.c b/fs/xfs/scrub/rtrmap_repair.c
+index f2fdd7a9fc24..fc2592c53af5 100644
+--- a/fs/xfs/scrub/rtrmap_repair.c
++++ b/fs/xfs/scrub/rtrmap_repair.c
+@@ -810,28 +810,6 @@ xrep_rtrmap_build_new_tree(
+ 
+ /* Reaping the old btree. */
+ 
+-/* Reap the old rtrmapbt blocks. */
+-STATIC int
+-xrep_rtrmap_remove_old_tree(
+-	struct xrep_rtrmap	*rr)
+-{
+-	int			error;
+-
+-	/*
+-	 * Free all the extents that were allocated to the former rtrmapbt and
+-	 * aren't cross-linked with something else.
+-	 */
+-	error = xrep_reap_metadir_fsblocks(rr->sc, &rr->old_rtrmapbt_blocks);
+-	if (error)
+-		return error;
+-
+-	/*
+-	 * Ensure the proper reservation for the rtrmap inode so that we don't
+-	 * fail to expand the new btree.
+-	 */
+-	return xrep_reset_metafile_resv(rr->sc);
+-}
+-
+ static inline bool
+ xrep_rtrmapbt_want_live_update(
+ 	struct xchk_iscan		*iscan,
+@@ -995,8 +973,11 @@ xrep_rtrmapbt(
+ 	if (error)
+ 		goto out_records;
+ 
+-	/* Kill the old tree. */
+-	error = xrep_rtrmap_remove_old_tree(rr);
++	/*
++	 * Free all the extents that were allocated to the former rtrmapbt and
++	 * aren't cross-linked with something else.
++	 */
++	error = xrep_reap_metadir_fsblocks(rr->sc, &rr->old_rtrmapbt_blocks);
+ 	if (error)
+ 		goto out_records;
+ 
 -- 
 2.45.2
 
