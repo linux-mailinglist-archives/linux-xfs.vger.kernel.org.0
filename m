@@ -1,58 +1,58 @@
-Return-Path: <linux-xfs+bounces-20282-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20284-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5E99A46A5C
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:57:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 949FAA46A5E
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:57:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B5031889C5B
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:58:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4979E1889C36
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2F6236A62;
-	Wed, 26 Feb 2025 18:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31A73238D52;
+	Wed, 26 Feb 2025 18:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p3ZfARr/"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gPLBXwAD"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DC5236421
-	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230E8238D2E
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596251; cv=none; b=aNhwm/wBKSKVGSPLdg4zqD+I/5f4X31T2CbWUPboF34YpmVVtkZk6uyW1heD6dyzKvZfYzk2pjkIOCbSMs6ZC/2/jW5HkFiJn4rAMJuUjHokbh+/Ee6zuajiJCfxiDS438SUrs+fYBhZbuoOXshU4OIXV8OzYBE04o1xuDn1Lh0=
+	t=1740596252; cv=none; b=EfCSuxnjFKZ46NVIy1BOT1u3y+Ek8NpKSyGBZL3Pf9io0+Q9f7ysxh7R/mKSbz4aH0Y7XjuAE0dF203U2me9tM+ZNC6e5ocHaNbLJXF8qejbWZ/IRsCPMg1fJ4gMfSOCtXZr2cC4uOPocFuKR6X04OZyD521NXC4mC19kgfWKtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596251; c=relaxed/simple;
-	bh=cXn7SYDo/HQljYWDDFF8fdX6i6ps3tzeGoHP3yN8SHA=;
+	s=arc-20240116; t=1740596252; c=relaxed/simple;
+	bh=zzYde/ysDi7IHF04JF0iUFu8MVP02meo2MMvu452DAs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NOn+sObOb/90wqP4cNEts+AIb08IKF8Odiza47Mglpi+qLEyvAYn1BaKBwAFvujLe7MA403N3NZZDvIlHCj6iKt107v71T9hXs5S8w196RqAkpX2O0FAB4J007oaCOun8hiQLoCNsj1UWqT1MhZ84xhCqmQ3dXHZWjLe4Zb2egw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=p3ZfARr/; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=iTrN0GRM20jvke8ffEfi/0Jx1xiUYLIs6z2iYu8wttRg0yGj1x3f1A1qXgUeK96JSv+G3e0yu+L1FtAaXr0ePAloUBInWJwErdWwh9iYm1PsYEmd3PXSbxrxL6F3GpDrvqEwwB3OXyW1k800TtRk/qOKqmiq5Q2rIfr0rF2l6po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gPLBXwAD; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=3JsT7pk/rvuv3lHfBltf7qyMRYAiPVGrk+72Iht/Wp8=; b=p3ZfARr/be80ixwAkbnQ20f3zG
-	/NIX0qaDq8Js3JiyP2YjRx9gozblFUKWntbmvQajAxuv/gkoi9t9A+uR85kAk7YQODGQuksFaGkac
-	vHgQqBer2nVYWAPnOAEYLP07YpkCmHrt8lta2ycDE2K0IkmS0STR0zsH/N6lL3nh+wEoyG1p27RIo
-	UA3IICN/NNI2JchXOP8oUVHORdfJ4UJe3g+qjReQL15myOKxBTiK5p4O8kniPjKcLRxdWSDemn2bZ
-	NgEXcdIMmMLXlqNoG6CLLpKQvgIH6u79vpToEveChpXDPK5WTS2u78C/Cm+maq1cZhHb17uTg8HXh
-	P/PrZPDQ==;
+	bh=fvHfsvkIWCsx1ByIq3on87A+oDYX6mIhXF+Mr4bWMA4=; b=gPLBXwADzz4DUrp61KwbRswjsj
+	Ev1LOkHEh/m98sSa037kZObEUjS6SeSMzqqHnZUqMZDtCyRBDp2yWpyOPCANcmsz7bZK2qurAQfrp
+	M+kpjbpyowao5Xzj0QBJn0y21GLnmYjONfraBn9V+oOtOaDecAw/XotfnP4mMlj1iF2EqFAWyu6ia
+	o9XFIw39XHxitdBTKzQbRwJkt5HRkOSL39M14hM2/x0/4XP7Q+0jBCbRd009GDjS6/rCOHkZGJ/Wn
+	mchJaxu0MfCD8hae4ggCunnhLR3WXafKZQ2r3S2S5Q/9kTbnF8b7teRHt5DCNXlULvO49fA101rmj
+	w5ZccTpQ==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnMb3-000000053to-1thq;
+	id 1tnMb3-000000053tu-34eJ;
 	Wed, 26 Feb 2025 18:57:29 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	Hans Holmberg <hans.holmberg@wdc.com>,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 17/44] xfs: export zoned geometry via XFS_FSOP_GEOM
-Date: Wed, 26 Feb 2025 10:56:49 -0800
-Message-ID: <20250226185723.518867-18-hch@lst.de>
+Subject: [PATCH 18/44] xfs: disable sb_frextents for zoned file systems
+Date: Wed, 26 Feb 2025 10:56:50 -0800
+Message-ID: <20250226185723.518867-19-hch@lst.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250226185723.518867-1-hch@lst.de>
 References: <20250226185723.518867-1-hch@lst.de>
@@ -65,62 +65,113 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Export the zoned geometry information so that userspace can query it.
+Zoned file systems not only don't use the global frextents counter, but
+for them the in-memory percpu counter also includes reservations taken
+before even allocating delalloc extent records, so it will never match
+the per-zone used information.  Disable all updates and verification of
+the sb counter for zoned file systems as it isn't useful for them.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_fs.h | 5 ++++-
- fs/xfs/libxfs/xfs_sb.c | 6 ++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_sb.c           |  2 +-
+ fs/xfs/scrub/fscounters.c        | 11 +++++++++--
+ fs/xfs/scrub/fscounters_repair.c | 10 ++++++----
+ fs/xfs/xfs_mount.c               |  2 +-
+ fs/xfs/xfs_super.c               |  4 +++-
+ 5 files changed, 20 insertions(+), 9 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 2c3171262b44..5e66fb2b2cc7 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -189,7 +189,9 @@ struct xfs_fsop_geom {
- 	uint32_t	checked;	/* o: checked fs & rt metadata	*/
- 	__u32		rgextents;	/* rt extents in a realtime group */
- 	__u32		rgcount;	/* number of realtime groups	*/
--	__u64		reserved[16];	/* reserved space		*/
-+	__u64		rtstart;	/* start of internal rt section */
-+	__u64		rtreserved;	/* RT (zoned) reserved blocks	*/
-+	__u64		reserved[14];	/* reserved space		*/
- };
- 
- #define XFS_FSOP_GEOM_SICK_COUNTERS	(1 << 0)  /* summary counters */
-@@ -247,6 +249,7 @@ typedef struct xfs_fsop_resblks {
- #define XFS_FSOP_GEOM_FLAGS_EXCHANGE_RANGE (1 << 24) /* exchange range */
- #define XFS_FSOP_GEOM_FLAGS_PARENT	(1 << 25) /* linux parent pointers */
- #define XFS_FSOP_GEOM_FLAGS_METADIR	(1 << 26) /* metadata directories */
-+#define XFS_FSOP_GEOM_FLAGS_ZONED	(1 << 27) /* zoned rt device */
- 
- /*
-  * Minimum and maximum sizes need for growth checks.
 diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index 52a04aae44e8..3b886886ea69 100644
+index 3b886886ea69..65256e109e64 100644
 --- a/fs/xfs/libxfs/xfs_sb.c
 +++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -1569,6 +1569,8 @@ xfs_fs_geometry(
- 		geo->flags |= XFS_FSOP_GEOM_FLAGS_EXCHANGE_RANGE;
- 	if (xfs_has_metadir(mp))
- 		geo->flags |= XFS_FSOP_GEOM_FLAGS_METADIR;
-+	if (xfs_has_zoned(mp))
-+		geo->flags |= XFS_FSOP_GEOM_FLAGS_ZONED;
- 	geo->rtsectsize = sbp->sb_blocksize;
- 	geo->dirblocksize = xfs_dir2_dirblock_bytes(sbp);
- 
-@@ -1589,6 +1591,10 @@ xfs_fs_geometry(
- 		geo->rgcount = sbp->sb_rgcount;
- 		geo->rgextents = sbp->sb_rgextents;
+@@ -1333,7 +1333,7 @@ xfs_log_sb(
+ 	 * we handle nearly-lockless reservations, so we must use the _positive
+ 	 * variant here to avoid writing out nonsense frextents.
+ 	 */
+-	if (xfs_has_rtgroups(mp)) {
++	if (xfs_has_rtgroups(mp) && !xfs_has_zoned(mp)) {
+ 		mp->m_sb.sb_frextents =
+ 				xfs_sum_freecounter(mp, XC_FREE_RTEXTENTS);
  	}
-+	if (xfs_has_zoned(mp)) {
-+		geo->rtstart = sbp->sb_rtstart;
-+		geo->rtreserved = sbp->sb_rtreserved;
+diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
+index 9dd893ece188..e629663e460a 100644
+--- a/fs/xfs/scrub/fscounters.c
++++ b/fs/xfs/scrub/fscounters.c
+@@ -413,7 +413,13 @@ xchk_fscount_count_frextents(
+ 
+ 	fsc->frextents = 0;
+ 	fsc->frextents_delayed = 0;
+-	if (!xfs_has_realtime(mp))
++
++	/*
++	 * Don't bother verifying and repairing the fs counters for zoned file
++	 * systems as they don't track an on-disk frextents count, and the
++	 * in-memory percpu counter also includes reservations.
++	 */
++	if (!xfs_has_realtime(mp) || xfs_has_zoned(mp))
+ 		return 0;
+ 
+ 	while ((rtg = xfs_rtgroup_next(mp, rtg))) {
+@@ -597,7 +603,8 @@ xchk_fscounters(
+ 			try_again = true;
+ 	}
+ 
+-	if (!xchk_fscount_within_range(sc, frextents,
++	if (!xfs_has_zoned(mp) &&
++	    !xchk_fscount_within_range(sc, frextents,
+ 			&mp->m_free[XC_FREE_RTEXTENTS].count,
+ 			fsc->frextents - fsc->frextents_delayed)) {
+ 		if (fsc->frozen)
+diff --git a/fs/xfs/scrub/fscounters_repair.c b/fs/xfs/scrub/fscounters_repair.c
+index 8fb0db78489e..f0d2b04644e4 100644
+--- a/fs/xfs/scrub/fscounters_repair.c
++++ b/fs/xfs/scrub/fscounters_repair.c
+@@ -74,10 +74,12 @@ xrep_fscounters(
+ 	 * track of the delalloc reservations separately, as they are are
+ 	 * subtracted from m_frextents, but not included in sb_frextents.
+ 	 */
+-	xfs_set_freecounter(mp, XC_FREE_RTEXTENTS,
+-		fsc->frextents - fsc->frextents_delayed);
+-	if (!xfs_has_rtgroups(mp))
+-		mp->m_sb.sb_frextents = fsc->frextents;
++	if (!xfs_has_zoned(mp)) {
++		xfs_set_freecounter(mp, XC_FREE_RTEXTENTS,
++				fsc->frextents - fsc->frextents_delayed);
++		if (!xfs_has_rtgroups(mp))
++			mp->m_sb.sb_frextents = fsc->frextents;
 +	}
+ 
+ 	return 0;
+ }
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 6b80fd55c787..fd1f1e63ede7 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -556,7 +556,7 @@ xfs_check_summary_counts(
+ 	 * If we're mounting the rt volume after recovering the log, recompute
+ 	 * frextents from the rtbitmap file to fix the inconsistency.
+ 	 */
+-	if (xfs_has_realtime(mp) && !xfs_is_clean(mp)) {
++	if (xfs_has_realtime(mp) && !xfs_has_zoned(mp) && !xfs_is_clean(mp)) {
+ 		error = xfs_rtalloc_reinit_frextents(mp);
+ 		if (error)
+ 			return error;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 86d61f3d83cd..a840e1c68ff2 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1131,7 +1131,9 @@ xfs_reinit_percpu_counters(
+ 	percpu_counter_set(&mp->m_icount, mp->m_sb.sb_icount);
+ 	percpu_counter_set(&mp->m_ifree, mp->m_sb.sb_ifree);
+ 	xfs_set_freecounter(mp, XC_FREE_BLOCKS, mp->m_sb.sb_fdblocks);
+-	xfs_set_freecounter(mp, XC_FREE_RTEXTENTS, mp->m_sb.sb_frextents);
++	if (!xfs_has_zoned(mp))
++		xfs_set_freecounter(mp, XC_FREE_RTEXTENTS,
++				mp->m_sb.sb_frextents);
  }
  
- /* Read a secondary superblock. */
+ static void
 -- 
 2.45.2
 
