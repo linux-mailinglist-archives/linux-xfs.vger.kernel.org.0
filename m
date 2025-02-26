@@ -1,58 +1,58 @@
-Return-Path: <linux-xfs+bounces-20293-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20298-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 182C9A46A68
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:58:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6CE6A46A76
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:58:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80AFE16C7C2
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:58:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D1F53ADE7C
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E663238D45;
-	Wed, 26 Feb 2025 18:57:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E996237700;
+	Wed, 26 Feb 2025 18:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bhU6T5Wm"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LEZyv1yN"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BBC238D2D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08AF23908C
 	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596254; cv=none; b=E2zn3LEZ0Szl3BhfdyD04lEaukpv30594irNgNZSz6e47J3Dm7907+tXNHBefIseBjpN4qFDnMOBU2XE8+5bMF110eAWnvMp7y99ag8kPAhFbFALW2po5ljo6ODu97wuPcVRpOtzk/aJ4T++w4o0cWxeXo1ESHgb/9ZeQvu3IuQ=
+	t=1740596256; cv=none; b=NJ3qaTpN7BWxAX373+LLdFD6oey4SS87pdSlzdFbAYh/VBouyOB7UBa95A6zs5zH6yMq+fsUOV+Ih/CcT2O9jP2jjcLRsjNAiZDKcTVlesDZPgVG0ShZ+tP2IQDEw3EkiH78nBY4iM+34KEEqfGmBxOzw9b909fPY4RwSgFZN2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596254; c=relaxed/simple;
-	bh=PGWouvOc+gNSjvkA/eobUYaxS0puzpHDHCbA9qqc37M=;
+	s=arc-20240116; t=1740596256; c=relaxed/simple;
+	bh=G1ZL9jl94oN3AucbMIBlnRrkdV5sL+cbwDaNBKtU+lw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hFw6OyVuDdX+vSYTUvjEHWDjI+ZIICDewRMbJodpvxmygmoAVdY0RTkYpn976FCdxU2FjvXDnq9TqVAPJ2j60DGr2gbVgJz7XlfZzuu+A3QJVttA7KD3huaIviAs9KNBca9bKcIFaw5xGWJm3Rx+O1za/2KMWDPe1qrtTrLGYIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bhU6T5Wm; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=HtxnbYC3BRiDGXj9zW5HRMpkV1YUOCqEraOMl81pQzlSzkFZlAzk5MG8jkP+KKrArz9wkO33NkjsMsLBS3/2NRGjdNLdOkL64eIMo1PLch3jxIyZlE68+9ambfHEauEekU4yqUv4A3rcwTntp8PGZm8GeSitqi/8ma3A9HUeYBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LEZyv1yN; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=X0r8qJOozTQt+ER+SF3X9ToR28Keovm1zv4WwyV2nho=; b=bhU6T5WmbSa3eV21UkyIqfRFb4
-	CYNNHD9J+i6sH1V75bmxnXrzNj6t4/00sgRM3L/YiNwIIGyTG9Bs2NbFmVXa2XhVf8IpV2OEKnirc
-	AGWoq94lGkS/OVwbWfh8rPU8MhDdmE7YVy/gi5nmwt9OamaB+V0dH0ixZpMcUq5jI3oZ38sXhRAQF
-	rM4P+2I9LkhKN8zS2pXeqpH3t4jGZSOyKjgLDOtTHpBSHUdpcIAwRycgJ86k0X/4Izmyd6f35LJnQ
-	GUvpb6oiO71w9yJcVvAHhBrY82/8iTsx8UBNQMdWANl4dxJR9eAYHf1zHGcaqlXXFnF8z+49jgVzz
-	t4oXQcaQ==;
+	bh=ZWABWFKx826Yci8ZkfyZyj/Bik2drkWSczVCAq1FuaU=; b=LEZyv1yNTFbe/F6azlw+Q3N41K
+	maVqjS/I2IQyjXR83ZoOj7NyzBoarTTsT4/wk7XFw3AZpDob17s59KLFlsOv15thqgvg5sCVJgyht
+	43KElVAhta7LChqI9borrUq44zBlwvk/cbvjyf+YYvkCKnkqalaIjXoPBbWYoOGRJWuP4byRv3dmf
+	Dg4mXU9cmE+ydeVIOnDYhIItOctshbwx9aCgD/wpdJT8BSWvCBV3lRDE4WFvv3qFpc5yUR67VOJ4k
+	/YDXIhLBqrxrBJHWuq/Dhr1uhlwTeO0wWTICFeffwxqBqMHF7oWdSUDHSA5L6ci5D4osHpSj7+y54
+	i+SVZFAg==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnMb7-000000053vl-0TH1;
+	id 1tnMb7-000000053w6-1hWl;
 	Wed, 26 Feb 2025 18:57:33 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	Hans Holmberg <hans.holmberg@wdc.com>,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 29/44] xfs: hide reserved RT blocks from statfs
-Date: Wed, 26 Feb 2025 10:57:01 -0800
-Message-ID: <20250226185723.518867-30-hch@lst.de>
+Subject: [PATCH 30/44] xfs: support growfs on zoned file systems
+Date: Wed, 26 Feb 2025 10:57:02 -0800
+Message-ID: <20250226185723.518867-31-hch@lst.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250226185723.518867-1-hch@lst.de>
 References: <20250226185723.518867-1-hch@lst.de>
@@ -65,31 +65,178 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-File systems with a zoned RT device have a large number of reserved
-blocks that are required for garbage collection, and which can't be
-filled with user data.  Exclude them from the available blocks reported
-through stat(v)fs.
+Replace the inner loop growing one RT bitmap block at a time with
+one just modifying the superblock counters for growing an entire
+zone (aka RTG).  The big restriction is just like at mkfs time only
+a RT extent size of a single FSB is allowed, and the file system
+capacity needs to be aligned to the zone size.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- fs/xfs/xfs_super.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_rtalloc.c | 121 ++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 101 insertions(+), 20 deletions(-)
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 39b2bad67fcd..b6426f5c8b51 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -869,7 +869,8 @@ xfs_statfs_rt(
- {
- 	st->f_bfree = xfs_rtbxlen_to_blen(mp,
- 			xfs_sum_freecounter(mp, XC_FREE_RTEXTENTS));
--	st->f_blocks = mp->m_sb.sb_rblocks;
-+	st->f_blocks = mp->m_sb.sb_rblocks - xfs_rtbxlen_to_blen(mp,
-+			mp->m_free[XC_FREE_RTEXTENTS].res_total);
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 6a45749daf57..8bfdd8d6fab1 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -860,6 +860,84 @@ xfs_growfs_rt_init_rtsb(
+ 	return error;
  }
  
- static void
++static void
++xfs_growfs_rt_sb_fields(
++	struct xfs_trans	*tp,
++	const struct xfs_mount	*nmp)
++{
++	struct xfs_mount	*mp = tp->t_mountp;
++
++	if (nmp->m_sb.sb_rextsize != mp->m_sb.sb_rextsize)
++		xfs_trans_mod_sb(tp, XFS_TRANS_SB_REXTSIZE,
++			nmp->m_sb.sb_rextsize - mp->m_sb.sb_rextsize);
++	if (nmp->m_sb.sb_rbmblocks != mp->m_sb.sb_rbmblocks)
++		xfs_trans_mod_sb(tp, XFS_TRANS_SB_RBMBLOCKS,
++			nmp->m_sb.sb_rbmblocks - mp->m_sb.sb_rbmblocks);
++	if (nmp->m_sb.sb_rblocks != mp->m_sb.sb_rblocks)
++		xfs_trans_mod_sb(tp, XFS_TRANS_SB_RBLOCKS,
++			nmp->m_sb.sb_rblocks - mp->m_sb.sb_rblocks);
++	if (nmp->m_sb.sb_rextents != mp->m_sb.sb_rextents)
++		xfs_trans_mod_sb(tp, XFS_TRANS_SB_REXTENTS,
++			nmp->m_sb.sb_rextents - mp->m_sb.sb_rextents);
++	if (nmp->m_sb.sb_rextslog != mp->m_sb.sb_rextslog)
++		xfs_trans_mod_sb(tp, XFS_TRANS_SB_REXTSLOG,
++			nmp->m_sb.sb_rextslog - mp->m_sb.sb_rextslog);
++	if (nmp->m_sb.sb_rgcount != mp->m_sb.sb_rgcount)
++		xfs_trans_mod_sb(tp, XFS_TRANS_SB_RGCOUNT,
++			nmp->m_sb.sb_rgcount - mp->m_sb.sb_rgcount);
++}
++
++static int
++xfs_growfs_rt_zoned(
++	struct xfs_rtgroup	*rtg,
++	xfs_rfsblock_t		nrblocks)
++{
++	struct xfs_mount	*mp = rtg_mount(rtg);
++	struct xfs_mount	*nmp;
++	struct xfs_trans	*tp;
++	xfs_rtbxlen_t		freed_rtx;
++	int			error;
++
++	/*
++	 * Calculate new sb and mount fields for this round.  Also ensure the
++	 * rtg_extents value is uptodate as the rtbitmap code relies on it.
++	 */
++	nmp = xfs_growfs_rt_alloc_fake_mount(mp, nrblocks,
++			mp->m_sb.sb_rextsize);
++	if (!nmp)
++		return -ENOMEM;
++	freed_rtx = nmp->m_sb.sb_rextents - mp->m_sb.sb_rextents;
++
++	xfs_rtgroup_calc_geometry(nmp, rtg, rtg_rgno(rtg),
++			nmp->m_sb.sb_rgcount, nmp->m_sb.sb_rextents);
++
++	error = xfs_trans_alloc(mp, &M_RES(nmp)->tr_growrtfree, 0, 0, 0, &tp);
++	if (error)
++		goto out_free;
++
++	xfs_rtgroup_lock(rtg, XFS_RTGLOCK_RMAP);
++	xfs_rtgroup_trans_join(tp, rtg, XFS_RTGLOCK_RMAP);
++
++	xfs_growfs_rt_sb_fields(tp, nmp);
++	xfs_trans_mod_sb(tp, XFS_TRANS_SB_FREXTENTS, freed_rtx);
++
++	error = xfs_trans_commit(tp);
++	if (error)
++		goto out_free;
++
++	/*
++	 * Ensure the mount RT feature flag is now set, and compute new
++	 * maxlevels for rt btrees.
++	 */
++	mp->m_features |= XFS_FEAT_REALTIME;
++	xfs_rtrmapbt_compute_maxlevels(mp);
++	xfs_rtrefcountbt_compute_maxlevels(mp);
++	xfs_zoned_add_available(mp, freed_rtx);
++out_free:
++	kfree(nmp);
++	return error;
++}
++
+ static int
+ xfs_growfs_rt_bmblock(
+ 	struct xfs_rtgroup	*rtg,
+@@ -945,24 +1023,7 @@ xfs_growfs_rt_bmblock(
+ 	/*
+ 	 * Update superblock fields.
+ 	 */
+-	if (nmp->m_sb.sb_rextsize != mp->m_sb.sb_rextsize)
+-		xfs_trans_mod_sb(args.tp, XFS_TRANS_SB_REXTSIZE,
+-			nmp->m_sb.sb_rextsize - mp->m_sb.sb_rextsize);
+-	if (nmp->m_sb.sb_rbmblocks != mp->m_sb.sb_rbmblocks)
+-		xfs_trans_mod_sb(args.tp, XFS_TRANS_SB_RBMBLOCKS,
+-			nmp->m_sb.sb_rbmblocks - mp->m_sb.sb_rbmblocks);
+-	if (nmp->m_sb.sb_rblocks != mp->m_sb.sb_rblocks)
+-		xfs_trans_mod_sb(args.tp, XFS_TRANS_SB_RBLOCKS,
+-			nmp->m_sb.sb_rblocks - mp->m_sb.sb_rblocks);
+-	if (nmp->m_sb.sb_rextents != mp->m_sb.sb_rextents)
+-		xfs_trans_mod_sb(args.tp, XFS_TRANS_SB_REXTENTS,
+-			nmp->m_sb.sb_rextents - mp->m_sb.sb_rextents);
+-	if (nmp->m_sb.sb_rextslog != mp->m_sb.sb_rextslog)
+-		xfs_trans_mod_sb(args.tp, XFS_TRANS_SB_REXTSLOG,
+-			nmp->m_sb.sb_rextslog - mp->m_sb.sb_rextslog);
+-	if (nmp->m_sb.sb_rgcount != mp->m_sb.sb_rgcount)
+-		xfs_trans_mod_sb(args.tp, XFS_TRANS_SB_RGCOUNT,
+-			nmp->m_sb.sb_rgcount - mp->m_sb.sb_rgcount);
++	xfs_growfs_rt_sb_fields(args.tp, nmp);
+ 
+ 	/*
+ 	 * Free the new extent.
+@@ -1129,6 +1190,11 @@ xfs_growfs_rtg(
+ 			goto out_rele;
+ 	}
+ 
++	if (xfs_has_zoned(mp)) {
++		error = xfs_growfs_rt_zoned(rtg, nrblocks);
++		goto out_rele;
++	}
++
+ 	error = xfs_growfs_rt_alloc_blocks(rtg, nrblocks, rextsize, &bmblocks);
+ 	if (error)
+ 		goto out_rele;
+@@ -1148,8 +1214,7 @@ xfs_growfs_rtg(
+ 
+ 	if (old_rsum_cache)
+ 		kvfree(old_rsum_cache);
+-	xfs_rtgroup_rele(rtg);
+-	return 0;
++	goto out_rele;
+ 
+ out_error:
+ 	/*
+@@ -1197,6 +1262,22 @@ xfs_growfs_check_rtgeom(
+ 
+ 	if (min_logfsbs > mp->m_sb.sb_logblocks)
+ 		return -EINVAL;
++
++	if (xfs_has_zoned(mp)) {
++		uint32_t	gblocks = mp->m_groups[XG_TYPE_RTG].blocks;
++		uint32_t	rem;
++
++		if (rextsize != 1)
++			return -EINVAL;
++		div_u64_rem(mp->m_sb.sb_rblocks, gblocks, &rem);
++		if (rem) {
++			xfs_warn(mp,
++"new RT volume size (%lld) not aligned to RT group size (%d)",
++				mp->m_sb.sb_rblocks, gblocks);
++			return -EINVAL;
++		}
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.45.2
 
