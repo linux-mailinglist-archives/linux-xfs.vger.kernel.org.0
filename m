@@ -1,115 +1,239 @@
-Return-Path: <linux-xfs+bounces-20260-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20262-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48B12A4681E
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:30:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A748A46826
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:33:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 270A91885053
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 17:30:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7878188493C
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 17:33:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6E16224AFB;
-	Wed, 26 Feb 2025 17:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F342248B9;
+	Wed, 26 Feb 2025 17:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="cQCZq8Eh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FiJ6pfs+"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9104B20CCEB
-	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 17:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2592E1E1E1A
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 17:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740591010; cv=none; b=hVFSyUZ4PHWQpfvyeOG+qWq1NE/LHdYy50zCXip2amRzqDCmgnLZMZTFC26PhhVy54DSGfmrNJwOW6JVOVJkYzYDxBpu81DMluiQgKW2/x9V/n/asxb/trDz6QO/yJHGRTJiLJ1v6QIxmpQoTX+5WXllx3cX2f/b/onS4lEpZ0M=
+	t=1740591224; cv=none; b=iJV4kfH/HbSHQ/wpOaRgehzrbnXlPVj5MVV8R+tW5x79kkjD0H/M0o7+ReJGLd+eHTsq5At7qPmPA/u9iof173o8Z/nNUsqfPl/uWXRbnCbBo0UlIDFRR9lwRNg2LJNriVsJigbLQb6hX5su7H87ePrEIBaZzIUHjfQ/EIdkw/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740591010; c=relaxed/simple;
-	bh=K3UGITGRipM7p76j5dqZhf82Lz+6ZzCI3IDP+V/gDS4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=px4BF7qJ3t3hLq56UL3Kg6AcWVG1JI1oTLEfVZMOKL+ITowY8NDW2+HgBst4l+DzBk8UEEeNNN6iIJlXvyIk/JKuPR1Ds6loBkpcOt0Mlz2O4FEPCOdaFe3lR4cLawM3I3gc/8PpZq9siForhqVmfGB/OYV0udt5wWWSI0TQaAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=cQCZq8Eh; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d2b3811513so3885095ab.1
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 09:30:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740591007; x=1741195807; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lVANN8GELxA2LEZTYYuOIhpjLMR/AaCWMuZrSOMGLrc=;
-        b=cQCZq8Eh8wytrbvhFMn53yUpCmDdNAz97WmlsGHXIDVQqNdkqrMn3JX04fuUueXB4a
-         3y4jcBPn5tnIaiIey1EbnmsmB5ZaNQBcvbvDmnL7KOdF9MeugHdfxJWngr18TLcxKvE6
-         ebJZ9M2l288fYcmTdU9fGhm+P6wYJ/N0j7Ppi6r5Wqpx4LLFXf9iBmV2v7x66RqKv+4k
-         Kt75CCw7oQZ+i7O6DRtxF+jBOevryDFMvPEXGjlANyee6s2FUDaxU2f2mTqNIS8ON+Go
-         w7Rr/4g9EOfy6vA0u45w2DISLtGLRZep3ToyYRY/v6wAarRH8wkGFeqB2xsLJIIM7r7/
-         96eA==
+	s=arc-20240116; t=1740591224; c=relaxed/simple;
+	bh=C7uyY5Pz0Lz9PwmsfVNIVgjqn8SRb4PUJ9FRC/UIvoE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=CmPW44Jpt8oTWIMHyqAaYHaDMFsgealFIZaFESIv4V1Gj7uIISMXo/LkTWlFQ/BWwxjZmcxVxY1mxEn63KvWyirJrKQyuc97vRdOxTSAcyyMwpMzoU+ssVB2V2Ra4g+tyQRr+DY8mudrC3xKiLN/QP6ipAWcoiSiTxpWhVPBAtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FiJ6pfs+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740591222;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LAMKY17M1S8TSLM2ApfQPBKV8Lm25eVHHysXLb156Ds=;
+	b=FiJ6pfs+BGSZUD3KOsDxGl1W2DLjCl9yb4GuzLQUiY2Ghi1fJXToFoZNTKhVqoj0rf9Cme
+	K63WX2YatEVqSb9fyGleQkHyK0NIhxWvMy30RKGTP1tu7mvd7zFsZYSYpRrEeceQjb984X
+	alsbFygI2av55WobwOu5CRFpJnWjyMU=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-59-cPdarrCXMCaFAkTPW5b-xA-1; Wed, 26 Feb 2025 12:33:40 -0500
+X-MC-Unique: cPdarrCXMCaFAkTPW5b-xA-1
+X-Mimecast-MFC-AGG-ID: cPdarrCXMCaFAkTPW5b-xA_1740591220
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e6a94b6bdfso1859856d6.1
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 09:33:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740591007; x=1741195807;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lVANN8GELxA2LEZTYYuOIhpjLMR/AaCWMuZrSOMGLrc=;
-        b=wMjgadGWuUpVYL4PZ0rlLE4+c542oyB+fDZPRIC4DMW6IoMeGSKL1j/gXb8lrthFaL
-         6RqodGIlR3dHgHCtIfky5IzskoVvOEYR4PJ5Tdg5xO5n6zz7E2aDwpf6d0DeJ+UW+7po
-         v+9olFBA1nt63ZwRZKc7h1QShCMtkGl+DdEAH/J4vf/hE+klNRSOWpZG3GmPtHgv/kPG
-         FpSzJGCgrtdIjLwBMAK2Xx/B3ulPvlS9H6L/2jHwmtrYpxSgiHfeLlWe11Gt3FzH521X
-         fTI6nhho1h8KqqF3vWgM19UavcbN6Ps7uyPmEepBfQVm6oVvwAovYf7d5jNutRwSO2DQ
-         4ymQ==
-X-Gm-Message-State: AOJu0Ywx5S9AHI5XS628mr3FKF2hH6xKcqzJzwpWR0KARYPNMK7pnkNR
-	5AAhyLBsao/ujsoM6ncBOs18FOLKuxUEg4Yt5kKpV3P50xfvuySpW7c5QOCxtdmABJ6xYpKw1sd
-	C
-X-Gm-Gg: ASbGncuR+cmi+/EibT/IgRW3yCtPIPXSUNEl5aQ6DVuIahDfGUApXaSBodSAmYNwbOT
-	XzVkayKw85WbdFy3gPnFBR9Q6lnvLtOMAwYNE8gxNmo5XoGevqveGzars+2fx/YwPgqN5mvri1j
-	wGo7nPDrLv6vBJk0vu1goAAaJ+aZkVXcmIf6SNq3SD20NVeqy+lO+Emxj0gKtw3+fatj5eYOtOT
-	CJY6sx8cesVlmqmEGp5RDdiAeohAWV2VL+sSbvALQeTnwo7FaukNszjgI4++nlkRXvTiHx3F6Nl
-	NkGZ5+0YfuOPfK9G2bpzIA==
-X-Google-Smtp-Source: AGHT+IE08XKenNtq+bMrYzA9dT3+ZDEykgqaeLAjmo+xmDFjtzY5WSOX0WPToZEER5xGTORC4ixEjA==
-X-Received: by 2002:a05:6e02:2188:b0:3d1:9bca:cf28 with SMTP id e9e14a558f8ab-3d3dd2e9deemr2357195ab.8.1740591007529;
-        Wed, 26 Feb 2025 09:30:07 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d361653616sm8894395ab.25.2025.02.26.09.30.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 09:30:06 -0800 (PST)
-Message-ID: <ba718fc2-08ba-4d7e-98f9-47f3f52c13a8@kernel.dk>
-Date: Wed, 26 Feb 2025 10:30:05 -0700
+        d=1e100.net; s=20230601; t=1740591220; x=1741196020;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LAMKY17M1S8TSLM2ApfQPBKV8Lm25eVHHysXLb156Ds=;
+        b=GG55yKH1Q4eGNSpUEPEkCi/pARF/VGd8wLZeJnCUXaNYSCamfFGZ/RxQRHj/Wm0aAE
+         KVl9Pq+wa7pEgRzQBKgLll1oQRYfEs1WYkHaI6BUYAFSe4pzkTZHlcazuoZ5by/uVEfT
+         F9rJnBAU60spcipsv77TeK2d+WlxCwyFAm50N4c9W/IIDa0GCWwZc9kRd1YavLS1lpVH
+         al9WLVEJMbGeVGF27LgDyczqJpJ5A6IhIvkQ98rftGprNjAkLH8jFZEuhiqKTEPQDLgr
+         T/OhafoQ0+iPjpAdbJTiNlaaIHKhHYtuXZvtElaexfeCQ5jAa3U7mGQV7i6F/r+vyody
+         Pqyw==
+X-Gm-Message-State: AOJu0YwTTgST082MpzXo9zpfUmdhQx815t1naBiu8zM2cpXvjeMUaxtc
+	ioB6HHNtCjQUqxkydgAfznWR0iGUvRvYttJ4wYr0dWurfpCH2GwG1w5d1Aa/vzqgM+xJlDGdW2/
+	kmuPRZfBrRU7mpstTNYaJsOatIZ+Rd/ZakGmi9XyVhcQcPX0I9CgVk/kIvhZV6bjVjM9JL9Z18Y
+	yO6fqPJIp8ySNASjNDxszvRLbymo97tFZk8ObHMfdpWw==
+X-Gm-Gg: ASbGncva37HIta+PheEC361VqzzzEJfeA3zW4xdFLxn44dUQKi67rDxl9VdDmCTcwBo
+	Vm0SvIJVI8VQUkRs7hmhnQGuWQXJzNMkFTunH4m75SqmF/nN91U4KgSb4IYS+mtiOhWIpn6gvED
+	88Tw61Y7w4fPPzC6MYjtz1IPE4qmVVwLOenXMBf1NNK9vhQE4+2oMFtR5Y4q0JDpGxsplnT81Dl
+	gRvDxULEo2njJlzSsBzRYhw9DtgE6OsaG4pBJAQbHCIGm/hjd2h5zhqBc7iOUX/GUIIgUrnSrX0
+	MSfyL7/erjTv8zI8U/krFr35nJ5jhFmKdT6RE3uWkjacQACNXdM1Kc5W6A==
+X-Received: by 2002:a05:6214:4007:b0:6e4:f090:3634 with SMTP id 6a1803df08f44-6e6b01ab9c3mr264224436d6.33.1740591220018;
+        Wed, 26 Feb 2025 09:33:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH1P6edDbMH1ynV2gKOffEid6Yha1I6DoiFkxMqT/yT11CTeuYWGQDFL7/5XpBCyk7li/dfdQ==
+X-Received: by 2002:a05:6214:4007:b0:6e4:f090:3634 with SMTP id 6a1803df08f44-6e6b01ab9c3mr264224106d6.33.1740591219567;
+        Wed, 26 Feb 2025 09:33:39 -0800 (PST)
+Received: from fedora.redhat.com (72-50-215-160.fttp.usinternet.com. [72.50.215.160])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e87b17103bsm25190246d6.94.2025.02.26.09.33.38
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 09:33:39 -0800 (PST)
+From: bodonnel@redhat.com
+To: linux-xfs@vger.kernel.org
+Subject: [PATCH] xfs_repair: -EFSBADCRC needs action when read verifier detects it.
+Date: Wed, 26 Feb 2025 11:32:22 -0600
+Message-ID: <20250226173335.558221-1-bodonnel@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHSET v2 0/2] Add XFS support for RWF_DONTCACHE
-From: Jens Axboe <axboe@kernel.dk>
-To: cem@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org
-References: <20250204184047.356762-1-axboe@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <20250204184047.356762-1-axboe@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/4/25 11:39 AM, Jens Axboe wrote:
-> Hi,
-> 
-> Now that the main bits are in mainline, here are the XFS patches for
-> adding RWF_DONTCACHE support. It's pretty trivial - patch 1 adds the
-> basic iomap flag and check, and patch 2 flags FOP_DONTCACHE support
-> in the file_operations struct. Could be folded into a single patch
-> at this point, I'll leave that up to you guys what you prefer.
-> 
-> Patches are aginst 6.14-rc1.
-> 
-> Since v1:
-> - Remove stale commit message paragraph
-> - Add comments for iomap flag from Darrick
+From: Bill O'Donnell <bodonnel@redhat.com>
 
-Is this slated for 6.15? I don't see it in the tree yet, but I also
-don't see a lot of other things in there. Would be a shame to miss the
-next release on this front.
+For xfs_repair, there is a case when -EFSBADCRC is encountered but not
+acted on. Modify da_read_buf to check for and repair. The current
+implementation fails for the case:
 
+$ xfs_repair xfs_metadump_hosting.dmp.image
+Phase 1 - find and verify superblock...
+Phase 2 - using internal log
+        - zero log...
+        - scan filesystem freespace and inode maps...
+        - found root inode chunk
+Phase 3 - for each AG...
+        - scan and clear agi unlinked lists...
+        - process known inodes and perform inode discovery...
+        - agno = 0
+Metadata CRC error detected at 0x46cde8, xfs_dir3_block block 0xd3c50/0x1000
+bad directory block magic # 0x16011664 in block 0 for directory inode 867467
+corrupt directory block 0 for inode 867467
+        - agno = 1
+        - agno = 2
+        - agno = 3
+        - process newly discovered inodes...
+Phase 4 - check for duplicate blocks...
+        - setting up duplicate extent list...
+        - check for inodes claiming duplicate blocks...
+        - agno = 0
+        - agno = 1
+        - agno = 3
+        - agno = 2
+bad directory block magic # 0x16011664 in block 0 for directory inode 867467
+Phase 5 - rebuild AG headers and trees...
+        - reset superblock...
+Phase 6 - check inode connectivity...
+        - resetting contents of realtime bitmap and summary inodes
+        - traversing filesystem ...
+bad directory block magic # 0x16011664 for directory inode 867467 block 0: fixing magic # to 0x58444233
+        - traversal finished ...
+        - moving disconnected inodes to lost+found ...
+Phase 7 - verify and correct link counts...
+Metadata corruption detected at 0x46cc88, xfs_dir3_block block 0xd3c50/0x1000
+libxfs_bwrite: write verifier failed on xfs_dir3_block bno 0xd3c50/0x8
+xfs_repair: Releasing dirty buffer to free list!
+xfs_repair: Refusing to write a corrupt buffer to the data device!
+xfs_repair: Lost a write to the data device!
+
+fatal error -- File system metadata writeout failed, err=117.  Re-run xfs_repair.
+
+
+With the patch applied:
+$ xfs_repair xfs_metadump_hosting.dmp.image
+Phase 1 - find and verify superblock...
+Phase 2 - using internal log
+        - zero log...
+        - scan filesystem freespace and inode maps...
+        - found root inode chunk
+Phase 3 - for each AG...
+        - scan and clear agi unlinked lists...
+        - process known inodes and perform inode discovery...
+        - agno = 0
+Metadata CRC error detected at 0x46ce28, xfs_dir3_block block 0xd3c50/0x1000
+bad directory block magic # 0x16011664 in block 0 for directory inode 867467
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+        - agno = 1
+        - agno = 2
+        - agno = 3
+        - process newly discovered inodes...
+Phase 4 - check for duplicate blocks...
+        - setting up duplicate extent list...
+        - check for inodes claiming duplicate blocks...
+        - agno = 0
+        - agno = 1
+        - agno = 2
+        - agno = 3
+bad directory block magic # 0x16011664 in block 0 for directory inode 867467
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+Phase 5 - rebuild AG headers and trees...
+        - reset superblock...
+Phase 6 - check inode connectivity...
+        - resetting contents of realtime bitmap and summary inodes
+        - traversing filesystem ...
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+Metadata CRC error detected at 0x46ce28, xfs_dir3_block block 0xd3c50/0x1000
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+bad directory block magic # 0x16011664 for directory inode 867467 block 0: fixing magic # to 0x58444233
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+rebuilding directory inode 867467
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
+cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
+        - traversal finished ...
+        - moving disconnected inodes to lost+found ...
+Phase 7 - verify and correct link counts...
+done
+
+Signed-off-by: Bill O'Donnell <bodonnel@redhat.com>
+---
+ repair/da_util.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/repair/da_util.c b/repair/da_util.c
+index 7f94f4012062..0a4785e6f69b 100644
+--- a/repair/da_util.c
++++ b/repair/da_util.c
+@@ -66,6 +66,9 @@ da_read_buf(
+ 	}
+ 	libxfs_buf_read_map(mp->m_dev, map, nex, LIBXFS_READBUF_SALVAGE,
+ 			&bp, ops);
++	if (bp->b_error == -EFSBADCRC) {
++		libxfs_buf_relse(bp);
++	}
+ 	if (map != map_array)
+ 		free(map);
+ 	return bp;
 -- 
-Jens Axboe
+2.48.1
+
 
