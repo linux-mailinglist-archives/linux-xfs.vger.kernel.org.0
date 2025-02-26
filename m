@@ -1,231 +1,212 @@
-Return-Path: <linux-xfs+bounces-20265-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20274-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FCB0A46999
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:26:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D0CF0A46A52
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:57:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0AFEF173B8A
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:26:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16BFE16D66C
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:57:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97065235BE8;
-	Wed, 26 Feb 2025 18:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E5C1237A3C;
+	Wed, 26 Feb 2025 18:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLXTKdZA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3qSlxg5c"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5614F221DAA
-	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FDD236A9C
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740594003; cv=none; b=cwVQxYRI/Z2s4IKBRxHkYVscUPE2grnFRq//yRyhFG3fYoXuzGFgOyj5Y8kk1XFhBGlia7r6anMM+9GsakCkurag33Io0uGMxKTmAPqXfd59CkVvQIOjkkpvLHbuvguyOllhXI7FK1lIfMFBL6+Sb8lbBo0BD5hfyNFvIO8mugA=
+	t=1740596249; cv=none; b=EtLAwbz7goZGvhA1mLPzeJwGhiJ97XnQdFtjPtWW07PbH+tWGgo2tscwmVyvsuDCkh5Nf/8dwyNHSkNMeSzwXDOK6z8rfXMSdbrkJZq/2gWNVaHKDg20HwgW/YsVc2kjrz78A9AtsLe3nIhJlNBxq8uD875mai36JnGiFqI+yw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740594003; c=relaxed/simple;
-	bh=IW2S8fvhVTEAZc3b3VbSgbZOk6fvr8Nqj/cu44cK8e8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJWXHb/JebU/R7ZTwk0QeQvDU4mA3M1RezPBmh+ofRD8yG8qVsG05Us4yKOz8+6yv4bjwVbjNWdKGj0yX0Ha33YO/DWw3A/wQiHe5fJXb4AW0LIieq62EMsT92siaRxM9z+/9rpzAvBbbuc9P76jRv5EA69numZ7eVh65re/4zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLXTKdZA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B96FFC4CEE7;
-	Wed, 26 Feb 2025 18:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740594002;
-	bh=IW2S8fvhVTEAZc3b3VbSgbZOk6fvr8Nqj/cu44cK8e8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rLXTKdZAq6P+rZlHCpWnSEgJoae6yDWd1sp/hhYCOIq4bjp1rpwuzew2slqHWhnIM
-	 cdS4F9zAcb/rqTtUivj+EbEGDu991olZ9HsmzJlIXByzNJZ9A1BTpJ+bB5NpPomwZy
-	 YYDETfuyI48C7/8vTy06uZy9ns3WWpDNkD2Ejm2PYo6Q+v+/BFw/42ehOAQd5+hTyB
-	 C0JupQEO+ajeb9fsa8jiBfiWxp75CaOLYg7oyC6zcxrveyJzTfiW2UKtL6Fd+l6g2k
-	 uotWpap+sN28yd9oTSSbq6U5zNo9/rAIANn85XNo3pfcSC9LBqyK1EGGonW5W+6RP/
-	 uxFAa8Z1v6Hyw==
-Date: Wed, 26 Feb 2025 10:20:02 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: bodonnel@redhat.com
-Cc: linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs_repair: -EFSBADCRC needs action when read verifier
- detects it.
-Message-ID: <20250226182002.GU6242@frogsfrogsfrogs>
-References: <20250226173335.558221-1-bodonnel@redhat.com>
+	s=arc-20240116; t=1740596249; c=relaxed/simple;
+	bh=XT/Q74L0HCrfy8f4uFBB4FEJPIyP321F5tv6ytGorHg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k+xuZMRQkLlnuP+Vx8OntpZuPlL3qK/btkybCHUWMsRsPDd6e05k9HljbLTS9IpEKMnkcQFgI6ufZpo3VfZpt4477V1qRVxVqvTUukmo+dl386SisYWoZiS4tRusDddhVXw8oTyBLbk4OUYDNKb8RBCQvc2qQKl/x9qcNHULej0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3qSlxg5c; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=lh1CwYFUEEx1oDiN5pr8pMuZV0g4lhD4TUotHsWoWIQ=; b=3qSlxg5cMnJW3eAU4qltrSbta/
+	/RoJK+geOg+/1O4Zi8pm9VhXK1Jnk1fgbR7MtRi4cZ8WvDioR/2zXN7eJV2HgDEtcw7qQuv5Ccjpj
+	YX7TO0bXRr7hc2pu0pVLlNyX3tLb/FeVOMSg10miyyRaLJCkt4f+PgF2Cb+8Zs5oPXR7suRvrj04o
+	CmXxVqM60LHQplYwqW5/GmynpfaeSC1pP6tsoQ0QorzuPJdbHI8rQupMofTZs8LgyqVXAPvpdL32p
+	mHi0l87GF3ePo6to54HkhtFjbfbJ7LISBlvyC2UVkdCtdOftwgcEuJN9HtfCisQkQaJTJjWmGVLkc
+	RgDhiTtg==;
+Received: from [4.28.11.157] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tnMay-000000053qj-1VTL;
+	Wed, 26 Feb 2025 18:57:24 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Carlos Maiolino <cem@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Hans Holmberg <hans.holmberg@wdc.com>,
+	linux-xfs@vger.kernel.org
+Subject: support for zoned devices v4
+Date: Wed, 26 Feb 2025 10:56:32 -0800
+Message-ID: <20250226185723.518867-1-hch@lst.de>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226173335.558221-1-bodonnel@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Feb 26, 2025 at 11:32:22AM -0600, bodonnel@redhat.com wrote:
-> From: Bill O'Donnell <bodonnel@redhat.com>
-> 
-> For xfs_repair, there is a case when -EFSBADCRC is encountered but not
-> acted on. Modify da_read_buf to check for and repair. The current
-> implementation fails for the case:
-> 
-> $ xfs_repair xfs_metadump_hosting.dmp.image
-> Phase 1 - find and verify superblock...
-> Phase 2 - using internal log
->         - zero log...
->         - scan filesystem freespace and inode maps...
->         - found root inode chunk
-> Phase 3 - for each AG...
->         - scan and clear agi unlinked lists...
->         - process known inodes and perform inode discovery...
->         - agno = 0
-> Metadata CRC error detected at 0x46cde8, xfs_dir3_block block 0xd3c50/0x1000
-> bad directory block magic # 0x16011664 in block 0 for directory inode 867467
-> corrupt directory block 0 for inode 867467
+Hi all,
 
-Curious -- this corrupt directory block fails the magic checks but
-process_dir2_data returns 0 because it didn't find any corruption.
-So it looks like we release the directory buffer (without dirtying it to
-reset the checksum)...
+this series adds support for zoned devices:
 
->         - agno = 1
->         - agno = 2
->         - agno = 3
->         - process newly discovered inodes...
-> Phase 4 - check for duplicate blocks...
->         - setting up duplicate extent list...
->         - check for inodes claiming duplicate blocks...
->         - agno = 0
->         - agno = 1
->         - agno = 3
->         - agno = 2
-> bad directory block magic # 0x16011664 in block 0 for directory inode 867467
+    https://zonedstorage.io/docs/introduction/zoned-storage
 
-...and then it shows up here again...
+to XFS. It has been developed for and tested on both SMR hard drives,
+which are the oldest and most common class of zoned devices:
 
-> Phase 5 - rebuild AG headers and trees...
->         - reset superblock...
-> Phase 6 - check inode connectivity...
->         - resetting contents of realtime bitmap and summary inodes
->         - traversing filesystem ...
-> bad directory block magic # 0x16011664 for directory inode 867467 block 0: fixing magic # to 0x58444233
+   https://zonedstorage.io/docs/introduction/smr
 
-...and again here.  Now we reset the magic and dirty the buffer...
+and ZNS SSDs:
 
->         - traversal finished ...
->         - moving disconnected inodes to lost+found ...
-> Phase 7 - verify and correct link counts...
-> Metadata corruption detected at 0x46cc88, xfs_dir3_block block 0xd3c50/0x1000
+   https://zonedstorage.io/docs/introduction/zns
 
-...but I guess we haven't fixed anything in the buffer, so the verifier
-trips.  What code does 0x46cc88 map to in the dir3 block verifier
-function?  That might reflect some missing code in process_dir2_data.
+It has not been tested with zoned UFS devices, as their current capacity
+points and performance characteristics aren't too interesting for XFS
+use cases (but never say never).
 
-> libxfs_bwrite: write verifier failed on xfs_dir3_block bno 0xd3c50/0x8
-> xfs_repair: Releasing dirty buffer to free list!
-> xfs_repair: Refusing to write a corrupt buffer to the data device!
-> xfs_repair: Lost a write to the data device!
-> 
-> fatal error -- File system metadata writeout failed, err=117.  Re-run xfs_repair.
-> 
-> 
-> With the patch applied:
-> $ xfs_repair xfs_metadump_hosting.dmp.image
-> Phase 1 - find and verify superblock...
-> Phase 2 - using internal log
->         - zero log...
->         - scan filesystem freespace and inode maps...
->         - found root inode chunk
-> Phase 3 - for each AG...
->         - scan and clear agi unlinked lists...
->         - process known inodes and perform inode discovery...
->         - agno = 0
-> Metadata CRC error detected at 0x46ce28, xfs_dir3_block block 0xd3c50/0x1000
-> bad directory block magic # 0x16011664 in block 0 for directory inode 867467
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
->         - agno = 1
->         - agno = 2
->         - agno = 3
->         - process newly discovered inodes...
-> Phase 4 - check for duplicate blocks...
->         - setting up duplicate extent list...
->         - check for inodes claiming duplicate blocks...
->         - agno = 0
->         - agno = 1
->         - agno = 2
->         - agno = 3
-> bad directory block magic # 0x16011664 in block 0 for directory inode 867467
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> Phase 5 - rebuild AG headers and trees...
->         - reset superblock...
-> Phase 6 - check inode connectivity...
->         - resetting contents of realtime bitmap and summary inodes
->         - traversing filesystem ...
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> Metadata CRC error detected at 0x46ce28, xfs_dir3_block block 0xd3c50/0x1000
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> bad directory block magic # 0x16011664 for directory inode 867467 block 0: fixing magic # to 0x58444233
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> rebuilding directory inode 867467
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
-> cache_node_put: node put on refcount 0 (node=0x7f46ac0c5610)
-> cache_node_put: node put on node (0x7f46ac0c5610) in MRU list
->         - traversal finished ...
->         - moving disconnected inodes to lost+found ...
-> Phase 7 - verify and correct link counts...
-> done
-> 
-> Signed-off-by: Bill O'Donnell <bodonnel@redhat.com>
-> ---
->  repair/da_util.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/repair/da_util.c b/repair/da_util.c
-> index 7f94f4012062..0a4785e6f69b 100644
-> --- a/repair/da_util.c
-> +++ b/repair/da_util.c
-> @@ -66,6 +66,9 @@ da_read_buf(
->  	}
->  	libxfs_buf_read_map(mp->m_dev, map, nex, LIBXFS_READBUF_SALVAGE,
->  			&bp, ops);
-> +	if (bp->b_error == -EFSBADCRC) {
-> +		libxfs_buf_relse(bp);
+Sequential write only zones are only supported for data using a new
+allocator for the RT device, which maps each zone to a rtgroup which
+is written sequentially.  All metadata and (for now) the log require
+using randomly writable space. This means a realtime device is required
+to support zoned storage, but for the common case of SMR hard drives
+that contain random writable zones and sequential write required zones
+on the same block device, the concept of an internal RT device is added
+which means using XFS on a SMR HDD is as simple as:
 
-This introduces a use-after-free on the buffer pointer.
+$ mkfs.xfs /dev/sda
+$ mount /dev/sda /mnt
 
---D
+When using NVMe ZNS SSDs that do not support conventional zones, the
+traditional multi-device RT configuration is required.  E.g. for an
+SSD with a conventional namespace 1 and a zoned namespace 2:
 
-> +	}
->  	if (map != map_array)
->  		free(map);
->  	return bp;
-> -- 
-> 2.48.1
-> 
-> 
+$ mkfs.xfs /dev/nvme0n1 -o rtdev=/dev/nvme0n2
+$ mount -o rtdev=/dev/nvme0n2 /dev/nvme0n1 /mnt
+
+The zoned allocator can also be used on conventional block devices, or
+on conventional zones (e.g. when using an SMR HDD as the external RT
+device).  For example using zoned XFS on normal SSDs shows very nice
+performance advantages and write amplification reduction for intelligent
+workloads like RocksDB.
+
+Some work is still in progress or planned, but should not affect the
+integration with the rest of XFS or the on-disk format:
+
+ - support for quotas
+ - support for reflinks - the I/O path already supports them, but
+   garbage collection currently isn't refcount aware and would unshare
+   them, rendering the feature useless
+ - more scalable garbage collection victim selection
+ - various improvements to hint based data placement
+
+To make testing easier a git tree is provided that has the required
+iomap changes that we merged through the VFS tree, this code and a
+few misc patches that make VM testing easier:
+
+    git://git.infradead.org/users/hch/xfs.git xfs-zoned
+
+The matching xfsprogs is available here:
+
+    git://git.infradead.org/users/hch/xfsprogs.git xfs-zoned
+
+An xfstests branch to enable the zoned code, and with various new tests
+is here:
+
+    git://git.infradead.org/users/hch/xfstests-dev.git xfs-zoned
+
+An updated xfs-documentation branch documenting the on-disk format is
+here:
+
+    git://git.infradead.org/users/hch/xfs-documentation.git xfs-zoned
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-zoned
+    http://git.infradead.org/users/hch/xfsprogs.git/shortlog/refs/heads/xfs-zoned
+    http://git.infradead.org/users/hch/xfstests-dev.git/shortlog/refs/heads/xfs-zoned
+    http://git.infradead.org/users/hch/xfs-documentation.git/shortlog/refs/heads/xfs-zoned
+
+Changes since v3:
+ - fix xfs_bmap_punch_delalloc_range incorrectly using XFS_BMAPI_REMAP.
+   (a huge thanks to Darrick Wong for spending a lot of time chasing this
+   down as he was the only one able to reproduce it)
+ - mark rtrmap corrupted in xfs_zone_free_blocks if the freed length is
+   impossibly large
+ - merge two patches into one to prevent a bisection hazard
+ - move the hunk adding a big comment to xfs_zone_gc.c to the correct
+   patch
+ - improve a few commit logs
+
+Changes since RFCv2:
+ - split the freecounter changes into two patches and changed the
+   structure to have a single array with a struct as entry for the
+   percpu counter and the reserved blocks fields
+ - split up the global metabtree reservation patch
+ - fix fixing up the metabtree reservation when rebuilding metabtrees
+ - guard the sysfs code with IS_ENABLED(CONFIG_XFS_RT)
+ - make the in-core sb_rtstart an xfs_rfsblock_t
+ - remove very verbose printks
+ - improve a few tracepoints to include more information
+ - move a few hunks to earlier patches
+ - use an if/else block in xfs_vm_writepages to keep the context
+ - use vmalloc for zi_used_bucket_bitmap
+   in it's own block
+ - improve a comment message
+ - more typo and whitespace fixin'
+
+Changes since RFC:
+ - rebased to current Linus' tree that has rtrmap and rtreflink merged
+ - adjust for minor changes in the iomap series
+ - add one more caller of rtg_rmap
+ - comment on the sb_dblocks access in statfs
+ - use xfs_inode_alloc_unitsize to report dio alignments
+ - improve various commit messages
+ - misc spelling fixes
+ - misc whitespace fixes
+ - add separate helpers for raw vs always positive free space counters
+ - print the pool name when reservations failed
+ - return bool from xfs_zone_validate
+ - use more rtg locking helpers
+ - use more XFS_IS_CORRUPT
+ - misc cleanups and minor renames
+ - document the XFS_ZR_* constants
+ - rename the IN_GC flag
+ - make gc_bio.state an enum
+ - don't join rtg to empty transaction in xfs_zone_gc_query
+ - update copyrights
+ - better inode and sb verifiers
+ - allocate GC thread specific data outside the thread
+ - clean up GC naming and add more comments
+ - use the cmp_int trick
+ - rework zone list locking a bit to avoid kmallocing under a spinlock
+ - export rtstart in the fsgeometry in fsblocks
+ - use buckets to speed up GC victim selection
+ - stop the GC thread when freezing the file system
+ - drop an assert that was racy
+ - move some code additions between patches in the series
+ - keep an active open zone reference for outstanding I/O
+ - handle the case of all using all available open zones and an an
+   open GC at shutdown at mount time correctly
+ - reject zoned specific mount options for non-zoned file systems
+ - export the max_open_zones limit in sysfs
+ - add freecounter tracing
+ - reduce metafile reservations
+ - fix GC I/O splitting on devices with not LBA aligned max_sectors
 
