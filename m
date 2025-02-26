@@ -1,58 +1,61 @@
-Return-Path: <linux-xfs+bounces-20274-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20266-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0CF0A46A52
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:57:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFEAAA46A4D
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 19:57:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 16BFE16D66C
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:57:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 750AF1889CAF
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 18:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E5C1237A3C;
-	Wed, 26 Feb 2025 18:57:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AE212376EF;
+	Wed, 26 Feb 2025 18:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3qSlxg5c"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b+b+mOwG"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FDD236A9C
-	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255B3236A7A
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 18:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596249; cv=none; b=EtLAwbz7goZGvhA1mLPzeJwGhiJ97XnQdFtjPtWW07PbH+tWGgo2tscwmVyvsuDCkh5Nf/8dwyNHSkNMeSzwXDOK6z8rfXMSdbrkJZq/2gWNVaHKDg20HwgW/YsVc2kjrz78A9AtsLe3nIhJlNBxq8uD875mai36JnGiFqI+yw4=
+	t=1740596247; cv=none; b=QssB5usLT752h2+NoUsB+CEvvox097q5DsNl61KMP1DIoIEJMGghUBF8027iBwNHhuvaKgfLBOGRaBXiZl4Hg4J1Yir/bC8J+cLBmiCx0xcoYsaayq+mSKzRyc3ksN0uxhkCjuQjxtLXiYXw21LSU+CS/eLgITNMF8sD3VQQ8p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596249; c=relaxed/simple;
-	bh=XT/Q74L0HCrfy8f4uFBB4FEJPIyP321F5tv6ytGorHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k+xuZMRQkLlnuP+Vx8OntpZuPlL3qK/btkybCHUWMsRsPDd6e05k9HljbLTS9IpEKMnkcQFgI6ufZpo3VfZpt4477V1qRVxVqvTUukmo+dl386SisYWoZiS4tRusDddhVXw8oTyBLbk4OUYDNKb8RBCQvc2qQKl/x9qcNHULej0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3qSlxg5c; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1740596247; c=relaxed/simple;
+	bh=XpWNeFOr3oPgNpopTqgpdaT8RbWXtGirfLLLuQaUdaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sRPilMstereYez/2m280HLy9GqQruJ7Wu7NFtG96Q7Hat9orfdkHEvJIywJ6SrUGGd1BN/m7K0dONZvYMyfKZckDs2arStL4u4SMj0VLEZu+fBxQWBM0KnXLGcITzDIp+toJn1wA6+D0pqQQZfnPA3I1CkQerHoQT+esfqNJeho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b+b+mOwG; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=lh1CwYFUEEx1oDiN5pr8pMuZV0g4lhD4TUotHsWoWIQ=; b=3qSlxg5cMnJW3eAU4qltrSbta/
-	/RoJK+geOg+/1O4Zi8pm9VhXK1Jnk1fgbR7MtRi4cZ8WvDioR/2zXN7eJV2HgDEtcw7qQuv5Ccjpj
-	YX7TO0bXRr7hc2pu0pVLlNyX3tLb/FeVOMSg10miyyRaLJCkt4f+PgF2Cb+8Zs5oPXR7suRvrj04o
-	CmXxVqM60LHQplYwqW5/GmynpfaeSC1pP6tsoQ0QorzuPJdbHI8rQupMofTZs8LgyqVXAPvpdL32p
-	mHi0l87GF3ePo6to54HkhtFjbfbJ7LISBlvyC2UVkdCtdOftwgcEuJN9HtfCisQkQaJTJjWmGVLkc
-	RgDhiTtg==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=bsTf1VGVm0mLe2YgrbHV++yjgSJ4PttZlWGSrY/lZo0=; b=b+b+mOwGRYAwNlJYBaXZt+TVDo
+	HjQ7NLduuDjB6vtX9q7Vu/YMWGuRPyh1qX+9c2jJY6ABgCF1NHNJ5xtlyL4VhHOLf57qZvBYNDCAT
+	8AocIDTTXP9o9hx2r6beCNpb5vH8SnSbG1Mfkgl+tPpp3jiWL2u6i8sDEczz6JHHpxFDAEIlqFMCF
+	t3H7qIWe+Qeq6Cx3LPPaNOgq/PrCofAvS4PajgD0FAbIKHlmGw+BQSZFwU2VJk3Rn/ltZVvnM4kPy
+	X72h37/XITaNr1rI38692RC9cznqIomOVF1RzMHw1AOs5HHqRbppuKkFMnnlxKWizuNThBqw7RE8F
+	UaWhszdg==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnMay-000000053qj-1VTL;
+	id 1tnMay-000000053qt-2gfs;
 	Wed, 26 Feb 2025 18:57:24 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	Hans Holmberg <hans.holmberg@wdc.com>,
 	linux-xfs@vger.kernel.org
-Subject: support for zoned devices v4
-Date: Wed, 26 Feb 2025 10:56:32 -0800
-Message-ID: <20250226185723.518867-1-hch@lst.de>
+Subject: [PATCH 01/44] xfs: reflow xfs_dec_freecounter
+Date: Wed, 26 Feb 2025 10:56:33 -0800
+Message-ID: <20250226185723.518867-2-hch@lst.de>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250226185723.518867-1-hch@lst.de>
+References: <20250226185723.518867-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -62,151 +65,76 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi all,
+Let the successful allocation be the main path through the function
+with exception handling in branches to make the code easier to
+follow.
 
-this series adds support for zoned devices:
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+---
+ fs/xfs/xfs_mount.c | 39 ++++++++++++++++++---------------------
+ 1 file changed, 18 insertions(+), 21 deletions(-)
 
-    https://zonedstorage.io/docs/introduction/zoned-storage
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 477c5262cf91..0598e9db488c 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1260,7 +1260,6 @@ xfs_dec_freecounter(
+ 	uint64_t		delta,
+ 	bool			rsvd)
+ {
+-	int64_t			lcounter;
+ 	uint64_t		set_aside = 0;
+ 	s32			batch;
+ 	bool			has_resv_pool;
+@@ -1299,28 +1298,26 @@ xfs_dec_freecounter(
+ 		set_aside = xfs_fdblocks_unavailable(mp);
+ 	percpu_counter_add_batch(counter, -((int64_t)delta), batch);
+ 	if (__percpu_counter_compare(counter, set_aside,
+-				     XFS_FDBLOCKS_BATCH) >= 0) {
+-		/* we had space! */
+-		return 0;
+-	}
+-
+-	/*
+-	 * lock up the sb for dipping into reserves before releasing the space
+-	 * that took us to ENOSPC.
+-	 */
+-	spin_lock(&mp->m_sb_lock);
+-	percpu_counter_add(counter, delta);
+-	if (!has_resv_pool || !rsvd)
+-		goto fdblocks_enospc;
+-
+-	lcounter = (long long)mp->m_resblks_avail - delta;
+-	if (lcounter >= 0) {
+-		mp->m_resblks_avail = lcounter;
++			XFS_FDBLOCKS_BATCH) < 0) {
++		/*
++		 * Lock up the sb for dipping into reserves before releasing the
++		 * space that took us to ENOSPC.
++		 */
++		spin_lock(&mp->m_sb_lock);
++		percpu_counter_add(counter, delta);
++		if (!rsvd)
++			goto fdblocks_enospc;
++		if (delta > mp->m_resblks_avail) {
++			xfs_warn_once(mp,
++"Reserve blocks depleted! Consider increasing reserve pool size.");
++			goto fdblocks_enospc;
++		}
++		mp->m_resblks_avail -= delta;
+ 		spin_unlock(&mp->m_sb_lock);
+-		return 0;
+ 	}
+-	xfs_warn_once(mp,
+-"Reserve blocks depleted! Consider increasing reserve pool size.");
++
++	/* we had space! */
++	return 0;
+ 
+ fdblocks_enospc:
+ 	spin_unlock(&mp->m_sb_lock);
+-- 
+2.45.2
 
-to XFS. It has been developed for and tested on both SMR hard drives,
-which are the oldest and most common class of zoned devices:
-
-   https://zonedstorage.io/docs/introduction/smr
-
-and ZNS SSDs:
-
-   https://zonedstorage.io/docs/introduction/zns
-
-It has not been tested with zoned UFS devices, as their current capacity
-points and performance characteristics aren't too interesting for XFS
-use cases (but never say never).
-
-Sequential write only zones are only supported for data using a new
-allocator for the RT device, which maps each zone to a rtgroup which
-is written sequentially.  All metadata and (for now) the log require
-using randomly writable space. This means a realtime device is required
-to support zoned storage, but for the common case of SMR hard drives
-that contain random writable zones and sequential write required zones
-on the same block device, the concept of an internal RT device is added
-which means using XFS on a SMR HDD is as simple as:
-
-$ mkfs.xfs /dev/sda
-$ mount /dev/sda /mnt
-
-When using NVMe ZNS SSDs that do not support conventional zones, the
-traditional multi-device RT configuration is required.  E.g. for an
-SSD with a conventional namespace 1 and a zoned namespace 2:
-
-$ mkfs.xfs /dev/nvme0n1 -o rtdev=/dev/nvme0n2
-$ mount -o rtdev=/dev/nvme0n2 /dev/nvme0n1 /mnt
-
-The zoned allocator can also be used on conventional block devices, or
-on conventional zones (e.g. when using an SMR HDD as the external RT
-device).  For example using zoned XFS on normal SSDs shows very nice
-performance advantages and write amplification reduction for intelligent
-workloads like RocksDB.
-
-Some work is still in progress or planned, but should not affect the
-integration with the rest of XFS or the on-disk format:
-
- - support for quotas
- - support for reflinks - the I/O path already supports them, but
-   garbage collection currently isn't refcount aware and would unshare
-   them, rendering the feature useless
- - more scalable garbage collection victim selection
- - various improvements to hint based data placement
-
-To make testing easier a git tree is provided that has the required
-iomap changes that we merged through the VFS tree, this code and a
-few misc patches that make VM testing easier:
-
-    git://git.infradead.org/users/hch/xfs.git xfs-zoned
-
-The matching xfsprogs is available here:
-
-    git://git.infradead.org/users/hch/xfsprogs.git xfs-zoned
-
-An xfstests branch to enable the zoned code, and with various new tests
-is here:
-
-    git://git.infradead.org/users/hch/xfstests-dev.git xfs-zoned
-
-An updated xfs-documentation branch documenting the on-disk format is
-here:
-
-    git://git.infradead.org/users/hch/xfs-documentation.git xfs-zoned
-
-Gitweb:
-
-    http://git.infradead.org/users/hch/xfs.git/shortlog/refs/heads/xfs-zoned
-    http://git.infradead.org/users/hch/xfsprogs.git/shortlog/refs/heads/xfs-zoned
-    http://git.infradead.org/users/hch/xfstests-dev.git/shortlog/refs/heads/xfs-zoned
-    http://git.infradead.org/users/hch/xfs-documentation.git/shortlog/refs/heads/xfs-zoned
-
-Changes since v3:
- - fix xfs_bmap_punch_delalloc_range incorrectly using XFS_BMAPI_REMAP.
-   (a huge thanks to Darrick Wong for spending a lot of time chasing this
-   down as he was the only one able to reproduce it)
- - mark rtrmap corrupted in xfs_zone_free_blocks if the freed length is
-   impossibly large
- - merge two patches into one to prevent a bisection hazard
- - move the hunk adding a big comment to xfs_zone_gc.c to the correct
-   patch
- - improve a few commit logs
-
-Changes since RFCv2:
- - split the freecounter changes into two patches and changed the
-   structure to have a single array with a struct as entry for the
-   percpu counter and the reserved blocks fields
- - split up the global metabtree reservation patch
- - fix fixing up the metabtree reservation when rebuilding metabtrees
- - guard the sysfs code with IS_ENABLED(CONFIG_XFS_RT)
- - make the in-core sb_rtstart an xfs_rfsblock_t
- - remove very verbose printks
- - improve a few tracepoints to include more information
- - move a few hunks to earlier patches
- - use an if/else block in xfs_vm_writepages to keep the context
- - use vmalloc for zi_used_bucket_bitmap
-   in it's own block
- - improve a comment message
- - more typo and whitespace fixin'
-
-Changes since RFC:
- - rebased to current Linus' tree that has rtrmap and rtreflink merged
- - adjust for minor changes in the iomap series
- - add one more caller of rtg_rmap
- - comment on the sb_dblocks access in statfs
- - use xfs_inode_alloc_unitsize to report dio alignments
- - improve various commit messages
- - misc spelling fixes
- - misc whitespace fixes
- - add separate helpers for raw vs always positive free space counters
- - print the pool name when reservations failed
- - return bool from xfs_zone_validate
- - use more rtg locking helpers
- - use more XFS_IS_CORRUPT
- - misc cleanups and minor renames
- - document the XFS_ZR_* constants
- - rename the IN_GC flag
- - make gc_bio.state an enum
- - don't join rtg to empty transaction in xfs_zone_gc_query
- - update copyrights
- - better inode and sb verifiers
- - allocate GC thread specific data outside the thread
- - clean up GC naming and add more comments
- - use the cmp_int trick
- - rework zone list locking a bit to avoid kmallocing under a spinlock
- - export rtstart in the fsgeometry in fsblocks
- - use buckets to speed up GC victim selection
- - stop the GC thread when freezing the file system
- - drop an assert that was racy
- - move some code additions between patches in the series
- - keep an active open zone reference for outstanding I/O
- - handle the case of all using all available open zones and an an
-   open GC at shutdown at mount time correctly
- - reject zoned specific mount options for non-zoned file systems
- - export the max_open_zones limit in sysfs
- - add freecounter tracing
- - reduce metafile reservations
- - fix GC I/O splitting on devices with not LBA aligned max_sectors
 
