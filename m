@@ -1,88 +1,88 @@
-Return-Path: <linux-xfs+bounces-20232-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20229-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEA54A463B3
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55FAFA463B2
 	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 15:51:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E135D17273A
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 14:51:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32CF27ABBE0
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Feb 2025 14:50:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 112DC222566;
-	Wed, 26 Feb 2025 14:50:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 898E422332B;
+	Wed, 26 Feb 2025 14:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XmkpD/X5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJpk20UC"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464EC222577
-	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 14:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AC52222A5
+	for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 14:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581454; cv=none; b=Ebk8JRaM1+rXrVrjX2q6+5HD3H5UkdFX05jORMVumXcurNgGQcY/VYZoQ9Fc+6Iu067qFOzMn8SUfr1yoCGBvTAPayeR2mYj2deAU9AWcAP4VmCueaM0dg4NBv9/vk05+7sE7U0xKLPG3vASxh5GLWSycMyo7yo9GOJVFarKODk=
+	t=1740581454; cv=none; b=L+kTGQNnod0Dc2GGEDHkD0JgCzB2Bj+I5gyp0trQU9AhvlG6FHbKU/J+K1nbEwsRoZT0NZ0EjGm3kE3IU8x1+6E+U5N6uNfjVZgdy++GyShd30Qd4C3Xt0WxFPvylEFG7t55zS5NVa+HJOOvcnXDIKlo+7RSH3w13EgsR0zQAF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740581454; c=relaxed/simple;
-	bh=MJ2Tul8N2/Gt2ODedDqE5IKqlFtdcKI9WnGeZyve120=;
+	bh=b6VpuGhmjnJeY+MT0xwbMPhoDdQyVcCuT5ElFhmbhFw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aJiITP6NLGY2/+y0furPZENBtByuK3WM47qGt/UgbID2fqz6/Yam1xjjdQFdizm8yr3eQtIGAJFKdMqw3R12WWEvIXM9AqOwLhYpJgC+nynH9wNiK/Qackp6Sr5o6hFt6yD2Il45bCa7c1OEZqpAG3VwWxFZQyZCKVX+lxJO23o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XmkpD/X5; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:To:Cc; b=Pvh4V1rPd+/8/5BRcelzs1F5FsQCh16iGvKZHfifL98dqgvhVKBbj57XGgIHyN6lxoG1seAjUlMQ6DIXAptKdnrcH+5muDf5l0SwBO3ucolpMfTAgrJ5AD6ImlZVNuHTxagQOjOT317Lq9lA3g8Mi8cSUEY/Jw0am3lpzKfee6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JJpk20UC; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740581452;
+	s=mimecast20190719; t=1740581451;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rya/hX8b8xYRoVXX2cpJVN5QpYydeDi0E+n4A3XI0zA=;
-	b=XmkpD/X5GpF3Nx1dTyWPNPekJQIUuJG8m6r3JACogOgqpnBCHdmM37eSodiG1FW1P1AWu+
-	X1HpDrUI9xwg/NMekgqc8zEkZvNiqhjMRKGRqErSWlPYB6CCbrhzZSnkSuy94az6BFC4Iw
-	LmHsx9DqanWw8gxVPRNVucDtM9zpckM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=N4vx4VBQ6GbCq2IqZ3u6bl+vK4FweiYa9dSee+sAslA=;
+	b=JJpk20UCiAjjR++EUB1WwhO1YryyZ7Bw6Iypmm5VfXM9AahcfG6vntXzXj73g8H5kRFs5J
+	LTxL7Za4dAlonaSEJ4QMU8g2AL7k8P18/RPFCxYNwwYVJ9JVOkxp06xuK58GFHZD2KUqeG
+	v+B6wvUyO98NN525c9sWSvKwJthMqz8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-204-jdemVXSRM0O95slC9kFTog-1; Wed, 26 Feb 2025 09:50:51 -0500
-X-MC-Unique: jdemVXSRM0O95slC9kFTog-1
-X-Mimecast-MFC-AGG-ID: jdemVXSRM0O95slC9kFTog_1740581450
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-abef9384a3bso48328166b.3
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 06:50:50 -0800 (PST)
+ us-mta-627-Fb3DE9CZPXSb_2lRX7bcQw-1; Wed, 26 Feb 2025 09:50:49 -0500
+X-MC-Unique: Fb3DE9CZPXSb_2lRX7bcQw-1
+X-Mimecast-MFC-AGG-ID: Fb3DE9CZPXSb_2lRX7bcQw_1740581448
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abba4c6d9ddso780128466b.1
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Feb 2025 06:50:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740581449; x=1741186249;
+        d=1e100.net; s=20230601; t=1740581448; x=1741186248;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rya/hX8b8xYRoVXX2cpJVN5QpYydeDi0E+n4A3XI0zA=;
-        b=uisAlEqsOfOjh2wcYfLPg9+am9mBB3+I89cjTIAld2s9OH78N5dzShDLDu/WJ9bb/C
-         AVohTdSKlTLajm8utPlF88nIFFWijiyYS2D9lfh65sTvSE0IUHmlXJcm6asIftSYzOEd
-         20r5vImTzOAWtNwEYey6+0RQ7x5uxgWNdlucraNSGjOvXQehas/GRDNZFz3me5zQ0p+6
-         4Q+74YL/yGjYrtAsjQeie+GTFg7W/YQrD65zKC8P2DmCMSpwRmQzE4O1WtYYyt3UerIC
-         IuS6yFBk4289WWHVpbOoFeQTljwLedM919QVNWLzbyhhVyEE1RD1KjpAA2OS87jnR5Ad
-         qt2A==
-X-Gm-Message-State: AOJu0Yz1x6gkIEY7Y0YZ1odnKI22nfMda1iljyV7qvkH2UBcimP5A5uM
-	kwRmp38XYGN3RL+HkZmxGGvZkGHoRqDByEHG5pjqEMPJTauJsuwFsSqFA01xBzaxB58IhiY4KvQ
-	HvW23YuKynVPtwqCVXhWr6P4XoFHoQEHRk4S322BFA1tgOkTXn+q6KTZJShctLrdt
-X-Gm-Gg: ASbGnctRSVHevkx1lHw8S8RWISDdPHv0gqQyQ9+iu1nF8rQeSFTThhY54qB+Ob5XjGR
-	foQ05/wKaXiO4HacOKdRa3NhXF7m1YHjaZiWNYPpGeNsnbywqu6Dq/xlAI3x4sEcJIYubqsq79T
-	rlCRcISjLSerdYHxX54E2vRI4ocpoGWehlYU/fY6Mp/K72e/+eR/51PyENOf+4dIDs8mzW+Mt2m
-	W3XypD3f+oeeGecBN0ha/1bg4RcZ8/4rDxcPjzUINteBBmQzJZEEKz//NR5GC2bquOVXXGF0tpS
-	GEUs2nMsIbvIm0nzrdhUcxYoCFG/K7mDJRQY7csX8A==
-X-Received: by 2002:a17:906:31d7:b0:ab7:a274:d3df with SMTP id a640c23a62f3a-abeeed5e9b4mr404002666b.20.1740581448657;
-        Wed, 26 Feb 2025 06:50:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF3xJj7Q4Gbnz+/VjWlH1syRtj83iH2HrOLTDUuJ1cL0FnolQyqflphJcy1qDndXJmrjHX85A==
-X-Received: by 2002:a17:906:31d7:b0:ab7:a274:d3df with SMTP id a640c23a62f3a-abeeed5e9b4mr403984966b.20.1740581446705;
-        Wed, 26 Feb 2025 06:50:46 -0800 (PST)
+        bh=N4vx4VBQ6GbCq2IqZ3u6bl+vK4FweiYa9dSee+sAslA=;
+        b=m2MQGT7q/juwbAMw4kjxio5E3dWkybF4QvBFaom3hoBde6/NyGHfHEgWxi/4BTU7Zj
+         UneYGB1Vaorzha2Mqmgr1JHZznY1QyhRJIdDxw7/4T1cfxTxutjygGTdKergC/ZSEQxT
+         DZ9wvvRZsK558snVSLS9Lo6Foa/hs06gyZyDNjjuVDZ2bcHR5q1sYmajEL+xVm4ZGUva
+         jaEtEwuOmbvqWcyd53vi8Pxkozn6To61k5VJipdx7q6kV7IATUcU0bNq+KngQ7JhHJH7
+         9pA+x2Vys9mXdFG63mjGuh7Z1WjIGN3mReaUP2m8Yp3P+HmufhCWFP4dWEpi2q/LORNN
+         p0bw==
+X-Gm-Message-State: AOJu0Yyykgv1JWKgs/jFfcc/Hdw6Suni/tXGNWhX2tj1ivFiX9AybyGE
+	ZuTUSFSj4ni+fFCV0yUyN4JkIE69JRnM/fQeNTWccxQkf2U9yMq4Ra7JdBPRl+waclGfuUTsvQ8
+	KgpC1X43Qc9Zq6IO1eKjlwvvat3wJA3tWUPcU5bQnWISv4JAMWmlY8xrF
+X-Gm-Gg: ASbGncud67p7q6oS6IWeiQavUmAkiTXmaUVyx14DheJKpchc3l1/puIQg4a3eDM9AzW
+	JHriRsxhcaETQKeYAzfOrkZN1YicgWfiJYjI4rv3MCFGNzYe5Ctaf744JdfNzeoGpiz8pHqPJws
+	UYG76XqoOcmVBiNhQxVBO/kH5AQO64yhvsvSITK91Oxi6UdE5Pb4vFMqqdGBJhZVsWLez1YS53V
+	8AJPU+Xvy8NS3KTyWr/urtlvGHlgJKGA0EX8ApG+TPiUd7EtwzCBnrxb5NIHPa6IY8lMTC2fSG+
+	s/cA+VLMCNTOUM+5kyks5dFuLTZnnc1r1aIDoPmSSg==
+X-Received: by 2002:a17:906:6a22:b0:aba:6204:1c03 with SMTP id a640c23a62f3a-abc0df5d89fmr2521170066b.57.1740581447941;
+        Wed, 26 Feb 2025 06:50:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG5KQZWIST/nMrryAAjeVIMaR9mEBJFmjzaEn7XACtdinURzx/Yw9Sm6Cv0oDuTDaUeDiAt1Q==
+X-Received: by 2002:a17:906:6a22:b0:aba:6204:1c03 with SMTP id a640c23a62f3a-abc0df5d89fmr2521166466b.57.1740581447545;
+        Wed, 26 Feb 2025 06:50:47 -0800 (PST)
 Received: from [127.0.0.2] (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cd564esm337731666b.21.2025.02.26.06.50.45
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cd564esm337731666b.21.2025.02.26.06.50.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:50:45 -0800 (PST)
+        Wed, 26 Feb 2025 06:50:47 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Wed, 26 Feb 2025 15:50:27 +0100
-Subject: [PATCH v5 02/10] release.sh: add --kup to upload release tarball
- to kernel.org
+Date: Wed, 26 Feb 2025 15:50:28 +0100
+Subject: [PATCH v5 03/10] release.sh: update version files make commit
+ optional
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -91,78 +91,152 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-update-release-v5-2-481914e40c36@kernel.org>
+Message-Id: <20250226-update-release-v5-3-481914e40c36@kernel.org>
 References: <20250226-update-release-v5-0-481914e40c36@kernel.org>
 In-Reply-To: <20250226-update-release-v5-0-481914e40c36@kernel.org>
 To: linux-xfs@vger.kernel.org
 Cc: "Darrick J. Wong" <djwong@kernel.org>, 
  Andrey Albershteyn <aalbersh@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1387; i=aalbersh@kernel.org;
- h=from:subject:message-id; bh=MJ2Tul8N2/Gt2ODedDqE5IKqlFtdcKI9WnGeZyve120=;
- b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIY0vdrOZ/qflcwr2Lm5PK923enXHGcopbof+9FU9YTk
- cJ1jS6rkn52lLIwiHExyIopsqyT1pqaVCSVf8SgRh5mDisTyBAGLk4BmIjiUoa/Qkv/L6mYIeK/
- N8h61uWHB03cgk7c+zpf9vZal2nP5jrtfM/w3/XTtuPMvXULFrHZs3a1crbd8TqyZ5vuOpn74rM
- TD9gf5QQA0YJMYA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3871; i=aalbersh@kernel.org;
+ h=from:subject:message-id; bh=b6VpuGhmjnJeY+MT0xwbMPhoDdQyVcCuT5ElFhmbhFw=;
+ b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIY0vdrOU84aMCe1Ls0OJal8/aB2qCgBXp5JtP5onZsa
+ jEUvfXp/MaOUhYGMS4GWTFFlnXSWlOTiqTyjxjUyMPMYWUCGcLAxSkAExHVZ/gfd9zV/Lf/vo4w
+ Xs76iumKm6x8VwusmWq8bNHuQwuOPeDMZGS4uVMz/rNa4c8THus41nLWfv7amLzeIGtLWtqFwji
+ xGVO5AWcBRgg=
 X-Developer-Key: i=aalbersh@kernel.org; a=openpgp;
  fpr=AE1B2A9562721A6FC4307C1F46A7EA18AC33E108
 
-Add kup support so that the maintainer can push the newly formed
-release tarballs to kernel.org.
+Based on ./VERSION script updates all other files. For
+./doc/changelog script asks maintainer to fill it manually as not
+all changes goes into changelog.
+
+--no-commit|-n flag is handy when something got into the version commit
+and need to be changed manually. Then ./release.sh -c will use fixed
+history
 
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 ---
- release.sh | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ release.sh | 75 ++++++++++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 58 insertions(+), 17 deletions(-)
 
 diff --git a/release.sh b/release.sh
-index ea08ab334954e5b8aa40278a40cf7aceec2488cc..42bee75bb6fde7056c1770157f253eb5f492036d 100755
+index 42bee75bb6fde7056c1770157f253eb5f492036d..385607f636d965ad98f0f3115e6f34d9e4042592 100755
 --- a/release.sh
 +++ b/release.sh
-@@ -16,6 +16,30 @@ set -e
- version=${PKG_MAJOR}.${PKG_MINOR}.${PKG_REVISION}
- date=`date +"%-d %B %Y"`
+@@ -11,16 +11,33 @@
  
-+KUP=0
-+
-+help() {
-+	echo "$(basename $0) - prepare xfsprogs release tarball or for-next update"
-+	printf "\t[--kup|-k] upload final tarball with KUP\n"
+ set -e
+ 
+-. ./VERSION
+-
+-version=${PKG_MAJOR}.${PKG_MINOR}.${PKG_REVISION}
+-date=`date +"%-d %B %Y"`
+-
+ KUP=0
++COMMIT=1
+ 
+ help() {
+ 	echo "$(basename $0) - prepare xfsprogs release tarball or for-next update"
+ 	printf "\t[--kup|-k] upload final tarball with KUP\n"
++	printf "\t[--no-commit|-n] don't create release commit\n"
 +}
 +
-+while [ $# -gt 0 ]; do
-+	case "$1" in
-+		--kup|-k)
-+			KUP=1
++update_version() {
++	echo "Updating version files"
++	# doc/CHANGES
++	header="xfsprogs-${version} ($(date +'%d %b %Y'))"
++	sed -i "1s/^/$header\n\t<TODO list user affecting changes>\n\n/" doc/CHANGES
++	$EDITOR doc/CHANGES
++
++	# ./configure.ac
++	CONF_AC="AC_INIT([xfsprogs],[${version}],[linux-xfs@vger.kernel.org])"
++	sed -i "s/^AC_INIT.*/$CONF_AC/" ./configure.ac
++
++	# ./debian/changelog
++	sed -i "1s/^/\n/" ./debian/changelog
++	sed -i "1s/^/ -- Nathan Scott <nathans@debian.org>  `date -R`\n/" ./debian/changelog
++	sed -i "1s/^/\n/" ./debian/changelog
++	sed -i "1s/^/  * New upstream release\n/" ./debian/changelog
++	sed -i "1s/^/\n/" ./debian/changelog
++	sed -i "1s/^/xfsprogs (${version}-1) unstable; urgency=low\n/" ./debian/changelog
+ }
+ 
+ while [ $# -gt 0 ]; do
+@@ -28,6 +45,9 @@ while [ $# -gt 0 ]; do
+ 		--kup|-k)
+ 			KUP=1
+ 			;;
++		--no-commit|-n)
++			COMMIT=0
 +			;;
-+		--help|-h)
-+			help
-+			exit 0
-+			;;
-+		*)
-+			>&2 printf "Error: Invalid argument\n"
-+			exit 1
-+			;;
-+		esac
-+	shift
-+done
+ 		--help|-h)
+ 			help
+ 			exit 0
+@@ -40,6 +60,36 @@ while [ $# -gt 0 ]; do
+ 	shift
+ done
+ 
++if [ -z "$EDITOR" ]; then
++	EDITOR=$(command -v vi)
++fi
++
++if [ $COMMIT -eq 1 ]; then
++	if git diff --exit-code ./VERSION > /dev/null; then
++		$EDITOR ./VERSION
++	fi
++fi
++
++. ./VERSION
++
++version=${PKG_MAJOR}.${PKG_MINOR}.${PKG_REVISION}
++date=`date +"%-d %B %Y"`
++
++if [ $COMMIT -eq 1 ]; then
++	update_version
++
++	git diff --color=always | less -r
++	[[ "$(read -e -p 'All good? [Y/n]> '; echo $REPLY)" == [Nn]* ]] && exit 0
++
++	echo "Commiting new version update to git"
++	git commit --all --signoff --message="xfsprogs: Release v${version}
++
++Update all the necessary files for a v${version} release."
++
++	echo "Tagging git repository"
++	git tag --annotate --sign --message="Release v${version}" v${version}
++fi
 +
  echo "Cleaning up"
  make realclean
  rm -rf "xfsprogs-${version}.tar" \
-@@ -56,4 +80,11 @@ fi
+@@ -47,17 +97,6 @@ rm -rf "xfsprogs-${version}.tar" \
+ 	"xfsprogs-${version}.tar.asc" \
+ 	"xfsprogs-${version}.tar.sign"
  
- mv "xfsprogs-${version}.tar.asc" "xfsprogs-${version}.tar.sign"
+-echo "Updating CHANGES"
+-sed -e "s/${version}.*/${version} (${date})/" doc/CHANGES > doc/CHANGES.tmp && \
+-	mv doc/CHANGES.tmp doc/CHANGES
+-
+-echo "Commiting CHANGES update to git"
+-git commit --all --signoff --message="xfsprogs: Release v${version}
+-
+-Update all the necessary files for a v${version} release."
+-
+-echo "Tagging git repository"
+-git tag --annotate --sign --message="Release v${version}" v${version}
  
-+if [ $KUP -eq 1 ]; then
-+	kup put \
-+		xfsprogs-${version}.tar.gz \
-+		xfsprogs-${version}.tar.sign \
-+		pub/linux/utils/fs/xfs/xfsprogs/
-+fi;
-+
- echo "Done. Please remember to push out tags using \"git push origin v${version}\""
+ echo "Making source tarball"
+ make dist
+@@ -87,4 +126,6 @@ if [ $KUP -eq 1 ]; then
+ 		pub/linux/utils/fs/xfs/xfsprogs/
+ fi;
+ 
+-echo "Done. Please remember to push out tags using \"git push origin v${version}\""
++echo ""
++echo "Done. Please remember to push out tags and the branch."
++printf "\tgit push origin v${version} master:master master:for-next\n"
 
 -- 
 2.47.2
