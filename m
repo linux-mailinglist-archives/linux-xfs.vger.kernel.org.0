@@ -1,171 +1,246 @@
-Return-Path: <linux-xfs+bounces-20444-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20452-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD2A3A4DDAC
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 13:17:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 314E7A4E128
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 15:37:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0222C3A5CBB
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 12:17:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71DFE188ACEF
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 14:33:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99506201269;
-	Tue,  4 Mar 2025 12:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29AB925E82B;
+	Tue,  4 Mar 2025 14:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7v92B6H"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FlLTRNph"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from beeline2.cc.itu.edu.tr (beeline2.cc.itu.edu.tr [160.75.25.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B183C201023;
-	Tue,  4 Mar 2025 12:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBE625E459
+	for <linux-xfs@vger.kernel.org>; Tue,  4 Mar 2025 14:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.116
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741098700; cv=pass; b=O7O1zSCsxza03HmJyV+QBrihGoExHQt+l71E/Ho7/U+/CjoGiTZVrbyreOUik9kR56ovr4micuhzZUe8yZ/G29qejd65T+pqTi0Dl+jASJs8cGxnNmvm/b0XZCrRQBLmGQ9d7jxou5IyB4EW38KA3HNpeNKgqEEcjde6BaoGQno=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741098700; c=relaxed/simple;
+	bh=eXllzOnoRt5/aqD3OK5q+LXzVWXzKgBZPq0p3jULFrA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tsosmYGkeyobbTo9Rg1oeE79zrtLipU1llNrmc4ISG2wncQ7SkR0+j9ufFAyHJ+IUcvFFL7phzPUs8wZ7bjY7FHo+5bIm5+jUd8nzjAkO0ElOcEFKYOynXTHGNghv/m76YuVSAwD+e1IbK/FRQGpaRneUbwcPbmLs0xvMrB6iG8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FlLTRNph; arc=none smtp.client-ip=170.10.133.124; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; arc=pass smtp.client-ip=160.75.25.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline2.cc.itu.edu.tr (Postfix) with ESMTPS id 882B540F1CC0
+	for <linux-xfs@vger.kernel.org>; Tue,  4 Mar 2025 17:16:57 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Authentication-Results: lesvatest1.cc.itu.edu.tr;
+	dkim=pass (1024-bit key, unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FlLTRNph
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6d5H0SQkzFw9K
+	for <linux-xfs@vger.kernel.org>; Tue,  4 Mar 2025 17:16:03 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 1F7C742731; Tue,  4 Mar 2025 17:15:27 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FlLTRNph
+X-Envelope-From: <linux-kernel+bounces-541214-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FlLTRNph
+Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
+	by le2 (Postfix) with ESMTP id 0131C41B5C
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:59:08 +0300 (+03)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by fgw2.itu.edu.tr (Postfix) with SMTP id CC39C2DCDE
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:59:08 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCA8D18826F6
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 08:58:59 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10F0D1F03EA;
+	Mon,  3 Mar 2025 08:58:29 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC011EFFAD
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 08:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741090656; cv=none; b=kig0kcUygp4nYvP0QsdVO4MkHeugfe++81SIoQbDu3+R7fslcfiFRM0vmQW2twV2mllThJVcKna2tipm5HRtvDZvYS3X//VUshiSDPn+Asn6FI5l+e8YSK1KY940hCzkZugYHsXU9uT9zTCa5iLvRnA1BM23Q40d25EbGdtnnBE=
+	t=1740992305; cv=none; b=PQMOAC3IhJYGcI2Ttid0xJ0IqEYEf0FWqe2tk63K6w4XF+w2OuWNoxngpfj5ahunG/54/aIteNv0kMjhSedGud03UjpCEG79+60J8c/IR6+QVSwe1cOPsr++A5zJ0gbnrwCOchzEnSZWX4pby7hHyi5eq1M/4vFd4n5mh8iNw9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741090656; c=relaxed/simple;
-	bh=H0viHNn2Noiu2ehJa4wGSKvvmC0Ntvd05iDJ90zjNZI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DHI5eu/ludksim1wMervyDT1fwDKIKBsQn52Y+zrrWYhDL9ppsNnifGbw9Y7P/RFHCxE3LaWxqgJxkx3brzm2nAGWa3Uc8JBKEMmJNt4HC3zj4hrUb1lmvHg4IHgsd1TcP9ThVfN/dDqjupj0tmMcdVxfGAdxT92Ar8/OuGtREk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7v92B6H; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac1f5157c90so114436066b.0;
-        Tue, 04 Mar 2025 04:17:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741090653; x=1741695453; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=599/Tw3ToamJqGW2mw+qAC6V0VOUfxPlSz0DmmrvZM4=;
-        b=E7v92B6HrvL2AwWqlwKLp04wSWaJZDivAu/LEsPJXbxj5PuDVK+xEjzqSia0WBbYV5
-         +kt4y5XOJC0Bscd7mqwqrduyTfsffYtBJYQ8WoPUYQu8BYj2nbRjvRZmGnHFVQH7TJpR
-         adzVILL0DBaWHtCI4+p3TRX1Uf4LolHiMEb6vwQl1RbICtlzWN9eDZiB2loEM74xiyi+
-         u4dSf3N59TZnHIEJfPm+7fwjAn8VPU/Wc9enq+1g1q9WLWIwg0sXnyL10rs8vUWtM1Pe
-         q23w6BsE6g1fAESs6rp+RGQFmBwkMk7zmOYurYasanZtopPtD8PhbNkw9qXzEaADlSC6
-         G2Ag==
+	s=arc-20240116; t=1740992305; c=relaxed/simple;
+	bh=eXllzOnoRt5/aqD3OK5q+LXzVWXzKgBZPq0p3jULFrA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a3FeNi6wkrpDwY09BzQPomiypp59S3L0reebJXfUnJ5PRZyY6AM7eXNdhfkUqFMCnqBh7Sf5/5ILo2VyRVlu1fCfgFxYCpKDRlpwW3AnJXgtb9bXqmtS67qm7irAvv0SD9r8qzWbW61zfuP1BT4uwxltkUWxTkIacv/JZV6A6co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FlLTRNph; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740992301;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yhKA0PWZzkHsCkSvRw6WIRSjH0fQoXRBt2BANeFnGaI=;
+	b=FlLTRNphcbOuuY9Lk+b+bJ3bQi0912o4Xn3MpyCyRB2nHnJSy8lH/5o+MnVUXN4l8gEXN8
+	zG+HB87chsKAO4Rzy2BRyu//4Fo1oEVSfXmopwGYxnmWSUYpafB8U9Th3dlj1BgpcjgGED
+	Dt8lli1sskf9ONOHdFPu/eu+JD0DBu8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-176-jM3ml-n-Px6345P5nMgzsQ-1; Mon, 03 Mar 2025 03:58:19 -0500
+X-MC-Unique: jM3ml-n-Px6345P5nMgzsQ-1
+X-Mimecast-MFC-AGG-ID: jM3ml-n-Px6345P5nMgzsQ_1740992299
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3910876fce0so600185f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 00:58:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741090653; x=1741695453;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=599/Tw3ToamJqGW2mw+qAC6V0VOUfxPlSz0DmmrvZM4=;
-        b=usgJw8uwHy825WJJ0OOCK3Tn+JuzZJlQw0w0GA0X19loUJBNv6r0mUf2u9LDYnk7g5
-         94FVMNTZcqg8N5xKXiRwxzg4nxELKBu4eR6KIAYJo5qTrHaPECK1/Qd/qZwJNZludJ2S
-         8fdyGXprVc7vQKhldxsWvmMzoifXzRVLLGZS9zcixCJ9eUtzv45+S/tVummtraNeQbQE
-         zrkoZWbuQB1kvCq5zMo/03Os3TDLEZ4gXlVL2lph3Q0JJcf2p/14Laos5/52ogSrVMyq
-         9s8CiCE2KtGXIMLMF1SwDKS9vrhyTqKlBczyu/4VTGQkeMVgVDqSBWN1bEuFzsgfOgNh
-         LedA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0BXaXs7zUIQcFiIKGhJWidLx7Jpw2VDK8kL1Z8Cd70lbV85reaqMjzWwbhle7R2rsiIKIJIFagbVxtDdK@vger.kernel.org, AJvYcCX++5HWkwxOaZpuYzZ+UvLQ8GZh0TDIJyCMwTXtFMZQp76hiwnRQaFwQb3kzIG4XdAYUuoR+gcJ6eY4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7fERY7ocMPB6U3Q8dvfftD+yYLquGs96+jIdM49CPb+11T+Kf
-	XUK6iVtll9CAZ8nAYjANudwh/+rlqXYgM8gfVX2EPo7FxLAcflw4TZVZzA==
-X-Gm-Gg: ASbGncuQmWpj8+79GSTDZQxwZVCQiKODHTn2vFQlrdQn2qGlCxlZoiEH3Dgef3BGydO
-	DgWuzWcm9H8SkiRsFwQEPbhzoANgYyJiqufUTxuMdxQG6M7AQ8B65YJoMGFlq9c+gSsTBKwC9F3
-	He/ASc+vLR4DxQDbfyQvhPnwuqEPRJ6bMZ11kFnA2/PK1oVsjKJMRrqfkAfTEKX3tmCqLJUjA7N
-	SZ1efK23T4GP1XKUV+AY9cGJWKj7umDLlWqvT2DWIdcozQ6nXBjCNl7aZXfz1vtmcMQgfYLtN5m
-	aL4nb18WGUEcWf4cZb0lWi+s3KTQ
-X-Google-Smtp-Source: AGHT+IGVQQNuddYw7b42dJlGMu9B3NVjyQv5HN54W9B+OxF/axiTscYQHYLUfl8wsoBiGgabTKVArg==
-X-Received: by 2002:a17:906:eeca:b0:abb:e965:1264 with SMTP id a640c23a62f3a-abf261fba4fmr1893189866b.4.1741090652348;
-        Tue, 04 Mar 2025 04:17:32 -0800 (PST)
-Received: from 127.com ([2620:10d:c092:600::1:87eb])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac1e61f5325sm190206466b.28.2025.03.04.04.17.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 04:17:31 -0800 (PST)
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Dave Chinner <david@fromorbit.com>
-Cc: io-uring@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	linux-xfs@vger.kernel.org,
-	wu lei <uwydoc@gmail.com>,
-	asml.silence@gmail.com
-Subject: [PATCH v2 1/1] iomap: propagate nowait to block layer
-Date: Tue,  4 Mar 2025 12:18:07 +0000
-Message-ID: <f287a7882a4c4576e90e55ecc5ab8bf634579afd.1741090631.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1740992298; x=1741597098;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yhKA0PWZzkHsCkSvRw6WIRSjH0fQoXRBt2BANeFnGaI=;
+        b=DEctHM9I6xH3kj5wl554u/MKq7lfV8lx7N2Hw+WGjxJ09mbrz8PAQU3xCy4goyAQLr
+         t9KzW7YI/kuXkDbW03IXmKLCdllGRVsamohW9/53zRrqp0oUm8eXRKmqoo7442d6i05r
+         21ceBIJAHQzEGu7M9dBR1LXB7aDoUZ5A2BE0cdsAKhej/b7J2hhk6TWGXHDxIIzd3B12
+         KJHDBRBn7O6C3JyWppQGYTDdEsUpRMVU2LtRuP0H9d20SUdmWhoZpkU5yGgnadUvq/Ug
+         AAYUml0so2m6P0jP7NjPj8/sOX6p2iJVP8JDaDhY8mkUxfD7jIVOuRMOip3oHBIoFE6r
+         XQqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVW5v1QWDGsA/4dql6f6rDFc/DJLpNpS9cDXqed0sc+EG8uVodC69i4NVMarQlN/TYmdql28LQ1CdSQ/v4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf/bHIsfhlQPdqQlr/04wQ2xWBDga0FJhcaZymkFNH+k9/8SGG
+	YFDBIVclOlp+FP6kzRsWufRB4jnVhiucOpfwxPZDLdmi09BAhtsHsLGQvBwVskMODjeqftduHjE
+	+0Cn8bcFWxKDI0gMuw07ZcHY8f/+JLkOqfT06qIZZGTWNjzhWrBfE0MF3bDDgMg==
+X-Gm-Gg: ASbGncvW/lAJko1F7g7pECBJeKdLC9AVVh+Y+sNS7YZ4RUuZBAoElWDyZcZb+EsC/kW
+	jUX2OSbS3zq2Wp/TX/FzynYYcdvayHgDSbtM4DkKd0mEonauRJN4DaCcVXU38s/TdSVEfx8RfEy
+	i+pBVEM3XU7p7ouz6Y59L0ujCsMkFFBJyF7fuaOoRkb4D5IdOIJq4wWolAfcS6DHPIb6QkYnak4
+	fQ8z65/V8hXhom4y8FAMwQgi2J6hwtwTHhtzfKNHkXRjR0rLZjXY7EeDAvGUh0H/u3QN0uSujwY
+	0Mtd28tv+9wX4ondYBefAJw16n4srVuynlCg8tbdETCXzRuPFoDWD4b4x1A5FT0uhU+nE+b5xLb
+	OOWz6bypzbAM7VRjipTyMGjDj4uwexzbCotBydm4ODA8=
+X-Received: by 2002:a5d:59ae:0:b0:391:10f9:f3a1 with SMTP id ffacd0b85a97d-39110f9f4ffmr1082156f8f.35.1740992298664;
+        Mon, 03 Mar 2025 00:58:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHrOB8TUQnl8FpqKRAFyy2zHk+Etq0hy84HKx7V6iLK+hyXpCu8bZkk/epZdl6ibKYIEl0N0g==
+X-Received: by 2002:a5d:59ae:0:b0:391:10f9:f3a1 with SMTP id ffacd0b85a97d-39110f9f4ffmr1082091f8f.35.1740992298255;
+        Mon, 03 Mar 2025 00:58:18 -0800 (PST)
+Received: from ?IPV6:2003:cb:c734:9600:af27:4326:a216:2bfb? (p200300cbc7349600af274326a2162bfb.dip0.t-ipconnect.de. [2003:cb:c734:9600:af27:4326:a216:2bfb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485e61csm13948947f8f.98.2025.03.03.00.58.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 00:58:17 -0800 (PST)
+Message-ID: <964e8991-44c0-4ff7-91cc-033ed7c09835@redhat.com>
+Date: Mon, 3 Mar 2025 09:58:15 +0100
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 19/20] fs/dax: Properly refcount fs dax pages
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org,
+ dan.j.williams@intel.com, linux-mm@kvack.org
+Cc: Alison Schofield <alison.schofield@intel.com>, lina@asahilina.net,
+ zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, logang@deltatee.com,
+ bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, catalin.marinas@arm.com,
+ will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+ dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org,
+ djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, peterx@redhat.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ loongarch@lists.linux.dev
+References: <cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com>
+ <c7d886ad7468a20452ef6e0ddab6cfe220874e7c.1740713401.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <c7d886ad7468a20452ef6e0ddab6cfe220874e7c.1740713401.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6d5H0SQkzFw9K
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741702579.94932@5n+9oBTtxidMrdsanuInAw
+X-ITU-MailScanner-SpamCheck: not spam
 
-There are reports of high io_uring submission latency for ext4 and xfs,
-which is due to iomap not propagating nowait flag to the block layer
-resulting in waiting for IO during tag allocation.
 
-Because of how errors are propagated back, we can't set REQ_NOWAIT
-for multi bio IO, in this case return -EAGAIN and let the caller to
-handle it, for example, it can reissue it from a blocking context.
-It's aligned with how raw bdev direct IO handles it.
+> -static inline unsigned long dax_folio_share_put(struct folio *folio)
+> +static inline unsigned long dax_folio_put(struct folio *folio)
+>   {
+> -	return --folio->page.share;
+> +	unsigned long ref;
+> +	int order, i;
+> +
+> +	if (!dax_folio_is_shared(folio))
+> +		ref = 0;
+> +	else
+> +		ref = --folio->share;
+> +
 
-Cc: stable@vger.kernel.org
-Link: https://github.com/axboe/liburing/issues/826#issuecomment-2674131870
-Reported-by: wu lei <uwydoc@gmail.com>
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+It would still be good to learn how this non-atomic update here is safe 
+(@Dan?), but that's independent of this series.
 
-v2:
-	Fail multi-bio nowait submissions
+Staring at it, I would have thought we have to us an atomic_t here.
 
- fs/iomap/direct-io.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+Acked-by: David Hildenbrand <david@redhat.com>
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index b521eb15759e..07c336fdf4f0 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -363,9 +363,14 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
- 	 */
- 	if (need_zeroout ||
- 	    ((dio->flags & IOMAP_DIO_NEED_SYNC) && !use_fua) ||
--	    ((dio->flags & IOMAP_DIO_WRITE) && pos >= i_size_read(inode)))
-+	    ((dio->flags & IOMAP_DIO_WRITE) && pos >= i_size_read(inode))) {
- 		dio->flags &= ~IOMAP_DIO_CALLER_COMP;
- 
-+		if (!is_sync_kiocb(dio->iocb) &&
-+		    (dio->iocb->ki_flags & IOCB_NOWAIT))
-+			return -EAGAIN;
-+	}
-+
- 	/*
- 	 * The rules for polled IO completions follow the guidelines as the
- 	 * ones we set for inline and deferred completions. If none of those
-@@ -374,6 +379,23 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
- 	if (!(dio->flags & (IOMAP_DIO_INLINE_COMP|IOMAP_DIO_CALLER_COMP)))
- 		dio->iocb->ki_flags &= ~IOCB_HIPRI;
- 
-+	bio_opf = iomap_dio_bio_opflags(dio, iomap, use_fua, atomic);
-+
-+	if (!is_sync_kiocb(dio->iocb) && (dio->iocb->ki_flags & IOCB_NOWAIT)) {
-+		/*
-+		 * This is nonblocking IO, and we might need to allocate
-+		 * multiple bios. In this case, as we cannot guarantee that
-+		 * one of the sub bios will not fail getting issued FOR NOWAIT
-+		 * and as error results are coalesced across all of them, ask
-+		 * for a retry of this from blocking context.
-+		 */
-+		if (bio_iov_vecs_to_alloc(dio->submit.iter, BIO_MAX_VECS + 1) >
-+					  BIO_MAX_VECS)
-+			return -EAGAIN;
-+
-+		bio_opf |= REQ_NOWAIT;
-+	}
-+
- 	if (need_zeroout) {
- 		/* zero out from the start of the block to the write offset */
- 		pad = pos & (fs_block_size - 1);
-@@ -383,8 +405,6 @@ static loff_t iomap_dio_bio_iter(const struct iomap_iter *iter,
- 			goto out;
- 	}
- 
--	bio_opf = iomap_dio_bio_opflags(dio, iomap, use_fua, atomic);
--
- 	nr_pages = bio_iov_vecs_to_alloc(dio->submit.iter, BIO_MAX_VECS);
- 	do {
- 		size_t n;
 -- 
-2.48.1
+Cheers,
+
+David / dhildenb
+
 
 
