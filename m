@@ -1,106 +1,58 @@
-Return-Path: <linux-xfs+bounces-20462-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20467-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BC08A4ECB2
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 20:04:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ECC4A4ECF0
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 20:14:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9946B882F0A
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 18:12:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 972968838D3
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 18:29:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C9B228040B;
-	Tue,  4 Mar 2025 17:52:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F3711F4261;
+	Tue,  4 Mar 2025 18:21:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yWADDRKw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJg1OTFl"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D31623312E
-	for <linux-xfs@vger.kernel.org>; Tue,  4 Mar 2025 17:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741110743; cv=pass; b=V8rZzpRCxudpp5banJxGwEpl1wk6KOwshdXor26mzJFb9ykRNQJBa84a3BKqm7bj7lH42ju7I/vtJIkyJVg3nyYuOGJeRIgFWw08wmXh8uG9NukPDJPJGSTi7HHWy4uku3ta3G7bIXlg/o1ZNjxDwQWlK381rMi9fMblroL2TpQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741110743; c=relaxed/simple;
-	bh=Bz1lkAIfe6XJhf3eq5SVjSBSproAa10eY3/wDj27F2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mW/Mgwwxmxmw5yPU7pIF56nAcvH6NqIXzSvapWeVkGA8HXZfRVB7qgszLvFHaD1qHbASVHG29LVonZdPU6ZLvc4plFIcGPrgNGprjs2UlqdkbVtbmB2JSe5mvM4T6klYDhD0+V6Dc3Hi0s2Kq6oz/nDwOb+pomXmtAYNfZZPSeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yWADDRKw; arc=none smtp.client-ip=198.137.202.133; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; arc=pass smtp.client-ip=160.75.25.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id 37E4F40D1F4E
-	for <linux-xfs@vger.kernel.org>; Tue,  4 Mar 2025 20:52:19 +0300 (+03)
-X-Envelope-From: <root@cc.itu.edu.tr>
-Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6dK96kFqzFwLl
-	for <linux-xfs@vger.kernel.org>; Tue,  4 Mar 2025 17:26:21 +0300 (+03)
-Received: by le1 (Postfix, from userid 0)
-	id EFB6042756; Tue,  4 Mar 2025 17:26:04 +0300 (+03)
-Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yWADDRKw
-X-Envelope-From: <linux-kernel+bounces-541884-bozkiru=itu.edu.tr@vger.kernel.org>
-Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yWADDRKw
-Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
-	by le2 (Postfix) with ESMTP id 1197B41AE7
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 17:09:50 +0300 (+03)
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by fgw2.itu.edu.tr (Postfix) with SMTP id 9AC3C2DCDE
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 17:09:49 +0300 (+03)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B37713A9CC1
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:09:08 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD612139CE;
-	Mon,  3 Mar 2025 14:09:07 +0000 (UTC)
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E4C13C816;
-	Mon,  3 Mar 2025 14:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5432E3375;
+	Tue,  4 Mar 2025 18:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741010945; cv=none; b=pFvCipalJp2tkXPBgcXg/4zfwNSwbWpMhA3KxAST5p2y0KXjQUtubtsNAO0vQ6l/nKUigqtvcl+0CRc3WwyBBQEzzqyfiG8x45GQeXRPHFE3o/wiBqxpS/VU4L7nVQXv6y7Nhkh1KcU2b8CwH0wmNQyfsggQIbF3xXUf77JlZMs=
+	t=1741112473; cv=none; b=MreK34GXC4o68zAgCZvqzXQyox5P45bkZ0rK27eh6hqIiv/5lIrUTNFRPXLC6vhnqus9hdXaC2P/IXJv3QZnWJFMQv5hMMf7RZdNEPyhMKW+JZohZoAeiwoVXJw1myI+Me+UZ+yS+mileAvWaXk0Q3VpRs5EyMHpq2VoSQM9mBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741010945; c=relaxed/simple;
-	bh=Bz1lkAIfe6XJhf3eq5SVjSBSproAa10eY3/wDj27F2w=;
+	s=arc-20240116; t=1741112473; c=relaxed/simple;
+	bh=VTQFXOYllTlcr9vYSd2P7Rl0RRizMkZACCi/GABP9Uo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7hXsMQO6SBP1bEAnvmWUDa6NVJA8pDCuAhDrTl5zUZCgDJrK64pBGXjE+h2taHFhFjjKrbRv41UUH3cgxR4936udKJRkd/+kYAL3UM+p80xcWRhBgrOe3nggc31yKB7oiPDCz4ayxEBBv9sb1+DdFA9sjWJ9MNC21gorNnkK80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yWADDRKw; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=da6DZJIEZngOU636aAML7UreXiQIbQlvEAqAV9JlA8Q=; b=yWADDRKwjkLdCq/W/PQvaik30N
-	0WruLQPGjrswfXxDKwxx+1WQMUfx750OQAM24RECp2kOZAgjevytteVQNn6PqpP6PzdEr/9U6QUag
-	vyXBq7/jum9t2mJcqHLd/9LNFAFluSZRdJobILmJEl4zK83osoYeKSi39U77Qns7TxoZy1an00tYG
-	Zfdw/l3rd48uH+2izKyhVKLaHpE1zN+463MrOqLdWHqZwZmt6FEJxtFR3gACrbktm/mV2tKxoqRmb
-	HXr3zbkSOn3EExsPDiUAD3ff6bvEwSB87pfzvqHNQxZXyzzqHxeP2RGHJ0PjReJnvraPYRPSnhJbm
-	u7ADZJQA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tp6TY-000000011yk-1M1Z;
-	Mon, 03 Mar 2025 14:08:56 +0000
-Date: Mon, 3 Mar 2025 06:08:56 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Jinliang Zheng <alexjlzheng@gmail.com>
-Cc: cem@kernel.org, djwong@kernel.org, dchinner@redhat.com,
-	alexjlzheng@tencent.com, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: don't allow log recover IO to be throttled
-Message-ID: <Z8W3-Jni2k_MqmZs@infradead.org>
-References: <20250303112301.766938-1-alexjlzheng@tencent.com>
-Precedence: bulk
+	 Content-Type:Content-Disposition:In-Reply-To; b=YrIJao1rvcyhD0eshUC3bS+DwnqHSiqvDd6/PzZ+OY0IxFTmH0P2Q92HdXCQeNDt0wiL4y3w1qyj+hEz8oaDJS2TMNSxlI8O5AaeHBx+5PEfDkYGb1RtULrAzFPPUOjoDeZ1vS7NL1ZV988S4hj0p1+8JCyakmsiiMvXtR7fP+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJg1OTFl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A24E6C4CEE5;
+	Tue,  4 Mar 2025 18:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741112472;
+	bh=VTQFXOYllTlcr9vYSd2P7Rl0RRizMkZACCi/GABP9Uo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cJg1OTFl0CBCYyFUzo/omTa3VgDUAhaHJ6H9xTSA10LF1vgqP7yax9V5m9DvFalbG
+	 L75z40uZGOsJuWI1kqxfnK7kDLNyJLyCqyU8trOMd7xbfW9+CbEVXqzYmKlvhmTIky
+	 Ywn++G4DYiFgHUikdCRWqmDFVybWDb/YiCb/Xul+KcD+Q/eMqgyV1UzHpdptg2gdO3
+	 phmukZIm9Xgbcoynqeja/V2BNzIv6qb+WcM5DDeG/YfxDc1ZoXiKvmCYGwqr6pLHtM
+	 jxn425ztKbEhNJugz0EZhwVKwv4FxxlOF8JJOmK1y4y8GHgKhmGhlicPr2QcsdefjB
+	 p5/iFrtK3LlLQ==
+Date: Tue, 4 Mar 2025 10:21:12 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zorro Lang <zlang@redhat.com>
+Cc: Zorro Lang <zlang@kernel.org>, hch@lst.de, fstests@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] fstests: test mkfs.xfs protofiles with xattr support
+Message-ID: <20250304182112.GB2803740@frogsfrogsfrogs>
+References: <173706975660.1928701.8344148155038133836.stgit@frogsfrogsfrogs>
+ <173706975673.1928701.14882814105946770615.stgit@frogsfrogsfrogs>
+ <20250302131544.5om3lil64kw5nnyo@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <20250304174242.GA2803749@frogsfrogsfrogs>
+ <20250304180040.7yoddqyciqajw47d@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -109,41 +61,203 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250303112301.766938-1-alexjlzheng@tencent.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6dK96kFqzFwLl
-X-ITU-Libra-ESVA: No virus found
-X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741715446.8179@3ZmxG9lCgfbitdBul3t7KQ
-X-ITU-MailScanner-SpamCheck: not spam
+In-Reply-To: <20250304180040.7yoddqyciqajw47d@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 
-On Mon, Mar 03, 2025 at 07:23:01PM +0800, Jinliang Zheng wrote:
-> When recovering a large filesystem, avoid log recover IO being
-> throttled by rq_qos_throttle().
-
-Why?  Do you have numbers or a bug report?
-
-> diff --git a/fs/xfs/xfs_bio_io.c b/fs/xfs/xfs_bio_io.c
-> index fe21c76f75b8..259955f2aeb2 100644
-> --- a/fs/xfs/xfs_bio_io.c
-> +++ b/fs/xfs/xfs_bio_io.c
-> @@ -22,12 +22,15 @@ xfs_rw_bdev(
->  	unsigned int		left = count;
->  	int			error;
->  	struct bio		*bio;
-> +	blk_opf_t		opf = op | REQ_META | REQ_SYNC;
+On Wed, Mar 05, 2025 at 02:00:40AM +0800, Zorro Lang wrote:
+> On Tue, Mar 04, 2025 at 09:42:42AM -0800, Darrick J. Wong wrote:
+> > On Sun, Mar 02, 2025 at 09:15:44PM +0800, Zorro Lang wrote:
+> > > On Thu, Jan 16, 2025 at 03:35:04PM -0800, Darrick J. Wong wrote:
+> > > > From: Darrick J. Wong <djwong@kernel.org>
+> > > > 
+> > > > Make sure we can do protofiles with xattr support.
+> > > > 
+> > > > Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+> > > > ---
+> > > 
+> > > This test always fails on my side, as below (diff output):
+> > > 
+> > >    ...
+> > >    Attribute "rootdata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > >    Attribute "bigdata" has a 37960 byte value for SCRATCH_MNT/directory/test
+> > >    Attribute "acldata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > >   +Attribute "selinux" has a 28 byte value for SCRATCH_MNT/directory/test
+> > >    *** unmount FS
+> > >    *** done
+> > >    *** unmount
+> > > 
+> > > Looks like the $SELINUX_MOUNT_OPTIONS doesn't help the mkfs protofile
+> > > with xattrs.
+> > 
+> > Oops.  Ok then, I'll filter them out below...
+> > 
+> > > Thanks,
+> > > Zorro
+> > > 
+> > > 
+> > > >  tests/xfs/1937     |  144 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  tests/xfs/1937.out |  102 +++++++++++++++++++++++++++++++++++++
+> > > >  2 files changed, 246 insertions(+)
+> > > >  create mode 100755 tests/xfs/1937
+> > > >  create mode 100644 tests/xfs/1937.out
+> > > >
 >  
->  	if (is_vmalloc && op == REQ_OP_WRITE)
->  		flush_kernel_vmap_range(data, count);
->  
-> -	bio = bio_alloc(bdev, bio_max_vecs(left), op | REQ_META | REQ_SYNC,
-> -			GFP_KERNEL);
-> +	if (op == REQ_OP_WRITE)
-> +		opf |= REQ_IDLE;
+> [snip]
+> 
+> > > > +	echo "*** verify FS"
+> > > > +	(cd $SCRATCH_MNT ; find . | LC_COLLATE=POSIX sort \
+> > > > +		| grep -v ".use_space" \
+> > > > +		| xargs $here/src/lstat64 | _filter_stat)
+> > > > +	diff -q $SCRATCH_MNT/bigfile $tempfile.2 \
+> > > > +		|| _fail "bigfile corrupted"
+> > > > +	diff -q $SCRATCH_MNT/symlink $tempfile.2 \
+> > > > +		|| _fail "symlink broken"
+> > > > +
+> > > > +	$ATTR_PROG -l $SCRATCH_MNT/directory/test | _filter_scratch
+> > 
+> > ...so they don't spill into the golden output.  As this is already in
+> > patches-in-queue, do you want me to send a fixpatch on top of that?
+> 
+> If you just need a simple filter, I think you can tell me what do you
+> want to change, I can amend the commit simply. Or if you need to change
+> more, only re-send this patch is good to me :)
 
-And there's really no need to do any games with the op here.  Do it in
-the caller and document why it's done there.
+I /think/ changing the above line to this will fix it:
 
+	$ATTR_PROG -l $SCRATCH_MNT/directory/test | \
+		sed -e '/Attribute..selinux..has/d' | \
+		_filter_scratch
 
+--D
+
+> Thanks,
+> Zorro
+> 
+> > 
+> > --D
+> > 
+> > > > +
+> > > > +	echo "*** unmount FS"
+> > > > +	_full "umount"
+> > > > +	_scratch_unmount >>$seqfull 2>&1 \
+> > > > +		|| _fail "umount failed"
+> > > > +}
+> > > > +
+> > > > +_verify_fs 2
+> > > > +
+> > > > +echo "*** done"
+> > > > +status=0
+> > > > +exit
+> > > > diff --git a/tests/xfs/1937.out b/tests/xfs/1937.out
+> > > > new file mode 100644
+> > > > index 00000000000000..050c8318b1abca
+> > > > --- /dev/null
+> > > > +++ b/tests/xfs/1937.out
+> > > > @@ -0,0 +1,102 @@
+> > > > +QA output created by 1937
+> > > > +Wrote 2048.00Kb (value 0x2c)
+> > > > +*** create FS version 2
+> > > > +*** check FS
+> > > > +*** mount FS
+> > > > +*** verify FS
+> > > > + File: "."
+> > > > + Size: <DSIZE> Filetype: Directory
+> > > > + Mode: (0777/drwxrwxrwx) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 4 
+> > > > +
+> > > > + File: "./bigfile"
+> > > > + Size: 2097152 Filetype: Regular File
+> > > > + Mode: (0666/-rw-rw-rw-) Uid: (3) Gid: (0)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./block_device"
+> > > > + Size: 0 Filetype: Block Device
+> > > > + Mode: (0012/b-----x-w-) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 Device type: 161,162
+> > > > +
+> > > > + File: "./char_device"
+> > > > + Size: 0 Filetype: Character Device
+> > > > + Mode: (0345/c-wxr--r-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 Device type: 177,178
+> > > > +
+> > > > + File: "./directory"
+> > > > + Size: <DSIZE> Filetype: Directory
+> > > > + Mode: (0755/drwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 2 
+> > > > +
+> > > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_0"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_1"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_2"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_3"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_4"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./directory/test"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./directory_setgid"
+> > > > + Size: <DSIZE> Filetype: Directory
+> > > > + Mode: (2755/drwxr-sr-x) Uid: (3) Gid: (2)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 2 
+> > > > +
+> > > > + File: "./directory_setgid/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_5"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./pipe"
+> > > > + Size: 0 Filetype: Fifo File
+> > > > + Mode: (0670/frw-rwx---) Uid: (0) Gid: (0)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./setgid"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (2666/-rw-rwsrw-) Uid: (0) Gid: (0)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./setugid"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (6666/-rwsrwsrw-) Uid: (0) Gid: (0)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./setuid"
+> > > > + Size: 1348680 Filetype: Regular File
+> > > > + Mode: (4666/-rwsrw-rw-) Uid: (0) Gid: (0)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +
+> > > > + File: "./symlink"
+> > > > + Size: 7 Filetype: Symbolic Link
+> > > > + Mode: (0123/l--x-w--wx) Uid: (0) Gid: (0)
+> > > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > > +Attribute "userdata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > > > +Attribute "rootdata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > > > +Attribute "bigdata" has a 37960 byte value for SCRATCH_MNT/directory/test
+> > > > +Attribute "acldata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > > > +*** unmount FS
+> > > > +*** done
+> > > > +*** unmount
+> > > > 
+> > > 
+> > 
+> 
+> 
 
