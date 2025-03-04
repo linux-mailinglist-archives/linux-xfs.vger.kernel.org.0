@@ -1,133 +1,289 @@
-Return-Path: <linux-xfs+bounces-20464-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20466-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D066A4EB05
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 19:17:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9CE7A4EB73
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 19:26:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 723E7168C8F
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 18:12:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FAEF8835CE
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Mar 2025 18:16:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FE372E3376;
-	Tue,  4 Mar 2025 17:53:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B890A20A5D9;
+	Tue,  4 Mar 2025 18:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfQewOIg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YhLABN/b"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4710324EA86;
-	Tue,  4 Mar 2025 17:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DC920B1EB
+	for <linux-xfs@vger.kernel.org>; Tue,  4 Mar 2025 18:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741110832; cv=none; b=OaOIJ56Vfrhcdr0AFGGbss1wzFjOsdgwVi0+gzO8v4TD+Bmf6QXr7z8k5c55yMUGinrBr6be4i99kHp/pG04y5+Kh4k9cNEmkEQwDK6LmP+VlfowJWZnP9tI+ibZqkxld1+tRdkr0SsroOYgTdDlijEoM+n+eckd4QXN2Vt8aoc=
+	t=1741111255; cv=none; b=VujyTa6lZ4Gg7S3UF8xaaS9O+qBc7XXAUHQf34sMAJp5bkHx/yZZNzUFeBvUMbL0y9JUJbo8mhHOxH6rFT7xfYx0rUSVaEEaknE89UPWEUIMtMn6JeMBLxB6o64WKnPUaqXWPbsOlu4alQWEKLHJwB7mLhe3yTXKANfHMjBskiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741110832; c=relaxed/simple;
-	bh=0LDmePTln+u4axdJ0aOPepEv01zoP0TaGJ87bXJkb8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bazQoQeOwL9kFw6RKsGcJTMPw7FKMKy/A0FAV6XOhKjhwiGkQZSDu9mWwO9oy5QKYykgmF+B7z+Ah0/b5/gyEmLW98V2DV/1km7dOXm7mayqwePMZTF+aY+3aXmW5d2W+V+1HozYlhKQMCzs32Xm7E/iePQmE4FfET4XGCEgGlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VfQewOIg; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-390d98ae34dso4796877f8f.3;
-        Tue, 04 Mar 2025 09:53:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741110828; x=1741715628; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I/0aj31QshGP4T78wXyPNtHRWjMSC7Sxol6fL65EPGE=;
-        b=VfQewOIglCqMcm+l9/X1Dzt9NUe+hf/I7lfEws71nET6ys8S4p27xpnUkicXKjAJxy
-         67h6B/QAWK81O5bP+8woeocHGzn51c3Y2ntP10+l4wWAv8SiIWf1Lc++WLxxtviFwdHF
-         zSoy+iHX29lY+3CWPnMAab+ewvwh3V8ja/I/1iHFg5gIkgUlsNYwea+lfVm8gdf8H2xJ
-         OgWsaJN3FwN5q/1LnFMP1uqCqVDPtazlCHcYVZs7pGjbMQY06/0D2ts+mPwoTEDyLRwE
-         zpuHDphzWZ7DoVRy1S8rjwV0SOF6II/craVezgV1Ptqwg+Zf+i9xseW/N84poJoBnb0g
-         LKhg==
+	s=arc-20240116; t=1741111255; c=relaxed/simple;
+	bh=3WSqMz/LoOIwHMuqPvHCPZ39xMGhc+Vblgx8Y3zTzBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h9CfGQil4TwNjBQyMhF8Z+cb1BZDmAW1kEY3l8xoMHN+ISo+cL/pENqZTT2yhBKICYR3lOTWSbuTK+HlfMv2ERTJF9r9a4bOVOm1MhepoS7psPZVBI9C5zinGK5Nw++Bj0vcN7jUZz02EN0hwNvbAtMJFqh3ZGpTOl110kdSKJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YhLABN/b; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741111252;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WBecTwctML88vqPy/on9x469GjzYB+S5ZmJ1F5KyEkA=;
+	b=YhLABN/bz41xtKzWVWbbtbegzUm/w06OfETVQFq+iu3ai6iZTmyOUU3dxGu9/1Y2sIPJTg
+	yqaa8beMi8EIRPLcQdhTFSj21ECqRoisz1W35qQmvVQK67tbFRbvhXPX0tBFPSs19u2FBW
+	fA4UHKpWaN1crRN3WufeCBVFO/9mUww=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-584-ZUWZcMzyO0iHWlPrHv-jEQ-1; Tue, 04 Mar 2025 13:00:46 -0500
+X-MC-Unique: ZUWZcMzyO0iHWlPrHv-jEQ-1
+X-Mimecast-MFC-AGG-ID: ZUWZcMzyO0iHWlPrHv-jEQ_1741111245
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fe86c01f5cso11508524a91.1
+        for <linux-xfs@vger.kernel.org>; Tue, 04 Mar 2025 10:00:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741110828; x=1741715628;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/0aj31QshGP4T78wXyPNtHRWjMSC7Sxol6fL65EPGE=;
-        b=e2HkDFn2hWyTOszwamde835F0bJ6CwSSZ/oRKqV+T8GcPW53UdESeZ00B6LA0B5gPs
-         4lJBlirYLkxwwmFi5bWzz+PFwS5YW2Ui5wsPrB1mLw84pRHjg/hFzolLLsNj52eTXzCn
-         2G8tGV7PzKrLHlYKRTnEdU5kvlJupMvVDNIhNzIoa+iU/Riu5zwehaTtBhIHVPjp5OJ4
-         EQwEsL6fvM76jrp3VAMhTXQyw1P/kaxIdJwdoqQiO5Zvgmhi6r2743xiRrc05FeCA3DN
-         riI7mvpraLb50uU8/5Ugk4fKribJyG8kb4fDmDTo3PafA1eBdyIWr5lXkyMMqurO87uA
-         vkgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXG9MdnnyKW0yO1lmy5aMD3FU3i13ZYKUzXR7iElVq1ClH+DCMp/Q+pD9yYoGgd3OxLxlJRLFbs4sQK@vger.kernel.org, AJvYcCXM910wH2kusQiRI665Sn1B7qrK13oZmpRz8hYPd+Y4zUF5vhLNm+uqf2fAqJxRJ2qIiA4OrSo7pg==@vger.kernel.org, AJvYcCXtw1/lrMQk/0VOa80vA8oSz4egBk/Ltz/9/2bML6nOw4MBd2hiCu7+bv7MQE5Cn9f87SKSrqgaWQFxFS9ntA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIhYyFWggJvr5G3wtVEVGWDekr1mLeB2nTmUqELcg8QWIEhiMX
-	SGHdYJXopZboEghLBEyf6Ni2mazvZmW1mzRv2h0zKWzHLcgmou/p
-X-Gm-Gg: ASbGncvkIgYwJVuTa57CWwUjApozaO22MikHWzsM4Mu8oXvLNA4mzz8RdYoUF6BcQNH
-	R/iDju/C1bSkmahk6iVh9oPb4SwNShX6lH5/qZAz9wO3uK1fT9/TrgXTzvLPKL+2Fh0RJgIpBg5
-	PTJT1JLOPLKKlJUrOxMug22J3sHatVta07mOc1WRht+PQ9IqMmVK8cDG+lj/dk5nJ69FH+KVEJ4
-	VfooG+HP1Atm2qrOoMaDu7Mz7/xERvZHCXl+UZJ3MdYQGpvzkNZLRSaEeJWu+B8WET9iAhEGKfA
-	bqEQzMwnLIiYYzjHybiB7DdGe3Ukaj9UR/1Os7DHfc/wyVcF0bOIqg==
-X-Google-Smtp-Source: AGHT+IFX0oebidS7NUhxe0FgEu8LE8CRLLFgT2QQN91OazOCqVX9imk0OrJ2ME3eMMHyHKzUCto+nQ==
-X-Received: by 2002:a5d:59ae:0:b0:391:10f9:f3a1 with SMTP id ffacd0b85a97d-39110f9f4ffmr8167306f8f.35.1741110828240;
-        Tue, 04 Mar 2025 09:53:48 -0800 (PST)
-Received: from [192.168.8.100] ([185.69.144.147])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485e045sm18521029f8f.99.2025.03.04.09.53.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 09:53:46 -0800 (PST)
-Message-ID: <8295d4e5-dff7-4e20-80b5-0a8019498257@gmail.com>
-Date: Tue, 4 Mar 2025 17:54:51 +0000
+        d=1e100.net; s=20230601; t=1741111245; x=1741716045;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WBecTwctML88vqPy/on9x469GjzYB+S5ZmJ1F5KyEkA=;
+        b=a6X6dwJBPhVMo7NTqTU2iBREL2mtZKRMCKESzRUqQLzuKs69YTiHBrdp5dMfU6sxw7
+         Zqyqg2o/SCYfJQp4i5i59a+HLwAicnTHw8ZTSCEwBt7YYqerx+ogDDgp9GxHOQpuFvib
+         fIahu4X0kI+/cCm8ORbTaBhiQsMRQSZ3ain+tdngLSSweaoctVKLtvQHJ90ZCtPut1G1
+         50r6Xu0t4B9WbBRJ1tF794g+wYlbAenLtq7z8I0keu/Nm26jGcl0X7uCK+XcEHoyoZzo
+         +dbaLjP4TFM34Ho/Lg+n9dw4J4RVZKhvgQYP7OEsZj7Ks2nWwyxTjPN6SVL3AOU/vg7U
+         OIwg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0CGshxqVo/I9CTP1zIAUIjdzqMXzHJ9tJ1lErfay+HHpgPP9C0lthS8Ubg78KxWijAU+9vlxUNVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvbcK5jY1v+fWc/76OXIiM87Q1zsQiVxj3tnkR6u628CGjNbpS
+	p6E9xZnbHYEd+eVAMED80v9mbG2eO29X+cYr/yEkqNbQJFn1NILyDeKz//1T9gu+pE8Fg/Vex1X
+	gvBkNM6Od8ueU+d0P7AyvJjCuv1UwlErTcw9mCTEjvxbfhhMUvGxl8dUKPA==
+X-Gm-Gg: ASbGncuH2zSzdnY6gUJGllh6j2jV0ZxutzPQVOrISnOaEHw9DnKwCos9sYLpPw3Z53q
+	5pnKFPn3/h0u4ijyh3cjZqP28tUxcSBMIji3w577AA/vE7vr/kVx+KC5nbGUpqmyNQpuexhvVQk
+	j2vKP56D0EABq2pHNtLjVfkZB93TD9R0KR3aK3jvujKS/WmPCGyovkTEnnlH5encJBq93cOTaME
+	3mH3M9HK28aESPdW5YzkN6Vl6PVKX4yq0+n9JNA+ONOfXWLUblF588V71M7kuV+F4cL9wFwTQnJ
+	1Ah8zP+TmuIfKbAdtcb+O4VQqARR3bW6hARAlfxrfBn/AIErxujO/Kk8
+X-Received: by 2002:a05:6a21:4613:b0:1ee:dd60:194f with SMTP id adf61e73a8af0-1f2f4e45147mr28203968637.26.1741111245024;
+        Tue, 04 Mar 2025 10:00:45 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGrEVpMt1TC86DAQEPPAlMYdw+D+XtbQA6Vq0wy6kj5q/vKdTteC5BmkNy4Tg+w1dtlyrVhuw==
+X-Received: by 2002:a05:6a21:4613:b0:1ee:dd60:194f with SMTP id adf61e73a8af0-1f2f4e45147mr28203921637.26.1741111244603;
+        Tue, 04 Mar 2025 10:00:44 -0800 (PST)
+Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af14cd45d19sm7644214a12.35.2025.03.04.10.00.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 10:00:44 -0800 (PST)
+Date: Wed, 5 Mar 2025 02:00:40 +0800
+From: Zorro Lang <zlang@redhat.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Zorro Lang <zlang@kernel.org>, hch@lst.de, fstests@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] fstests: test mkfs.xfs protofiles with xattr support
+Message-ID: <20250304180040.7yoddqyciqajw47d@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+References: <173706975660.1928701.8344148155038133836.stgit@frogsfrogsfrogs>
+ <173706975673.1928701.14882814105946770615.stgit@frogsfrogsfrogs>
+ <20250302131544.5om3lil64kw5nnyo@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+ <20250304174242.GA2803749@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] iomap: propagate nowait to block layer
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org,
- Dave Chinner <david@fromorbit.com>, io-uring@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
- wu lei <uwydoc@gmail.com>
-References: <f287a7882a4c4576e90e55ecc5ab8bf634579afd.1741090631.git.asml.silence@gmail.com>
- <Z8clJ2XSaQhLeIo0@infradead.org>
- <83af597f-e599-41d2-a17b-273d6d877dad@gmail.com>
- <Z8cxVLEEEwmUigjz@infradead.org>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <Z8cxVLEEEwmUigjz@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250304174242.GA2803749@frogsfrogsfrogs>
 
-On 3/4/25 16:59, Christoph Hellwig wrote:
-> On Tue, Mar 04, 2025 at 04:41:40PM +0000, Pavel Begunkov wrote:
->> bio_iov_vecs_to_alloc() can overestimate, i.e. the check might return
->> -EAGAIN in more cases than required but not the other way around,
->> that should be enough for a fix such as this patch. Or did I maybe
->> misunderstood you?
+On Tue, Mar 04, 2025 at 09:42:42AM -0800, Darrick J. Wong wrote:
+> On Sun, Mar 02, 2025 at 09:15:44PM +0800, Zorro Lang wrote:
+> > On Thu, Jan 16, 2025 at 03:35:04PM -0800, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <djwong@kernel.org>
+> > > 
+> > > Make sure we can do protofiles with xattr support.
+> > > 
+> > > Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+> > > ---
+> > 
+> > This test always fails on my side, as below (diff output):
+> > 
+> >    ...
+> >    Attribute "rootdata" has a 5 byte value for SCRATCH_MNT/directory/test
+> >    Attribute "bigdata" has a 37960 byte value for SCRATCH_MNT/directory/test
+> >    Attribute "acldata" has a 5 byte value for SCRATCH_MNT/directory/test
+> >   +Attribute "selinux" has a 28 byte value for SCRATCH_MNT/directory/test
+> >    *** unmount FS
+> >    *** done
+> >    *** unmount
+> > 
+> > Looks like the $SELINUX_MOUNT_OPTIONS doesn't help the mkfs protofile
+> > with xattrs.
 > 
-> No you didn;t but we need to do this properly.
+> Oops.  Ok then, I'll filter them out below...
 > 
->> Assuming you're suggesting to implement that, I can't say I'm excited by
->> the idea of reworking a non trivial chunk of block layer to fix a problem
->> and then porting it up to some 5.x, especially since it was already
->> attempted before by someone and ultimately got reverted.
+> > Thanks,
+> > Zorro
+> > 
+> > 
+> > >  tests/xfs/1937     |  144 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  tests/xfs/1937.out |  102 +++++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 246 insertions(+)
+> > >  create mode 100755 tests/xfs/1937
+> > >  create mode 100644 tests/xfs/1937.out
+> > >
+ 
+[snip]
+
+> > > +	echo "*** verify FS"
+> > > +	(cd $SCRATCH_MNT ; find . | LC_COLLATE=POSIX sort \
+> > > +		| grep -v ".use_space" \
+> > > +		| xargs $here/src/lstat64 | _filter_stat)
+> > > +	diff -q $SCRATCH_MNT/bigfile $tempfile.2 \
+> > > +		|| _fail "bigfile corrupted"
+> > > +	diff -q $SCRATCH_MNT/symlink $tempfile.2 \
+> > > +		|| _fail "symlink broken"
+> > > +
+> > > +	$ATTR_PROG -l $SCRATCH_MNT/directory/test | _filter_scratch
 > 
-> Stop whining.  Backporting does not matter for upstream development,
-> and I'm pretty sure you'd qualify for a job where you don't have to do
-> this if you actually care and don't just like to complain.
+> ...so they don't spill into the golden output.  As this is already in
+> patches-in-queue, do you want me to send a fixpatch on top of that?
 
-That's an interesting choice of words. Dear Christoph, I'm afraid you
-don't realise that you're the one whining at a person who actually tries
-to fix it. I'd appreciate if you stop this bullshit, especially if you're
-not willing to fix it yourself. If you do, please, be my guest and prove
-me wrong.
+If you just need a simple filter, I think you can tell me what do you
+want to change, I can amend the commit simply. Or if you need to change
+more, only re-send this patch is good to me :)
 
-Stable does exist, and people do care about it, and people do care about
-problems being fixed and not delayed because your desire for someone else
-to do some random grand rework for you. If there are _actual_ problems
-with the patch, please let me know. Some of more rare cases being not
-as efficient is not a problem.
+Thanks,
+Zorro
 
--- 
-Pavel Begunkov
+> 
+> --D
+> 
+> > > +
+> > > +	echo "*** unmount FS"
+> > > +	_full "umount"
+> > > +	_scratch_unmount >>$seqfull 2>&1 \
+> > > +		|| _fail "umount failed"
+> > > +}
+> > > +
+> > > +_verify_fs 2
+> > > +
+> > > +echo "*** done"
+> > > +status=0
+> > > +exit
+> > > diff --git a/tests/xfs/1937.out b/tests/xfs/1937.out
+> > > new file mode 100644
+> > > index 00000000000000..050c8318b1abca
+> > > --- /dev/null
+> > > +++ b/tests/xfs/1937.out
+> > > @@ -0,0 +1,102 @@
+> > > +QA output created by 1937
+> > > +Wrote 2048.00Kb (value 0x2c)
+> > > +*** create FS version 2
+> > > +*** check FS
+> > > +*** mount FS
+> > > +*** verify FS
+> > > + File: "."
+> > > + Size: <DSIZE> Filetype: Directory
+> > > + Mode: (0777/drwxrwxrwx) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 4 
+> > > +
+> > > + File: "./bigfile"
+> > > + Size: 2097152 Filetype: Regular File
+> > > + Mode: (0666/-rw-rw-rw-) Uid: (3) Gid: (0)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./block_device"
+> > > + Size: 0 Filetype: Block Device
+> > > + Mode: (0012/b-----x-w-) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 Device type: 161,162
+> > > +
+> > > + File: "./char_device"
+> > > + Size: 0 Filetype: Character Device
+> > > + Mode: (0345/c-wxr--r-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 Device type: 177,178
+> > > +
+> > > + File: "./directory"
+> > > + Size: <DSIZE> Filetype: Directory
+> > > + Mode: (0755/drwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 2 
+> > > +
+> > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_0"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_1"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_2"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_3"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./directory/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_4"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./directory/test"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./directory_setgid"
+> > > + Size: <DSIZE> Filetype: Directory
+> > > + Mode: (2755/drwxr-sr-x) Uid: (3) Gid: (2)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 2 
+> > > +
+> > > + File: "./directory_setgid/file_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_5"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (0755/-rwxr-xr-x) Uid: (3) Gid: (1)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./pipe"
+> > > + Size: 0 Filetype: Fifo File
+> > > + Mode: (0670/frw-rwx---) Uid: (0) Gid: (0)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./setgid"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (2666/-rw-rwsrw-) Uid: (0) Gid: (0)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./setugid"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (6666/-rwsrwsrw-) Uid: (0) Gid: (0)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./setuid"
+> > > + Size: 1348680 Filetype: Regular File
+> > > + Mode: (4666/-rwsrw-rw-) Uid: (0) Gid: (0)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +
+> > > + File: "./symlink"
+> > > + Size: 7 Filetype: Symbolic Link
+> > > + Mode: (0123/l--x-w--wx) Uid: (0) Gid: (0)
+> > > +Device: <DEVICE> Inode: <INODE> Links: 1 
+> > > +Attribute "userdata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > > +Attribute "rootdata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > > +Attribute "bigdata" has a 37960 byte value for SCRATCH_MNT/directory/test
+> > > +Attribute "acldata" has a 5 byte value for SCRATCH_MNT/directory/test
+> > > +*** unmount FS
+> > > +*** done
+> > > +*** unmount
+> > > 
+> > 
+> 
 
 
