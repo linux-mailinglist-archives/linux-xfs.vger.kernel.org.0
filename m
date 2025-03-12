@@ -1,91 +1,67 @@
-Return-Path: <linux-xfs+bounces-20689-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-20678-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10182A5D686
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Mar 2025 07:46:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB2E2A5D67A
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Mar 2025 07:46:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B926B189C6CB
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Mar 2025 06:46:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 68A0C189C3E5
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Mar 2025 06:46:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E8C61E5B6F;
-	Wed, 12 Mar 2025 06:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DcUZJ0eQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8BB81E5B7F;
+	Wed, 12 Mar 2025 06:46:04 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352061E25EF;
-	Wed, 12 Mar 2025 06:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E732BD04;
+	Wed, 12 Mar 2025 06:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741761994; cv=none; b=P+SLgo9hudgmM90S4g9JcEzYRF3+AlEa8/RcutyzRHVt50hwCoBmfeR30r1lZyU7qe2k8b1Gp1f3fRWyzb3LY87hNhoTT+RuwT9zlBAg6geQnYxImzaGDJTT76zE32KhLogvqUSMZAIV6QOpk6hrHscXSUCZ4S/QRFKoPwyaRyU=
+	t=1741761964; cv=none; b=MbcMunKvIvI44kEFdm+rFzPam03y4l0g+RoTRjCLIYo4TIFQphblrIJH84bA32/1xR/7IZaNcOn0kw2MYrtZRbnlg56jfTh4VzsX12OfxOz4zWsu3tDEKvwzzfp46RfYK2E5OghhJiE/NZXof848oO14rRyP+oj/1BePZi7/sYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741761994; c=relaxed/simple;
-	bh=LGcMO4L5SjAqR4JL+byLtIvA9eFwqrCO7ivh9CUt/M4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SRoXFbH4HtimMyG7pbNJmqtyUY+Wyyk+xUupG8UwvZwiTE89IBrFAgeIYjLvPANoPxBXiMzezEZa8UWVABLHk7GV9MYbycxZJmPqK83Y86/vCWMgeZMlnizEeISrvMV98b0Oj+4I8dhIPFyTxiDST/Wjz7MvL/0iP6BbFsVx7BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DcUZJ0eQ; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1741761964; c=relaxed/simple;
+	bh=AwESd08s1Ltgpo/klo6q9Cc8nnu8ZLOaoiY44fbEMgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lrMo0gSrY6GDYi0LWk2iE92Dn2XhoTUVHzyMRpg2tlsY2ljsCo48Sy4/TXriQeCkx/52+x9B7BOfxXxacp3edbbpgTa5Pggn35g5XYcE2ZYJPfb21/5pDWKckzlBVMwvo5Id6roZA06We0jXw7Y67sCXlzuxvjUfd38m6EmnEyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=mg4jF/elO0L6V3QDR+jzf12z+53XfQM3w4/bfLcOl0w=; b=DcUZJ0eQeIAULugcBa3fBYujDC
-	veI78+7+JBn2uRC/483ncWXY2MvVPRkD4LJkOfmxVtTDs06SqcA5gvT8+3mv+kervdv3iYxJpCOya
-	Y4gcZzGzMbilh2z5B7zaeSN46+6C1LkLh5Snkry2w85Zq6h65G6XVVSdDuu9RsoQy2yXro00yRIsM
-	Xc7+7tqMp+2Gkt6sIzAjGcZCEsq1WHw+Vxu98B8XYfXm/VY8JYkOgJCiYC71JuLNlYl+ulqNiEzaP
-	NUTiu14oWLG7irJiV2I0SiHJAMugVV84dmVXmS7kOjaxMP1mzXY00TauE2PpwcPyg78Uj8DrXXAjA
-	za/g0uiA==;
-Received: from 2a02-8389-2341-5b80-f359-bc8f-8f56-db64.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:f359:bc8f:8f56:db64] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tsFrM-00000007cxD-1E0v;
-	Wed, 12 Mar 2025 06:46:32 +0000
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 0474668AA6; Wed, 12 Mar 2025 07:45:58 +0100 (CET)
+Date: Wed, 12 Mar 2025 07:45:57 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Zorro Lang <zlang@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Hans Holmberg <hans.holmberg@wdc.com>,
-	fstests@vger.kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: [PATCH 17/17] xfs/206: filter out the zoned line from mkfs output
-Date: Wed, 12 Mar 2025 07:45:09 +0100
-Message-ID: <20250312064541.664334-18-hch@lst.de>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250312064541.664334-1-hch@lst.de>
-References: <20250312064541.664334-1-hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, zlang@kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH] xfs: remove the post-EOF prealloc tests from the auto
+ and quick groups
+Message-ID: <20250312064557.GA13275@lst.de>
+References: <20241023103930.432190-1-hch@lst.de> <20241023172351.GG21853@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241023172351.GG21853@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-So that the test still passes with a zone enabled mkfs.
+On Wed, Oct 23, 2024 at 10:23:51AM -0700, Darrick J. Wong wrote:
+> On Wed, Oct 23, 2024 at 12:39:30PM +0200, Christoph Hellwig wrote:
+> > These fail for various non-default configs like DAX, alwayscow and
+> > small block sizes.
+> 
+> Shouldn't we selectively _notrun these tests for configurations where
+> speculative/delayed allocations don't work?
+> 
+> I had started on a helper to try to detect the situations where the
+> tests cannot ever pass, but never quite finished it:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- tests/xfs/206 | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tests/xfs/206 b/tests/xfs/206
-index 01531e1f08c3..bfd2dee939dd 100755
---- a/tests/xfs/206
-+++ b/tests/xfs/206
-@@ -66,6 +66,7 @@ mkfs_filter()
- 	    -e '/metadir=.*/d' \
- 	    -e 's/, parent=[01]//' \
- 	    -e '/rgcount=/d' \
-+	    -e '/zoned=/d' \
- 	    -e "/^Default configuration/d"
- }
- 
--- 
-2.45.2
+Did you ever finish this off?
 
 
