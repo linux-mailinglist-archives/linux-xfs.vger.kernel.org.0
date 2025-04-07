@@ -1,149 +1,146 @@
-Return-Path: <linux-xfs+bounces-21196-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-21198-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39EDCA7EC4D
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Apr 2025 21:14:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ECC9A7EC42
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Apr 2025 21:13:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 987733BE28D
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Apr 2025 19:07:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A6F57A1F4C
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Apr 2025 19:12:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5A525EFB4;
-	Mon,  7 Apr 2025 18:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAE9D22154A;
+	Mon,  7 Apr 2025 18:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixQBzJ8r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9SLRVsm"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E30A2236EF;
-	Mon,  7 Apr 2025 18:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A21821C9E0;
+	Mon,  7 Apr 2025 18:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744051309; cv=none; b=L77VBKHu0VFakG4mghJ6hd5Ua6wqLJrF3cNFDdDGITwb8A00S8eZ0sjgCTOgoxp62hf87z42LO5wUmRWPUZp6nORr/n82P/E6Hs2XELpM03OvzVR7F7I+5BzlqXby5S4738MK/UOY4at1JJ/suUBuGPen5LUa87vMhCp7FAr+jg=
+	t=1744052017; cv=none; b=iuglwpt4Ws3Hdmlfy8XnNXr4YTJVmWn7tVM1d79Ae/G6PYAb85U5obLW+lWZglW9kmyTQd4fWTGniZ/YvpChu+vS69kJcuMkMmEL42/HkzeZZkDtfJigAyGMi26hnzAqHwFqYr24qYVfamXk+eiPb7QhcL8j8RiFk3GUuWoUoPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744051309; c=relaxed/simple;
-	bh=WsJxHs7ssFBLw+K2ayKsr/xwB0JkZ16lTqa8TgJxi8M=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=B1bUPoaj5jqY9g5M1R8U90f2xqdv8eDUXQp5ihQaQ0r/n2jmNc1hNVaAcZCuWcFyV0xSgD+IWUiYHhZfZvt6URrXUj6+BnV1oKs8p6NCr65bqDBZxcNVtNotAR6EmxspoXP8+7UHzxckWu+JZtO+Pf5/X61czGJ+RpujquP7V6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ixQBzJ8r; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1744052017; c=relaxed/simple;
+	bh=umagi24FKCMK/a/Okp120yrmkDjKN0OfMdyvW1Ehz4E=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=tT0T1u2/9xaVIVNbt6lsvMhenT4T8HQepuX++0xW5tH16AaAgDdDB3qE49rA0eHJXVVLOw9htv0pGApgjdgsrTQuoC+3pIUalY+Q4663UgexCSzIH5eZlAShIPUUVfXbsVeR2vTj1bx3hLdh4cxf/j1EzWWZ7Whw/XF8vQSqQR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I9SLRVsm; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fd89d036so55388025ad.1;
-        Mon, 07 Apr 2025 11:41:47 -0700 (PDT)
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af93cd64ef3so3107565a12.2;
+        Mon, 07 Apr 2025 11:53:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744051306; x=1744656106; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744052015; x=1744656815; darn=vger.kernel.org;
         h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=CIpAmSbBdQep2UPEbRPweZhmkepvDXxjx+XL+AXt7sI=;
-        b=ixQBzJ8rGRLDNIjjstXyDYigbXc8ieB85Or+NgMzeY+09vbs4srpo4gmQtm11OZ8iv
-         tcSvbYfi4msrDkDoe7i7kjsuAAxIwcg3J6BO7xk0kDCRBM8buyf3F85XTQGlo0kVvB/i
-         DK52y0Q/V+3KM3MPJ4H8Lxnc06wEPbMKHT/6/O3saAG6ND2u7tUhioH2LoVgbJo0LmVx
-         Ws7jr3WqLCHtVHcdZ89glKo6eHN+UC09WYgOj0pS61lIg2jre4mcVgzeQKgbhHWiYzi9
-         M/7oJ1q+7vPlw3H6gSYvZ0xf6+Y8mDIz/zmx4RdGAApTrjgQJ9psKCTnqFMGk5Gl3dxt
-         ntxA==
+        bh=mNiKg1wKghdxIu47AfoQkBi8eiWjGsZuYc0UwrG48IE=;
+        b=I9SLRVsmApqBSAamFiMezUEbCmSXCvd4Pr3ajLOUu1RTCZyrIXbPlLdlda8CCJ590M
+         3FutwXwJUt+oquN0285sCqzrQ1U6MFyeHn1ZFro2z1p8XB2t7RRonBSUH7fGJdKBvivD
+         zWFIszM1+R52ni9rCDqiLMHe1NlR5cqWesrod2q0BM4gA23kJUZNxHhSB1vDOHmpFxxG
+         g6VeyR/nHpPYjKJoKcBqaLuiFaqCaqE4cVFDF2vg5dGIE0wzhXrZeqWVSafawpDA2W5X
+         Jr5P4gfcRbn9u6nZRz0+X56ykRSfQ9WOw0+Jg2RHqbwVM4k+cmgGAhsQHRj6yJY5NzQv
+         RvTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744051306; x=1744656106;
+        d=1e100.net; s=20230601; t=1744052015; x=1744656815;
         h=references:message-id:date:in-reply-to:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CIpAmSbBdQep2UPEbRPweZhmkepvDXxjx+XL+AXt7sI=;
-        b=s/3eE5Cl89m7oqcsT9eKxtMpam7T3jEa5b/HEK3MORb8wN+eoXSLx4RaB2pwJMVNVl
-         dVT7FmmfRmbbq+1TMe4rXPhQa+DDdtHdunkkgyvAP8hmvjRD11TVKkA08+orww2woH6T
-         OsbiAbHltsn0gHiwdPl4EiI5/+/P/1TBc/mNWNsN04oR//+78D5FI2ZrYK62Mmy5AHtp
-         uS/wlDDnZs2D3MLtp6EO8QphS179L1fs8P4GlcoDVoq+J8IGk6ojleKi9nlh61WGVuIR
-         fHnFV+sH+TiyV645FKDG9XodRFySyG6PzDCCxK8+MVoOUEsVDqPqy3FJwTml2uvAFIUx
-         vrMw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6yGNLw2fVn0so3W5TS38g5jewPj0xKXXEgqzclnngHNWJ3fPGN0oK54l2cjzKQPjjkFxqka2dXiTWKFe/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw33fl0D4+yrNMNIuEOEH1+JaEts4yuETxhwHvoWTS4/au4m6T0
-	UjvRfaqaZWyRkYTjUu45YETgNnuZqNBKStQ7w4v3Y2NtATBdV9TEzxsEbQ==
-X-Gm-Gg: ASbGncsf/PkvYTuAEtl55TM0fwRIRwcJDTsScephSoO5kOzH79WJZU0X7wioXSA27Pp
-	OQOiKBTFWcEGPeDhaoHSRAv7oyi4o1QPdEX5RUrp7QO1hhz0OO0h+tSAXCJddYGCdmuFoZX7341
-	Oyi/0DtA2WdghSPMqIEqIuBulKZafI1TGLR2jlZnA1f6yjvXvLDhaNy2HW9uTB0cVrD6iSgNAFQ
-	yDHHyAyQ2HWcFesSGqkd32haqhzo0bxHypSJATYFcNfFzVGKIjPIOsb4Thnr++Ki7Gc037CWO4J
-	bifw3IJ/6PdaUkkYDMi7+5bM8WZqDFnVQuw=
-X-Google-Smtp-Source: AGHT+IGa7/w+zv1hKMZv9koIXd49+8ZWBJNdIAoATsZ0zFn6zGIWgu8nAMSpdWde0TOXMDCKKOBFpQ==
-X-Received: by 2002:a17:902:ea0d:b0:223:628c:199 with SMTP id d9443c01a7336-22a8a0b4154mr155141975ad.52.1744051305700;
-        Mon, 07 Apr 2025 11:41:45 -0700 (PDT)
+        bh=mNiKg1wKghdxIu47AfoQkBi8eiWjGsZuYc0UwrG48IE=;
+        b=dgEZAQyY6IRutu7/x8lvLL9zU1Xb+b3wJogK3WMLifW3cfzBMhtrFaQjE31jfjLCRv
+         ENQg/2iYm+FkVTotQZsIAKDjxSLdduQR0W1ehMRStc56VIBA/Qgj8mYDashJvYD+5anY
+         41L0g0soyFIp/ICDxBIY+zcUu1ow/KmP+xM0IxYSu0SeQVr/HqmtPHcTYrMRzJhUj4c4
+         n4M8md0nmQeTeNGNNhW7bExA3Bj0+WSjJpkvth5+PrffhVAx+sIaZWYMmLrw6EuHhGZS
+         KltzP8D9cGHh3u8AfCcUSKjxyXI1pH5hNqALd9/pBWN8uBkkb5OKOvdPW3DZIC+i/GU2
+         8dHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDGjZmDZNM9qo69E4sbA/gBFY0Ru8MySNwzuKs2aFQLkuzLPwro5Sx8h765BnUUp3+tN8bfB90@vger.kernel.org, AJvYcCVTx03qKMHSs/iYdhatBMiu0GZuZgtpKtQWd195T2PQi6GZMmMwqwbX3nc96hoh4XXiLxpKrbKKY65Q@vger.kernel.org, AJvYcCXJMO0dhQ3CRFb7lc8xYpB7tA5wiJ7Oh3a7cg7CUaorG8C0VK6BKJCO5xe/NcGHe/RraVQAQfFNipc9Kw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD5wHjiAxSC4gYzE3rIsclpGN6gBxzen3xtpX614Ve9w9zeP9r
+	lGbcA23OnJs0ddOPh2TMe7z6W0eo2LoQHW5dJ4K0UZ8l73yXmUcq
+X-Gm-Gg: ASbGnctIVvIS0uDRc4QRoVJgmCZKx0tXrpLKx9BQwS8vWxH2Suag5wZT+xf1L/9Syd1
+	/GiiWXdzx9IF0ED6rs3TJPXHS5n/cPR3AZCwy4VrBBAnmWgmsk5av4Lfeuti4PN6PWU4h0MN0vI
+	CLhg6nKEKfSgccivq/FsnniF36Bem3kGyE1zhGgj1SZ6DME2oe2rRyYgiEThPLBzYKxrtXmkZir
+	M/ockFJSANQvoA+iSzQ06unZGquAuULn3qLZG2fq8PvTdB7ugnF384xiGD07v04iZ71j6FQpoln
+	sQsAWbUykTHG17MEqcO7k13RyHB5lzXXFx4=
+X-Google-Smtp-Source: AGHT+IEGUA3F//yfOUyAv7X2bByM5R5xYZQ8l94roj2vbVoQUabKxuuUQKsbacshguK8Di3CGtkmoQ==
+X-Received: by 2002:a17:90b:274b:b0:2fa:15ab:4df5 with SMTP id 98e67ed59e1d1-306a4b86e6emr17666167a91.34.1744052015299;
+        Mon, 07 Apr 2025 11:53:35 -0700 (PDT)
 Received: from dw-tp ([171.76.81.0])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c3819sm84508635ad.87.2025.04.07.11.41.43
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a2f626sm9250636a91.21.2025.04.07.11.53.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 11:41:45 -0700 (PDT)
+        Mon, 07 Apr 2025 11:53:34 -0700 (PDT)
 From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org, John Garry <john.g.garry@oracle.com>, ojaswin@linux.ibm.com, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] Documentation: iomap: Add missing flags description
-In-Reply-To: <20250407162527.GC6266@frogsfrogsfrogs>
-Date: Tue, 08 Apr 2025 00:00:40 +0530
-Message-ID: <878qobzuwf.fsf@gmail.com>
-References: <3170ab367b5b350c60564886a72719ccf573d01c.1743691371.git.ritesh.list@gmail.com> <20250407162527.GC6266@frogsfrogsfrogs>
+To: Zorro Lang <zlang@redhat.com>
+Cc: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>, fstests@vger.kernel.org, linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, ojaswin@linux.ibm.com, djwong@kernel.org, zlang@kernel.org, david@fromorbit.com
+Subject: Re: [PATCH v2 5/5] common: exit --> _exit
+In-Reply-To: <20250407161914.mfnqef2vqghgy3c2@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+Date: Tue, 08 Apr 2025 00:16:42 +0530
+Message-ID: <877c3vzu5p.fsf@gmail.com>
+References: <cover.1743487913.git.nirjhar.roy.lists@gmail.com> <f6c7e5647d5839ff3a5c7d34418ec56aba22bbc1.1743487913.git.nirjhar.roy.lists@gmail.com> <87mscwv7o0.fsf@gmail.com> <20250407161914.mfnqef2vqghgy3c2@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 
-"Darrick J. Wong" <djwong@kernel.org> writes:
+Zorro Lang <zlang@redhat.com> writes:
 
-> On Thu, Apr 03, 2025 at 11:52:27PM +0530, Ritesh Harjani (IBM) wrote:
->> Let's document the use of these flags in iomap design doc where other
->> flags are defined too -
+> On Fri, Apr 04, 2025 at 10:34:47AM +0530, Ritesh Harjani wrote:
+>> "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com> writes:
 >> 
->> - IOMAP_F_BOUNDARY was added by XFS to prevent merging of ioends
->>   across RTG boundaries.
->> - IOMAP_F_ATOMIC_BIO was added for supporting atomic I/O operations
->>   for filesystems to inform the iomap that it needs HW-offload based
->>   mechanism for torn-write protection
+>> > Replace exit <return-val> with _exit <return-val> which
+>> > is introduced in the previous patch.
+>> >
+>> > Signed-off-by: Nirjhar Roy (IBM) <nirjhar.roy.lists@gmail.com>
+<...>
+>> > ---
+>> > @@ -225,7 +225,7 @@ _filter_bmap()
+>> >  die_now()
+>> >  {
+>> >  	status=1
+>> > -	exit
+>> > +	_exit
 >> 
->> Signed-off-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
->> ---
->>  Documentation/filesystems/iomap/design.rst | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->> 
->> diff --git a/Documentation/filesystems/iomap/design.rst b/Documentation/filesystems/iomap/design.rst
->> index e29651a42eec..b916e85bc930 100644
->> --- a/Documentation/filesystems/iomap/design.rst
->> +++ b/Documentation/filesystems/iomap/design.rst
->> @@ -243,6 +243,11 @@ The fields are as follows:
->>       regular file data.
->>       This is only useful for FIEMAP.
->>  
->> +   * **IOMAP_F_BOUNDARY**: This indicates that I/O and I/O completions
->> +     for this iomap must never be merged with the mapping before it.
->> +     Currently XFS uses this to prevent merging of ioends across RTG
->> +     (realtime group) boundaries.
+>> Why not remove status=1 too and just do _exit 1 here too?
+>> Like how we have done at other places?
 >
-> Hrm, ok.  Based on hch's comment about not mentioning specific fs
-> behavior, I think I'll suggest something more like:
+> Yeah, nice catch! As the defination of _exit:
 >
-> IOMAP_F_BOUNDARY: This I/O and its completion must not be merged with
-> any other I/O or completion.  Filesystems must use this when submitting
-> I/O to devices that cannot handle I/O crossing certain LBAs (e.g. ZNS
-> devices).  This flag applies only to buffered I/O writeback; all other
-> functions ignore it.
+>   _exit()
+>   {
+>        status="$1"
+>        exit "$status"
+>   }
 >
-
-Sure.
-
->>     * **IOMAP_F_PRIVATE**: Starting with this value, the upper bits can
->>       be set by the filesystem for its own purposes.
->>  
->> @@ -250,6 +255,11 @@ The fields are as follows:
->>       block assigned to it yet and the file system will do that in the bio
->>       submission handler, splitting the I/O as needed.
->>  
->> +   * **IOMAP_F_ATOMIC_BIO**: Indicates that write I/O must be submitted
->> +     with the ``REQ_ATOMIC`` flag set in the bio. Filesystems need to set
->> +     this flag to inform iomap that the write I/O operation requires
->> +     torn-write protection based on HW-offload mechanism.
+> The
+>   "
+>   status=1
+>   exit
+>   "
+> should be equal to:
+>   "
+>   _exit 1
+>   "
 >
-> They must also ensure that mapping updates upon the completion of the
-> I/O must be performed in a single metadata update.
+> And "_exit" looks not make sense, due to it gives null to status.
+>
+> Same problem likes below:
+>
+>
+> @@ -3776,7 +3773,7 @@ _get_os_name()
+>                 echo 'linux'
+>         else
+>                 echo Unknown operating system: `uname`
+> -               exit
+> +               _exit
+>
+>
+> The "_exit" without argument looks not make sense.
 >
 
-Thanks Darrick, for the clarification and the review comments on this
-patch. Once the remaining tracing patch is reviewed, I will incorporate
-these comments in v2.
+That's right. _exit called with no argument could make status as null.
+To prevent such misuse in future, should we add a warning/echo message
+if the no. of arguments passed to _exit() is not 1? 
 
 -ritesh
 
