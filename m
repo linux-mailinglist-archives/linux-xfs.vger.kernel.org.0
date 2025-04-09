@@ -1,56 +1,56 @@
-Return-Path: <linux-xfs+bounces-21347-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-21349-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DA11A82BF4
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Apr 2025 18:10:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87BE4A82BCB
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Apr 2025 18:05:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8FC99A7FE4
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Apr 2025 15:57:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 413834A1FE6
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Apr 2025 15:58:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 099FF2690EC;
-	Wed,  9 Apr 2025 15:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D6726A0D0;
+	Wed,  9 Apr 2025 15:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dscMxxdM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mzJet7v9"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE23A1A3159
-	for <linux-xfs@vger.kernel.org>; Wed,  9 Apr 2025 15:55:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A781326B2CA
+	for <linux-xfs@vger.kernel.org>; Wed,  9 Apr 2025 15:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214149; cv=none; b=tr+Q6JP6vdNQZaMhdgrLjs8K0XbLdh7Nxn9IoO04yjcJr3wKxjMk1nqHtCvHM6UNJI0dH+cRGoz3xwGz1mhQm3qGv4tkDfi2OakWw5ZpkS73zY+NFg7j3bvKGvC7qgi/VIMksoNZLCIvCi+/WDwe/CLrRr3wDZiy8AbUJo3/Pvo=
+	t=1744214198; cv=none; b=cakA5OJZAozGMg8dchdqt5tZhMYdPdu+c31i1AsYVChYmGeSKGod48akJUo3RYDGedZZz6s3Bydby0feRSYxoU0Zh/+ncxhQIdlT+rZFe6PkBmiCZ3WIj58h42oqXseU1dLWE+4QFCNn2kLbImLjP946ZigfBCgsUusyFldRFm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214149; c=relaxed/simple;
-	bh=mthoxDcElzgRsLVZaRCDuKxJFn7Kz3ktjjZTjEkypMg=;
+	s=arc-20240116; t=1744214198; c=relaxed/simple;
+	bh=Hs9GsaKD7o9yNaHYjUDkEj6fFb6C0NW0R/OwKZJay0o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPvmdggslVhkI2Do8ageqEBmla1suJ37MioUZEnCOThK4VBA/mr/Bl05Rw0+3sE4FNScaBdnmT40+rkNcXvITT1lgmp4cAXTojdS6yi28KyRPkSd8EomMwUi0C+NW1VOdFkRFYsOp+bkfW8lB/WSq6PP3FyD2qWGoctlu5kEjxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dscMxxdM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373F0C4CEE2;
-	Wed,  9 Apr 2025 15:55:49 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7meDJzqORF3nUFvXtzVioZTdg+zvH8DOuMsiG+ZBenSVqEBuhjk0NOyAD2GRBdLJlMPfjrCqGIfC4t5S87KBwR8LCBJSbHO/4SLdC79morNlbghq0uFBLRCwvT4Y1SbfBgtOVqhmc2+EJ+3lTeKe2NhzqWasUAAHtFsVnkKHh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mzJet7v9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BF9C4CEE2;
+	Wed,  9 Apr 2025 15:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744214149;
-	bh=mthoxDcElzgRsLVZaRCDuKxJFn7Kz3ktjjZTjEkypMg=;
+	s=k20201202; t=1744214198;
+	bh=Hs9GsaKD7o9yNaHYjUDkEj6fFb6C0NW0R/OwKZJay0o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dscMxxdMxbSTLk1IP9rGkts1fkXWKexD6TIUr7k2m1WHxTm6Q50BVAz4KFqHnh2ab
-	 Jk2qqOUlCKzgCRlk6R2l/NSkSbjScsFSNbNSjTdXSC/6PZv/BeCQNG3fTttB8tddM6
-	 U/p5stocp+n4i646y0Weg56EkLH2KbOgYJxi4HE0Fu4SBXOrZPYIAg7aj+KtQLWviF
-	 g34AZu+fCOa4z7K73uTkntq1vMQnVq7IQwJ3XjbIwRXNeP6uj0LsUWkmrm+vQfcosG
-	 CIC+g+L6dJZcCWkSQktEBDQp5UQw8vasJPLLSupyN+n23pl0D7ic3vFcg1uWQGEYYs
-	 1RwXN3urwFryQ==
-Date: Wed, 9 Apr 2025 08:55:48 -0700
+	b=mzJet7v99vq2KeZ0RPWT7pYHeLYKBSGSUedzkAlMyIOEacZPg2ZXHTjQsq5AQN94F
+	 V12Tm2QupUbQcmIy48AXwazMNcGkHrj4KKpa6YMMBqrLDYdTE1T9xinOC2bg0jx4ph
+	 A5Q8NmdEpyZHMB2x3I8hRFDyOwGxBGUmGm3bztw9gq9ZfRnDTJaiysX4LXsoIumXrx
+	 2rAfPxT6vwptQkm+pyGLJDFc8rkPT9APd3+3okDhgYTJJ3yAgHdAZWo0hoG6nBLthi
+	 KDiQwvdoxhpDPZLVV727flUAUF2pUor9KI7fxA20JzfAPk49McRUjWV6Y5U77aF7Ob
+	 xXYg29hiI+evw==
+Date: Wed, 9 Apr 2025 08:56:37 -0700
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: Christoph Hellwig <hch@lst.de>
 Cc: Andrey Albershteyn <aalbersh@kernel.org>,
 	Hans Holmberg <hans.holmberg@wdc.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 13/45] FIXUP: xfs: allow internal RT devices for zoned
- mode
-Message-ID: <20250409155548.GV6283@frogsfrogsfrogs>
+Subject: Re: [PATCH 20/45] FIXUP: xfs: add support for zoned space
+ reservations
+Message-ID: <20250409155637.GX6283@frogsfrogsfrogs>
 References: <20250409075557.3535745-1-hch@lst.de>
- <20250409075557.3535745-14-hch@lst.de>
+ <20250409075557.3535745-21-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -59,182 +59,46 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409075557.3535745-14-hch@lst.de>
+In-Reply-To: <20250409075557.3535745-21-hch@lst.de>
 
-On Wed, Apr 09, 2025 at 09:55:16AM +0200, Christoph Hellwig wrote:
+On Wed, Apr 09, 2025 at 09:55:23AM +0200, Christoph Hellwig wrote:
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/libxfs.h    |  6 ++++++
->  include/xfs_mount.h |  7 +++++++
->  libfrog/fsgeom.c    |  2 +-
->  libxfs/init.c       | 13 +++++++++----
->  libxfs/rdwr.c       |  2 ++
->  repair/agheader.c   |  4 +++-
->  6 files changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/libxfs.h b/include/libxfs.h
-> index 82b34b9d81c3..b968a2b88da3 100644
-> --- a/include/libxfs.h
-> +++ b/include/libxfs.h
-> @@ -293,4 +293,10 @@ static inline bool xfs_sb_version_hassparseinodes(struct xfs_sb *sbp)
->  		xfs_sb_has_incompat_feature(sbp, XFS_SB_FEAT_INCOMPAT_SPINODES);
->  }
->  
-> +static inline bool xfs_sb_version_haszoned(struct xfs_sb *sbp)
-> +{
-> +	return XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5 &&
-> +		xfs_sb_has_incompat_feature(sbp, XFS_SB_FEAT_INCOMPAT_ZONED);
-> +}
-> +
->  #endif	/* __LIBXFS_H__ */
-> diff --git a/include/xfs_mount.h b/include/xfs_mount.h
-> index 7856acfb9f8e..bf9ebc25fc79 100644
-> --- a/include/xfs_mount.h
-> +++ b/include/xfs_mount.h
-> @@ -53,6 +53,13 @@ struct xfs_groups {
->  	 * rtgroup, so this mask must be 64-bit.
->  	 */
->  	uint64_t		blkmask;
-> +
-> +	/*
-> +	 * Start of the first group in the device.  This is used to support a
-> +	 * RT device following the data device on the same block device for
-> +	 * SMR hard drives.
-> +	 */
-> +	xfs_fsblock_t		start_fsb;
->  };
->  
->  /*
-> diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
-> index b5220d2d6ffd..13df88ae43a7 100644
-> --- a/libfrog/fsgeom.c
-> +++ b/libfrog/fsgeom.c
-> @@ -81,7 +81,7 @@ xfs_report_geom(
->  		isint ? _("internal log") : logname ? logname : _("external"),
->  			geo->blocksize, geo->logblocks, logversion,
->  		"", geo->logsectsize, geo->logsunit / geo->blocksize, lazycount,
-> -		!geo->rtblocks ? _("none") : rtname ? rtname : _("external"),
-> +		!geo->rtblocks ? _("none") : rtname ? rtname : _("internal"),
 
-Hum.  This change means that if you call xfs_db -c info without
-supplying a realtime device, the info command output will claim an
-internal rt device:
-
-$ truncate -s 3g /tmp/a
-$ truncate -s 3g /tmp/b
-$ mkfs.xfs -f /tmp/a -r rtdev=/tmp/b
-$ xfs_db -c info /tmp/a
-meta-data=/tmp/a                 isize=512    agcount=4, agsize=196608 blks
-         =                       sectsz=512   attr=2, projid32bit=1
-         =                       crc=1        finobt=1, sparse=1, rmapbt=0
-         =                       reflink=0    bigtime=1 inobtcount=1 nrext64=1
-         =                       exchange=0   metadir=0
-data     =                       bsize=4096   blocks=786432, imaxpct=25
-         =                       sunit=0      swidth=0 blks
-naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=0
-log      =internal log           bsize=4096   blocks=16384, version=2
-         =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =internal               extsz=4096   blocks=786432, rtextents=786432
-         =                       rgcount=0    rgsize=0 extents
-         =                       zoned=0      start=0 reserved=0
-
-The realtime device is external, you just haven't supplied one.  How
-about:
-
-static inline const char *
-rtdev_name(
-	const struct xfs_fsop_geo	*geo,
-	const char			*rtname)
-{
-	if (!geo->rtblocks)
-		return _("none");
-	if (geo->rtstart)
-		return _("internal");
-	if (!rtname)
-		return _("external");
-	return rtname;
-}
-
-instead?
+Looks fine,
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
 --D
 
->  		geo->rtextsize * geo->blocksize, (unsigned long long)geo->rtblocks,
->  			(unsigned long long)geo->rtextents,
->  		"", geo->rgcount, geo->rgextents);
-> diff --git a/libxfs/init.c b/libxfs/init.c
-> index 5b45ed347276..a186369f3fd8 100644
-> --- a/libxfs/init.c
-> +++ b/libxfs/init.c
-> @@ -560,7 +560,7 @@ libxfs_buftarg_init(
->  				progname);
->  			exit(1);
->  		}
-> -		if (xi->rt.dev &&
-> +		if ((xi->rt.dev || xi->rt.dev == xi->data.dev) &&
->  		    (mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
->  		     mp->m_rtdev_targp->bt_mount != mp)) {
->  			fprintf(stderr,
-> @@ -577,7 +577,11 @@ libxfs_buftarg_init(
->  	else
->  		mp->m_logdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->log,
->  				lfail);
-> -	mp->m_rtdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->rt, rfail);
-> +	if (!xi->rt.dev || xi->rt.dev == xi->data.dev)
-> +		mp->m_rtdev_targp = mp->m_ddev_targp;
-> +	else
-> +		mp->m_rtdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->rt,
-> +				rfail);
->  }
+> ---
+>  libxfs/libxfs_priv.h | 2 ++
+>  libxfs/xfs_bmap.c    | 1 -
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
+> index 82952b0db629..d5f7d28e08e2 100644
+> --- a/libxfs/libxfs_priv.h
+> +++ b/libxfs/libxfs_priv.h
+> @@ -471,6 +471,8 @@ static inline int retzero(void) { return 0; }
+>  #define xfs_sb_validate_fsb_count(sbp, nblks)		(0)
+>  #define xlog_calc_iovec_len(len)		roundup(len, sizeof(uint32_t))
 >  
->  /* Compute maximum possible height for per-AG btree types for this fs. */
-> @@ -978,7 +982,7 @@ libxfs_flush_mount(
->  			error = err2;
->  	}
->  
-> -	if (mp->m_rtdev_targp) {
-> +	if (mp->m_rtdev_targp && mp->m_rtdev_targp != mp->m_ddev_targp) {
->  		err2 = libxfs_flush_buftarg(mp->m_rtdev_targp,
->  				_("realtime device"));
->  		if (!error)
-> @@ -1031,7 +1035,8 @@ libxfs_umount(
->  	free(mp->m_fsname);
->  	mp->m_fsname = NULL;
->  
-> -	libxfs_buftarg_free(mp->m_rtdev_targp);
-> +	if (mp->m_rtdev_targp != mp->m_ddev_targp)
-> +		libxfs_buftarg_free(mp->m_rtdev_targp);
->  	if (mp->m_logdev_targp != mp->m_ddev_targp)
->  		libxfs_buftarg_free(mp->m_logdev_targp);
->  	libxfs_buftarg_free(mp->m_ddev_targp);
-> diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
-> index 35be785c435a..f06763b38bd8 100644
-> --- a/libxfs/rdwr.c
-> +++ b/libxfs/rdwr.c
-> @@ -175,6 +175,8 @@ libxfs_getrtsb(
->  	if (!mp->m_rtdev_targp->bt_bdev)
->  		return NULL;
->  
-> +	ASSERT(!mp->m_sb.sb_rtstart);
+> +#define xfs_zoned_add_available(mp, rtxnum)	do { } while (0)
 > +
->  	error = libxfs_buf_read_uncached(mp->m_rtdev_targp, XFS_RTSB_DADDR,
->  			XFS_FSB_TO_BB(mp, 1), 0, &bp, &xfs_rtsb_buf_ops);
->  	if (error)
-> diff --git a/repair/agheader.c b/repair/agheader.c
-> index 327ba041671f..5bb4e47e0c5b 100644
-> --- a/repair/agheader.c
-> +++ b/repair/agheader.c
-> @@ -485,7 +485,9 @@ secondary_sb_whack(
->  	 *
->  	 * size is the size of data which is valid for this sb.
->  	 */
-> -	if (xfs_sb_version_hasmetadir(sb))
-> +	if (xfs_sb_version_haszoned(sb))
-> +		size = offsetofend(struct xfs_dsb, sb_rtstart);
-> +	else if (xfs_sb_version_hasmetadir(sb))
->  		size = offsetofend(struct xfs_dsb, sb_pad);
->  	else if (xfs_sb_version_hasmetauuid(sb))
->  		size = offsetofend(struct xfs_dsb, sb_meta_uuid);
+>  /*
+>   * Prototypes for kernel static functions that are aren't in their
+>   * associated header files.
+> diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
+> index 3a857181bfa4..3cb47c3c8707 100644
+> --- a/libxfs/xfs_bmap.c
+> +++ b/libxfs/xfs_bmap.c
+> @@ -35,7 +35,6 @@
+>  #include "xfs_symlink_remote.h"
+>  #include "xfs_inode_util.h"
+>  #include "xfs_rtgroup.h"
+> -#include "xfs_zone_alloc.h"
+>  
+>  struct kmem_cache		*xfs_bmap_intent_cache;
+>  
 > -- 
 > 2.47.2
 > 
