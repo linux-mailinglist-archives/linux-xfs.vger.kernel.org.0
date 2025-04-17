@@ -1,79 +1,71 @@
-Return-Path: <linux-xfs+bounces-21615-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-21617-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FFB1A9235A
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Apr 2025 19:06:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BEDDA92B0D
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Apr 2025 20:56:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2E9CB18949DB
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Apr 2025 17:06:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B0774A8306
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Apr 2025 18:55:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 053021A23BE;
-	Thu, 17 Apr 2025 17:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2lU1wQ7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79192566FE;
+	Thu, 17 Apr 2025 18:55:18 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B590035973
-	for <linux-xfs@vger.kernel.org>; Thu, 17 Apr 2025 17:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from dibed.net-space.pl (dibed.net-space.pl [84.10.22.86])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id EA2B28462
+	for <linux-xfs@vger.kernel.org>; Thu, 17 Apr 2025 18:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.10.22.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744909559; cv=none; b=NykrEOEcZ2B9cyYeKZapVKQKZoiKe8i3KVVnyUHVj60YSXH74lvWL63dJqTfI50pjagqu0NnmzjWaH30VhvFShTBSY4pHfNO0k2YOUuCvfuQPKDyN3JvgnelkJ4wriD1ZgZMLA54Eat6OgRUGUiMKkxBKQctgT3WoDLCfikIyNE=
+	t=1744916118; cv=none; b=BO9rYURN8H9iTY1lxYvNhufyR170b0HBFff+9m7k7LW9c1wXoFOyaRq2EwBMHdheuvpI17INKRHbjH4uNX7qRd3rtQBUESMBA8Z15PrPCn2tXoiSitY7YtzO2fRiGya0caS9mCR9K3MofNaG8/dytWzhxccZvWlJvv43bl314Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744909559; c=relaxed/simple;
-	bh=QU3FGT1iRACJDUf6nMZPry+pzFBbpif9WjpebsF0GGg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=t1NZNEHF+AVE91b4v6Ck6AysikIXH7rBDfyzOX6zIUPczuyPKaZ5lxOKIKpOlS7NB639Q9cRFH9NvU4lnFhinniAYVjMoNRNP0u/BeGNIgWbL7PU2ToRAhTCVnOpiaAFdtyRIUxvvfnX1HN39qGvre3grgDAAjF3qV5kUIGH218=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2lU1wQ7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97887C4CEE4;
-	Thu, 17 Apr 2025 17:05:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744909559;
-	bh=QU3FGT1iRACJDUf6nMZPry+pzFBbpif9WjpebsF0GGg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=c2lU1wQ7PYUre+rEkygKas8oIjys7bnDZ3euKPMdda8lrpS1bXTVLCaKvIg+QqyZ1
-	 yBt2IH0eJtr0wfcw7iyMa3pFL8fzXPuaDDQe+YbUGWqBQYbw1VkNjyeQN571GscHAI
-	 dslj1LgBH7onSjgY3mTywcXNUg4G50uWQrA+XLTk94DJyy32yOM5FfxOwFkOBsiH4J
-	 Yvi7H5MsajI3SGHNlSVRXD8/JosMM2OwDGvjiOQNUs8l87QIdx/DcLDTmzVvzTNH36
-	 pNS2z9UFNZ6rEykGkZjWcrwFU4an1DRKehpErWLouoYMpoPKx7cOmyEKw1uAfpJpmr
-	 vhnqFpZl7pR4w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB1EF380664C;
-	Thu, 17 Apr 2025 17:06:38 +0000 (UTC)
-Subject: Re: [GIT PULL] XFS fixes for v6.15-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <e3ip6gczsaxvbg7iddmvwy5svl54hig7tjbarvf7ttfqymcqcp@xlvtlw3se257>
-References: <e3ip6gczsaxvbg7iddmvwy5svl54hig7tjbarvf7ttfqymcqcp@xlvtlw3se257>
-X-PR-Tracked-List-Id: <linux-xfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <e3ip6gczsaxvbg7iddmvwy5svl54hig7tjbarvf7ttfqymcqcp@xlvtlw3se257>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-fixes-6.15-rc3
-X-PR-Tracked-Commit-Id: c7b67ddc3c999aa2f8d77be7ef1913298fe78f0e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 096384deed6b873e62ac854b624f5be94f8f7357
-Message-Id: <174490959759.4147514.8451573706297649636.pr-tracker-bot@kernel.org>
-Date: Thu, 17 Apr 2025 17:06:37 +0000
-To: Carlos Maiolino <cem@kernel.org>
-Cc: torvalds@linux-foundation.org, linux-xfs@vger.kernel.org
+	s=arc-20240116; t=1744916118; c=relaxed/simple;
+	bh=cGDsIZ8Khdn2R6tfkzZ5hWfPGtNg8i6ROPGDU6GIDbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J1qkcpHmKhL5YfcCnxG6c3PSWSRkPhkl7cqQR3DytytCU8rCmyGyqSzp/zAyQVolacXQft3WxU3in5nBUmMKRG+Nm8WFD+TQp98e14ne+4PkF9x54veW9GzFv4JFqJk/soDmcSLUKeSdJbGWD+sdaH/G86txuWGygkh/kAGNtUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-space.pl; spf=pass smtp.mailfrom=net-space.pl; arc=none smtp.client-ip=84.10.22.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=net-space.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=net-space.pl
+Received: from router-fw.i.net-space.pl ([192.168.52.1]:41638 "EHLO
+	tomti.i.net-space.pl") by router-fw-old.i.net-space.pl with ESMTP
+	id S2261973AblDQSe4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+	Thu, 17 Apr 2025 20:34:56 +0200
+X-Comment: RFC 2476 MSA function at dibed.net-space.pl logged sender identity as: dkiper
+Date:	Thu, 17 Apr 2025 20:34:53 +0200
+From:	Daniel Kiper <dkiper@net-space.pl>
+To:	Eric Sandeen <sandeen@redhat.com>
+Cc:	grub-devel@gnu.org, linux-xfs@vger.kernel.org,
+	Anthony Iliopoulos <ailiop@suse.com>,
+	Marta Lewandowska <mlewando@redhat.com>,
+	Jon DeVree <nuxi@vault24.org>
+Subject: Re: [PATCH GRUB] fs/xfs: fix large extent counters incompat feature
+ support
+Message-ID: <20250417183453.75qm4nt6otdktjij@tomti.i.net-space.pl>
+References: <985816b8-35e6-4083-994f-ec9138bd35d2@redhat.com>
+ <0e47cb04-542c-460a-a5b9-e9b0f3ef6c1f@redhat.com>
+ <5c60155e-baa6-4a6c-a872-587397cf677a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c60155e-baa6-4a6c-a872-587397cf677a@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-The pull request you sent on Thu, 17 Apr 2025 14:07:01 +0200:
+On Tue, Apr 15, 2025 at 08:08:12PM -0500, Eric Sandeen via Grub-devel wrote:
+> Can I bribe someone to merge this fix, perhaps? ;)
+>
+> On 3/27/25 2:48 PM, Eric Sandeen wrote:
+> > Grub folks, ping on this? It has 2 reviews and testing but I don't see it
+> > merged yet.
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-fixes-6.15-rc3
+Huh! This somehow fallen through the cracks. Sorry about that...
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/096384deed6b873e62ac854b624f5be94f8f7357
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Daniel
 
