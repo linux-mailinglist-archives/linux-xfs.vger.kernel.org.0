@@ -1,96 +1,194 @@
-Return-Path: <linux-xfs+bounces-21645-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-21647-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 020D0A94B03
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Apr 2025 04:31:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CFB2A94BCC
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Apr 2025 06:00:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F30303B397B
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Apr 2025 02:31:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 358783B235E
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Apr 2025 03:59:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05A1217BEBF;
-	Mon, 21 Apr 2025 02:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EBF32571CE;
+	Mon, 21 Apr 2025 04:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXZTgKZs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eruI6xRT"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D30D2905;
-	Mon, 21 Apr 2025 02:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4E4257422;
+	Mon, 21 Apr 2025 04:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745202684; cv=none; b=mqy5tlsSXgf+jJkb6OF64m6e8N1Nn40TDjCP5T7/LGlMmeFv3DVjxs4R0+8A/7cWTYNdgUnLSMrwe9NvZGSooXUnC+qhKrgRnoY11DG0eqafSMSTWDgMRcb1IREoGD44Eu/tLUvWVL6d1YC2sq4rMDvO7J8QA3yeUOIYPHxkngI=
+	t=1745208004; cv=none; b=T6KxyrA/bFDnUhewPL/7FwbVzZBR7rNGEHC38u3p4U1xLI5edY/4Rymto5ZafmD9TdDFPVohLWTKA70gK2f1STzGHWYT0UoMq63H2tcSK7hBUxAWXSIhq/n09HY6J31VZS45EtdB37YTbnnbdLCKtJ94inrwZz287m0NY/ahO2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745202684; c=relaxed/simple;
-	bh=tEaK+Oom7ijrJ8AxlZ52ZDEbivL7nUBLG7vUvGwGyjw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d5GlXBg9bxqNuJN9+0HiQzdSH7rbFaKRRdMW6zg3/S4G+kBhYcbZeD2snzIpUB5+++MwB/6SwVnuSMuM7yfoISkwTaTOm1xcQh9cnsdkMMK2C3ATtJ+kCv4HbD09lYdHp/J9oyB2Whe3ZQ1DJ9NgJFJePLXD6wKxSnl0zCQJ12k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dXZTgKZs; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso640408666b.0;
-        Sun, 20 Apr 2025 19:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745202681; x=1745807481; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tEaK+Oom7ijrJ8AxlZ52ZDEbivL7nUBLG7vUvGwGyjw=;
-        b=dXZTgKZs49Y2tbmlIBZO/yr6xlWZJJwKV6BecM/Jmtj4Aveeum+S6YlGCPa+IESgbA
-         8k1r/XjyyHQ00mzT+fSczBL6PT4VJBkLAiq1VOkZCLE3HI7mM5i+i+V8ztBJdpgBWUz2
-         0HUDBSJ870iYm9JbMJIqNlw786HJW/SneM6N2W7CoD6Ferp3S1B6uTKL5lQEmIcUaFq5
-         rOkZCWz5RDJttxsYFgKHQ/FCB6YB/vF37xfcIoQis3ZaptQrpL2lXZTQ+A8XYqFoP1z5
-         Vj4ngX32xTcaPzZpSV6MwBDjbLy05BP/FFLrxXW+u6Fl7mBquS1chjotdnuwjVBhQg+f
-         7Aug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745202681; x=1745807481;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tEaK+Oom7ijrJ8AxlZ52ZDEbivL7nUBLG7vUvGwGyjw=;
-        b=suHEpXBwLogv5YHH3SWqDmqz5MyEhWZgb9glXJVW3kB0JGV6Ba0DZr/8N9fFQyskjc
-         PdD/XPE/x8vtkD5GkEgdtt1m4XsPovhEaiA0KAbMAJaEKsuajgjn64CubYyofdLIGvrG
-         iMwbIl2Oeqyt5kzVOCzJM4/Vsz/yyAeO4ciF++yq6//fiTc+dH1XBB8348V1T5y46rt5
-         BBVs5VBiMD59spY06dj8OoHlrDSQduK8ogjIL2aeAiuGbLhFBrDMRs1J671rRI9BdIB9
-         nHGR9KXd3PBAIm5SD7aNID4ynljCZhrHajRkPWDOPBnvJOh5054TTV6wY+buuoqpr+Vy
-         byzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZSK8NtYUMhVBpYmi0fCtpio+UJvye6Dr+rO0sqWUc6qE0lLD6mIELVS/pAXWUQezL3JHJzjNo2A6eTg==@vger.kernel.org, AJvYcCXWHbQUIC1aOQUcFtNSf2E5rjK8ac9amPpsyEGsghgGEygluDi5HUA0I4fnEY0ctlS5gJXdOBYtBv3p@vger.kernel.org, AJvYcCXtpO1Dpzx7mP1IdkHWIqdP8T1zjZLJQNP3VqOJNyfdmG0bGzk4kgRVztE5QGOx1KWfuY2gB9XyRb1jQxrBpg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSxZ2jUA3oSMRyoRh8qGS6GjzsK/2uQLrfc4D9Dx8XmZsZ/20z
-	GWqEeLTD1ZploxJIBJXBcvC39QwO5q2UVxetN1Z8+CkGyliSPWysKhUSzB7dB52ikSmq0YnNLpi
-	cB+pKOA300vFmKurAaSWdu95kzQ==
-X-Gm-Gg: ASbGncsw1PH8j+w6wdaBuCleVl71XFRUIRIVMHfv+npN0oRJLH7znQbXXtiQbXqaIrV
-	KmtxeOtEeLFbOGGSpJ5m1XcXVCPGxcxm5uRMg/Tfn9khjwliPXAUP0+WYHbUWWT7j+EjQxmGHd7
-	qJcv3dOio+NI/hsJWPOAuo0jB2D9AV85HIwGBYVVrs/WEbTFTAeapA
-X-Google-Smtp-Source: AGHT+IFvk3OKeedfObHR+haZPpeL8y9MDwyTIqTlWTgGbpVt44OarajVHfHqt0LQycSpL/yiyPZAhmpl2XzURePHNaU=
-X-Received: by 2002:a17:907:da3:b0:ac1:dd6f:f26c with SMTP id
- a640c23a62f3a-acb74db8e8cmr899622366b.46.1745202681153; Sun, 20 Apr 2025
- 19:31:21 -0700 (PDT)
+	s=arc-20240116; t=1745208004; c=relaxed/simple;
+	bh=RW11lH/vgZHjN0mrmXY31n6A+FJGXzaLFXSDkuu3JhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qxpDjYsHPPeuy0VTbb0oEzyv7DjN8JzAUtrpjDmI9iblnS0AHeHxGlT8Xe+YgKXLZSGAfp5UHCGyfxRNXRSz7uCbzjdaz5AzMpmc7z2K8kYnrNJWZqh8cjByzzBZ0g8Gmz4Va85JjnAVJLSOkgaypotEEFh8d1jv/lgf3TI7lDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eruI6xRT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776C2C4CEEB;
+	Mon, 21 Apr 2025 04:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745208003;
+	bh=RW11lH/vgZHjN0mrmXY31n6A+FJGXzaLFXSDkuu3JhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eruI6xRT0hI3rN17Hfjkve1biEZD3zMDpyRPPNuGgED/1kYdIk4M15eqoZl8ABBgv
+	 mfdRfOybmACfFl85C7b0M6MzK8rbHXnzVrweWDm0QDBMHnrNYfapjpr82Hbet3ckE6
+	 IlGsMeb01/zjSDKI+B43tHwVaQtRtXM7r7obyR4mG8OVuVtQ7kwzKfcEWPyCaueRqO
+	 6sM0gAh/dfTyTcFvwoeguYBtdG87SdzzdqRgBF23d/mVaCsXxfXx7dQTge11nZYGN3
+	 yRIJp+H9l0U5oEvJTEhKGRyyv1dmrtiKWxw3dXd76ONaTsAE5qDohgA0ZTya2lIf4J
+	 OBWKhNQ3p/aFw==
+Date: Sun, 20 Apr 2025 21:00:02 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
+Message-ID: <20250421040002.GU25675@frogsfrogsfrogs>
+References: <20250415121425.4146847-1-john.g.garry@oracle.com>
+ <20250415121425.4146847-12-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203094322.1809766-1-hch@lst.de> <20250203094322.1809766-2-hch@lst.de>
-In-Reply-To: <20250203094322.1809766-2-hch@lst.de>
-From: Anuj gupta <anuj1072538@gmail.com>
-Date: Mon, 21 Apr 2025 08:00:43 +0530
-X-Gm-Features: ATxdqUGhqh8b93TrZx53x60-M6ftN16MSQWs4BvCu2RxwTrDV5bCDV50pF-D4-g
-Message-ID: <CACzX3AtXC0rvjjjbpTwwuNM0nqRz4UpmsL5F11S8oFzS5Le5RA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] block: support integrity generation and verification
- from file systems
-To: Christoph Hellwig <hch@lst.de>
-Cc: Kanchan Joshi <joshi.k@samsung.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, 
-	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>, Qu Wenruo <wqu@suse.com>, 
-	Goldwyn Rodrigues <rgoldwyn@suse.com>, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415121425.4146847-12-john.g.garry@oracle.com>
 
-> +EXPORT_SYMBOL_GPL(blk_integrity_generate);
+On Tue, Apr 15, 2025 at 12:14:22PM +0000, John Garry wrote:
+> Add xfs_file_dio_write_atomic() for dedicated handling of atomic writes.
+> 
+> The function works based on two operating modes:
+> - HW offload, i.e. REQ_ATOMIC-based
+> - CoW based with out-of-places write and atomic extent remapping
+> 
+> The preferred method is HW offload as it will be faster. If HW offload is
+> not possible, then we fallback to the CoW-based method.
+> 
+> HW offload would not be possible for the write length exceeding the HW
+> offload limit, the write spanning multiple extents, unaligned disk blocks,
+> etc.
+> 
+> Apart from the write exceeding the HW offload limit, other conditions for
+> HW offload can only be detected in the iomap handling for the write. As
+> such, we use a fallback method to issue the write if we detect in the
+> ->iomap_begin() handler that HW offload is not possible. Special code
+> -ENOPROTOOPT is returned from ->iomap_begin() to inform that HW offload
+> not possible.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+> ---
+>  fs/xfs/xfs_file.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index ba4b02abc6e4..81a377f65aa3 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -728,6 +728,72 @@ xfs_file_dio_write_zoned(
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Handle block atomic writes
+> + *
+> + * Two methods of atomic writes are supported:
+> + * - REQ_ATOMIC-based, which would typically use some form of HW offload in the
+> + *   disk
+> + * - COW-based, which uses a COW fork as a staging extent for data updates
+> + *   before atomically updating extent mappings for the range being written
+> + *
+> + */
+> +static noinline ssize_t
+> +xfs_file_dio_write_atomic(
+> +	struct xfs_inode	*ip,
+> +	struct kiocb		*iocb,
+> +	struct iov_iter		*from)
+> +{
+> +	unsigned int		iolock = XFS_IOLOCK_SHARED;
+> +	ssize_t			ret, ocount = iov_iter_count(from);
+> +	const struct iomap_ops	*dops;
+> +
+> +	/*
+> +	 * HW offload should be faster, so try that first if it is already
+> +	 * known that the write length is not too large.
+> +	 */
+> +	if (ocount > xfs_inode_buftarg(ip)->bt_bdev_awu_max)
+> +		dops = &xfs_atomic_write_cow_iomap_ops;
+> +	else
+> +		dops = &xfs_direct_write_iomap_ops;
+> +
+> +retry:
+> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = xfs_file_write_checks(iocb, from, &iolock, NULL);
+> +	if (ret)
+> +		goto out_unlock;
+> +
+> +	/* Demote similar to xfs_file_dio_write_aligned() */
+> +	if (iolock == XFS_IOLOCK_EXCL) {
+> +		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
+> +		iolock = XFS_IOLOCK_SHARED;
+> +	}
+> +
+> +	trace_xfs_file_direct_write(iocb, from);
+> +	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops,
+> +			0, NULL, 0);
+> +
+> +	/*
+> +	 * The retry mechanism is based on the ->iomap_begin method returning
+> +	 * -ENOPROTOOPT, which would be when the REQ_ATOMIC-based write is not
+> +	 * possible. The REQ_ATOMIC-based method typically not be possible if
+> +	 * the write spans multiple extents or the disk blocks are misaligned.
+> +	 */
+> +	if (ret == -ENOPROTOOPT && dops == &xfs_direct_write_iomap_ops) {
+> +		xfs_iunlock(ip, iolock);
+> +		dops = &xfs_atomic_write_cow_iomap_ops;
+> +		goto retry;
+> +	}
+> +
+> +out_unlock:
+> +	if (iolock)
+> +		xfs_iunlock(ip, iolock);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Handle block unaligned direct I/O writes
+>   *
+> @@ -843,6 +909,8 @@ xfs_file_dio_write(
+>  		return xfs_file_dio_write_unaligned(ip, iocb, from);
+>  	if (xfs_is_zoned_inode(ip))
+>  		return xfs_file_dio_write_zoned(ip, iocb, from);
 
-Since this is now exported, it should have a kernel-doc style comment.
-Otherwise looks good to me:
-Reviewed-by: Anuj Gupta <anuj20.g@samsung.com>
+What happens to an IOCB_ATOMIC write to a zoned file?  I think the
+ioend for an atomic write to a zoned file involves a similar change as
+an outofplace atomic write to a file (one big transaction to absorb
+all the mapping changes) but I don't think the zoned code quite does
+that...?
+
+--D
+
+> +	if (iocb->ki_flags & IOCB_ATOMIC)
+> +		return xfs_file_dio_write_atomic(ip, iocb, from);
+>  	return xfs_file_dio_write_aligned(ip, iocb, from,
+>  			&xfs_direct_write_iomap_ops, &xfs_dio_write_ops, NULL);
+>  }
+> -- 
+> 2.31.1
+> 
+> 
 
