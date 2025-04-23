@@ -1,60 +1,50 @@
-Return-Path: <linux-xfs+bounces-21811-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-21814-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C91D0A993DC
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 18:04:30 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 149C0A993CD
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 18:03:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE4554A3FA8
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 15:56:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 055BA7A3330
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 16:02:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9392927A108;
-	Wed, 23 Apr 2025 15:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aZXDIz+Q"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9475C29115D;
+	Wed, 23 Apr 2025 15:53:48 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71933280CC8
-	for <linux-xfs@vger.kernel.org>; Wed, 23 Apr 2025 15:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB24819DFA7;
+	Wed, 23 Apr 2025 15:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423046; cv=none; b=C4EVJGkU3ftzcS4nYBWCCpKrx0J0FWG54wje3gHLKeSj0Jc0CfNXA0Mv1LPghelX1fCcstwbTW6JvTVD//c6YS8kuGF/WRnkDHHLxCM0QktiyDDt+wK2TyxSeNlQG60JQxz4nSwg1/ODUDJFzSxrlf1bXc/4JrPE6KbR+qGpmTk=
+	t=1745423628; cv=none; b=A8gCuaXPGpGEmQ2Ic5tKHzWIyZPtt7niZy+REUiUBXhlPj1a2jOgz59SCNOPzcmMkK0ya5Wn4xZczKsIPBJmtYwXO23dHgpYjTKRLmcrh+z33PB6P48KAIpnuMDUoAwpgcWywwM3DFClAvbtO8pySVRAOU2hy3mlqzKpPpLagEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423046; c=relaxed/simple;
-	bh=xIZQZihDP9esUWy+q2NpD8j9I24uNwORw4xJOWFme00=;
+	s=arc-20240116; t=1745423628; c=relaxed/simple;
+	bh=kAkYGXhLqXgPzrZy4lBSQyt77vQUpcthss2TcC8H8GA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMGL+GWUuU35wra3xjObZtKuwQ2pwU9K+yzRhx3y9W5gNw337PMwjvPPpfIBpD8BS/fcVmvVOLzoEJZO/TL85YEN+RZ2vN1ib+sOcTEQ5//CvGfvjrWrQVJW3D+Nb7lxk0eF777VB+rBXhg72yzy4PFRS4/VC4+sJt4p1PzI+7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aZXDIz+Q; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xIZQZihDP9esUWy+q2NpD8j9I24uNwORw4xJOWFme00=; b=aZXDIz+QX+CCm1M7Hr7Wea8uCs
-	9EptMC6oqURDDIqdezodXWQiRJwXMLLamQz//yf/y0WGt8TeO69ghNpKcp0LyB9NV6MRJhV6LZfj6
-	eNXMsKblKkoZ9t0UZTFAbUhwve5+ir6cfEiCEmRYYj98JQRhIed/JghmqxQQzkFb0BF8QZbU0C76q
-	WY9pO5QLyTTSGuV6c2pPjWZIxBkX3uhLGMyW7XWhK+uN6wXF2EpFikECJ4tPSCNe4rNDUFRm2NkOQ
-	cHu6/6Gp89aaVMmFCypoIIWWoUHUS51UzwzJLPKXwCOpxXdrR2DeiL8K6sdwVLZC7KcfrZdJvQ73P
-	yx1U1AWA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7cGZ-0000000B0Vv-2gf4;
-	Wed, 23 Apr 2025 15:44:03 +0000
-Date: Wed, 23 Apr 2025 08:44:03 -0700
-From: Christoph Hellwig <hch@infradead.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cg9ai/EAbv0qE60CsWoNJFB37C0VeWtZBgVoH60ftiw4dKhM5xRIhTQXz6Qynr7iuzqD4eV7EC9YUd86CqrNPFFqQPBaSQ5tqygV4z0kTy8+trBmtn49EdzsTNZZt1GFuAuHK9LSuCQLRR8s1S1frgyJBHuwlsyJUO+rLzjtuu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 8676768BFE; Wed, 23 Apr 2025 17:53:40 +0200 (CEST)
+Date: Wed, 23 Apr 2025 17:53:40 +0200
+From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Andrey Albershteyn <aalbersh@redhat.com>,
-	xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH 1/2] xfs_io: catch statx fields up to 6.15
-Message-ID: <aAkKw1tC78C7sZSX@infradead.org>
-References: <20250416052134.GB25675@frogsfrogsfrogs>
- <aAcz6NiFfxJHAHQ5@infradead.org>
- <20250423153123.GE25675@frogsfrogsfrogs>
+Cc: Christoph Hellwig <hch@lst.de>, John Garry <john.g.garry@oracle.com>,
+	brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v8 11/15] xfs: commit CoW-based atomic writes atomically
+Message-ID: <20250423155340.GA32225@lst.de>
+References: <20250422122739.2230121-1-john.g.garry@oracle.com> <20250422122739.2230121-12-john.g.garry@oracle.com> <20250423082307.GA29539@lst.de> <20250423145850.GA25675@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -63,13 +53,43 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423153123.GE25675@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250423145850.GA25675@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Apr 23, 2025 at 08:31:23AM -0700, Darrick J. Wong wrote:
-> "Add all the new statx fields and flags that have accumulated for the
-> past couple of years so they all print now." ?
+On Wed, Apr 23, 2025 at 07:58:50AM -0700, Darrick J. Wong wrote:
+> > > +xfs_calc_default_atomic_ioend_reservation(
+> > > +	struct xfs_mount	*mp,
+> > > +	struct xfs_trans_resv	*resp)
+> > > +{
+> > > +	if (xfs_has_reflink(mp))
+> > > +		resp->tr_atomic_ioend = resp->tr_itruncate;
+> > > +	else
+> > > +		memset(&resp->tr_atomic_ioend, 0,
+> > > +				sizeof(resp->tr_atomic_ioend));
+> > > +}
+> > 
+> > What is the point of zeroing out the structure for the non-reflink
+> > case?  Just as a poision for not using it when not supported as no
+> > code should be doing that?  Just thinking of this because it is a
+> > potentially nasty landmine for the zoned atomic support.
+> 
+> Yes.  I thought about adding a really stupid helper:
 
-Sounds good.
+Why don't we just always set up the xfs_trans_resv structure?  We
+do that for all kinds of other transactions not supported as well,
+don't we?
+
+> static inline bool xfs_has_sw_atomic_write(struct xfs_mount *mp)
+> {
+> 	return xfs_has_reflink(mp);
+> }
+> 
+> But that seemed too stupid so I left it out.  Maybe it wasn't so dumb,
+> since that would be where you'd enable ZNS support by changing that to:
+> 
+> 	return xfs_has_reflink(mp) || xfs_has_zoned(mp);
+
+But that helper might actually be useful in various places, so
+independent of the above I'm in favor of it.
 
 
