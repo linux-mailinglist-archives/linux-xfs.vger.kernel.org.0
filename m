@@ -1,115 +1,147 @@
-Return-Path: <linux-xfs+bounces-21815-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-21817-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E24CA99489
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 18:17:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 628AAA994C2
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 18:21:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF3A91BA2A6A
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 16:06:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA3B216C59B
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Apr 2025 16:15:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEEE5288C90;
-	Wed, 23 Apr 2025 15:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C97C27CB33;
+	Wed, 23 Apr 2025 16:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sl88vdl4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCQNSGi7"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB232798E3;
-	Wed, 23 Apr 2025 15:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A54242D64
+	for <linux-xfs@vger.kernel.org>; Wed, 23 Apr 2025 16:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423932; cv=none; b=A4UtRWa4KjPuzOEr+0+DXv9s+rbsfYhvzqEb2fdRyP27usSQAojqQmtWwxkXPpoHcewKhYpj62ttaDy7Mi+s9rq11XyVsLjHJokfruotuo9cjqAv04bY4/XbVPWpxmW163YFNXAzOVeUYd9PxVaMxPFqSUhAgqMom+qYXW97l0I=
+	t=1745424954; cv=none; b=UqQgFKOlWioTt1/Ja0rz/mEnCYP2tr5pGHSvUpImbfcZmFrRO4nPo9TAxHQm2mTNMDB7/UPYWfX8ljfaAu4kbh1uFZuTN4tspEqOZy/JFnxDGmfp2MmzcpqVxse+FTAf2yh+A/IWUAl9yUoWMzoZ9pRebpENVXHzcLBYKVn0lIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423932; c=relaxed/simple;
-	bh=PpFC8zZMZXSzlNypRJqafF0wtsr0ftAXYGxb5xxbR54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qE9EigLzOgLaiGK0esc3igNAQxFxcn7F6zdK1aQ9JZSIt1g3jxeAWcJR2rFqeaq2DGiOSVgeGcCTvwKZ196KX34atVW2d6+IVTN7IqVzX8WA1me9N0To3S2I4ejUe8RYFhv7YY5XX3XyNskS/ogCJe7ovZB/fVAAIYp8pnHwoeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sl88vdl4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9EFC4CEE2;
-	Wed, 23 Apr 2025 15:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745423932;
-	bh=PpFC8zZMZXSzlNypRJqafF0wtsr0ftAXYGxb5xxbR54=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sl88vdl4dmVc242WZOqWBaMjdg+yskYnEhkxQPq6ttrbldVbB7kFfCbEQfiXsuEbp
-	 6vvML156AwB6aM5ZaOuJB+/ncxGTstLXImQx/6JqoihyrebII6CPjISjSl566D704P
-	 wCu0VzyjgksQ6/OtneULglbNfWFpVEY/M4cdPA89pvwlHHcowkFND5iWljwaDI3Zcn
-	 sqiu39JSffJBD8h+K2EqA0NnQc4WUY03c6Kd1Zx/A/UkOqGRqHFAuSiGQTRksuSJp2
-	 GHrFS1f1LU/5kq/C4QRWhNEaR/1aU99+CJLqz3rx5aJ/UmV6WPhcoSmHl9Wfym5aKJ
-	 pa6wMtPNPmYJg==
-Date: Wed, 23 Apr 2025 08:58:51 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v8 11/15] xfs: commit CoW-based atomic writes atomically
-Message-ID: <20250423155851.GL25700@frogsfrogsfrogs>
-References: <20250422122739.2230121-1-john.g.garry@oracle.com>
- <20250422122739.2230121-12-john.g.garry@oracle.com>
- <20250423082307.GA29539@lst.de>
- <20250423145850.GA25675@frogsfrogsfrogs>
- <20250423155340.GA32225@lst.de>
+	s=arc-20240116; t=1745424954; c=relaxed/simple;
+	bh=smFj1YeEGhf7Xt80Ow6NFyKiK1AWmH8oDQdvNNVmxiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cGrScMLA+daDfhp6laQtCICFnFvwQw4a/zFrB4CAJUHROddarGNlM5xwKe15ke6LtQcYLgsCbh7iZgdQGv7GVCX9s/F79mwwILlwg+eYoq01Nuki2RKJXid9yjG206UUAD9uSqZDLsT2/R8FxzRaA0gZjDygguko6FZrhvKyvVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCQNSGi7; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso206935e9.0
+        for <linux-xfs@vger.kernel.org>; Wed, 23 Apr 2025 09:15:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745424951; x=1746029751; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lkjRHFBLJ3Uj6+H/rNOOJNppMoLk/63ENUBT/kITDo4=;
+        b=kCQNSGi7EEPxISn15QOxRlvVQd8LdTx96ZdiEHnPsTqFb6rSyeN0vffd0gg7HhMIbB
+         UxoZZaOPiLUHRXuhSZIYxnvQQSxDVP69zpqaSJJjgKG5vtEAQA5rrKOS9DYDiJ2Qnp23
+         JdJ+dxcl0LjLiw1MHnjauclZnPF1dzWVQxLdKNlvRnSZxrdkOZ7rUGTCUljqoW9ZBdVa
+         4jnyIzFo6cG3qOHvN84SNzysxqisaZ+IumzSliIHRwcdNG86OlIrnqZGAS9OMGnLKn8I
+         /j55w61tWXl71LmN1/zB2KtmHws0Hph4YLOzynER6ETeiUnmxnxWii343E+0ubwthZ+5
+         78dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745424951; x=1746029751;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lkjRHFBLJ3Uj6+H/rNOOJNppMoLk/63ENUBT/kITDo4=;
+        b=TAC3xF6/u56KtA7HBHziX/gvgvIoV7EVh7LE/sOTpdk3db3sqzymSyCYs9Y6TYPkV+
+         rb+lOgyyoJ1Czf10mj6qr0qOQzwLkZMCDSyC9UjBPPSiwofl9H2jA5+Yxq87h1x70Ms2
+         cyp6CwTlD2FrQ4SVFiLAxNrX08tt31fsUjDixmDnnCWuqtPDj580EyUXZOvKedRzpD+h
+         Zj7Xe6kEBMKzyNH/2cPeol4owqhFFOHUlxPTboMXJXho6YCIViFZwjWbxcCJW3ZA9Ld0
+         yW/cATeNxoPmQH5PnfBod869wheMVE5Dv0oQLma9taC0e0XkQEd9cwI4yzZ18uYMLeBX
+         vW8w==
+X-Gm-Message-State: AOJu0YwCbIbQ8qfeevUoJX5/FZr0zzlwFO/GsbxPhsLdH7p5b6cPFvIJ
+	216RrLlLa4K6oY+YDCkU5mRMGWmdKMpuHeMiSJGkvJu56bIIaBjoysurng==
+X-Gm-Gg: ASbGncs2mY03OXNCYdES4joB4/aZCXyy9h3BuXwQyFXR61vDCDXgCMOODJ6zGuytWG/
+	aGhuxGSfk99mXtZ6AYX/j7VlxmMgGIVh7uJkP6e2ANi1zT95w2VjMCQ0eH7PlRK3OpQK1fdGAU/
+	JUimHtLxPqEu7Wd2WIPnP6j65zD2VFo0WhPl6GRJsgm6nedVCnrn04TuI7KQ5G45k2W048DKGh2
+	yuF0o5DiCf3lZagWaGOX/1cFfuTMg9Vh61FsNCvGEAQPZcn9Tc0tcwuKMM9mLPY2A+isCGeLGWo
+	G9bzYBxKF9KmaY3GaX/E
+X-Google-Smtp-Source: AGHT+IH3JaPa3zEDQNg7QD2OCTKk+7F7xTb7NwM8T6/k4vTblUqAZn7Li1GOFLHQbaYh1QoMfyzeSw==
+X-Received: by 2002:a05:600c:511e:b0:43d:ac5:11e8 with SMTP id 5b1f17b1804b1-4406abfad78mr122967225e9.21.1745424951279;
+        Wed, 23 Apr 2025 09:15:51 -0700 (PDT)
+Received: from localhost.localdomain ([78.209.93.220])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa421c79sm19083567f8f.1.2025.04.23.09.15.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 09:15:50 -0700 (PDT)
+From: Luca Di Maio <luca.dimaio1@gmail.com>
+To: linux-xfs@vger.kernel.org
+Cc: Luca Di Maio <luca.dimaio1@gmail.com>,
+	dimitri.ledkov@chainguard.dev,
+	smoser@chainguard.dev,
+	djwong@kernel.org,
+	hch@infradead.org
+Subject: [PATCH v6 0/4] mkfs: add ability to populate filesystem from directory
+Date: Wed, 23 Apr 2025 18:03:15 +0200
+Message-ID: <20250423160319.810025-1-luca.dimaio1@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423155340.GA32225@lst.de>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 05:53:40PM +0200, Christoph Hellwig wrote:
-> On Wed, Apr 23, 2025 at 07:58:50AM -0700, Darrick J. Wong wrote:
-> > > > +xfs_calc_default_atomic_ioend_reservation(
-> > > > +	struct xfs_mount	*mp,
-> > > > +	struct xfs_trans_resv	*resp)
-> > > > +{
-> > > > +	if (xfs_has_reflink(mp))
-> > > > +		resp->tr_atomic_ioend = resp->tr_itruncate;
-> > > > +	else
-> > > > +		memset(&resp->tr_atomic_ioend, 0,
-> > > > +				sizeof(resp->tr_atomic_ioend));
-> > > > +}
-> > > 
-> > > What is the point of zeroing out the structure for the non-reflink
-> > > case?  Just as a poision for not using it when not supported as no
-> > > code should be doing that?  Just thinking of this because it is a
-> > > potentially nasty landmine for the zoned atomic support.
-> > 
-> > Yes.  I thought about adding a really stupid helper:
-> 
-> Why don't we just always set up the xfs_trans_resv structure?  We
-> do that for all kinds of other transactions not supported as well,
-> don't we?
+Currently the only way to pre populate an XFS partition is via the
+prototype file. While it works it has some limitations like:
+  - not allowed spaces in file names
+  - not preserving timestamps of original inodes
 
-Works for me.  There's really no harm in it mirroring tr_itruncate since
-it won't affect the log size calculation.
+This series adds a new -P option to mkfs.xfs that allows users to
+populate a newly created filesystem directly from an existing directory.
+While similar to the prototype functionality, this doesn't require
+writing a prototype file.
+The implementation preserves file and directory attributes (ownership,
+permissions, timestamps) from the source directory when copying content
+to the new filesystem.
 
-> > static inline bool xfs_has_sw_atomic_write(struct xfs_mount *mp)
-> > {
-> > 	return xfs_has_reflink(mp);
-> > }
-> > 
-> > But that seemed too stupid so I left it out.  Maybe it wasn't so dumb,
-> > since that would be where you'd enable ZNS support by changing that to:
-> > 
-> > 	return xfs_has_reflink(mp) || xfs_has_zoned(mp);
-> 
-> But that helper might actually be useful in various places, so
-> independent of the above I'm in favor of it.
+[v1] -> [v2]
+  remove changes to protofile spec
+  ensure backward compatibility
+[v2] -> [v3]
+  use inode_set_[acm]time() as suggested
+  avoid copying atime and ctime
+  they are often problematic for reproducibility, and
+  mtime is the important information to preserve anyway
+[v3] -> [v4]
+  rewrite functionality to populate directly from an input directory
+  this is similar to mkfs.ext4 option.
+[v4] -> [v5]
+  reorder patch to make it easier to review
+  reflow to keep code below 80 chars
+  use _() macro in prints
+  add SPDX headers to new files
+  fix comment styling
+  move from typedef to structs
+  move direntry handling to own function
+[v5] -> [v6]
+  rebase on 6.14
 
-<nod> John, who should work on the next round, you or me?
+Luca Di Maio (4):
+  proto: expose more functions from proto
+  populate: add ability to populate a filesystem from a directory
+  mkfs: add -P flag to populate a filesystem from a directory
+  man: document -P flag to populate a filesystem from a directory
 
---D
+ man/man8/mkfs.xfs.8.in |   7 +
+ mkfs/Makefile          |   2 +-
+ mkfs/populate.c        | 313 +++++++++++++++++++++++++++++++++++++++++
+ mkfs/populate.h        |  10 ++
+ mkfs/proto.c           |  33 ++---
+ mkfs/proto.h           |  22 +++
+ mkfs/xfs_mkfs.c        |  23 ++-
+ 7 files changed, 385 insertions(+), 25 deletions(-)
+ create mode 100644 mkfs/populate.c
+ create mode 100644 mkfs/populate.h
+
+Signed-off-by: Luca Di Maio <luca.dimaio1@gmail.com>
+
+--
+2.49.0
 
