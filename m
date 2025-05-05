@@ -1,37 +1,37 @@
-Return-Path: <linux-xfs+bounces-22189-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-22191-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 852C0AA8BCA
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 May 2025 07:46:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30812AA8BDF
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 May 2025 07:55:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBCB53B3076
-	for <lists+linux-xfs@lfdr.de>; Mon,  5 May 2025 05:45:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 753443AF922
+	for <lists+linux-xfs@lfdr.de>; Mon,  5 May 2025 05:55:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EA2E185B67;
-	Mon,  5 May 2025 05:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65D8D1B21B8;
+	Mon,  5 May 2025 05:55:49 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C42139E;
-	Mon,  5 May 2025 05:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E895EBE;
+	Mon,  5 May 2025 05:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746423956; cv=none; b=g/u+r4ojtqj9X59PEi5RUoFwFYDLdaNWYMSLN6E14yNdSxv7yXIZJTfy2bnpR1awQlUgtH3D/A7zHOYTW8pMf4h+Oq+rJCAXIGIgD0wWg79HLsGDn5MT+9nbe1aOZk0cuoUcosBJFWYWbYmNxUrpHBQ2hfb1qzQpV21kzOHGUEg=
+	t=1746424549; cv=none; b=eVqDUaRxzS5xMG1TEDtXrqWH0EH4JL5NWp5xZsGufBp8GLp2KDqbG+Od0cOrCUvYg4j0bgr5tY2a0ao5XHssb48Fze53Ve7fWZbpxG2/SL5ZS/+9frorUsilgLaJKnKMjUNmG94OuD25/Uef2982wIG/sAY9C8oRt7U08puD+6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746423956; c=relaxed/simple;
-	bh=4gn9TG1eNTrW9xDNN9bGw6HLyAmyE26Dayg0mZ4cgh0=;
+	s=arc-20240116; t=1746424549; c=relaxed/simple;
+	bh=lslOGUWOv2aeb0i9NMR1VzC1Ida5MbIcAK+QwiRTlsQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M+C8rVYD/YBxDBIPclxCA9YBYOJ0XT/2N3Rltgo6Pp8NgJEgqJrtA9x/JlZGh3O+kvSrtiBzKreA2LVWnOSNfCGDbqBQOuvV/MusGMxlXpZULEQjSVBfjulXSodMbobajaGhk5mwQxLTI6AsKrGSdKI0TmvqsLA9noxBAlwu9Cc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzPhpm0I9RiCYjIDT3CeqtBu+Z9F/fEN6M0wsj6Ixa5oCi1PCAwGUIWMXiuXoozawqMgjp2gSlOHMTZPe/wWtLPxrNldtDAxEKlBKfRRCYDvtbLmzMQ72vP3zEEkA4xn1TSmPMJPMrabd119KQSylOikA0fpIewYuV9ChHE2YNA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 3892668BFE; Mon,  5 May 2025 07:45:50 +0200 (CEST)
-Date: Mon, 5 May 2025 07:45:49 +0200
+	id 30BBA68BEB; Mon,  5 May 2025 07:55:43 +0200 (CEST)
+Date: Mon, 5 May 2025 07:55:43 +0200
 From: hch <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: Hans Holmberg <Hans.Holmberg@wdc.com>,
@@ -39,10 +39,10 @@ Cc: Hans Holmberg <Hans.Holmberg@wdc.com>,
 	Carlos Maiolino <cem@kernel.org>,
 	Dave Chinner <david@fromorbit.com>, hch <hch@lst.de>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/2] xfs: free the item in xfs_mru_cache_insert on
- failure
-Message-ID: <20250505054549.GA21045@lst.de>
-References: <20250430084117.9850-1-hans.holmberg@wdc.com> <20250430084117.9850-2-hans.holmberg@wdc.com> <20250502200646.GT25675@frogsfrogsfrogs>
+Subject: Re: [RFC PATCH 2/2] xfs: add inode to zone caching for data
+ placement
+Message-ID: <20250505055542.GA21256@lst.de>
+References: <20250430084117.9850-1-hans.holmberg@wdc.com> <20250430084117.9850-3-hans.holmberg@wdc.com> <20250502200415.GS25675@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -51,24 +51,15 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250502200646.GT25675@frogsfrogsfrogs>
+In-Reply-To: <20250502200415.GS25675@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, May 02, 2025 at 01:06:46PM -0700, Darrick J. Wong wrote:
-> >  	atomic_inc(&pag_group(args->pag)->xg_active_ref);
-> >  	item->pag = args->pag;
-> > -	error = xfs_mru_cache_insert(mp->m_filestream, pino, &item->mru);
-> > -	if (error)
-> > -		goto out_free_item;
-> > +	xfs_mru_cache_insert(mp->m_filestream, pino, &item->mru);
-> 
-> Hmm, don't you still need to check for -ENOMEM returns?  Or if truly
-> none of the callers care anymore, then can we get rid of the return
-> value for xfs_mru_cache_insert?
+On Fri, May 02, 2025 at 01:04:15PM -0700, Darrick J. Wong wrote:
+> It seems like a decent idea to try to land random writes to the same
+> file in the same zone.  This helps us reduce seeking out of the zone on
+> subsequent reads, right?
 
-Both for file streams and the zone association in the next patch the
-mru cache is just a hint, so we ignore all errors (see the return 0
-in the error handling boilerplate in the existing code).  But hardcoding
-that assumption into the core mru cache helpers seems a bit weird.
+Yes.  Having as few zones as possible per file also means that GC works
+better, as it often can consolidate extents.
 
 
