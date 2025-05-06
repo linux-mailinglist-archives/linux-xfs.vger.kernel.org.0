@@ -1,75 +1,116 @@
-Return-Path: <linux-xfs+bounces-22286-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-22288-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE3E8AAC37F
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 14:11:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AEB2AAC6A6
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 15:41:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6F9E1BA8114
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 12:11:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 544B41C450AA
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 13:39:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE3127F758;
-	Tue,  6 May 2025 12:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16BFB280A56;
+	Tue,  6 May 2025 13:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AyUw/U3R"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D9B27F738;
-	Tue,  6 May 2025 12:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523E728136C
+	for <linux-xfs@vger.kernel.org>; Tue,  6 May 2025 13:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746533468; cv=none; b=oPMRsmqq3Qh0NwB/6LUfCO1nXCilFLLlKHbGVX/zQq4+RGKnsoWBc/IWbM/VfMoLDFLULZ4bzXoEtEAE/U0JO0FFDXygG8BAFPgpY9Sl9iOVDAmoiODd3lboEVGhDmW+okcT0G+rqMHvpgrU2bRYeSqkHVHmfBZ4s/o1Tebp6BQ=
+	t=1746538694; cv=none; b=b6+lTeO2vNIuYa0ewPc5LzdkQw2qmabH5/7wzbSKKLJC37NVbfbmInpW4A+UixunUTsCXZQRln7zwQUp0D/EOcHoPtT/RzzrLoStzPqmhv7FCM05qeBUEjQNg90WG4Og9dQ6EuGwee77pUeqBJYx2tqqLTprcZOgu8KWZkq0hT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746533468; c=relaxed/simple;
-	bh=Z42DKWzQrGFUA4xxtScwUk/kQFCHLo2DdyxI1glwSG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6P1G0E7UpYH5r4bdhsx939M7ilJnZPsLwMp4HO2eMfttzuT3lMVUO5/6LfG/j+Ye5qEzIlfeSKGaDD+qQCHLJxX/tUqGMSgPm61QHAwuj9i0Ir3kQTrUXbTg6IgCoY48I9ND1BL1LXw8jMt8gMwvkJ1Qofyb3x8K9Gh9cRpNkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 27FBC68AA6; Tue,  6 May 2025 14:11:03 +0200 (CEST)
-Date: Tue, 6 May 2025 14:11:02 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tytso@mit.edu, john.g.garry@oracle.com, bmarzins@redhat.com,
-	chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com,
-	brauner@kernel.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
-	yukuai3@huawei.com, yangerkun@huawei.com
-Subject: Re: [RFC PATCH v4 07/11] fs: statx add write zeroes unmap attribute
-Message-ID: <20250506121102.GA21905@lst.de>
-References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com> <20250421021509.2366003-8-yi.zhang@huaweicloud.com> <20250505132208.GA22182@lst.de> <20250505142945.GJ1035866@frogsfrogsfrogs> <c7d8d0c3-7efa-4ee6-b518-f8b09ec87b73@huaweicloud.com> <20250506043907.GA27061@lst.de> <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
+	s=arc-20240116; t=1746538694; c=relaxed/simple;
+	bh=YUwIk/MUgZVDImrx7CL0rOp1pojouNJ/5zWviwTHO3c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RrP95QhljTCMU9U49yvJqTUoC8V7rdsYz4ZCXuS11OpcXyqknL2ZmE4iXn6NmYzs+gxqdXoYBVp8h5pbH8aWJ1X1ACRmC9s5Yl4CnVxTWzvWazUBGZf9AD/uBqYfzubeMF2RUhj7DxhPxqEMXLzvTo2ULEHWdb7odrnxfjICAYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AyUw/U3R; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746538692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FRDlHq9OYFR2plyoy4p/CDyb6oeH08x28ypDYsNxI+g=;
+	b=AyUw/U3RsXJsd0zAZDet2YGMYzWOg+bPLpbMvKLXQlYp8rMVvpiVt7i9qR80pA3ELu4n4r
+	+9o6fUspFxKO5ehT2/GUy05hBSAnp+YKzWQ8KYXO9P6mNdSyin4cpepjBbmhZHGQjzduF0
+	+UCnWvaPmBh2gfj61knVF+nAUZEn6vU=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-360-JKduOJfVOT-xafKeiTQrng-1; Tue,
+ 06 May 2025 09:38:08 -0400
+X-MC-Unique: JKduOJfVOT-xafKeiTQrng-1
+X-Mimecast-MFC-AGG-ID: JKduOJfVOT-xafKeiTQrng_1746538686
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7BBF51955D52;
+	Tue,  6 May 2025 13:38:06 +0000 (UTC)
+Received: from bfoster.redhat.com (unknown [10.22.64.112])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A8F419560A3;
+	Tue,  6 May 2025 13:38:05 +0000 (UTC)
+From: Brian Foster <bfoster@redhat.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	djwong@kernel.org,
+	hch@infradead.org
+Subject: [PATCH v2 0/6] iomap: misc buffered write path cleanups and prep
+Date: Tue,  6 May 2025 09:41:12 -0400
+Message-ID: <20250506134118.911396-1-bfoster@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64c8b62a-83ba-45be-a83e-62b6ad8d6f22@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Tue, May 06, 2025 at 07:16:56PM +0800, Zhang Yi wrote:
-> Sorry, but I don't understand your suggestion. The
-> STATX_ATTR_WRITE_ZEROES_UNMAP attribute only indicate whether the bdev
-> and the block device that under the specified file support unmap write
-> zeroes commoand. It does not reflect whether the bdev and the
-> filesystems support FALLOC_FL_WRITE_ZEROES. The implementation of
-> FALLOC_FL_WRITE_ZEROES doesn't fully rely on the unmap write zeroes
-> commoand now, users simply refer to this attribute flag to determine
-> whether to use FALLOC_FL_WRITE_ZEROES when preallocating a file.
-> So, STATX_ATTR_WRITE_ZEROES_UNMAP and FALLOC_FL_WRITE_ZEROES doesn't
-> have strong relations, why do you suggested to put this into the ext4
-> and bdev patches that adding FALLOC_FL_WRITE_ZEROES?
+Hi all,
 
-So what is the point of STATX_ATTR_WRITE_ZEROES_UNMAP?
+Here's a bit more fallout and prep. work associated with the folio batch
+prototype posted a while back [1]. Work on that is still pending so it
+isn't included here, but based on the iter advance cleanups most of
+these seemed worthwhile as standalone cleanups. Mainly this just cleans
+up some of the helpers and pushes some pos/len trimming further down in
+the write begin path.
+
+The fbatch thing is still in prototype stage, but for context the intent
+here is that it can mostly now just bolt onto the folio lookup path
+because we can advance the range that is skipped and return the next
+folio along with the folio subrange for the caller to process.
+
+Thoughts, reviews, flames appreciated.
+
+Brian
+
+[1] https://lore.kernel.org/linux-fsdevel/20241213150528.1003662-1-bfoster@redhat.com/
+
+v2:
+- Split up warning in trim folio range helper.
+- Use min() and min_not_zero() instead of open coding.
+- Drop pos param from __iomap_write_begin() (folded into patch 6).
+v1: https://lore.kernel.org/linux-fsdevel/20250430190112.690800-1-bfoster@redhat.com/
+
+Brian Foster (6):
+  iomap: resample iter->pos after iomap_write_begin() calls
+  iomap: drop unnecessary pos param from iomap_write_[begin|end]
+  iomap: drop pos param from __iomap_[get|put]_folio()
+  iomap: helper to trim pos/bytes to within folio
+  iomap: push non-large folio check into get folio path
+  iomap: rework iomap_write_begin() to return folio offset and length
+
+ fs/iomap/buffered-io.c | 100 ++++++++++++++++++++++++-----------------
+ 1 file changed, 58 insertions(+), 42 deletions(-)
+
+-- 
+2.49.0
 
 
