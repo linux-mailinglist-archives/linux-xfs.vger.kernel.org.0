@@ -1,70 +1,70 @@
-Return-Path: <linux-xfs+bounces-22292-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-22290-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C58FDAAC6B5
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 15:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A650AAC6B1
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 15:42:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 281C14A18C6
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 13:39:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8DE24637E3
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 May 2025 13:39:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB815281522;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC262820BC;
 	Tue,  6 May 2025 13:38:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jL8u/WR7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="La3RRLF1"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CE128151D
-	for <linux-xfs@vger.kernel.org>; Tue,  6 May 2025 13:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD0F2820A4
+	for <linux-xfs@vger.kernel.org>; Tue,  6 May 2025 13:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746538698; cv=none; b=ZDkmtBQbpK/bhcoKYc13QzCGCs42Aho9i+qnw+kx9g9ChqC9M4XfwZgbOx91/ymgWZ5NDGX2RPLGv4gONvDX5DY1A34Bp1hUWA1f+K27DeiKxW1QIyhYB+PbTW0XDXCHpzr3ryO2A1BN08G8xCzVTj4Ddtrn6xKOfMW8IHzT3+4=
+	t=1746538698; cv=none; b=LsW5JHmj0OaIE7V83C5pJMg5y0uN6g6A7Cisk+xApJmJiqWvmHajywuRZ9mx+fuzT4oMlxk1RfZ/P5+hW3loIVazXJ9LMZLvslSV0T878Vy9x2rm7L1lseOwXLsl0EfZNfv9cyQCuJpNNlcnUi1X3qc+xamlpWJ9s9uwkOkRhBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746538698; c=relaxed/simple;
-	bh=N3jf+x7YIHEpu+iezzMHG0wvDE97TSJoTshtaNBjRu0=;
+	bh=bxsokHBwmQvsItyL3+7D8FnFkBa89+xNStZbRDpYlp4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g9K9xyH7oAu+HY3vewdCDVHIORq1pZ/2aaMgK7hpXFK/fhMVD33cteZXTXXKQFQ/aGayB1FfS6tr4+7ek803xi46Mmvg1xFwHMtmJ584Fl0/sfgvxQ57C1QdNnpjOwU6zW7c4YVvhCAZYAX+LmW4VSENabKAg34uOqX2Brf8x/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jL8u/WR7; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=pc+YYqm8GEVobHwrzIbEXc10rbWy+BPwwNHPZyL462uKW4PCeQ57AX0WAlDEhiDfuSdQCkIKRFbAG9EDDFbjLoU6otZGYWDSt386t/8JGKvrevXkV8gL75BBtXhXCzs7qztXiuY6M6z45LJv5N7Rc39t8cPveUA9uqp9Ug3fxWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=La3RRLF1; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746538696;
+	s=mimecast20190719; t=1746538695;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cG4Njz9QU/5Qa09BhieVaQE4EqIBEoMIfRF6PM6Urow=;
-	b=jL8u/WR7HDRz2cB9Orz2gGJWKQ/WfVYSQkelmGpAvvoR1UCcLimVu4k8qfVezVjQduUZe4
-	Dl+G3DU++H9Fvk3K8SBBIKld6M3wOj3OGeri/gIM0vmGBD1UVdO7kd/Q9tUPERd99wsg8p
-	R1P1965ACGTrMyJLO0LZWHf731lzIyQ=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=cpLGvvKJcGCeYWyzXZJZeALF1vwxaZtpiyv7gdGUMTY=;
+	b=La3RRLF140IPkzhnHLlWmBhXrIMXMYHqh7TeY5pMjM3gYlH7YShKFPvWqb1feZQbyzMRss
+	DJcuabVhyO1jOLyo5gU/P4oD7xcBIXyKKO9Yyw89AriebVmA+WhtXwBA8MdEf4cHwzugfp
+	1Q2xbEjbfXUBcYgXKVIgvTMCfAS80AY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-317-u0XCw2SEMhqfMnRn2QiltQ-1; Tue,
- 06 May 2025 09:38:12 -0400
-X-MC-Unique: u0XCw2SEMhqfMnRn2QiltQ-1
-X-Mimecast-MFC-AGG-ID: u0XCw2SEMhqfMnRn2QiltQ_1746538691
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-642-txFs4Q0HNn2Bm9bZPw4yUg-1; Tue,
+ 06 May 2025 09:38:13 -0400
+X-MC-Unique: txFs4Q0HNn2Bm9bZPw4yUg-1
+X-Mimecast-MFC-AGG-ID: txFs4Q0HNn2Bm9bZPw4yUg_1746538693
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A56B41955DDF;
-	Tue,  6 May 2025 13:38:11 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D8A6B18009AC;
+	Tue,  6 May 2025 13:38:12 +0000 (UTC)
 Received: from bfoster.redhat.com (unknown [10.22.64.112])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B7EFB19560A3;
-	Tue,  6 May 2025 13:38:10 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EAB4919560A3;
+	Tue,  6 May 2025 13:38:11 +0000 (UTC)
 From: Brian Foster <bfoster@redhat.com>
 To: linux-fsdevel@vger.kernel.org
 Cc: linux-xfs@vger.kernel.org,
 	djwong@kernel.org,
 	hch@infradead.org
-Subject: [PATCH v2 4/6] iomap: helper to trim pos/bytes to within folio
-Date: Tue,  6 May 2025 09:41:16 -0400
-Message-ID: <20250506134118.911396-5-bfoster@redhat.com>
+Subject: [PATCH v2 5/6] iomap: push non-large folio check into get folio path
+Date: Tue,  6 May 2025 09:41:17 -0400
+Message-ID: <20250506134118.911396-6-bfoster@redhat.com>
 In-Reply-To: <20250506134118.911396-1-bfoster@redhat.com>
 References: <20250506134118.911396-1-bfoster@redhat.com>
 Precedence: bulk
@@ -77,111 +77,41 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Several buffered write based iteration callbacks duplicate logic to
-trim the current pos and length to within the current folio. Factor
-this into a helper to make it easier to relocate closer to folio
-lookup.
+The len param to __iomap_get_folio() is primarily a folio allocation
+hint. iomap_write_begin() already trims its local len variable based
+on the provided folio, so move the large folio support check closer
+to folio lookup.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/iomap/buffered-io.c | 35 ++++++++++++++++++++---------------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+ fs/iomap/buffered-io.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 5c08b2916bc7..11046a3c60fe 100644
+index 11046a3c60fe..92d7b659db33 100644
 --- a/fs/iomap/buffered-io.c
 +++ b/fs/iomap/buffered-io.c
-@@ -766,6 +766,22 @@ static void __iomap_put_folio(struct iomap_iter *iter, size_t ret,
- 	}
- }
+@@ -746,6 +746,9 @@ static struct folio *__iomap_get_folio(struct iomap_iter *iter, size_t len)
+ 	const struct iomap_folio_ops *folio_ops = iter->iomap.folio_ops;
+ 	loff_t pos = iter->pos;
  
-+/* trim pos and bytes to within a given folio */
-+static loff_t iomap_trim_folio_range(struct iomap_iter *iter,
-+		struct folio *folio, size_t *offset, u64 *bytes)
-+{
-+	loff_t pos = iter->pos;
-+	size_t fsize = folio_size(folio);
++	if (!mapping_large_folio_support(iter->inode->i_mapping))
++		len = min_t(size_t, len, PAGE_SIZE - offset_in_page(pos));
 +
-+	WARN_ON_ONCE(pos < folio_pos(folio));
-+	WARN_ON_ONCE(pos >= folio_pos(folio) + fsize);
-+
-+	*offset = offset_in_folio(folio, pos);
-+	*bytes = min(*bytes, fsize - *offset);
-+
-+	return pos;
-+}
-+
- static int iomap_write_begin_inline(const struct iomap_iter *iter,
- 		struct folio *folio)
- {
-@@ -920,7 +936,7 @@ static int iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 		struct folio *folio;
- 		loff_t old_size;
- 		size_t offset;		/* Offset into folio */
--		size_t bytes;		/* Bytes to write to folio */
-+		u64 bytes;		/* Bytes to write to folio */
- 		size_t copied;		/* Bytes copied from user */
- 		u64 written;		/* Bytes have been written */
- 		loff_t pos;
-@@ -959,11 +975,8 @@ static int iomap_write_iter(struct iomap_iter *iter, struct iov_iter *i)
- 		}
- 		if (iter->iomap.flags & IOMAP_F_STALE)
- 			break;
--		pos = iter->pos;
+ 	if (folio_ops && folio_ops->get_folio)
+ 		return folio_ops->get_folio(iter, pos, len);
+ 	else
+@@ -807,9 +810,6 @@ static int iomap_write_begin(struct iomap_iter *iter, size_t len,
+ 	if (fatal_signal_pending(current))
+ 		return -EINTR;
  
--		offset = offset_in_folio(folio, pos);
--		if (bytes > folio_size(folio) - offset)
--			bytes = folio_size(folio) - offset;
-+		pos = iomap_trim_folio_range(iter, folio, &offset, &bytes);
- 
- 		if (mapping_writably_mapped(mapping))
- 			flush_dcache_folio(folio);
-@@ -1280,7 +1293,6 @@ static int iomap_unshare_iter(struct iomap_iter *iter)
- 	do {
- 		struct folio *folio;
- 		size_t offset;
--		loff_t pos;
- 		bool ret;
- 
- 		bytes = min_t(u64, SIZE_MAX, bytes);
-@@ -1289,11 +1301,8 @@ static int iomap_unshare_iter(struct iomap_iter *iter)
- 			return status;
- 		if (iomap->flags & IOMAP_F_STALE)
- 			break;
--		pos = iter->pos;
- 
--		offset = offset_in_folio(folio, pos);
--		if (bytes > folio_size(folio) - offset)
--			bytes = folio_size(folio) - offset;
-+		iomap_trim_folio_range(iter, folio, &offset, &bytes);
- 
- 		ret = iomap_write_end(iter, bytes, bytes, folio);
- 		__iomap_put_folio(iter, bytes, folio);
-@@ -1356,7 +1365,6 @@ static int iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 	do {
- 		struct folio *folio;
- 		size_t offset;
--		loff_t pos;
- 		bool ret;
- 
- 		bytes = min_t(u64, SIZE_MAX, bytes);
-@@ -1365,14 +1373,11 @@ static int iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- 			return status;
- 		if (iter->iomap.flags & IOMAP_F_STALE)
- 			break;
--		pos = iter->pos;
- 
- 		/* warn about zeroing folios beyond eof that won't write back */
- 		WARN_ON_ONCE(folio_pos(folio) > iter->inode->i_size);
--		offset = offset_in_folio(folio, pos);
--		if (bytes > folio_size(folio) - offset)
--			bytes = folio_size(folio) - offset;
- 
-+		iomap_trim_folio_range(iter, folio, &offset, &bytes);
- 		folio_zero_range(folio, offset, bytes);
- 		folio_mark_accessed(folio);
- 
+-	if (!mapping_large_folio_support(iter->inode->i_mapping))
+-		len = min_t(size_t, len, PAGE_SIZE - offset_in_page(pos));
+-
+ 	folio = __iomap_get_folio(iter, len);
+ 	if (IS_ERR(folio))
+ 		return PTR_ERR(folio);
 -- 
 2.49.0
 
