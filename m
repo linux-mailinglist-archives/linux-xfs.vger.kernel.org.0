@@ -1,60 +1,52 @@
-Return-Path: <linux-xfs+bounces-22438-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-22439-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 364D9AB1755
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 May 2025 16:27:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E39BAB2477
+	for <lists+linux-xfs@lfdr.de>; Sat, 10 May 2025 17:53:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A7812171E83
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 May 2025 14:27:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3E429E7EA6
+	for <lists+linux-xfs@lfdr.de>; Sat, 10 May 2025 15:52:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A5A921322B;
-	Fri,  9 May 2025 14:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8713C1F1306;
+	Sat, 10 May 2025 15:53:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAL2sgMb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2//s9Si"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC2F2110
-	for <linux-xfs@vger.kernel.org>; Fri,  9 May 2025 14:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446A42E406
+	for <linux-xfs@vger.kernel.org>; Sat, 10 May 2025 15:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746800846; cv=none; b=b1aJTJXKlMFkY8J3Rh8Kq5AiZu0MzFhKYz5qmQmicBDCuNe5B3MRoe7sRd1y4H99P2oX52sZDtmJegMTgRoBEQoHbwobpYuNxdaTUqgq94Ouk4L9CdCueRBQwkwu2GOCIv1aeQkFQwx/F0SFdG/Rcia+etie1LmrsKyxaOVGL1w=
+	t=1746892383; cv=none; b=UVy40skcE32bHO4/aS51WZeH9hiwhI0rVhuIwVFM5poxEQF6f5/Wv53sSILtLwFN+cGrg2RDepfwYcspwr8z0DfEE5+2JqGqXxmx5GrAkqjJdXezv21G13HMEsGAUsmosyoYxHi+4uMd2YBCMQtrX3bMKfH5kr/QXkfeU0AxGf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746800846; c=relaxed/simple;
-	bh=7INa349h6C0oFFV5nLvfnkfFSUvB5dyKIGXBwNxQT+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QVKBRQSj5Oaya8I/qY5U2cRXywW06mP/7sESyjPI/9W6DG8icSt/pV/bUT/4D45umYxRXBxBow78roeXcDAh/ih5Qd65zTBhhJnUfDA9SPhXV0zQp7g4cNj6IjWSJ17ZAxcRlP8EiJmDJfx/vzbMOrpxz0J3aXe4MmM21gBcoTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAL2sgMb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD03C4CEE4;
-	Fri,  9 May 2025 14:27:26 +0000 (UTC)
+	s=arc-20240116; t=1746892383; c=relaxed/simple;
+	bh=B60E0UxtZGxkzOlg9mnRMvcgNw6LUET8KOS+JsefO8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=aBhCS/uvmXJiQKG3TadWt41Vzl44PbMbZ8+qIc+OIRTpuX60hUYwLmu4vFmrNO7oVaLBjLfhKTpQbJhEMpQbeBmt5Nd2uPeW6PK96ciNPU4iCORf5oshXHBBp7HT/iDoGTpllOUoa8yoJs6H5RCJtLhMhixmtCzMLDzfgjx04EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2//s9Si; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99805C4CEE2;
+	Sat, 10 May 2025 15:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746800846;
-	bh=7INa349h6C0oFFV5nLvfnkfFSUvB5dyKIGXBwNxQT+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fAL2sgMb8IJPa9BBkdm5ddt33FNZVLHeEqg+w2ngJJyQEcr9NL6TqbI2RxvflVwW/
-	 VKMbF32HFk/CEZTt9c7RG770vT+Q/reQef/L5Q/ZJy3Z92QkkGjv5vX72uir2OBwjT
-	 /R38lRMPBSKmySjsZectMp3vvbfS/pS9gknslnxHUkcbVy+nVB34vXhxlGZVTwK2w+
-	 ANVZNevr3EIAqaTPuyd2YjXkGQoIwmLGWWbnvmhelY5z6m4+gytanZh9O7x7gwrZh+
-	 Sfyst70nmq7JyElv1oUmx8Cpno2yeUOgAtPceXikTYb33QHFVY7qoRoke7+TIdfcbF
-	 mX+mSgFbXbHwg==
-Date: Fri, 9 May 2025 07:27:24 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Daniel Gomez <da.gomez@kernel.org>, linux-xfs@vger.kernel.org,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Pankaj Raghav <p.raghav@samsung.com>, gost.dev@samsung.com
-Subject: Re: [PATCH] mkfs: use stx_blksize for dev block size by default
-Message-ID: <aB4QzM8PTC2qD9EW@bombadil.infradead.org>
-References: <20250206-min-io-default-blocksize-v1-1-2312e0bb8809@samsung.com>
- <Z6WMXlJrgIIbgNV7@infradead.org>
- <323gt6bngrysa3i6nzgih6golhs3wovawnn5chjcrkegajinw7@fxdjlji5xbxb>
- <Z61wnFLUGz6d_WSh@infradead.org>
- <hljsp2xn24z4hjebmrgluwcwvqokt2f6apcuuyd7z3xgfitagh@gk3wr4oh4xrt>
- <Z7RFQQoC5J7Dl6HC@infradead.org>
+	s=k20201202; t=1746892382;
+	bh=B60E0UxtZGxkzOlg9mnRMvcgNw6LUET8KOS+JsefO8w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=c2//s9SigawfwivSd89m7U5CblEYtIleg2dzhyDg9tQ7ZLqmZW6IDL6q/5LQpOp7m
+	 0sIYGQVuv1v70FG/6CgEr+44OUlWub5l0/HXoj6UJHKgvulAJHmPPsrN4NEmtHumEZ
+	 oP9jQNp38JQ0Iid1nPkUCGIoG/ezvTbDHt5dlxGaV9VdLzt39RQHwgj8vFRqDlBn6E
+	 zBIu1hTd27kdrofNJO1JF8SFasJRrOX/+RTOeL8akdBEoyWySZWgz/kFc1ByF3c8i6
+	 fgPaith3JeobjeCN2e1iqqaXORMDHawGWbQUR26F5hMhCQLi8PzdtCOQuZ4NCrOYhk
+	 Rgs00fB4xkn1A==
+Date: Sat, 10 May 2025 08:53:01 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Carlos Maiolino <cem@kernel.org>
+Cc: xfs <linux-xfs@vger.kernel.org>
+Subject: [PATCH] xfs: remove some EXPERIMENTAL warnings
+Message-ID: <20250510155301.GC2701446@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -63,21 +55,99 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z7RFQQoC5J7Dl6HC@infradead.org>
 
-On Tue, Feb 18, 2025 at 12:30:57AM -0800, Christoph Hellwig wrote:
-> On Thu, Feb 13, 2025 at 02:26:37PM +0100, Daniel Gomez wrote:
-> > That's a good question. The stx_blksize field description indicates the value
-> > should be referring to the fs block size that avoids RMW.
-> 
-> One that is optimal, the RMW is an example.  This what Posix says:
-> 
-> blksize_t st_blksize    A file system-specific preferred I/O block size 
->                         for this object. In some file system types, this 
-> 			may vary from file to file. 
-> 
+From: Darrick J. Wong <djwong@kernel.org>
 
-So this should just be repsined with this just stat blocksize?
+Online fsck was finished a year ago, in Linux 6.10.  The exchange-range
+syscall and parent pointers were merged in the same cycle.  None of
+these have encountered any serious errors in the year that they've been
+in the kernel (or the many many years they've been under development) so
+let's drop the shouty warnings.
 
-  Luis
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+---
+ fs/xfs/xfs_message.h |    3 ---
+ fs/xfs/scrub/scrub.c |    2 --
+ fs/xfs/xfs_message.c |   12 ------------
+ fs/xfs/xfs_super.c   |    7 -------
+ 4 files changed, 24 deletions(-)
+
+diff --git a/fs/xfs/xfs_message.h b/fs/xfs/xfs_message.h
+index a92a4d09c8e9fa..bce9942f394a6f 100644
+--- a/fs/xfs/xfs_message.h
++++ b/fs/xfs/xfs_message.h
+@@ -92,12 +92,9 @@ void xfs_buf_alert_ratelimited(struct xfs_buf *bp, const char *rlmsg,
+ 
+ enum xfs_experimental_feat {
+ 	XFS_EXPERIMENTAL_PNFS,
+-	XFS_EXPERIMENTAL_SCRUB,
+ 	XFS_EXPERIMENTAL_SHRINK,
+ 	XFS_EXPERIMENTAL_LARP,
+ 	XFS_EXPERIMENTAL_LBS,
+-	XFS_EXPERIMENTAL_EXCHRANGE,
+-	XFS_EXPERIMENTAL_PPTR,
+ 	XFS_EXPERIMENTAL_METADIR,
+ 	XFS_EXPERIMENTAL_ZONED,
+ 
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index 9908850bf76f9e..76e24032e99a53 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -680,8 +680,6 @@ xfs_scrub_metadata(
+ 	if (error)
+ 		goto out;
+ 
+-	xfs_warn_experimental(mp, XFS_EXPERIMENTAL_SCRUB);
+-
+ 	sc = kzalloc(sizeof(struct xfs_scrub), XCHK_GFP_FLAGS);
+ 	if (!sc) {
+ 		error = -ENOMEM;
+diff --git a/fs/xfs/xfs_message.c b/fs/xfs/xfs_message.c
+index 15d410d16bb27c..54fc5ada519c43 100644
+--- a/fs/xfs/xfs_message.c
++++ b/fs/xfs/xfs_message.c
+@@ -145,10 +145,6 @@ xfs_warn_experimental(
+ 			.opstate	= XFS_OPSTATE_WARNED_PNFS,
+ 			.name		= "pNFS",
+ 		},
+-		[XFS_EXPERIMENTAL_SCRUB] = {
+-			.opstate	= XFS_OPSTATE_WARNED_SCRUB,
+-			.name		= "online scrub",
+-		},
+ 		[XFS_EXPERIMENTAL_SHRINK] = {
+ 			.opstate	= XFS_OPSTATE_WARNED_SHRINK,
+ 			.name		= "online shrink",
+@@ -161,14 +157,6 @@ xfs_warn_experimental(
+ 			.opstate	= XFS_OPSTATE_WARNED_LBS,
+ 			.name		= "large block size",
+ 		},
+-		[XFS_EXPERIMENTAL_EXCHRANGE] = {
+-			.opstate	= XFS_OPSTATE_WARNED_EXCHRANGE,
+-			.name		= "exchange range",
+-		},
+-		[XFS_EXPERIMENTAL_PPTR] = {
+-			.opstate	= XFS_OPSTATE_WARNED_PPTR,
+-			.name		= "parent pointer",
+-		},
+ 		[XFS_EXPERIMENTAL_METADIR] = {
+ 			.opstate	= XFS_OPSTATE_WARNED_METADIR,
+ 			.name		= "metadata directory tree",
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 696874e72eacf1..b4e830fe101b2f 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1953,13 +1953,6 @@ xfs_fs_fill_super(
+ 		}
+ 	}
+ 
+-
+-	if (xfs_has_exchange_range(mp))
+-		xfs_warn_experimental(mp, XFS_EXPERIMENTAL_EXCHRANGE);
+-
+-	if (xfs_has_parent(mp))
+-		xfs_warn_experimental(mp, XFS_EXPERIMENTAL_PPTR);
+-
+ 	/*
+ 	 * If no quota mount options were provided, maybe we'll try to pick
+ 	 * up the quota accounting and enforcement flags from the ondisk sb.
 
