@@ -1,94 +1,95 @@
-Return-Path: <linux-xfs+bounces-22532-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-22534-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCC69AB6239
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 May 2025 07:21:01 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8DF4AB6269
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 May 2025 07:37:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82B0519E67B3
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 May 2025 05:21:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B33F3B6299
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 May 2025 05:36:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8BFB1E9B07;
-	Wed, 14 May 2025 05:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC091DE4C5;
+	Wed, 14 May 2025 05:36:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bBZaikTF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DeEMRc9l"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B7D1D2F42
-	for <linux-xfs@vger.kernel.org>; Wed, 14 May 2025 05:20:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA121E492D
+	for <linux-xfs@vger.kernel.org>; Wed, 14 May 2025 05:36:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747200057; cv=none; b=hAgj+dgOSwE4covx0diUxw2UGSbZYynz8dIrDsGi+AJh2nzXAS8rPoX7ZL/wupWXs3EHWObU2RAw1YT0ksadrwhH0HHM5sX6VZNGB7HBaOH9qJBTtJKBXnKg0evKE+lKk60i8Tss5emrUBaUTpsCGQzUmDJkuiVpD/69QBN4T/g=
+	t=1747201017; cv=none; b=RMCXNrN6WvhfJAj+7MpWNbzqUTJ9rko1S04klZJmoX8Ui5zCh3Vtdedzi8hVH0MQ2HkmTr848T0E+3Ydnff7qJy4WhGpl4vK/6PovwUzHhbKfrk2WkgoTrWnjsThHJSkeO5n4Snr85j/AutKnFE+SC8HiaoyTbetsV4g2a1pDg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747200057; c=relaxed/simple;
-	bh=iaSoaw7bB3NhqQPx7C2KU/lCarj17ymW18hvtWU4L/E=;
+	s=arc-20240116; t=1747201017; c=relaxed/simple;
+	bh=5cfTI/aWoZlCOnNpty3N6u09TpujQH8CPhzu9Z7vEJ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C5tkc4yWduI+g4JWnbVoH711lZvQFlkjPL+6mOTggzNmMcr1gvcAThp/fRpeuFLFhI/RWKtu3gAyMJ0BVRHZ61GKGOVdu0xwHOFxAVO0+rHiY6653RYlXOtMSh9lEzqr/NmEV3IYLwW1Cm5pabPSpLaY+exNC9tJdAzhiN5ExNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bBZaikTF; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=LmcSkAaa/rdN7Nif4YN08sMctuzbktZFvQrmc7C1G6+v+5nitjwLe3mzOvAKBsyDA406nYRjfKEm9+nHHIQRqirBtNo5BYtg6TMrimJ0Eqk6fd2NGn4/eEdxmShNQmap561eJNYY9EmllhuHlO3pbw7fC9mIJSAL8QwMP0N5Z3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DeEMRc9l; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747200051;
+	s=mimecast20190719; t=1747201013;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TXtBDIE77Q4RcA96cyQfjtM+WgYsnihPBjFJnUlXQZY=;
-	b=bBZaikTF5iKza3DLG/JUj++BCkPShSIEp73sYyelnoHu2nFi1gzgcTrTn/RdLRLEnivl3A
-	CTl7/o7QSvC5BXKMpAtMmeYJ9Dkjyi0+1UusH2CsV7iJ+ctFOZGEXvm/cT/q7CBmWGg2W9
-	lmDe58ED/J6uiSCZYdxVBhqG30FnO1U=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=k7DVWcCawpaeNJq2qKOr5EAfsfYlAClMdZ4LZ2aaJxI=;
+	b=DeEMRc9lOWQT5QeT7dVD6hBqG/zUIqNYXmJAEl7UU7/iP1k8u20ZwOKKxPGjVqysKMEA7H
+	brgXEi0Wf0hPLNtRG9UHYHJV3tgoh7X/sSLGk1pXFCPqhwf+661zAw1KdI7fQh7IXb/2Bb
+	swsFmZvlQvXlwz7AdljE8bYxyffsSmI=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-595-BInIVTlzNvGk53UHn_hXHA-1; Wed, 14 May 2025 01:20:50 -0400
-X-MC-Unique: BInIVTlzNvGk53UHn_hXHA-1
-X-Mimecast-MFC-AGG-ID: BInIVTlzNvGk53UHn_hXHA_1747200049
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22e68e50f80so45450945ad.1
-        for <linux-xfs@vger.kernel.org>; Tue, 13 May 2025 22:20:50 -0700 (PDT)
+ us-mta-199-mqr_10ckMfa0_IcW3gXPsA-1; Wed, 14 May 2025 01:36:51 -0400
+X-MC-Unique: mqr_10ckMfa0_IcW3gXPsA-1
+X-Mimecast-MFC-AGG-ID: mqr_10ckMfa0_IcW3gXPsA_1747201011
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-b2518fbaaabso4988528a12.1
+        for <linux-xfs@vger.kernel.org>; Tue, 13 May 2025 22:36:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747200049; x=1747804849;
+        d=1e100.net; s=20230601; t=1747201011; x=1747805811;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TXtBDIE77Q4RcA96cyQfjtM+WgYsnihPBjFJnUlXQZY=;
-        b=fENaDPWeaNOriOofXLTJkQKGf8+ZymXkk+oM/YeEryPQ0UbWNHBkBKD6yLiNZdRFZW
-         i8hpx1802GbAwFAptIg37o+58h48A/rp/2hbZdsSrRgYkD6fycjyewV4QOmkxnwiB5OR
-         bp2w8yEvitnI40D2fPzwNbKX0D3UY9kzrxV1V8bH9ppz3xL8Oh8m7I1DQb0DrQjogWz4
-         WEuT9shEwDweZdz2+NR9sxkvoYVyTu7DiQ8Zk7D3nb1QiUgrnjEPMCn0USr7BDEVJAzc
-         VhGiJyNUhpMOIXi017j0UvhJLu5rbbctKpG7cCewQXy4E7SzCV0XuTih39YgoXe2fL02
-         ruYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLx0hUeDkPEQgE06Yt2N0waf3Ke8LsqlBtzbSbdYwNOiMycKYYZmXWVN5COFCVk8DGZSH3GIaO2U0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh96vtA4v7/4tcKrDX6b6E46ADxKmPs/1ED9NPo8U8QEqmNDpG
-	Yab0zwjQUHCd5/dATa0oFMmtY6jIzrMpVJr0bwbS3YiiPYzm6gwWfbV+kzcaWo8KFEEkV4veVW8
-	hJ0iv1KkwTnQCahJDWLVFXNkvFXG5GEDSQZAjQr5kxth7Avel9v1kzCdKqw==
-X-Gm-Gg: ASbGncsPiJwRDg+RVScP8X444b+T3HIwiCOVCS++SjU6vjyWh5dFbFdgrTFxP3VjDM1
-	ungPhJCGQEVhrjm4gsTBCoHHOx66P50UREHwQQfLLuJ4ZnnVBTCQ9gYMdcfFQRa8NYmlUcbNiE5
-	7GVatRdN+jGQeu1rvs+mZqD/8fiI43pNgWK+o01BMnDFM1xp3yJPVxdut1zrAIiHqMYcMhBna9R
-	4O9MsPEHTZDHXnP1W9XyHcjMnSvbXB2F27CNM9iPsq1amIQxHgwHvTXTuEAAZUZcJ5KVwHn5Wzv
-	9lHxq4C+yziXwGAvTsRmCXkKfmFZyeoEJ02ycIC2ax7mGEjBpvWr
-X-Received: by 2002:a17:902:d4d0:b0:22e:68c4:2602 with SMTP id d9443c01a7336-231981a85c1mr28934405ad.33.1747200049502;
-        Tue, 13 May 2025 22:20:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGlx6APVjppTpKolovlnJP7aetqZfQVG8S4gkZTYEsgBJ0KT5TH/IvUnaGF4AlKDpj3hN7dsw==
-X-Received: by 2002:a17:902:d4d0:b0:22e:68c4:2602 with SMTP id d9443c01a7336-231981a85c1mr28934185ad.33.1747200049163;
-        Tue, 13 May 2025 22:20:49 -0700 (PDT)
+        bh=k7DVWcCawpaeNJq2qKOr5EAfsfYlAClMdZ4LZ2aaJxI=;
+        b=LWWA7AdRQ1C2nfDj6e3QDfwWpaXIJndEHaDJ6SDRazinaUXu9+qr+FYm6JSe+2EjJ7
+         XrKXtPRCQkZ4nYOGgz0mphkMiDZVnc7jQmVhBjriXCafopCWcHNS0C9YV7KJTdAaGduw
+         UhQ91hAdtLbZqu7c5d1O4ShBj5n141a9F5hZqboQww+Y9X0BQNaqUYSuwxiwLTfb9tZV
+         iJOfJ8BMQVXooHGOavKBnU55XkqT/YCy6t62OlvGVo/HrnFXmp6gMYDauN7BXifneRzR
+         KyLEePYsk+ocD9BNRkJmPIBDw95W+0XYXihw421b8qFzwclZIQjsBoTo68GrOJ3gIvT2
+         ifpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXp/cx2b0mGjplazHtlhKTNn7UvdIDepXV6YsIdYHfTN4LsSUiy6rpDpE7Kx+y2F3+MvTsqfULopTc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoKE0l/acBV26xxY7UXKBLw156qix3IgrOsGszcYahrMaVQBvU
+	pYsteB8lkfp1If9nvX52Xm1siVwVEuNwtBUJQTMgP1yXsb0HtP8VB1PMUQZrVVDRlietcfe90eK
+	OkYIivtW2zUUtTFfJ0yqmaxh42fOYmiw09JDuldhauIGRcipT8ZcLhXYvuA==
+X-Gm-Gg: ASbGncuY/qosQz3WuX5MCNmZpe/QMY08i3m0atvYa3GX7xqmGmvigwf+gYpU3afLbFC
+	fjzcMOEhpVwKlkPk5H45BJ6tTMmtfL7QIBcmYPLq4cENHm6Zz5VzxSUsg2UX6ErPC9OfAtd/okk
+	mdrkUZfKZYiUW2K7GNTKXfPe/6gpB1RYk7xGF9p7SVx99gPp8JB9qlj2+5WAaGS8Sd9gehPqKuN
+	5MXelckJ6CfyRSylY6epa5oRGl8Xqpx2VIE3g/TuTKh3tIXPh8s6KYHdkAoBFfmMMWCkZkyTEO8
+	bBT4a7MFpb84w+ELrUWAhh1YLCqxPDZ6cp+FISssKGCA04sqQSh7
+X-Received: by 2002:a05:6a21:33a1:b0:1f5:8fe3:4e29 with SMTP id adf61e73a8af0-215ff08f0d0mr2736423637.3.1747201010719;
+        Tue, 13 May 2025 22:36:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG5eWBBrJf4d2S34HMSb0MF2dI6lzhWWQaGfh5YOlas66yp91639bve2mCDTBX6wAna3TDIig==
+X-Received: by 2002:a05:6a21:33a1:b0:1f5:8fe3:4e29 with SMTP id adf61e73a8af0-215ff08f0d0mr2736391637.3.1747201010402;
+        Tue, 13 May 2025 22:36:50 -0700 (PDT)
 Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271d98sm89427225ad.154.2025.05.13.22.20.45
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b236de8839asm8012301a12.40.2025.05.13.22.36.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 May 2025 22:20:48 -0700 (PDT)
-Date: Wed, 14 May 2025 13:20:43 +0800
+        Tue, 13 May 2025 22:36:50 -0700 (PDT)
+Date: Wed, 14 May 2025 13:36:44 +0800
 From: Zorro Lang <zlang@redhat.com>
 To: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
 Cc: fstests@vger.kernel.org, linux-ext4@vger.kernel.org,
 	linux-xfs@vger.kernel.org, ritesh.list@gmail.com,
 	ojaswin@linux.ibm.com, djwong@kernel.org, zlang@kernel.org,
 	david@fromorbit.com
-Subject: Re: [PATCH v1 2/3] new: Replace "status=0; exit 0" with _exit 0
-Message-ID: <20250514052043.o7as5lxhkzklungz@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+Subject: Re: [PATCH v1 1/3] new: Add a new parameter (name/emailid) in the
+ "new" script
+Message-ID: <20250514053644.q2yzlhceclxvvffn@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 References: <cover.1747123422.git.nirjhar.roy.lists@gmail.com>
- <96ea8b7bb8dcaa397ade82611d56482d79f28598.1747123422.git.nirjhar.roy.lists@gmail.com>
+ <837f220a24b8cbaaaeb2bc91287f2d7db930001a.1747123422.git.nirjhar.roy.lists@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -97,38 +98,66 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <96ea8b7bb8dcaa397ade82611d56482d79f28598.1747123422.git.nirjhar.roy.lists@gmail.com>
+In-Reply-To: <837f220a24b8cbaaaeb2bc91287f2d7db930001a.1747123422.git.nirjhar.roy.lists@gmail.com>
 
-On Tue, May 13, 2025 at 08:10:11AM +0000, Nirjhar Roy (IBM) wrote:
-> We should now start using _exit 0 for every new test
-> that we add.
+On Tue, May 13, 2025 at 08:10:10AM +0000, Nirjhar Roy (IBM) wrote:
+> This patch another optional interactive prompt to enter the
+> author name and email id for each new test file that is
+> created using the "new" file.
+> 
+> The sample output looks like something like the following:
+> 
+> ./new selftest
+> Next test id is 007
+> Append a name to the ID? Test name will be 007-$name. y,[n]:
+> Creating test file '007'
+> Add to group(s) [auto] (separate by space, ? for list): selftest quick
+> Enter <author_name> <email-id>: Nirjhar Roy <nirjhar.roy.lists@gmail.com>
+> Creating skeletal script for you to edit ...
+>  done.
+> 
+> ...
+> ...
 > 
 > Signed-off-by: Nirjhar Roy (IBM) <nirjhar.roy.lists@gmail.com>
 > ---
->  new | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  new | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
 > diff --git a/new b/new
-> index 139715bf..e55830ce 100755
+> index 6b50ffed..139715bf 100755
 > --- a/new
 > +++ b/new
-> @@ -176,8 +176,7 @@ exit
->  #echo "If failure, check \$seqres.full (this) and \$seqres.full.ok (reference)"
+> @@ -136,6 +136,9 @@ else
+>  	check_groups "${new_groups[@]}" || exit 1
+>  fi
 >  
->  # success, all done
-> -status=0
-> -exit
-> +_exit 0
+> +read -p "Enter <author_name> <email-id>: " -r
 
-Hmm, this makes sense after we have:
+I think most of "YOUR NAME HERE" are the name of company, e.g.
+"Oracle, Inc", "Red Hat, Inc". Some authors just write their names, e.g.
+"Filipe Manana", "Chao Yu"...
 
-  744623644 common: Move exit related functions to a common/exit
+So I think the "<email-id>" hint isn't necessary. If someone need that, he
+can write it with his name together.
 
-Reviewed-by: Zorro Lang <zlang@redhat.com>
+Thanks,
+Zorro
 
->  End-of-File
+> +author_name="${REPLY:=YOUR NAME HERE}"
+> +
+>  echo -n "Creating skeletal script for you to edit ..."
 >  
->  sleep 2		# latency to read messages to this point
+>  year=`date +%Y`
+> @@ -143,7 +146,7 @@ year=`date +%Y`
+>  cat <<End-of-File >$tdir/$id
+>  #! /bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+> -# Copyright (c) $year YOUR NAME HERE.  All Rights Reserved.
+> +# Copyright (c) $year $author_name.  All Rights Reserved.
+>  #
+>  # FS QA Test $id
+>  #
 > -- 
 > 2.34.1
 > 
