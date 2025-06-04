@@ -1,250 +1,320 @@
-Return-Path: <linux-xfs+bounces-22812-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-22814-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 781C8ACCF93
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Jun 2025 00:05:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A35D9ACD552
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Jun 2025 04:22:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 207443A4C97
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Jun 2025 22:04:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DF5E3A2F79
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Jun 2025 02:21:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 705EF22333B;
-	Tue,  3 Jun 2025 22:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="ani9RRjD"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA33188000;
+	Wed,  4 Jun 2025 02:21:48 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777271C3306
-	for <linux-xfs@vger.kernel.org>; Tue,  3 Jun 2025 22:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634C63594F;
+	Wed,  4 Jun 2025 02:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748988309; cv=none; b=jzGN1P0o8ncJVxedIlk/j+0Oij3wYV64M0CFZvaFcfjlUzRPPxn7zRAO6/DdUiOgOpBVTVpwmYt9/uSE+O9kvLIc1jPHL7WdEyPjP6+GxjWmBDpNV0PiRfEaPSBm405aYHeCZSBRJkVkIhbs2MFyH46eY5cBgtdtY03cVooiCCc=
+	t=1749003708; cv=none; b=bgXPQWNwlx/9900vEUcKEDcRZ6+LENSAnMgKW/cah8gSvh2C4sOBnLVYETaHnc/xWvaA5ra8NT1n5Bp0n6UYWLtwo86xjQ7Eb5nTJxPl16zO62SCwbaqbWS18PdxsvH94VCmmhdu124X1AANf/FokD1IkRj09Yd5p4yGxC7Qedc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748988309; c=relaxed/simple;
-	bh=4Q6wpdubX03roYzxWuBd4mlmXNKXJQgIgTSoc1SwQqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AvT41X7rdydYU9pKv2WHcNfBKZCW9gIZVFompcphtaIgXfbYrNGKWUHAJk+SV35S9Q2RFaKRjOhW1eJ1BI84ojl9qznS6r5FrEGhypGvVqHMvAnSep7eVFiDTXCLQLmmDM75tnDOupca5l3XkTn0DnpGabZ6aOBv4aAAiKn9uI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=ani9RRjD; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231e8553248so59252845ad.1
-        for <linux-xfs@vger.kernel.org>; Tue, 03 Jun 2025 15:05:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1748988306; x=1749593106; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lju0Ryqqd15qALOnq6lO5mGiDU1YmqZiwkz30QskHzc=;
-        b=ani9RRjDaxhGeak8nlfuJA3wxU75NFrtPlZo9WiYTSiONxBHzrIKeu6gfLLkWgfpf/
-         XyRqG3ig+6UR3OhQ1I63KevmdwZPrKjq7zQD2eu1D69fVBwOfAiG+1SMZmf2VHkCtwnB
-         Dy0UNxXQA1GFHRmEfjlbdlpDa+gSSpEwgyYYXx8umV2XEBqfuuCF7i8v2oYB+txWZAvP
-         hDnerlEfDtW3KSmoadE9SUUwHf7SKALtu+n0x4yuXUNXNck8KSN2VhpckWY1/wiErd7e
-         FGxL8wP85DxqJRJyMZotIquBS4KDo3x7KfkccDThQWdCQdilXtuOIxyOTfkm85vyDtuJ
-         mIPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748988306; x=1749593106;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lju0Ryqqd15qALOnq6lO5mGiDU1YmqZiwkz30QskHzc=;
-        b=lfn0ZDb2I7osq/MJR1+gyeuwpM2u5mSYv6Je+cblMVyPUHsknekkgIFc6cGiK02BPH
-         y7wwESJo6cOtghIOBAHhRTGpu2b63oCk4Z/7MqzE32WDNYHcbewENwArzLiDleYwkYF7
-         t6VPX47kj2Fzm4XePHBB9+2h8KiLcxLs0VvD9SMuFDXoZ/kALzy4nyJjvFqKqOc/S2hx
-         TP+QWfVWF1f2pSdtnLRmJ8p+9GGIInQT/l8kXym6UJw9hLcHdjO1YlrgFe6iJoDHOqMp
-         WDM32FQeMZ3y5OgCfSsa/HH91SrG6l3tuzkZzGJfsqavGcVj0nFyUPa3FzzzIz2n8ogt
-         Pbbw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8tPrVZA25uju2qIV/c8m4U6utx7ryHtBoha0LSPlEBCeFInf/ERUEcrWvv67kGqyB42lGRX1kMjI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGzhzvFMwSb1P/tM07iXu9DNIim+qGkMS0HBir4aiBCTXGWpZ4
-	6aEC0YM+lEuNOisDYIyNk/Wpgtopa9zc26VykluQjP2E6FsPU8ntLzWeN4KbdNfOhNU=
-X-Gm-Gg: ASbGncuOJi8zPOOtFXZ+cdGsYGa1zQKCbEYY9ULDi+kSpMFeH5VOg7raAvg4nuoGHM+
-	feICZ8Yg2/QpRqv5JjdgiDV/+FqhZJCXD5hsyRDCNIcsv/KUFyL+Tn2LALeEqzW556zqzgzNcsE
-	jQv+uPB/lyQiG+IJTD4npz08S8QSwOZfKkij5yFSh1EIrVWsgkOMUn4agwaCqM76fkm6aQFswpQ
-	MEH7mq6ZaoXXfqnIUpCa4d7O6CNntT51esyecKnHhpBESKqmfJTcS53QTU4ZHDlxir/bmrq1Cl1
-	j8MSfRY6pXWgwzP3JX5QQ9UfoWSkk9SwDWyGVnBiDdVzaJO4HMdeIBmvEDp2Mw64HjK/EDau3eO
-	RbsPe9Ibo40jpW7GizhcNMmNNtMk=
-X-Google-Smtp-Source: AGHT+IFB7MFjtIScvIBdqXB2ckXxOy1R5cdJuSvkVoKok2QP9CnHqhUz+oglAxd/DdbXqyKh7BRlLw==
-X-Received: by 2002:a17:903:18f:b0:234:986c:66e0 with SMTP id d9443c01a7336-235e112bd6cmr4869035ad.4.1748988306543;
-        Tue, 03 Jun 2025 15:05:06 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-184-88.pa.nsw.optusnet.com.au. [49.180.184.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d14c79sm92206565ad.230.2025.06.03.15.05.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jun 2025 15:05:05 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98.2)
-	(envelope-from <david@fromorbit.com>)
-	id 1uMZkl-0000000Bsxy-26gn;
-	Wed, 04 Jun 2025 08:05:03 +1000
-Date: Wed, 4 Jun 2025 08:05:03 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>,
-	Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
-	cem@kernel.org, linux-xfs@vger.kernel.org,
-	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [QUESTION] xfs, iomap: Handle writeback errors to prevent silent
- data corruption
-Message-ID: <aD9xj8cwfY9ZmQ2B@dread.disaster.area>
-References: <CALOAHbDm7-byF8DCg1JH5rb4Yi8FBtrsicojrPvYq8AND=e6hQ@mail.gmail.com>
- <aDfkTiTNH1UPKvC7@dread.disaster.area>
- <aD04v9dczhgGxS3K@infradead.org>
- <aD4xboH2mM1ONhB-@dread.disaster.area>
- <aD5-_OOsKyX0rDDO@infradead.org>
+	s=arc-20240116; t=1749003708; c=relaxed/simple;
+	bh=xhZvMESc55g+qRWJ4xx7cgzusA78J8NvqvJvA/N9ZVA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z929S5qBs8EjuVYtupPe2Xhbn4PgG2DsUTYwYCGpu9YZIvTZ70Qc56hkKGnfzOgJ6AuzLUHd0EU7R3Tidp7NJLn9mTbs9wJoD58Sc4vdJqRImfpSbTDG9WMyRjtjzeylznPp7gfIuTMVBPjtGcsNgb7EtVgVkvPSVBB6DV4nDKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bBrtc2hzRzKHN3y;
+	Wed,  4 Jun 2025 10:21:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id B8D641A0A0D;
+	Wed,  4 Jun 2025 10:21:42 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+nrT9oedfBOQ--.14997S4;
+	Wed, 04 Jun 2025 10:21:40 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hch@lst.de,
+	tytso@mit.edu,
+	djwong@kernel.org,
+	john.g.garry@oracle.com,
+	bmarzins@redhat.com,
+	chaitanyak@nvidia.com,
+	shinichiro.kawasaki@wdc.com,
+	brauner@kernel.org,
+	martin.petersen@oracle.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH 00/10] fallocate: introduce FALLOC_FL_WRITE_ZEROES flag
+Date: Wed,  4 Jun 2025 10:08:40 +0800
+Message-ID: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aD5-_OOsKyX0rDDO@infradead.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnCl+nrT9oedfBOQ--.14997S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3ZFWxXw17Cr45Ww1rCw1xXwb_yoWDWrW8pa
+	yUXF4Ykr1DKryxC3s3ua1I9ryrZws5AFW3Gw4Ik34UZFZ8XF1xKFs2ga4Yva9rJFyxW3WD
+	XFsrKr9rua47A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
+	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjTRRBT5DUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Mon, Jun 02, 2025 at 09:50:04PM -0700, Christoph Hellwig wrote:
-> On Tue, Jun 03, 2025 at 09:19:10AM +1000, Dave Chinner wrote:
-> > > In other words, write errors in Linux are in general expected to be
-> > > persistent, modulo explicit failfast requests like REQ_NOWAIT.
-> > 
-> > Say what? the blk_errors array defines multiple block layer errors
-> > that are transient in nature - stuff like ENOSPC, ETIMEDOUT, EILSEQ,
-> > ENOLINK, EBUSY - all indicate a transient, retryable error occurred
-> > somewhere in the block/storage layers.
-> 
-> Let's use the block layer codes reported all the way up to the file
-> systems and their descriptions instead of the errnos they are
-> mapped to for compatibility.  The above would be in order:
-> 
-> [BLK_STS_NOSPC]         = { -ENOSPC,    "critical space allocation" },
-> [BLK_STS_TIMEOUT]       = { -ETIMEDOUT, "timeout" },
-> [BLK_STS_PROTECTION]    = { -EILSEQ,    "protection" },
-> [BLK_STS_TRANSPORT]     = { -ENOLINK,   "recoverable transport" },
-> [BLK_STS_DEV_RESOURCE]  = { -EBUSY,     "device resource" },
-> 
-> > What is permanent about dm-thinp returning ENOSPC to a write
-> > request? Once the pool has been GC'd to free up space or expanded,
-> > the ENOSPC error goes away.
-> 
-> Everything.  ENOSPC means there is no space.  There might be space in
-> the non-determinant future, but if the layer just needs to GC it must
-> not report the error.
+From: Zhang Yi <yi.zhang@huawei.com>
 
-GC of thin pools requires the filesystem to be mounted so fstrim can
-be run to tell the thinp device where all the free LBA regions it
-can reclaim are located. If we shut down the filesystem instantly
-when the pool goes ENOSPC on a metadata write, then *we can't run
-fstrim* to free up unused space and hence allow that metadata write
-to succeed in the future.
+Changes since RFC v4:
+ - Rebase codes on 6.16-rc1.
+ - Add a new queue_limit flag, and change the write_zeroes_unmap sysfs
+   interface to RW mode. User can disable the unmap write zeroes
+   operation by writing '0' to it when the operation is slow.
+ - Modify the documentation of write_zeroes_unmap sysfs interface as
+   Martin suggested.
+ - Remove the statx interface.
+ - Make the bdev and ext4 don't allow to submit FALLOC_FL_WRITE_ZEROES
+   if the block device does not enable the unmap write zeroes operation,
+   it should return -EOPNOTSUPP.
+Changes sicne RFC v3:
+ - Rebase codes on 6.15-rc2.
+ - Add a note in patch 1 to indicate that the unmap write zeros command
+   is not always guaranteed as Christoph suggested.
+ - Rename bdev_unmap_write_zeroes() helper and move it to patch 1 as
+   Christoph suggested.
+ - Introduce a new statx attribute flag STATX_ATTR_WRITE_ZEROES_UNMAP as
+   Christoph and Christian suggested.
+ - Exchange the order of the two patches that modified
+   blkdev_fallocate() as Christoph suggested.
+Changes since RFC v2:
+ - Rebase codes on next-20250314.
+ - Add support for nvme multipath.
+ - Add support for NVMeT with block device backing.
+ - Clear FALLOC_FL_WRITE_ZEROES if dm clear
+   limits->max_write_zeroes_sectors.
+ - Complement the counterpart userspace tools(util-linux and xfs_io)
+   and tests(blktests and xfstests), please see below for details.
+Changes since RFC v1:
+ - Switch to add a new write zeroes operation, FALLOC_FL_WRITE_ZEROES,
+   in fallocate, instead of just adding a supported flag to
+   FALLOC_FL_ZERO_RANGE.
+ - Introduce a new flag BLK_FEAT_WRITE_ZEROES_UNMAP to the block
+   device's queue limit features, and implement it on SCSI sd driver,
+   NVMe SSD driver and dm driver.
+ - Implement FALLOC_FL_WRITE_ZEROES on both the ext4 filesystem and
+   block device (bdev).
 
-It should be obvious at this point that a filesystem shutdown on an
-ENOSPC error from the block device on anything other than journal IO
-is exactly the wrong thing to be doing.
+RFC v4: https://lore.kernel.org/linux-fsdevel/20250421021509.2366003-1-yi.zhang@huaweicloud.com/
+RFC v3: https://lore.kernel.org/linux-fsdevel/20250318073545.3518707-1-yi.zhang@huaweicloud.com/
+RFC v2: https://lore.kernel.org/linux-fsdevel/20250115114637.2705887-1-yi.zhang@huaweicloud.com/
+RFC v1: https://lore.kernel.org/linux-fsdevel/20241228014522.2395187-1-yi.zhang@huaweicloud.com/
 
-> > What is permanent about an IO failing with EILSEQ because a t10
-> > checksum failed due to a random bit error detected between the HBA
-> > and the storage device? Retry the IO, and it goes through just fine
-> > without any failures.
-> 
-> Normally it means your checksum was wrong.  If you have bit errors
-> in the cable they will show up again, maybe not on the next I/O
-> but soon.
+The counterpart userspace tools changes and tests are here:
+ - util-linux: https://lore.kernel.org/linux-fsdevel/20250318073218.3513262-1-yi.zhang@huaweicloud.com/ 
+ - xfsprogs: https://lore.kernel.org/linux-fsdevel/20250318072318.3502037-1-yi.zhang@huaweicloud.com/
+ - xfstests: https://lore.kernel.org/linux-fsdevel/20250318072615.3505873-1-yi.zhang@huaweicloud.com/
+ - blktests: https://lore.kernel.org/linux-fsdevel/20250318072835.3508696-1-yi.zhang@huaweicloud.com/
 
-But it's unlikely to be hit by another cosmic ray anytime soon, and
-so bit errors caused by completely random environmental events
-should -absolutely- be retried as the subsequent write retry will
-succeed.
+Original Description:
 
-If there is a dodgy cable causing the problems, the error will
-re-occur on random IOs and we'll emit write errors to the log that
-monitoring software will pick up. If we are repeatedly isssuing write
-errors due to EILSEQ errors, then that's a sign the hardware needs
-replacing.
+Currently, we can use the fallocate command to quickly create a
+pre-allocated file. However, on most filesystems, such as ext4 and XFS,
+fallocate create pre-allocation blocks in an unwritten state, and the
+FALLOC_FL_ZERO_RANGE flag also behaves similarly. The extent state must
+be converted to a written state when the user writes data into this
+range later, which can trigger numerous metadata changes and consequent
+journal I/O. This may leads to significant write amplification and
+performance degradation in synchronous write mode. Therefore, we need a
+method to create a pre-allocated file with written extents that can be
+used for pure overwriting. At the monent, the only method available is
+to create an empty file and write zero data into it (for example, using
+'dd' with a large block size). However, this method is slow and consumes
+a considerable amount of disk bandwidth, we must pre-allocate files in
+advance but cannot add pre-allocated files while user business services
+are running.
 
-There is no risk to filesystem integrity if write retries
-succeed, and that gives the admin time to schedule downtime to
-replace the dodgy hardware. That's much better behaviour than
-unexpected production system failure in the middle of the night...
+Fortunately, with the development and more and more widely used of
+flash-based storage devices, we can efficiently write zeros to SSDs
+using the unmap write zeroes command if the devices do not write
+physical zeroes to the media. For example, if SCSI SSDs support the
+UMMAP bit or NVMe SSDs support the DEAC bit[1], the write zeroes command
+does not write actual data to the device, instead, NVMe converts the
+zeroed range to a deallocated state, which works fast and consumes
+almost no disk write bandwidth. Consequently, this feature can provide
+us with a faster method for creating pre-allocated files with written
+extents and zeroed data. However, please note that this may be a
+best-effort optimization rather than a mandatory requirement, some
+devices may partially fall back to writing physical zeroes due to
+factors such as receiving unaligned commands. 
 
-It is because we have robust and resilient error handling in the
-filesystem that the system is able to operate correctly in these
-marginal situations. Operating in marginal conditions or as hardware
-is beginning to fail is a necessary to keep production systems
-running until corrective action can be taken by the administrators.
+This series aims to implement this by:
+1. Introduce a new feature BLK_FEAT_WRITE_ZEROES_UNMAP to the block
+   device queue limit features, which indicates whether the storage is
+   device explicitly supports the unmapped write zeroes command. This
+   flag should be set to 1 by the driver if the attached disk supports
+   this command.
 
-> > These transient error types typically only need a write retry after
-> > some time period to resolve, and that's what XFS does by default.
-> > What makes these sorts of errors persistent in the linux block layer
-> > and hence requiring an immediate filesystem shutdown and complete
-> > denial of service to the storage?
-> > 
-> > I ask this seriously, because you are effectively saying the linux
-> > storage stack now doesn't behave the same as the model we've been
-> > using for decades. What has changed, and when did it change?
-> 
-> Hey, you can retry.  You're unlikely to improve the situation though
-> but instead just keep deferring the inevitable shutdown.
+2. Introduce a queue limit flag, BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED,
+   along with a corresponding sysfs entry. Users can query the support
+   status of the unmap write zeroes operation and disable this operation
+   if the write zeroes operation is very slow.
 
-Absolutely. That's the whole point - random failures won't repeat,
-and hence when they do occur we avoid a shutdown by retrying them on
-failure. This is -exactly- how robust error handling should work.
+       /sys/block/<disk>/queue/write_zeroes_unmap
 
-However, for IO errors that persist or where other IO errors start
-to creep in, all the default behaviour is trying to do is hold the
-system up in a working state until downtime can be scheduled and the
-broken hardware is replaced. If integrity ends up being compromised
-by a subsequent IO failure, then we will shut the filesystem down at
-that point.
+3. Introduce a new flag, FALLOC_FL_WRITE_ZEROES, into the fallocate.
+   Filesystems that support this operation should allocate written
+   extents and issue zeroes to the specified range of the device. For
+   local block device filesystems, this operation should depend on the
+   write_zeroes_unmap operaion of the underlying block device. It should
+   return -EOPNOTSUPP if the device doesn't enable unmap write zeroes
+   operaion.
 
-This is about resilience in the face of errors. Not every error is
-fatal, nor does every error re-occur. There are classes of errors
-known to be transient (ENOSPC), others that are permanent (ENODEV),
-and others that we just don't know (EIO). If we value resiliency
-and robustness, then the filesystem should be able to withstand
-transient and "maybe-transient" IO failures without compromising
-integrity.
+This series implements the BLK_FEAT_WRITE_ZEROES_UNMAP feature and
+BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED flag for SCSI, NVMe and
+device-mapper drivers, and add the FALLOC_FL_WRITE_ZEROES and
+STATX_ATTR_WRITE_ZEROES_UNMAP support for ext4 and raw bdev devices.
+Any comments are welcome.
 
-Failing to recognise that transient and "maybe-transient" errors can
-generally be handled cleanly and successfully with future write
-retries leads to brittle, fragile systems that fall over at the
-first sign of anything going wrong. Filesystems that are targetted
-at high value production systems and/or running mission critical
-applications needs to have resilient and robust error handling.
+I've tested performance with this series on ext4 filesystem on my
+machine with an Intel Xeon Gold 6248R CPU, a 7TB KCD61LUL7T68 NVMe SSD
+which supports unmap write zeroes command with the Deallocated state
+and the DEAC bit. Feel free to give it a try.
 
-> > > Which also leaves me a bit puzzled what the XFS metadata retries are
-> > > actually trying to solve, especially without even having a corresponding
-> > > data I/O version.
-> > 
-> > It's always been for preventing immediate filesystem shutdown when
-> > spurious transient IO errors occur below XFS. Data IO errors don't
-> > cause filesystem shutdowns - errors get propagated to the
-> > application - so there isn't a full system DOS potential for
-> > incorrect classification of data IO errors...
-> 
-> Except as we see in this thread for a fairly common use case (buffered
-> I/O without fsync) they don't.  And I agree with you that this is not
-> how you write applications that care about data integrity - but the
-> entire reset of the system and just about every common utility is
-> written that way.
+0. Ensure the NVMe device supports WRITE_ZERO command.
 
-Yes, I know that. But there are still valid reasons for retrying
-failed async data writeback IO when it triggers a spurious or
-retriable IO error....
+ $ cat /sys/block/nvme5n1/queue/write_zeroes_max_bytes
+   8388608
+ $ nvme id-ns -H /dev/nvme5n1 | grep -i -A 3 "dlfeat"
+   dlfeat  : 25
+   [4:4] : 0x1   Guard Field of Deallocated Logical Blocks is set to CRC
+                 of The Value Read
+   [3:3] : 0x1   Deallocate Bit in the Write Zeroes Command is Supported
+   [2:0] : 0x1   Bytes Read From a Deallocated Logical Block and its
+                 Metadata are 0x00
 
-> And even applications that fsync won't see you fancy error code.  The
-> only thing stored in the address_space for fsync to catch is EIO and
-> ENOSPC.
+1. Compare 'dd' and fallocate with unmap write zeroes, the later one is
+   significantly faster than 'dd'.
 
-The filesystem knows exactly what the IO error reported by the block
-layer is before we run folio completions, so we control exactly what
-we want to report as IO compeltion status.
+   Create a 1GB and 10GB zeroed file.
+    $dd if=/dev/zero of=foo bs=2M count=$count oflag=direct
+    $time fallocate -w -l $size bar
 
-Hence the bogosities of error propagation to userspace via the
-mapping is completely irrelevant to this discussion/feature because
-it would be implemented below the layer that squashes the eventual
-IO errno into the address space...
+    #1G
+    dd:                     0.5s
+    FALLOC_FL_WRITE_ZEROES: 0.17s
 
--Dave.
+    #10G
+    dd:                     5.0s
+    FALLOC_FL_WRITE_ZEROES: 1.7s
+
+2. Run fio overwrite and fallocate with unmap write zeroes
+   simultaneously, fallocate has little impact on write bandwidth and
+   only slightly affects write latency.
+
+ a) Test bandwidth costs.
+  $ fio -directory=/test -direct=1 -iodepth=10 -fsync=0 -rw=write \
+        -numjobs=10 -bs=2M -ioengine=libaio -size=20G -runtime=20 \
+        -fallocate=none -overwrite=1 -group_reportin -name=bw_test
+
+   Without background zero range:
+    bw (MiB/s): min= 2068, max= 2280, per=100.00%, avg=2186.40
+
+   With background zero range:
+    bw (MiB/s): min= 2056, max= 2308, per=100.00%, avg=2186.20
+
+ b) Test write latency costs.
+  $ fio -filename=/test/foo -direct=1 -iodepth=1 -fsync=0 -rw=write \
+        -numjobs=1 -bs=4k -ioengine=psync -size=5G -runtime=20 \
+        -fallocate=none -overwrite=1 -group_reportin -name=lat_test
+
+   Without background zero range:
+   lat (nsec): min=9269, max=71635, avg=9840.65
+
+   With a background zero range:
+   lat (usec): min=9, max=982, avg=11.03
+
+3. Compare overwriting in a pre-allocated unwritten file and a written
+   file in O_DSYNC mode. Write to a file with written extents is much
+   faster.
+
+  # First mkfs and create a test file according to below three cases,
+  # and then run fio.
+
+  $ fio -filename=/test/foo -direct=1 -iodepth=1 -fdatasync=1 \
+        -rw=write -numjobs=1 -bs=4k -ioengine=psync -size=5G \
+        -runtime=20 -fallocate=none -group_reportin -name=test
+
+   unwritten file:                 IOPS=20.1k, BW=78.7MiB/s
+   unwritten file + fast_commit:   IOPS=42.9k, BW=167MiB/s
+   written file:                   IOPS=98.8k, BW=386MiB/s
+
+Thanks,
+Yi.
+
+---
+
+[1] https://nvmexpress.org/specifications/
+    NVM Command Set Specification, Figure 82 and Figure 114.
+
+Zhang Yi (10):
+  block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to queue limits features
+  nvme: set BLK_FEAT_WRITE_ZEROES_UNMAP if device supports DEAC bit
+  nvme-multipath: add BLK_FEAT_WRITE_ZEROES_UNMAP support
+  nvmet: set WZDS and DRB if device supports BLK_FEAT_WRITE_ZEROES_UNMAP
+  scsi: sd: set BLK_FEAT_WRITE_ZEROES_UNMAP if device supports unmap
+    zeroing mode
+  dm: add BLK_FEAT_WRITE_ZEROES_UNMAP support
+  fs: introduce FALLOC_FL_WRITE_ZEROES to fallocate
+  block: factor out common part in blkdev_fallocate()
+  block: add FALLOC_FL_WRITE_ZEROES support
+  ext4: add FALLOC_FL_WRITE_ZEROES support
+
+ Documentation/ABI/stable/sysfs-block | 20 +++++++++
+ block/blk-settings.c                 |  6 +++
+ block/blk-sysfs.c                    | 25 +++++++++++
+ block/fops.c                         | 44 +++++++++++--------
+ drivers/md/dm-table.c                |  7 ++-
+ drivers/md/dm.c                      |  1 +
+ drivers/nvme/host/core.c             | 21 +++++----
+ drivers/nvme/host/multipath.c        |  3 +-
+ drivers/nvme/target/io-cmd-bdev.c    |  4 ++
+ drivers/scsi/sd.c                    |  5 +++
+ fs/ext4/extents.c                    | 66 +++++++++++++++++++++++-----
+ fs/open.c                            |  1 +
+ include/linux/blkdev.h               | 18 ++++++++
+ include/linux/falloc.h               |  3 +-
+ include/trace/events/ext4.h          |  3 +-
+ include/uapi/linux/falloc.h          | 18 ++++++++
+ 16 files changed, 201 insertions(+), 44 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.46.1
+
 
