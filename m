@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-23094-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23098-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1344FAD7D6D
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 23:25:31 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63A90AD7D75
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 23:26:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C335B3A3EE4
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 21:25:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75EF33B7551
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 21:25:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E8C2DFA3B;
-	Thu, 12 Jun 2025 21:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3C782E1731;
+	Thu, 12 Jun 2025 21:25:05 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76F62D8DDF;
-	Thu, 12 Jun 2025 21:25:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603A02DCBE4;
+	Thu, 12 Jun 2025 21:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749763504; cv=none; b=kABnKZnM7/8wqgGk8SKN+be25sYP6DVPRfVXiNKfGX0/oWP+BWYxPpbih/gvCW0sEgqrOEa6Inb3yhWc5zqTlmPy3nMi2CElM724JBTwukaWQ+b072AMFwXDa2ydczw9A7O+xvwM95Y3TLygQPUsqbVRA3HeIkUAHeWjxm3EHUE=
+	t=1749763505; cv=none; b=sdu1T2tXVHtoGisUkVaOIM/avEV/oFkMFAO3He4doq6Tmdwfu8Fr69FdTAQ5VXZFpfFshsqAujECI3IPbmNC04smPgIE8AA8uCvcuR7OQ/Wy2Sc9/dT5fUjTxc+GGOTM4Jw2e5Vd508k4rx6v5hZmPVbnDJZpIjtIQovv/NqfkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749763504; c=relaxed/simple;
-	bh=4l3kvVo4cfZ3K+FLvtLpoePJnS6GtWwUUo0+jAAGrMQ=;
+	s=arc-20240116; t=1749763505; c=relaxed/simple;
+	bh=zRnYHNw1IkZxk/dBgC0osXHFs/qpnb5lqXbr0izsgqE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kLThxcoX/w+U8dkokpihqBMbKe1OWy++YsDdmR3ALybJfqPKFb1Pm0qP4wklUgfOgyYyIbcfJprLDIrCZt4HmsqRYooPATbb4jHqMKpHaNaPUIPf0A9JeGX4yjEUHbRZ+lq8v1SyswF039HWVb1P09r6gl36hqt76JYUPM6V0j8=
+	 Content-Type; b=EJZ5mjlVtYG2yxO9Od/SYTbpYghruf/cZaeNPu+3dgKa/0KzuE61NPkrUcjmOlgltW7kazdtcjzVHLSd7ud1KcOA9qnsrQgnCm6N3/QGcgAobmksLr7pI7tb87kr7j/iAEpFo9NI3w5uLXpwCYr6oawiHVeQe9j/E/rNCtXDRAQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 332875797F;
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 5DD1412023A;
 	Thu, 12 Jun 2025 21:25:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 78DC36000F;
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id B859920023;
 	Thu, 12 Jun 2025 21:24:59 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uPpRT-00000001tQz-3lDh;
-	Thu, 12 Jun 2025 17:26:35 -0400
-Message-ID: <20250612212635.748779142@goodmis.org>
+	id 1uPpRU-00000001tRT-0FV6;
+	Thu, 12 Jun 2025 17:26:36 -0400
+Message-ID: <20250612212635.916651164@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 12 Jun 2025 17:24:12 -0400
+Date: Thu, 12 Jun 2025 17:24:13 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -51,7 +51,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Carlos  Maiolino <cem@kernel.org>,
  Christoph Hellwig <hch@lst.de>,
  "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH 07/14] xfs: ifdef out unused xfs_attr events
+Subject: [PATCH 08/14] xfs: Remove unused event xfs_attr_node_removename
 References: <20250612212405.877692069@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -60,49 +60,39 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Queue-Id: 78DC36000F
-X-Stat-Signature: 1utj44zzuw5br316xpcfjk5zcjm6ch3b
-X-Rspamd-Server: rspamout05
+X-Stat-Signature: 5m1a4pwrf6tfcigetmrakcdqarri9u1w
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: B859920023
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+70v1B4gCQRQSAQWGzzZ3vC3aBvg7avbk=
-X-HE-Tag: 1749763499-862500
-X-HE-Meta: U2FsdGVkX1/1hnysNfa5zsbZin82bbtuFgMe7yngO5DHHkHezDEa50Hhcj1J4MXCc+mCvuWRtLriMc08/AwYX7eQMXw5lmOSsEdhrjmCxJnxldNR0EAQjnHhenGvsI91xOrtXAG/IbBQLnfUe7g6uR0U8+wi/oJJ7xBTmXWB8lFozZOQfUL/gmXFtI/e/9sHeoTpD+n1AcknKKjLK+VgaDg99Xx8lOxbNMal0Y3Gcg/lBlNIjDczXqDGjaY4gmAtUjDzmbey04PbW70IZk9amFRiwhZt+MC5M6puZmXaIGxvaFQFq34XqETB13Nk71NyhD0p1D0vCTvoIMiBIgsl9NeILxuHNkI3OLj9M6Tm7+6F5cv+PBa0Ihy4ICjBpZ4LCjzm/kKv3tdnrwIvVFUWGQ==
+X-Session-ID: U2FsdGVkX18OIw2FF8TdDdPXyr4KM5DiiLb9E2yrGwc=
+X-HE-Tag: 1749763499-341034
+X-HE-Meta: U2FsdGVkX180+/Ybqn2q8J6nsyJy0JJb4oN6BzAf+TBUsnro2JryN/aMq4vdUrSUL4SCcoqCutZe2adrqA9pO6UOzuKI2EpiifHS1KKLd0Dk6rOeelXiqesMaPPbsSEMpj8UE8Ml6wKQJzsCI7bWVWPvD/87Y6GGb9uXGaXLonvKKUK4Ic61Yn4S4XyRWcfu21Sa66OQBcY/YdZrjPeBvDI99GyQjtpN65jDaVsXf/svE2rP9LEdCj218OpRak7zwW92fig0oBV9j8w7BiKrn1SsQqhGiBm9OiWCWfmhaYI3y2cFZ7KgudK2BFct+Xqlyyr87Wb+/XEyYUnF4d8wkEdBAnaWx1FQY+bdo8FTkFMS4d97PpVCw4krgnvh99QY49MTcEQTVs7oZAeYK47d6Q==
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Trace events can take up to 5K in memory for text and meta data per event
-regardless if they are used or not, so they should not be defined when not
-used. The events xfs_attr_fillstate and xfs_attr_refillstate are only
-called in code that is #ifdef out and exists only for future reference.
-
-Ifdef out the events that go with that code and add a comment mentioning
-the other code.
+When xfs_attri_remove_iter() was removed, so was the call to the trace
+event xfs_attr_node_removename. As trace events can take up to 5K in
+memory for text and meta data regardless if they are used or not, they
+should not be created when unused. Remove the unused event.
 
 Fixes: 59782a236b622 ("xfs: remove xfs_attri_remove_iter")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/xfs/xfs_trace.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/xfs/xfs_trace.h | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index cdc639198bb9..bd4e5a727b73 100644
+index bd4e5a727b73..3c15282b2a8a 100644
 --- a/fs/xfs/xfs_trace.h
 +++ b/fs/xfs/xfs_trace.h
-@@ -2467,8 +2467,14 @@ DEFINE_ATTR_EVENT(xfs_attr_node_get);
+@@ -2465,7 +2465,6 @@ DEFINE_ATTR_EVENT(xfs_attr_leaf_toosmall);
+ DEFINE_ATTR_EVENT(xfs_attr_node_addname);
+ DEFINE_ATTR_EVENT(xfs_attr_node_get);
  DEFINE_ATTR_EVENT(xfs_attr_node_replace);
- DEFINE_ATTR_EVENT(xfs_attr_node_removename);
+-DEFINE_ATTR_EVENT(xfs_attr_node_removename);
  
-+/*
-+ * When the corresponding code in xfs_attr.c is re-enabled
-+ * then so can these trace events.
-+ */
-+#if 0
- DEFINE_ATTR_EVENT(xfs_attr_fillstate);
- DEFINE_ATTR_EVENT(xfs_attr_refillstate);
-+#endif
- 
- DEFINE_ATTR_EVENT(xfs_attr_rmtval_get);
- 
+ /*
+  * When the corresponding code in xfs_attr.c is re-enabled
 -- 
 2.47.2
 
