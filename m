@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-23097-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23102-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23109AD7D73
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 23:25:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67228AD7D7C
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 23:26:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 38A4C3B7C6D
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 21:25:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A219E3B7B48
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 21:25:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 926C42E1723;
-	Thu, 12 Jun 2025 21:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 963B12E2F06;
+	Thu, 12 Jun 2025 21:25:06 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7A52DCBE2;
-	Thu, 12 Jun 2025 21:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552FE2D4B7A;
+	Thu, 12 Jun 2025 21:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749763505; cv=none; b=Xo1pWKxB8GAuhtOm3wkUk1kAi0DrmxQPSDUYM8AnSf6cABun8cfTD2hwMmEYWfvqkAlBFq2o6pdgqBoeE4yu/1QxxQqyWQpSuXETaFMAcmmHOCMC5fL/SoRBIiRDWrPC+5LNckD2oaLhLRJ9kvCU0/fpePn+A7ofbCCJBGM3bg4=
+	t=1749763506; cv=none; b=VCi+Fm4IBTDtyBb1AX+5cs2ugpRsfwnuifiSiLrgeFyCmeRPYYOtQeCJCMNnykvRWfKGnSRNHtiLsyFcPBSRQ/p9Qmyx4tArLty+9gQgnuV/LT22gtY6O9jr9y0lo96VQffMnDTpXXlwvZZRSUd1sXh5gD5ULHLJ+L3dO7ywbjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749763505; c=relaxed/simple;
-	bh=Hj5p80U0BlS67DfChc9EawelY7e03EBTEBWaAhRRYE8=;
+	s=arc-20240116; t=1749763506; c=relaxed/simple;
+	bh=HuMjZINpKSUcmI84cW4j+vLlDWcteElTKOayabQOjQY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Iy0KEVsq3pA7eor9G+8yIqIfeBLPv0IZwKuMVEsQJxx7x1zT3RQGFvKPk3AxZXL2Xd91wKsl0lDzs+EY8P40OrpN2nVt5ryHg6rYo4LD9hRTS68w0PwFMC2wnwMrYopnh0YSCRXSPYaQNyTim2zh1hx4mzY55tVgCeh4V318mwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 Content-Type; b=QClrcU0IEdV6PKgzZ6TwJXRhsNv9UclJvx1BEsWnAkmywPB3PcniMM5fyzAngCM8sGkuiLyyFCUfOxOJiUG1mQ1hgdpN+LyNx0NBh7xk1CiA8TUfqPigWHGOmufuoeXOH6odzzaaOj0pnqr3fVhlSlWQTpRoCT4aLZp1jLofsoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id A1FB7140119;
-	Thu, 12 Jun 2025 21:25:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id E682718;
-	Thu, 12 Jun 2025 21:24:59 +0000 (UTC)
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 24740120242;
+	Thu, 12 Jun 2025 21:25:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 43A8220010;
+	Thu, 12 Jun 2025 21:25:00 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uPpRU-00000001tSS-1gQD;
+	id 1uPpRU-00000001tSw-2Pc2;
 	Thu, 12 Jun 2025 17:26:36 -0400
-Message-ID: <20250612212636.252544787@goodmis.org>
+Message-ID: <20250612212636.430882263@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 12 Jun 2025 17:24:15 -0400
+Date: Thu, 12 Jun 2025 17:24:16 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -51,7 +51,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Carlos  Maiolino <cem@kernel.org>,
  Christoph Hellwig <hch@lst.de>,
  "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH 10/14] xfs: Remove unused event xfs_alloc_near_nominleft
+Subject: [PATCH 11/14] xfs: Remove unused event xfs_pagecache_inval
 References: <20250612212405.877692069@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -60,39 +60,63 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Stat-Signature: boocakeqhbte66cnjdanun73458yd44i
+X-Stat-Signature: u9qzqba3sbjuss5rnceuh3fo6gok7das
 X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: E682718
+X-Rspamd-Queue-Id: 43A8220010
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18V/YH0dZYiTbPkq/nW6ZnltEr6uk4VF04=
-X-HE-Tag: 1749763499-323208
-X-HE-Meta: U2FsdGVkX1/0YKQ1caPnnqHOizesHT+WHJsXxpGH92zaw/rZaxkNicSm7SEe1Xv97AIBai5lbTs7f6DhV4vUyySXfGOzjct7phR+NI3qLUm3tdPj70ag1HzIM/hYBV8v5uxsT8PuaJJI6EtA4OMAbqrbE8rijwrJlsDFiU0M/HVYm7XI553Z9y0OSv9uNAWADqRmvNZeDZlPVk0TAGWybJ957mz3sMnNRPlUsMOLcukGvcj0+lfyU9GIF/9NBcsfxFaLX0BaYt4eNVCwbDaejpOi9LmCr5RXc4bmSxdUHN31egs63U7RlwXwUToLKZ56rRYOVmB6KMm2pIUB/7EkfbjntdfVNPPLa2GEdqW2jwMJ91ImkVY3TZfKwL+YwY6FKaSBPx/rc+diSz7yei3+Bg==
+X-Session-ID: U2FsdGVkX19FFybcoQc1IEhFothZu6rsSnE/QAd4I/U=
+X-HE-Tag: 1749763500-295858
+X-HE-Meta: U2FsdGVkX1/j5UlrzR+HDEpRPi6KS7T4Ux1FzgznzSfyAYaaxe2IbU60ruu+rJ2SvfXxQ8XmQ3LE0Rc6+XRuoLFG2kAdiwchKTUmviC9MEdxcZrWfOu+7BBkTS9vVFiF9898NdTt6v9LFIgdsMg0LJK16ReU9Gk6S+FK7MhWMHRkhNY6cNB5F04jFqvf72TgJyTMRj7966xIgretl0rpgrM8i47XcnjcGm+XfRpky4Le2AsoIjdizg0DFCRSECrYNDm5PXBEDcArriviLzx72M9LNyLAsOahxUDoD6AHB9Snl4QPYepIXv1DPjOooaWQzfPmuDLZ0WAsVT8lMitKm15eqzduyKNmGlmyctPy90uu+b9NVAZ0k05XjgaHDFhlMgyoe1Nhsvb/zxGNTc6b/w==
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-When the function xfs_alloc_space_available() was restructured, it removed
-the only calls to the trace event xfs_alloc_near_nominleft. As trace
-events take up to 5K of memory for text and meta data for each event, they
-should not be created when not used. Remove this unused event.
+When the function xfs_flushinval_pages() was removed, it removed the only
+caller to the trace event xfs_pagecache_inval. As trace events can take up
+to 5K of memory in text and meta data each regardless if they are used or
+not, they should not be created when unused. Remove the unused event.
 
-Fixes: 54fee133ad59 ("xfs: adjust allocation length in xfs_alloc_space_available")
+Fixes: fb59581404ab ("xfs: remove xfs_flushinval_pages")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/xfs/xfs_trace.h | 1 -
- 1 file changed, 1 deletion(-)
+ fs/xfs/xfs_trace.h | 25 -------------------------
+ 1 file changed, 25 deletions(-)
 
 diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 6ec483341bc4..277402801394 100644
+index 277402801394..ee21ce3651a5 100644
 --- a/fs/xfs/xfs_trace.h
 +++ b/fs/xfs/xfs_trace.h
-@@ -2263,7 +2263,6 @@ DEFINE_EVENT(xfs_alloc_class, name, \
- DEFINE_ALLOC_EVENT(xfs_alloc_exact_done);
- DEFINE_ALLOC_EVENT(xfs_alloc_exact_notfound);
- DEFINE_ALLOC_EVENT(xfs_alloc_exact_error);
--DEFINE_ALLOC_EVENT(xfs_alloc_near_nominleft);
- DEFINE_ALLOC_EVENT(xfs_alloc_near_first);
- DEFINE_ALLOC_EVENT(xfs_alloc_cur);
- DEFINE_ALLOC_EVENT(xfs_alloc_cur_right);
+@@ -1893,31 +1893,6 @@ DEFINE_EVENT(xfs_itrunc_class, name, \
+ DEFINE_ITRUNC_EVENT(xfs_itruncate_extents_start);
+ DEFINE_ITRUNC_EVENT(xfs_itruncate_extents_end);
+ 
+-TRACE_EVENT(xfs_pagecache_inval,
+-	TP_PROTO(struct xfs_inode *ip, xfs_off_t start, xfs_off_t finish),
+-	TP_ARGS(ip, start, finish),
+-	TP_STRUCT__entry(
+-		__field(dev_t, dev)
+-		__field(xfs_ino_t, ino)
+-		__field(xfs_fsize_t, size)
+-		__field(xfs_off_t, start)
+-		__field(xfs_off_t, finish)
+-	),
+-	TP_fast_assign(
+-		__entry->dev = VFS_I(ip)->i_sb->s_dev;
+-		__entry->ino = ip->i_ino;
+-		__entry->size = ip->i_disk_size;
+-		__entry->start = start;
+-		__entry->finish = finish;
+-	),
+-	TP_printk("dev %d:%d ino 0x%llx disize 0x%llx start 0x%llx finish 0x%llx",
+-		  MAJOR(__entry->dev), MINOR(__entry->dev),
+-		  __entry->ino,
+-		  __entry->size,
+-		  __entry->start,
+-		  __entry->finish)
+-);
+-
+ TRACE_EVENT(xfs_bunmap,
+ 	TP_PROTO(struct xfs_inode *ip, xfs_fileoff_t fileoff, xfs_filblks_t len,
+ 		 int flags, unsigned long caller_ip),
 -- 
 2.47.2
 
