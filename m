@@ -1,121 +1,121 @@
-Return-Path: <linux-xfs+bounces-23073-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23075-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3477CAD6DA8
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 12:27:17 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D206AD6EE2
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 13:21:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D41C1BC48BB
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 10:26:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 95D097AEC62
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Jun 2025 11:20:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B024C23AB81;
-	Thu, 12 Jun 2025 10:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="Omfq8Zw3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFAAC23C8AA;
+	Thu, 12 Jun 2025 11:20:58 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A15238176;
-	Thu, 12 Jun 2025 10:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10A223C50F;
+	Thu, 12 Jun 2025 11:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749723932; cv=none; b=O8xtVQ6Lo92OX7lkENlwHsXCQ6LnCYIPDtACy2fguCfsuG+WL6hI3H/Wh8wcczhISsMu0JuxqHTsNzlw38qkVprQEEQ0x9RpqVABAWHs+AW43fFjsh7T5SOT73XGFCakq1+jzxNHnXC8WApoI9jI4nQ+tRR0e/zEzlPy/AfgDjQ=
+	t=1749727258; cv=none; b=Z7xZoI2xYVuaBD090gV8KG6rtO4c7eSvIOUrNKRnFFLjVx069TSOLnJ6SCRoWBh4AsOfiy46KfUNoS2IugRPEYCu96f5QhyXBCkTGAny5k71G8minB9Z7AzdkNakSEAsGz/rn4oFDKqhMkembNDnhouAnL4qTlNEje7QjDN86P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749723932; c=relaxed/simple;
-	bh=IL/Ee0kDLb8vKxIQmMw05p8FdmrpU4ne3hnvCI1+tys=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lWVHtq3qPPubjycnDvpzNg2EUugEINbI99v71Cb1h+TUADhrlPkGtgDOglbtGB8NZAIHHkM+r+nTy9CNhCnzB7GILvZNVR2GmIKZYwV3oBQIpTXif3w7uVtBK9t6ewLmA1zv532m/0NAEFLieJ17VcdsEyFdNf3xMn+9ULGPj2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=Omfq8Zw3; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.6])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 39F7F40737D7;
-	Thu, 12 Jun 2025 10:25:26 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 39F7F40737D7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1749723926;
-	bh=PF768aoX4r6yIrDUHf+haREU0cDIObqduX7ooUbbWAY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Omfq8Zw32u6QjraRHp/3OS6OO0Dxhf0Sa4NeamJ+9oYx9eHyQG208M+zBiRsfhKv+
-	 mRB97JkSyhVBnDm9Ozd3Y6ProVBNRjbbQ8zcDgAv1LiNZ0L0iRxAYTLC+vd203jYVL
-	 /Sl7huHw7cP64zYs/MNk44O/F4xltwmypyvkEp3U=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Carlos Maiolino <cem@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Christoph Hellwig <hch@lst.de>,
-	linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 6/6] xfs: refactor xfs_btree_diff_two_ptrs() to take advantage of cmp_int()
-Date: Thu, 12 Jun 2025 13:24:50 +0300
-Message-ID: <20250612102455.63024-7-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250612102455.63024-1-pchelkin@ispras.ru>
-References: <20250612102455.63024-1-pchelkin@ispras.ru>
+	s=arc-20240116; t=1749727258; c=relaxed/simple;
+	bh=h6YOaSQV04KhF5kytS5KZKyKtH/gn74YtvcnSW9T1LE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GM/QpzjrqiVSx1TFxc8FDfRevTLxE2WOql1NgjQZhpW8Of/EMRmCVTNZpYq1tK+P46xKkfMVNQ+IIyroyd2NeWLTLRdWNg15moZ3ntPZZnwShvQvuMrDT89oiFamOe8AoLmjKEqU40QVUZEIxvgiEt1uEwrkKtM1VfWLNb3H2jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bJ0Sw65TCzYQvR7;
+	Thu, 12 Jun 2025 19:20:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id CB8261A0F13;
+	Thu, 12 Jun 2025 19:20:47 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgB3218NuEpot0onPQ--.37716S3;
+	Thu, 12 Jun 2025 19:20:47 +0800 (CST)
+Message-ID: <41c21e20-5439-4157-ad73-6f133df42d28@huaweicloud.com>
+Date: Thu, 12 Jun 2025 19:20:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/10] block: introduce BLK_FEAT_WRITE_ZEROES_UNMAP to
+ queue limits features
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ djwong@kernel.org, john.g.garry@oracle.com, bmarzins@redhat.com,
+ chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, brauner@kernel.org,
+ martin.petersen@oracle.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ yukuai3@huawei.com, yangerkun@huawei.com
+References: <20250604020850.1304633-1-yi.zhang@huaweicloud.com>
+ <20250604020850.1304633-2-yi.zhang@huaweicloud.com>
+ <20250611060900.GA4613@lst.de>
+ <343f7f06-9bf6-442f-8e77-0a774203ec3f@huaweicloud.com>
+ <20250612044744.GA12828@lst.de>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <20250612044744.GA12828@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgB3218NuEpot0onPQ--.37716S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruF1UZFyxCrWxtF1DCr45Jrb_yoWkAwc_ur
+	s5JwsrZw1kJryxt34ftrs8Grsxuwsru3yxKw1xWr1rK3s8JF4xA3ykuwnFvw15tFsIgry2
+	9ry0qF4SkFW2gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxxYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIa
+	0PDUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Use cmp_int() to yield the result of a three-way-comparison instead of
-performing subtractions with extra casts.
+On 2025/6/12 12:47, Christoph Hellwig wrote:
+> On Wed, Jun 11, 2025 at 03:31:21PM +0800, Zhang Yi wrote:
+>>>> +/* supports unmap write zeroes command */
+>>>> +#define BLK_FEAT_WRITE_ZEROES_UNMAP	((__force blk_features_t)(1u << 17))
+>>>
+>>>
+>>> Should this be exposed through sysfs as a read-only value?
+>>
+>> Uh, are you suggesting adding another sysfs interface to expose
+>> this feature?
+> 
+> That was the idea.  Or do we have another way to report this capability?
+> 
 
-Found by Linux Verification Center (linuxtesting.org).
+Exposing this feature looks useful, but I think adding a new interface
+might be somewhat redundant, and it's also difficult to name the new
+interface. What about extend this interface to include 3 types? When
+read, it exposes the following:
 
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- fs/xfs/libxfs/xfs_btree.c | 6 +++---
- fs/xfs/libxfs/xfs_btree.h | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ - none     : the device doesn't support BLK_FEAT_WRITE_ZEROES_UNMAP.
+ - enabled  : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, but the
+              BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is not set.
+ - disabled : the device supports BLK_FEAT_WRITE_ZEROES_UNMAP, and the
+              BLK_FLAG_WRITE_ZEROES_UNMAP_DISABLED is set.
 
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index d3591728998e..9a227b6b3296 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -5353,15 +5353,15 @@ xfs_btree_count_blocks(
- }
- 
- /* Compare two btree pointers. */
--int64_t
-+int
- xfs_btree_diff_two_ptrs(
- 	struct xfs_btree_cur		*cur,
- 	const union xfs_btree_ptr	*a,
- 	const union xfs_btree_ptr	*b)
- {
- 	if (cur->bc_ops->ptr_len == XFS_BTREE_LONG_PTR_LEN)
--		return (int64_t)be64_to_cpu(a->l) - be64_to_cpu(b->l);
--	return (int64_t)be32_to_cpu(a->s) - be32_to_cpu(b->s);
-+		return cmp_int(be64_to_cpu(a->l), be64_to_cpu(b->l));
-+	return cmp_int(be32_to_cpu(a->s), be32_to_cpu(b->s));
- }
- 
- struct xfs_btree_has_records {
-diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index 1bf20d509ac9..23598f287af5 100644
---- a/fs/xfs/libxfs/xfs_btree.h
-+++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -519,9 +519,9 @@ struct xfs_btree_block *xfs_btree_get_block(struct xfs_btree_cur *cur,
- 		int level, struct xfs_buf **bpp);
- bool xfs_btree_ptr_is_null(struct xfs_btree_cur *cur,
- 		const union xfs_btree_ptr *ptr);
--int64_t xfs_btree_diff_two_ptrs(struct xfs_btree_cur *cur,
--				const union xfs_btree_ptr *a,
--				const union xfs_btree_ptr *b);
-+int xfs_btree_diff_two_ptrs(struct xfs_btree_cur *cur,
-+			    const union xfs_btree_ptr *a,
-+			    const union xfs_btree_ptr *b);
- void xfs_btree_get_sibling(struct xfs_btree_cur *cur,
- 			   struct xfs_btree_block *block,
- 			   union xfs_btree_ptr *ptr, int lr);
--- 
-2.49.0
+Users can write '0' and '1' to disable and enable this operation if it
+is not 'none', thoughts?
+
+Best regards,
+Yi.
 
 
