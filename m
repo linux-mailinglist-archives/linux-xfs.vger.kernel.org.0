@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-23196-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23194-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 595AAADB82C
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 19:53:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5241FADB824
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 19:53:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B57C5174E0B
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 17:53:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4EE953A3ABC
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 17:52:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C3A9289820;
-	Mon, 16 Jun 2025 17:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CF9C289358;
+	Mon, 16 Jun 2025 17:52:59 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9D2288C3F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1295B286D69;
 	Mon, 16 Jun 2025 17:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750096380; cv=none; b=b8BDD/aiDHRMgC2DipFfneaZ5SFJPtbuKLMgx7g8inx5AwLJBsd53aQ7SKs6lA4Br8URzfYH0cMNCGjeCgBc5dUesiQgi6X7Ha/91f9um99hu61l2f3HZbZaXITE6+Ay6/Cv0l2FIPchkJKch34HrzrnzHMHNILYuBQQRStN0Ms=
+	t=1750096378; cv=none; b=COb4kKPYWEh94omr/b2mhzHFxVBZx7iwUuo22obwMCp9JPji/Lez3gl6Z+IvOyDdSaxSnw0AOY+PbqCy6tqoZlFmXZD8no/5FGuADlITj4LbYUMMgOA1QwPiYoCXyhj5RnSkJdS6ec5xDCBnZNXYbU79Y3xtWOxwMzzJB4Imfi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750096380; c=relaxed/simple;
-	bh=AVp114dx6LIJj9Vd/bX8lpwcQYfC2mGHedvxI2YWSDc=;
+	s=arc-20240116; t=1750096378; c=relaxed/simple;
+	bh=CYlQXKUC/k4zUgCaV2OcyF0QZlscFj2OAaCfrAxSlTE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=P2BlYlq2BCl6QzDN+bRzrXkpPk36Xu6nEkkrKeoV+JsRHeq6zU2e/civXPkejt6R4uJrHkbGRGPsXtvO4f2OdiKTrhAPRMe1T7/qLLElsQ9zGB78Iy+6fNaiJWot1KP4jiQoyRqv2adEB3WePB6Lrt8bkzY/6pu+UFPhMLDX0YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 Content-Type; b=GZbHdOJ+STdcpRvRo/O/OLwVKGhKJWXOMnJaEN3qtcxfy0xaJgLHH4T7a/5sb4IMVX3vOlrwaJPFMxwjEzFQbQZtvqfl7PjpgHTWm41WvA4YiGWwmUlBzLASrxmUnDY3Ey4uUR8laqhgXl+s8Kkkxfj/Lr+9rWI7wTlY5+lmoUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 24D92BD4CF;
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 15FBC1A0B2E;
 	Mon, 16 Jun 2025 17:52:55 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 6169820031;
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 5D47A20030;
 	Mon, 16 Jun 2025 17:52:53 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uRE0v-00000001KUj-1NFk;
+	id 1uRE0v-00000001KVD-24A3;
 	Mon, 16 Jun 2025 13:52:57 -0400
-Message-ID: <20250616175257.180775864@goodmis.org>
+Message-ID: <20250616175257.347133467@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 16 Jun 2025 13:51:50 -0400
+Date: Mon, 16 Jun 2025 13:51:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -52,7 +52,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Carlos  Maiolino <cem@kernel.org>,
  Christoph Hellwig <hch@lst.de>,
  "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH v2 04/13] xfs: remove unused xfs_reflink_compare_extents events
+Subject: [PATCH v2 05/13] xfs: remove unused trace event xfs_attr_rmtval_set
 References: <20250616175146.813055227@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -61,44 +61,41 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Queue-Id: 6169820031
-X-Stat-Signature: 8ebu6r87hmzjy94ce4huz546yxirojhq
-X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 5D47A20030
+X-Stat-Signature: fpx5h43nbm9ytpfeggtat4prb66fxuw1
+X-Rspamd-Server: rspamout07
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+09dk2fJxNMYcf0HeQDLz2wZnw6nwyG90=
-X-HE-Tag: 1750096373-741816
-X-HE-Meta: U2FsdGVkX19Z3P0KrrHzWZRue+GgVdvYI4OP2XZ4COW9H6U4/8ML0uXAPbclnNmzyRIkgCcHPYMQ2yTFNhTnLwIAgukcPh0Nh154NcUTzXJyz9uMY7XxL87DocTTyd0hPgnQCeK3maB2aKYG5E6ui/o1oW+aUej96z9eHpaDB+j51UaE6C/VCLgJTNWAGJUY5GFiWvDo/8Bj6JkKBj+rTCLpegIgPdIiuHkSH4Q7wc51ilE4/x4vrtGtuU9W+RevL/c1bOM3K2Ialv+R6VVroc8KTC9GE9stOZNG6JA868ZB7csOWqAsxMRlZyuUZZnOyw9VWugCbwT8WCyGs8Ivoh2rzGgymsMmWwH+raJZSqcxojTrqnejGITYt+SpEJolgEekLMT/FBYlRyYMeU+wlQ==
+X-Session-ID: U2FsdGVkX1/cuPiYW/TAvrROxey7zFty0wbljByrxvs=
+X-HE-Tag: 1750096373-943156
+X-HE-Meta: U2FsdGVkX1+EAisccI8NqaLL4Fb8JVQqxVRAVke+C9JezXVqVSzTUhNL/hE7w1av+UUEJ6v0Sy1mXDKOfmMswfqsZI4j5Xl05HRAHGjRNkFjPEbifVxdZ738zCebTSEZ4kCBXp8hyEI/nSpPc1DHoIfeNv7MChK0AaKl2wOpxbYimigSj6iJZE2OLMLnjWqe8XhgJw6gRyV2u2DaIDXBQL8ScgW618UlIHosuzkCJkTpQK7ka83ZcsecJglEVeCYiMw3TfsUHoZQGLwmeo/LHuEV4nVLdu/64JXsJTvFdhPPEKAhss7FQQaQi5NnLP4mO5IO5ywPkxgnH9wx2nVtwUYxgBDnSpCIUZAw+xNQzOIa2l+zbJOvnnYBhGRbkTCBi5bWnGyoxk6EqvflERNdeA==
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-When the clone/dedupe_file_rang common functions were refactored, it
-removed the calls to the xfs_reflink_compare_extents and
-xfs_reflink_compare_extents_error events. As each event can take up to 5K
-in memory for text and meta data regardless if they are used or not, they
-should not be created if they are not used. Remove these unused events.
+When the function xfs_attr_rmtval_set() was removed, the call to the
+corresponding trace event was also removed but the trace event itself was
+not. As trace events can take up to 5K of memory in text and meta data
+regardless if they are used or not they should not be created when not
+used. Remove the unused trace event.
 
-Fixes: 876bec6f9bbf ("vfs: refactor clone/dedupe_file_range common functions")
+Fixes: 0e6acf29db6f ("xfs: Remove xfs_attr_rmtval_set")
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/xfs/xfs_trace.h | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/xfs/xfs_trace.h | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 993397f4767c..6ba8cf1a52c5 100644
+index 6ba8cf1a52c5..f62afb388189 100644
 --- a/fs/xfs/xfs_trace.h
 +++ b/fs/xfs/xfs_trace.h
-@@ -4206,10 +4206,6 @@ DEFINE_INODE_ERROR_EVENT(xfs_reflink_remap_extent_error);
- DEFINE_INODE_IREC_EVENT(xfs_reflink_remap_extent_src);
- DEFINE_INODE_IREC_EVENT(xfs_reflink_remap_extent_dest);
+@@ -2471,7 +2471,6 @@ DEFINE_ATTR_EVENT(xfs_attr_fillstate);
+ DEFINE_ATTR_EVENT(xfs_attr_refillstate);
  
--/* dedupe tracepoints */
--DEFINE_DOUBLE_IO_EVENT(xfs_reflink_compare_extents);
--DEFINE_INODE_ERROR_EVENT(xfs_reflink_compare_extents_error);
--
- /* unshare tracepoints */
- DEFINE_SIMPLE_IO_EVENT(xfs_reflink_unshare);
- DEFINE_INODE_ERROR_EVENT(xfs_reflink_unshare_error);
+ DEFINE_ATTR_EVENT(xfs_attr_rmtval_get);
+-DEFINE_ATTR_EVENT(xfs_attr_rmtval_set);
+ 
+ #define DEFINE_DA_EVENT(name) \
+ DEFINE_EVENT(xfs_da_class, name, \
 -- 
 2.47.2
 
