@@ -1,120 +1,106 @@
-Return-Path: <linux-xfs+bounces-23197-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23207-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C603ADB829
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 19:53:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C654ADB912
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 20:49:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CF4F7A20DC
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 17:52:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35B36188B752
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 18:50:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0B0289823;
-	Mon, 16 Jun 2025 17:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E30028982F;
+	Mon, 16 Jun 2025 18:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxLFR8cQ"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4219E288C2D;
-	Mon, 16 Jun 2025 17:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A94021D585;
+	Mon, 16 Jun 2025 18:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750096380; cv=none; b=RCU7tCw0fgzlG/YJcRltPrUj6HZpyAGoICeq7gJ+P9eAGja97R5xT4wcbCWc4NvcF0SIcKNawLueuH/Vw6mv5EPiimt8LnJh/aMI7j5obFbsSbihhCI1sFkIGhCzRApCmrbvC+INUHxw6N8UP2K5iyCvT/ApjsVk1TN2A8Wg6zE=
+	t=1750099783; cv=none; b=uBOAGGfq6IsqCdIZXUII2GgpFAs4u1Dub+2xTYjnD3SKOePGsbrars+w2fCcAFiKXexoyWhQwdQmLSMunhM+NwwlBSE9A682VkHso7ic7KQARcOE7P79xK9HETzf1OzeUnbuXQvw4lg732snTdS6Y27sXNm6zZ2hsg07v6k3r+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750096380; c=relaxed/simple;
-	bh=GkX6+5ssbSsWC2eRweu5p5dS6b/weFQGhxl3Vz1yWm4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=scRzjFWl2njWgnCzZ04rY67l5OFJNlDrHObsiZsM0GoTGZmYnP/oir+EaSFiefQxExxaLe1wyc3MUJp3l+7YQ2fgvfuVryGrVu5Lq1Ojfkn9oizaG+e50YL+WVtWte633ILTUqhKPBArGDDp4XkBN84q4A3WOLLZ6yGO02GGmKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 98518C0AF9;
-	Mon, 16 Jun 2025 17:52:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id CFDA12002C;
-	Mon, 16 Jun 2025 17:52:54 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uRE0w-00000001KZ6-3XJ8;
-	Mon, 16 Jun 2025 13:52:58 -0400
-Message-ID: <20250616175258.691664401@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 16 Jun 2025 13:51:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Carlos  Maiolino <cem@kernel.org>,
- Christoph Hellwig <hch@lst.de>,
- "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH v2 13/13] xfs: change xfs_xattr_class from a TRACE_EVENT() to
- DECLARE_EVENT_CLASS()
-References: <20250616175146.813055227@goodmis.org>
+	s=arc-20240116; t=1750099783; c=relaxed/simple;
+	bh=9qQ61Kp9umUHi4GxqExw5FJpuvThBeB78u+krMUOoCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bg5ahCRL+O2/2BNTQeuUdSZPaDhGF6fQV3hJSxvxQ3H9EYHEDNosdJgWE+VSIoyAi5OoOgK8Raxj0JHXRNls3eiJre0FEFnjxszDZvuUMB/Yi9NI33ONxfi+G8319c/C99qh943RZYcuTwzgaQzv9eHGCXb2b9dGmEZUO7mBdfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZxLFR8cQ; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a44b0ed780so71726051cf.3;
+        Mon, 16 Jun 2025 11:49:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750099780; x=1750704580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZbNgm74YKelcUXDbOCv5OUWQbQ2/2H3RfdKt5p5VlZA=;
+        b=ZxLFR8cQwgmRsWpY0v6qB7JRsTNDSDVBDgwI4+Tsaf/WsDD/lbhFx0MYJfgsAaBXns
+         LUDUMLXDveGI9eq1p5o+CiF9gVx0/g6kcyXcpBtMqtHFU4+ez1ya+TZEYibWoUMBAl00
+         cJAvLD1Fb3ao/TzjkUTc7DHydIbh76vHm2GTMfLcHAqjmV1m+IzXWvudsBdtSvhlyaxD
+         Dk2/5n5xoL7L09moRTN/cjbFdQ3x/gRJUmaMSLevAWZ4VeIxJ+gdFjHzjf6RPM1AaQyo
+         bJmaN1B8r7p4AxMKKuxIcsf34VR8RNRSK0HwdlzZ5vp02KaKsAPN8KYrhJLlvaIHRISq
+         haUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750099780; x=1750704580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZbNgm74YKelcUXDbOCv5OUWQbQ2/2H3RfdKt5p5VlZA=;
+        b=uG5wmybjO1DfQx042eNviRHscxAQb4rFklIvK73RPaVNTUOrTh6BAOVfHyGMHkCAfy
+         D5GD7uQslvmy1GP6k2urtCOgaOyv5wHzSLGfavO4t4TxcoZ59RfniCM4JhI/tOqJT356
+         Zzq3gAd3C2bfnXd4zRf6HBxeq5OQmL6FL1l7hWFl66Lt7im0BJPEnKHnqzMq4R91oYMO
+         9OLEi1lTPAQsCgeH8GuO7x9TDssgx6AmYeZwSv/p77jXtJZpI6plgqx0xwI90lijVdoP
+         hm1F3cTDp253B6SEyLIMGis6s1G6Sh5W820l88e6Y/TIPeZAEQvJQbtH9y99+SoE/qXO
+         GtbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNEJIJ9R88CpcpXRIxMOmF5LAvQruUqTcQqXT3OPsgALYRTPr0/nOgzTvDPWR5W3tRAbQnOD0dyjc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH1d7qrimwO4ybTAPaS49GZMRlJ0aJYOIbDxcKw5U6QI1rjzv1
+	/BiQS0aGCuhPxJEo2qqkXwOrDan0EUUGYisK2pyQ4y2V6y1+elmdaTRXQIMgLpnhBVvC5p1FWwA
+	XQMK/I6z1rJgV/fskHDCPQcfohRw9Jc+wIIsa
+X-Gm-Gg: ASbGncsn9b42lPphTPEXgfi7ZDdX+gFxJgBoaNztB+IOvsV/ZGlNuNOK2Qv5iIGfCBW
+	jaaGo7pos4zpCwdz8y2RpBozLYvyVggNHQvXrx1gwvGgekDLZwUUo2aNryEPknIFOovr71Z96ZF
+	GBlvAG3ULZyDElPPWNgG/m0evbvkCgrlIMvawXBW+V0ijdJeQdlxpkzReUKo4=
+X-Google-Smtp-Source: AGHT+IGLpiMCmBeTSbFoQsIrZlhUdYB0kqAULHCAu+w8Mgtog6QDPt8QCC8hl4dZyD8ugor7d/G7sgZ9V4+SDzgTRtQ=
+X-Received: by 2002:ac8:58c8:0:b0:4a5:9b9c:2d9f with SMTP id
+ d75a77b69052e-4a73c4fce3dmr182509771cf.2.1750099780359; Mon, 16 Jun 2025
+ 11:49:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Queue-Id: CFDA12002C
-X-Stat-Signature: 6151eycwd9aj61x8fugb3hnroagoiz49
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19GNZDWZ6rXSZs0MgWJEFXBUVhlRJNZ5b4=
-X-HE-Tag: 1750096374-804361
-X-HE-Meta: U2FsdGVkX1+g5hTChwKkEzGc6weI1MJjDnZc/XzwPe7Mykeii7LOaV5B+syfA7Zl0zJ6NUf6pv49P1IZ89eBtI94uTBoT/jLlWB26uu+EeNbBhvXSr2gngHPGIV+yAtoRtO+dwLs4z0L7GnlBKbp8cf7Xm0pGaoIIpSrJs45tQ/gjUacW8fxzL8b9jhWLHm/iUGRSwFQhBZcp7UBd9lQqtz8Mlt3JOkvZoS9iSzhbQqlbb8aCyZs/tMHyot7vmZqeVoU6nP1eAZcZFL2qc9DNpgBcbEf/mO4jEgBb97lizzVEFRKwCzvEt9ZGJxs9baTbxngz1//Kh48zSyuXEStKdTMtyHCGMMt2gn8aj7CgGcndRXmB1SiZK+Nwq2eIkE4tQ0FfbIredHRI+PhKSeAfw==
+References: <20250613214642.2903225-1-joannelkoong@gmail.com>
+ <20250613214642.2903225-10-joannelkoong@gmail.com> <aFATg58omJ2405xC@infradead.org>
+In-Reply-To: <aFATg58omJ2405xC@infradead.org>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Mon, 16 Jun 2025 11:49:29 -0700
+X-Gm-Features: AX0GCFvBUNWuSpPPwssnIdbnfMc4X1HhAR1N3Dkoa9SeH6VgFYK4K-hGJ-eEvmQ
+Message-ID: <CAJnrk1a934dLVLjUo2hy1jTo4B6xcj4ODMRb_YO8aM7CfquUfg@mail.gmail.com>
+Subject: Re: [PATCH v2 09/16] iomap: change 'count' to 'async_writeback'
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-fsdevel@vger.kernel.org, djwong@kernel.org, anuj1072538@gmail.com, 
+	miklos@szeredi.hu, brauner@kernel.org, linux-xfs@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, Jun 16, 2025 at 5:52=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
+g> wrote:
+>
+> On Fri, Jun 13, 2025 at 02:46:34PM -0700, Joanne Koong wrote:
+> > Rename "count" to "async_writeback" to better reflect its function and
+> > since it is used as a boolean, change its type from unsigned to bool.
+>
+> Not sure async_writeback is really the right name here, the way it is
+> used is just that there is any writeback going on.  Which generally
+> is asynchronous as otherwise performance would suck, but the important
+> bit is that the responsibility for finishing the folio writeback shifted
+> to the caller.
 
-xfs_xattr_class was accidentally created as a TRACE_EVENT() instead of a
-class with DECLARE_EVENT_CLASS().
-
-Note, TRACE_EVENT() is just defined as:
-
- #define TRACE_EVENT(name, proto, args, tstruct, assign, print) \
-	DECLARE_EVENT_CLASS(name,			       \
-			     PARAMS(proto),		       \
-			     PARAMS(args),		       \
-			     PARAMS(tstruct),		       \
-			     PARAMS(assign),		       \
-			     PARAMS(print));		       \
-	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
-
-The difference between TRACE_EVENT() and DECLARE_EVENT_CLASS() is that
-TRACE_EVENT() also creates an event with the class name.
-
-Switch xfs_xattr_class over to being a class and not an event as it is not
-called directly, and that event with the class name takes up unnecessary
-memory.
-
-Fixes: e47dcf113ae3 ("xfs: repair extended attributes")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/xfs/scrub/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-index d7c4ced47c15..1e6e9c10cea2 100644
---- a/fs/xfs/scrub/trace.h
-+++ b/fs/xfs/scrub/trace.h
-@@ -2996,7 +2996,7 @@ DEFINE_EVENT(xrep_pptr_salvage_class, name, \
- DEFINE_XREP_PPTR_SALVAGE_EVENT(xrep_xattr_salvage_pptr);
- DEFINE_XREP_PPTR_SALVAGE_EVENT(xrep_xattr_insert_pptr);
- 
--TRACE_EVENT(xrep_xattr_class,
-+DECLARE_EVENT_CLASS(xrep_xattr_class,
- 	TP_PROTO(struct xfs_inode *ip, struct xfs_inode *arg_ip),
- 	TP_ARGS(ip, arg_ip),
- 	TP_STRUCT__entry(
--- 
-2.47.2
-
-
+I like your name "wb_pending" a lot better.
 
