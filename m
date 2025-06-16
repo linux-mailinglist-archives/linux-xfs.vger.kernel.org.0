@@ -1,46 +1,46 @@
-Return-Path: <linux-xfs+bounces-23206-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23197-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6160CADB840
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 19:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C603ADB829
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 19:53:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 437407A9E43
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 17:54:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CF4F7A20DC
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Jun 2025 17:52:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5653928C841;
-	Mon, 16 Jun 2025 17:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0B0289823;
+	Mon, 16 Jun 2025 17:53:00 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF4F288CB5;
-	Mon, 16 Jun 2025 17:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4219E288C2D;
+	Mon, 16 Jun 2025 17:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750096386; cv=none; b=CVqajuLXT9+aRBSL84LI4k2gzk03A2gJZBlzSvki+Z9Ln82SmQgoPYfyL+V1+Fq1IVHlZg2UqskDFIfTOCyRL55jXzy00XRX5GgzvJs6W9781X2WwzsQUE3n+0YzS/l7rKu0vFTP2AfM1LNL4GZyPo5SLPhqMZlW4k4hFftpjy4=
+	t=1750096380; cv=none; b=RCU7tCw0fgzlG/YJcRltPrUj6HZpyAGoICeq7gJ+P9eAGja97R5xT4wcbCWc4NvcF0SIcKNawLueuH/Vw6mv5EPiimt8LnJh/aMI7j5obFbsSbihhCI1sFkIGhCzRApCmrbvC+INUHxw6N8UP2K5iyCvT/ApjsVk1TN2A8Wg6zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750096386; c=relaxed/simple;
-	bh=NKxXMIXzsSM7kZFMLFM188WPZyVP6ERPHjmDt7Sjzjs=;
+	s=arc-20240116; t=1750096380; c=relaxed/simple;
+	bh=GkX6+5ssbSsWC2eRweu5p5dS6b/weFQGhxl3Vz1yWm4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=fpHQuu932OxxyUbPy77WaGW8PpIZ/uvoxOWmghbAGFmV3gWwclWc72QjDmoiLNMoAL4zWaq3Skg4UInXs3tJchCiUvDxYqJpdExT13KPNvusgXXKulgLIfMCDacUXk3/jCKL+jMfIyeihSZASGUmOaEhRUVYQFfiuj96fFORNaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 Content-Type; b=scRzjFWl2njWgnCzZ04rY67l5OFJNlDrHObsiZsM0GoTGZmYnP/oir+EaSFiefQxExxaLe1wyc3MUJp3l+7YQ2fgvfuVryGrVu5Lq1Ojfkn9oizaG+e50YL+WVtWte633ILTUqhKPBArGDDp4XkBN84q4A3WOLLZ6yGO02GGmKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 415D6101344;
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 98518C0AF9;
 	Mon, 16 Jun 2025 17:52:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 8CF2C30;
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id CFDA12002C;
 	Mon, 16 Jun 2025 17:52:54 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uRE0w-00000001KYc-2opA;
+	id 1uRE0w-00000001KZ6-3XJ8;
 	Mon, 16 Jun 2025 13:52:58 -0400
-Message-ID: <20250616175258.528614307@goodmis.org>
+Message-ID: <20250616175258.691664401@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 16 Jun 2025 13:51:58 -0400
+Date: Mon, 16 Jun 2025 13:51:59 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -52,8 +52,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Carlos  Maiolino <cem@kernel.org>,
  Christoph Hellwig <hch@lst.de>,
  "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH v2 12/13] xfs: only create event xfs_file_compat_ioctl when CONFIG_COMPAT is
- configure
+Subject: [PATCH v2 13/13] xfs: change xfs_xattr_class from a TRACE_EVENT() to
+ DECLARE_EVENT_CLASS()
 References: <20250616175146.813055227@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -62,43 +62,57 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Stat-Signature: bnkzq5i39athu4785ruc1wcg5jzjpyxf
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 8CF2C30
+X-Rspamd-Queue-Id: CFDA12002C
+X-Stat-Signature: 6151eycwd9aj61x8fugb3hnroagoiz49
+X-Rspamd-Server: rspamout05
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+QZfLrgkevSGG6U4TZA9OYfpnsSZdbJIs=
-X-HE-Tag: 1750096374-221371
-X-HE-Meta: U2FsdGVkX19px8Fb8CkmNOiT1mEhlKTs0+8gaUgB8JXJqdaV4kFMqKW0pxevEZdglKLijc1+Xx4sDGHqlQ+8wkRiO5VyWNfrSLWT83FApzx/xlzL+Lo2dyK4fdgy/Fi6lK8ReI3xvUnIOK6Av6HNYgrOlTKtTk+9Jjt3gOTyQFO9yzoX4X0Y+Jy10Phl6AO+5O9PehVjceE4CorDoZfLEVULnXEFu8ADrSe+12MKRMT7SHXtP2gZA58ElcDPce543jIFtqNGzmFFjSQ40HOMofWl6Uqof7gquiJWvsBsSbKoGFpfxtIu0Hlf5iM1DkOgKb/L085+uV1sELqTr5Ayho2Cb5V7rWEHcBRXji2cDfXBOwLYz3qc9Tf1Dd/yzs+lFBwbiPFva8RW2V5p8J9HSw==
+X-Session-ID: U2FsdGVkX19GNZDWZ6rXSZs0MgWJEFXBUVhlRJNZ5b4=
+X-HE-Tag: 1750096374-804361
+X-HE-Meta: U2FsdGVkX1+g5hTChwKkEzGc6weI1MJjDnZc/XzwPe7Mykeii7LOaV5B+syfA7Zl0zJ6NUf6pv49P1IZ89eBtI94uTBoT/jLlWB26uu+EeNbBhvXSr2gngHPGIV+yAtoRtO+dwLs4z0L7GnlBKbp8cf7Xm0pGaoIIpSrJs45tQ/gjUacW8fxzL8b9jhWLHm/iUGRSwFQhBZcp7UBd9lQqtz8Mlt3JOkvZoS9iSzhbQqlbb8aCyZs/tMHyot7vmZqeVoU6nP1eAZcZFL2qc9DNpgBcbEf/mO4jEgBb97lizzVEFRKwCzvEt9ZGJxs9baTbxngz1//Kh48zSyuXEStKdTMtyHCGMMt2gn8aj7CgGcndRXmB1SiZK+Nwq2eIkE4tQ0FfbIredHRI+PhKSeAfw==
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The trace event xfs_file_compat_ioctl is only used when CONFIG_COMPAT is
-configured in the build. As trace events can take up to 5K in memory for
-text and meta data regardless if they are used, they should not be created
-when unused. Add #ifdef CONFIG_COMPAT around the event so that it is only
-created when that is configured.
+xfs_xattr_class was accidentally created as a TRACE_EVENT() instead of a
+class with DECLARE_EVENT_CLASS().
 
-Fixes: cca28fb83d9e6 ("xfs: split xfs_itrace_entry")
+Note, TRACE_EVENT() is just defined as:
+
+ #define TRACE_EVENT(name, proto, args, tstruct, assign, print) \
+	DECLARE_EVENT_CLASS(name,			       \
+			     PARAMS(proto),		       \
+			     PARAMS(args),		       \
+			     PARAMS(tstruct),		       \
+			     PARAMS(assign),		       \
+			     PARAMS(print));		       \
+	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
+
+The difference between TRACE_EVENT() and DECLARE_EVENT_CLASS() is that
+TRACE_EVENT() also creates an event with the class name.
+
+Switch xfs_xattr_class over to being a class and not an event as it is not
+called directly, and that event with the class name takes up unnecessary
+memory.
+
+Fixes: e47dcf113ae3 ("xfs: repair extended attributes")
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- fs/xfs/xfs_trace.h | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/scrub/trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 7977af7c6873..448dea97a052 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1083,7 +1083,9 @@ DEFINE_INODE_EVENT(xfs_get_acl);
- #endif
- DEFINE_INODE_EVENT(xfs_vm_bmap);
- DEFINE_INODE_EVENT(xfs_file_ioctl);
-+#ifdef CONFIG_COMPAT
- DEFINE_INODE_EVENT(xfs_file_compat_ioctl);
-+#endif
- DEFINE_INODE_EVENT(xfs_ioctl_setattr);
- DEFINE_INODE_EVENT(xfs_dir_fsync);
- DEFINE_INODE_EVENT(xfs_file_fsync);
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index d7c4ced47c15..1e6e9c10cea2 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -2996,7 +2996,7 @@ DEFINE_EVENT(xrep_pptr_salvage_class, name, \
+ DEFINE_XREP_PPTR_SALVAGE_EVENT(xrep_xattr_salvage_pptr);
+ DEFINE_XREP_PPTR_SALVAGE_EVENT(xrep_xattr_insert_pptr);
+ 
+-TRACE_EVENT(xrep_xattr_class,
++DECLARE_EVENT_CLASS(xrep_xattr_class,
+ 	TP_PROTO(struct xfs_inode *ip, struct xfs_inode *arg_ip),
+ 	TP_ARGS(ip, arg_ip),
+ 	TP_STRUCT__entry(
 -- 
 2.47.2
 
