@@ -1,95 +1,95 @@
-Return-Path: <linux-xfs+bounces-23481-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23477-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F3FDAE9147
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Jun 2025 00:50:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18E51AE9140
+	for <lists+linux-xfs@lfdr.de>; Thu, 26 Jun 2025 00:50:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 254D41C26046
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Jun 2025 22:50:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF4251C25820
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Jun 2025 22:50:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B89C22F3C1E;
-	Wed, 25 Jun 2025 22:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3DB72F2C68;
+	Wed, 25 Jun 2025 22:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="f80/M6tL"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="0+fAZkt+"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D369B2877E5
-	for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 22:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11D726E6E1
+	for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 22:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750891806; cv=none; b=i//dTjTUyr6tAWGnYNiLRl9ePwxMXaUB8c8bG9656yMJdGm3mGcwtr8D8WWGQEISyHjWPtZB32MARAxRMOFGUw4ekVBhglZjcch3DlmwrnbOW4rceJuybkjKBNL7/8GdCAl7llsyK/Vpw9tj5vX9YkkBtsbcltIOmrKnZCzizgM=
+	t=1750891805; cv=none; b=VsrNTHRYTbe0QxEHKeV0o9OfwE+KKYsVi3z1nP1y5AIflGufTZVwhJBMYf09dXYqmUPrUHJH6ty/wmA4k/dcZ2EDvLmEtJzH2oTdsIqMlhrWFQqBYTGjFTsQzYwXs4wSqHJNbrXW41DYKL0YGz4489uIxbLMI75OcXTWNICTekU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750891806; c=relaxed/simple;
-	bh=9143z7Zs+JNMo+QJE3yGK921aK9+qjNmrqWp80EdO+s=;
+	s=arc-20240116; t=1750891805; c=relaxed/simple;
+	bh=6bCjEgWU7v3p0baQfA4G5iQvrp8jXJfBz6Ruz5pWy44=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hFxZTvRCm03gNPz6L1n5OQ+rjtDHLyNknyMUU6furMZj8mwhNjjL19RnShpPdwFEbhEdHpoLrMPmuLLlb7trmsx6Jlx6uVBjDUZwqfNQwjRDU47GSTPuX721OJXi1UVZnljeFvQ3LL+YrJPS83qjunTRNlCjsdYypBDyQedpVrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=f80/M6tL; arc=none smtp.client-ip=209.85.210.179
+	 MIME-Version; b=u2lbv5MGMQDUd1eytlEvndIXLu3z/g8Gkn3MWe1ocklowt+knfR8PQqQxZLs8C+k32qqx1aUHe5/66eaTj0ut/QjRav43CNJnGzmW9/4ooKYyEPYaRutir9eCvdpCBAr5TsDbwdeXI2KOYMeA9UlBXtG8lc5sCKOpkb2DYabRw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=0+fAZkt+; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747e41d5469so547113b3a.3
-        for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 15:50:04 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23649faf69fso4032755ad.0
+        for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 15:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1750891804; x=1751496604; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1750891803; x=1751496603; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bkc3mvRmKsAmpgr3Dl0h7YR/9QXHyZh7YtpEtJuoJXI=;
-        b=f80/M6tLlSs8jcL7ZJ4l2GyXK8DS/r5Jif2H4eEN0SVIUvPVLqRNRkZNDpLc79vydz
-         uXfM67g2pHKkoRdtxhQdeNKF7kx6ZcDs2kPDe+6zVvfkfyT3szot3zIpXkTViKHABUCS
-         bNTrILO5QHHw0jjL3KVM04zJK7sPEHV83+VSZgDuS2RcYjULgbW/+xunAQkGLDUN4Vig
-         NXQyJ50NBb3vurPMeZr5PedH5LOtsxWs6nQ0Z5REbmK8c7EmGdkcclPWbmhQa5SSq3OK
-         w1u12H435J4yrV/nTPFlAl6Z7XoWF7EQt9rNN7XusC7cc2G0rOtocp5XZGT29vW54AKn
-         7ewQ==
+        bh=9aBTu7spJ63itDWX69McuCpg+t+NVxbwSWKdRLJc9hM=;
+        b=0+fAZkt+muo5Qaet85kIpNZ9fsP1aRwDp6NhCvfszUs/9+ll8fjAFBX5mUA0XVME+C
+         KiXqSMvvPmPz/xsM5snzjE2n5pUUqxpr8DS7auWoFIjWyyadQMG3fD8qX802K6nDh55f
+         fCoRF94d2E/MZojMW/x48xFVJtkDHEIM+YcQ/G2AcB85bcDiatjRI/w34Cici6sZnZbM
+         EbHanWGWttYnSXhlCO7DYh/WNCAEK/8397vT7rsFQUFOIuTN+dobvNYGfUt9VQODxnWf
+         ijmMrjnWfxQTVDzTa0wpMlPaauDzlWNYzVY4/k7ZPWNhAyTCnIjS+k/bLdmu4kLRTPYc
+         TQvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750891804; x=1751496604;
+        d=1e100.net; s=20230601; t=1750891803; x=1751496603;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bkc3mvRmKsAmpgr3Dl0h7YR/9QXHyZh7YtpEtJuoJXI=;
-        b=BBitL4iTHYKdVQmUHaWAky+V8MhvxGFtkDyRQ1zdIHxHqXmix/u/TYPhfykSpMUACb
-         S9eKnKUzC4vQkVh/K7CEaG4AesFMaIaU9TMNT5AZWyVjyiNSSgCZLPP00w+rLHytX6Ng
-         EDDnW3TQsxMSUlCYhIW0IuLZSMu3B/6T6OAHRf3Njg6CQhH8E/fqubzNMrT2UZl5BnE3
-         VJS593gR7t1dHPgQTIjH1pFGVeAT4V2AKI+acBr3Lkv3R9l4WQlmrCBU0X7wEBPL/pEl
-         D6csuLD40hX4MOVKkx+NUj/g5vD4JmbCPaiGs6+mMNHTS9UPbL5b5igxyGLJ5k90DzBQ
-         iKOw==
-X-Gm-Message-State: AOJu0Ywe/yED4OSbTsyfptkpoW4Azya1gAWWHCdhDrwgO7+1PG9ijHM/
-	2NN6XDzCmHgqBi8RQ0144mvvIZ1Yu9gF6Jh3sdUms6oSCdiziQrtWAKHK14MbNiVcjZf3x7/GcQ
-	H2f2F
-X-Gm-Gg: ASbGncuMkoN6cL1Nawo8LpPUdJpL9c7LkWN21QxqVSjrFVR3nKsW8XFHNuU5LXILMAO
-	c/VD7fE9Ire3jMUaRFThtVvXiNCC9dBm7zVEJCUxPXIb6cQ9+CoPXATyEt4qL9khd3LjAnCc3hv
-	9eKS0E+uuQ4asZ1EiCxJF+u5XnJ6K/95vk9CZrBuP3Bu96ebLNeVKn3NpkFUxhPcQBeOxRW/0LT
-	jmzBzV7Hj00UmFTzMof0yxoarfp0a0vBTSsnCloM3ALaVwnLKi94gKxYkPYO0m166gRDhdj0oNJ
-	xZHJt6erRc1nyrcMDiWfR6doxzaBUwQtXV1uv2TWXlbDdjL08pu4x1MD4SC5cqcNIoSSWx7BUez
-	B2EZuMMwaFpRnlDBrV8PanZPWMVizPuLNzuBk
-X-Google-Smtp-Source: AGHT+IGjUgmNYLDyAsq8H2mWGNrNTtiONe/70UlNTtt162Jcs8MTpsEF6uHcx18Rwql8bNvLcDKj2w==
-X-Received: by 2002:a05:6a20:158d:b0:218:59b:b2f4 with SMTP id adf61e73a8af0-2207f31ce05mr7284175637.42.1750891804103;
-        Wed, 25 Jun 2025 15:50:04 -0700 (PDT)
+        bh=9aBTu7spJ63itDWX69McuCpg+t+NVxbwSWKdRLJc9hM=;
+        b=v2fvhy04BEp9OuEsXYxeVyf3ukY1bbZUZ6Y+0Zbe7ExrhO+gdp+mUNnoU7ot3oIZ1W
+         1NQYBxyrpx9yfPoBZc7aa6JW5wL2y7UGX9IuB/34Pvzs4mDPL2JE1RB0oIJ+yTzWcD8b
+         wFjXccOsskSkJ5LBP7P63hS/b//wztppJ2NgMcv4CeNlX7arIHN7nDnKFhfLyWGAK9AJ
+         Gq4vGD/UgSLWKWpAEvljzalOWEzxi8g6nDmJyNMpgfRuhAZ/q3AoDwdkiWODwK1Lhrkv
+         1V0ryGltVZm6K/foQrAxHYoUBK9JJYAouDohjyutGT6Aadoue0bFDHw/xqOzhjEcevTm
+         mcOA==
+X-Gm-Message-State: AOJu0YztDU5ool92LCEIVTOh5N57fg35lwTPIZMIuBmS9mSjbrHz4ML2
+	E1a4Hd+zD3UBT1s0wRCdwydXKQmGVQ9z6F9z+a+/mAD6yL/8S/SX6Zo5fuxQFWl/VCjA0jclWdy
+	VrkH6
+X-Gm-Gg: ASbGncuRjKqESqLlDt57gxyzshJuA+krmlGLHzNhnzFZeG+tIH8RC7pUvCiTilPR4pl
+	KT/OBDq90h5na82uiXAlyNL7Ui24ziFTaB2wVtaJ2+Pat5FQWjn49tWpy+dvXg2vDROQuLD97Ik
+	D7If9IgmXyBWPb310tCfJWTTO3bJbzatLA2aHeuR4QeI3ya54lBAxoLWbSevQh4lN2VfEHVjdzv
+	qQPzdAR4hbGs6+vdKAdYsCvolWcnfM27Ct1C5ejmebkOIxkEzK5TFiK9D13ZYayhEW1Qql6LXMV
+	P5Ynx7oZrd2Z3+KZNNsqCUIzTDgXk479hjPogp/qTkDJRSKfqFGoY8EhJUxQicL+F76wTeLXHtq
+	RByrc9nmGw7hDbqe44TQqXbkPKAwLY1MA+cMT
+X-Google-Smtp-Source: AGHT+IGxwkAjvhfeHHJDtP2gqT61p/HkdPH6wt/UCl8ltYt8CGlkCuZOm4SXpwa+HH/Qosyx5Rb7LQ==
+X-Received: by 2002:a17:902:cec2:b0:235:779:edfa with SMTP id d9443c01a7336-23824044853mr76109265ad.32.1750891802814;
+        Wed, 25 Jun 2025 15:50:02 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-184-88.pa.nsw.optusnet.com.au. [49.180.184.88])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34c44b39bdsm101834a12.68.2025.06.25.15.50.02
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83ce31asm140286255ad.63.2025.06.25.15.50.02
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 25 Jun 2025 15:50:02 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
 	by dread.disaster.area with esmtp (Exim 4.98.2)
 	(envelope-from <dave@fromorbit.com>)
-	id 1uUYwK-00000003FOE-0g6s
+	id 1uUYwK-00000003FOI-0uUt
 	for linux-xfs@vger.kernel.org;
 	Thu, 26 Jun 2025 08:50:00 +1000
 Received: from dave by devoid.disaster.area with local (Exim 4.98)
 	(envelope-from <dave@devoid.disaster.area>)
-	id 1uUYwK-000000061eS-0CWJ
+	id 1uUYwK-000000061eW-0Kjp
 	for linux-xfs@vger.kernel.org;
 	Thu, 26 Jun 2025 08:50:00 +1000
 From: Dave Chinner <david@fromorbit.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 4/7] xfs: add tracepoints for stale pinned inode state debug
-Date: Thu, 26 Jun 2025 08:48:57 +1000
-Message-ID: <20250625224957.1436116-5-david@fromorbit.com>
+Subject: [PATCH 5/7] xfs: rearrange code in xfs_buf_item.c
+Date: Thu, 26 Jun 2025 08:48:58 +1000
+Message-ID: <20250625224957.1436116-6-david@fromorbit.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250625224957.1436116-1-david@fromorbit.com>
 References: <20250625224957.1436116-1-david@fromorbit.com>
@@ -103,117 +103,192 @@ Content-Transfer-Encoding: 8bit
 
 From: Dave Chinner <dchinner@redhat.com>
 
-I needed more insight into how stale inodes were getting stuck on
-the AIL after a forced shutdown when running fsstress. These are the
-tracepoints I added for that purpose.
+The code to initialise, release and free items is all the way down
+the bottom of the file. Upcoming fixes need to these functions
+earlier in the file, so move them to the top.
+
+There is one code change in this move - the parameter to
+xfs_buf_item_relse() is changed from the xfs_buf to the
+xfs_buf_log_item - the thing that the function is releasing.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_inode_item.c | 5 ++++-
- fs/xfs/xfs_log_cil.c    | 4 +++-
- fs/xfs/xfs_trace.h      | 9 ++++++++-
- fs/xfs/xfs_trans.c      | 4 +++-
- 4 files changed, 18 insertions(+), 4 deletions(-)
+ fs/xfs/xfs_buf_item.c | 116 +++++++++++++++++++++---------------------
+ fs/xfs/xfs_buf_item.h |   1 -
+ 2 files changed, 58 insertions(+), 59 deletions(-)
 
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index c6cb0b6b9e46..285e27ff89e2 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -758,11 +758,14 @@ xfs_inode_item_push(
- 		 * completed and items removed from the AIL before the next push
- 		 * attempt.
- 		 */
-+		trace_xfs_inode_push_stale(ip, _RET_IP_);
- 		return XFS_ITEM_PINNED;
- 	}
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index 90139e0f3271..3e3c0f65a25c 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -32,6 +32,61 @@ static inline struct xfs_buf_log_item *BUF_ITEM(struct xfs_log_item *lip)
+ 	return container_of(lip, struct xfs_buf_log_item, bli_item);
+ }
  
--	if (xfs_ipincount(ip) > 0 || xfs_buf_ispinned(bp))
-+	if (xfs_ipincount(ip) > 0 || xfs_buf_ispinned(bp)) {
-+		trace_xfs_inode_push_pinned(ip, _RET_IP_);
- 		return XFS_ITEM_PINNED;
++static void
++xfs_buf_item_get_format(
++	struct xfs_buf_log_item	*bip,
++	int			count)
++{
++	ASSERT(bip->bli_formats == NULL);
++	bip->bli_format_count = count;
++
++	if (count == 1) {
++		bip->bli_formats = &bip->__bli_format;
++		return;
 +	}
++
++	bip->bli_formats = kzalloc(count * sizeof(struct xfs_buf_log_format),
++				GFP_KERNEL | __GFP_NOFAIL);
++}
++
++static void
++xfs_buf_item_free_format(
++	struct xfs_buf_log_item	*bip)
++{
++	if (bip->bli_formats != &bip->__bli_format) {
++		kfree(bip->bli_formats);
++		bip->bli_formats = NULL;
++	}
++}
++
++static void
++xfs_buf_item_free(
++	struct xfs_buf_log_item	*bip)
++{
++	xfs_buf_item_free_format(bip);
++	kvfree(bip->bli_item.li_lv_shadow);
++	kmem_cache_free(xfs_buf_item_cache, bip);
++}
++
++/*
++ * xfs_buf_item_relse() is called when the buf log item is no longer needed.
++ */
++static void
++xfs_buf_item_relse(
++	struct xfs_buf_log_item	*bip)
++{
++	struct xfs_buf		*bp = bip->bli_buf;
++
++	trace_xfs_buf_item_relse(bp, _RET_IP_);
++
++	ASSERT(!test_bit(XFS_LI_IN_AIL, &bip->bli_item.li_flags));
++	ASSERT(atomic_read(&bip->bli_refcount) == 0);
++
++	bp->b_log_item = NULL;
++	xfs_buf_rele(bp);
++	xfs_buf_item_free(bip);
++}
++
+ /* Is this log iovec plausibly large enough to contain the buffer log format? */
+ bool
+ xfs_buf_log_check_iovec(
+@@ -468,7 +523,7 @@ xfs_buf_item_unpin(
+ 			ASSERT(list_empty(&bp->b_li_list));
+ 		} else {
+ 			xfs_trans_ail_delete(lip, SHUTDOWN_LOG_IO_ERROR);
+-			xfs_buf_item_relse(bp);
++			xfs_buf_item_relse(bip);
+ 			ASSERT(bp->b_log_item == NULL);
+ 		}
+ 		xfs_buf_relse(bp);
+@@ -578,7 +633,7 @@ xfs_buf_item_put(
+ 	 */
+ 	if (aborted)
+ 		xfs_trans_ail_delete(lip, 0);
+-	xfs_buf_item_relse(bip->bli_buf);
++	xfs_buf_item_relse(bip);
+ 	return true;
+ }
  
- 	if (xfs_iflags_test(ip, XFS_IFLUSHING))
- 		return XFS_ITEM_FLUSHING;
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index f66d2d430e4f..a80cb6b9969a 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -793,8 +793,10 @@ xlog_cil_ail_insert(
- 		struct xfs_log_item	*lip = lv->lv_item;
- 		xfs_lsn_t		item_lsn;
+@@ -729,33 +784,6 @@ static const struct xfs_item_ops xfs_buf_item_ops = {
+ 	.iop_push	= xfs_buf_item_push,
+ };
  
--		if (aborted)
-+		if (aborted) {
-+			trace_xlog_ail_insert_abort(lip);
- 			set_bit(XFS_LI_ABORTED, &lip->li_flags);
-+		}
+-STATIC void
+-xfs_buf_item_get_format(
+-	struct xfs_buf_log_item	*bip,
+-	int			count)
+-{
+-	ASSERT(bip->bli_formats == NULL);
+-	bip->bli_format_count = count;
+-
+-	if (count == 1) {
+-		bip->bli_formats = &bip->__bli_format;
+-		return;
+-	}
+-
+-	bip->bli_formats = kzalloc(count * sizeof(struct xfs_buf_log_format),
+-				GFP_KERNEL | __GFP_NOFAIL);
+-}
+-
+-STATIC void
+-xfs_buf_item_free_format(
+-	struct xfs_buf_log_item	*bip)
+-{
+-	if (bip->bli_formats != &bip->__bli_format) {
+-		kfree(bip->bli_formats);
+-		bip->bli_formats = NULL;
+-	}
+-}
+-
+ /*
+  * Allocate a new buf log item to go with the given buffer.
+  * Set the buffer's b_log_item field to point to the new
+@@ -976,34 +1004,6 @@ xfs_buf_item_dirty_format(
+ 	return false;
+ }
  
- 		if (lip->li_ops->flags & XFS_ITEM_RELEASE_WHEN_COMMITTED) {
- 			lip->li_ops->iop_release(lip);
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 9f0d6bc966b7..ba45d801df1c 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1146,6 +1146,7 @@ DECLARE_EVENT_CLASS(xfs_iref_class,
- 		__field(xfs_ino_t, ino)
- 		__field(int, count)
- 		__field(int, pincount)
-+		__field(unsigned long, iflags)
- 		__field(unsigned long, caller_ip)
- 	),
- 	TP_fast_assign(
-@@ -1153,13 +1154,15 @@ DECLARE_EVENT_CLASS(xfs_iref_class,
- 		__entry->ino = ip->i_ino;
- 		__entry->count = atomic_read(&VFS_I(ip)->i_count);
- 		__entry->pincount = atomic_read(&ip->i_pincount);
-+		__entry->iflags = ip->i_flags;
- 		__entry->caller_ip = caller_ip;
- 	),
--	TP_printk("dev %d:%d ino 0x%llx count %d pincount %d caller %pS",
-+	TP_printk("dev %d:%d ino 0x%llx count %d pincount %d iflags 0x%lx caller %pS",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->ino,
- 		  __entry->count,
- 		  __entry->pincount,
-+		  __entry->iflags,
- 		  (char *)__entry->caller_ip)
- )
+-STATIC void
+-xfs_buf_item_free(
+-	struct xfs_buf_log_item	*bip)
+-{
+-	xfs_buf_item_free_format(bip);
+-	kvfree(bip->bli_item.li_lv_shadow);
+-	kmem_cache_free(xfs_buf_item_cache, bip);
+-}
+-
+-/*
+- * xfs_buf_item_relse() is called when the buf log item is no longer needed.
+- */
+-void
+-xfs_buf_item_relse(
+-	struct xfs_buf	*bp)
+-{
+-	struct xfs_buf_log_item	*bip = bp->b_log_item;
+-
+-	trace_xfs_buf_item_relse(bp, _RET_IP_);
+-	ASSERT(!test_bit(XFS_LI_IN_AIL, &bip->bli_item.li_flags));
+-
+-	if (atomic_read(&bip->bli_refcount))
+-		return;
+-	bp->b_log_item = NULL;
+-	xfs_buf_rele(bp);
+-	xfs_buf_item_free(bip);
+-}
+-
+ void
+ xfs_buf_item_done(
+ 	struct xfs_buf		*bp)
+@@ -1023,5 +1023,5 @@ xfs_buf_item_done(
+ 	xfs_trans_ail_delete(&bp->b_log_item->bli_item,
+ 			     (bp->b_flags & _XBF_LOGRECOVERY) ? 0 :
+ 			     SHUTDOWN_CORRUPT_INCORE);
+-	xfs_buf_item_relse(bp);
++	xfs_buf_item_relse(bp->b_log_item);
+ }
+diff --git a/fs/xfs/xfs_buf_item.h b/fs/xfs/xfs_buf_item.h
+index e10e324cd245..50dd79b59cf5 100644
+--- a/fs/xfs/xfs_buf_item.h
++++ b/fs/xfs/xfs_buf_item.h
+@@ -49,7 +49,6 @@ struct xfs_buf_log_item {
  
-@@ -1249,6 +1252,8 @@ DEFINE_IREF_EVENT(xfs_irele);
- DEFINE_IREF_EVENT(xfs_inode_pin);
- DEFINE_IREF_EVENT(xfs_inode_unpin);
- DEFINE_IREF_EVENT(xfs_inode_unpin_nowait);
-+DEFINE_IREF_EVENT(xfs_inode_push_pinned);
-+DEFINE_IREF_EVENT(xfs_inode_push_stale);
- 
- DECLARE_EVENT_CLASS(xfs_namespace_class,
- 	TP_PROTO(struct xfs_inode *dp, const struct xfs_name *name),
-@@ -1653,6 +1658,8 @@ DEFINE_LOG_ITEM_EVENT(xfs_ail_flushing);
- DEFINE_LOG_ITEM_EVENT(xfs_cil_whiteout_mark);
- DEFINE_LOG_ITEM_EVENT(xfs_cil_whiteout_skip);
- DEFINE_LOG_ITEM_EVENT(xfs_cil_whiteout_unpin);
-+DEFINE_LOG_ITEM_EVENT(xlog_ail_insert_abort);
-+DEFINE_LOG_ITEM_EVENT(xfs_trans_free_abort);
- 
- DECLARE_EVENT_CLASS(xfs_ail_class,
- 	TP_PROTO(struct xfs_log_item *lip, xfs_lsn_t old_lsn, xfs_lsn_t new_lsn),
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index c6657072361a..b4a07af513ba 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -742,8 +742,10 @@ xfs_trans_free_items(
- 
- 	list_for_each_entry_safe(lip, next, &tp->t_items, li_trans) {
- 		xfs_trans_del_item(lip);
--		if (abort)
-+		if (abort) {
-+			trace_xfs_trans_free_abort(lip);
- 			set_bit(XFS_LI_ABORTED, &lip->li_flags);
-+		}
- 		if (lip->li_ops->iop_release)
- 			lip->li_ops->iop_release(lip);
- 	}
+ int	xfs_buf_item_init(struct xfs_buf *, struct xfs_mount *);
+ void	xfs_buf_item_done(struct xfs_buf *bp);
+-void	xfs_buf_item_relse(struct xfs_buf *);
+ bool	xfs_buf_item_put(struct xfs_buf_log_item *);
+ void	xfs_buf_item_log(struct xfs_buf_log_item *, uint, uint);
+ bool	xfs_buf_item_dirty_format(struct xfs_buf_log_item *);
 -- 
 2.45.2
 
