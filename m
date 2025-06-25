@@ -1,95 +1,95 @@
-Return-Path: <linux-xfs+bounces-23483-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23478-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 341C7AE9146
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Jun 2025 00:50:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 538D4AE9142
+	for <lists+linux-xfs@lfdr.de>; Thu, 26 Jun 2025 00:50:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E0594A7254
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Jun 2025 22:50:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 863C64A734D
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Jun 2025 22:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A72C2F3C2A;
-	Wed, 25 Jun 2025 22:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D7072F3C09;
+	Wed, 25 Jun 2025 22:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="qpB6ecdC"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="lcGyv2m1"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8012877FE
-	for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 22:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CB42877DC
+	for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 22:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750891807; cv=none; b=h8EJg+/rspwpDxWo8+U5db9JQ5vD0yB9zSjjIzUTrC24pvpLOFwwkuQxnoeIOYsic9wyvSHwTrORaMfuM1HN+458S2VnZ7HiKsRDDi9shDL10F7c55bsx8TbDH9RX8hSR8qmjZDrwxsaQ3t11dSbKDlx+lkj74R2+KbFVlR7j7M=
+	t=1750891806; cv=none; b=Ftwd4b/bSMjqwK69sLQrhd/sYgy2dILT0g2qlhJ2ijX/u8nzGvDpNh1KxALLme0fv6KGbxPBRDBt8+pVHhl7mAe1DNQZ6WHfQKUnRvOrDZPiQsNe2vXdGm0x1H3e8faTho2jkQ7Jwh2H+xMvgyNqF0WQkPbJIlZOKnu0UTw4q7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750891807; c=relaxed/simple;
-	bh=b+++P7QndNMyrx+KO4BJUU2+tMBy0+DWJePg3vH/KBI=;
+	s=arc-20240116; t=1750891806; c=relaxed/simple;
+	bh=xAXvv5pUFPl9JKMopSBUbzzIhUbS6/u9CrsIdCM3WiM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ul82l+fYqGftE+hWsCq08lMh634Io+/M7BRLUWFYmZlazVc+E1Hmt79XSKVhwVfHkWpsoDHz17ZHLTsc/mQLdF7r2zLRi1ZD0Z9FoV59dxzLaqU+T1w66aX4Q6qJruUz2kMwGTrd1QCkOR2+EF3GU+kzQBk1dw41KzTwtZE2uVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=qpB6ecdC; arc=none smtp.client-ip=209.85.210.179
+	 MIME-Version; b=c4PwknN4hJHjuPZvQAOKwdi/D3GAYGIIOx5HJoTczj/+bnaCZCS2zJWBAuwjVoq5JoFWxEj9vHBHbfVworTpo3feQfBSIWKnxW8c5mtuGUoptCJSeydtaxknEuwCkE85TSJoZ/BEnF5ygn23FH81nd6vdF1x8VVBOhDnMyRvjRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=lcGyv2m1; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso1410895b3a.1
-        for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 15:50:05 -0700 (PDT)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2360ff7ac1bso3505965ad.3
+        for <linux-xfs@vger.kernel.org>; Wed, 25 Jun 2025 15:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1750891805; x=1751496605; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1750891803; x=1751496603; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k9yzBWR5cupYN0Ntrz6YKK6KPJn60StWqtlmGDbu3L4=;
-        b=qpB6ecdCuEJ//4pyzgJn2MCfN5BB6vEEkaZfRSg9r0qQt4VZHC5lf68W0sqrb7F/FW
-         tQg6DBKijAQ/m+dVYcH89/Q4SFCKr05X18oHeEfTrZHX2Rltl5Huvsr+2ef09jgyUSTw
-         pDQKB2kYovoHSc1kI8DKqptmJCEaIa/AyNxjzegU/1wI7OUI46jJM+oWmpmwFi0M44U/
-         kJvoWMozBw2LzjD4QmB547u9u8k9KnfkO6fA3LkEl1nF/XGHkoVevSsMfHhSGRZasdYA
-         CnHE3jQlNzy8p24HAUzukjtnTIe4v527eDH83VNdoCTJMUn/knQffjpeTqwokwTIc4lm
-         bI4A==
+        bh=/FohsiEuJ9BIY8fT7PcHL77GMkhUGtG1Yw/E8yCqLGI=;
+        b=lcGyv2m1pf4YZ1vEWiIcstsqyexE39t86kGzw17HDvY2uh7/d81sMCTDgP3c510oFy
+         ShRPMtYXg4R6Ap9ND/Kb+Xkhuarg8iYCsdLU7Vxf2D8og7Av1FFuybOEima9HUsqyXYx
+         jpTkrWoxWLhw7GGdhUJazqj5XGQhv4fThByUPuFZ+RLe//pu7hz2dBKsSvG66K3ZWbzj
+         mDoT1Y9GM0Cf7ZB6Ty8vjeYFJOhqb2IJ/eGvJx3L6OB87uT3ZwuLvEzY00Ft2kDTs3By
+         1RErhweR0YTj495fBnB9EmwV36jWHJIrpEq/QBR5qWAnQdJ24ZIU7jT2Ptx/sjAr3LiC
+         A+Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750891805; x=1751496605;
+        d=1e100.net; s=20230601; t=1750891803; x=1751496603;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k9yzBWR5cupYN0Ntrz6YKK6KPJn60StWqtlmGDbu3L4=;
-        b=IZHt2+GR6pXIcxDyhixV+oiN3BOCJT5rpcs8dwbyXAMB3/Naib/4Q0eO9XEp0e9u+M
-         A6y78u3XqzMGIIaPogh2StCu1kbV/uMCKBo+gFJVQ4zFLHBi/AFgv08wEybU3wpVFKVy
-         2ggnTKNBl9VPIwL8a4fK0D4lJVab0w7OysTKa8neJoYck+PpbjSz3rVWKytG8esMoCrS
-         ovhMYsTe3PHuHV2ToffEnd4ZJfPWOhM2bKpLSKHStAGq9H1QesmiVWmNkIuZp7kxpeoM
-         iSxxukBCizcf3EjAWD/CtYzVRdcMpBlP2pzrZxJP8PXSP+hTft2uAZewfEUHgoyyKlHF
-         zIKA==
-X-Gm-Message-State: AOJu0Yz/21ChHJFfZlOJ+ppI0ocwUZ4B5gRk3opDA+i5FDCtC/rr9nRX
-	F8bq6730x6yaeAgLUeYb+/DfPNBitw3SxlImsG+bbG81+8BsSRjd06hk3X9H8g9hmKfsJNKMA9W
-	22Yul
-X-Gm-Gg: ASbGncumc+Ep9e+2yaCZ91MJkFTvkpnHqNJi1hhaZn4CW0vOtotjWU9TxVYDffz+SSa
-	4uRJziOxjnNPiQ4ZNEbpR9F+ynBj102o0AdBqzDOdtraQjVPto8FKoqmEyIlsc5a73blyINrXvL
-	VMluzx08MnRC3VaTirCy0HvlZgIAF0jS9f1uLoRJdRzV2qin7AZzdJl6eSNmZUNm3NSgxWNdJKC
-	kSUZa7FFX+JsONhe8iThx7OyZ5i2vdmulD8mRVyRyTSzoiGcbQaffmmSeZhFMZkoIc2w7GOmVkD
-	nqD/Vp071xt30EA7pqJzzIhJiHD0a2D5CaR8UROWkeYOJC7EXd62i8VW6avRoj0SgfLQy5qm5R+
-	zUvnPi56pYaOHoShDH23sLQ95RipKX6+ErIu9
-X-Google-Smtp-Source: AGHT+IFsGb/c2voep53QrEpwgcNcn8F/WstDcbEt3A/UEj4pLQgPU8ssGiA+8e28UGc0+ubt3jhcUw==
-X-Received: by 2002:a05:6a20:1443:b0:220:1843:3b7b with SMTP id adf61e73a8af0-2208d06c6c2mr2345536637.4.1750891804656;
-        Wed, 25 Jun 2025 15:50:04 -0700 (PDT)
+        bh=/FohsiEuJ9BIY8fT7PcHL77GMkhUGtG1Yw/E8yCqLGI=;
+        b=HOpDqZdd7K8tfLitZmwp81Fp0rpdMWfQO6igGvLkPmQzzajYO4TtSvawdf+X/13+30
+         S3+j8P9iJUq0dM2/iBXbxnQsuOh46VHp2V3t5R3He7pngHTFN4ZusZc4ehEudIWxmlHb
+         /MZ4MRQ2h6i3VvpQQGhhFpD/3uwzaLtXjsuREqraVmONcuKPwUAaias+ygvN87ARcIyt
+         4xo2PRjPonRNObsjElZw/D/inhJcZHAF1DdBeoZmt9kzAczNu/YLn2c9KK2vLlnzZvrP
+         D10AMAFFqP9hAJZicEjlVFZ8HmYpGirBtYuw1e5a8rkzQtZtwLt5pVEpD2rKSwLoqkpO
+         spCw==
+X-Gm-Message-State: AOJu0YzVIJ2NvngaZszatz9mhp3/0bSFX0YcgXHViUaGP9bM8C1wuirA
+	M8H3wrIVp6nQMueZXjLoUc/68rww6dCxt+jWeJgzFTY99wKwC8cCL+BfCYS/22I7dvqNZn6sp9P
+	tRTT6
+X-Gm-Gg: ASbGncufntNMeZa2ZWtoyj8Kpvt9DAGCfRavc3NP7C6+wfKiisyGq5ua5Rm2/NYFvuA
+	Zs557PVv8OOFGdgd3VFSnj4ByDKrd5ADPwAUhKVq/+SaFPFj3JXrZiLu8IakyZmIKRSX4FvIL/j
+	GPWfRnBcp30ePcJoUSqLDRFPFfiXQNJLlSPJvsnP29WTAsTXX2wzg0ZHOzOrt5N9bMr8JkUNUkD
+	qIbZvHShqc0KqVlfI6cyfV3KU7+FTXan0+cz5yGZNcyXav+vQTBklb1LgQRkB6ZF8XYgrJg//SN
+	UhWzMZPEuhylALwG9KmyVZOmHYiFeXIwrNs09RQLrSv6t74om07iQlqS74xYQJy+wmkQm2osdyD
+	Mr35LCMH7oDSZ1GVfiQ9HtDQOorE+w9C0hcPA
+X-Google-Smtp-Source: AGHT+IFZ4Tn0gqyjAgqsf54jAEDgjG/6syhzR4cG8NxptKjDkkQMwFNvC+H2uAbePcEF8SeJxriscA==
+X-Received: by 2002:a17:902:ce10:b0:235:e76c:4353 with SMTP id d9443c01a7336-238e9df0ca2mr17679975ad.51.1750891803432;
+        Wed, 25 Jun 2025 15:50:03 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-184-88.pa.nsw.optusnet.com.au. [49.180.184.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e20fb8sm5587453b3a.41.2025.06.25.15.50.03
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86091d9sm141584925ad.124.2025.06.25.15.50.02
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 15:50:04 -0700 (PDT)
+        Wed, 25 Jun 2025 15:50:02 -0700 (PDT)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
 	by dread.disaster.area with esmtp (Exim 4.98.2)
 	(envelope-from <dave@fromorbit.com>)
-	id 1uUYwK-00000003FO5-0IfD
+	id 1uUYwK-00000003FO7-0PBg
 	for linux-xfs@vger.kernel.org;
 	Thu, 26 Jun 2025 08:50:00 +1000
 Received: from dave by devoid.disaster.area with local (Exim 4.98)
 	(envelope-from <dave@devoid.disaster.area>)
-	id 1uUYwJ-000000061eG-408N
+	id 1uUYwJ-000000061eK-480j
 	for linux-xfs@vger.kernel.org;
 	Thu, 26 Jun 2025 08:49:59 +1000
 From: Dave Chinner <david@fromorbit.com>
 To: linux-xfs@vger.kernel.org
-Subject: [PATCH 1/7] xfs: xfs_ifree_cluster vs xfs_iflush_shutdown_abort deadlock
-Date: Thu, 26 Jun 2025 08:48:54 +1000
-Message-ID: <20250625224957.1436116-2-david@fromorbit.com>
+Subject: [PATCH 2/7] xfs: catch stale AGF/AGF metadata
+Date: Thu, 26 Jun 2025 08:48:55 +1000
+Message-ID: <20250625224957.1436116-3-david@fromorbit.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250625224957.1436116-1-david@fromorbit.com>
 References: <20250625224957.1436116-1-david@fromorbit.com>
@@ -103,150 +103,218 @@ Content-Transfer-Encoding: 8bit
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Lock order of xfs_ifree_cluster() is cluster buffer -> try ILOCK
--> IFLUSHING, except for the last inode in the cluster that is
-triggering the free. In that case, the lock order is ILOCK ->
-cluster buffer -> IFLUSHING.
+There is a race condition that can trigger in dmflakey fstests that
+can result in asserts in xfs_ialloc_read_agi() and
+xfs_alloc_read_agf() firing. The asserts look like this:
 
-xfs_iflush_cluster() uses cluster buffer -> try ILOCK -> IFLUSHING,
-so this can safely run concurrently with xfs_ifree_cluster().
+ XFS: Assertion failed: pag->pagf_freeblks == be32_to_cpu(agf->agf_freeblks), file: fs/xfs/libxfs/xfs_alloc.c, line: 3440
+.....
+ Call Trace:
+  <TASK>
+  xfs_alloc_read_agf+0x2ad/0x3a0
+  xfs_alloc_fix_freelist+0x280/0x720
+  xfs_alloc_vextent_prepare_ag+0x42/0x120
+  xfs_alloc_vextent_iterate_ags+0x67/0x260
+  xfs_alloc_vextent_start_ag+0xe4/0x1c0
+  xfs_bmapi_allocate+0x6fe/0xc90
+  xfs_bmapi_convert_delalloc+0x338/0x560
+  xfs_map_blocks+0x354/0x580
+  iomap_writepages+0x52b/0xa70
+  xfs_vm_writepages+0xd7/0x100
+  do_writepages+0xe1/0x2c0
+  __writeback_single_inode+0x44/0x340
+  writeback_sb_inodes+0x2d0/0x570
+  __writeback_inodes_wb+0x9c/0xf0
+  wb_writeback+0x139/0x2d0
+  wb_workfn+0x23e/0x4c0
+  process_scheduled_works+0x1d4/0x400
+  worker_thread+0x234/0x2e0
+  kthread+0x147/0x170
+  ret_from_fork+0x3e/0x50
+  ret_from_fork_asm+0x1a/0x30
 
-xfs_inode_item_precommit() uses ILOCK -> cluster buffer, but this
-cannot race with xfs_ifree_cluster() so being in a different order
-will not trigger a deadlock.
+I've seen the AGI variant from scrub running on the filesysetm
+after unmount failed due to systemd interference:
 
-xfs_reclaim_inode() during a filesystem shutdown uses ILOCK ->
-IFLUSHING -> cluster buffer via xfs_iflush_shutdown_abort(), and
-this deadlocks against xfs_ifree_cluster() like so:
+ XFS: Assertion failed: pag->pagi_freecount == be32_to_cpu(agi->agi_freecount) || xfs_is_shutdown(pag->pag_mount), file: fs/xfs/libxfs/xfs_ialloc.c, line: 2804
+.....
+ Call Trace:
+  <TASK>
+  xfs_ialloc_read_agi+0xee/0x150
+  xchk_perag_drain_and_lock+0x7d/0x240
+  xchk_ag_init+0x34/0x90
+  xchk_inode_xref+0x7b/0x220
+  xchk_inode+0x14d/0x180
+  xfs_scrub_metadata+0x2e2/0x510
+  xfs_ioc_scrub_metadata+0x62/0xb0
+  xfs_file_ioctl+0x446/0xbf0
+  __se_sys_ioctl+0x6f/0xc0
+  __x64_sys_ioctl+0x1d/0x30
+  x64_sys_call+0x1879/0x2ee0
+  do_syscall_64+0x68/0x130
+  ? exc_page_fault+0x62/0xc0
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
- sysrq: Show Blocked State
- task:kworker/10:37   state:D stack:12560 pid:276182 tgid:276182 ppid:2      flags:0x00004000
- Workqueue: xfs-inodegc/dm-3 xfs_inodegc_worker
+Essentially, it is the same problem. When _flakey_drop_and_remount()
+loads the drop-writes table, it makes all writes silently fail. The
+as reported to the fs as completed successfully, but they are not
+issued to the backing store. The filesystem sees the successful
+write completion and marks the metadata buffer clean and removes it
+from the AIL.
+
+If this happens at the same time as memory pressure is occuring,
+the now-clean AGF and/or AGI buffers can be reclaimed from memory.
+
+Shortly afterwards, but before _flakey_drop_and_remount() runs
+unmount, background writeback is kicked and it tries to allocate
+blocks for the dirty pages in memory. This then tries to access the
+AGF buffer we just turfed out of memory. It's not found, so it gets
+read in from disk.
+
+This is all fine, except for the fact that the last writeback of the
+AGF did not actually reach disk. The AGF on disk is stale compared
+to the in-memory state held by the perag, and so they don't match
+and the assert fires.
+
+Then other operations on that inode hang because the task was killed
+whilst holding inode locks. e.g:
+
+ Workqueue: xfs-conv/dm-12 xfs_end_io
  Call Trace:
   <TASK>
   __schedule+0x650/0xb10
   schedule+0x6d/0xf0
-  schedule_timeout+0x8b/0x180
-  schedule_timeout_uninterruptible+0x1e/0x30
-  xfs_ifree+0x326/0x730
-  xfs_inactive_ifree+0xcb/0x230
-  xfs_inactive+0x2c8/0x380
-  xfs_inodegc_worker+0xaa/0x180
+  schedule_preempt_disabled+0x15/0x30
+  rwsem_down_write_slowpath+0x31a/0x5f0
+  down_write+0x43/0x60
+  xfs_ilock+0x1a8/0x210
+  xfs_trans_alloc_inode+0x9c/0x240
+  xfs_iomap_write_unwritten+0xe3/0x300
+  xfs_end_ioend+0x90/0x130
+  xfs_end_io+0xce/0x100
   process_scheduled_works+0x1d4/0x400
   worker_thread+0x234/0x2e0
   kthread+0x147/0x170
   ret_from_fork+0x3e/0x50
   ret_from_fork_asm+0x1a/0x30
   </TASK>
- task:fsync-tester    state:D stack:12160 pid:2255943 tgid:2255943 ppid:3988702 flags:0x00004006
- Call Trace:
-  <TASK>
-  __schedule+0x650/0xb10
-  schedule+0x6d/0xf0
-  schedule_timeout+0x31/0x180
-  __down_common+0xbe/0x1f0
-  __down+0x1d/0x30
-  down+0x48/0x50
-  xfs_buf_lock+0x3d/0xe0
-  xfs_iflush_shutdown_abort+0x51/0x1e0
-  xfs_icwalk_ag+0x386/0x690
-  xfs_reclaim_inodes_nr+0x114/0x160
-  xfs_fs_free_cached_objects+0x19/0x20
-  super_cache_scan+0x17b/0x1a0
-  do_shrink_slab+0x180/0x350
-  shrink_slab+0xf8/0x430
-  drop_slab+0x97/0xf0
-  drop_caches_sysctl_handler+0x59/0xc0
-  proc_sys_call_handler+0x189/0x280
-  proc_sys_write+0x13/0x20
-  vfs_write+0x33d/0x3f0
-  ksys_write+0x7c/0xf0
-  __x64_sys_write+0x1b/0x30
-  x64_sys_call+0x271d/0x2ee0
-  do_syscall_64+0x68/0x130
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-We can't change the lock order of xfs_ifree_cluster() - XFS_ISTALE
-and XFS_IFLUSHING are serialised through to journal IO completion
-by the cluster buffer lock being held.
+and it's all down hill from there.
 
-There's quite a few asserts in the code that check that XFS_ISTALE
-does not occur out of sync with buffer locking (e.g. in
-xfs_iflush_cluster). There's also a dependency on the inode log item
-being removed from the buffer before XFS_IFLUSHING is cleared, also
-with asserts that trigger on this.
+Memory pressure is one way to trigger this, another is to run "echo
+3 > /proc/sys/vm/drop_caches" randomly while tests are running.
 
-Further, we don't have a requirement for the inode to be locked when
-completing or aborting inode flushing because all the inode state
-updates are serialised by holding the cluster buffer lock across the
-IO to completion.
+Regardless of how it is triggered, this effectively takes down the
+system once umount hangs because it's holding a sb->s_umount lock
+exclusive and now every sync(1) call gets stuck on it.
 
-We can't check for XFS_IRECLAIM in xfs_ifree_mark_inode_stale() and
-skip the inode, because there is no guarantee that the inode will be
-reclaimed. Hence it *must* be marked XFS_ISTALE regardless of
-whether reclaim is preparing to free that inode. Similarly, we can't
-check for IFLUSHING before locking the inode because that would
-result in dirty inodes not being marked with ISTALE in the event of
-racing with XFS_IRECLAIM.
-
-Hence we have to address this issue from the xfs_reclaim_inode()
-side. It is clear that we cannot hold the inode locked here when
-calling xfs_iflush_shutdown_abort() because it is the inode->buffer
-lock order that causes the deadlock against xfs_ifree_cluster().
-
-Hence we need to drop the ILOCK before aborting the inode in the
-shutdown case. Once we've aborted the inode, we can grab the ILOCK
-again and then immediately reclaim it as it is now guaranteed to be
-clean.
-
-Note that dropping the ILOCK in xfs_reclaim_inode() means that it
-can now be locked by xfs_ifree_mark_inode_stale() and seen whilst in
-this state. This is safe because we have left the XFS_IFLUSHING flag
-on the inode and so xfs_ifree_mark_inode_stale() will simply set
-XFS_ISTALE and move to the next inode. An ASSERT check in this path
-needs to be tweaked to take into account this new shutdown
-interaction.
+Fix this by replacing the asserts with a corruption detection check
+and a shutdown.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_icache.c | 8 ++++++++
- fs/xfs/xfs_inode.c  | 2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_alloc.c  | 41 ++++++++++++++++++++++++++++++--------
+ fs/xfs/libxfs/xfs_ialloc.c | 31 ++++++++++++++++++++++++----
+ 2 files changed, 60 insertions(+), 12 deletions(-)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 726e29b837e6..bbc2f2973dcc 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -979,7 +979,15 @@ xfs_reclaim_inode(
- 	 */
- 	if (xlog_is_shutdown(ip->i_mount->m_log)) {
- 		xfs_iunpin_wait(ip);
-+		/*
-+		 * Avoid a ABBA deadlock on the inode cluster buffer vs
-+		 * concurrent xfs_ifree_cluster() trying to mark the inode
-+		 * stale. We don't need the inode locked to run the flush abort
-+		 * code, but the flush abort needs to lock the cluster buffer.
-+		 */
-+		xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 		xfs_iflush_shutdown_abort(ip);
-+		xfs_ilock(ip, XFS_ILOCK_EXCL);
- 		goto reclaim;
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index 7839efe050bf..000cc7f4a3ce 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -3444,16 +3444,41 @@ xfs_alloc_read_agf(
+ 
+ 		set_bit(XFS_AGSTATE_AGF_INIT, &pag->pag_opstate);
  	}
- 	if (xfs_ipincount(ip))
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index ee3e0f284287..761a996a857c 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1635,7 +1635,7 @@ xfs_ifree_mark_inode_stale(
- 	iip = ip->i_itemp;
- 	if (__xfs_iflags_test(ip, XFS_IFLUSHING)) {
- 		ASSERT(!list_empty(&iip->ili_item.li_bio_list));
--		ASSERT(iip->ili_last_fields);
-+		ASSERT(iip->ili_last_fields || xlog_is_shutdown(mp->m_log));
- 		goto out_iunlock;
++
+ #ifdef DEBUG
+-	else if (!xfs_is_shutdown(mp)) {
+-		ASSERT(pag->pagf_freeblks == be32_to_cpu(agf->agf_freeblks));
+-		ASSERT(pag->pagf_btreeblks == be32_to_cpu(agf->agf_btreeblks));
+-		ASSERT(pag->pagf_flcount == be32_to_cpu(agf->agf_flcount));
+-		ASSERT(pag->pagf_longest == be32_to_cpu(agf->agf_longest));
+-		ASSERT(pag->pagf_bno_level == be32_to_cpu(agf->agf_bno_level));
+-		ASSERT(pag->pagf_cnt_level == be32_to_cpu(agf->agf_cnt_level));
++	/*
++	 * It's possible for the AGF to be out of sync if the block device is
++	 * silently dropping writes. This can happen in fstests with dmflakey
++	 * enabled, which allows the buffer to be cleaned and reclaimed by
++	 * memory pressure and then re-read from disk here. We will get a
++	 * stale version of the AGF from disk, and nothing good can happen from
++	 * here. Hence if we detect this situation, immediately shut down the
++	 * filesystem.
++	 *
++	 * This can also happen if we are already in the middle of a forced
++	 * shutdown, so don't bother checking if we are already shut down.
++	 */
++	if (!xfs_is_shutdown(pag_mount(pag))) {
++		bool	ok = true;
++
++		ok &= pag->pagf_freeblks == be32_to_cpu(agf->agf_freeblks);
++		ok &= pag->pagf_freeblks == be32_to_cpu(agf->agf_freeblks);
++		ok &= pag->pagf_btreeblks == be32_to_cpu(agf->agf_btreeblks);
++		ok &= pag->pagf_flcount == be32_to_cpu(agf->agf_flcount);
++		ok &= pag->pagf_longest == be32_to_cpu(agf->agf_longest);
++		ok &= pag->pagf_bno_level == be32_to_cpu(agf->agf_bno_level);
++		ok &= pag->pagf_cnt_level == be32_to_cpu(agf->agf_cnt_level);
++
++		if (XFS_IS_CORRUPT(pag_mount(pag), !ok)) {
++			xfs_ag_mark_sick(pag, XFS_SICK_AG_AGF);
++			xfs_trans_brelse(tp, agfbp);
++			xfs_force_shutdown(pag_mount(pag),
++					SHUTDOWN_CORRUPT_ONDISK);
++			return -EFSCORRUPTED;
++		}
+ 	}
+-#endif
++#endif /* DEBUG */
++
+ 	if (agfbpp)
+ 		*agfbpp = agfbp;
+ 	else
+diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+index 0c47b5c6ca7d..750111634d9f 100644
+--- a/fs/xfs/libxfs/xfs_ialloc.c
++++ b/fs/xfs/libxfs/xfs_ialloc.c
+@@ -2801,12 +2801,35 @@ xfs_ialloc_read_agi(
+ 		set_bit(XFS_AGSTATE_AGI_INIT, &pag->pag_opstate);
  	}
  
++#ifdef DEBUG
+ 	/*
+-	 * It's possible for these to be out of sync if
+-	 * we are in the middle of a forced shutdown.
++	 * It's possible for the AGF to be out of sync if the block device is
++	 * silently dropping writes. This can happen in fstests with dmflakey
++	 * enabled, which allows the buffer to be cleaned and reclaimed by
++	 * memory pressure and then re-read from disk here. We will get a
++	 * stale version of the AGF from disk, and nothing good can happen from
++	 * here. Hence if we detect this situation, immediately shut down the
++	 * filesystem.
++	 *
++	 * This can also happen if we are already in the middle of a forced
++	 * shutdown, so don't bother checking if we are already shut down.
+ 	 */
+-	ASSERT(pag->pagi_freecount == be32_to_cpu(agi->agi_freecount) ||
+-		xfs_is_shutdown(pag_mount(pag)));
++	if (!xfs_is_shutdown(pag_mount(pag))) {
++		bool	ok = true;
++
++		ok &= pag->pagi_freecount == be32_to_cpu(agi->agi_freecount);
++		ok &= pag->pagi_count == be32_to_cpu(agi->agi_count);
++
++		if (XFS_IS_CORRUPT(pag_mount(pag), !ok)) {
++			xfs_ag_mark_sick(pag, XFS_SICK_AG_AGI);
++			xfs_trans_brelse(tp, agibp);
++			xfs_force_shutdown(pag_mount(pag),
++					SHUTDOWN_CORRUPT_ONDISK);
++			return -EFSCORRUPTED;
++		}
++	}
++#endif /* DEBUG */
++
+ 	if (agibpp)
+ 		*agibpp = agibp;
+ 	else
 -- 
 2.45.2
 
