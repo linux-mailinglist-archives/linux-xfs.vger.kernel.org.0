@@ -1,71 +1,59 @@
-Return-Path: <linux-xfs+bounces-23947-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-23950-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 203DAB04047
-	for <lists+linux-xfs@lfdr.de>; Mon, 14 Jul 2025 15:40:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5931B0408A
+	for <lists+linux-xfs@lfdr.de>; Mon, 14 Jul 2025 15:50:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70F58163B17
-	for <lists+linux-xfs@lfdr.de>; Mon, 14 Jul 2025 13:39:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 179CB16A3AC
+	for <lists+linux-xfs@lfdr.de>; Mon, 14 Jul 2025 13:50:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7334724C060;
-	Mon, 14 Jul 2025 13:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C7B25393C;
+	Mon, 14 Jul 2025 13:50:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QN/SJBBi"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dA5RnhSL"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CF01E47A8
-	for <linux-xfs@vger.kernel.org>; Mon, 14 Jul 2025 13:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8069F24A044;
+	Mon, 14 Jul 2025 13:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752500344; cv=none; b=PuiSmVHZ8xcmADYDby0R7tVa9Pz41P3p8ZdlxOVfW8bCgVPwSy1mNiyK4ugGXxkPguJRmKAQqEeVRsdmC5kWe+F1KEzlL2j7ZqyAP9BAJusvAKlG3RaOEi14WFX5Mssxh/bC/t+CmRKIoBl0mwfVdEoKq8THl+pvN5Reieodf28=
+	t=1752501012; cv=none; b=jOjd2Pcv9dHGzymSoPogQtIGC//7S28WqP1xjyA3IolPezCn8sXVVgmbDBSKrzTpA7SebcTr5Wk8f0BfsN483GpHgcRQGQ01Q3dDB9T6z1u/Sna53iyBm6X8NQMgniIG3SBFYVSGI9QFaq+Keh6mTwqeeV9CWzCBIiblV1Jbjw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752500344; c=relaxed/simple;
-	bh=uqVM8DCOecLRMSWwfCMP4U2syF28xrRLCFZtT0XQEeA=;
+	s=arc-20240116; t=1752501012; c=relaxed/simple;
+	bh=0TP3xid4HyfS/q5CALXUWBgaZa8LPhsdYQVwoFfdolw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+6Egn1UsnmxCnb9RdLQs4HoHOrpxzx6XdSs7o2+e1rW05P1zTbnRtIb4dcnFEcVfLC2VGNK5KlKA7v0enq+QP/3+OUnPdaE/MxuPwoOv3oPbdkXk1FfR+iL+6PDjqPLYhdFKgidbb71WLiC947Fng35XL7hqia2hVnM5tWJzA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QN/SJBBi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752500341;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=78ELezR9/WM68ny3VH62OCs9mnwuCAXrTRQ3vgvPl24=;
-	b=QN/SJBBiS3ySJOm2B1WynOORxX8aCv+N9WZXlnlG2W07+Jz0MlNPPTs7fJgn43bc9r5Jjc
-	LpwVWTJ9elaZmc6EzYzIquKNSGY1+FUSCqyw+Vqlm6lSxbSKQfo8d5D2oqFejGWuSjayDd
-	3yTFzzysg0L1M2DnrpuPH6XoumauuL8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-203-eTBeY3LjNmy-M3LcqYZQdw-1; Mon,
- 14 Jul 2025 09:39:00 -0400
-X-MC-Unique: eTBeY3LjNmy-M3LcqYZQdw-1
-X-Mimecast-MFC-AGG-ID: eTBeY3LjNmy-M3LcqYZQdw_1752500337
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C03471955F41;
-	Mon, 14 Jul 2025 13:38:57 +0000 (UTC)
-Received: from bfoster (unknown [10.22.64.43])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8CD3A180045B;
-	Mon, 14 Jul 2025 13:38:56 +0000 (UTC)
-Date: Mon, 14 Jul 2025 09:42:38 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-mm@kvack.org, djwong@kernel.org, willy@infradead.org
-Subject: Re: [PATCH v2 7/7] xfs: error tag to force zeroing on debug kernels
-Message-ID: <aHUJToKyf6cq4T2f@bfoster>
-References: <20250714132059.288129-1-bfoster@redhat.com>
- <20250714132059.288129-8-bfoster@redhat.com>
- <aHUEtVJK6PPepNde@infradead.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFUgMByybp0+RUGghdtjcOktU93kS/9qHs49S+LxdcIYt3sC5ycgaP4jT+b9RwIIVTXppLd94+UbibqtZPOp3HlBFsvRBAsS7I4+jGiZ+wi070XUmB5EskVZlx/EnDdvNPhXq3TspZKEM32Of7gXsjDKjbww3VTfzSATBxIc4pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dA5RnhSL; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=czBUTEEl6Gw7IKindFaK1YcrN9r3/Sl2wLQw5Z+YuxA=; b=dA5RnhSLE9i/TyJGauyHmbrzjm
+	XHwuZNISLapnPrTzEaYzlCo4vNLbIiyd0Qn7t1sio3CAcDtB03q9U8ZJs8epBUgpElbPVUJtpAXnv
+	pAgG06OCEC6WQ8ah+PCn1jgQDgfZt1KSRokWHaszem/ClKbqsmSSz/RmLdzwSqrt9MLs2UVfugDHF
+	YYlffTVBkXAqYxG44GV3w/N2S1qR77BTMa3GgJmmMJCS0GOslBnjqci6Lbo//rcDXsraWiRZLW/SI
+	jolCm5NOoNh92JYBMswQ5obvitiUQFX6GuupNDboKe+BFEBoM2MFNRF9tGJzueBY5FwPvwDQ3NkbB
+	qTzY2ikA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ubJZI-00000002MhE-43OO;
+	Mon, 14 Jul 2025 13:50:08 +0000
+Date: Mon, 14 Jul 2025 06:50:08 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: Do we need an opt-in for file systems use of hw atomic writes?
+Message-ID: <aHULEGt3d0niAz2e@infradead.org>
+References: <20250714131713.GA8742@lst.de>
+ <6c3e1c90-1d3d-4567-a392-85870226144f@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -74,28 +62,32 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aHUEtVJK6PPepNde@infradead.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <6c3e1c90-1d3d-4567-a392-85870226144f@oracle.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Jul 14, 2025 at 06:23:01AM -0700, Christoph Hellwig wrote:
-> On Mon, Jul 14, 2025 at 09:20:59AM -0400, Brian Foster wrote:
-> > -	error = xfs_free_file_space(XFS_I(inode), offset, len, ac);
-> > -	if (error)
-> > -		return error;
-> > +	/* randomly force zeroing to exercise zero range */
+On Mon, Jul 14, 2025 at 02:39:54PM +0100, John Garry wrote:
+> On 14/07/2025 14:17, Christoph Hellwig wrote:
+> > Hi all,
+> > 
+> > I'm currently trying to sort out the nvme atomics limits mess, and
+> > between that, the lack of a atomic write command in nvme, and the
+> > overall degrading quality of cheap consumer nvme devices I'm starting
+> > to free really uneasy about XFS using hardware atomics by default without
+> > an explicit opt-in, as broken atomics implementations will lead to
+> > really subtle data corruption.
+> > 
+> > Is is just me, or would it be a good idea to require an explicit
+> > opt-in to user hardware atomics?
 > 
-> This comment feels very sparse for this somewhat confusing behavior.
-> Can you add a shortened version of the commit message here explaining
-> why this is useful?
-> 
+> But isn't this just an NVMe issue? I would assume that we would look at such
+> an option in the NVMe driver (to opt in when we are concerned about the
+> implementation), and not the FS. SCSI is ok AFAIK.
 
-Sure, will fix.
+SCSI is a better standard, and modulo USB devices doesn't have as much
+of an issue with cheap consumer devices.
 
-Brian
-
-> Otherwise looks good:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> 
+But form the file system POV we've spent the last decade or so hardening
+file systems against hardware failures, so now suddenly using such a
+high risk feature automatically feels a bit odd.
 
 
