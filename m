@@ -1,57 +1,57 @@
-Return-Path: <linux-xfs+bounces-24012-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24014-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4013CB05A37
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jul 2025 14:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 29820B05A3C
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jul 2025 14:31:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A06E3A4BAA
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jul 2025 12:31:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41FAF3A90A9
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jul 2025 12:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 025592DFA28;
-	Tue, 15 Jul 2025 12:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC242E03F5;
+	Tue, 15 Jul 2025 12:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="haovO3r6"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OgDTP7qn"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C40D2DEA6A
-	for <linux-xfs@vger.kernel.org>; Tue, 15 Jul 2025 12:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6272DEA72
+	for <linux-xfs@vger.kernel.org>; Tue, 15 Jul 2025 12:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752582691; cv=none; b=Oksd/RInP+7sYip6oGRHfMJNjpln4hARjzyotcWuTxOXmreMWUZV1rhJG9GtkP7/PzJNeQASvfwqke+bp+mI9dr60zY4+B7FgfRrQqE6opMY2NWr1rb+jQX8CZ1Qp+t3x51gVN+SBrYf/flLYbykrSveInOyrAwa/+zqOHrFkIg=
+	t=1752582697; cv=none; b=qkH3SBMzDCvF5Z72tKCa8LKuTKaUHmq54n2JNKKYYrIdPK/ZERUM6xng4qBnMW6QdusPcphL64GNh4y9ON1MomX7/Z/6BRqhWrSvVHSNybqcEO8yXyZax0ppkrKRQWEu72XIRIRZl9HeOboZ8vpefKzBawLE21BBzPVsyRYhP+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752582691; c=relaxed/simple;
-	bh=fZYeiP0gnPATiVBAyjEcsUsICkSjuVUCUZqNdKHTSc0=;
+	s=arc-20240116; t=1752582697; c=relaxed/simple;
+	bh=6EqkgQgXgavPW82zUfuJ7AOohAKfb22il6UH44tvEBc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pmcs2Y0IRutl4SEpspE3TKOvXOkymVacKMeuaZGomyA2Ki7JqRsWBdRZ4b2GsPUu18cE2w2czsLPuzLAelkbXKxnZrlp349d972gAfrP+shMKw/Ntu21ozc2toknKq23iYgrTtg8pBRgtu5KZeF6nxXiSgqDpLrmiWChsrmb7dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=haovO3r6; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=tOWKga/tLJozKrNUZRuaSFouAm79NwNi+3aasj/7BZTuE80j7tODfO6qSfPXjqSEfwssx+eYVtL7wRDeBW1XIq12/8G5dZUpOCUCirsSXXsR52G08frM1vRFYH1rPKB87txa6oB4+NFz2wcpZFzOZMtZdKSrC+wkTUfzhdwhRNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OgDTP7qn; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=Mi6hhkPwLJGLR++ELHgDawW/evKWm9JW4OzeeqZlQTg=; b=haovO3r6K2MbxMD8QIyvgq9LGw
-	3QtOLMJ8o1jo5LyQC2/A7doPmiGYaiWQRVRyY8fi8jS3pbebZevCIlcwE7Uk+/3cfg3whu8YCYam4
-	0g8Nr+kvA26j6Yc0eKViC3vpy7qJFEWzL8MRHhDm3ZSA98/TbXYcjhYKxKpQLYIalwEa6DvfYJo+Y
-	tBf2ddwJHpI5BFnsfWR00RYdIOPoAYrz5z+iXr14bIfut+v+wbdu02yyGiUqSyj3rbCbY5M1Ym3RJ
-	Rwy5R4eiHV8RY02atOhaHAlpUSoOrmzJI6/O98ugBgz2EO+2jYkjpHzyWaZsvk9Qah9fwXVog8KRW
-	+RAYoFXg==;
+	bh=uTGRHz7gKkTgIicNR16Dnb/Al5c9cQ/nh/+CbUWoJ5U=; b=OgDTP7qnvkwGPwaG2nmxLo5bJ4
+	WbyurJmLlnpqDwmiGRhmKg1MTKWHKMAPB///B9LppmJPs4XfSXCVE7TxOBhEmG5HHYiZyfz6HSqwQ
+	TE3bHQatpmhy5wLtHI7OmKxSiIMnWKRZrQ0tvxhLpxMjczY/2+6B4j1SFO48cT8/QqkFbvUTAlqQE
+	vrzG1kbg3SrcsNvXER1ZOzR4qWMPgoGPYL/cwXdCkZHWmeFfadoYsxXY7rPwQek3CbvJqMHSulG0H
+	4c26C3iv5TuEqY904XPJTebAy4Oi1Xxyl9LzoUV0VPcVMJmLb7B7WDHTVMEAo1RmicN9tgbiuiS/+
+	mEWUAbYQ==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubeoj-000000054kQ-3VjU;
-	Tue, 15 Jul 2025 12:31:30 +0000
+	id 1ubeon-000000054kn-0VuV;
+	Tue, 15 Jul 2025 12:31:33 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: linux-xfs@vger.kernel.org,
 	Carlos Maiolino <cmaiolino@redhat.com>
-Subject: [PATCH 01/18] xfs: don't pass the old lv to xfs_cil_prepare_item
-Date: Tue, 15 Jul 2025 14:30:06 +0200
-Message-ID: <20250715123125.1945534-2-hch@lst.de>
+Subject: [PATCH 02/18] xfs: cleanup the ordered item logic in xlog_cil_insert_format_items
+Date: Tue, 15 Jul 2025 14:30:07 +0200
+Message-ID: <20250715123125.1945534-3-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250715123125.1945534-1-hch@lst.de>
 References: <20250715123125.1945534-1-hch@lst.de>
@@ -64,80 +64,82 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-By the time xfs_cil_prepare_item is called, the old lv is still pointed
-to by the log item.  Take it from there instead of spreading the old lv
-logic over xlog_cil_insert_format_items and xfs_cil_prepare_item.
+Split out handling of ordered items into a single branch in
+xlog_cil_insert_format_items so that the rest of the code becomes more
+clear.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 ---
- fs/xfs/xfs_log_cil.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ fs/xfs/xfs_log_cil.c | 31 +++++++++++++------------------
+ 1 file changed, 13 insertions(+), 18 deletions(-)
 
 diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index a80cb6b9969a..2c31c7c0ef97 100644
+index 2c31c7c0ef97..9200301e539b 100644
 --- a/fs/xfs/xfs_log_cil.c
 +++ b/fs/xfs/xfs_log_cil.c
-@@ -370,8 +370,8 @@ xlog_cil_alloc_shadow_bufs(
- STATIC void
- xfs_cil_prepare_item(
- 	struct xlog		*log,
-+	struct xfs_log_item	*lip,
- 	struct xfs_log_vec	*lv,
--	struct xfs_log_vec	*old_lv,
- 	int			*diff_len)
- {
- 	/* Account for the new LV being passed in */
-@@ -381,19 +381,19 @@ xfs_cil_prepare_item(
- 	/*
- 	 * If there is no old LV, this is the first time we've seen the item in
- 	 * this CIL context and so we need to pin it. If we are replacing the
--	 * old_lv, then remove the space it accounts for and make it the shadow
-+	 * old lv, then remove the space it accounts for and make it the shadow
- 	 * buffer for later freeing. In both cases we are now switching to the
- 	 * shadow buffer, so update the pointer to it appropriately.
- 	 */
--	if (!old_lv) {
-+	if (!lip->li_lv) {
- 		if (lv->lv_item->li_ops->iop_pin)
- 			lv->lv_item->li_ops->iop_pin(lv->lv_item);
- 		lv->lv_item->li_lv_shadow = NULL;
--	} else if (old_lv != lv) {
-+	} else if (lip->li_lv != lv) {
- 		ASSERT(lv->lv_buf_len != XFS_LOG_VEC_ORDERED);
- 
--		*diff_len -= old_lv->lv_bytes;
--		lv->lv_item->li_lv_shadow = old_lv;
-+		*diff_len -= lip->li_lv->lv_bytes;
-+		lv->lv_item->li_lv_shadow = lip->li_lv;
+@@ -452,9 +452,8 @@ xlog_cil_insert_format_items(
  	}
  
- 	/* attach new log vector to log item */
-@@ -453,7 +453,6 @@ xlog_cil_insert_format_items(
- 
  	list_for_each_entry(lip, &tp->t_items, li_trans) {
- 		struct xfs_log_vec *lv;
--		struct xfs_log_vec *old_lv = NULL;
- 		struct xfs_log_vec *shadow;
- 		bool	ordered = false;
+-		struct xfs_log_vec *lv;
+-		struct xfs_log_vec *shadow;
+-		bool	ordered = false;
++		struct xfs_log_vec *lv = lip->li_lv;
++		struct xfs_log_vec *shadow = lip->li_lv_shadow;
  
-@@ -474,7 +473,6 @@ xlog_cil_insert_format_items(
+ 		/* Skip items which aren't dirty in this transaction. */
+ 		if (!test_bit(XFS_LI_DIRTY, &lip->li_flags))
+@@ -464,21 +463,23 @@ xlog_cil_insert_format_items(
+ 		 * The formatting size information is already attached to
+ 		 * the shadow lv on the log item.
+ 		 */
+-		shadow = lip->li_lv_shadow;
+-		if (shadow->lv_buf_len == XFS_LOG_VEC_ORDERED)
+-			ordered = true;
++		if (shadow->lv_buf_len == XFS_LOG_VEC_ORDERED) {
++			if (!lv) {
++				lv = shadow;
++				lv->lv_item = lip;
++			}
++			ASSERT(shadow->lv_size == lv->lv_size);
++			xfs_cil_prepare_item(log, lip, lv, diff_len);
++			continue;
++		}
+ 
+ 		/* Skip items that do not have any vectors for writing */
+-		if (!shadow->lv_niovecs && !ordered)
++		if (!shadow->lv_niovecs)
  			continue;
  
  		/* compare to existing item size */
--		old_lv = lip->li_lv;
- 		if (lip->li_lv && shadow->lv_size <= lip->li_lv->lv_size) {
+-		if (lip->li_lv && shadow->lv_size <= lip->li_lv->lv_size) {
++		if (lv && shadow->lv_size <= lv->lv_size) {
  			/* same or smaller, optimise common overwrite case */
- 			lv = lip->li_lv;
-@@ -510,7 +508,7 @@ xlog_cil_insert_format_items(
+-			lv = lip->li_lv;
+-
+-			if (ordered)
+-				goto insert;
+ 
+ 			/*
+ 			 * set the item up as though it is a new insertion so
+@@ -498,16 +499,10 @@ xlog_cil_insert_format_items(
+ 			/* switch to shadow buffer! */
+ 			lv = shadow;
+ 			lv->lv_item = lip;
+-			if (ordered) {
+-				/* track as an ordered logvec */
+-				ASSERT(lip->li_lv == NULL);
+-				goto insert;
+-			}
+ 		}
+ 
  		ASSERT(IS_ALIGNED((unsigned long)lv->lv_buf, sizeof(uint64_t)));
  		lip->li_ops->iop_format(lip, lv);
- insert:
--		xfs_cil_prepare_item(log, lv, old_lv, diff_len);
-+		xfs_cil_prepare_item(log, lip, lv, diff_len);
+-insert:
+ 		xfs_cil_prepare_item(log, lip, lv, diff_len);
  	}
  }
- 
 -- 
 2.47.2
 
