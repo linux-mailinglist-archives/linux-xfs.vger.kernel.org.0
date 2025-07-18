@@ -1,168 +1,113 @@
-Return-Path: <linux-xfs+bounces-24138-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24140-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5952BB0A1EE
-	for <lists+linux-xfs@lfdr.de>; Fri, 18 Jul 2025 13:30:23 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F957B0A485
+	for <lists+linux-xfs@lfdr.de>; Fri, 18 Jul 2025 14:55:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93F8F566496
-	for <lists+linux-xfs@lfdr.de>; Fri, 18 Jul 2025 11:30:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C2BD1C43927
+	for <lists+linux-xfs@lfdr.de>; Fri, 18 Jul 2025 12:55:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 458EB2D9499;
-	Fri, 18 Jul 2025 11:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 012022D979E;
+	Fri, 18 Jul 2025 12:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPkh152y"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE222D3206;
-	Fri, 18 Jul 2025 11:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48F82D876B
+	for <linux-xfs@vger.kernel.org>; Fri, 18 Jul 2025 12:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752838218; cv=none; b=hjcpbziDJay04Di3huCPiRKAhHK0q6wRg6uiv4JsrI4pWHwseyz20cT9WEy5bzNSk3I42Bq5bP48/w/LWLm3MbQrkaklQPmqBwfTjhoC+vww7WfQSxyOUcUMB31idrzG0WQGqiadhRVCtEAOAK1x42fnG6hVGh1c3yTAWT6K0dc=
+	t=1752843325; cv=none; b=JubIwNgUNoD1KgDLIOF8ohf0El2q0fm6LsyLTmHyncyRJX+suqOEPSFEwzJyTwJN+k5904MTCnBtVF9S74PF2P8qzBsgdRKjSSQAw1iXF0eFb768rzMObJJVbAasaBAZ2Xoyc+adEy/+4xoV1en2T3pR3RV96lDKoWhnKQrlDvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752838218; c=relaxed/simple;
-	bh=UUVCBT6lKG/vOrflJdQpK6r+iw1jUuveLVSVaNg4mzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OwqKRYRsmwIXYvLQN8tnwEp9RWHhp7TZt+63/Jn1XLUFhfTbWXrGy6WyP/kmOyE94SDW2eUCm+zuKx0wJfWA5BRh7zmTxsoa0c9j4scAL0BiMKWiLaQdtRzXWPceQMJ+xVSpDAyLDYdAL6EHJ4PvOLCuhi7MVPklHYWUSbp0M/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bk6z94pvdzYQvRT;
-	Fri, 18 Jul 2025 19:30:13 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 67B8E1A108A;
-	Fri, 18 Jul 2025 19:30:12 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgBXIBFCMHpoxLmzAg--.29749S3;
-	Fri, 18 Jul 2025 19:30:12 +0800 (CST)
-Message-ID: <e6333d2d-cc30-44d3-8f23-6a6c5ea0134d@huaweicloud.com>
-Date: Fri, 18 Jul 2025 19:30:10 +0800
+	s=arc-20240116; t=1752843325; c=relaxed/simple;
+	bh=+f/KTu+mqgZsthitIBXjwCIAJFH/nw8dY6TEEWZNPTE=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=keTxOWYBdRspgliMt4l4dEBzfJ+fCQQ9XExtw7Qy4/GfF53SqHwrJ+TL6o6kt1fr0BdBSmMDRWS3Wz08OuyzO2puURA//JzpkUidXDniuM+bX9vYtw8eZcgK5/2PjWZoCaIJemsWjripm6RVtrbcm2p8k3dC5QRZIiQ7SYOLTpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPkh152y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABE9FC4CEEB;
+	Fri, 18 Jul 2025 12:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752843325;
+	bh=+f/KTu+mqgZsthitIBXjwCIAJFH/nw8dY6TEEWZNPTE=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+	b=OPkh152y6AesCxWzRmztU4SZMJuCDTeLinkRAXzNwzJJ9LWugTWCokmVQs1v6Q6J9
+	 5ElWYYClIQUz3rFeaHp9LyP2tYCoLRQDwLA9RVDaQO5x0h316mWYPUv8p0zWQz0UVM
+	 qEWOGRTSEK5Da9XvZ3M2lx/H2bjSCgU7/DLkqjXU5J1TSjKoynKEqMS3uQty0wQmS5
+	 p+KPUbutq1YrcOgayNV0iMcitf6waoBLnUj9vv4DM7QVhlpPOwJs4fh+RVKKAtIA7C
+	 laWuZE22PI7902f9Jy17fbGc6h6cRrKmDdHPg9ZRE2Cq/MLjouvVL5+C4L88F/NFvp
+	 /qE8EbJKZxtSg==
+References: <20250716121339.GA2043@lst.de>
+ <20250716153812.GG2672049@frogsfrogsfrogs> <20250716160234.GA15830@lst.de>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Chandan Babu R <chandanbabu@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Carlos Maiolino <cem@kernel.org>,
+ linux-xfs@vger.kernel.org, Fedor Pchelkin <pchelkin@ispras.ru>
+Subject: Re: flakey assert failures in xfs/538 in for-next
+Date: Fri, 18 Jul 2025 17:49:29 +0530
+In-reply-to: <20250716160234.GA15830@lst.de>
+Message-ID: <87wm85acaw.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] iomap: optional zero range dirty folio processing
-To: Brian Foster <bfoster@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-mm@kvack.org, hch@infradead.org, willy@infradead.org,
- "Darrick J. Wong" <djwong@kernel.org>,
- Ext4 Developers List <linux-ext4@vger.kernel.org>
-References: <20250714204122.349582-1-bfoster@redhat.com>
- <20250714204122.349582-4-bfoster@redhat.com>
- <20250715052259.GO2672049@frogsfrogsfrogs>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250715052259.GO2672049@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBXIBFCMHpoxLmzAg--.29749S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCrW5uw45tr1UXF4kGrWrAFb_yoW5ZFyUpF
-	WDKFs0yr4kX347Xwn3JF4kAryFy39ava1UGry7GwnIv3s0gr1IkF10ka4Y9F15Wr1rCF42
-	vr4jya4xWF1YyFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2NtUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain
 
-On 2025/7/15 13:22, Darrick J. Wong wrote:
-> On Mon, Jul 14, 2025 at 04:41:18PM -0400, Brian Foster wrote:
->> The only way zero range can currently process unwritten mappings
->> with dirty pagecache is to check whether the range is dirty before
->> mapping lookup and then flush when at least one underlying mapping
->> is unwritten. This ordering is required to prevent iomap lookup from
->> racing with folio writeback and reclaim.
->>
->> Since zero range can skip ranges of unwritten mappings that are
->> clean in cache, this operation can be improved by allowing the
->> filesystem to provide a set of dirty folios that require zeroing. In
->> turn, rather than flush or iterate file offsets, zero range can
->> iterate on folios in the batch and advance over clean or uncached
->> ranges in between.
->>
->> Add a folio_batch in struct iomap and provide a helper for fs' to
-> 
-> /me confused by the single quote; is this supposed to read:
-> 
-> "...for the fs to populate..."?
-> 
-> Either way the code changes look like a reasonable thing to do for the
-> pagecache (try to grab a bunch of dirty folios while XFS holds the
-> mapping lock) so
-> 
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-> 
-> --D
-> 
-> 
->> populate the batch at lookup time. Update the folio lookup path to
->> return the next folio in the batch, if provided, and advance the
->> iter if the folio starts beyond the current offset.
->>
->> Signed-off-by: Brian Foster <bfoster@redhat.com>
->> Reviewed-by: Christoph Hellwig <hch@lst.de>
->> ---
->>  fs/iomap/buffered-io.c | 89 +++++++++++++++++++++++++++++++++++++++---
->>  fs/iomap/iter.c        |  6 +++
->>  include/linux/iomap.h  |  4 ++
->>  3 files changed, 94 insertions(+), 5 deletions(-)
->>
->> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
->> index 38da2fa6e6b0..194e3cc0857f 100644
->> --- a/fs/iomap/buffered-io.c
->> +++ b/fs/iomap/buffered-io.c
-[...]
->> @@ -1398,6 +1452,26 @@ static int iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
->>  	return status;
->>  }
->>  
->> +loff_t
->> +iomap_fill_dirty_folios(
->> +	struct iomap_iter	*iter,
->> +	loff_t			offset,
->> +	loff_t			length)
->> +{
->> +	struct address_space	*mapping = iter->inode->i_mapping;
->> +	pgoff_t			start = offset >> PAGE_SHIFT;
->> +	pgoff_t			end = (offset + length - 1) >> PAGE_SHIFT;
->> +
->> +	iter->fbatch = kmalloc(sizeof(struct folio_batch), GFP_KERNEL);
->> +	if (!iter->fbatch)
+On Wed, Jul 16, 2025 at 06:02:34 PM +0200, Christoph Hellwig wrote:
+> On Wed, Jul 16, 2025 at 08:38:12AM -0700, Darrick J. Wong wrote:
+>> I've seen this happen maybe once or twice, I think the problem is that
+>> the symlink xfs_bmapi_write fails to allocate enough blocks to store the
+>> symlink target, doesn't notice, and then the actual target write runs
+>> out of blocks before it runs out of pathlen and kaboom.
+>> 
+>> Probably the right answer is to ENOSPC if we can't allocate blocks, but
+>> I guess we did reserve free space so perhaps we just keep bmapi'ing
+>> until we get all the space we need?
+>> 
+>> The weird part is that XFS_SYMLINK_MAPS should be large enough to fit
+>> all the target we need, so ... I don't know if bmapi_write is returning
+>> fewer than 3 nmaps because it hit ENOSPC or what?
+>> 
+>> (and because I can't reproduce it reliably, I have not investigated
+>> further :()
 
-Hi, Brian!
+I think you are right. Most likely we were able to successfully allocate less
+than XFS_SYMLINK_MAPS (i.e. 3) and the next allocation only found free extents
+whose length were larger than 1 FSB.
 
-I think ext4 needs to be aware of this failure after it converts to use
-iomap infrastructure. It is because if we fail to add dirty folios to the
-fbatch, iomap_zero_range() will flush those unwritten and dirty range.
-This could potentially lead to a deadlock, as most calls to
-ext4_block_zero_page_range() occur under an active journal handle.
-Writeback operations under an active journal handle may result in circular
-waiting within journal transactions. So please return this error code, and
-then ext4 can interrupt zero operations to prevent deadlock.
+The test fills 90% of the filesystem and then punches holes at every other
+block used by each of the "filler" files. So the filesystem could have some
+"free extents" whose size is larger than 1 FSB. These larger free extents
+allowed the block reservation to succeed.
 
-Thanks,
-Yi.
+During the test run, we could have consumed all the 1 FSB sized free extents
+and hence a later allocation attempt can fail since we were trying to allocate
+only 1 FSB sized extent.
 
->> +		return offset + length;
->> +	folio_batch_init(iter->fbatch);
->> +
->> +	filemap_get_folios_dirty(mapping, &start, end, iter->fbatch);
->> +	return (start << PAGE_SHIFT);
->> +}
->> +EXPORT_SYMBOL_GPL(iomap_fill_dirty_folios);
+>
+> I guess the recent cleanups are not too blame then, or just slightly
+> changed the timing for me to have a streak to frequently hit it.
+>
+> xfs/538 is the alloc minlen test that injects getting back the minlen
+> or failing allocations if minlen > 1.  I guess that interacts badly
+> somehow with the rather uncommon multi-map allocations.  The only
+> other one is xfs_da_grow_inode_int, and that only for directories
+> with a larger directory block size, and as a fallback when the contig
+> allocations fails.  It might be worth crafting a test doing a lot
+> of symlinking while doing that error injetion to trigger it more
+> reliably.
 
+I have modifed xfs/538 to perform only write* and symlink
+operations. Unfortunately, the test hasn't failed yet despite running for 27
+iterations. I will let it run during the weekend.
+
+-- 
+Chandan
 
