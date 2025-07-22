@@ -1,53 +1,53 @@
-Return-Path: <linux-xfs+bounces-24171-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24174-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23EABB0E4D8
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 22:20:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDB21B0E4E0
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 22:20:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CF2A3AD516
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 20:20:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 577B9580C96
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 20:20:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D921F28507D;
-	Tue, 22 Jul 2025 20:20:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DF08285C8B;
+	Tue, 22 Jul 2025 20:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4ts9N4q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+zQN/nV"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BA480C02;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C492857CF;
 	Tue, 22 Jul 2025 20:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753215631; cv=none; b=cMSwlB0h0+DCeSipyy6IPD+sgSbqLQc2Kbm1xEjXwTTAhtzs0arRRK4rH8fusPwwuN5BjxHoAIPqKGiL/errlbEVmOjhizxB4aM5dP/uo9nZ10zOcm5W1Xij3IrmU2UH8YHH3f3rOju0oGen+7gf5+FRO5xB1iDCMtCbb1KfsBs=
+	t=1753215632; cv=none; b=g0F8/tlcuiS8ws1JK+2sMk3U6S0LZht4k15SFqgsFCU8VkuZpMubgBZRAfOJ4E8Thi8Tb1holkwF+5faSnwmLRCjiIlYZxKNeS4EPnwRoEq6Y0IZHRgoxTSDQXY9gMkClCh5q3+lBKeDl7X25faaLKparRrzddtIslqtWXCfjjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753215631; c=relaxed/simple;
-	bh=z72uWazKkS2fqyE92fEFcTlRZQYXZwO/VsWMIsYj9vc=;
+	s=arc-20240116; t=1753215632; c=relaxed/simple;
+	bh=wBR0+P1gjCOSCENPtBV7Ah8gY16/RWgDe9xN4dTCRBk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MXKuOwbWnMhac8IfiZOBX41UgYgfW+FdaSs8Bew9vLZlke5hl9zwi0kMqzibZs4I0E8YD+n1wAOaIE8IHEhdU9HYoDMAP/RwMUUOc0Trn3NebBTJOTuWa/a6TW4a8cwXqLZpOWAKmNl08OLs6yLPwxWs/Jfh9XYPzYTaFmlhb94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4ts9N4q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E061C4CEF7;
+	 Content-Type; b=rOILGl2lsGyZ3ejA9ruf3Mfw7vPAK1NANn3SIdvVf3KP8HW+3n5EPx++qObqJYe2+AmyIjW6nKy7wyjHAw2PlMeE8d1WbVQ0n25h5npkt/muFFT3vKD1PljEtohezSISNQlHE6pDdNfxz0lmz1JFsot9ULzzhmrgyOVZNQDMSWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+zQN/nV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 907B4C4CEFA;
 	Tue, 22 Jul 2025 20:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1753215631;
-	bh=z72uWazKkS2fqyE92fEFcTlRZQYXZwO/VsWMIsYj9vc=;
+	bh=wBR0+P1gjCOSCENPtBV7Ah8gY16/RWgDe9xN4dTCRBk=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=g4ts9N4qPIqoE9QyhTwU4lAtBxfmJsK8keOvp2SS6qPIV7P1F5lQ3gOaR5oAtfuEW
-	 WvOAWn8TJC9ZarUmblAcjSSJuplFB4PLhgf9DDkP+0Z0U02MOOKbCiT004J7YJjPme
-	 7I9CUoXbj16QXRX6lKoZbx80KJ6erdpc2NGVHNSGJH+JsE5bW8i1TRXX5k2jNyiM0M
-	 5YDKjnyWzG9GAb6C5aOvhEh6cEyidEp7ki0Ig8NUQw5xftOQYYcVloM4qP3KCIcuC/
-	 qwx1zxOXbhc7aIgSZHGwAdBpMoq9xhDsl2F+FlKS2o9YvjGMKwqS95RpdyEl9mEbmZ
-	 xNaudiDW96N6w==
+	b=H+zQN/nVv4o6xPuA5fEVQMFNMp6Euz+P3K9gCWZiAgIXZcWN32Xvlwk92T3fRKdRC
+	 7msF4Lxju+LMPa6pZgzVYILSW2cKM+yxKk2Gv+XF9sgw7+s2ZHyhAdRxYPmEv92f09
+	 qdOpt/1idsoxHWOCcan4bVLBDx4ToyZxYr4zWPl/J24fbHiex9PDFze5skaImk6PZr
+	 Xjgh4uqN06H37qw0bUXuXfj1873UjFiNkPm3JCPmzrLBbI/PCG7jPg1fuuIETV1wQo
+	 UMunLBOqAKOFDiPkrAX0xpSacmCkLgOBw1G8Xcs19RgVh8IssNTlEpNK3zN3/d4Fbv
+	 hnRZSHMLIgz5A==
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1ueJTS-000000001Nn-3TTQ;
+	id 1ueJTS-000000001OH-49nd;
 	Tue, 22 Jul 2025 16:20:30 -0400
-Message-ID: <20250722202030.683039393@kernel.org>
+Message-ID: <20250722202030.847917487@kernel.org>
 User-Agent: quilt/0.68
-Date: Tue, 22 Jul 2025 16:19:09 -0400
+Date: Tue, 22 Jul 2025 16:19:10 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -59,7 +59,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Carlos  Maiolino <cem@kernel.org>,
  Christoph Hellwig <hch@lst.de>,
  "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH 2/4] xfs: remove unused trace event xfs_log_cil_return
+Subject: [PATCH 3/4] xfs: remove unused trace event xfs_discard_rtrelax
 References: <20250722201907.886429445@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -71,26 +71,26 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The trace event xfs_log_cil_return was added but never used. Remove it.
+The trace event xfs_discard_rtrelax was added but never used. Remove it.
 
-Fixes: c1220522ef405 ("xfs: grant heads track byte counts, not LSNs")
+Fixes: a330cae8a7147 ("xfs: Remove header files which are included more than once")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
  fs/xfs/xfs_trace.h | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 22c10a1b7fd3..4ce8689ed839 100644
+index 4ce8689ed839..1061992da144 100644
 --- a/fs/xfs/xfs_trace.h
 +++ b/fs/xfs/xfs_trace.h
-@@ -1600,7 +1600,6 @@ DEFINE_LOGGRANT_EVENT(xfs_log_ticket_ungrant);
- DEFINE_LOGGRANT_EVENT(xfs_log_ticket_ungrant_sub);
- DEFINE_LOGGRANT_EVENT(xfs_log_ticket_ungrant_exit);
- DEFINE_LOGGRANT_EVENT(xfs_log_cil_wait);
--DEFINE_LOGGRANT_EVENT(xfs_log_cil_return);
+@@ -2858,7 +2858,6 @@ DEFINE_EVENT(xfs_rtdiscard_class, name, \
+ 	TP_ARGS(mp, rtbno, len))
+ DEFINE_RTDISCARD_EVENT(xfs_discard_rtextent);
+ DEFINE_RTDISCARD_EVENT(xfs_discard_rttoosmall);
+-DEFINE_RTDISCARD_EVENT(xfs_discard_rtrelax);
  
- DECLARE_EVENT_CLASS(xfs_log_item_class,
- 	TP_PROTO(struct xfs_log_item *lip),
+ DECLARE_EVENT_CLASS(xfs_btree_cur_class,
+ 	TP_PROTO(struct xfs_btree_cur *cur, int level, struct xfs_buf *bp),
 -- 
 2.47.2
 
