@@ -1,105 +1,84 @@
-Return-Path: <linux-xfs+bounces-24170-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24173-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21C63B0E391
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 20:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C32BAB0E4DA
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 22:20:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 349A6560E4B
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 18:35:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 430A15803C3
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jul 2025 20:20:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89022281526;
-	Tue, 22 Jul 2025 18:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05C5A285412;
+	Tue, 22 Jul 2025 20:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMmetN+W"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPMGPagL"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447E627F747;
-	Tue, 22 Jul 2025 18:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC759244679;
+	Tue, 22 Jul 2025 20:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753209338; cv=none; b=VbaaDz+mB9Bbk583kwBOqU+oGzRWJ8hbfDYGrrKdgGw/vwmCnzvXT528CO+sUrwzv+NlXpcxm1pgJH5fwY/QgoVrBQvREPuwCt730k8AaxM/Z12l+vWzdoOjGAXNjfHuR454gck0jzqtgjxHdCki5UUkov7MMqYzDPezDTVhbVY=
+	t=1753215631; cv=none; b=XySz3T6k/XhAHNX8TYDdeo/ph3iMazbH6dBQtK3xJiX/bkDnE6zAdsY0Yk96VUH7NlvWQDWZIjenZgf9u1viCrWtFwYaPrXBhDDckMKx+uNLD88SN92SjFz1vLBHM6IDc9PtakOW7PO5JitZ8BfeuPXAPCy7ck2cm7Y5YnAKz/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753209338; c=relaxed/simple;
-	bh=tmsG48jECFf0zV4CrIt7ct1LswYIhppt329VQrzKfTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9DNE5qs4yMUVzbHR9O0D0lIKDmACbiy6tL1fhA/EVZk0voxqEEU3PHmtA6wDnZ4Vsx8AQvu62ScudHJjQWB1dxIblXSflDaHyUOXmTfJxMig3XPnIgoTN89hsgCPAtIdX2NvuzYo0ywk94r8u5eGWmDJeriLsIfjk1Evbq2Z0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMmetN+W; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977D5C4CEF4;
-	Tue, 22 Jul 2025 18:35:37 +0000 (UTC)
+	s=arc-20240116; t=1753215631; c=relaxed/simple;
+	bh=6oTpm/WO7h/xsMs2YERBx7sSkHmWl3zwJ+O9pCTP6j0=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=Z8NtC3fDpNRzQNqlmrLwtUY4hH06L+Bnb+2fiogNPtH2caTYtf6ThDnrU6Q2vhmfe32k0won6JroYUoRgD/KqJ/4iS5ck+CJUSxXAvzf7YEmiqwQ57y2oEuOvkzlUxAZvRkLaGFoFLvN9AF2x0ZZ9Ei5vEunjttTP7UKShOodIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPMGPagL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F00C4CEEB;
+	Tue, 22 Jul 2025 20:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753209337;
-	bh=tmsG48jECFf0zV4CrIt7ct1LswYIhppt329VQrzKfTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vMmetN+WxlUYyGnFV3/cMZtG4rJoL57AMu9HBGuSoUcO9GAfybGpvaJay4JPzonov
-	 4WSx4PEpRzWlSCUWnbrMyoqPk4ZK9iaDizsdyLKlFC+9rz+ICC89BX8XCs2DK3vyCp
-	 99YCw99ZkqlaO71ZRwPY6tfNZUxotSTZMu8GOAlu1vzQfl4946yfBVLnIv9iJwM/9k
-	 g8wCgL2VqDEpBypOyyqADzlbzzsHf9AlCUK/Z61Q9jPvnaaOtuRM1Z7xfPMjJlpdvI
-	 T+yY6BdKiNfm6N2KDYP9KsK5B7R/vLVRV4vCoyjGvrpEeFOK6AttpQGzF9IWvWJ8gP
-	 MLvBbwnSriobQ==
-Date: Tue, 22 Jul 2025 11:35:37 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: cen zhang <zzzccc427@gmail.com>, cem@kernel.org,
-	linux-kernel@vger.kernel.org, baijiaju1990@gmail.com,
-	zhenghaoran154@gmail.com, r33s3n6@gmail.com, gality365@gmail.com,
-	linux-xfs@vger.kernel.org
-Subject: Re: [BUG] xfs: Assertion failed in xfs_iwalk_args triggered by
- XFS_IOC_INUMBERS
-Message-ID: <20250722183537.GU2672049@frogsfrogsfrogs>
-References: <CAFRLqsU-k2GYx4D9HUmu+tSTvmMbY_ea9aYwE+2yvHwLP_+JDQ@mail.gmail.com>
- <aH3fXv5tlfGtzVD1@infradead.org>
+	s=k20201202; t=1753215631;
+	bh=6oTpm/WO7h/xsMs2YERBx7sSkHmWl3zwJ+O9pCTP6j0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TPMGPagLsE5eqhb1pawAKhc9SABuoPS/N3aRY3H35o63i5VJeMPD1bilmZghVl4Yx
+	 30l/++JqAF94cwC1NqB1jkwf/DSne222GlBNjcq+hBi9+YISySUJikAEdR5I1PmbNb
+	 tLxPliTqZcxfnRpuE8xR2CPp1ztF4jUFf6g6q89Qr/duO/EmwLw2OfzbjbkxJc1x4+
+	 XtslPI3H+VDuih+269X3av6mSelctgXLpILkAHhIWdgCwjmfvTAUdEKHLxxud+Kg4g
+	 8w11t72ouGO90opboWKWsO9s1wCK5gZ5u24TBU+IkJVEi8MpJX5ahyvXHdZqrYW/AK
+	 1ls5H+ULmSh7w==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1ueJTS-000000001Mn-227S;
+	Tue, 22 Jul 2025 16:20:30 -0400
+Message-ID: <20250722201907.886429445@kernel.org>
+User-Agent: quilt/0.68
+Date: Tue, 22 Jul 2025 16:19:07 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Carlos  Maiolino <cem@kernel.org>,
+ Christoph Hellwig <hch@lst.de>,
+ "Darrick J. Wong" <djwong@kernel.org>
+Subject: [PATCH 0/4] xfs: more unused events from linux-next
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aH3fXv5tlfGtzVD1@infradead.org>
 
-On Sun, Jul 20, 2025 at 11:34:06PM -0700, Christoph Hellwig wrote:
-> The patch below should fix the issue.  But I wonder if we should split
-> the flags a bit better to make things more obvious.
 
-We did in [1], but did you have something else in mind?
+I reran the unused tracepoint code on the latest linux-next and found more
+xfs trace events. One was recently added but the rest were there before. Not
+sure how I missed them.
 
-[1] https://lore.kernel.org/linux-xfs/20220321051750.400056-18-chandan.babu@oracle.com/
+But anyway, here's a few more patches to remove unused xfs trace events.
 
-> diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> index c8c9b8d8309f..302efe54e2af 100644
-> --- a/fs/xfs/xfs_itable.c
-> +++ b/fs/xfs/xfs_itable.c
-> @@ -457,7 +457,8 @@ xfs_inumbers(
->  	 * locking abilities to detect cycles in the inobt without deadlocking.
->  	 */
->  	tp = xfs_trans_alloc_empty(breq->mp);
-> -	error = xfs_inobt_walk(breq->mp, tp, breq->startino, breq->flags,
-> +	error = xfs_inobt_walk(breq->mp, tp, breq->startino,
-> +			breq->flags & XFS_IBULK_SAME_AG,
+Steven Rostedt (4):
+      xfs: remove unused trace event xfs_dqreclaim_dirty
+      xfs: remove unused trace event xfs_log_cil_return
+      xfs: remove unused trace event xfs_discard_rtrelax
+      xfs: remove unused trace event xfs_reflink_cow_enospc
 
-That's correct -- the only IBULK flag with meaning for xfs_inobt_walk is
-SAME_AG because the others affect bulkstat output.
-
-But it might be clearer to make this explicit the same way that
-xfs_bulkstat does:
-
-	unsigned int iwalk_flags = 0;
-
-	if (breq->flags & XFS_IBULK_SAME_AG)
-		iwalk_flags |= XFS_IWALK_SAME_AG;
-
-	error = xfs_inobt_walk(..., iwalk_flags, ...);
-
-This probably should have been included in [1] so:
-
-Cc: <stable@vger.kernel.org> # v5.19
-Fixes: 5b35d922c52798 ("xfs: Decouple XFS_IBULK flags from XFS_IWALK flags")
-
---D
+----
+ fs/xfs/xfs_trace.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
