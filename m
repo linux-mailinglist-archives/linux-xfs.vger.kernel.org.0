@@ -1,57 +1,60 @@
-Return-Path: <linux-xfs+bounces-24185-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24187-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0F95B0F212
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Jul 2025 14:20:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44204B0F214
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Jul 2025 14:20:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E06AC1777BA
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Jul 2025 12:20:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5973B7AED8B
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Jul 2025 12:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E02328CF69;
-	Wed, 23 Jul 2025 12:20:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDE3D258CE1;
+	Wed, 23 Jul 2025 12:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eD7oXQ8E"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jx7GxhcK"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF515EEDE
-	for <linux-xfs@vger.kernel.org>; Wed, 23 Jul 2025 12:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3712E54A9
+	for <linux-xfs@vger.kernel.org>; Wed, 23 Jul 2025 12:20:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753273217; cv=none; b=hKA5mgyYXj87fhmFS8Nmuqtwfr3yvyDwt1HAISv2BN3JIOVoigqUjzHCEg1L3ohNlYo38pCLRnfF8TZ3vUZe1T/0z41kvDoxvBQyBd+or6Evvax5OrfhkyPkOk7Wnu8shf0WiDBXTu1tn5/+UXs07/+Ul4/rW29g2lwlIBlLuu4=
+	t=1753273221; cv=none; b=gp897bwIdM0MWa3i34eq6Jc/E4vFoAPGPKOM5bJ/jVvB1JVympedp8+T4I+VOufWOQpLL9bnf2Ns5R73Y+9EZtkT9FHsA99QjN6Fwgx39sWTReXxSd/M6J1zCMsR52wKl+IDv59HS4LXUxYcqZcUU/54VNOoALnuYFydAddIii4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753273217; c=relaxed/simple;
-	bh=QdAKrIoCPsxJ8DMHDVO+if5eFfR/vpDpn7kS+BYLiLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vo6/IsoFmD+XDbOoW5CsQ3u41wTCAZLT4nUfRAMHcBDrvYSIQZFq3DdhVcjeo2Uu44DB4WykyVyID3fxyOtwvQ6f1CbnxtshYdYrBwiZouCeyUhFH1TXUCNoyOVjUmMdbBkuGLcjESJimGKdNB1rBNiqEvO7XJpJLIfVelW4DfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eD7oXQ8E; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1753273221; c=relaxed/simple;
+	bh=b8+0P3UWTxw1UHzsJX9NjbxoAujZXOW3hlPltvU9sN0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lQRq6mY1d5z556bZVEkc985Py5jqKkRStMhTKIRVmM5b7VzPn6QIr/jBAh+RmpR+BVU9oPDGXV4GGk6SeFxhoK4cnSP4ZWX51XzfNk/LYSw6TpJK0X3xwoU/qSQAi7+FWbeN2DiXdqqthWW8MsYhlEqzQn4IuGDU5nSbiy5txV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Jx7GxhcK; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=OhvUUUWY0tCUo1vn/G10TDlt9nD9BzvvwGRsBqtlBXU=; b=eD7oXQ8EjqiiduydACZ+uaDByj
-	Oas0TpiyLCGeEjM4MxbyiWn1cGu7f20y+yrD79ZqiPWnL647lEqcGR3/tGgRaiuOcBNNvkl7k7wLE
-	+oABM/3qXHnqedrY56LhpR2uV/aWozAayxn7abFsgXfK/vblCPvXxR4cLULB+1S/TU+mO0a4IsKdP
-	Hze09Gxy6666+6FnnJg2t5li1O9RhtsFsOmdDcJnYernv4CBY7I09cXdqUq7/I2ssEJMtlmA23ZSs
-	aCsCZa+Jmpl0nltplMDHMoQyVI0Zsh30xrwpw7DjxMVUR27snkwYuS+enpoTYC+xJkZz0/cqX1IGD
-	vLgUBuvA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=i/VYZFYUkKLHG+5I/fzperk8FkBx+0Y7cHtRPhCNJ0M=; b=Jx7GxhcKzkElPM5u8gNg7XkVk0
+	x1bDtzRtH1ugFkHYBMxSs3m56QvwEQR+iH/eAt3rfAwN/iieHkamzvSH0SjlWFrRgoZOHswe+5od1
+	4H+hf4W168ji6PXesHGEjFagBtYGaIh5/8+6Qjw/WnM2IoTtXIgABxC6a4+PYKxrkLJk1Mbrz9WiW
+	yUeyb8F8W98GAU1yJQgD0zx19kztq/LcGpPBV+USA7SJxZzuln/VTxog48NKZ1FLeiaEn/z/Gxi6b
+	8cleruzk2EjgKWUCLUg7D0/WixdHbmLb0jWrTmyTNY3HQl1QTnriDyz6AjA4seLM1eNacWMwpk1bw
+	Koy5XkAA==;
 Received: from [2001:67c:1232:144:a1d2:d12d:cb2d:5181] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ueYSD-00000004tVN-2bj4;
-	Wed, 23 Jul 2025 12:20:13 +0000
+	id 1ueYSF-00000004tVU-1y2l;
+	Wed, 23 Jul 2025 12:20:15 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: cen zhang <zzzccc427@gmail.com>,
 	linux-xfs@vger.kernel.org
-Subject: fix XFS_IBULK_* vs XFS_IWALK_* confusion
-Date: Wed, 23 Jul 2025 14:19:43 +0200
-Message-ID: <20250723122011.3178474-1-hch@lst.de>
+Subject: [PATCH 1/2] xfs: fully decouple XFS_IBULK* flags from XFS_IWALK* flags
+Date: Wed, 23 Jul 2025 14:19:44 +0200
+Message-ID: <20250723122011.3178474-2-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250723122011.3178474-1-hch@lst.de>
+References: <20250723122011.3178474-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -61,16 +64,49 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi all,
+Fix up xfs_inumbers to now pass in the XFS_IBULK* flags into the flags
+argument to xfs_inobt_walk, which expects the XFS_IWALK* flags.
 
-this fixes a syzcall triggered assert due to the somewhat sloppy split
-between the XFS_IBULK and XFS_IWALK flags.  The first is the minimal
-fix for the reported problem, and the second one cleans up the
-interface to avoid problems like this in the future.
+Currently passing the wrong flags works for non-debug builds because
+the only XFS_IWALK* flag has the same encoding as the corresponding
+XFS_IBULK* flag, but in debug builds it can trigger an assert that no
+incorrect flag is passed.  Instead just extra the relevant flag.
 
-Diffstat:
- xfs_ioctl.c  |    2 +-
- xfs_itable.c |    8 ++------
- xfs_itable.h |   10 ++++------
- 3 files changed, 7 insertions(+), 13 deletions(-)
+Fixes: 5b35d922c52798 ("xfs: Decouple XFS_IBULK flags from XFS_IWALK flags")
+Reported-by: cen zhang <zzzccc427@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/xfs/xfs_itable.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
+index c8c9b8d8309f..5116842420b2 100644
+--- a/fs/xfs/xfs_itable.c
++++ b/fs/xfs/xfs_itable.c
+@@ -447,17 +447,21 @@ xfs_inumbers(
+ 		.breq		= breq,
+ 	};
+ 	struct xfs_trans	*tp;
++	unsigned int		iwalk_flags = 0;
+ 	int			error = 0;
+ 
+ 	if (xfs_bulkstat_already_done(breq->mp, breq->startino))
+ 		return 0;
+ 
++	if (breq->flags & XFS_IBULK_SAME_AG)
++		iwalk_flags |= XFS_IWALK_SAME_AG;
++
+ 	/*
+ 	 * Grab an empty transaction so that we can use its recursive buffer
+ 	 * locking abilities to detect cycles in the inobt without deadlocking.
+ 	 */
+ 	tp = xfs_trans_alloc_empty(breq->mp);
+-	error = xfs_inobt_walk(breq->mp, tp, breq->startino, breq->flags,
++	error = xfs_inobt_walk(breq->mp, tp, breq->startino, iwalk_flags,
+ 			xfs_inumbers_walk, breq->icount, &ic);
+ 	xfs_trans_cancel(tp);
+ 
+-- 
+2.47.2
+
 
