@@ -1,349 +1,259 @@
-Return-Path: <linux-xfs+bounces-24241-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24243-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 354EEB14269
-	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 21:11:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0199FB1430A
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 22:31:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05C597A6612
-	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 19:09:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19C3918C2B4F
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 20:32:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAE7F27780C;
-	Mon, 28 Jul 2025 19:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D2E1A08BC;
+	Mon, 28 Jul 2025 20:31:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUUjvG46"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jc/9QD+d"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9F52BCFB;
-	Mon, 28 Jul 2025 19:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0326B4C9D
+	for <linux-xfs@vger.kernel.org>; Mon, 28 Jul 2025 20:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753729878; cv=none; b=LWQ62Nt3vH/RnkDQvQEuEKWuOdERaUphheluaEGwmBS1sykIFhbNwURlFg+AiVsorUAHccOdlZ6OqKr932vxP+z9BDLpzzOp7Bu1cMvnggOHYfoc6Nqx+rA7cV3kGkLLONe/ul6UJay53RcuwVnsxvWSMORSpXz1FyTUwhndAbY=
+	t=1753734691; cv=none; b=cxxXHJbi3qJk1UkhrPyNaFgndiZQ2gl4BEuv6RB8AUK5A6fbXs+i5odOAsufeeAni7g8YmaWCf8luwGusftDouBD8IGHajdhoZwksu/Fh8LY37+wKUTeMSf/vfLpIo+4fPyt1HLeQqOS9hi8MBPtTC595Ap2k+0yffvGH4CLT9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753729878; c=relaxed/simple;
-	bh=OPHzlOHDVErfDOFN6qu+2Q+agu10HU+OTpjRoqIYI8k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qne/+kQV/57vRYp655FhPK0BhDsIMA7GXCRWO3M4/MbJcVzp81JNdjPUX8jd0p1oZT8ZDiuzX2WmFzT44M4lsN3OFy9QPYW9Tx2sHjLgmJw0lrwun+Yn9Q5Rq5qHzr7sG2Q8LQ0scpYVki28GU7aMggbWYE3BGJSfP/PhKXdy8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUUjvG46; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB1E0C4CEE7;
-	Mon, 28 Jul 2025 19:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753729877;
-	bh=OPHzlOHDVErfDOFN6qu+2Q+agu10HU+OTpjRoqIYI8k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mUUjvG46rwuGxYK8BNbP0pBPCj+GJbHYvP7thaySUcFZMeBV/hHb5YGChFsjJEMcA
-	 uqN8zYiW2RZUUS2k2arkaC/rJNDxZ9Gqr9pYxCouVgxpOTctixk/2OoQdDlAEhw2I7
-	 28Qw5Ekq5Csmdz8bGTJ87mjvm7AxQVhGZOZSYnoILxS4Bj+na8+CkbnFYTyGikrehy
-	 hQVIgCOtH96G/It5OVK2Zj219BrrRiBr0lyuLJh3GGCCQVCBJ2cBvlnUpzsnAPqb9X
-	 OlIfoe4o/APEGzqDZCbBXRmXF01HNXH1TQRR9Zn8jeryQRhIAi9Q9qEL/zK7pL3W3C
-	 lG4zguT5wvqOQ==
-Date: Mon, 28 Jul 2025 12:11:17 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-	linux-xfs@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Miklos Szeredi <miklos@szeredi.hu>, Jan Kara <jack@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <liam.howlett@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>
-Subject: Re: next-20250721 arm64 16K and 64K page size WARNING fs fuse file.c
- at fuse_iomap_writeback_range
-Message-ID: <20250728191117.GE2672070@frogsfrogsfrogs>
-References: <CA+G9fYs5AdVM-T2Tf3LciNCwLZEHetcnSkHsjZajVwwpM2HmJw@mail.gmail.com>
- <20250723144637.GW2672070@frogsfrogsfrogs>
- <CAJnrk1Z7wcB8uKWcrAuRAZ8B-f8SKnOuwtEr-=cHa+ApR_sgXQ@mail.gmail.com>
- <20250723212020.GY2672070@frogsfrogsfrogs>
- <CAJnrk1bFWRTGnpNhW_9MwSYZw3qPnPXZBeiwtPSrMhCvb9C3qg@mail.gmail.com>
- <CAJnrk1byTVJtuOyAyZSVYrusjhA-bW6pxBOQQopgHHbD3cDUHw@mail.gmail.com>
- <CAJnrk1ZYR=hM5k90H57tOv=fe6F-r8dO+f3wNuCT_w3j8YNYNQ@mail.gmail.com>
- <20250728171425.GR2672029@frogsfrogsfrogs>
- <CAJnrk1bBesBijYRD1Wf_01OSBykJ0VzwFZKZFev0wPn9wYc98Q@mail.gmail.com>
+	s=arc-20240116; t=1753734691; c=relaxed/simple;
+	bh=R9+5Lb1P8nVdkBaFU4wBZNzDcHY97ji498FxYqLBnkM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Og3R4Yq/ra9FuTMwvaYJhdtx8OjAHAHb0ivTw4OqjZNHPlMk9z014j+ErPh+8RI9wLp7J4XlYcwKdo5H/ebUZo5KQFaL0KcKF/XDfeVwMR/cETq3z9xY7iKDqApz6Sv1QjYJ7Kw1JxJ3HQhfZdADnFB/aSAjKfARKP1pYGjHxkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jc/9QD+d; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753734685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EKJwftSlaT22fO4beByVlIMH/g6yb1l1MUyokYspDhY=;
+	b=Jc/9QD+dRvdRw6P9QPdYPlNMXSy9xu4pDKpQdgrwcIW/2KY94sUFnesGqabsZIJbJzJx6s
+	iOQA6ZSykorjuyy5d6SRj1I3mDqO4+5iW/h2zrdQ3N7JPAvN/vOaO3DTADSwDh0hk3uxbh
+	Su3PPjB7oDE/m/LojPmlUyUwWvhdIQk=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-49-9c0qncEAMui6aBxe-aFmZw-1; Mon, 28 Jul 2025 16:31:23 -0400
+X-MC-Unique: 9c0qncEAMui6aBxe-aFmZw-1
+X-Mimecast-MFC-AGG-ID: 9c0qncEAMui6aBxe-aFmZw_1753734682
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-6077833ae13so4416999a12.1
+        for <linux-xfs@vger.kernel.org>; Mon, 28 Jul 2025 13:31:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753734682; x=1754339482;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EKJwftSlaT22fO4beByVlIMH/g6yb1l1MUyokYspDhY=;
+        b=U3tMmf0MSPoChTDFksH6ultmKTQJViTiVDX1I/+kM2xC6Xz7DclYPw0sshGDmt5BIB
+         RSTTYqgHK1ZFMeIoqenbi4/KLZL9gfr4xQ7i+6XwQNHP/AsnhasIxTPojre2g9/RTUcW
+         pX88S5CrJSRQMPajlI7Trq9ebeLecTXcHrl9sQku8n9BKe8wYRX2tGEyOvwSSnqsEcba
+         RwvabhrH9IdPPSgMmCPYd9waOkYxGuf6u1YDxJaPc0jNveJQOMLS60HZov9kOWAXnoS0
+         zY89Bm5bX7GtN5tyY0cfT3YFeePRIAWgSRvnej9/xy8xajRGyFICqQNhg8PbwTSo1v24
+         YOBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUytUxzUgmWcoHYpojCRvUSsmSEpK76lHJ7lQHKJGtGVPxqijCwbOCL2YOrZXOGdXHgR83PH8CvWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTGZ6+NMFaUgeI6GTXtlBm3tsYUu2fyrhw1LR2SucIlk8pDDle
+	vFs13JMAeJzPPG5xsVoP5UABXcI+bQXR6J+34eixH+DhrwwTYw4755f/WzKfyVymWgmfrP32zJH
+	OI+6SG2xcp3dZ5fu3ihFUrU8Rk3dTvV5G32cONcWC1gxeitL5tNxWDKZJN0Cl
+X-Gm-Gg: ASbGncst+JchmCD3mILpS1iFCPxjvEGy0gQPhaBsvU8Q8xpdFZIkhR16C2ZDvTp6gZs
+	W9LMAxVwOdopt6dPgvvmZ5BlJ17MIEMk3wzWY4AmdSbfGkE4LBiqKce6ygt3Femd2bNmWqUdZb+
+	V7kpx055ktdiMjCFHl+AkcB4RA5839edSQwW2bhm7SY3kS/cpN0DFmSIGZJN51nTKiOgMTeY1e0
+	dL1BZC/J+/cFtd4QBM9PzgrS0B530Xuiw6fspdBFVfIv/OyJLABFADzoW/PJilWEuEB2flElqHi
+	m/tTJbN8pxXZVNraKI57Yw3hgTBtcxgvkJutF1UXdLPIGQ==
+X-Received: by 2002:a05:6402:354e:b0:612:c4a1:1381 with SMTP id 4fb4d7f45d1cf-614f1df5cbbmr13035066a12.26.1753734682263;
+        Mon, 28 Jul 2025 13:31:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEW5S0Y0Z+OJsUUAjaoiSY8D+vHt8hu3xP13H3f8LeLxORwrEN+Yh7uHxko4qmOtGByPbpMPw==
+X-Received: by 2002:a05:6402:354e:b0:612:c4a1:1381 with SMTP id 4fb4d7f45d1cf-614f1df5cbbmr13035033a12.26.1753734681757;
+        Mon, 28 Jul 2025 13:31:21 -0700 (PDT)
+Received: from [127.0.0.2] (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615226558d3sm2730656a12.45.2025.07.28.13.31.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jul 2025 13:31:21 -0700 (PDT)
+From: Andrey Albershteyn <aalbersh@redhat.com>
+X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
+Subject: [PATCH RFC 00/29] fs-verity support for XFS with post EOF merkle
+ tree
+Date: Mon, 28 Jul 2025 22:30:04 +0200
+Message-Id: <20250728-fsverity-v1-0-9e5443af0e34@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJnrk1bBesBijYRD1Wf_01OSBykJ0VzwFZKZFev0wPn9wYc98Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMzdh2gC/y2MTQ6CMBBGr9LM2iZlDCWwNfEAbg2Ltkx1FoB0K
+ tEQ7m6jLt/38zYQSkwCndog0crC81SgOigIdzfdSPNQGNBgbbBCHWUtj/zW5K0NFJtIrYcyfyS
+ K/PqqrnA5n6D/hYmWZ9Hmf+OdkA7zOHLu1NHUQ9MiWmcd9Pv+AWCji9SPAAAA
+X-Change-ID: 20250212-fsverity-eb66cef7fe9b
+To: fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, david@fromorbit.com, djwong@kernel.org, 
+ ebiggers@kernel.org, hch@lst.de
+Cc: Andrey Albershteyn <aalbersh@redhat.com>, 
+ Andrey Albershteyn <aalbersh@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6348; i=aalbersh@kernel.org;
+ h=from:subject:message-id; bh=R9+5Lb1P8nVdkBaFU4wBZNzDcHY97ji498FxYqLBnkM=;
+ b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIYMtrvie+MaxBTmb3r2XXpu5VzBVKecm//6LpHw0B38
+ sOQHmndq50dpSwMYlwMsmKKLOuktaYmFUnlHzGokYeZw8oEMoSBi1MAJpK1mOG/34rozX9nMzPZ
+ iH45lXo6O47XQdKed63kpLL3oWfjuI7oMzJMEj7ccDRei83Yn/HwLAkF11dzlgm/bLz378aMJ93
+ vPhYxAQDS8UaI
+X-Developer-Key: i=aalbersh@kernel.org; a=openpgp;
+ fpr=AE1B2A9562721A6FC4307C1F46A7EA18AC33E108
 
-On Mon, Jul 28, 2025 at 10:44:01AM -0700, Joanne Koong wrote:
-> On Mon, Jul 28, 2025 at 10:14 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> >
-> > On Fri, Jul 25, 2025 at 06:16:15PM -0700, Joanne Koong wrote:
-> > > On Thu, Jul 24, 2025 at 12:14 PM Joanne Koong <joannelkoong@gmail.com> wrote:
-> > > >
-> > > > On Wed, Jul 23, 2025 at 3:37 PM Joanne Koong <joannelkoong@gmail.com> wrote:
-> > > > >
-> > > > > On Wed, Jul 23, 2025 at 2:20 PM Darrick J. Wong <djwong@kernel.org> wrote:
-> > > > > >
-> > > > > > On Wed, Jul 23, 2025 at 11:42:42AM -0700, Joanne Koong wrote:
-> > > > > > > On Wed, Jul 23, 2025 at 7:46 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > [cc Joanne]
-> > > > > > > >
-> > > > > > > > On Wed, Jul 23, 2025 at 05:14:28PM +0530, Naresh Kamboju wrote:
-> > > > > > > > > Regressions found while running LTP msync04 tests on qemu-arm64 running
-> > > > > > > > > Linux next-20250721, next-20250722 and next-20250723 with 16K and 64K
-> > > > > > > > > page size enabled builds.
-> > > > > > > > >
-> > > > > > > > > CONFIG_ARM64_64K_PAGES=y ( kernel warning as below )
-> > > > > > > > > CONFIG_ARM64_16K_PAGES=y ( kernel warning as below )
-> > > > > > > > >
-> > > > > > > > > No warning noticed with 4K page size.
-> > > > > > > > > CONFIG_ARM64_4K_PAGES=y works as expected
-> > > > > > > >
-> > > > > > > > You might want to cc Joanne since she's been working on large folio
-> > > > > > > > support in fuse.
-> > > > > > > >
-> > > > > > > > > First seen on the tag next-20250721.
-> > > > > > > > > Good: next-20250718
-> > > > > > > > > Bad:  next-20250721 to next-20250723
-> > > > > > >
-> > > > > > > Thanks for the report. Is there a link to the script that mounts the
-> > > > > > > fuse server for these tests? I'm curious whether this was mounted as a
-> > > > > > > fuseblk filesystem.
-> > > > > > >
-> > > > > > > > >
-> > > > > > > > > Regression Analysis:
-> > > > > > > > > - New regression? Yes
-> > > > > > > > > - Reproducibility? Yes
-> > > > > > > > >
-> > > > > > > > > Test regression: next-20250721 arm64 16K and 64K page size WARNING fs
-> > > > > > > > > fuse file.c at fuse_iomap_writeback_range
-> > > > > > > > >
-> > > > > > > > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > > > > > > > >
-> > > > > > > > > ## Test log
-> > > > > > > > > ------------[ cut here ]------------
-> > > > > > > > > [  343.828105] WARNING: fs/fuse/file.c:2146 at
-> > > > > > > > > fuse_iomap_writeback_range+0x478/0x558 [fuse], CPU#0: msync04/4190
-> > > > > > > >
-> > > > > > > >         WARN_ON_ONCE(len & (PAGE_SIZE - 1));
-> > > > > > > >
-> > > > > > > > /me speculates that this might be triggered by an attempt to write back
-> > > > > > > > some 4k fsblock within a 16/64k base page?
-> > > > > > > >
-> > > > > > >
-> > > > > > > I think this can happen on 4k base pages as well actually. On the
-> > > > > > > iomap side, the length passed is always block-aligned and in fuse, we
-> > > > > > > set blkbits to be PAGE_SHIFT so theoretically block-aligned is always
-> > > > > > > page-aligned, but I missed that if it's a "fuseblk" filesystem, that
-> > > > > > > isn't true and the blocksize is initialized to a default size of 512
-> > > > > > > or whatever block size is passed in when it's mounted.
-> > > > > >
-> > > > > > <nod> I think you're correct.
-> > > > > >
-> > > > > > > I'll send out a patch to remove this line. It doesn't make any
-> > > > > > > difference for fuse_iomap_writeback_range() logic whether len is
-> > > > > > > page-aligned or not; I had added it as a sanity-check against sketchy
-> > > > > > > ranges.
-> > > > > > >
-> > > > > > > Also, I just noticed that apparently the blocksize can change
-> > > > > > > dynamically for an inode in fuse through getattr replies from the
-> > > > > > > server (see fuse_change_attributes_common()). This is a problem since
-> > > > > > > the iomap uses inode->i_blkbits for reading/writing to the bitmap. I
-> > > > > > > think we will have to cache the inode blkbits in the iomap_folio_state
-> > > > > > > struct unfortunately :( I'll think about this some more and send out a
-> > > > > > > patch for this.
-> > > > > >
-> > > > > > From my understanding of the iomap code, it's possible to do that if you
-> > > > > > flush and unmap the entire pagecache (whilst holding i_rwsem and
-> > > > > > mmap_invalidate_lock) before you change i_blkbits.  Nobody *does* this
-> > > > > > so I have no idea if it actually works, however.  Note that even I don't
-> > > > > > implement the flush and unmap bit; I just scream loudly and do nothing:
-> > > > >
-> > > > > lol! i wish I could scream loudly and do nothing too for my case.
-> > > > >
-> > > > > AFAICT, I think I just need to flush and unmap that file and can leave
-> > > > > the rest of the files/folios in the pagecache as is? But then if the
-> > > > > file has active refcounts on it or has been pinned into memory, can I
-> > > > > still unmap and remove it from the page cache? I see the
-> > > > > invalidate_inode_pages2() function but my understanding is that the
-> > > > > page still stays in the cache if it has has active references, and if
-> > > > > the page gets mmaped and there's a page fault on it, it'll end up
-> > > > > using the preexisting old page in the page cache.
-> > > >
-> > > > Never mind, I was mistaken about this. Johannes confirmed that even if
-> > > > there's active refcounts on the folio, it'll still get removed from
-> > > > the page cache after unmapping and the page cache reference will get
-> > > > dropped.
-> > > >
-> > > > I think I can just do what you suggested and call
-> > > > filemap_invalidate_inode() in fuse_change_attributes_common() then if
-> > > > the inode blksize gets changed. Thanks for the suggestion!
-> > > >
-> > >
-> > > Thinking about this some more, I don't think this works after all
-> > > because the writeback + page cache removal and inode blkbits update
-> > > needs to be atomic, else after we write back and remove the pages from
-> > > the page cache, a write could be issued right before we update the
-> > > inode blkbits. I don't think we can hold the inode lock the whole time
-> > > for it either since writeback could be intensive. (also btw, I
-> > > realized in hindsight that invalidate_inode_pages2_range() would have
-> > > been the better function to call instead of
-> > > filemap_invalidate_inode()).
-> > >
-> > > > >
-> > > > > I don't think I really need to have it removed from the page cache so
-> > > > > much as just have the ifs state for all the folios in the file freed
-> > > > > (after flushing the file) so that it can start over with a new ifs.
-> > > > > Ideally we could just flush the file, then iterate through all the
-> > > > > folios in the mapping in order of ascending index, and kfree their
-> > > > > ->private, but I'm not seeing how we can prevent the case of new
-> > > > > writes / a new ifs getting allocated for folios at previous indexes
-> > > > > while we're trying to do the iteration/kfreeing.
-> > > > >
-> > >
-> > > Going back to this idea, I think this can work. I realized we don't
-> > > need to flush the file, it's enough to free the ifs, then update the
-> > > inode->i_blkbits, then reallocate the ifs (which will now use the
-> > > updated blkbits size), and if we hold the inode lock throughout, that
-> > > prevents any concurrent writes.
-> > > Something like:
-> > >      inode_lock(inode);
-> > >      XA_STATE(xas, &mapping->i_pages, 0);
-> > >      xa_lock_irq(&mapping->i_pages);
-> > >      xas_for_each_marked(&xas, folio, ULONG_MAX, PAGECACHE_TAG_DIRTY) {
-> > >           folio_lock(folio);
-> > >           if (folio_test_dirty(folio)) {
-> > >                   folio_wait_writeback(folio);
-> > >                   kfree(folio->private);
-> > >           }
+Hi all,
 
-Heh, I didn't even see this chunk, distracted as I am today. :/
+This patchset adds fs-verity support for XFS. This version store merkle
+tree beyond end of the file, similar as ext4 does it.
 
-So this doesn't actually /initiate/ writeback, it just waits
-(potentially for a long time) for someone else to come along and do it.
-That might not be what you want since the blocksize change will appear
-to stall while nothing else is going on in the system.
+The first two patches introduce new iomap_read/write interface in iomap.
+The reasons are:
+- it is not bound by EOF,
+- the iomap_read_region() also allocates folio and returns it to caller.
 
-Also, unless you're going to put this in buffered-io.c, it's not
-desirable for a piece of code to free something it didn't allocate.
-IOWs, I don't think it's a good idea for *fuse* to go messing with a
-folio->private that iomap set.
+Then follows changes to the fs-verity core, per-filesystem workqueue,
+iomap integration. These are mostly unchanged from previous patchsets.
 
-> > >           folio_unlock(folio);
-> > >      }
-> > >     inode->i_blkbits = new_blkbits_size;
-> >
-> > The trouble is, you also have to resize the iomap_folio_state objects
-> > attached to each folio if you change i_blkbits...
-> 
-> I think the iomap_folio_state objects automatically get resized here,
-> no? We first kfree the folio->private which kfrees the entire ifs,
+The iomap read path has a bit of a fs-verity only zeroing logic for the
+case when tree block size, fs block size and page size differ. As tree is
+contiguous region of memory I just zero the tail of the tree region.
 
-Err, right, it does free the ifs and recreate it later if necessary.
+Preallocations. I just disabled preallocations by setting allocation
+size to zero for Merkle tree data. This should not be a problem as these
+files are read-only and in stable state when we get to Merkle tree
+writing. It would be nice to allocate tree size on first write, but I
+haven't got to it yet.
 
-> then we change inode->i_blkbits to the new size, then when we call
-> folio_mark_dirty(), it'll create the new ifs which creates a new folio
-> state object using the new/updated i_blkbits size
-> 
-> >
-> > >     xas_set(&xas, 0);
-> > >     xas_for_each_marked(&xas, folio, ULONG_MAX, PAGECACHE_TAG_DIRTY) {
-> > >           folio_lock(folio);
-> > >           if (folio_test_dirty(folio) && !folio_test_writeback(folio))
-> > >                  folio_mark_dirty(folio);
-> >
-> > ...because iomap_dirty_folio doesn't know how to reallocate the folio
-> > state object in response to i_blkbits having changed.
+The tree is read by iomap into page cache at offset 1 << 53. This seems
+to be far enough to handle any supported file size.
 
-Also, what about clean folios that have an ifs?  You'd still need to
-handle the ifs's attached to those.
+Testing. The -g verity is passing for 1k and 4k with/without quota, the
+tests include different merkle tree block size.
 
-So I guess if you wanted iomap to handle a blocksize change, you could
-do something like:
+I plan to look into readahead and whole tree allocation on first write
+and xfsprogs requires a bit more work.
 
-iomap_change_file_blocksize(inode, new_blkbits) {
-	inode_lock()
-	filemap_invalidate_lock()
+Feedback is welcomed :)
 
-	inode_dio_wait()
-	filemap_write_and_wait()
-	if (new_blkbits > mapping_min_folio_order()) {
-		truncate_pagecache()
-		inode->i_blkbits = new_blkbits;
-	} else {
-		inode->i_blkbits = new_blkbits;
-		xas_for_each(...) {
-			<create new ifs>
-			<translate uptodate/dirty state to new ifs>
-			<swap ifs>
-			<free old ifs>
-		}
-	}
+xfsprogs:
+https://github.com/alberand/xfsprogs/tree/b4/fsverity
 
-	filemap_invalidate_unlock()
-	inode_unlock()
-}
+xfstests:
+https://github.com/alberand/xfstests/tree/b4/fsverity
 
---D
+Cc: fsverity@lists.linux.dev
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
 
-> > --D
-> >
-> > >           folio_unlock(folio);
-> > >     }
-> > >     xa_unlock_irq(&mapping->i_pages);
-> > >     inode_unlock(inode);
-> > >
-> > >
-> > > I think this is the only approach that doesn't require changes to iomap.
-> > >
-> > > I'm going to think about this some more next week and will try to send
-> > > out a patch for this then.
-> > >
-> > >
-> > > Thanks,
-> > > Joanne
-> > >
-> > > > > >
-> > > > > > void fuse_iomap_set_i_blkbits(struct inode *inode, u8 new_blkbits)
-> > > > > > {
-> > > > > >         trace_fuse_iomap_set_i_blkbits(inode, new_blkbits);
-> > > > > >
-> > > > > >         if (inode->i_blkbits == new_blkbits)
-> > > > > >                 return;
-> > > > > >
-> > > > > >         if (!S_ISREG(inode->i_mode))
-> > > > > >                 goto set_it;
-> > > > > >
-> > > > > >         /*
-> > > > > >          * iomap attaches per-block state to each folio, so we cannot allow
-> > > > > >          * the file block size to change if there's anything in the page cache.
-> > > > > >          * In theory, fuse servers should never be doing this.
-> > > > > >          */
-> > > > > >         if (inode->i_mapping->nrpages > 0) {
-> > > > > >                 WARN_ON(inode->i_blkbits != new_blkbits &&
-> > > > > >                         inode->i_mapping->nrpages > 0);
-> > > > > >                 return;
-> > > > > >         }
-> > > > > >
-> > > > > > set_it:
-> > > > > >         inode->i_blkbits = new_blkbits;
-> > > > > > }
-> > > > > >
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/commit/?h=fuse-iomap-attrs&id=da9b25d994c1140aae2f5ebf10e54d0872f5c884
-> > > > > >
-> > > > > > --D
-> > > > > >
-> > > > > > >
-> > > > > > > Thanks,
-> > > > > > > Joanne
-> > > > > > >
-> > >
+Cc: david@fromorbit.com
+Cc: djwong@kernel.org
+Cc: ebiggers@kernel.org
+Cc: hch@lst.de
+
+[RFC] Directly mapped xattr data & fs-verity
+[1]: https://lore.kernel.org/linux-xfs/20241229133350.1192387-1-aalbersh@kernel.org/
+
+---
+Andrey Albershteyn (19):
+      iomap: add iomap_writepages_unbound() to write beyond EOF
+      iomap: introduce iomap_read/write_region interface
+      fs: add FS_XFLAG_VERITY for verity files
+      fsverity: add per-sb workqueue for post read processing
+      fsverity: add tracepoints
+      iomap: integrate fs-verity verification into iomap's read path
+      xfs: add attribute type for fs-verity
+      xfs: add fs-verity ro-compat flag
+      xfs: add inode on-disk VERITY flag
+      xfs: initialize fs-verity on file open and cleanup on inode destruction
+      xfs: don't allow to enable DAX on fs-verity sealed inode
+      xfs: disable direct read path for fs-verity files
+      xfs: disable preallocations for fsverity Merkle tree writes
+      xfs: add writeback and iomap reading of Merkel tree pages
+      xfs: add fs-verity support
+      xfs: add fs-verity ioctls
+      xfs: fix scrub trace with null pointer in quotacheck
+      xfs: add fsverity traces
+      xfs: enable ro-compat fs-verity flag
+
+Darrick J. Wong (10):
+      fsverity: report validation errors back to the filesystem
+      fsverity: pass super_block to fsverity_enqueue_verify_work
+      ext4: use a per-superblock fsverity workqueue
+      f2fs: use a per-superblock fsverity workqueue
+      btrfs: use a per-superblock fsverity workqueue
+      fsverity: remove system-wide workqueue
+      fsverity: expose merkle tree geometry to callers
+      xfs: advertise fs-verity being available on filesystem
+      xfs: check and repair the verity inode flag state
+      xfs: report verity failures through the health system
+
+ Documentation/filesystems/fsverity.rst |   8 +
+ MAINTAINERS                            |   1 +
+ fs/btrfs/super.c                       |  14 ++
+ fs/buffer.c                            |   7 +-
+ fs/ext4/readpage.c                     |   4 +-
+ fs/ext4/super.c                        |  11 ++
+ fs/f2fs/compress.c                     |   3 +-
+ fs/f2fs/data.c                         |   2 +-
+ fs/f2fs/super.c                        |  11 ++
+ fs/ioctl.c                             |  11 ++
+ fs/iomap/buffered-io.c                 | 301 ++++++++++++++++++++++++++++--
+ fs/iomap/ioend.c                       |  41 +++-
+ fs/super.c                             |   3 +
+ fs/verity/enable.c                     |   4 +
+ fs/verity/fsverity_private.h           |   2 +-
+ fs/verity/init.c                       |   2 +-
+ fs/verity/open.c                       |  37 ++++
+ fs/verity/verify.c                     |  52 +++---
+ fs/xfs/Makefile                        |   1 +
+ fs/xfs/libxfs/xfs_da_format.h          |  15 +-
+ fs/xfs/libxfs/xfs_format.h             |  13 +-
+ fs/xfs/libxfs/xfs_fs.h                 |   2 +
+ fs/xfs/libxfs/xfs_health.h             |   4 +-
+ fs/xfs/libxfs/xfs_inode_buf.c          |   8 +
+ fs/xfs/libxfs/xfs_inode_util.c         |   2 +
+ fs/xfs/libxfs/xfs_log_format.h         |   1 +
+ fs/xfs/libxfs/xfs_sb.c                 |   4 +
+ fs/xfs/scrub/attr.c                    |   7 +
+ fs/xfs/scrub/common.c                  |  74 ++++++++
+ fs/xfs/scrub/common.h                  |   3 +
+ fs/xfs/scrub/inode.c                   |   7 +
+ fs/xfs/scrub/inode_repair.c            |  36 ++++
+ fs/xfs/scrub/trace.h                   |   2 +-
+ fs/xfs/xfs_aops.c                      |  21 ++-
+ fs/xfs/xfs_bmap_util.c                 |   7 +
+ fs/xfs/xfs_file.c                      |  23 ++-
+ fs/xfs/xfs_fsverity.c                  | 330 +++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_fsverity.h                  |  28 +++
+ fs/xfs/xfs_health.c                    |   1 +
+ fs/xfs/xfs_inode.h                     |   6 +
+ fs/xfs/xfs_ioctl.c                     |  16 ++
+ fs/xfs/xfs_iomap.c                     |  22 ++-
+ fs/xfs/xfs_iops.c                      |   4 +
+ fs/xfs/xfs_mount.h                     |   2 +
+ fs/xfs/xfs_super.c                     |  22 +++
+ fs/xfs/xfs_trace.h                     |  49 ++++-
+ include/linux/fs.h                     |   2 +
+ include/linux/fsverity.h               |  49 ++++-
+ include/linux/iomap.h                  |  32 ++++
+ include/trace/events/fsverity.h        | 162 ++++++++++++++++
+ include/uapi/linux/fs.h                |   1 +
+ 51 files changed, 1399 insertions(+), 71 deletions(-)
+---
+base-commit: 305d79226a6a797b193ca681e9f26f3bf081397b
+change-id: 20250212-fsverity-eb66cef7fe9b
+
+Best regards,
+-- 
+Andrey Albershteyn <aalbersh@kernel.org>
+
 
