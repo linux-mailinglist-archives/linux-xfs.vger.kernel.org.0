@@ -1,89 +1,89 @@
-Return-Path: <linux-xfs+bounces-24260-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24262-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F099B14328
-	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 22:33:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33601B1432F
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 22:33:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2624F163326
-	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 20:33:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D67716419A
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jul 2025 20:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E5C280330;
-	Mon, 28 Jul 2025 20:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60AA279358;
+	Mon, 28 Jul 2025 20:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PLcT1N7K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5SjRPMx"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EC7281358
-	for <linux-xfs@vger.kernel.org>; Mon, 28 Jul 2025 20:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23951281531
+	for <linux-xfs@vger.kernel.org>; Mon, 28 Jul 2025 20:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753734706; cv=none; b=foKPFwCJImZ8obNM1FqTrolebhfosB2dJIj6xgY3pZL3VOzKIuBrLSpiCC/yXaD3QPuRR1AdB1PqXJp4bC0D10+1NnZy/pUmzAlSYfltehVNgRL+aGJZjZKIaEHfGNjZ9ER3OKzrDsi8UHgevn8rkswiN/erlu8YAMfltYt5VHc=
+	t=1753734708; cv=none; b=pTH9zZ2HgSBp4NBurJBp8pnZ+4IGqntI4EyIQLKqTDplmPncVWQUbqgWqpi22cuRIoKL8YLmzlx3tipIPYgKQyethMe5oX8K3tZTj2pXG7oCcRlh0aSaaTpYtZN5KXzaJLL6DE13kAlOuNlz9SF2eDW7vImLnNewdpH6GUEU98s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753734706; c=relaxed/simple;
-	bh=pEsdBsP++Y85G6aS7bR9cTIxDhq123OG0RgfqhdTNOc=;
+	s=arc-20240116; t=1753734708; c=relaxed/simple;
+	bh=9p3je7ovaq0B8RD2/pr9rtueolxe1jVdbp+fSNss1tA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tDx/p9L08cau3+DPvPm5qC6WMZaZp1X4GkLy7ggdBipRc85x7d4sfkTbqc2GfsGge8hVPiu7Ridttx07gB2KqoB5wn2jF9QHhy+NwDUJeFnQ7MfTD4kxP+K5M3WeQ/Ub9fe8uaXNJgMCVut/mBj3Z2lDFzwCdCnhflpD/Mkn7BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PLcT1N7K; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:To:Cc; b=ewQXv5jQWZc1UdYRk0BYmBEwsBreY4o6lZLjISzjsar6sHs0mBv8jwPeeMDAPv97Rv1Wrd8S+wSF41YiLChHvG/LoFAUycQg0MsoraI1XC2HvPjt8766osBjIkqRwWbgzKZAAOSL4vFcMrc33WgnewRM/tONWdraOAuRfmShDVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y5SjRPMx; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1753734702;
+	s=mimecast20190719; t=1753734706;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wvsKU5ht1WKmP/gTh8rNGT9sMvO2NAzg8uCQD7oEXFQ=;
-	b=PLcT1N7Kbny7lptvmax2N4jtScSgSOqcEKwtfa9EKf+vyiDLo33x4OtPg94it+ppmNOVez
-	eVLN+nCxWEFfObwkdy1+xGgfpECCqupksq3MA4uWa917OQl4wCW3Lpk8ie65xkBM/iVItP
-	YmNZ+fjy3Qavqn9bqee2XGOUvDoTTcY=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=QtQJvCPxeTpstVyjgZAbXZc0G2YxyuH7YAlXrLlQnu0=;
+	b=Y5SjRPMxtVzWQqCK3JtTY5vYqTNKzrVx9By0yUscgxGlxps5S0SxRX1zWtGgNhKiRzPHa/
+	N2saJ1q9juUJA5/VVloUlfK6nTe1VkMUbH/CzKjeZ+oyrkbzBYiT1BkWqM5O2gw9Zk5Tme
+	G4WkQpIFduKXqwJYUJnKGes4E09lOkk=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-267-s5OtGy4MMGymWeJ5UMNVaA-1; Mon, 28 Jul 2025 16:31:41 -0400
-X-MC-Unique: s5OtGy4MMGymWeJ5UMNVaA-1
-X-Mimecast-MFC-AGG-ID: s5OtGy4MMGymWeJ5UMNVaA_1753734700
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-61543f038dbso853020a12.1
-        for <linux-xfs@vger.kernel.org>; Mon, 28 Jul 2025 13:31:40 -0700 (PDT)
+ us-mta-682-ekTE89nLNHWsOKtn7N0RnA-1; Mon, 28 Jul 2025 16:31:41 -0400
+X-MC-Unique: ekTE89nLNHWsOKtn7N0RnA-1
+X-Mimecast-MFC-AGG-ID: ekTE89nLNHWsOKtn7N0RnA_1753734701
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-61563bdc8daso318969a12.2
+        for <linux-xfs@vger.kernel.org>; Mon, 28 Jul 2025 13:31:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1753734700; x=1754339500;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wvsKU5ht1WKmP/gTh8rNGT9sMvO2NAzg8uCQD7oEXFQ=;
-        b=WpedCOSG7JUXV6dqxmuZyLpobPyjJ4RE5CEIAMyWUsi6ki2qVMdVhqDO/YYA6b0RM+
-         Uby9p+JH1AdhlSSPCM5Bo3rK3PDW0Cpnfs5Xs3j2bVFRcbikFZ+Xst2QFOEGTFVdgvq6
-         mzYy2WMgFrZJ2sODd+1nQX4BAaPyof/5VkgigOJBDaR1K96iBd74HeCJtuk66fKtg81m
-         SuCpvoUX2FDTlXUbt+3Rikn9vH2wpgDaJ92F9dqewy31bnTuLTcyg6PBQxP4FtMR/2O8
-         RqiqyAK99k2heLJsBu3pheShAiqlX+qe+XUjRi9XdZ6ABBDJ5Rx/KMglmZzoXwof7CCl
-         UhSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKIV1bI+50Q4G6zl+VnzRJusxKUigSc7f8BpTjfeowqJ+hJMPK8yQ9ORUFG57oT94pFZ7qT8OH+48=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyQxQDSuvhbuXkaYJQc9Mg59HhRH8EICVzY956RWg8ITyGy4rO
-	onvrRr3/LUEEJ5rx0FI1c+l/FcYOJTw5T5BX4n0s9KsM2995tw6brCoxNhezZYFOSfVCkHP0tbB
-	8gG6xGkIEW21iotO4axIwPyGc+RUZd9qWnWlDTv9YxqjQXOulzrqf/nSGepO7
-X-Gm-Gg: ASbGncvWRzifIBvYmiziuQNhA8gMukrd0PSbKiZGuKGx+4P7DddJT/sAxKvIlbi/9He
-	3ti1CQyCfeTv+whRsJHcRhZntO5H/y5eYiYRr1VRjhU/xqIxmae9HXPo+BkXSf7BV8h2avcKym3
-	+ZxoWhfKsB7SJD8x+V/5LUNtiDvWlOyCqs4opsf6IznSczLnwhKFXxWzWHkwKYGk72AcxhtzzeZ
-	tGypEu3tQO85PJTHkSVDuukOYh3Gjg8mzZuQSTDfKmaHQWHbs4319+XnRTle67yxqEGGNj7CSqF
-	8LAHf31KhjrnsBrZ9KMNKAjNbyYdvSRJmr2wncrvAfJP0g==
-X-Received: by 2002:a05:6402:4301:b0:612:3d0c:a71a with SMTP id 4fb4d7f45d1cf-614f1d1fb27mr12150577a12.14.1753734699800;
-        Mon, 28 Jul 2025 13:31:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEAgVdoNTEBJPqNHsQOHuT9fwO/DO3qMlfW/S4s3Osuit2xlyTjHHaIzxM7/XbZcrxj7z3tdA==
-X-Received: by 2002:a05:6402:4301:b0:612:3d0c:a71a with SMTP id 4fb4d7f45d1cf-614f1d1fb27mr12150558a12.14.1753734699371;
-        Mon, 28 Jul 2025 13:31:39 -0700 (PDT)
+        bh=QtQJvCPxeTpstVyjgZAbXZc0G2YxyuH7YAlXrLlQnu0=;
+        b=IU2h53DoM5Unk4hQCy+deUEte9H3ozYBDLdCDRDIZ6aH/1lGsjxAu0yDmRd6NYz79E
+         T/m4iKNb1gzypny15MpJK7HayPfBRO0vySgx+lsUBox2GkixfjhLPzfxahWTuPtzJZDI
+         ZaFMHb0s9jjbxehPvSFJPkp1HFAidSnZLoBXY1Bwsfa3oUirt+EvZy2wEfYoOWHO3EjT
+         nR/5hlTlPhhod/yjFo/3NbL5AEkQC1TTdME6v/pc5lV2ikc3yeDU39+wRV/9DXCYp1eM
+         IEcC+5iYC6+yPjJuveIZODwIWoDc5ys9pFe3dK4DFN5Vay9OjyrimNZHpver8kqJo763
+         gvSA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0A6kZS3a23zV5Wc/Sm74UTx+uhmoYJMNbg+rkHCvV2ajF/1e1beL362fRj3faVqexejxVbtGhpgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7ERSGXw76cciciq9xGDSrRU65jbWm7ht6/ZGTNJJzJVxJm2Gh
+	EQglUL+CZD6Ngb2wYcTsNJdBULdR+MqBoXgtnFQ8TnBJQKRd1p2vwxJIV8/94cyChPIHvNqzc/o
+	TEAp9kYt7tGeEJH5i7Vf6UR09Axd20wcKsNvjW74meR8IENfKtEiRfMNNRioY
+X-Gm-Gg: ASbGncuYnYQJ3k8wytK+Li2Qnb75hgesRHfsUNKvzhiC/WVNfKac6ythjs/qndogtNQ
+	tjcToK/NiS8V7w2tZiPwrgsLk8fQwZ5x/DVdBnH2aT1Q+FNRSnLA/Lv8+dPuK4zeBA1dbEolL4X
+	7cJHFZAf2RAdX2m8QMZ9gJOG5NrXnLxs16qNP+g5exuErk3ceQNhKVE9f/7WD76YTzxvMpb8lpO
+	C9Pj9Y8ZfBG/eYamFzncPNfmGnPdlJrds+cgjMUMLyOZdo4BK3Q/kUD/uj1uz1zD01Q1UNhfXCC
+	UaTI+jZ+8M6zSKEW3zOhJYeC/S3UgLm4jpqv5RTRhxxrYA==
+X-Received: by 2002:a05:6402:84e:b0:607:f082:5fbf with SMTP id 4fb4d7f45d1cf-614f1bc4e08mr12085049a12.12.1753734700501;
+        Mon, 28 Jul 2025 13:31:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEm3mB3ElwGqIqkRyBhO2Z5hZvB74PuXLKq9UDjvFTGDUQy/f5zCpnhAQLNFtZgZRIeyuyWA==
+X-Received: by 2002:a05:6402:84e:b0:607:f082:5fbf with SMTP id 4fb4d7f45d1cf-614f1bc4e08mr12085030a12.12.1753734700033;
+        Mon, 28 Jul 2025 13:31:40 -0700 (PDT)
 Received: from [127.0.0.2] (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615226558d3sm2730656a12.45.2025.07.28.13.31.37
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-615226558d3sm2730656a12.45.2025.07.28.13.31.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jul 2025 13:31:38 -0700 (PDT)
+        Mon, 28 Jul 2025 13:31:39 -0700 (PDT)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Mon, 28 Jul 2025 22:30:22 +0200
-Subject: [PATCH RFC 18/29] xfs: don't allow to enable DAX on fs-verity
- sealed inode
+Date: Mon, 28 Jul 2025 22:30:23 +0200
+Subject: [PATCH RFC 19/29] xfs: disable direct read path for fs-verity
+ files
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -92,7 +92,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250728-fsverity-v1-18-9e5443af0e34@kernel.org>
+Message-Id: <20250728-fsverity-v1-19-9e5443af0e34@kernel.org>
 References: <20250728-fsverity-v1-0-9e5443af0e34@kernel.org>
 In-Reply-To: <20250728-fsverity-v1-0-9e5443af0e34@kernel.org>
 To: fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
@@ -100,42 +100,63 @@ To: fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org,
  ebiggers@kernel.org, hch@lst.de
 Cc: Andrey Albershteyn <aalbersh@redhat.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=898; i=aalbersh@kernel.org;
- h=from:subject:message-id; bh=VsEwWloIYSoJV3t10dMO/UU69MLyJpIl83HjhawNhNE=;
- b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIYMtrvSaSauInrBJydPPWKkpFKI8MDeYdw853hsVkzN
- /I8trh34lVHKQuDGBeDrJgiyzppralJRVL5Rwxq5GHmsDKBDGHg4hSAiSRGMjJczTb9yi05r+xl
- 4rdFa1eLfF/6KK25opvb576Gyvs9l9e+Z2T4luqUMafv5KawH4qnzDbxLM48f8iIf+313i8mWQf
- ON7ziBAB2pUkA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1542; i=aalbersh@kernel.org;
+ h=from:subject:message-id; bh=pMZQbXtMrVBz6SrzAXMqrLN3V7mq4bHJ3sncK2j8+2g=;
+ b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIYMtrvSXxXVRT749GyXdn3V8Wy/1NWLajpunhedsr8p
+ PdVBb+qMxk7SlkYxLgYZMUUWdZJa01NKpLKP2JQIw8zh5UJZAgDF6cATOTfKYZ/JpG5x6ae+WG9
+ UHzu0bbHp/l1zJR3r2a6/kn4xPYVObVntBj+GeYfWnr/wBwvvidTpB3bFZ1ZZxxvVNr0zeXOi8w
+ JTWfd2ACym0xK
 X-Developer-Key: i=aalbersh@kernel.org; a=openpgp;
  fpr=AE1B2A9562721A6FC4307C1F46A7EA18AC33E108
 
 From: Andrey Albershteyn <aalbersh@redhat.com>
 
-fs-verity doesn't support DAX. Forbid filesystem to enable DAX on
-inodes which already have fs-verity enabled. The opposite is checked
-when fs-verity is enabled, it won't be enabled if DAX is.
+The direct path is not supported on verity files. Attempts to use direct
+I/O path on such files should fall back to buffered I/O path.
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-[djwong: fix typo in subject]
+[djwong: fix braces]
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_iops.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/xfs_file.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 83d31802f943..2d8ecdd0b403 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1365,6 +1365,8 @@ xfs_inode_should_enable_dax(
- 		return false;
- 	if (!xfs_inode_supports_dax(ip))
- 		return false;
-+	if (ip->i_diflags2 & XFS_DIFLAG2_VERITY)
-+		return false;
- 	if (xfs_has_dax_always(ip->i_mount))
- 		return true;
- 	if (ip->i_diflags2 & XFS_DIFLAG2_DAX)
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index da13162925d9..9680c97ee40f 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -259,7 +259,8 @@ xfs_file_dax_read(
+ 	struct kiocb		*iocb,
+ 	struct iov_iter		*to)
+ {
+-	struct xfs_inode	*ip = XFS_I(iocb->ki_filp->f_mapping->host);
++	struct inode		*inode = iocb->ki_filp->f_mapping->host;
++	struct xfs_inode	*ip = XFS_I(inode);
+ 	ssize_t			ret = 0;
+ 
+ 	trace_xfs_file_dax_read(iocb, to);
+@@ -312,10 +313,18 @@ xfs_file_read_iter(
+ 
+ 	if (IS_DAX(inode))
+ 		ret = xfs_file_dax_read(iocb, to);
+-	else if (iocb->ki_flags & IOCB_DIRECT)
++	else if ((iocb->ki_flags & IOCB_DIRECT) && !fsverity_active(inode))
+ 		ret = xfs_file_dio_read(iocb, to);
+-	else
++	else {
++		/*
++		 * In case fs-verity is enabled, we also fallback to the
++		 * buffered read from the direct read path. Therefore,
++		 * IOCB_DIRECT is set and need to be cleared (see
++		 * generic_file_read_iter())
++		 */
++		iocb->ki_flags &= ~IOCB_DIRECT;
+ 		ret = xfs_file_buffered_read(iocb, to);
++	}
+ 
+ 	if (ret > 0)
+ 		XFS_STATS_ADD(mp, xs_read_bytes, ret);
 
 -- 
 2.50.0
