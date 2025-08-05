@@ -1,84 +1,84 @@
-Return-Path: <linux-xfs+bounces-24423-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24425-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1FDEB1AD45
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Aug 2025 06:50:35 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E684B1AD71
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Aug 2025 07:02:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9384F18A2E7F
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Aug 2025 04:50:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D781A180CCC
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Aug 2025 05:01:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4774C3594C;
-	Tue,  5 Aug 2025 04:50:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0FB199E94;
+	Tue,  5 Aug 2025 05:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aR6Y90Tj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNmltnP2"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5342192E5
-	for <linux-xfs@vger.kernel.org>; Tue,  5 Aug 2025 04:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE84117A2FA
+	for <linux-xfs@vger.kernel.org>; Tue,  5 Aug 2025 05:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754369422; cv=none; b=ANpYHC+yB57WNnA6lym1+ACDpgHKz2K9+UX1vWiiHXjMeBGyObNL/1bR6xdIgLzXtZvWftTfJkNUnjVwQ1ucvN4kuMOWP9jJTPTPWXpsAvkuWgMTV3pHEl1tqkqN4PRxp5bX26DBtER1WMA2Yj+tS7IBZw5+ZfGjux4MMe/GjBw=
+	t=1754370105; cv=none; b=V1ZOCNc4uWdK2IHD29zNTNRNamypse5MPuZZ2R+qSPLOXWHkuqbxygpFBhEYT6FGLrWFplV0hCsRvw5VCihVs6peg/pxVO6shl03EC4v0ucy5hnUbVMb+kmyeBT2U6k4lepU/xvs1TlFh7mQ6d/RzNZxKR4EPWQ6C6elPjHMfBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754369422; c=relaxed/simple;
-	bh=rbLiQOufiJaHIio8u9t9ktEh8unj3ho1YWq1RYHrny0=;
+	s=arc-20240116; t=1754370105; c=relaxed/simple;
+	bh=pqq+FcQQ+NEVd+1xiYm/Xmfeo5vnLdRpsqdkPhfcSvI=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=OvuhuUZ7Sv6jVvWOF1Cq4A9VKGhJA8VD2svXroC2pVwE0JFD3rWdJxuXHlSIIm0/RFKeK3avSbWHh7D2XFY6cdfxYYWHs7hVV63p9jm8fUONP6mxg0FLhs8ptcVVelMx3K2k/CzgUVRLGA0ldaCes21d9UMdtCkSF9DjWfHZA+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aR6Y90Tj; arc=none smtp.client-ip=209.85.215.177
+	 Content-Type:Mime-Version; b=bcJucKa0lZ7FK9Wooco2a2Qb4Rj0xffRCrZPv7D/NTjazK7t2mn8NC2Lit4/nJL+CHjEr5nyvF4hDvDE2sDNfZqrgJE1DI6kuOh/6603pNNcWV1fp/JkvamhGPJJcgmuFx4ZzgGN8InG2+82c4XSxm/YnxOMaS45NwUHdKh9OLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GNmltnP2; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b3507b63c6fso3996827a12.2
-        for <linux-xfs@vger.kernel.org>; Mon, 04 Aug 2025 21:50:20 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-76bc5e68d96so4163959b3a.3
+        for <linux-xfs@vger.kernel.org>; Mon, 04 Aug 2025 22:01:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754369420; x=1754974220; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754370103; x=1754974903; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to:date
          :to:from:subject:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oZz2Ou8wZUIItrqA5BpcmIfhKphsw8UsqRsbuLimLZo=;
-        b=aR6Y90TjL5UoX4oNUap7Lsls8R1kND1j+MqmS+QrAXbLjVj1DdxDyat2sjqC33m2kw
-         SSRep/QJnlq50Umd9Q/vxhyks9X2w7PN8H/7vB9pWIsiXLYfUZ37TccIE5SsSSOa/N4h
-         SZDYoMQqpglEi94tE5gTOrt/Qdc7eN9Bd3JBldU0ocr/qabgIIjMpFnCSOKA0hyvx9N9
-         OASmDLGwxcr0NsDpkffvRCn7VpJi6iTjzYdMdOAmwFAIAwOeYnv5zLxDsOZT0JPD0+nw
-         tQSpDBTe/EZrnct5hzAM5UYF/N6euCfb6CrjzRSL0QsGvENGsne+861xM76OPpCo72FH
-         eEFQ==
+        bh=RE7Mct/T3NR0Z3Wd9KMBh3LaJwbBGPXI9IqPsbgZHmE=;
+        b=GNmltnP2BZ3n03khjpOw97ZGje/NKvBmmtVnUvCsB+MkCRlHFgimwzZroMij1j6qSy
+         1jMJ7DgVgF96NgMIH7c85YKZOkgSp8Bx0W1AFCNb1aveegnq5ybKA99H3QWQQORrPt90
+         sxHhVkce794FEtJARA1ysjH7EGKAXTJQr8BL6yV02GnDCRtqw+uFqUF4WMaok37WTKfA
+         vz0rA4H3R15bHzim3isfswrazAS33RiSzPoUegh0oTxIO4uafnnHZFWYKWJMY1oI+yNa
+         FSPTnkB3gFql3MFCLq3IF2dhecVOy051JpENAmrkg7GMqkbYQPkhx8T4CNLbnKToIjwM
+         0s5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754369420; x=1754974220;
+        d=1e100.net; s=20230601; t=1754370103; x=1754974903;
         h=content-transfer-encoding:mime-version:references:in-reply-to:date
          :to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=oZz2Ou8wZUIItrqA5BpcmIfhKphsw8UsqRsbuLimLZo=;
-        b=ulBo3szKIBh0GespTs8wvRUEwvhcIXrMTY6jHUAT5fTP47utCbJhNmYqjDLmmolUrJ
-         WJD5UTapnDzo+HxusKP09CMVD1HuSasxRuGVMlrLV8wmuIkTsK1dIXfbH1Z0tCBsWD6y
-         npU9icReNt1kHNkOqShFcnlE9InNCnSYbF5bGIDoIdLlNG2TPMZzcBB/bTy5xO3+G/+J
-         gNS9jPr5jyRRinCsJyadHqBDdohEw6hK5ZghdYIMXpo8xUo3QdbrCi8oXy7YRNboTzmW
-         OmLD+ZATn5sm7RO3YccKDti4akrQbUrEj2eyC482rbypjaGMEuY3q6deTBj3+LdQsdkY
-         ooCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWoiK3kjiv5H8De9fmfXKlhnwqEZm3q+ZtQ7MvLTo812T9FOzB0fnUOvdxT2LPor5wTiFLWg188WkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBfBZNRLDPQM6h0DZXm+RJ0h5SBIdS8UuZ+6Ym2lD9XRGbFc67
-	Fo6fnfEraBlaGn5nfQgZ/ZaggcjsmDZw88nakYZcpiKnsnBcZrzVBbQq7xS8gA==
-X-Gm-Gg: ASbGnct6Ur8/95KbO+5IJy1aB9gyDtj6Hs09JOkEf92zTGm8aPN1xha1M7kInzvbo5p
-	r0S1sau1xBjB+pmToJbEUCvCf7zA10YDC/o2uFh56HL8lH1DRbIY9lfrYRAS4BRyETPaoWytIM2
-	Cz4P7wYXyeTN+AVwFsyW90lHurVab/eJ5vpDKl6IVwWe65wRLsvbzmq3WIj0sJecoEinRRrlVjC
-	7cGfn0p1PWCOiWeLqyxufn6Fa/HRgDQfsrWDcqMK3PNxM+RUqqVHQMkgylTbKmjcJGRqSiYKlac
-	dOTEUoJG/iLNp17C5N8MG28fvxaV9k+VmwBMa/rXrVnU+fcXvCybPYbssabfcxvVzBUFEuY0uy0
-	sOh+4S27lHAuRW0trxOcYXn+AIxTIgL6Aj7Udil60aSq/MhajlGQWbHG8FzsWvQsLte0Fkf8bb+
-	c=
-X-Google-Smtp-Source: AGHT+IFDv8riI0KkOmm3u9ZZI550JBl7ZGzCoKIoVQCrk0IOhdvALGrOXWo7h3HEq4XdaFRc0hsTiA==
-X-Received: by 2002:a17:902:e84f:b0:240:5c38:7555 with SMTP id d9443c01a7336-24246f2cd33mr168276095ad.5.1754369419794;
-        Mon, 04 Aug 2025 21:50:19 -0700 (PDT)
+        bh=RE7Mct/T3NR0Z3Wd9KMBh3LaJwbBGPXI9IqPsbgZHmE=;
+        b=ZswL2sk//W/gSGp3tzhTBIZMsF4km5T0ztz6WKZBVSBDLB7p8iLP3XrWBMMK2F30RL
+         H5yZSNmAVpvNdJ+d5U8djdLOb0AQ8Mt+OOakUaShH6fhlY4LGHP/IZCxzto8jhatrmo4
+         0t33TaOGRc2xOqga9QdpySqTCWK9S01OwYWW20ak97n7aroWCcfL58tgWiwGHYZTGl6e
+         bmF+3l1UxtjE/DHnJKF28LVyRjhmhRSv4rhHrsxWU7CArYRmhr614L7UPq6iH6pfozVx
+         hIlgCJ1HVkof+Ib4O7X6/1MzIDOKCXT136mI2V0kCrJyFP3Dgcto9CTCBgtgqkFwlzza
+         Azxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtvyjx+E3at/VoEZ4OKP95RHK51fMZ36hku+tZ0ej76V8vvC67DSFcOLhMpoRf1GVftWk49TsQ7CA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzriVOLJnRjzE+s9inyViKqzwrg5G5M59RyWqrGLkojaLPbWg+i
+	1lOvNtbDIFj5xmlnZlqGzXdaiFLycu6IzBryaT5qTjkHPI7xDpSKZZ4KgS8gOQ==
+X-Gm-Gg: ASbGncuR0dF9uqqfvnwqCYI2St4qKuej0WCTWVPigtsDkTBFOxUAagt1OfthmVOZpX/
+	fLLNLTaW2iUZgs8f37GMvwRhPCHoqcX3HR+jnBITsboXt6/7oGjJIu7GRzjqSHBpCh+u3la0x/4
+	bfOVBPZA98vYdjcelkK6Zp1N9Xbmp32iloXpdJCYvKvm0gr/UNRzVp/sZdR323unkV+yhTKu7Sb
+	2TILCgmt9AhAfKBcBsrZSnF+enkIH15YvRwIF4qxZA8tqRNPcZJ5atWziKGLgmKl+10jqCbiSD3
+	dguCq28kqTBWd3DNg44CyEY4gokb50olB4u3+GedzPtuXLq79/nF7+ZCxMGu2+32pv7YE35DGKY
+	+kmdYv8XBpA8c5AlZPbq2tbXM7xZhqDBO/x8zEsRcIks8GX8lwna5SgrFhkxUON1adEJEXRpiHP
+	Y=
+X-Google-Smtp-Source: AGHT+IEjQO7mZlWs85w5JCpY5U05Lia0DINHalw+GnEdRv1gJQNZNPC2isdgajfD5U/2K7FWhI0Xvw==
+X-Received: by 2002:a05:6a00:1495:b0:748:323f:ba21 with SMTP id d2e1a72fcca58-76bec302002mr15019380b3a.1.1754370102951;
+        Mon, 04 Aug 2025 22:01:42 -0700 (PDT)
 Received: from li-5d80d4cc-2782-11b2-a85c-bed59fe4c9e5.ibm.com ([49.207.198.59])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8aa9257sm123491995ad.153.2025.08.04.21.50.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76c09adf8efsm3437682b3a.68.2025.08.04.22.01.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Aug 2025 21:50:19 -0700 (PDT)
-Message-ID: <8a9071104eec47d91ab44c86465d08d76e0cf808.camel@gmail.com>
+        Mon, 04 Aug 2025 22:01:42 -0700 (PDT)
+Message-ID: <58fc5e2ae7f658863c6934260221aeb917a3b2d6.camel@gmail.com>
 Subject: Re: Shrinking XFS - is that happening?
 From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
 To: Roy Sigurd Karlsbakk <roy@karlsbakk.net>, linux-xfs@vger.kernel.org
-Date: Tue, 05 Aug 2025 10:20:15 +0530
+Date: Tue, 05 Aug 2025 10:31:39 +0530
 In-Reply-To: <B96A5598-3A5F-4166-8566-2792E5AADB3E@karlsbakk.net>
 References: <B96A5598-3A5F-4166-8566-2792E5AADB3E@karlsbakk.net>
 Content-Type: text/plain; charset="UTF-8"
@@ -95,15 +95,14 @@ On Mon, 2025-08-04 at 17:13 +0200, Roy Sigurd Karlsbakk wrote:
 > Hi all!
 > 
 > I beleive I heard something from someone some time back about work in progress on shrinking xfs filesystems. Is this something that's been worked with or have I been lied to or just had a nice dream?
-> 
-> roy
 I have recently posted an RFC[1]. The work is based/inspired from an old RFC[2] by Gao and ideas
 given by Dave Chinner.
 
 [1] https://lore.kernel.org/all/cover.1752746805.git.nirjhar.roy.lists@gmail.com/
 [2] https://lore.kernel.org/all/20210414195240.1802221-1-hsiangkao@redhat.com/
 --NR
-
+> 
+> roy
 > 
 > --
 > Roy Sigurd Karlsbakk
