@@ -1,48 +1,48 @@
-Return-Path: <linux-xfs+bounces-24735-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24736-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3511B2D475
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Aug 2025 09:05:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A46F8B2D47E
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Aug 2025 09:07:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5EDA93B310F
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Aug 2025 07:05:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DF7B1BC7D32
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Aug 2025 07:08:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62C92D0C8C;
-	Wed, 20 Aug 2025 07:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 535A62D375D;
+	Wed, 20 Aug 2025 07:07:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzzzrcQB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQnfFDFK"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F86535336A;
-	Wed, 20 Aug 2025 07:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A8B2D24A4;
+	Wed, 20 Aug 2025 07:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755673521; cv=none; b=p2zcj2Pxdyoz7Jv1w4tD7yIwTweIY4+UPf7p7rfpa7Ky6jyGZ9KjXNTck4Qp+t5Rx9mWiH+dorPC8cN/ELmtGS3eU1aAA/lMsUIR3K+mJB+GrhQvlRUlApXYjXg3j5xaeb89dOETKteYk2mhbDeBd9rF5LTeFmFepf5JJIcoY68=
+	t=1755673649; cv=none; b=TxcoJk/scBFg01dCvrM71U8UG4sC/dBy3mZ+NtYD7el9MpzGOvmNvhbxGTETK1NRJelYtu8jTiGB52N4/bcobvqiXrhhbGw3iCLcbsaTcRdEQMrsJ09IhbqxayXOYd3Pnfy9Pv/7eoIP4KC6Sa7/YgLuHEmPeqKTSe78m/DWMVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755673521; c=relaxed/simple;
-	bh=KEYfh4PJvrgBa95LZ3pjvfb1K6WI8Uw2nKvoJM+W9wA=;
+	s=arc-20240116; t=1755673649; c=relaxed/simple;
+	bh=RNuT8rolpmE1350wVDqZkO9I6NZ7Os8mz1M+GRaxmxU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Km9Kv/z9ReXN3StHTnxsi5Cxz1RMPzXpicEH31IZl9bn4o2e+kyQCR86XNZQukftu7b55Bw6rCVlNMlzSPY4Vz06pzu8uLoOVwACmik+U0WniI1UDmAPpDlLQ2bHP7a6eHr+Dahu1COzzWQgxrLvCQEpXoAdnoenMzJU9+2Ksww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzzzrcQB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90982C116D0;
-	Wed, 20 Aug 2025 07:05:16 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=UdajSNM9Kl/6CcW8B8Ik2qYHn2arOaIXpg8Ena9mmNSw5YIc7qztZPqsuffinkOjuz9cOCSvRp6o4ESxj042xPUaBqmeA00tsh1zCltWk06cEfVJSf3F5/XBTv0y+uZB5s8NiiRef97AwHY8wxID2M1jEK/iwMVnCdH8YE0zia4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQnfFDFK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 071F4C113CF;
+	Wed, 20 Aug 2025 07:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755673518;
-	bh=KEYfh4PJvrgBa95LZ3pjvfb1K6WI8Uw2nKvoJM+W9wA=;
+	s=k20201202; t=1755673648;
+	bh=RNuT8rolpmE1350wVDqZkO9I6NZ7Os8mz1M+GRaxmxU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CzzzrcQBbIqpX8uzZUPojwM27IwtbuODyEFkaXtqm3CvsTzQjS/cTMWmRwqoQK1Cm
-	 Vzd3d05YKv5t1XAfzguWakulffRfdLLlaYtQ0mVYcSuO91zJO/+mVuCJc+Rgvt+oZb
-	 2i/2/u8PVZ2sDgaVRvCA7GpUdQ7QRarjTHJlccMBcZRIsbLUSmWir5m7XoTjpOEE7c
-	 0cmD11R7vghvZt4KE/a+Pq1ladn/8SaaT9o6loaMQ28YmaJZeKB2JGD0htPn2sNFW6
-	 QEiQXzhUDVPzr5WpSwE63n7eMPb6vSOYlxgIm+13Xfj0u2zor4rwpr7j4D5XxIMKmR
-	 Cbq6MmMlXwZ+Q==
-Message-ID: <d07a4397-1648-4264-8a30-74a2ea3da165@kernel.org>
-Date: Wed, 20 Aug 2025 16:02:31 +0900
+	b=qQnfFDFKl2N8g9DijYw7VjJqcUUzwZK92nY4P2ZjHnSCpMAUQ3eyDA6UWU0hg06rt
+	 05JffScD0bvWRVFsGfDYE/CID9uaExK9DA7gEiqhKJ18A8P2SWdUQSX2Wcy2iDanZ/
+	 w/Wn/TgyUGpYpi/GWB/7YuqAc8nqr98FLsIrWcgV/NnjyGAvTYmJUHwlBidARaKRcK
+	 aPtwbkrYdsE4pAZLQohFtI5lBpQZv8MqyAZwF6ADuvxq4h26AVzlfTsUUg/Bg6+5aj
+	 gF9yKis26phVD/tgEgyeTWlghlS4AmQOcGiffcgG20yfIO8yM1FXBTdnrOsEjdGeWR
+	 XrV4zDVw9E5Sw==
+Message-ID: <90801327-0146-4852-b038-30a0595f46ea@kernel.org>
+Date: Wed, 20 Aug 2025 16:04:41 +0900
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -108,6 +108,10 @@ On 8/20/25 1:49 AM, Keith Busch wrote:
 >   * @segs: [out] number of segments in the bio with the first half of the sectors
 >   * @max_bytes: [in] maximum number of bytes per bio
 > + * @len_align: [in] length alignment for each vector
+
+Another thing: since this is a mask, maybe better to call it len_align_mask
+like you did in patch 2 for bio_iov_iter_get_pages_aligned() ?
+
 >   *
 >   * Find out if @bio needs to be split to fit the queue limits in @lim and a
 >   * maximum size of @max_bytes.  Returns a negative error number if @bio can't be
@@ -125,13 +129,6 @@ On 8/20/25 1:49 AM, Keith Busch wrote:
 >  
 >  	bio_for_each_bvec(bv, bio, iter) {
 > +		if (bv.bv_offset & lim->dma_alignment || bv.bv_len & len_align)
-
-Shouldn't this be:
-
-		if (bv.bv_offset & len_align || bv.bv_len & len_align)
-
-?
-
 > +			return -EINVAL;
 > +
 >  		/*
