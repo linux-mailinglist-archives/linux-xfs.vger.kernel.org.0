@@ -1,104 +1,71 @@
-Return-Path: <linux-xfs+bounces-24742-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24744-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70E4BB2E12F
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Aug 2025 17:33:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3C6FB2EDB8
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Aug 2025 07:57:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36A4B5E6F63
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Aug 2025 15:27:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CCF937B3907
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Aug 2025 05:55:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE25D36CE14;
-	Wed, 20 Aug 2025 15:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzkTlGwy"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F692C2372;
+	Thu, 21 Aug 2025 05:56:53 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBD136CDF3
-	for <linux-xfs@vger.kernel.org>; Wed, 20 Aug 2025 15:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6849D17BA3;
+	Thu, 21 Aug 2025 05:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755703553; cv=none; b=pagPNxb/OpQiFwKuuJlJcGxlAenLVfoLIlXBKFbANz6oXzug+D+Wh2EKWE0/cpUrT1kQVdNvheIfDiO2l0PQJFC93X69yZ+zl6CGEJE/qmrwRJO5UiKveg87zlH/Q5PYv9oa5rBOxb9AzF1AHHC//bN/3l+6iL/TBubrxnw3ZTI=
+	t=1755755813; cv=none; b=LxraF4LkpYibgdM1PVBGS2M5vEK7jXGGJyVAC98MEgt2glRCEGH+og0p9OYEofjWkPSMXmIZkfZPYGWLsxv+DzzHvefFU9RS5vOZ3Eil2MZFxd27eBvolnM4i/aI2gLRJnP2KMcteyjcv4zclqF+2Ame9SD3X/GKfANaMuYmlEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755703553; c=relaxed/simple;
-	bh=R9alDJNi3S9evUljS+b07Jjju41HZO2HOVzmSL6mx5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bcSucwQuApYBOYB4ZZupi2jGh0pDtQSCPmoHJlx/7wh/bSze+l3+j7Iedppm79GLCVWrwwYa7cU2RNj4vmTcdEn6TwI/ArGQpcmyakE02WPVZHn4E1E1xgBoSoIfJe+FFdC8HsTtMybbhMxBqKXJbmxHUpoIL1dQmtzK8WhduRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzkTlGwy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37CDCC4CEE7;
-	Wed, 20 Aug 2025 15:25:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755703553;
-	bh=R9alDJNi3S9evUljS+b07Jjju41HZO2HOVzmSL6mx5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UzkTlGwyzlkwC4yNWr7U1lp1j2pckDPXd3UNal1sbSkTRuK2EkQfufC6RpWvIc7Sc
-	 2tSr0alu+4qkeL5e8A1lF7ENJHwt+3olNrAcI7pSRs1frqLdhetbpROtKl8/6jTYFf
-	 R1RbokIeDg8sDEsjGxieY0c7ROoZyha408Lk45fqMDS+8UzeDmwc6eTHOJLFYDx4Ki
-	 b6gb9sOyUO9GxZ+fsM8dJQw/UwSvvc4bzbRLoHZOoCL/B5Uc1L7jZ/CkFYJJr7mzwz
-	 iKxOEj6LzDkEJh1oTacqIexfZvjvYBJB5iiCMrxA96/YZIgtSNjDPgj8ivOiM/xMRH
-	 aHpxmgPR3ebvw==
-Date: Wed, 20 Aug 2025 08:25:52 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
+	s=arc-20240116; t=1755755813; c=relaxed/simple;
+	bh=u+naIwJRv/P1JexjaegzYYWrQG0ap9+JnttS0myNNXM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OKyrU5Ceqv4Mu6pSN/xV4ImlIsAM73mmK8L4e25/l9IlzpFbudo01KZbup7AKKK0RlUE9vfBuD1uiyRsl+IOyqYb5S3pz7L3qdeZemM736j7MEzMvYjzbIlFeU5yYVC8uJIlsO+FnXu5/xelnrsvGDHO5WmmTBskGbI3qG5msOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201606.home.langchao.com
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202508211355311966;
+        Thu, 21 Aug 2025 13:55:31 +0800
+Received: from localhost.localdomain.com (10.94.10.82) by
+ jtjnmail201606.home.langchao.com (10.100.2.6) with Microsoft SMTP Server id
+ 15.1.2507.57; Thu, 21 Aug 2025 13:55:31 +0800
+From: chuguangqing <chuguangqing@inspur.com>
 To: Carlos Maiolino <cem@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>,
-	Chandan Babu R <chandanbabu@kernel.org>,
-	Zorro Lang <zlang@redhat.com>, xfs <linux-xfs@vger.kernel.org>
-Subject: Re: Yearly maintainership rotation?
-Message-ID: <20250820152552.GD7965@frogsfrogsfrogs>
-References: <Pd4KqICHYbjm5ZYOHBmgSRgs-uKNopGdeI4ARGEXr12t8ZnKctQMdfVRNceZbMeFFKncvIv9_fKyKoMCmCiLfg==@protonmail.internalid>
- <20250819225400.GB7965@frogsfrogsfrogs>
- <7svscwa3oy5oxavscjgapcvr7lbumsntu32fq7uhmrfqr6pino@7awm4hxzzqzb>
+CC: <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>, chuguangqing
+	<chuguangqing@inspur.com>
+Subject: [PATCH 0/1] fix  typo error in xfs comment
+Date: Thu, 21 Aug 2025 13:54:15 +0800
+Message-ID: <20250821055416.2009-1-chuguangqing@inspur.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7svscwa3oy5oxavscjgapcvr7lbumsntu32fq7uhmrfqr6pino@7awm4hxzzqzb>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 2025821135532a9f6cfad76f4763800e593758c50706e
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-On Wed, Aug 20, 2025 at 10:07:02AM +0200, Carlos Maiolino wrote:
-> On Tue, Aug 19, 2025 at 03:54:00PM -0700, Darrick J. Wong wrote:
-> > Hi everyone,
-> > 
-> > Now that it's nearly September again, what do you all think about
-> > rotating release managers?  Chandan has told me that he'd be willing to
-> > step into maintaining upstream xfsprogs; what do the rest of you think
-> > about that?
-> > 
-> > Also, does anyone want to tackle fstests? :D
-> 
-> Considering you were specific about xfxsprogs and fstests, I believe
-> you excluded kernel on purpose, but anyway, from my side I'm pretty ok
-> with how things are now, and I'd rather keep it as-is, specially because
-> I'm enjoying the role :-)
+The original comment contains two spelling mistakes: "attribute" is misspelled as "attibute", and "targeted" is misspelled as "targetted".
 
-I specifically mentioned xfsprogs because Chandan volunteered, and
-fstests because Zorro has been maintaining that for a very long time.
+chuguangqing (1):
+  xfs: fix typo in comment
 
-It's fine if everyone wants to keep going as they are now, but positive
-re-affirmation once a year feels (to a longtime maintainer like me,
-anyway) like a face-saving way to give people an offramp if they decide
-to take it.  IOWs, I think it best to help the maintainers avoid
-burnout.
+ fs/xfs/libxfs/xfs_trans_resv.c | 2 +-
+ fs/xfs/scrub/dirtree.c         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> Of course I'm talking about my side and my workload only, I don't speak
-> for Andrey or Zorro.
+-- 
+2.43.5
 
-<nod> No rush, you all have plenty of time to give things a good
-thinking through. :)
-
---D
-
-> Carlos
-> 
-> > 
-> > --D
-> > 
-> 
 
