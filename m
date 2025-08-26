@@ -1,56 +1,44 @@
-Return-Path: <linux-xfs+bounces-24939-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24941-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 202A5B3634E
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 15:28:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD8C4B36467
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 15:38:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BEB041894F8D
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 13:23:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5B1C563782
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 13:29:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2589C33CE97;
-	Tue, 26 Aug 2025 13:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZJoAfnvN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B956B242D6A;
+	Tue, 26 Aug 2025 13:28:21 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE718187554
-	for <linux-xfs@vger.kernel.org>; Tue, 26 Aug 2025 13:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DD018A6C4
+	for <linux-xfs@vger.kernel.org>; Tue, 26 Aug 2025 13:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756214485; cv=none; b=OVLYkeutiAlgZyaJHkJ9sZyNCEmQCieeTbdK/qem25gp9bu15flkH1mCDqfsgjHnOHUgiRZGM7gxos2osr8Oj8wkEfUAbOm8/tlkD6+oWcjPAMR8rw+r5exmj9vMS6WGBt2iDaNrYjod9F5oL20609Nv1d9QY3woSG4TtSpLuz4=
+	t=1756214901; cv=none; b=pbAEhnEeYIccxRNHQiQQHeOsHqc9NuhstMMiDBH4YXxsl3U6/cWbQ8QJoZsWLqzPVMGU4xyLYIRWxb+zmhyvORPLSBSsSU7znoX/CpJ2roLGcaatSHTvuaLG53j83zKsBGGJZnY5k27wVslfwHMvlGbv2iQVPEfJzTnkVS/vyKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756214485; c=relaxed/simple;
-	bh=BbO5gshgzmou5xtEa3rVWdh9Fu8W/DFr14RwZwgeZ8E=;
+	s=arc-20240116; t=1756214901; c=relaxed/simple;
+	bh=2IfAVlgIOdVAgpm6bhb+A77KDlaUz1YB6hEUimBA5ac=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TVmqZyCRV0te0/kSeqGeqaQe+j/g5t9rHy1szoJv7ofwSNpRINd2VJDOumzrCMvDQz7WW/Updx8kNTGG5vkTmMr7HBGs8gHH5/GBHlVP8q7aqySCwZRnYBOs475ChHInrTf4+WNYdSpwOEbbgJi24Hozielf4jBmWZqmC17reB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZJoAfnvN; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5dS/wNrp+jL5cd4wuBJgvlp397KkEzokaW2v4WWtGf0=; b=ZJoAfnvNXRt8n7XFxD2xUK37XV
-	+dvBHUvgodWt76clcEIw2o+fkaebZ1M6OQfOkt+5ZrsoalGijllI3vV4aNHpGmvKoVFVzdTtxq52L
-	RKaeoOdlU4Uva6A242suLcVm5Srton6n593i18Q5m/e1swLpILMRXrK02BS3HKPuBy0pc6z7LH2T8
-	XUPBR3NcUZWYVlU+LCqMte1X2FpI0ykbwGhcd/1uGQAjf1BUwP1KLFuoZU3D+mtF5KFYEQII3qs1h
-	C/TmnXMeWZKzKU9FC1+YklB3KnyX6Kwe7ZbwaKYZAnFNL/EBEk5CjJ2TuOphFcnpBI0lokZYtYOab
-	1s2FurfA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uqtc4-0000000C58m-0Cnf;
-	Tue, 26 Aug 2025 13:21:24 +0000
-Date: Tue, 26 Aug 2025 06:21:24 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: linux-xfs@vger.kernel.org, contact@xavierclaude.be, djwong@kernel.org
-Subject: Re: [ANNOUNCE] xfsprogs: for-next updated to 9ec44397ea2a
-Message-ID: <aK201Ikol4QsG8Yl@infradead.org>
-References: <kmkoyhtz4mjuy5xlucr4noywsgons5n6pn5ti3fjs4uv34fzlx@zsopyugtig6f>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XbJ8gepn+wVZlX5ARzdMfAHLIn9J1jo0M6uKRBu+EA7xVn4/oOPzdHCBGfURT6NI+6a6GSRO5+OhhO80mYMeFXZgBQGT2HE0eSdK36viExhT18Wr9jGSZxoHupv3l9z9R8/LaJbnOnn5BF9GzhHubrz1UWgSmiLzjXtAj7PK9oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 0961A67373; Tue, 26 Aug 2025 15:28:16 +0200 (CEST)
+Date: Tue, 26 Aug 2025 15:28:15 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] xfs: track the number of blocks in each buftarg
+Message-ID: <20250826132815.GA1946@lst.de>
+References: <20250825111944.460955-1-hch@lst.de> <20250825111944.460955-2-hch@lst.de> <20250825152649.GA812310@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -59,10 +47,25 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <kmkoyhtz4mjuy5xlucr4noywsgons5n6pn5ti3fjs4uv34fzlx@zsopyugtig6f>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250825152649.GA812310@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Btw, do you to pick up the support for populate from a directory from
-Luca?  I think this will be a really nice feature to have.
+On Mon, Aug 25, 2025 at 08:26:49AM -0700, Darrick J. Wong wrote:
+> > +	mp->m_ddev_targp->bt_nr_blocks = mp->m_sb.sb_dblocks;
+> > +	if (mp->m_rtdev_targp && mp->m_rtdev_targp != mp->m_ddev_targp)
+> > +		mp->m_rtdev_targp->bt_nr_blocks = mp->m_sb.sb_dblocks;
+> 
+> Crazy question here: say we start with dblocks==1G on a 2GB disk.  Then
+> we start growfs to double the size of the filesystem, but crash midway
+> through.  Then in the process of restarting the system, some harried
+> sysadmin accidentally shrinks the disk to 1GB before letting the
+> filesystem mount.  Log recovery will try to replay the expansion, but
+> now the disk is no longer large enough to contain the filesystem.
+> 
+> Should we be checking for that here and erroring out?
+
+I don't think having tons of sanity checks here hurts, but I also
+don't volunteer to implement it as there's a lot of bigger fish to
+fry :)
 
 
