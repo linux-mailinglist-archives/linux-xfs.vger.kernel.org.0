@@ -1,65 +1,60 @@
-Return-Path: <linux-xfs+bounces-24940-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-24938-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E672DB363AD
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 15:32:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B477AB3632E
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 15:27:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C7BE8A3999
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 13:24:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A36A1BC4C57
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Aug 2025 13:22:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8301C860A;
-	Tue, 26 Aug 2025 13:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342F3252904;
+	Tue, 26 Aug 2025 13:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="6Gyt/z+B";
-	dkim=pass (2048-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="Cb3RGTnk"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hBwOCIwF"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from trent.utfs.org (trent.utfs.org [94.185.90.103])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33BD139579
-	for <linux-xfs@vger.kernel.org>; Tue, 26 Aug 2025 13:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.185.90.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75008312803;
+	Tue, 26 Aug 2025 13:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756214573; cv=none; b=jFiSpqaM2wwgHnvy1QwfyHO8rB808VqrYec5wEyFc5HiBVkEuDTu9R0HKioGtSWmGubJB4AKOi0BDnosuQkoiOaKUPEABePvd23vW1+Y3/TQrRgYBejbopunkpjRFWRDK5Rx6ArcLyZ1+83/GqdoXx7+mcpcb8Gh/TLBpfXqx9g=
+	t=1756214426; cv=none; b=J+41U809sBaCODd8R0AkKEXUZ0QViC03AfQunIytfv39MRIKR+sjgVvIkLGUSE6phdZ2vMWrj3cP6BRD+lh93Q6fu3oB5vSR2v4NHPw+nNx55/bGScsL0+2nMkd9LytioybJ0IAM3raRxtr2+4MrcHY3/h0OXIxVoQ9ZfJh5KWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756214573; c=relaxed/simple;
-	bh=VJ/q/jbbNSamEaDBMkge77mKJlNf7zt+n6EtTi7+w8o=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=sz9RNKvoq6NacDP6Hopiu9o8a4VuNS4Jsm3cG2Jsyj4rmXSTmiimYqXbl+R5UZnOaPdJNQEgUwLU8En9RozQpaEeK3u3JS0kRrI6j3xkc6xXx2ttAMcwfUR8dp8yog7PEHzE+gd7SoHN7o/7Kzm3InOlez9tFEOO27n6oiA1AUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nerdbynature.de; spf=pass smtp.mailfrom=nerdbynature.de; dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=6Gyt/z+B; dkim=pass (2048-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b=Cb3RGTnk; arc=none smtp.client-ip=94.185.90.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nerdbynature.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nerdbynature.de
-Authentication-Results: mail.nerdbynature.de; dmarc=fail (p=none dis=none) header.from=nerdbynature.de
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/simple;
- d=nerdbynature.de; i=@nerdbynature.de; q=dns/txt; s=key1;
- t=1756214142; h=date : from : to : cc : subject : message-id :
- mime-version : content-type : from;
- bh=VJ/q/jbbNSamEaDBMkge77mKJlNf7zt+n6EtTi7+w8o=;
- b=6Gyt/z+BZ3HqZ/5cpRK0bQNxA23/gsyOKVPQ/Ue2/7Vq7zH9Kc11SZDi9DxkxSUh5jwcn
- huR1iLAyC0yY8mxDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nerdbynature.de;
- i=@nerdbynature.de; q=dns/txt; s=key0; t=1756214142; h=date : from :
- to : cc : subject : message-id : mime-version : content-type : from;
- bh=VJ/q/jbbNSamEaDBMkge77mKJlNf7zt+n6EtTi7+w8o=;
- b=Cb3RGTnkrfujJ2xP1a/FST57OggcPMmLvIe5E4NeDHqPhVDeieeWBPuNd3PfST5Ah+UbL
- IwIrMVM7wik1W6pjTeupn47VchyyYZ2Nm0PVjPuicz7u9lljPJ3zFNilM7ejnLsbJmMwH3O
- 6j5j2dx0SjIY/urTj1N8Xre73an/gvIljlQ+odgTVTxfM1FBKUmNUj9r1yDZy9CgLCWpNjy
- /3WuX0NNDN2wI0/46G1JBPa+zWpGgupB6OYW9t5sdpm50WX9Dtrlgs73bFKu3HBEXqFOC2M
- iDtMV5qCJNmnslRvbcxAfNwYXNUyImm11Mcmr6hl1/HbZ3ilQlFL2OiGpJhQ==
-Received: from localhost (localhost [IPv6:::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by trent.utfs.org (Postfix) with ESMTPS id E3BBC5FEFC;
-	Tue, 26 Aug 2025 15:15:42 +0200 (CEST)
-Date: Tue, 26 Aug 2025 15:15:42 +0200 (CEST)
-From: Christian Kujau <lists@nerdbynature.de>
-To: linux-xfs@vger.kernel.org
-cc: "Darrick J. Wong" <djwong@kernel.org>
-Subject: xfsprogs: fix utcnow deprecation warning in xfs_scrub_all.py
-Message-ID: <ce844705-550d-3eb2-0d08-d779f9ebc029@nerdbynature.de>
+	s=arc-20240116; t=1756214426; c=relaxed/simple;
+	bh=jjuPapsgWGN+1Nrpf5amo90HYScgmnPUiRwCTJLjtng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QJaZfHaTf8t0mWo0N3vXPa9VvmZdl5pt1cyfnbUzKqqfvDOmIYMW4Fhu99HJq5x4b1XcndWpkqon0D24ZAwFa+TwnOqpF3tZY58dlgmvdnnwx1lflBBK8BO6m7ooyc1xVtRzBHpK3TYzIC7UaTBlS0KzrldyCBK3XHefeCbX2KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hBwOCIwF; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=08FyapFBrrTQwRGwpcVtG9uDqwyWlKXLu+km+C9VdQU=; b=hBwOCIwFJIBSYAJABpSjMN+oNy
+	NNoVgkKjMTFVeUHScuDRssT9CFkFNU1WtW91Bwut1vWPBU7I6LM5S9DXewQlsE3M7CbQk4XFcyW3D
+	082mDFTozH/s6Ps7tfFhe6ZLGmadeVGiRqP1Ynks+7M+FP8tynLgI3RCL+xPHrGOD3aa0iU7BITQV
+	fwc4+S+7m4uLG/qiuoZv5No6IVyZIez7BNu4A6ls3rWpvzXEl69vt7IAUORis+xQhMpIdMMe9VESP
+	7AyCc3jG1TWdSI2V1s+pIq1n0yHnBqyXpbHtZA4GbPq2Oo7na6Pe9J23jpelKOm5mjXaoO8kKsgbd
+	FIYiLH2g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uqtav-0000000C4xd-3sR2;
+	Tue, 26 Aug 2025 13:20:13 +0000
+Date: Tue, 26 Aug 2025 06:20:13 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jinliang Zheng <alexjlzheng@gmail.com>
+Cc: hch@infradead.org, alexjlzheng@tencent.com, brauner@kernel.org,
+	djwong@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	yi.zhang@huawei.com
+Subject: Re: [PATCH v3 0/4] allow partial folio write with iomap_folio_state
+Message-ID: <aK20jalLkbKedAz8@infradead.org>
+References: <aKwuJptHVsx-Ed82@infradead.org>
+ <20250825113921.2933350-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -67,49 +62,27 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250825113921.2933350-1-alexjlzheng@tencent.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Running xfs_scrub_all under Python 3.13.5 prints the following warning:
+On Mon, Aug 25, 2025 at 07:39:21PM +0800, Jinliang Zheng wrote:
+> Actually, I discovered this while reading (and studying) the code for large
+> folios.
+> 
+> Given that short-writes are inherently unusual, I don't think this patchset
+> will significantly improve performance in hot paths. It might help in scenarios
+> with frequent memory hardware errors, but unfortunately, I haven't built a
+> test scenario like that.
+> 
+> I'm posting this patchset just because I think we can do better in exception
+> handling: if we can reduce unnecessary copying, why not?
 
-----------------------------------------------
-$ /usr/sbin/xfs_scrub_all --auto-media-scan-stamp \
-   /var/lib/xfsprogs/xfs_scrub_all_media.stamp \
-   --auto-media-scan-interval 1d
-/usr/sbin/xfs_scrub_all:489: DeprecationWarning: 
-datetime.datetime.utcnow() is deprecated and scheduled for removal in a 
-future version. Use timezone-aware objects to represent datetimes in UTC: 
-datetime.datetime.now(datetime.UTC).
-  dt = datetime.utcnow()
-Automatically enabling file data scrub.
-----------------------------------------------
+I'm always interested in the motivation, especially for something
+adding more code or doing large changes.  If it actually improves
+performance it's much easier to argue for.  If it doesn't that doesn't
+mean the patch is bad, but it needs to have other upsides.  I'll take
+another close look, but please also add your motivation to the cover
+letter and commit log for the next round.
 
-Python documentation for context: 
-https://docs.python.org/3/library/datetime.html#datetime.datetime.utcnow
-
-Fix this by using datetime.now() instead.
-
-NB: Debian/13 ships Python 3.13.5 and has a xfs_scrub_all.timer active, 
-I'd assume that many systems will have that warning now in their logs :-)
-
-Signed-off-by: Christian Kujau <lists@nerdbynature.de>
-
-diff --git a/scrub/xfs_scrub_all.py.in b/scrub/xfs_scrub_all.py.in
-index 515cc144..a94b1b71 100644
---- a/scrub/xfs_scrub_all.py.in
-+++ b/scrub/xfs_scrub_all.py.in
-@@ -496,8 +496,7 @@ def scan_interval(string):
- def utcnow():
- 	'''Create a representation of the time right now, in UTC.'''
- 
--	dt = datetime.utcnow()
--	return dt.replace(tzinfo = timezone.utc)
-+	return datetime.now(timezone.utc)
- 
- def enable_automatic_media_scan(args):
- 	'''Decide if we enable media scanning automatically.'''
-
-
--- 
-BOFH excuse #360:
-
-Your parity check is overdrawn and you're out of cache.
 
