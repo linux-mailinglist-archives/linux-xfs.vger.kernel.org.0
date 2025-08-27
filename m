@@ -1,90 +1,88 @@
-Return-Path: <linux-xfs+bounces-25034-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25036-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22C85B38654
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Aug 2025 17:20:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80A46B38659
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Aug 2025 17:20:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2896B98454C
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Aug 2025 15:19:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9578998367E
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Aug 2025 15:19:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FAFB27CCE2;
-	Wed, 27 Aug 2025 15:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E764284882;
+	Wed, 27 Aug 2025 15:16:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SjDlcZcy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gzQFWnoc"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71324321454
-	for <linux-xfs@vger.kernel.org>; Wed, 27 Aug 2025 15:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DB427FD5D
+	for <linux-xfs@vger.kernel.org>; Wed, 27 Aug 2025 15:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756307773; cv=none; b=CwIv+d25e7SeLtXPZpcnd3/rWeMUBQTctkh1edj69XMSN+JHRsMZgnEP3/E8iOH7WkkBlqWhJfaM5tIBcqkst2JNOvtGKSKLIwtjXLlHlngp/I2/CbGEk0OOkfEyA+Jc2X75dzT45RVY5MP9zzWbSswSwgF2XK+gQLcNQ3yB/Mc=
+	t=1756307788; cv=none; b=R+l+JK+JngAuHAq2BTSa5cC9i6eiLrDZu47CC8oUoH3wB25diPo5Zhv9kYe5W0MMaQckvLKuj57VjcReIRJgfwReLsMF4ElRyGRTDuYbhjDMipOcfHskCzUCojhupOCtboxR1gDwsToEuwRJtUKZrjjVCbGumx+G5usByFTHnjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756307773; c=relaxed/simple;
-	bh=izSJWa7mz724b1JHGLezzPPHQAOYuss7tQ3I2vbEPI4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=t5VvCRkX8bYaYF0Eg4JYkQ8Zc+bluNNfAcMjm1py3n85Xw1cUm0FPE0eETGf70tyNzM3/tc12eV3ipC4IBiTtqXQayO2FXypucy0K2a1Y9SfuIa239yf926+kRxDtMFbgSmAMhXSQvASKMsORzK8rXi+9Z7fYxbpWDbB/Mnd9sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SjDlcZcy; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1756307788; c=relaxed/simple;
+	bh=PPr77puRvCeAT40UGuOX5WZ1/o6gVvC8AT6qc5GzuQg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 In-Reply-To:To:Cc; b=XyJvtFZmpp04eFzDs6LfnU/+J2J1JlzCM/TY8zLZ+FIheMSmrNmXvvvivMgpcPCYdYj0rfJk7ASEhvukkU/XutBpivbUEd5HRUKHStlbTSzm5KhP2xE7lnEeZIUpxdhSQW3U4d0XSOOrFNiA3ol4fm/BYsvG+tWZwmk82CuLlsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gzQFWnoc; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756307770;
+	s=mimecast20190719; t=1756307785;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ilPsX5xqHT53yqhTHdeXCad6dD85Xi19tJRkkZN2ujQ=;
-	b=SjDlcZcyRb7McRYcR2NRGb7G7F2QtwuRKx7bqQVT0PnPeEPmurXUsiaH4fAObu6tth0xuJ
-	fPpC/i79OWWUjnOzCPmmrdF8+NmZujGkDg8mv7Az8Pz6o8WB6yTIVgC8jstPZw3agGsvWW
-	+j3M97zi8v1LO4bxxpbepbQz20U7qWQ=
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+	bh=GoGNdT1TeINSx3pJcevvIE4J9/n+UyYLAaBs2NvW64U=;
+	b=gzQFWnoc4CbY7dNgYiDE4jN4ayKXq7RiS0sxm1Jh1s4/IEbveIikjWrTR8IlzkJydk4ZhB
+	2viWgsUrY06+vO3tgRrlhH0u3OLNY6HL7TNFPJYMd7rGMOOUhpSwnJj3uTmiMW0MFk99OW
+	TaXHLyMHrfk7LVwKFVUgHCHy+/FCiQs=
 Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
  [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-347-5Cf220LrPJqfMB0_3syMxQ-1; Wed, 27 Aug 2025 11:16:04 -0400
-X-MC-Unique: 5Cf220LrPJqfMB0_3syMxQ-1
-X-Mimecast-MFC-AGG-ID: 5Cf220LrPJqfMB0_3syMxQ_1756307762
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45a1b0ccb6cso34362035e9.3
-        for <linux-xfs@vger.kernel.org>; Wed, 27 Aug 2025 08:16:03 -0700 (PDT)
+ us-mta-589-tZQY_Mm0N8GMrzJ-tzqM-A-1; Wed, 27 Aug 2025 11:16:23 -0400
+X-MC-Unique: tZQY_Mm0N8GMrzJ-tzqM-A-1
+X-Mimecast-MFC-AGG-ID: tZQY_Mm0N8GMrzJ-tzqM-A_1756307780
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45b629ed73bso20732775e9.2
+        for <linux-xfs@vger.kernel.org>; Wed, 27 Aug 2025 08:16:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756307761; x=1756912561;
-        h=to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ilPsX5xqHT53yqhTHdeXCad6dD85Xi19tJRkkZN2ujQ=;
-        b=Mh3Tr0QPdyDqzSgt+k4HQIJqokHF3NB69zMxZ00HLgG74FBk+QNf1vln5nyNIKyEjn
-         6PvmfHa//tar5C0ExUrWmrrULvenwFWkR40xNx0X3qepIH89fRMPQa3IEsFY6JosMDVm
-         R6svI5IhEXc5rV0mvZSnPp1v2bcnvQSP4E5PyKjuleGK/yJMMvyCbpfE32OCw4uTaW/5
-         2xoLqBCbOPL/P41fLFQMTcQHjcZKWwzI0igYnwyy3wi5/D7XeEgDvkKlxJGgzA9+XKec
-         /bNgabTIL+jZ+Ll7+YKfP4io9i45gOg4ILXozc/MhBpbHGMtqm6h6RYJjgJNQlKkryqy
-         rA5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUe17AcSiul9/h0cPiW91a6cITvEZesN6+IfA7HrAkgTtkjPsALBKvvjh2DARybR3pcrgaIvRgPdQs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwwr4YjlyE1+07239RMNY2+0fJrTzjXG4rJl85upuSJfo+rb8R
-	7xZgvvsNBfoqUfOoE00kw+dQC974ZPHUcp/eSXET6kwg6mxkrooVwVqODznGoLmo6Pe7BY8g1iW
-	1HEGOONZ5ep/4/Z9eXjIOFCsISonChg9PXSBhhQw+hZX3voMX/mD/YoV6fC840wF+wRdmqEREc4
-	VomBEyJEV6jP8bt9qfeAe2r+xlp5hlcI7aZxFxA3fhlNXw
-X-Gm-Gg: ASbGncsB6rHm7Y6z+yeFLYk75d4WecNy0fHj0qUDrdSABsb1vlmnFJg77tfVzr7SbZS
-	XaK2Pp06z6SpDoHmKp9xvq3sLWRoyT1Tjpuxhq/5TW9qM+Vwuzyl53hqzXL//yCnrlzVtNX9f1J
-	03reii3N34kkIYVHIX658pq2s93GWeTUkijxB0LNngLhuLEljIT4PDERMMi5xrOqVNhekM6w7gy
-	7z27YqGUt1IqFkiSzE5ta5LwSPSYJhkVPu2l7hMrctpBlVf31oMwTxUat0R63eVaFrvsNELGvnV
-	r5MwW9JqgJ9vJCvBYA==
-X-Received: by 2002:a05:600c:8b55:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-45b54b21175mr167644095e9.9.1756307761134;
-        Wed, 27 Aug 2025 08:16:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEjEsUcMJyO+PVXTjXz23g996Y3GnnPBnHITgsL3/hdP62yPOXCCipt8Xc5Y0OEQxuWSFy33g==
-X-Received: by 2002:a05:600c:8b55:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-45b54b21175mr167643805e9.9.1756307760700;
-        Wed, 27 Aug 2025 08:16:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756307779; x=1756912579;
+        h=cc:to:in-reply-to:content-transfer-encoding:mime-version:message-id
+         :date:subject:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GoGNdT1TeINSx3pJcevvIE4J9/n+UyYLAaBs2NvW64U=;
+        b=h03yHuq59zPv+vfE9o+wCBBVsCvaR/UI9raJiUFSjRzfZCoDu71+9LOuxSVQuNi97l
+         xVLxKe3i7taaiFaTNIxyQY9LAtlxOJ2kJxI+2v/rENoz77Xtk5T3v+Xaw4lDLtmlmeNE
+         YufA+iMvRWc9RcdOU16v1GcMhECcIdrFL/u9Nhj5nWLq+P2pUzaroBeJstm11ym3jqdF
+         0BZKd3/zTPdZ6Zfuvn6Zgp+U7uVDQk23+oLLf5gjjy5uJv2Ns9ymRtSVkVQK9g9TwRCC
+         l3HfI3krc6YDP1/l97FqU5EnaRqqdk8I0XwNIXQm50RTWzpdNHYHddYby824g2pSHKbr
+         GS+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWAb2r4FefU3WSl/E3L77he+43LgtdxgdmST6k5KKRLcTOeGQb3ZIfnO08woss3kbMo0I4XyDou02Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCfAhbHX4TkJv0kYK/A5za6oD9fPVxq6nL2KS91sGDvm34ZGiE
+	Ewm/2iIhgf7anTWdA7WeLSf7jHvGXZVKXNeIgSqCnyZ4TJ/odUAlDg9yY60LTPt3900UPIof/H8
+	i4RYH2iCT+d+DFyOllQNMy8qS+/5Sh+hO72qrpBW4BTbz+5MhOqTxSeaFgKCd
+X-Gm-Gg: ASbGncsghYF/gyQspqnH+6XzjYzL9ZeJds0CUI1DxbBHCF58fz1eDu/kFVNXdOglKsy
+	y+zvOV7dXkEIdeoDeGv1CiFDZjDAxYIjU/lPPql/3VsKBhn0cdYqi0eBQ7g/KgDqI24ZpvutkqV
+	z8j1BwU881LR7d5ICqUsYyK+yy+/oGdSJ7aLm2HUhGK4OqKCp6syI3PC1Xtdn9THQUPXeOrvo18
+	jrDNMmANfRG44Hk1QVVcRwkc2T2i+deD35jkp0wbuQ+XxvJ8ATfqXeKp/Fm5Fw8tDoBLvDIyiLw
+	NAlngrBsqaPFBaconQ==
+X-Received: by 2002:a05:600c:1f83:b0:456:1c4a:82b2 with SMTP id 5b1f17b1804b1-45b517ad803mr174421015e9.10.1756307779461;
+        Wed, 27 Aug 2025 08:16:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSshh7UA0Q1tQ+3feB1Bg+Sb2OMUJ7cAMX5l3HHqsQhNcKfVCBQkB/C/cHAyfVwt7bELFVww==
+X-Received: by 2002:a05:600c:1f83:b0:456:1c4a:82b2 with SMTP id 5b1f17b1804b1-45b517ad803mr174420705e9.10.1756307778992;
+        Wed, 27 Aug 2025 08:16:18 -0700 (PDT)
 Received: from [127.0.0.2] ([91.245.205.131])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b6f0e27b2sm33896285e9.10.2025.08.27.08.15.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b6f0c6dc1sm35019145e9.1.2025.08.27.08.16.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Aug 2025 08:16:00 -0700 (PDT)
+        Wed, 27 Aug 2025 08:16:18 -0700 (PDT)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Wed, 27 Aug 2025 17:15:56 +0200
-Subject: [PATCH v2 4/4] xfs_db: use file_setattr to copy attributes on
- special files with rdump
+Subject: [PATCH v2 0/3] Test file_getattr and file_setattr syscalls
+Date: Wed, 27 Aug 2025 17:16:14 +0200
+Message-Id: <20250827-xattrat-syscall-v2-0-ba489b5bc17a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -93,77 +91,72 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250827-xattrat-syscall-v2-4-82a2d2d5865b@kernel.org>
-References: <20250827-xattrat-syscall-v2-0-82a2d2d5865b@kernel.org>
-In-Reply-To: <20250827-xattrat-syscall-v2-0-82a2d2d5865b@kernel.org>
-To: aalbersh@kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-xfs@vger.kernel.org
+X-B4-Tracking: v=1; b=H4sIAD4hr2gC/2WNwQ6DIBAFf8XsuTSAVWlP/Y/GA8FFSYmahRCN4
+ d9L7bHHmeTNOyAgOQzwqA4gTC64ZS4gLxWYSc8jMjcUBsllw2vRsU3HSDqysAejvWeIyjYohxa
+ FgrJaCa3bzuKrLzy5EBfaz4MkvvbXUlz9tZJgnLWa383N1p0V/PlGmtFfFxqhzzl/AAsF82evA
+ AAA
+X-Change-ID: 20250317-xattrat-syscall-ee8f5e2d6e18
+In-Reply-To: <dvht4j3ipg74c2inz33n6azo65sebhhag5odh7535hfssamxfa@6wr2m4niilye>
+To: fstests@vger.kernel.org
+Cc: zlang@redhat.com, linux-fsdevel@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>, 
+ Andrey Albershteyn <aalbersh@redhat.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1536; i=aalbersh@kernel.org;
- h=from:subject:message-id; bh=izSJWa7mz724b1JHGLezzPPHQAOYuss7tQ3I2vbEPI4=;
- b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIYMtYr6sx2X2/9R/D67Q6xFYxlLXWhp/qbZFq/RwTff
- npny8VlBZs6SlkYxLgYZMUUWdZJa01NKpLKP2JQIw8zh5UJZAgDF6cATGTPKoZ/ag2LZ8awTl3L
- 0TMp2qHn0vufM3mZVTblO/sEbdHvd55awvDPlF/kdm7+m1dPhLcJu0x6k3X2U4jQtEvmWgdU7vC
- cbvjLDADKp0kQ
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1760; i=aalbersh@kernel.org;
+ h=from:subject:message-id; bh=PPr77puRvCeAT40UGuOX5WZ1/o6gVvC8AT6qc5GzuQg=;
+ b=owJ4nJvAy8zAJea2/JXEGuOHHIyn1ZIYMtYrOp7b0lEhvrvvh/Ljp3xCofUxbawCiksZlq6t6
+ F7dKTvl08GOUhYGMS4GWTFFlnXSWlOTiqTyjxjUyMPMYWUCGcLAxSkAE9nZyfC/oP2OrKljSqlD
+ 8+duHbN0q8zLWV7s6+Xr0q6q7cuya1vEyPB2RfflhKaFmt1265S3mz++HfBg4T7veRJH1sp85Qy
+ 1ns8KAJ2MRdE=
 X-Developer-Key: i=aalbersh@kernel.org; a=openpgp;
  fpr=AE1B2A9562721A6FC4307C1F46A7EA18AC33E108
 
-rdump just skipped file attributes on special files as copying wasn't
-possible. Let's use new file_getattr/file_setattr syscalls to copy
-attributes even for special files.
+Add a test to check basic functionallity of file_getattr() and
+file_setattr() syscalls. These syscalls are used to get/set filesystem
+inode attributes (think of FS_IOC_SETFSXATTR ioctl()). The difference
+from ioctl() is that these syscalls use *at() semantics and can be
+called on any file without opening it, including special ones.
+
+For XFS, with the use of these syscalls, xfs_quota now can
+manipulate quota on special files such as sockets. Add a test to
+check that special files are counted, which wasn't true before.
+
+To: fstests@vger.kernel.org
+Cc: zlang@redhat.com
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
 
 Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 ---
- db/rdump.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+Changes in v2:
+- Improve help message for file_attr
+- Refactor file_attr.c
+- Drop _wants_*_commit
+- Link to v1: https://lore.kernel.org/r/20250808-xattrat-syscall-v1-0-6a09c4f37f10@kernel.org
 
-diff --git a/db/rdump.c b/db/rdump.c
-index 9ff833553ccb..82520e37d713 100644
---- a/db/rdump.c
-+++ b/db/rdump.c
-@@ -17,6 +17,7 @@
- #include "field.h"
- #include "inode.h"
- #include "listxattr.h"
-+#include "libfrog/file_attr.h"
- #include <sys/xattr.h>
- #include <linux/xattr.h>
- 
-@@ -152,6 +153,12 @@ rdump_fileattrs_path(
- 	const struct destdir	*destdir,
- 	const struct pathbuf	*pbuf)
- {
-+	struct file_attr	fa = {
-+		.fa_extsize	= ip->i_extsize,
-+		.fa_projid	= ip->i_projid,
-+		.fa_cowextsize	= ip->i_cowextsize,
-+		.fa_xflags	= xfs_ip2xflags(ip),
-+	};
- 	int			ret;
- 
- 	ret = fchmodat(destdir->fd, pbuf->path, VFS_I(ip)->i_mode & ~S_IFMT,
-@@ -181,7 +188,18 @@ rdump_fileattrs_path(
- 			return 1;
- 	}
- 
--	/* Cannot copy fsxattrs until setfsxattrat gets merged */
-+	ret = xfrog_file_setattr(destdir->fd, pbuf->path, NULL, &fa,
-+			AT_SYMLINK_NOFOLLOW);
-+	if (ret) {
-+		if (errno == EOPNOTSUPP || errno == EPERM || errno == ENOTTY)
-+			lost_mask |= LOST_FSXATTR;
-+		else
-+			dbprintf(_("%s%s%s: xfrog_file_setattr %s\n"),
-+					destdir->path, destdir->sep, pbuf->path,
-+					strerror(errno));
-+		if (strict_errors)
-+			return 1;
-+	}
- 
- 	return 0;
- }
+---
+Andrey Albershteyn (3):
+      file_attr: introduce program to set/get fsxattr
+      generic: introduce test to test file_getattr/file_setattr syscalls
+      xfs: test quota's project ID on special files
 
+ .gitignore             |   1 +
+ configure.ac           |   1 +
+ include/builddefs.in   |   1 +
+ m4/package_libcdev.m4  |  16 +++
+ src/Makefile           |   5 +
+ src/file_attr.c        | 268 +++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/2000     | 109 ++++++++++++++++++++
+ tests/generic/2000.out |  37 +++++++
+ tests/xfs/2000         |  73 ++++++++++++++
+ tests/xfs/2000.out     |  15 +++
+ 10 files changed, 526 insertions(+)
+---
+base-commit: 3d57f543ae0c149eb460574dcfb8d688aeadbfff
+change-id: 20250317-xattrat-syscall-ee8f5e2d6e18
+
+Best regards,
 -- 
-2.49.0
+Andrey Albershteyn <aalbersh@kernel.org>
 
 
