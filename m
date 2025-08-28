@@ -1,55 +1,55 @@
-Return-Path: <linux-xfs+bounces-25078-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25079-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF904B39E90
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Aug 2025 15:19:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DCCFB39E92
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Aug 2025 15:19:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4AEE87B4033
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B69D07B3AE4
 	for <lists+linux-xfs@lfdr.de>; Thu, 28 Aug 2025 13:18:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 314F7311C1D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31585313552;
 	Thu, 28 Aug 2025 13:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NceQfCv8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3mEkakJ"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3920313543
-	for <linux-xfs@vger.kernel.org>; Thu, 28 Aug 2025 13:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E388D311C07
+	for <linux-xfs@vger.kernel.org>; Thu, 28 Aug 2025 13:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756387143; cv=none; b=E8BE2p6yzGb5CzwBpQElGULU8hg30jP7WVkWhd1VVr3wh32BKFGD5k7Zi5bB7uwQ7RCAYOqvKZscST3kYyIAhpvj/GyVb27IXFHRLdA5F4oEKuA7GtS9G8TI8kDULDiuJ/ZB6LG9l4fPBIk+cbsdNTTHYNPx2+p+aZDawRoMzG4=
+	t=1756387143; cv=none; b=PCGde96I8oZeBHL5BgvsNTbHJZdW7blREv7kxSyx/vNe0x8MguHdM3XyYNPEVn+8qyPR+zrOp6aaEE3oVxFrBJnWkhTHzFfcCXaXaLY/LO8M7FHoaP0+E/bUnhoe1BvQ6yAFDnt3Yx/4/8csVdXnaWGVnGFnlOv1kiNxQY6/K+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756387143; c=relaxed/simple;
-	bh=lBUBXKSTLeYCVkAZzTqATwh9bMuFZeG2zaz6XJEKsHQ=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eEoXPHlPTFW/UXpI2A1XYGYKra5U0OH1mSibnWHONkg02Ckj4jeiwbL9OB95wXQQFzD7wkUnGOJ6MtaM32pV50IOUlOX0CZcmuEpa56GZR86LXRsYCRH4ae5IDHmeymtBaHVj4QIDXWRaFy4gRzhI3XlgelmocnfbaJ7J43Pb2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NceQfCv8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA983C4CEF5;
-	Thu, 28 Aug 2025 13:18:59 +0000 (UTC)
+	bh=Y6ypxoX2XffdELZxczW8mJBleNbb5/cQVgU3dXSHxTQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Pb/c8nURzJH7j65fEKI3r8kY86LXBJ7gvLEayUeRUPwCd+foU6mGe5742GNnZMn+aFfvf6Ktna/tTAzkYiAzN6fYF04TudrHV9UHywT/UZx+HN7W4CcRXHu/YVMSCaEJPeFpmE9R+3xvV3Kt5tvvJnApjhns57zQXR3NOkwTwuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3mEkakJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A55CC4CEEB;
+	Thu, 28 Aug 2025 13:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756387140;
-	bh=lBUBXKSTLeYCVkAZzTqATwh9bMuFZeG2zaz6XJEKsHQ=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=NceQfCv8JtcJwnR8Iyt2aOVIzyYsE2s+CA7+3sdSXDDVAfciGuyrAOiWn3jBbya9N
-	 jKNIikS5jgpKLkqmhr9LG02qszwxj9jBLp6Ze08122o1sNXY8N6fyOxXELrU0KDRD/
-	 29ry3l0bOj9q73IKvUDENCxMWnMD4uWIuSch/Tggrda0F4HKREhf8FV5Xe4XApwzo3
-	 EhYv0Owscti7Ynmt7CpEtzWFl9U5oVr3b7OgVnlfz3bu2cXPdny1r+dfLsFTTnbGL3
-	 xwgggClNb54WICsK3vbuwifNQxcEkVF8mB2EhI5PrrCSI/XP33iuDRM4+52clp4OWZ
-	 DcLSNcUSfPkNg==
+	s=k20201202; t=1756387141;
+	bh=Y6ypxoX2XffdELZxczW8mJBleNbb5/cQVgU3dXSHxTQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=m3mEkakJN1M3m5XkyRksBDMPzCQ8GWOcyBaLetfpS62ieLTz5sF0/tlVU0NaDdxBN
+	 2T4O7tOb6edRzdw0S8QMfwamHfkuI6iB8Zse/IH7OcalIC2Pu6uO4VkyFXyLqQ+8qF
+	 y0BYs0NcSlbVzcXN2m5AzBWxvUxhC2hdmN1l+sBlcueFVQemC3n7PQavHC/Vz3SS9T
+	 WQ8ftSWAK9+3Wynh6Do/lAkJ/EeGxI01mLzTYUXWxRBQDdOGWd1wpg7NhfDK5537Q+
+	 qnORupGBcivoe7Y2kIuukS4MPkdPWZ74NHja2rlFgZdJtnA55P12J+dN7VGuMwhYwq
+	 d+Th1owA49jcg==
 From: Carlos Maiolino <cem@kernel.org>
-To: djwong@kernel.org, linux-xfs@vger.kernel.org, 
- Andrey Albershteyn <aalbersh@redhat.com>
-In-Reply-To: <20250804-xfs-xattrat-v2-0-71b4ead9a83e@kernel.org>
-References: <20250804-xfs-xattrat-v2-0-71b4ead9a83e@kernel.org>
-Subject: Re: [PATCH v2 0/3] Use new syscalls to set filesystem file
- attributes on any inode
-Message-Id: <175638713952.29667.3546386820900620080.b4-ty@kernel.org>
-Date: Thu, 28 Aug 2025 15:18:59 +0200
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-xfs@vger.kernel.org
+In-Reply-To: <20250825111510.457731-1-hch@lst.de>
+References: <20250825111510.457731-1-hch@lst.de>
+Subject: Re: [PATCH v2] xfs: implement XFS_IOC_DIOINFO in terms of
+ vfs_getattr
+Message-Id: <175638714076.29667.11579415359404190380.b4-ty@kernel.org>
+Date: Thu, 28 Aug 2025 15:19:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -60,21 +60,21 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
-On Mon, 04 Aug 2025 14:08:13 +0200, Andrey Albershteyn wrote:
-> With addition of new syscalls file_getattr/file_setattr allow changing
-> filesystem file attributes on special files. Fix project ID inheritance
-> for special files in renames.
+On Mon, 25 Aug 2025 13:15:00 +0200, Christoph Hellwig wrote:
+> Use the direct I/O alignment reporting from ->getattr instead of
+> reimplementing it.  This exposes the relaxation of the memory
+> alignment in the XFS_IOC_DIOINFO info and ensure the information will
+> stay in sync.  Note that randholes.c in xfstests has a bug where it
+> incorrectly fails when the required memory alignment is smaller than the
+> pointer size.  Round up the reported value as there is a fair chance that
+> this code got copied into various applications.
 > 
-> 
+> [...]
 
 Applied to for-next, thanks!
 
-[1/3] xfs: allow renames of project-less inodes
-      commit: 8d2f9f5c64f16e0717854fb66d795ebe8c30103b
-[2/3] xfs: add .fileattr_set and fileattr_get callbacks for symlinks
-      commit: 8a221004fe5288b66503699a329a6b623be13f91
-[3/3] xfs: allow setting file attributes on special files
-      commit: 0239bd9fa445a21def88f7e76fe6e0414b2a4da0
+[1/1] xfs: implement XFS_IOC_DIOINFO in terms of vfs_getattr
+      commit: 851c4c96db001f51bdad1432aa54549c7fe2c63e
 
 Best regards,
 -- 
