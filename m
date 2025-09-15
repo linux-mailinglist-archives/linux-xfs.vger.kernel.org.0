@@ -1,56 +1,56 @@
-Return-Path: <linux-xfs+bounces-25534-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25535-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66A83B57CF6
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 15:28:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C430B57CF9
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 15:28:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62E2F48783C
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 13:27:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B5D833B89AC
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 13:27:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D497A315D44;
-	Mon, 15 Sep 2025 13:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1619C315D49;
+	Mon, 15 Sep 2025 13:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kviMB9cL"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GBlWyIgZ"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CBE313534
-	for <linux-xfs@vger.kernel.org>; Mon, 15 Sep 2025 13:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40000314A92
+	for <linux-xfs@vger.kernel.org>; Mon, 15 Sep 2025 13:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757942833; cv=none; b=OGBqWvC24GLVulXC1XQCdMqUv0pQLwkTfVpwc0dTYAD0QEtxKMTjFYONLcsUAaWHIS/kt7uCO8otMQQ/gS5z7fK6WbdVX1PZaaQkIQmFI3cgsBqKjBKVl7BSxqhCWzCWvFCPc/sMk3hz9xFk891JTdB0jcoEdWY0ysIC492aVJg=
+	t=1757942833; cv=none; b=VLAB2OvCAuECjwnztsiC7rvv+D4m+qZggiGEZRUljVdM83Hq5KVQpuHzmoBMtfPF+1rqK4tJf/hH94vx7OQB1S5wXk9V6oXWQXt3KHbpIeBDhPqdbo6mR7E0r4w/BtRGo+PI35TkUmLI+OE3WOaYYMS4VJ7oB3K7xjDvEiwqHAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757942833; c=relaxed/simple;
-	bh=9VXEij6V6e5QVbNDFw52Fyg14luPN0OYJGv6d+1YwPg=;
+	bh=PzWDiC+zcKI1D+8Mb8827cMInzZLZFpbuDOGACo/JJ4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qJ82w0KUZvMb5gF4wLixgM/0A0CT/ft1fcByD6YbwINUxd4nKsExKKKsvI4pZ/d7TGjJ/1JwVz1r9rlr7msz/uLNdjrKlL17ojmtAIdg76qAwlpNU4pe3hnPyHikFQ2V0DSWIGgWRrolsCia2XF80eNKYlQkDxQtcJf53TTvZf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kviMB9cL; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=KJRTpzWe8wR6EYyTwd97VmZCxXReyajm0saApHvN/Xwbh4z1yLVFpXzhOFDZlhLgb3/Pmvi4EoiD+GxNPb+b97xRlW270jtm8PX7UQIlaW9NK0L5AH9sa/Kw/n/vHFZ1txlM6kNUNUXKUQOY5eydqc5GCpdC1Z9+YHt53TrUXkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GBlWyIgZ; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=WS2IMCFCKIx59qCEp23pbcBiGzCwcuj5SdxIbIaxNLU=; b=kviMB9cLMIEtD8ljhOz+eCxSbE
-	gktpFHQjYUYk7Z4YmZfpO7Mb7NiRv9/0bGuTFkhXDP4UtCLWsQYHz5fE32eptBNgSikuf3w+/2by2
-	fEjSjnnDRjTWpK9p0ZS0JC7+N/9U0F26GQ+jJXr6MkM/EI6NL5oqegyETRhxDjhTvJCMnlIu+UsaX
-	EZuhOTzeaw9qJXmtsPL6+VQhb35/nF/7GjJ+txUui8h2CLYv8MtxCJu4GYXkQpjp5XyI2jPKxOWH3
-	1K5NeEeQpFtWgvKJE2zQUUvYsJMUND6TKGT7rksnIbnKuk82Oh24VBWR+xYEJLIz/pCogDslgPqPu
-	FN90IrWA==;
+	bh=ISvHUCcHwvxQ/RbJFHc7UCwGxPVWgeXKfbgwaLfvZrc=; b=GBlWyIgZFXRJx/rn2403rSZGAC
+	6zsNGpWiZ39jonrt0RtoxnqLMTVE2FW9cfkVg8poK9ynHn5cMjzruT88i2KgREbjX21+5pXGnp824
+	ugsN1PaaFkylbqDa1iL7w7OUsJHKIkeJt5ah4yyCKOyJx5dt7LrLuaCGbIEvIeYEqBG4Ns/Sso6AY
+	A8eYkT1Ac91R1Qg1Vg8xxwA0Tv0dB4aDLFuu+jH/n1fHIcejDRpZmY/zTgyo6NYasTLzYm1IjbbTl
+	WkQRX4IRv8emAW3c3ZAeG80BB5QCbouNQQzu7ReRh41CIpclHeik+8ywmIslaHqPVzgrS2XtXPOdH
+	1boIkbZQ==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uy9Ed-00000004JbA-2OPG;
+	id 1uy9Ed-00000004JbI-3An0;
 	Mon, 15 Sep 2025 13:27:11 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: linux-xfs@vger.kernel.org
-Subject: [PATCH 08/15] xfs: remove the xfs_efi_log_format_64_t typedef
-Date: Mon, 15 Sep 2025 06:26:58 -0700
-Message-ID: <20250915132709.160247-9-hch@lst.de>
+Subject: [PATCH 09/15] xfs: remove the xfs_efd_log_format_t typedef
+Date: Mon, 15 Sep 2025 06:26:59 -0700
+Message-ID: <20250915132709.160247-10-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250915132709.160247-1-hch@lst.de>
 References: <20250915132709.160247-1-hch@lst.de>
@@ -69,42 +69,42 @@ remaining users to use the underlying struct.
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
  fs/xfs/libxfs/xfs_log_format.h | 4 ++--
- fs/xfs/xfs_extfree_item.c      | 2 +-
+ fs/xfs/xfs_extfree_item.h      | 2 +-
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
-index c9e3b3f178cb..dca750367756 100644
+index dca750367756..bb06c48e0513 100644
 --- a/fs/xfs/libxfs/xfs_log_format.h
 +++ b/fs/xfs/libxfs/xfs_log_format.h
-@@ -656,13 +656,13 @@ xfs_efi_log_format32_sizeof(
- 			nr * sizeof(struct xfs_extent_32);
- }
- 
--typedef struct xfs_efi_log_format_64 {
-+struct xfs_efi_log_format_64 {
- 	uint16_t		efi_type;	/* efi log item type */
- 	uint16_t		efi_size;	/* size of this item */
- 	uint32_t		efi_nextents;	/* # extents to free */
- 	uint64_t		efi_id;		/* efi identifier */
- 	struct xfs_extent_64	efi_extents[];	/* array of extents to free */
--} xfs_efi_log_format_64_t;
+@@ -677,13 +677,13 @@ xfs_efi_log_format64_sizeof(
+  * log.  The efd_extents array is a variable size array whose
+  * size is given by efd_nextents;
+  */
+-typedef struct xfs_efd_log_format {
++struct xfs_efd_log_format {
+ 	uint16_t		efd_type;	/* efd log item type */
+ 	uint16_t		efd_size;	/* size of this item */
+ 	uint32_t		efd_nextents;	/* # of extents freed */
+ 	uint64_t		efd_efi_id;	/* id of corresponding efi */
+ 	struct xfs_extent	efd_extents[];	/* array of extents freed */
+-} xfs_efd_log_format_t;
 +};
  
  static inline size_t
- xfs_efi_log_format64_sizeof(
-diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-index 0190cc55d75b..418ddab590e0 100644
---- a/fs/xfs/xfs_extfree_item.c
-+++ b/fs/xfs/xfs_extfree_item.c
-@@ -216,7 +216,7 @@ xfs_efi_copy_format(
- 		}
- 		return 0;
- 	} else if (buf->iov_len == len64) {
--		xfs_efi_log_format_64_t *src_efi_fmt_64 = buf->iov_base;
-+		struct xfs_efi_log_format_64 *src_efi_fmt_64 = buf->iov_base;
+ xfs_efd_log_format_sizeof(
+diff --git a/fs/xfs/xfs_extfree_item.h b/fs/xfs/xfs_extfree_item.h
+index e56376853f2d..af1b0331f7af 100644
+--- a/fs/xfs/xfs_extfree_item.h
++++ b/fs/xfs/xfs_extfree_item.h
+@@ -69,7 +69,7 @@ struct xfs_efd_log_item {
+ 	struct xfs_log_item	efd_item;
+ 	struct xfs_efi_log_item *efd_efip;
+ 	uint			efd_next_extent;
+-	xfs_efd_log_format_t	efd_format;
++	struct xfs_efd_log_format efd_format;
+ };
  
- 		dst_efi_fmt->efi_type     = src_efi_fmt_64->efi_type;
- 		dst_efi_fmt->efi_size     = src_efi_fmt_64->efi_size;
+ static inline size_t
 -- 
 2.47.2
 
