@@ -1,59 +1,55 @@
-Return-Path: <linux-xfs+bounces-25561-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25563-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74760B58472
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 20:21:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7005CB58484
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 20:25:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C08B64C4692
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 18:21:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96E257AF57D
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 18:23:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 305FB2DD5F0;
-	Mon, 15 Sep 2025 18:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798272E0B6C;
+	Mon, 15 Sep 2025 18:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ii1Im98I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQkudXr2"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D710A2C2354;
-	Mon, 15 Sep 2025 18:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F7127E7EE
+	for <linux-xfs@vger.kernel.org>; Mon, 15 Sep 2025 18:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757960458; cv=none; b=ntMzGPoRzBERgH3fQu9lHJ4ubGXJaClyDOyD4iB8lJsrnEUGd5Xoeer7aSqujU7AErGORfLo/tAvAxG3itPK08bRXrl+zgO7WD9n8Cvc+BQwAwZaDKPWChMuACoZ/1197nms4JbIIE0/N215kG1JldvDtIIxZdmc40ajdEanPJU=
+	t=1757960714; cv=none; b=NmCH6GOqcpD27EXhl90xjCYgIH86k3Wnb3BMp+2Cok0XFiZqYdBW6Tp3n6XLKSKlzju1rEfIK0sj2AaE0B/PY3twIJnT1vPcqlbJGCqTrhBcCorOn4zWYlG4zNhKAtWd/Oqgb7w6mL89ItAlBTPrmyIpU6e0sRxAKfxT5z1S4Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757960458; c=relaxed/simple;
-	bh=C+jlw61u8ZmAqA0aRDKtJ2SMaA4kWKFBfzyeC1aSKlU=;
+	s=arc-20240116; t=1757960714; c=relaxed/simple;
+	bh=PMyvH6B+L4RDLmTYLhlpzv1o+O8fiD0g2oJx4or+KHc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b6tSRIOOH13MyUkYtcTwKozHCysYKdCs6r+BGi5HJQzHzq3tmlwnFvDXm941/Jn+iRax629Rs97PfSqwC7PKB//aGbRaTce8x9TcMPeBl/lPam66EX7rtYu923M3/XmnLk64/1QSHi+BzKSy0gpIz6i8PAz0XrgExmyAZzawVug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ii1Im98I; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71161C4CEF1;
-	Mon, 15 Sep 2025 18:20:57 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YRDHOgwDuJDqu/sA+SIyVNV14OCRQDq8JjfNX94+g3UhRvTttDo71w0rnqjcujeIwYrFTa8QX2XBFPfR98FqEHHoCztkE1WdcGADxbvRKBrMnZuj/pzI6mLhOMgVXo6t4O3mSZqsTHwokZmgvdKS5n1F2y9p3vKOJFGjlCQJhgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQkudXr2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B1CCC4CEF1;
+	Mon, 15 Sep 2025 18:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757960457;
-	bh=C+jlw61u8ZmAqA0aRDKtJ2SMaA4kWKFBfzyeC1aSKlU=;
+	s=k20201202; t=1757960714;
+	bh=PMyvH6B+L4RDLmTYLhlpzv1o+O8fiD0g2oJx4or+KHc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ii1Im98IiZudOz56pMvlutKTZjh2F2ni2qJNyZg8+heQA1qwGI/U4HdRVCmno2LvR
-	 1wIdWZaDlhrHC7be4w6d2WkwT4pu7f/ahGiDwnWj9ctFjpY8SWSQ59PErO3GWfO/LH
-	 3ZRfZD++RmQdOT74G0CSLqk/RjbPaqq8GDDVsym3jt2m1XUJXL36kM0q1GxKvznxbX
-	 sJym0YgCeFtN7fyx1USRdZo0/YLkyAOvDh6GeUY6cj1ZaJ7kkS8Jb/aerBeid+FIJ5
-	 //0FpOSI8HDj1Swtlj1T9iPWbExvXrfUt4jtLGtZ8wTDcAAfLhyDkE+lO2dx8D35so
-	 VNfr7SzRRmbuA==
-Date: Mon, 15 Sep 2025 11:20:56 -0700
+	b=BQkudXr2zCgGBwQ2JcWcWU8QtTfkBH4IXlP50pUHP8pSAhrJMxdWx+S/xOFMZZC3o
+	 HEwCFAQB1PVWiuCdpr16uXjHwA5paTalqVF9qcBGjyNQr7vuYl8m60aoIXCr1L08AH
+	 LSspyTtwT43nRLL9OLo2uERreZooIMyZn9vudyDS6SBQRAfJAPs2bfxE7JaTCO9jnz
+	 EQX1LG1Ui+bUX9rFYyLZeh/EXchNcE4rQbVJngRrfldUdUKEVnDSVbHYwSTu9gr6Gv
+	 Y0ghTddZUeuaNX9lk9vhQzlMlpMsrb16TvkamAMD+nTnw/K2WAURV2fe1gITMhLhbm
+	 p0roumubn2HUg==
+Date: Mon, 15 Sep 2025 11:25:13 -0700
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Catherine Hoang <catherine.hoang@oracle.com>,
-	Leah Rumancik <leah.rumancik@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH CANDIDATE 5.15, 6.1, 6.6] xfs: Increase
- XFS_QM_TRANS_MAXDQS to 5
-Message-ID: <20250915182056.GO8096@frogsfrogsfrogs>
-References: <20250913030503.433914-1-amir73il@gmail.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] xfs: fix log CRC mismatches between i386 and other
+ architectures
+Message-ID: <20250915182513.GP8096@frogsfrogsfrogs>
+References: <20250915132047.159473-1-hch@lst.de>
+ <20250915132047.159473-3-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -62,229 +58,195 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250913030503.433914-1-amir73il@gmail.com>
+In-Reply-To: <20250915132047.159473-3-hch@lst.de>
 
-On Sat, Sep 13, 2025 at 05:05:02AM +0200, Amir Goldstein wrote:
-> From: Allison Henderson <allison.henderson@oracle.com>
+On Mon, Sep 15, 2025 at 06:20:30AM -0700, Christoph Hellwig wrote:
+> When mounting file systems with a log that was dirtied on i386 on
+> other architectures or vice versa, log recovery is unhappy:
 > 
-> [ Upstream  commit f103df763563ad6849307ed5985d1513acc586dd ]
+> [   11.068052] XFS (vdb): Torn write (CRC failure) detected at log block 0x2. Truncating head block from 0xc.
 > 
-> With parent pointers enabled, a rename operation can update up to 5
-> inodes: src_dp, target_dp, src_ip, target_ip and wip.  This causes
-> their dquots to a be attached to the transaction chain, so we need
-> to increase XFS_QM_TRANS_MAXDQS.  This patch also add a helper
-> function xfs_dqlockn to lock an arbitrary number of dquots.
-> 
-> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> 
-> [amir: backport to kernels prior to parent pointers to fix an old bug]
-> 
-> A rename operation of a directory (i.e. mv A/C/ B/) may end up changing
-> three different dquot accounts under the following conditions:
-> 1. user (or group) quotas are enabled
-> 2. A/ B/ and C/ have different owner uids (or gids)
-> 3. A/ blocks shrinks after remove of entry C/
-> 4. B/ blocks grows before adding of entry C/
-> 5. A/ ino <= XFS_DIR2_MAX_SHORT_INUM
-> 6. B/ ino > XFS_DIR2_MAX_SHORT_INUM
-> 7. C/ is converted from sf to block format, because its parent entry
->    needs to be stored as 8 bytes (see xfs_dir2_sf_replace_needblock)
-> 
-> When all conditions are met (observed in the wild) we get this assertion:
-> 
-> XFS: Assertion failed: qtrx, file: fs/xfs/xfs_trans_dquot.c, line: 207
-> 
-> The upstream commit fixed this bug as a side effect, so decided to apply
-> it as is rather than changing XFS_QM_TRANS_MAXDQS to 3 in stable kernels.
+> This is because the CRCs generated by i386 and other architectures
+> always diff.  The reason for that is that sizeof(struct xlog_rec_header)
+> returns different values for i386 vs the rest (324 vs 328), because the
+> struct is not sizeof(uint64_t) aligned, and i386 has odd struct size
+> alignment rules.
 
-Heh.  Indeed, you only need MAXDQS==5 for filesystems that support
-parent pointers, because only on those filesystems can you end up
-needing to allocate a xattr block either to the new whiteout file or
-free one from the file being unlinked.
+...and let me guess, the checksum function samples data all the way out
+to byte 324/328 too?
 
-> The Fixes commit below is NOT the commit that introduced the bug, but
-> for some reason, which is not explained in the commit message, it fixes
-> the comment to state that highest number of dquots of one type is 3 and
-> not 2 (which leads to the assertion), without actually fixing it.
+> This issue goes back to commit 13cdc853c519 ("Add log versioning, and new
+> super block field for the log stripe") in the xfs-import tree, which
+> adds log v2 support and the h_size field that causes the unaligned size.
+> At that time it only mattered for the crude debug only log header
+> checksum, but with commit 0e446be44806 ("xfs: add CRC checks to the log")
+> it became a real issue for v5 file system, because now there is a proper
+> CRC, and regular builds actually expect it match.
+> 
+> Fix this by allowing checksums with and without the padding.
+> 
+> Fixes: 0e446be44806 ("xfs: add CRC checks to the log")
 
-Agree.
+Cc: <stable@vger.kernel.org> # v3.8
 
-> The change of wording from "usr, grp OR prj" to "usr, grp and prj"
-> suggests that there may have been a confusion between "the number of
-> dquote of one type" and "the number of dquot types" (which is also 3),
-> so the comment change was only accidentally correct.
+Perhaps?  This seems like a serious tripping point for old kernels.
 
-I interpret the "OR" -> "and" change to reflect the V4 -> V5 transition
-where you actually can have all three dquot types because group/project
-quota are no longer mutually exclusive.
-
-The "...involved in a transaction is 3" part I think is separate, and
-strange that XFS_QM_TRANS_MAXDQS wasn't updated.
-
-> Fixes: 10f73d27c8e9 ("xfs: fix the comment explaining xfs_trans_dqlockedjoin")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
+>  fs/xfs/libxfs/xfs_log_format.h | 30 +++++++++++++++++++++++++++++-
+>  fs/xfs/libxfs/xfs_ondisk.h     |  2 ++
+>  fs/xfs/xfs_log.c               |  8 ++++----
+>  fs/xfs/xfs_log_priv.h          |  4 ++--
+>  fs/xfs/xfs_log_recover.c       | 19 +++++++++++++++++--
+>  5 files changed, 54 insertions(+), 9 deletions(-)
 > 
-> Christoph,
-> 
-> This is a cognitive challenge. can you say what you where thinking in
-> 2013 when making the comment change in the Fixes commit?
-> Is my speculation above correct?
-> 
-> Catherine and Leah,
-> 
-> I decided that cherry-pick this upstream commit as is with a commit
-> message addendum was the best stable tree strategy.
-> The commit applies cleanly to 5.15.y, so I assume it does for 6.6 and
-> 6.1 as well. I ran my tests on 5.15.y and nothing fell out, but did not
-> try to reproduce these complex assertion in a test.
-> 
-> Could you take this candidate backport patch to a spin on your test
-> branch?
-> 
-> What do you all think about this?
+> diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_format.h
+> index 0d637c276db0..942c490f23e4 100644
+> --- a/fs/xfs/libxfs/xfs_log_format.h
+> +++ b/fs/xfs/libxfs/xfs_log_format.h
+> @@ -174,12 +174,40 @@ typedef struct xlog_rec_header {
+>  	__be32	  h_prev_block; /* block number to previous LR		:  4 */
+>  	__be32	  h_num_logops;	/* number of log operations in this LR	:  4 */
+>  	__be32	  h_cycle_data[XLOG_HEADER_CYCLE_SIZE / BBSIZE];
+> -	/* new fields */
+> +
+> +	/* fields added by the Linux port: */
+>  	__be32    h_fmt;        /* format of log record                 :  4 */
+>  	uuid_t	  h_fs_uuid;    /* uuid of FS                           : 16 */
+> +
+> +	/* fields added for log v2: */
+>  	__be32	  h_size;	/* iclog size				:  4 */
+> +
+> +	/*
+> +	 * When h_size added for log v2 support, it caused structure to have
+> +	 * a different size on i386 vs all other architectures because the
+> +	 * sum of the size ofthe  member is not aligned by that of the largest
+> +	 * __be64-sized member, and i386 has really odd struct alignment rules.
+> +	 *
+> +	 * Due to the way the log headers are placed out on-disk that alone is
+> +	 * not a problem becaue the xlog_rec_header always sits alone in a
+> +	 * BBSIZEs area, and the rest of that area is padded with zeroes.
+> +	 * But xlog_cksum used to calculate the checksum based on the structure
+> +	 * size, and thus gives different checksums for i386 vs the rest.
+> +	 * We now do two checksum validation passes for both sizes to allow
+> +	 * moving v5 file systems with unclean logs between i386 and other
+> +	 * (little-endian) architectures.
 
-I only think you need MAXDQS==5 for 6.12 to handle parent pointers.
+Is this a problem on other 32-bit platforms?  Or just i386?
 
-The older kernels could have it set to 3 instead.  struct xfs_dqtrx on a
-6.17-rc6 kernel is 88 bytes.  Stuffing 9 of them into struct
-xfs_dquot_acct instead of 15 means that the _acct struct is only 792
-bytes instead of 1392, which means we can use the 1k slab instead of the
-2k slab.
+> +	 */
+> +	__u32	  h_pad0;
+>  } xlog_rec_header_t;
+>  
+> +#ifdef __i386__
+> +#define XLOG_REC_SIZE		offsetofend(struct xlog_rec_header, h_size)
+> +#define XLOG_REC_SIZE_OTHER	sizeof(struct xlog_rec_header)
+> +#else
+> +#define XLOG_REC_SIZE		sizeof(struct xlog_rec_header)
+> +#define XLOG_REC_SIZE_OTHER	offsetofend(struct xlog_rec_header, h_size)
+> +#endif /* __i386__ */
+> +
+>  typedef struct xlog_rec_ext_header {
+>  	__be32	  xh_cycle;	/* write cycle of log			: 4 */
+>  	__be32	  xh_cycle_data[XLOG_HEADER_CYCLE_SIZE / BBSIZE]; /*	: 256 */
+> diff --git a/fs/xfs/libxfs/xfs_ondisk.h b/fs/xfs/libxfs/xfs_ondisk.h
+> index 5ed44fdf7491..7bfa3242e2c5 100644
+> --- a/fs/xfs/libxfs/xfs_ondisk.h
+> +++ b/fs/xfs/libxfs/xfs_ondisk.h
+> @@ -174,6 +174,8 @@ xfs_check_ondisk_structs(void)
+>  	XFS_CHECK_STRUCT_SIZE(struct xfs_rud_log_format,	16);
+>  	XFS_CHECK_STRUCT_SIZE(struct xfs_map_extent,		32);
+>  	XFS_CHECK_STRUCT_SIZE(struct xfs_phys_extent,		16);
+> +	XFS_CHECK_STRUCT_SIZE(struct xlog_rec_header,		328);
+> +	XFS_CHECK_STRUCT_SIZE(struct xlog_rec_ext_header,	260);
+
+I guess we'll find out from the build bots. ;)
+
+The code changes looks ok modulo my various questions.
 
 --D
 
-> Thanks,
-> Amir.
-> 
->  fs/xfs/xfs_dquot.c       | 41 ++++++++++++++++++++++++++++++++++++++++
->  fs/xfs/xfs_dquot.h       |  1 +
->  fs/xfs/xfs_qm.h          |  2 +-
->  fs/xfs/xfs_trans_dquot.c | 15 ++++++++++-----
->  4 files changed, 53 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-> index c15d61d47a06..6b05d47aa19b 100644
-> --- a/fs/xfs/xfs_dquot.c
-> +++ b/fs/xfs/xfs_dquot.c
-> @@ -1360,6 +1360,47 @@ xfs_dqlock2(
->  	}
->  }
 >  
-> +static int
-> +xfs_dqtrx_cmp(
-> +	const void		*a,
-> +	const void		*b)
-> +{
-> +	const struct xfs_dqtrx	*qa = a;
-> +	const struct xfs_dqtrx	*qb = b;
-> +
-> +	if (qa->qt_dquot->q_id > qb->qt_dquot->q_id)
-> +		return 1;
-> +	if (qa->qt_dquot->q_id < qb->qt_dquot->q_id)
-> +		return -1;
-> +	return 0;
-> +}
-> +
-> +void
-> +xfs_dqlockn(
-> +	struct xfs_dqtrx	*q)
-> +{
-> +	unsigned int		i;
-> +
-> +	BUILD_BUG_ON(XFS_QM_TRANS_MAXDQS > MAX_LOCKDEP_SUBCLASSES);
-> +
-> +	/* Sort in order of dquot id, do not allow duplicates */
-> +	for (i = 0; i < XFS_QM_TRANS_MAXDQS && q[i].qt_dquot != NULL; i++) {
-> +		unsigned int	j;
-> +
-> +		for (j = 0; j < i; j++)
-> +			ASSERT(q[i].qt_dquot != q[j].qt_dquot);
-> +	}
-> +	if (i == 0)
-> +		return;
-> +
-> +	sort(q, i, sizeof(struct xfs_dqtrx), xfs_dqtrx_cmp, NULL);
-> +
-> +	mutex_lock(&q[0].qt_dquot->q_qlock);
-> +	for (i = 1; i < XFS_QM_TRANS_MAXDQS && q[i].qt_dquot != NULL; i++)
-> +		mutex_lock_nested(&q[i].qt_dquot->q_qlock,
-> +				XFS_QLOCK_NESTED + i - 1);
-> +}
-> +
->  int __init
->  xfs_qm_init(void)
+>  	XFS_CHECK_OFFSET(struct xfs_bui_log_format, bui_extents,	16);
+>  	XFS_CHECK_OFFSET(struct xfs_cui_log_format, cui_extents,	16);
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index c8a57e21a1d3..69703dc3ef94 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+> @@ -1568,13 +1568,13 @@ xlog_cksum(
+>  	struct xlog		*log,
+>  	struct xlog_rec_header	*rhead,
+>  	char			*dp,
+> -	int			size)
+> +	unsigned int		hdrsize,
+> +	unsigned int		size)
 >  {
-> diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
-> index 6b5e3cf40c8b..0e954f88811f 100644
-> --- a/fs/xfs/xfs_dquot.h
-> +++ b/fs/xfs/xfs_dquot.h
-> @@ -231,6 +231,7 @@ int		xfs_qm_dqget_uncached(struct xfs_mount *mp,
->  void		xfs_qm_dqput(struct xfs_dquot *dqp);
+>  	uint32_t		crc;
 >  
->  void		xfs_dqlock2(struct xfs_dquot *, struct xfs_dquot *);
-> +void		xfs_dqlockn(struct xfs_dqtrx *q);
+>  	/* first generate the crc for the record header ... */
+> -	crc = xfs_start_cksum_update((char *)rhead,
+> -			      sizeof(struct xlog_rec_header),
+> +	crc = xfs_start_cksum_update((char *)rhead, hdrsize,
+>  			      offsetof(struct xlog_rec_header, h_crc));
 >  
->  void		xfs_dquot_set_prealloc_limits(struct xfs_dquot *);
+>  	/* ... then for additional cycle data for v2 logs ... */
+> @@ -1818,7 +1818,7 @@ xlog_sync(
 >  
-> diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
-> index 442a0f97a9d4..f75c12c4c6a0 100644
-> --- a/fs/xfs/xfs_qm.h
-> +++ b/fs/xfs/xfs_qm.h
-> @@ -121,7 +121,7 @@ enum {
->  	XFS_QM_TRANS_PRJ,
->  	XFS_QM_TRANS_DQTYPES
->  };
-> -#define XFS_QM_TRANS_MAXDQS		2
-> +#define XFS_QM_TRANS_MAXDQS		5
->  struct xfs_dquot_acct {
->  	struct xfs_dqtrx	dqs[XFS_QM_TRANS_DQTYPES][XFS_QM_TRANS_MAXDQS];
->  };
-> diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-> index 955c457e585a..99a03acd4488 100644
-> --- a/fs/xfs/xfs_trans_dquot.c
-> +++ b/fs/xfs/xfs_trans_dquot.c
-> @@ -268,24 +268,29 @@ xfs_trans_mod_dquot(
+>  	/* calculcate the checksum */
+>  	iclog->ic_header.h_crc = xlog_cksum(log, &iclog->ic_header,
+> -					    iclog->ic_datap, size);
+> +			iclog->ic_datap, XLOG_REC_SIZE, size);
+>  	/*
+>  	 * Intentionally corrupt the log record CRC based on the error injection
+>  	 * frequency, if defined. This facilitates testing log recovery in the
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index a9a7a271c15b..0cfc654d8e87 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -499,8 +499,8 @@ xlog_recover_finish(
+>  extern void
+>  xlog_recover_cancel(struct xlog *);
 >  
->  /*
->   * Given an array of dqtrx structures, lock all the dquots associated and join
-> - * them to the transaction, provided they have been modified.  We know that the
-> - * highest number of dquots of one type - usr, grp and prj - involved in a
-> - * transaction is 3 so we don't need to make this very generic.
-> + * them to the transaction, provided they have been modified.
->   */
->  STATIC void
->  xfs_trans_dqlockedjoin(
->  	struct xfs_trans	*tp,
->  	struct xfs_dqtrx	*q)
+> -extern __le32	 xlog_cksum(struct xlog *log, struct xlog_rec_header *rhead,
+> -			    char *dp, int size);
+> +__le32	 xlog_cksum(struct xlog *log, struct xlog_rec_header *rhead,
+> +		char *dp, unsigned int hdrsize, unsigned int size);
+>  
+>  extern struct kmem_cache *xfs_log_ticket_cache;
+>  struct xlog_ticket *xlog_ticket_alloc(struct xlog *log, int unit_bytes,
+> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+> index 0a4db8efd903..549d60959aee 100644
+> --- a/fs/xfs/xfs_log_recover.c
+> +++ b/fs/xfs/xfs_log_recover.c
+> @@ -2894,9 +2894,24 @@ xlog_recover_process(
+>  	int			pass,
+>  	struct list_head	*buffer_list)
 >  {
-> +	unsigned int		i;
->  	ASSERT(q[0].qt_dquot != NULL);
->  	if (q[1].qt_dquot == NULL) {
->  		xfs_dqlock(q[0].qt_dquot);
->  		xfs_trans_dqjoin(tp, q[0].qt_dquot);
-> -	} else {
-> -		ASSERT(XFS_QM_TRANS_MAXDQS == 2);
-> +	} else if (q[2].qt_dquot == NULL) {
->  		xfs_dqlock2(q[0].qt_dquot, q[1].qt_dquot);
->  		xfs_trans_dqjoin(tp, q[0].qt_dquot);
->  		xfs_trans_dqjoin(tp, q[1].qt_dquot);
-> +	} else {
-> +		xfs_dqlockn(q);
-> +		for (i = 0; i < XFS_QM_TRANS_MAXDQS; i++) {
-> +			if (q[i].qt_dquot == NULL)
-> +				break;
-> +			xfs_trans_dqjoin(tp, q[i].qt_dquot);
+> -	__le32			expected_crc = rhead->h_crc, crc;
+> +	__le32			expected_crc = rhead->h_crc, crc, other_crc;
+>  
+> -	crc = xlog_cksum(log, rhead, dp, be32_to_cpu(rhead->h_len));
+> +	crc = xlog_cksum(log, rhead, dp, XLOG_REC_SIZE,
+> +			be32_to_cpu(rhead->h_len));
+> +
+> +	/*
+> +	 * Look at the end of the struct xlog_rec_header definition in
+> +	 * xfs_log_format.h for the glory details.
+> +	 */
+> +	if (expected_crc && crc != expected_crc) {
+> +		other_crc = xlog_cksum(log, rhead, dp, XLOG_REC_SIZE_OTHER,
+> +				be32_to_cpu(rhead->h_len));
+> +		if (other_crc == expected_crc) {
+> +			xfs_notice_once(log->l_mp,
+> +	"Fixing up incorrect CRC due to padding.");
+> +			crc = other_crc;
 > +		}
->  	}
->  }
+> +	}
 >  
+>  	/*
+>  	 * Nothing else to do if this is a CRC verification pass. Just return
 > -- 
-> 2.47.1
+> 2.47.2
 > 
 > 
 
