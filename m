@@ -1,45 +1,45 @@
-Return-Path: <linux-xfs+bounces-25576-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25577-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D06AB5862F
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 22:51:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4821DB58634
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 22:51:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07EB62A053A
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 20:51:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 008CC1B22959
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Sep 2025 20:51:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C289276045;
-	Mon, 15 Sep 2025 20:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07E36276045;
+	Mon, 15 Sep 2025 20:51:20 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04D5218AB4
-	for <linux-xfs@vger.kernel.org>; Mon, 15 Sep 2025 20:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5342773C3
+	for <linux-xfs@vger.kernel.org>; Mon, 15 Sep 2025 20:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757969456; cv=none; b=LrTd280SY7P7xN9kxldlaX3pabDDXgeU1Xz8oUP86xNgjve/TjwWvOhEtxNQvXhNnPe8D5qzaSeB0SbvXR4k9cbTpFvwYoRZqzr2Yfz4bDpuf17xqAkAhMa05O0vQXQRKZ2TayybbKCYo6jaeG9ppnvtmFzl1Y1hEAfytZlueLY=
+	t=1757969479; cv=none; b=Bj5+3PmrdhvBZ2fN172dkG0mYUHHjjfjYS1b3mnDEVpbAwI6etk9W6/8/8rJ+lp7CFfK7KcbdhkwN5ngncgREtxOtHXXBZfkqCidMLb/B+o3kmnfLT8nutcz9HPhpBbVEWMPUZumZ0VLeK9vnaQwAFZOhtZr2OLZ4e6lZ1FjY6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757969456; c=relaxed/simple;
-	bh=z3rnWUUoP7nfi5HxQ93qEZ4AcUN5nAhRzZiOlA/yUik=;
+	s=arc-20240116; t=1757969479; c=relaxed/simple;
+	bh=SkyIc955KAt9qlamPhYwL0n1OndilZg/1bMA1MA0udw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sh8GQuLR2ozP8VFBlxI0XePh6lcEkbILP1brlxwtkLdFZJBcwBMKzY+1HYLfTw5AvnNJTEep7Kb1eU95znTVB7Xygpvg7zQ+wzzouMryKTluHIDpBo299ReKkbUYxfnqEMLrQyFWmiZCN1xayRrVV1mCXBF6bStO0iAOeE8yHYk=
+	 Content-Type:Content-Disposition:In-Reply-To; b=fISWTmmhXzx328bhmYCY8YasXy+AKSwf7bpqgt4ZA4kRVKA44TUM9+8WPPZ5k9998NCJYuCjX81lUCwGvvd7U3CR39a9/jU+aCcjiqeI7BgvX2jPkO/b1WeW/WRtVWJsq57dOfR4PjmZbYIkzGhDW6qZQmTYqLJTkKXw/P4lcZs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 93BBB68AA6; Mon, 15 Sep 2025 22:50:49 +0200 (CEST)
-Date: Mon, 15 Sep 2025 22:50:49 +0200
+	id 49CA068AA6; Mon, 15 Sep 2025 22:51:13 +0200 (CEST)
+Date: Mon, 15 Sep 2025 22:51:13 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: fix log CRC mismatches between i386 and other
- architectures
-Message-ID: <20250915205049.GB5650@lst.de>
-References: <20250915132047.159473-1-hch@lst.de> <20250915132047.159473-3-hch@lst.de> <20250915182513.GP8096@frogsfrogsfrogs>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] xfs_io: use the XFS_ERRTAG macro to generate
+ injection targets
+Message-ID: <20250915205113.GC5650@lst.de>
+References: <20250915133336.161352-1-hch@lst.de> <20250915133336.161352-3-hch@lst.de> <20250915191115.GZ8096@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -48,30 +48,19 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250915182513.GP8096@frogsfrogsfrogs>
+In-Reply-To: <20250915191115.GZ8096@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Sep 15, 2025 at 11:25:13AM -0700, Darrick J. Wong wrote:
-> ...and let me guess, the checksum function samples data all the way out
-> to byte 324/328 too?
-
-Yes.
-
-> > Fixes: 0e446be44806 ("xfs: add CRC checks to the log")
+On Mon, Sep 15, 2025 at 12:11:15PM -0700, Darrick J. Wong wrote:
+> On Mon, Sep 15, 2025 at 06:33:17AM -0700, Christoph Hellwig wrote:
+> > Use the new magic macro table provided by libxfs to autogenerate
+> > the list of valid error injection targets.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > 
-> Cc: <stable@vger.kernel.org> # v3.8
+> With this applied we no longer have to manually update inject.c every
+> time we do a libxfs port too, right?
 
-Still not a fan of the explicit stable tag vs implying it by fixes,
-but yes, this should be backported.
-
-> > +	 * We now do two checksum validation passes for both sizes to allow
-> > +	 * moving v5 file systems with unclean logs between i386 and other
-> > +	 * (little-endian) architectures.
-> 
-> Is this a problem on other 32-bit platforms?  Or just i386?
-
-The alignment is an i386-specific quirk.  We have similar workarounds
-for the extent structure in the EFI/EFD items and some 32-bit ioctls,
-except that this one can be a bit simpler.
+Exactly.
 
 
