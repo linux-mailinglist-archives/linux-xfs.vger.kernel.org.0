@@ -1,79 +1,78 @@
-Return-Path: <linux-xfs+bounces-25685-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25687-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B5D3B59884
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 16:02:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6B78B598AF
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 16:05:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE83C3A6925
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 14:01:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 906BC7B81AF
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 14:01:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A370342CBE;
-	Tue, 16 Sep 2025 13:59:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E6F534A30B;
+	Tue, 16 Sep 2025 13:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bfy3Z2aZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLBo2LB5"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08DD340D90
-	for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 13:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CC7321F3F
+	for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 13:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758031185; cv=none; b=OD8WdtrATyJk6iiRnC/IDD4aPDuWdrr+xnxj9J1cc7v394q7k/gmDa1chKSpMyepWgTFsSbUNQiO0842Cj5nMruTcsx3HAhwNnMZw3XTonUP9C58ySe/QX3pP7ejJk6NCl9Sf8SYT8fQ897Ethct+/JLjcTTH32zaUCXVZZcM5Y=
+	t=1758031189; cv=none; b=RBCx0XQgLMkYvzCKWyHxwgCnzZxv06kLK6PS4VQh1aUmA5jcHI8zPZ0Gc+rT8yoYuk7WXNFl6cPFvPOeeJUl7lUj6dHtFfvuM3Q9IWYRwhVunJi4MbQ0vDQTCCg6biCHSqPM2uQncEbZ4tGSa3iD4+DmtZurtCxdbFOVYdpsr/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758031185; c=relaxed/simple;
-	bh=Nc3Gee0vrTnwJ6vndyB/379w2+GYqChkKGGXlbOU7TI=;
+	s=arc-20240116; t=1758031189; c=relaxed/simple;
+	bh=zBN9BldLXuQYafbepgbsRKYJCNw2ZdSE8TIiThiLfW4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MHGk9tZ3DnTC4FOAHqKkD1EBnPq2IX+czIGDHB1rL5/X+7Nz+EEp7Gyy/7F3mnwpHGTDLPIa+Z0+JMEpZqDZNZvwo2Nm9L2MXPb1IkGV5K8rFnYoqNTcqcpp6lD7NhFDDsg6QFMTuyHxVzIJ0GcNrPHPrEcWtgUFBdpPvnHaIMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bfy3Z2aZ; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version; b=iv8c2CaJH0Ybc0iOKD1Phu/TBHcxDg8CqMLXSi84apI/IRGxuhfd6G6BIGSfCZDHdw1J+h/xNIf0C6eBoM1h1OEZCv7L3tjr3Yjkx9fnV9Xxo9/m5/5d7dYFHyGRFrSLti5PX7NmT9I1EVvZ7oYKFg5hP2PgaRud9q+LUC4F1Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BLBo2LB5; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45dec026c78so55694545e9.0
-        for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 06:59:41 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45dd505a1dfso43954975e9.2
+        for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 06:59:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758031180; x=1758635980; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758031182; x=1758635982; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZMpr+bvOy5/2/12diBRSepmR81u8HtS5BLKXmxw+l6c=;
-        b=Bfy3Z2aZLBnOB8OcwpmFwYOu2POPQiCG4qrDIkeZLAq85nJOPv1oMvqfVaKt9AsC3U
-         3Uktntb0t45qL8UPokum8BSzilCUJhZhCsH8jPMbp2A3URiWK/XkKMNL1aZ8ikktgwBC
-         FBu5TXgeNYsuIf4oWRiw/mUKTgisVJIz65TMwWMF5XFrST7CGgysQOapTPSkeY8OB1Po
-         bHsoKAuX/XJXtM9D3Q2LAeJGNG6408NFZoxD9aTf1YH3tTR3IOlipopr6kYaWogera6L
-         CkZKsIFl49pl06CdVK62sd9Pg9v0yido6U6u3FZ6zBiGjqPfOhiqLQ+7oAV6VRsKGfyS
-         Dsxg==
+        bh=rbghKwI6RgQqtHuzp8YIKipmqQLga/vSj80h86fMMYM=;
+        b=BLBo2LB5PHvFexWoLIYT5WrIPilki61efSEs5c0jKV5SbQmSndN00mauMoB88EsbHy
+         EbW3RDHt6qEcAhbdRfU/nR0p3s4ponYl6Od3MsYa3toqlYwc4dPCmvXQinYcjsWKkpoY
+         1OgiiIhCNypynnEVbf6HaKtZAZIkbWWGkbYJOw9CwmaKGdEyGmqorR3wDJtsmNIg8YRE
+         BKy9Gtsw/o9jXEw+WYSZBaiWgv7q56SpVfUBc0goRKHiTm6Drm8X62FsntD6u0YWyDak
+         Ksngv81i03MZ/WRkd+u6vWvTeo51lmVGNs53sBwSK6FgmtujqQgh7j1VFNMk147g/McU
+         8Mhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758031180; x=1758635980;
+        d=1e100.net; s=20230601; t=1758031182; x=1758635982;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZMpr+bvOy5/2/12diBRSepmR81u8HtS5BLKXmxw+l6c=;
-        b=Fjy2fJ3pVzqFYrx+hW3ZUn+oKFBJkE33P2WZEWeI5P3nuwKEh3w8ro2UXwizIpvDGP
-         frQ84aHgeQEtqoHiOFwuluSRlqR7EXktiOIMdKycgbhYPri6oPeJwhe4DOMezpT1LkzX
-         vOybb5f68FZSbgdLe8HX6uHxrT9+2whc8cb/oakf2BdWFS4qCXANoM5+5yh+ugvisO4S
-         rCQXyAJaLWYTa/+maF+7yjgl1+YRrPXCT+AjeMdko1i2gu5eeINRzbo/+viXfu6KXjHl
-         FVhMWve9bQi8brPrGtSZws0sV3xeS1PY9oylFvbHnv3gIvbHeWMOJiDzG7/2hCsJJnFJ
-         IC+g==
-X-Forwarded-Encrypted: i=1; AJvYcCV1M9GxVkB13eUg50EdZ2uAsexPcvkbEIRt3deMNUrg4DrWDZVeRRVny+gT44Aic7rZwSpy8yjgETE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyacWmk0l6uOlJHkEsrY8mOFIGLQxlwUxuDWcdBFOkZgkSuiqDy
-	UVX59JaA7lFnj0JMFlTiKhAcSHICVRdUBFD6dAxUmg7CdR7Sprhlzif3
-X-Gm-Gg: ASbGncu+aZpsB+phLdLqu0Ul0Ik2thJ38VwPDugsl9DVakIyxsKNALQscx77aoQ46pl
-	ktxDjvhfmXL2lcNLZDDf1yxsz8KP2rROFcA6jo9ksXsw6+WklpMAiX61+yDXb464qFadKUfFBUw
-	eqZ2rpGBlKD8MGLw5AK1zXhqc1Q3UaZw3BaJdojMF88tCtXW2G98G5fjZ3SWFkQ2oD8cdSzRWt7
-	xXf8LmyaJeUcQXqC3EhrtZsq3iKiIuN2IGkoh/MucjAOskMSo/hG2hAyk9JwqSvfF9MehWaxIVc
-	fMamUsLRNy1kZMZwrTzk/wqwXX/Qqq8rGFJPdqO5Sdlm1yzsmOvtqyOHGcADszULfGUOeBxQm44
-	FUrlHnLaMjSn6xHV3YWypED0sME5gtkGQUylVVI+p7qBN6gr8td4VoMRwkYhyu7XmMS7/GOOPHv
-	JI9/FVs+0=
-X-Google-Smtp-Source: AGHT+IFbHxr4sMvLl74+5elP/3RKStElte34B3ctaItgubMLw6jX0shTLa+rud5mii4r4ob7vh3LMg==
-X-Received: by 2002:a05:600c:1d20:b0:45f:2b47:b06e with SMTP id 5b1f17b1804b1-45f2db8764cmr67166895e9.18.1758031179775;
-        Tue, 16 Sep 2025 06:59:39 -0700 (PDT)
+        bh=rbghKwI6RgQqtHuzp8YIKipmqQLga/vSj80h86fMMYM=;
+        b=JmaIYU6ukrf1kA9Vc4or6l0Sf4FZHmSHVeb2a+7CpkInZfjJGB+g5vzRxr38BWEhec
+         dsnXWRolcHfjEA2n4/dkWkrj/J1bOFT6WI9mI8R8VrrM9QU7jpXkh+5axGt0g4MQ2+WI
+         uFlWZUnot2BWae5gwPoDsCsVLCJ9qTEKoAEkAzcTvoLKWorPdHnwsUzjLq57FlNR9rAp
+         WlCnrxi0B1+ovo01K3fhG6TfSSTdyvWy4wULeJCZghWmh09oz3gwxCaLjdvccxe+5EaH
+         9GowbH32CZbKTiNpaVxfFJbHwe6W1NCJVvvFLHZCqaLnPJc2CDFfI560Zj1xdIml/j4k
+         ZORQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX4fg105MSGylbeG4Bca0+/xg69DessBUyHIzN6YOUlqjl5ZoSdmIqsw05btm4IwV8cJLkCoJCq70g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydJhbPNH9lzUVUSH/4n4L+wOXP91SqP8qXHCPHvgLF+F2bhLCm
+	BIxqQ8Q8BYxh7NpOORWqOVHCDk3Urg26DzPC6eHpbNG9ONmxZlG59Y8q
+X-Gm-Gg: ASbGnctpY716wpM3Lyh+GqAM5aOKpnwYsWWU08YMkOW0eagKrY6r5imrbAMZr4risBT
+	kWJ5gsozvdXXhRCtIyj4093HQkPECbEJPpPwqBE1dXnLPqObXcf3VR+rWqKObHHOfrY/Ah43G/c
+	TsAFwMDsDqe0CpObNDnEUWxFE/aab5AlZYtv5ZJ3h6TdJPtEEV9yJckYaiSigFuxlqFt3PcEdC8
+	9yUwZlAj/yKdMgXxRTwjtzL1e7n9f2yxHQ7TwpWAn1Sga52spnsmdwVCfv801ti/ZltcFHGpbnh
+	8G4yMh4iGH4ZBEoxsaT16ozyIfpa2PQc3MdvGLxEHadvkL0K+cnzosZvfU25Y4EatUuV58jpcGp
+	0yfUxp8xwJRya/SeHZDBUWgiy5LWXmm8K0/buF3UuSiDcIEMAMvx85fghhnciQmNPcJvG0YBv
+X-Google-Smtp-Source: AGHT+IE5shqQIUKbOw6hlw6cRTrcBtFVXG2OEPPmead9j/NTizmYAzcuhQc64qnxQ9XZRhrVFrM2rw==
+X-Received: by 2002:a05:6000:310f:b0:3ec:d7c4:25a5 with SMTP id ffacd0b85a97d-3ecd7c4282emr1856689f8f.42.1758031181954;
+        Tue, 16 Sep 2025 06:59:41 -0700 (PDT)
 Received: from f.. (cst-prg-88-146.cust.vodafone.cz. [46.135.88.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7cde81491sm16557991f8f.42.2025.09.16.06.59.38
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7cde81491sm16557991f8f.42.2025.09.16.06.59.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Sep 2025 06:59:39 -0700 (PDT)
+        Tue, 16 Sep 2025 06:59:41 -0700 (PDT)
 From: Mateusz Guzik <mjguzik@gmail.com>
 To: brauner@kernel.org
 Cc: viro@zeniv.linux.org.uk,
@@ -89,9 +88,9 @@ Cc: viro@zeniv.linux.org.uk,
 	ceph-devel@vger.kernel.org,
 	linux-unionfs@vger.kernel.org,
 	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v4 04/12] btrfs: use the new ->i_state accessors
-Date: Tue, 16 Sep 2025 15:58:52 +0200
-Message-ID: <20250916135900.2170346-5-mjguzik@gmail.com>
+Subject: [PATCH v4 05/12] netfs: use the new ->i_state accessors
+Date: Tue, 16 Sep 2025 15:58:53 +0200
+Message-ID: <20250916135900.2170346-6-mjguzik@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250916135900.2170346-1-mjguzik@gmail.com>
 References: <20250916135900.2170346-1-mjguzik@gmail.com>
@@ -124,58 +123,57 @@ inode->i_state |= (I_A | I_B)   => inode_state_add_raw(inode, I_A | I_B)
 inode->i_state &= ~(I_A | I_B)  => inode_state_del_raw(inode, I_A | I_B)
 inode->i_state = I_A | I_B      => inode_state_set_raw(inode, I_A | I_B)
 
- fs/btrfs/inode.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/netfs/misc.c        | 8 ++++----
+ fs/netfs/read_single.c | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 5bcd8e25fa78..eaf3c20e5b23 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -3856,7 +3856,7 @@ static int btrfs_add_inode_to_root(struct btrfs_inode *inode, bool prealloc)
- 		ASSERT(ret != -ENOMEM);
- 		return ret;
- 	} else if (existing) {
--		WARN_ON(!(existing->vfs_inode.i_state & (I_WILL_FREE | I_FREEING)));
-+		WARN_ON(!(inode_state_read_once(&existing->vfs_inode) & (I_WILL_FREE | I_FREEING)));
+diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
+index 20748bcfbf59..f0f23887d350 100644
+--- a/fs/netfs/misc.c
++++ b/fs/netfs/misc.c
+@@ -147,10 +147,10 @@ bool netfs_dirty_folio(struct address_space *mapping, struct folio *folio)
+ 	if (!fscache_cookie_valid(cookie))
+ 		return true;
+ 
+-	if (!(inode->i_state & I_PINNING_NETFS_WB)) {
++	if (!(inode_state_read_once(inode) & I_PINNING_NETFS_WB)) {
+ 		spin_lock(&inode->i_lock);
+-		if (!(inode->i_state & I_PINNING_NETFS_WB)) {
+-			inode->i_state |= I_PINNING_NETFS_WB;
++		if (!(inode_state_read(inode) & I_PINNING_NETFS_WB)) {
++			inode_state_add(inode, I_PINNING_NETFS_WB);
+ 			need_use = true;
+ 		}
+ 		spin_unlock(&inode->i_lock);
+@@ -192,7 +192,7 @@ void netfs_clear_inode_writeback(struct inode *inode, const void *aux)
+ {
+ 	struct fscache_cookie *cookie = netfs_i_cookie(netfs_inode(inode));
+ 
+-	if (inode->i_state & I_PINNING_NETFS_WB) {
++	if (inode_state_read_once(inode) & I_PINNING_NETFS_WB) {
+ 		loff_t i_size = i_size_read(inode);
+ 		fscache_unuse_cookie(cookie, aux, &i_size);
  	}
+diff --git a/fs/netfs/read_single.c b/fs/netfs/read_single.c
+index fa622a6cd56d..f728aae9bde9 100644
+--- a/fs/netfs/read_single.c
++++ b/fs/netfs/read_single.c
+@@ -36,12 +36,12 @@ void netfs_single_mark_inode_dirty(struct inode *inode)
  
- 	return 0;
-@@ -5317,7 +5317,7 @@ static void evict_inode_truncate_pages(struct inode *inode)
- 	struct extent_io_tree *io_tree = &BTRFS_I(inode)->io_tree;
- 	struct rb_node *node;
+ 	mark_inode_dirty(inode);
  
--	ASSERT(inode->i_state & I_FREEING);
-+	ASSERT(inode_state_read_once(inode) & I_FREEING);
- 	truncate_inode_pages_final(&inode->i_data);
+-	if (caching && !(inode->i_state & I_PINNING_NETFS_WB)) {
++	if (caching && !(inode_state_read_once(inode) & I_PINNING_NETFS_WB)) {
+ 		bool need_use = false;
  
- 	btrfs_drop_extent_map_range(BTRFS_I(inode), 0, (u64)-1, false);
-@@ -5745,7 +5745,7 @@ struct btrfs_inode *btrfs_iget_path(u64 ino, struct btrfs_root *root,
- 	if (!inode)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (!(inode->vfs_inode.i_state & I_NEW))
-+	if (!(inode_state_read_once(&inode->vfs_inode) & I_NEW))
- 		return inode;
- 
- 	ret = btrfs_read_locked_inode(inode, path);
-@@ -5769,7 +5769,7 @@ struct btrfs_inode *btrfs_iget(u64 ino, struct btrfs_root *root)
- 	if (!inode)
- 		return ERR_PTR(-ENOMEM);
- 
--	if (!(inode->vfs_inode.i_state & I_NEW))
-+	if (!(inode_state_read_once(&inode->vfs_inode) & I_NEW))
- 		return inode;
- 
- 	path = btrfs_alloc_path();
-@@ -7435,7 +7435,7 @@ static void btrfs_invalidate_folio(struct folio *folio, size_t offset,
- 	u64 page_start = folio_pos(folio);
- 	u64 page_end = page_start + folio_size(folio) - 1;
- 	u64 cur;
--	int inode_evicting = inode->vfs_inode.i_state & I_FREEING;
-+	int inode_evicting = inode_state_read_once(&inode->vfs_inode) & I_FREEING;
- 
- 	/*
- 	 * We have folio locked so no new ordered extent can be created on this
+ 		spin_lock(&inode->i_lock);
+-		if (!(inode->i_state & I_PINNING_NETFS_WB)) {
+-			inode->i_state |= I_PINNING_NETFS_WB;
++		if (!(inode_state_read(inode) & I_PINNING_NETFS_WB)) {
++			inode_state_add(inode, I_PINNING_NETFS_WB);
+ 			need_use = true;
+ 		}
+ 		spin_unlock(&inode->i_lock);
 -- 
 2.43.0
 
