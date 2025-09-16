@@ -1,54 +1,56 @@
-Return-Path: <linux-xfs+bounces-25664-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25666-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 669DBB5954B
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 13:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62E3BB5954D
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 13:35:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C2A78189F32A
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 11:35:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B8151BC1F0B
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 11:35:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD6BB30748F;
-	Tue, 16 Sep 2025 11:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3529307499;
+	Tue, 16 Sep 2025 11:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGB+ldeq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoNvm5PM"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D969307489
-	for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 11:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE8B3064A6;
+	Tue, 16 Sep 2025 11:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758022487; cv=none; b=ABErejh59IKLmM7+3a+lCBKqAQJVnzhugoP7936BRVuhxNPdy2zrunUBDlKnHr/tNkIMx9RhPdo3qxQEV7HxjTR0vgtDaxJJ+t+k0hkp1rrYtNUDr8rIh4WgyAHXw+8qUU6zC0XQB3o+V+2XtIeRMCKOUfOQt+TKQG7EFhpNQv8=
+	t=1758022489; cv=none; b=BnnTrKy+fOE8Iuj9FqZQMZp/2y7ZXU85PlWiNazp35s8XPg1sSo4mZBAPckxrb+gB9RVcx7rFufUL+PHyTCsUj4Gu0/+VMJBaglv73xFAFXiPnry/YU05IR5GNtabVDlQYBlEZVM3BJZCIrOPrGej48oESPA+Lz37nIJaFgzNIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758022487; c=relaxed/simple;
-	bh=sGWKZ8rIFEe58tNCs2nNcvP+/TqehZszISngJhzteSA=;
+	s=arc-20240116; t=1758022489; c=relaxed/simple;
+	bh=C2VFNh9pG4n1CHA/01gyfSaN+qDLGHCCfe5WiisML6c=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=S0V+w5sXyg2bj5RvnqAr11wXWY052eiG2AMmr47nGsGlGDG8vM2Tf5UhKRNJ1MnG59cvKwWqkP1nQ4d9f5XdB1TEbqQA04by18rzYBr2mwunX+LTZPbrzMUGLCA5KKBz3qoWRM7pN/lSClGwTU2ZloQNIEfeprv5DxHCSIvNo8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGB+ldeq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 431B7C4CEFB;
-	Tue, 16 Sep 2025 11:34:46 +0000 (UTC)
+	 MIME-Version:Content-Type; b=gv9Eq9ILxPr1X6gO2VU9PYUb40yrKmCJxUUbjby5kbYnYrAlqBCfQb9fW02rNUtZwY5GgV3nmevG4Fn4tC95Yq4ODohJRGIccFRVCY2p69XgZiGCRn8aYPAQyv4shB2RyBwsdd4sXcH7w8wnW8nEhBtSgzAQmUevfD2KB0ryEPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoNvm5PM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94121C4CEEB;
+	Tue, 16 Sep 2025 11:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758022487;
-	bh=sGWKZ8rIFEe58tNCs2nNcvP+/TqehZszISngJhzteSA=;
+	s=k20201202; t=1758022489;
+	bh=C2VFNh9pG4n1CHA/01gyfSaN+qDLGHCCfe5WiisML6c=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=eGB+ldeqiV7qiPf4nBMS0+wczX8JF2wL5E32H3NEbfWZQXUeh7tD2FKtGrGy5F2Dk
-	 W4H9wqx05SD/fI3z+3B5vJdjnAz0B+XXKItycwp3SFo8giNpPfHFiKQMie+7YgIUs9
-	 TD5MVnNMq8n3YW8xQjx44tN3aAntDb3MZAiwtjoVIVwKJIJNQvVQ/6m8YhFcOZdRbv
-	 vSyKDHm7XHDef/OCzxd0TKl61iFWKzOP+UKEcY3ULoV72Vx+p4uTVlNDLBIMwePDSe
-	 Z3AKe4OWNogZOkazsnk6TlQmrDLRVZ1DyePgr2cElooU/pNO20bEutxlsccsrBofkD
-	 0eaPwHEadBjQQ==
+	b=FoNvm5PMCHajQNTMUN+OR08ZdrYXyV2yCuWoBmeyy+6G4r9zhnQK1axIhiPhg+xH5
+	 V4nOGSWwFKxXuAh6X7wgGyCjo2V6Fpm3AZdmWTo4Nj/eTlp+yDtUbzfnXv0PAzXitX
+	 2kqJyXpL7wii7AvyqD79eJZpHvV89ZhLX1jZQzEdm06FsBxsrHmihXJUyH8gaDN1tY
+	 T8PpdFSOAIy2yhraML5cMaw0idYLB2F4Ez8gDlBBELwrTTNxeQZYfAlsM+/SKiVJv0
+	 Pcc2lQuMl6O5Ds4WStfqNRe+kHvrDmp4aeKMU3JjFPxZ1UXU3kIxcznp1h8Vt+ZDwX
+	 dhIbk8Ngl5K6A==
 From: Carlos Maiolino <cem@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
-In-Reply-To: <20250915132047.159473-1-hch@lst.de>
-References: <20250915132047.159473-1-hch@lst.de>
-Subject: Re: fix cross-platform log CRC validation
-Message-Id: <175802248590.997282.16087539623369702162.b4-ty@kernel.org>
-Date: Tue, 16 Sep 2025 13:34:45 +0200
+To: linux-xfs@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>
+Cc: Dave Chinner <david@fromorbit.com>, 
+ "Darrick J . Wong" <djwong@kernel.org>, hch <hch@lst.de>, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250901105128.14987-1-hans.holmberg@wdc.com>
+References: <20250901105128.14987-1-hans.holmberg@wdc.com>
+Subject: Re: [PATCH 0/3] xfs: hint based zone allocation improvements
+Message-Id: <175802248724.997282.6225952797513053259.b4-ty@kernel.org>
+Date: Tue, 16 Sep 2025 13:34:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -59,26 +61,25 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
-On Mon, 15 Sep 2025 06:20:28 -0700, Christoph Hellwig wrote:
-> this series fixes recovery of logs written on i386 on other
-> architectures or vice versa.
+On Mon, 01 Sep 2025 10:52:03 +0000, Hans Holmberg wrote:
+> This series makes the zone allocation policy a bit easier to
+> understand and adjusts the policy for unset and "none" rw hints,
+> avoiding mixing these with files with file data with set values.
 > 
-> Diffstat:
->  libxfs/xfs_log_format.h |   30 +++++++++++++++++++++++++++++-
->  libxfs/xfs_ondisk.h     |    2 ++
->  xfs_log.c               |    8 ++++----
->  xfs_log_priv.h          |    4 ++--
->  xfs_log_recover.c       |   34 ++++++++++++++++++++++++----------
->  5 files changed, 61 insertions(+), 17 deletions(-)
+> The first patch adds an enum for the number of hints available,
+> the second introduces allocation matrix without changing the policy,
+> and rhe third adjusts the allocation policy.
 > 
 > [...]
 
 Applied to for-next, thanks!
 
-[1/2] xfs: rename the old_crc variable in xlog_recover_process
-      commit: 0b737f4ac1d3ec093347241df74bbf5f54a7e16c
-[2/2] xfs: fix log CRC mismatches between i386 and other architectures
-      commit: e747883c7d7306acb4d683038d881528fbfbe749
+[1/3] fs: add an enum for number of life time hints
+      commit: 94deac977fbd0246c971b4f1d17a6385f5e0b1a4
+[2/3] xfs: refactor hint based zone allocation
+      commit: 0301dae732a5402a68fdb8d8461b97da6b9bccc6
+[3/3] xfs: adjust the hint based zone allocation policy
+      commit: 8e2cdd8e18ff5073ad76ab2220910001eae39398
 
 Best regards,
 -- 
