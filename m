@@ -1,58 +1,54 @@
-Return-Path: <linux-xfs+bounces-25663-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25665-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35CE8B59543
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 13:34:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E88ECB59549
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 13:35:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6228188D3EF
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 11:35:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 142EF7B177A
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 11:33:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D6FD302CB6;
-	Tue, 16 Sep 2025 11:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8413074B2;
+	Tue, 16 Sep 2025 11:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4X0Htkp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yw1GVTkh"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B292EB5A1;
-	Tue, 16 Sep 2025 11:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9E030748A
+	for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 11:34:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758022485; cv=none; b=gCazxsbKExAGW2W5mZs+XMaQ5Jhg88kz8kskoUBO1IwpvS9K4Xsi86Ro9V+hIyD1VajAV+445bnVTz31iXZkpDvbY6/9/AlqNF30fxec7aGMNKyuwxQdbQIAVVenAN6gdhnWIcD6kGIP0Tp8lQ8Ev1JP+r8dd3R3zcdbIheAkw4=
+	t=1758022487; cv=none; b=UvhbsTLZclhgNSByxlsZ7d6ObIVh7CED4eCTfoPrHm3cckxB0BlHL/C2Pp2V8RFAiav/yXcBpXImt0R2G2Z+znnTj6/Paw+vQw0w6ZrjZNQnjMcc37rYwK2o9EvjWM+USEwiiCyR0S/VXPh9u4NxKGQ1QdHS75kF2CIl6FoFYNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758022485; c=relaxed/simple;
-	bh=fUlsCnhWDAw/qI7fsKIj7DPbYIqynrXHXjGxmYrc5qo=;
+	s=arc-20240116; t=1758022487; c=relaxed/simple;
+	bh=4P7Ayi7of29rflk1KcVICpxRZEgxj9tsG4/I27pA6QQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=EIzQ6m/f8gjinufvka20UK5XBVc/Lb/D8bGPfvJM19H/19eI4dOu/qs/Ux6L/cChBEn874T6VE3inQGg9teI5hodjSSyYBhESwraHgSEreXqyUZaexOqSBrjiGUu3uF8BesPEN3FRnEkz1AXvUZtFjeopuNVyBMsMUnf+bzksr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4X0Htkp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6158CC4CEEB;
-	Tue, 16 Sep 2025 11:34:42 +0000 (UTC)
+	 MIME-Version:Content-Type; b=bk1PVw/A6LNT8VTIJpahTKoV3azbgOQg6d2NyINikIzgla6Q84CzV6/DuaZ3oUgkC1pXEA43MNwoqCdgxL/j9w4jEUYVtfzU+xfYhscuvkaI190wNmJIhMy6VwNS4D0fHq6+e39LFsKY7ivk+553G7bz53Ao7HuBqehUoDNCDXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yw1GVTkh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 240C9C4CEF0;
+	Tue, 16 Sep 2025 11:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758022484;
-	bh=fUlsCnhWDAw/qI7fsKIj7DPbYIqynrXHXjGxmYrc5qo=;
+	s=k20201202; t=1758022485;
+	bh=4P7Ayi7of29rflk1KcVICpxRZEgxj9tsG4/I27pA6QQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=j4X0Htkp5m2f/chFl4OextuKkP9i1oriE5nT+TZLWRoaA2IZIg6vF8ZJaJ+iPXvo0
-	 IAZT7sh6/8lR/ahQCLbDbtjlK8qwhCXAnXEfMIMzy197tHhvNDH8fxGzNIxWQnNgAq
-	 j5BuBjppNkKDHLwmuJmtvd6wjQEb758TmXE7VDEdLRDPZ25rBzXmGwYolAQ5kVH157
-	 cGFUFwYY36CwcMAlRfPsqtVo57WcHRYVzwyB/xJ2RmJ80WXwE7Dq5yH3ZQvw/BsLSD
-	 zSRH9UK1C5e0XRoRNR23SS7zOXQurQfSCIhqcjPnGvAyeXCua3L5QiKHQrUaliUp5S
-	 Sis+L+WyT10Zg==
+	b=Yw1GVTkhYn23x9JZUeuL+jQH4TOnzBAOe7skOD5F9pRqxZWSofL3J94vmD8t62MfZ
+	 uRV+hKua76eWMM09eR9wTP34soWaGrUJRX2/xeSTzQIbVFeT6qXb5oHrBByNoeP9lQ
+	 LvwrhTWluYUizetCf4ywymfNfc68LHnHer04yVCp9eRFo0Tw9X/EDLsB9QPR4ApOIX
+	 QNSQSWr63Uok6fT7KHdIKBoO7m39xZ38x/PZ5/imHLLTFNOUh0h7wFGBaVziyCRJbh
+	 F50Yl49/YqiqQYTYRen9d28CLilMdGwhN9RGX6JQETCjtgNXQYFjC734mbvIih+3I0
+	 rJYLnqZ3YM18A==
 From: Carlos Maiolino <cem@kernel.org>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
- Linux Documentation <linux-doc@vger.kernel.org>, 
- Linux XFS <linux-xfs@vger.kernel.org>, Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: David Chinner <david@fromorbit.com>, Jonathan Corbet <corbet@lwn.net>, 
- "Darrick J. Wong" <djwong@kernel.org>, Charles Han <hanchunchao@inspur.com>, 
- Stephen Rothwell <sfr@canb.auug.org.au>
-In-Reply-To: <20250909000431.7474-1-bagasdotme@gmail.com>
-References: <20250909000431.7474-1-bagasdotme@gmail.com>
-Subject: Re: [PATCH] xfs: extend removed sysctls table
-Message-Id: <175802248202.997282.13567404398222475250.b4-ty@kernel.org>
-Date: Tue, 16 Sep 2025 13:34:42 +0200
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-xfs@vger.kernel.org
+In-Reply-To: <20250915132709.160247-1-hch@lst.de>
+References: <20250915132709.160247-1-hch@lst.de>
+Subject: Re: remove most typedefs from xfs_log_format.h
+Message-Id: <175802248477.997282.4586556987348072736.b4-ty@kernel.org>
+Date: Tue, 16 Sep 2025 13:34:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -63,20 +59,53 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
-On Tue, 09 Sep 2025 07:04:31 +0700, Bagas Sanjaya wrote:
-> Commit 21d59d00221e4e ("xfs: remove deprecated sysctl knobs") moves
-> recently-removed sysctls to the removed sysctls table but fails to
-> extend the table, hence triggering Sphinx warning:
+On Mon, 15 Sep 2025 06:26:50 -0700, Christoph Hellwig wrote:
+> this removes most of the mostly unused typedefs in xfs_log_format.h.
+> There's a few left for which I have series pending that will do the
+> removal together with changes to the area.
 > 
-> Documentation/admin-guide/xfs.rst:365: ERROR: Malformed table.
-> Text in column margin in table line 8.
+> Diffstat:
+>  libxfs/xfs_log_format.h  |   83 +++++++++++++++++++++++------------------------
+>  libxfs/xfs_log_recover.h |    2 -
+>  xfs_extfree_item.c       |    4 +-
+>  xfs_extfree_item.h       |    4 +-
+>  xfs_log.c                |   19 +++++-----
+>  5 files changed, 56 insertions(+), 56 deletions(-)
 > 
 > [...]
 
 Applied to for-next, thanks!
 
-[1/1] xfs: extend removed sysctls table
-      commit: e3df98d30369d7859a855bd3e500ea46205640ca
+[01/15] xfs: remove the xlog_op_header_t typedef
+        commit: eff8668607888988cad7b31528ff08d8883c5d7e
+[02/15] xfs: remove the xfs_trans_header_t typedef
+        commit: 05f17dcbfd5dbe309af310508d8830ac4e0c5d4c
+[03/15] xfs: remove the xfs_extent_t typedef
+        commit: 476688c8ac60da9bfcb3ce7f5a2d30a145ef7f76
+[04/15] xfs: remove the xfs_extent32_t typedef
+        commit: 7eaf684bc48923b5584fc119e8c477be2cdb3eb2
+[05/15] xfs: remove the xfs_extent64_t typedef
+        commit: 72628b6f459ea4fed3003db8161b52ee746442d0
+[06/15] xfs: remove the xfs_efi_log_format_t typedef
+        commit: 655d9ec7bd9e38735ae36dbc635a9161a046f7b9
+[07/15] xfs: remove the xfs_efi_log_format_32_t typedef
+        commit: 68c9f8444ae930343a2c900cb909825bc8f7304a
+[08/15] xfs: remove the xfs_efi_log_format_64_t typedef
+        commit: 3fe5abc2bf4db88c7c9c99e8a1f5b3d1336d528f
+[09/15] xfs: remove the xfs_efd_log_format_t typedef
+        commit: 0a33d5ad8a46d1f63174d2684b1d743bd6090554
+[10/15] xfs: remove the unused xfs_efd_log_format_32_t typedef
+        commit: a0cb349672f9ac2dcd80afa3dd25e2df2842db7a
+[11/15] xfs: remove the unused xfs_efd_log_format_64_t typedef
+        commit: 3dde08b64c98cf76b2e2378ecf36351464e2972a
+[12/15] xfs: remove the unused xfs_buf_log_format_t typedef
+        commit: 1b5c7cc8f8c54858f69311290d5ade12627ff233
+[13/15] xfs: remove the unused xfs_dq_logformat_t typedef
+        commit: ae1ef3272b31e6bccd9f2014e8e8c41887a5137b
+[14/15] xfs: remove the unused xfs_qoff_logformat_t typedef
+        commit: bf0013f59ccdb283083f0451f6edc50ff98e68c0
+[15/15] xfs: remove the unused xfs_log_iovec_t typedef
+        commit: 3e5bdfe48e1f159de7ca3b23a6afa6c10f2a9ad2
 
 Best regards,
 -- 
