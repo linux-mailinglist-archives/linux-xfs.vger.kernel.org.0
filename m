@@ -1,60 +1,56 @@
-Return-Path: <linux-xfs+bounces-25672-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25674-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F56FB59835
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 15:52:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E15D9B59854
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 15:57:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88FF41BC483F
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 13:53:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 568B4170470
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Sep 2025 13:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C87B31DDB6;
-	Tue, 16 Sep 2025 13:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7E9322751;
+	Tue, 16 Sep 2025 13:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZEVly9E2"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O9TJ/cAP"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749BB31D731
-	for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 13:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A51F5CDF1
+	for <linux-xfs@vger.kernel.org>; Tue, 16 Sep 2025 13:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758030757; cv=none; b=jj5OHWIKlAQOAmZJ/V7hVF+hu7MIOk/VoVWo0ZWqwS6Yc5bKWVFam2k+vYD30PcoI4zQG0NQtFw6s7ZegRBCIClnLgfu1vIGkaWTgDEoJZfaqnlkdmzgaOh/jgTFEUlpaDLfyvrH287gGHQGk/EiA9fzOYkNLF09vWwI/HsS4Xs=
+	t=1758031008; cv=none; b=rOWCtwBfNBILw3aBs1ONUp+Tc05ByPPL1+IvHn/ayXwiXLCdGh52SqTrgNAK+/9dPCWrJMoQrA2iExvuNmFcYhtZIjlNtRC/BuhrSqaH01Ct6xsbTmjIn9muQZ9CQa0gWp2toQaYC/10h9fCOcd8KY7gVH4xtS2SlK3/JfjA1SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758030757; c=relaxed/simple;
-	bh=mXa1ae3S48kCHLt9IjEMEdZfxnWt2IKncmPYrkAnfL0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=htw67grNWUhPHFw5BpjVWMXjB1nOAWqpNHDH0MhRfz5yiQc0+299Ub7yKTfs2epkdKZa2nqFbVGCDlwuSINoT7Kn8Zj4iRnY7necwZSl5v8KJClKmvdMysC9dhuBN9XOLYj9aoKhGM4TiEiRFmNziG0TWJ+nLdhPdnKycUo3Ut0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZEVly9E2; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1758031008; c=relaxed/simple;
+	bh=pnPfYnon6J80uqfto0WFyN3g4Yr8tmpclz+oQ50vqpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mMTjSKS6eL9Ll2McOBpZ0geLQic3dtrxRBe3rfIFd5enbZWvJW3KUKxUcaoH6RGuoTxocSOdkQv3u2LEgYDQZoSxGCWSpDxkTnGlQKXQ+Pb5W7otQ9/NyKjGYfpzpdIQt0w4cPedHdxT5+Ja2VRNlbTrYbgYGdXEPQw09ME/X3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O9TJ/cAP; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=JQP5BTsATzgxmeImquEtvNKiKchpssqkG9QPkfUp6bQ=; b=ZEVly9E2Gj516N8zjfHIsS00h9
-	SWjbIc2N7ZgBUTWn252sXQGCtDnvS6dNJS3Egl/ZOiUYq32HzYbiXhtmCxHu3Sb5T+UjMwltf8Gt+
-	i8JZ9Ifs/D3e5EfydwdxBLY4bnD/pLbcW7TpgK0IQJLjeKHKq9Og1daYndVy8xiFZjH7Tt8qyIdP3
-	h2jho2YQgxAIQmHRUEVMaIN6UZ99IEKsuq5ZSbmNk3PG8c6TOKxDcQcwtZBuvH59I813gz28M6fN0
-	hc7dRouM4sIM6Flhy4mHxwBZJbJRPlHoipExjEoynkg9a+r8k0FjEjLM5qRdvXBT/codbRGph4DUV
-	Q/dLW+Bw==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=FC95U8RK7ThH10PFmmOXlerVioZlO6iFMdy/CE/f+6o=; b=O9TJ/cAPrU5BTgwN42N7kCTX0b
+	SHde81HxIWgMGqGVgFdQaXAdL1QRWZ5pzCwGvmhSoVwYw4qh/NpHv1N2eQ/LIqWN+GG5yFzOZ4Vg/
+	PVB66zvkCTXRtFvroutnUMY0RHWdrzIFqm2bJRFdHOd4gOVIKbHMcQ7PDzDflYTbhAtI0ApYJEf0P
+	E8kKZWSjnVZE4gQwnZTHeonNwvYhy+SPLMouwbD7wyEcC1Mo2gq6jyh20ombH9OdPN40HOEedJ/TW
+	lxMseZQ0wpfLM2LXqiU51YQSSSa3vD02wi8/h6EoJK8fpZtnTnGfBiYMX9omYaeDfSlCtaACIhn+u
+	FG6OVM7g==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyW6m-00000007zfF-0QRx;
-	Tue, 16 Sep 2025 13:52:36 +0000
+	id 1uyWAo-000000080Ub-1Crq;
+	Tue, 16 Sep 2025 13:56:46 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
-Cc: linux-xfs@vger.kernel.org,
-	"Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH 2/2] xfs: use bt_nr_blocks in xfs_dax_translate_range
-Date: Tue, 16 Sep 2025 06:52:32 -0700
-Message-ID: <20250916135235.218084-3-hch@lst.de>
+Cc: linux-xfs@vger.kernel.org
+Subject: kill xlog_in_core_2_t
+Date: Tue, 16 Sep 2025 06:56:24 -0700
+Message-ID: <20250916135646.218644-1-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250916135235.218084-1-hch@lst.de>
-References: <20250916135235.218084-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -64,30 +60,22 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Only ranges inside the file system can be translated, and the file system
-can be smaller than the containing device.
+Hi all,
 
-Fixes: f4ed93037966 ("xfs: don't shut down the filesystem for media failures beyond end of log")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
----
- fs/xfs/xfs_notify_failure.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+xlog_in_core_2_t is probably one of the most confusing types in the
+kernel. Not only does it describe an on-disk format despite claiming
+to be in-core in the name, but it is also has an extremely confusing
+layout.  This series revamps our C representation of the underlying
+data structures so that they hopefully make a lot more sense while
+killing off xlog_in_core_2_t for good.
 
-diff --git a/fs/xfs/xfs_notify_failure.c b/fs/xfs/xfs_notify_failure.c
-index fbeddcac4792..3726caa38375 100644
---- a/fs/xfs/xfs_notify_failure.c
-+++ b/fs/xfs/xfs_notify_failure.c
-@@ -165,7 +165,7 @@ xfs_dax_translate_range(
- 	uint64_t		*bblen)
- {
- 	u64			dev_start = btp->bt_dax_part_off;
--	u64			dev_len = bdev_nr_bytes(btp->bt_bdev);
-+	u64			dev_len = BBTOB(btp->bt_nr_blocks);
- 	u64			dev_end = dev_start + dev_len - 1;
- 
- 	/* Notify failure on the whole device. */
--- 
-2.47.2
-
+Diffstat:
+ libxfs/xfs_log_format.h |   38 +++++-----
+ libxfs/xfs_ondisk.h     |    6 +
+ xfs_log.c               |  181 +++++++++++++++++-------------------------------
+ xfs_log_cil.c           |    6 -
+ xfs_log_priv.h          |   27 +++++--
+ xfs_log_recover.c       |   45 ++++-------
+ xfs_trace.h             |    2 
+ 7 files changed, 131 insertions(+), 174 deletions(-)
 
