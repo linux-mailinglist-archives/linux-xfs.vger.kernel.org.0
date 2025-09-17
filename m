@@ -1,137 +1,132 @@
-Return-Path: <linux-xfs+bounces-25759-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-25761-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ABC7B8200E
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Sep 2025 23:41:33 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABFC2B82269
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Sep 2025 00:25:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEFCC1898472
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Sep 2025 21:41:54 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AD1BC4E1F92
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Sep 2025 22:24:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2668F30DEC0;
-	Wed, 17 Sep 2025 21:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92433A55;
+	Wed, 17 Sep 2025 22:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M3EM8y5L"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="lb/YOChg"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996222BDC33;
-	Wed, 17 Sep 2025 21:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F7B30DD0A
+	for <linux-xfs@vger.kernel.org>; Wed, 17 Sep 2025 22:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758145286; cv=none; b=ucqgt3Con/TN2wH5aNYoELYazM7hn0yKAS0plPojXLEFO8R8X1U3/4Z2PKFLKQplIKDO4kCYOeu+WWNg7PXLubI1VxSC3YkMmkYBD9riSc1zx5T9g2bxcgPXSK3Zcbia4oZu3d/DA3fYBA/zYbdOycN36gi6OS7nTFYiKi5XhpU=
+	t=1758147895; cv=none; b=PGXhG+30OqnqB4f6Gu6vQlnyaJWirYdWxmZaApt7ij/BCPXjVE/ylDa5F9T3rNsjWMm1RtDGw04a8Z6w/iq2rfR/A4JDC+x5lEkvFmBE/EAI7gcISc7kF7Pw4J33DWsps0UkfYDbLE6FrluipAX/6WPNT0Ct6ySnLsnPDGdTSnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758145286; c=relaxed/simple;
-	bh=LFfVCJuauYXP84lOUN45XcIK3FpxUQkSFwCjspvozzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=elhQBRVriEifu+rvrwK2cQdUEDyILH+2fBYkbVR3cs8WT2J9df4BPIIXH5A8O5bW1d0jNdLF1E2EZT+UaPBtpPpogj2++KLznRQICrzBO7HgIMojlLK5nqVBTbrej+bqT8kqqrU7U2QMsXX/g8D7bk0DWqzv4RGUh13QZA1BJ+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M3EM8y5L; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758145285; x=1789681285;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LFfVCJuauYXP84lOUN45XcIK3FpxUQkSFwCjspvozzM=;
-  b=M3EM8y5LwuXMrJhJcPmVb4pNwZtzgXCf6FimY554COa85vYcl+qsfRtE
-   BhHrbzJkbVF4/erBfNhGUUczecVn3eXLGiL9fTOZN/VQT5+0Sxn2Ymgnn
-   lQJ/OUew8m8KxT0t0ZRxm/MO67zBnU7Ffo24hMCfk6vbzyjzFGuTg8J3o
-   eZYpwukWq4OXR7Y/NZ1nAyo1kL/jQEh1kPvicqWp9q7f6wH20D3QCSP8C
-   mv0Vk5HowRX+AI5vKLpn5JR1RHew27uMudkXG17KVoobrsoV+yjToY1FU
-   kHOx3qO/VYcQOkneXbhekR693jsALLlPzuPmFzzv7pceRGzYhq+DEgpAh
-   A==;
-X-CSE-ConnectionGUID: 9eSqf2NLQi6c2Vm2zH5TSQ==
-X-CSE-MsgGUID: 95k95iexRSanKUlcwIXo/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="64268266"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="64268266"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2025 14:41:25 -0700
-X-CSE-ConnectionGUID: lSanHIgkQaaxnWD72A5IPg==
-X-CSE-MsgGUID: 2DE8UQ91TFq3DAlmDMeSVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,273,1751266800"; 
-   d="scan'208";a="206146643"
-Received: from lkp-server01.sh.intel.com (HELO 84a20bd60769) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 17 Sep 2025 14:41:20 -0700
-Received: from kbuild by 84a20bd60769 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uyztu-0002Tf-2Z;
-	Wed, 17 Sep 2025 21:41:18 +0000
-Date: Thu, 18 Sep 2025 05:40:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Joanne Koong <joannelkoong@gmail.com>, brauner@kernel.org,
-	miklos@szeredi.hu
-Cc: oe-kbuild-all@lists.linux.dev, hch@infradead.org, djwong@kernel.org,
-	hsiangkao@linux.alibaba.com, linux-block@vger.kernel.org,
-	gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	kernel-team@meta.com, linux-xfs@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 11/15] iomap: move buffered io bio logic into new file
-Message-ID: <202509180515.Cc8A1Wu9-lkp@intel.com>
-References: <20250916234425.1274735-12-joannelkoong@gmail.com>
+	s=arc-20240116; t=1758147895; c=relaxed/simple;
+	bh=Xwwgc/zTyJ43VYKkxkJZLUEAQy0InzCX8neD/bZIz10=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U+GYB/JfiY4+6f0ytLFsfMQh4ArrbGJt8Cp16VhllL2GRlauRjlIxrt3fXKHzLO4hEW5HXzISvLTa7FLegZNlT62qA8PYvPgUFcjHOI7cyrV6QWNVJnhQNm1OANTyHLIPLu7Lz2RIHSZf4ojXVeM9yg/1GaUukEo9oxn1XEssiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=lb/YOChg; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b54d23714adso250008a12.0
+        for <linux-xfs@vger.kernel.org>; Wed, 17 Sep 2025 15:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1758147893; x=1758752693; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xwwgc/zTyJ43VYKkxkJZLUEAQy0InzCX8neD/bZIz10=;
+        b=lb/YOChgRqCfp9hqNVIbwYlNpmAkiP/qtcCmvYJCKCo9bDX2mpAhpKcttmpSGMIxM+
+         u9S49S6Mbco5Sm1zXj2ebl98aKau1oACsBlVlDmX5EXppyfoWiymjCaGb/HzmvZYJylM
+         OS8I10szrzbFK8x/yxXVuGjZx13fMbarzjT+uncRx5JqXODO4gN1MOfyZba7LX9yFhM1
+         RNWPXqtexmlREq/Xjlv7b3/v/2IEFjSg+JHyvwQPM0I72TCKrQNZsRxenOhqLS3m+sd/
+         acJnjmgFTYUCZhlPPX/UNisBZEGN0VIBX5mcx8w2O0gL0Yg2qMUDc+whl5NxrG+m9d80
+         5T+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758147893; x=1758752693;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xwwgc/zTyJ43VYKkxkJZLUEAQy0InzCX8neD/bZIz10=;
+        b=AObhG2noRqX4UYDdzkXFsv8gTRJieDi0LZHPEAx0gfh00BaeiYfICbBzJVhj4nC797
+         mMTeVFR9FURHZKbf6la46802LFD71g5SIXHm+yUnWM8rPHQ6V/jRCfwBQYHaQL9+PlG6
+         5dbn6oLELimUPYe7hy/CJKkuepRwlbfn/xKhVe9n7+xqi5rp/piazwyEA/naXSaRckgS
+         cAAswWokP46cjJ30ZE3nHm4lE4rc0R1zGc7obIVpxaUIeX4NUo/7x5CtIKvoMCyE1ZKg
+         ypbDb/QTHAvXVcLAkJ/ZvazsvRuFoQw+1ZBIsZk1cqWMPO3j9puCOMpRcAPWB1UPMXTY
+         mIcg==
+X-Gm-Message-State: AOJu0Yw6ln9sS0bvmdZCsaFC9ukGWlnSjMwZGT66nN7Fem1P+R+G7nMw
+	sONOvanofpJOEhg+/bLvR7yHuoq/eg5uYPIbvqFRAstTB8jfbG49y3J24C2xYVLdG5NStxLRGmR
+	6Mj+G
+X-Gm-Gg: ASbGncv3bKgD1jvE8qs7qJo64chSahKfDUyuTHzvcQ3UQdqViJGzZDWr9/ar7cOADrn
+	pUO/pNLqHpUWH+ZKEUqPS7bMb/Z5ir9d+9Zv2DzQ610hL128G7hpxPj+67PbQsu4wofDBI837Jc
+	LHkJha6Ut09t9YXhgrVNdtJgFTkhuS2i1XyNY0FtZIEnCfjuuNyFw7pl/HQe44MEjyiAkMHQkE8
+	V1vj5mwJ9kurrXe/UTSpEi0rOilaLkIRfFmQaJ/c0kb1y+d5FD0w0Dvw77xHZVo/kuv4Xgqgmxl
+	1YiNovaVMGKxExbAyYs/3ix3YDLJlO6UJ5Pj7fhtujp2WSqtCsZV8F0XH6Bgng6ybohNX6YntRx
+	6wJkrJG6KMgBKjAvHCYGkiSAFt0AXb2zDANK2e4uXJxU5ySr+XkLlEvn1uLE4LYYvBccomfD0fj
+	ddEzhQ
+X-Google-Smtp-Source: AGHT+IFJHqy5BRr/ZvManiXJCioTGxFzmPdc9bOHxs+9NrFIt5YzNLgqZ4vmTeY//XLHNzaGqOyC8A==
+X-Received: by 2002:a17:902:c404:b0:265:e815:fcdf with SMTP id d9443c01a7336-2697ceb5489mr15958635ad.17.1758147893208;
+        Wed, 17 Sep 2025 15:24:53 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-91-142.pa.nsw.optusnet.com.au. [49.180.91.142])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b54ff35afa1sm574948a12.7.2025.09.17.15.24.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Sep 2025 15:24:52 -0700 (PDT)
+Received: from devoid.disaster.area ([192.168.253.111])
+	by dread.disaster.area with esmtp (Exim 4.98.2)
+	(envelope-from <dave@fromorbit.com>)
+	id 1uz0a1-00000003I2X-3uca;
+	Thu, 18 Sep 2025 08:24:49 +1000
+Received: from dave by devoid.disaster.area with local (Exim 4.98.2)
+	(envelope-from <dave@devoid.disaster.area>)
+	id 1uz0a1-00000005a9A-3CYo;
+	Thu, 18 Sep 2025 08:24:49 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: linux-xfs@vger.kernel.org
+Cc: jack@suse.cz,
+	lherbolt@redhat.com
+Subject: [PATCH 0/2] xfs: reduce ILOCK contention on O_DSYNC DIO
+Date: Thu, 18 Sep 2025 08:12:52 +1000
+Message-ID: <20250917222446.1329304-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250916234425.1274735-12-joannelkoong@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Joanne,
+Hi folks,
 
-kernel test robot noticed the following build warnings:
+This is the changes I came up with in the course of the discussion
+with Jan about the fallocate+DIO+O_DSYNC performance improvement
+thread here:
 
-[auto build test WARNING on brauner-vfs/vfs.all]
-[also build test WARNING on mszeredi-fuse/for-next axboe-block/for-next xiang-erofs/dev-test xiang-erofs/dev xiang-erofs/fixes gfs2/for-next xfs-linux/for-next linus/master v6.17-rc6 next-20250917]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+https://lore.kernel.org/linux-xfs/CAM4Jq_71gxMcnOdgqWhKEa53sr9r57Qpi0hc5bs3NgtnNOGwtg@mail.gmail.com/T/#
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Joanne-Koong/iomap-move-bio-read-logic-into-helper-function/20250917-075255
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250916234425.1274735-12-joannelkoong%40gmail.com
-patch subject: [PATCH v3 11/15] iomap: move buffered io bio logic into new file
-config: x86_64-randconfig-071-20250918 (https://download.01.org/0day-ci/archive/20250918/202509180515.Cc8A1Wu9-lkp@intel.com/config)
-compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250918/202509180515.Cc8A1Wu9-lkp@intel.com/reproduce)
+The first patch is moves a little bit of code around to ensure
+that xfs_inode_item_precommit() always calculates all the changes
+before it starts manipulating the dirty and fsync flags on the inode
+log item. Whilst technically it could be considered a bug fix, the
+bug it fixes requires an inconsistency in the on disk format to
+exist first, so it likely won't ever be an issue in normal
+production systems. It also requires an application to run a
+fdatasync and then have a system crash just after the
+inconsistency is addressed to expose it. So the likelihood of it
+ever being triggered as a data integrity issue is -extremely- tiny.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509180515.Cc8A1Wu9-lkp@intel.com/
+The second patch is the one that addresses the performance issue. It
+removes the ILOCK from the sync/datasync path completely, and
+instead relies on a new datasync commit sequence number being stored
+in the inode log item to elide datasync journal flushes when they
+are unnecessary. The mechanism is explained at length in the patch
+description.
 
-All warnings (new ones prefixed by >>):
+The changes have been perf tested by both Jan and Lukas, and it has
+passed multiple fstests runs on a dozen different configs without
+regressions here.
 
-   In file included from fs/iomap/buffered-io.c:11:
->> fs/iomap/internal.h:13:5: warning: no previous prototype for 'iomap_bio_read_folio_range_sync' [-Wmissing-prototypes]
-      13 | int iomap_bio_read_folio_range_sync(const struct iomap_iter *iter,
-         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-Dave.
 
-
-vim +/iomap_bio_read_folio_range_sync +13 fs/iomap/internal.h
-
-     8	
-     9	#ifdef CONFIG_BLOCK
-    10	int iomap_bio_read_folio_range_sync(const struct iomap_iter *iter,
-    11			struct folio *folio, loff_t pos, size_t len);
-    12	#else
-  > 13	int iomap_bio_read_folio_range_sync(const struct iomap_iter *iter,
-    14			struct folio *folio, loff_t pos, size_t len)
-    15	{
-    16		WARN_ON_ONCE(1);
-    17		return -EIO;
-    18	}
-    19	#endif /* CONFIG_BLOCK */
-    20	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
