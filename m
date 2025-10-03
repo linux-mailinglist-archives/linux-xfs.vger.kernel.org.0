@@ -1,60 +1,62 @@
-Return-Path: <linux-xfs+bounces-26089-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-26091-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24FDBBB70F0
-	for <lists+linux-xfs@lfdr.de>; Fri, 03 Oct 2025 15:45:50 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7E78BB70F3
+	for <lists+linux-xfs@lfdr.de>; Fri, 03 Oct 2025 15:45:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id A0EC83461DA
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 Oct 2025 13:45:49 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 605354EC697
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 Oct 2025 13:45:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 432BB1F416A;
-	Fri,  3 Oct 2025 13:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E62B01E5206;
+	Fri,  3 Oct 2025 13:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SM8ztUie"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jT/UDRYl"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C9B1E5206
-	for <linux-xfs@vger.kernel.org>; Fri,  3 Oct 2025 13:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EFF1F4295
+	for <linux-xfs@vger.kernel.org>; Fri,  3 Oct 2025 13:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759498961; cv=none; b=tQWSOgg/NKRDd+rqANLje4/YaJ1T9ULv1uJ9nqSMhrsovPAMnlAn6qlIPsJrOxKEB2cehjkmJw8Tgr6ia2BnqLQo2V9A9lQilFq8jkjcwuPFWuP5ERgQVtMf1c0rlJ+FmavyYtlXTLjQquPxdPbRGs3zqmvLl0dMDrt2FFRqpJ4=
+	t=1759498963; cv=none; b=Ep31E/VrmHheFuCB+sMJZy7q18PmxhMNI8wQvyoE/LCc6wcWHEbwt8n34uOwKUvrNYZoMN1lN9IVvWbPdN86Sd8x1kIfiJfDZOqPYLwLkZzHIa2knH0dbZ3y8jyIYZNJERc8okk8TBQUBpd2D11+9vQOEbWuxCmwsyu5N2I+RZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759498961; c=relaxed/simple;
-	bh=9K/pcAJIAmNaWqCWy4cG3ZYxLZ/lu/7uNK022qUCius=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N3bNDc8r/0l9iLAZSaoo3MfgmGU2oppjWN7NzAj/xsQFLNNGBCgJhI9NyVhTuYX7BZGzn5kanog7XRqSmMlFhdbNwYWz0ZgxrWUkMQxYb5l0WavpLdCX8NlIsdju9VvhU1drdmovkrNuXGuDLe8X0vQ+W7Ue+NAxc2NM3U7SuPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SM8ztUie; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1759498963; c=relaxed/simple;
+	bh=GBAPEZFKXaP2PWh8kbeBdkUunm32ZdiFRGCNba9zXCk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IMQP9FDKj5HkjjQ7WCwgWk4Y6xG1PuRcQ+5hCcomkakMBym80ts8ZJfrX2egCf+KucapNFLs68SYjqGtv5QgZUUZDbpNLBrt9t+es8KxROP5UQTbKAAz1451fgwFwH+qj725MysNTfc0YW9IACH+i4N+Hl5BbO7D+z5wEwQN1ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jT/UDRYl; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759498957;
+	s=mimecast20190719; t=1759498961;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xfXtIfWkcf4xqLvnSN5itUWF/K16TMTPz0JBNVG+WgY=;
-	b=SM8ztUieaFjRupq9VrY3Mr+q0evnkNbYFXjL5MVf00zn1r+29krI8X4EjYDNik7MYtNg6c
-	WQ3yDLNd++HzRJCgd1F8CJuJsQ2CN4pVJztf8rEFVu3iTHPK8fMGf/x8gGNvRmx1yDUJto
-	/sw7sqJj00tZ4Q/7puH0Hje3dwZ9mYw=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RhaOcNHmb7LPmZ0Qghy3zkBE++ecIdVtQmAjZ928Tfs=;
+	b=jT/UDRYl1zQVksNc89atby4im7j5hC9R9MgGXCaHFZskzpKnw5Aiyg5OVdK1CbP5iWDhi3
+	EXRia91AjAS1fekzzRYR6B/Tabr2NRaNmYS1wJRqGr13ZTQwxZxczYdyNC+2sO4Zv4ZgBl
+	44jIfFY6sfiTHK/AMMgUqb8j9MrjATY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-6BpUaV_fOEO8LMYSqWcAgw-1; Fri,
- 03 Oct 2025 09:42:34 -0400
-X-MC-Unique: 6BpUaV_fOEO8LMYSqWcAgw-1
-X-Mimecast-MFC-AGG-ID: 6BpUaV_fOEO8LMYSqWcAgw_1759498953
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-645-Jb_DkJH6NRKWU0-g9B8PGg-1; Fri,
+ 03 Oct 2025 09:42:35 -0400
+X-MC-Unique: Jb_DkJH6NRKWU0-g9B8PGg-1
+X-Mimecast-MFC-AGG-ID: Jb_DkJH6NRKWU0-g9B8PGg_1759498954
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 971C819560B0;
-	Fri,  3 Oct 2025 13:42:32 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 497A1195605C;
+	Fri,  3 Oct 2025 13:42:34 +0000 (UTC)
 Received: from bfoster.redhat.com (unknown [10.22.64.54])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E0B7C19560B8;
-	Fri,  3 Oct 2025 13:42:30 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DC51B19560B1;
+	Fri,  3 Oct 2025 13:42:32 +0000 (UTC)
 From: Brian Foster <bfoster@redhat.com>
 To: linux-fsdevel@vger.kernel.org
 Cc: linux-xfs@vger.kernel.org,
@@ -63,9 +65,11 @@ Cc: linux-xfs@vger.kernel.org,
 	djwong@kernel.org,
 	willy@infradead.org,
 	brauner@kernel.org
-Subject: [PATCH v5 0/7] iomap: zero range folio batch support
-Date: Fri,  3 Oct 2025 09:46:34 -0400
-Message-ID: <20251003134642.604736-1-bfoster@redhat.com>
+Subject: [PATCH v5 1/7] filemap: add helper to look up dirty folios in a range
+Date: Fri,  3 Oct 2025 09:46:35 -0400
+Message-ID: <20251003134642.604736-2-bfoster@redhat.com>
+In-Reply-To: <20251003134642.604736-1-bfoster@redhat.com>
+References: <20251003134642.604736-1-bfoster@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -76,103 +80,107 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Hi all,
+Add a new filemap_get_folios_dirty() helper to look up existing dirty
+folios in a range and add them to a folio_batch. This is to support
+optimization of certain iomap operations that only care about dirty
+folios in a target range. For example, zero range only zeroes the subset
+of dirty pages over unwritten mappings, seek hole/data may use similar
+logic in the future, etc.
 
-Only minor changes in v5 to the XFS errortag patch. I've kept the R-b
-tags because the fundamental logic is the same, but the errortag
-mechanism has been reworked and so that one needed a rebase (which turns
-out much simpler). A second look certainly couldn't hurt, but otherwise
-the associated fstest still works as expected.
+Note that the helper is intended for use under internal fs locks.
+Therefore it trylocks folios in order to filter out clean folios.
+This loosely follows the logic from filemap_range_has_writeback().
 
-Note that the force zeroing fstests test has since been merged as
-xfs/131. Otherwise I still have some followup patches to this work re:
-the ext4 on iomap work, but it would be nice to move this along before
-getting too far ahead with that.
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+---
+ include/linux/pagemap.h |  2 ++
+ mm/filemap.c            | 58 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
 
-Brian
-
---- Original cover letter ---
-
-Hi all,
-
-Here's a first real v1 of folio batch support for iomap. This initially
-only targets zero range, the use case being zeroing of dirty folios over
-unwritten mappings. There is potential to support other operations in
-the future: iomap seek data/hole has similar raciness issues as zero
-range, the prospect of using this for buffered write has been raised for
-granular locking purposes, etc.
-
-The one major caveat with this zero range implementation is that it
-doesn't look at iomap_folio_state to determine whether to zero a
-sub-folio portion of the folio. Instead it just relies on whether the
-folio was dirty or not. This means that spurious zeroing of unwritten
-ranges is possible if a folio is dirty but the target range includes a
-subrange that is not.
-
-The reasoning is that this is essentially a complexity tradeoff. The
-current use cases for iomap_zero_range() are limited mostly to partial
-block zeroing scenarios. It's relatively harmless to zero an unwritten
-block (i.e. not a correctness issue), and this is something that
-filesystems have done in the past without much notice or issue. The
-advantage is less code and this makes it a little easier to use a
-filemap lookup function for the batch rather than open coding more logic
-in iomap. That said, this can probably be enhanced to look at ifs in the
-future if the use case expands and/or other operations justify it.
-
-WRT testing, I've tested with and without a local hack to redirect
-fallocate zero range calls to iomap_zero_range() in XFS. This helps test
-beyond the partial block/folio use case, i.e. to cover boundary
-conditions like full folio batch handling, etc. I recently added patch 7
-in spirit of that, which turns this logic into an XFS errortag. Further
-comments on that are inline with patch 7.
-
-Thoughts, reviews, flames appreciated.
-
-Brian
-
-v5:
-- Rebased across XFS errortag mechanism rework.
-v4: https://lore.kernel.org/linux-fsdevel/20250807144711.564137-1-bfoster@redhat.com/
-- Update commit log description in patch 3.
-- Added remaining R-b tags.
-v3: https://lore.kernel.org/linux-fsdevel/20250714204122.349582-1-bfoster@redhat.com/
-- Update commit log description in patch 2.
-- Improve comments in patch 7.
-v2: https://lore.kernel.org/linux-fsdevel/20250714132059.288129-1-bfoster@redhat.com/
-- Move filemap patch to top. Add some comments and drop export.
-- Drop unnecessary BUG_ON()s from iomap_write_begin() instead of moving.
-- Added folio mapping check to batch codepath, improved comments.
-v1: https://lore.kernel.org/linux-fsdevel/20250605173357.579720-1-bfoster@redhat.com/
-- Dropped most prep patches from previous version (merged separately).
-- Reworked dirty folio lookup to use find_get_entry() loop (new patch
-  for filemap helper).
-- Misc. bug fixes, code cleanups, comments, etc.
-- Added (RFC) prospective patch for wider zero range test coverage.
-RFCv2: https://lore.kernel.org/linux-fsdevel/20241213150528.1003662-1-bfoster@redhat.com/
-- Port onto incremental advance, drop patch 1 from RFCv1.
-- Moved batch into iomap_iter, dynamically allocate and drop flag.
-- Tweak XFS patch to always trim zero range on EOF boundary.
-RFCv1: https://lore.kernel.org/linux-fsdevel/20241119154656.774395-1-bfoster@redhat.com/
-
-Brian Foster (7):
-  filemap: add helper to look up dirty folios in a range
-  iomap: remove pos+len BUG_ON() to after folio lookup
-  iomap: optional zero range dirty folio processing
-  xfs: always trim mapping to requested range for zero range
-  xfs: fill dirty folios on zero range of unwritten mappings
-  iomap: remove old partial eof zeroing optimization
-  xfs: error tag to force zeroing on debug kernels
-
- fs/iomap/buffered-io.c       | 117 +++++++++++++++++++++++++----------
- fs/iomap/iter.c              |   6 ++
- fs/xfs/libxfs/xfs_errortag.h |   6 +-
- fs/xfs/xfs_file.c            |  29 ++++++---
- fs/xfs/xfs_iomap.c           |  38 +++++++++---
- include/linux/iomap.h        |   4 ++
- include/linux/pagemap.h      |   2 +
- mm/filemap.c                 |  58 +++++++++++++++++
- 8 files changed, 210 insertions(+), 50 deletions(-)
-
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 185644e288ea..0b471f0eb940 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -977,6 +977,8 @@ unsigned filemap_get_folios_contig(struct address_space *mapping,
+ 		pgoff_t *start, pgoff_t end, struct folio_batch *fbatch);
+ unsigned filemap_get_folios_tag(struct address_space *mapping, pgoff_t *start,
+ 		pgoff_t end, xa_mark_t tag, struct folio_batch *fbatch);
++unsigned filemap_get_folios_dirty(struct address_space *mapping,
++		pgoff_t *start, pgoff_t end, struct folio_batch *fbatch);
+ 
+ struct folio *read_cache_folio(struct address_space *, pgoff_t index,
+ 		filler_t *filler, struct file *file);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index a52dd38d2b4a..db9f2dac9c54 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2348,6 +2348,64 @@ unsigned filemap_get_folios_tag(struct address_space *mapping, pgoff_t *start,
+ }
+ EXPORT_SYMBOL(filemap_get_folios_tag);
+ 
++/**
++ * filemap_get_folios_dirty - Get a batch of dirty folios
++ * @mapping:	The address_space to search
++ * @start:	The starting folio index
++ * @end:	The final folio index (inclusive)
++ * @fbatch:	The batch to fill
++ *
++ * filemap_get_folios_dirty() works exactly like filemap_get_folios(), except
++ * the returned folios are presumed to be dirty or undergoing writeback. Dirty
++ * state is presumed because we don't block on folio lock nor want to miss
++ * folios. Callers that need to can recheck state upon locking the folio.
++ *
++ * This may not return all dirty folios if the batch gets filled up.
++ *
++ * Return: The number of folios found.
++ * Also update @start to be positioned for traversal of the next folio.
++ */
++unsigned filemap_get_folios_dirty(struct address_space *mapping, pgoff_t *start,
++			pgoff_t end, struct folio_batch *fbatch)
++{
++	XA_STATE(xas, &mapping->i_pages, *start);
++	struct folio *folio;
++
++	rcu_read_lock();
++	while ((folio = find_get_entry(&xas, end, XA_PRESENT)) != NULL) {
++		if (xa_is_value(folio))
++			continue;
++		if (folio_trylock(folio)) {
++			bool clean = !folio_test_dirty(folio) &&
++				     !folio_test_writeback(folio);
++			folio_unlock(folio);
++			if (clean) {
++				folio_put(folio);
++				continue;
++			}
++		}
++		if (!folio_batch_add(fbatch, folio)) {
++			unsigned long nr = folio_nr_pages(folio);
++			*start = folio->index + nr;
++			goto out;
++		}
++	}
++	/*
++	 * We come here when there is no folio beyond @end. We take care to not
++	 * overflow the index @start as it confuses some of the callers. This
++	 * breaks the iteration when there is a folio at index -1 but that is
++	 * already broke anyway.
++	 */
++	if (end == (pgoff_t)-1)
++		*start = (pgoff_t)-1;
++	else
++		*start = end + 1;
++out:
++	rcu_read_unlock();
++
++	return folio_batch_count(fbatch);
++}
++
+ /*
+  * CD/DVDs are error prone. When a medium error occurs, the driver may fail
+  * a _large_ part of the i/o request. Imagine the worst scenario:
 -- 
 2.51.0
 
