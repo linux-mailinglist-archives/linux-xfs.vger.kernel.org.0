@@ -1,34 +1,72 @@
-Return-Path: <linux-xfs+bounces-26393-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-26395-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81DB5BD6BFC
-	for <lists+linux-xfs@lfdr.de>; Tue, 14 Oct 2025 01:34:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B88CCBD6C0B
+	for <lists+linux-xfs@lfdr.de>; Tue, 14 Oct 2025 01:37:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 703B84E61B2
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 Oct 2025 23:34:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBCA71889BC4
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 Oct 2025 23:37:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FC76284B36;
-	Mon, 13 Oct 2025 23:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38DFE2BF00A;
+	Mon, 13 Oct 2025 23:37:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2HXLi+E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2HXLi+E"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from buxtehude.debian.org (buxtehude.debian.org [209.87.16.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5AE1E9B37
-	for <linux-xfs@vger.kernel.org>; Mon, 13 Oct 2025 23:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B84B296BD4
+	for <linux-xfs@vger.kernel.org>; Mon, 13 Oct 2025 23:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.87.16.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760398466; cv=none; b=SU+In+cAcSw1Egpdom5Y7/ou4DlViomryCmrwM7COeKomxJ0ZZD16vWI/7TcHjnfrMDGubxuPDWGVkOpbj0Hw+1C3UIEdoBJYFvjl7DxylWZCL9ip6BLDi+9fV7AOuNHsxLRUqDyx/F/e4Bp1p2sfVRvx3cyEAPgfzLY8aczBDc=
+	t=1760398629; cv=none; b=SisL4u0Sve+PvyCFPE4f2EMMkmKYbSZHapRtWIxbiq2Px+NMCqTCjxUH0SjQUnhO4j6tDJYA4aQawy/A7y3H2yU6mLATvc+e1LrBww385YfJpuQqfy9qRilV+2dt7tnkq9Vu5hC3gHHu7u6OX3ZFNF4xC5CBIZo5sf0lNo5RIJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760398466; c=relaxed/simple;
+	s=arc-20240116; t=1760398629; c=relaxed/simple;
 	bh=8p5h8ubpwH2DC6Eo2rzvAs6CsYoCfO34jLCN/ex+Nbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pf1cmeguY1XaJYUmf64I1eBreE1xp9Nz38xDCFgGLgG6mjozUUmfiVME3WcpqD2PsuHmiIiSXTr66oSJKNSFi0dwSuvjPpBOOw4w1mRLnTh56Dy5pBB7SDiDjUXEwyeViJ+Kiwbw/MZfY/iRd7qEHpKy8pbKYey+nSE7SylC0fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2HXLi+E; arc=none smtp.client-ip=10.30.226.201
+	h=Subject:References:Date:From:To:Cc:Message-ID:MIME-Version:
+	 Content-Type:Content-Disposition; b=Umg+uIPchyVKOPt/9GCyxIiPl+yeL2mCK9veENDXnSpzIvRE0bHs6VvY14LTmTc1U/iYDUfVvb9T4v3Tm8gD7KWHHQwQJWcx0EFjFfvq8OH1Veg+BPPpyqK7tEcEC+/GriOTg4itPsh7PcuH0xIXxtmuA1xReo6vjZg6mNIk9z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=buxtehude.debian.org; dkim=fail (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2HXLi+E reason="signature verification failed"; arc=none smtp.client-ip=209.87.16.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=buxtehude.debian.org
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.96)
+	(envelope-from <debbugs@buxtehude.debian.org>)
+	id 1v8S6C-00BLId-2L;
+	Mon, 13 Oct 2025 23:37:04 +0000
+X-Loop: owner@bugs.debian.org
+Subject: Bug#1116595: [PATCH] xfs_scrub_fail: reduce security lockdowns to avoid postfix problems
+Reply-To: "Darrick J. Wong" <djwong@kernel.org>, 1116595@bugs.debian.org
+Resent-From: "Darrick J. Wong" <djwong@kernel.org>
+Resent-To: debian-bugs-dist@lists.debian.org
+Resent-CC: linux-xfs@vger.kernel.org
+X-Loop: owner@bugs.debian.org
+Resent-Date: Mon, 13 Oct 2025 23:37:04 +0000
+Resent-Message-ID: <handler.1116595.B1116595.17603984662701927@bugs.debian.org>
+X-Debian-PR-Message: followup 1116595
+X-Debian-PR-Package: xfsprogs
+X-Debian-PR-Keywords: 
+References: <aNmt9M4e9Q6wqwxH@teal.hq.k1024.org>
+X-Debian-PR-Source: xfsprogs
+Received: via spool by 1116595-submit@bugs.debian.org id=B1116595.17603984662701927
+          (code B ref 1116595); Mon, 13 Oct 2025 23:37:04 +0000
+Received: (at 1116595) by bugs.debian.org; 13 Oct 2025 23:34:26 +0000
+X-Spam-Level: 
+X-Spam-Bayes: score:0.0000 Tokens: new, 36; hammy, 150; neutral, 208; spammy,
+	0. spammytokens: hammytokens:0.000-+--Signed-off-by,
+	0.000-+--Signedoffby, 0.000-+--journalctl, 0.000-+--UD:slice,
+	0.000-+--HCc:D*kernel.org
+Received: from sea.source.kernel.org ([2600:3c0a:e001:78e:0:1991:8:25]:51052)
+	by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <djwong@kernel.org>)
+	id 1v8S3e-00BKt3-1p
+	for 1116595@bugs.debian.org;
+	Mon, 13 Oct 2025 23:34:26 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id CE7694524D;
+	Mon, 13 Oct 2025 23:34:24 +0000 (UTC)
 Received: by smtp.kernel.org (Postfix) with ESMTPSA id A507AC4CEE7;
 	Mon, 13 Oct 2025 23:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
@@ -46,8 +84,6 @@ From: "Darrick J. Wong" <djwong@kernel.org>
 To: Andrey Albershteyn <aalbersh@redhat.com>
 Cc: 1116595@bugs.debian.org, Iustin Pop <iustin@debian.org>,
 	xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] xfs_scrub_fail: reduce security lockdowns to avoid postfix
- problems
 Message-ID: <20251013233424.GT6188@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -57,6 +93,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+X-Greylist: delayed 411 seconds by postgrey-1.37 at buxtehude; Mon, 13 Oct 2025 23:34:26 UTC
 
 From: Darrick J. Wong <djwong@kernel.org>
 
