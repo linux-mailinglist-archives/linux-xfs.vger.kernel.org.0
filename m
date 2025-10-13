@@ -1,59 +1,77 @@
-Return-Path: <linux-xfs+bounces-26289-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-26291-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AAD0BD142D
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 Oct 2025 04:50:09 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9824FBD1445
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 Oct 2025 04:58:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DDDAF189439D
-	for <lists+linux-xfs@lfdr.de>; Mon, 13 Oct 2025 02:50:32 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D34F34E7CC0
+	for <lists+linux-xfs@lfdr.de>; Mon, 13 Oct 2025 02:58:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D761DDC1D;
-	Mon, 13 Oct 2025 02:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44182EBBB8;
+	Mon, 13 Oct 2025 02:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="w7t+jOKj"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yvdjWMe1"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5A335948
-	for <linux-xfs@vger.kernel.org>; Mon, 13 Oct 2025 02:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B031F5423;
+	Mon, 13 Oct 2025 02:58:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760323807; cv=none; b=BhVVKeVxifEjxx1/dSF6ep3aYNqjdGrVj490OUKDMG3tl8cAqimee1H5jnNuuMrT4eL5ndYEhO64NkhERkWLCp4IGOwX+re0HgPN/qSOIYbp/KSun9QucfsOdEL0/TGSHpCaED2eHoOT5zFzVUBAfUNSjT82/cR8Fof+rAzULEg=
+	t=1760324307; cv=none; b=ZlUPECp3HPcT6WK1nGZJRkhb9cB37NstCiYEH2et3FiSDN8vj6FTqS+A7oar3kZgo+NGz+Zvt7Snb5eTp+dtAuCSzk1gv7lP0FZYM7iq+MVpfZa2t6rVvVimURZi8KyyQsMZKfdSpHfUfyRqLVXcqJbOZqkYr5T04/J1RxNXYdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760323807; c=relaxed/simple;
-	bh=iFY3MZZzhS/yGP+NUn7jWk3Zi7WrdgP+zSsWqAXagZ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fMcM2h4BdKCpghqQc75P/Iy++blTH+D/qPCW9Y7+aAgMROzr3WBV6MDPiMu4uOQ3/20w33/dhVv7ZGaGHcJakAtRaTo0Kf4k7kAGO1b0AxENZHXga8fiwIANd0otFm+IpKrBx/oO/Co9zHps6UNmSz0g2F+cEHT2wLiswmyTcRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=w7t+jOKj; arc=none smtp.client-ip=198.137.202.133
+	s=arc-20240116; t=1760324307; c=relaxed/simple;
+	bh=nKxfCO4ksQH4ZpyEpbXvS197w/tkWVyYr9fszANMZqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s7fP+6gbQEyOUrcuNXX6XPo62x+3r+g6reDzjK2IszDC3vOEhg0Vo96om2XwumLtvXY8f/f0nSyAMSCeL0S50bsbvHB3YOu+e/vJsW6CwKyvsMsThYVMOOOxaSGsl8yzjhROdCCkyqof9cN8t2g70MKnWx7ioxnLRCTyp5QK/3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yvdjWMe1; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=2PFpWdUiRDkY+KANeWibNdcvCk7BM57RSL2AFFXAfBw=; b=w7t+jOKjio9fVy6+IdULLACJBc
-	18B2pkFtZKzf97TPWMPbvo/REOeurR81+BnzteANyBrog3xPhuGlkd2nEYSUgG7pBci/TVTf68Xf0
-	Wosj+XfIaj8+9LwT1YeoTmCZA0x7NDrSisOika2kqIswuFRneCK/sTaYyrEwwVPqUCwY0gHVinb1X
-	kaxcH3qwfsJ0ccrqxE7z74/ydEGJJgUnocfIvtXzbC/HnCapaIqA5FKXsUiLazzs3anl3Zx987MFt
-	FY5VLAZIQhBk393vJpwLjCwDuDOBYvIiqZA9556zye6u+K6AP51Za1j5NNR8AH2wQv6uwSQsWJlNS
-	k/b72o7A==;
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=IHawD8fXUsjzdqrBUJCMerdnKe9dIKJrBNuL1oU4Go8=; b=yvdjWMe1dksG8iFjNpFAfj1aEe
+	A4MWib46wBHcELj51vFEJO1FLURpC0ChP3zWMAbP1jVF8ZtIJeMFGaZBYOfyIb3JZv9EPNHcHyllA
+	eYIMXJljTYaRflblHSUsTsymqH6ITRsIA/qMfc+J4kwlkTl+8MWSWMuqKQF/uNtPh3pLBGTwqZSok
+	iRlxAmYhIXlHBc01mgkwf4erW9kt2zjKSasJn4hFaFiEOON7+nvcIDjaSpR6Y3/O6qKbpANIlYJA1
+	0qjIoWDwM9gAzWid8AygMqkE3HXcdV4HfOjr1wWfM1JqnEXNDAb0WBnodQObMz4C9QP0qa6KSqWd6
+	x8Pmt9ew==;
 Received: from [220.85.59.196] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v88dR-0000000C7lh-1z4b;
-	Mon, 13 Oct 2025 02:50:05 +0000
+	id 1v88lL-0000000C862-27OS;
+	Mon, 13 Oct 2025 02:58:16 +0000
 From: Christoph Hellwig <hch@lst.de>
-To: Carlos Maiolino <cem@kernel.org>
-Cc: linux-xfs@vger.kernel.org
-Subject: [PATCH 17/17] xfs: reduce ilock roundtrips in xfs_qm_vop_dqalloc
-Date: Mon, 13 Oct 2025 11:48:18 +0900
-Message-ID: <20251013024851.4110053-18-hch@lst.de>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Jan Kara <jack@suse.cz>,
+	linux-block@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-btrfs@vger.kernel.org,
+	linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	jfs-discussion@lists.sourceforge.net,
+	ocfs2-devel@lists.linux.dev,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: filemap_* writeback interface cleanups
+Date: Mon, 13 Oct 2025 11:57:55 +0900
+Message-ID: <20251013025808.4111128-1-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251013024851.4110053-1-hch@lst.de>
-References: <20251013024851.4110053-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -63,120 +81,37 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-xfs_qm_vop_dqalloc only needs the (exclusive) ilock for attaching dquots
-to the inode if not done so yet.  All the other locks don't touch the inode
-and don't need the ilock - the i_rwsem / iolock protects against changes
-to the IDs while we are in a method, and the ilock would not help because
-dropping it for the dqget calls would be racy anyway.
+Hi all,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_qm.c | 32 +++-----------------------------
- 1 file changed, 3 insertions(+), 29 deletions(-)
+while looking at the filemap writeback code, I think adding
+filemap_fdatawrite_wbc ended up being a mistake, as all but the original
+btrfs caller should be using better high level interfaces instead.  This
+series removes all these, switches btrfs to a more specific interfaces
+and also cleans up another too low-level interface.  With this the
+writeback_control that is passed to the writeback code is only
+initialized in three places, although there are a lot more places in
+file system code that never reach the common writeback code.
 
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 7fbb89fcdeb9..336de0479022 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -1861,16 +1861,12 @@ xfs_qm_vop_dqalloc(
- 	struct xfs_dquot	*gq = NULL;
- 	struct xfs_dquot	*pq = NULL;
- 	int			error;
--	uint			lockflags;
- 
- 	if (!XFS_IS_QUOTA_ON(mp))
- 		return 0;
- 
- 	ASSERT(!xfs_is_metadir_inode(ip));
- 
--	lockflags = XFS_ILOCK_EXCL;
--	xfs_ilock(ip, lockflags);
--
- 	if ((flags & XFS_QMOPT_INHERIT) && XFS_INHERIT_GID(ip))
- 		gid = inode->i_gid;
- 
-@@ -1879,37 +1875,22 @@ xfs_qm_vop_dqalloc(
- 	 * if necessary. The dquot(s) will not be locked.
- 	 */
- 	if (XFS_NOT_DQATTACHED(mp, ip)) {
-+		xfs_ilock(ip, XFS_ILOCK_EXCL);
- 		error = xfs_qm_dqattach_locked(ip, true);
--		if (error) {
--			xfs_iunlock(ip, lockflags);
-+		xfs_iunlock(ip, XFS_ILOCK_EXCL);
-+		if (error)
- 			return error;
--		}
- 	}
- 
- 	if ((flags & XFS_QMOPT_UQUOTA) && XFS_IS_UQUOTA_ON(mp)) {
- 		ASSERT(O_udqpp);
- 		if (!uid_eq(inode->i_uid, uid)) {
--			/*
--			 * What we need is the dquot that has this uid, and
--			 * if we send the inode to dqget, the uid of the inode
--			 * takes priority over what's sent in the uid argument.
--			 * We must unlock inode here before calling dqget if
--			 * we're not sending the inode, because otherwise
--			 * we'll deadlock by doing trans_reserve while
--			 * holding ilock.
--			 */
--			xfs_iunlock(ip, lockflags);
- 			error = xfs_qm_dqget(mp, from_kuid(user_ns, uid),
- 					XFS_DQTYPE_USER, true, &uq);
- 			if (error) {
- 				ASSERT(error != -ENOENT);
- 				return error;
- 			}
--			/*
--			 * Get the ilock in the right order.
--			 */
--			lockflags = XFS_ILOCK_SHARED;
--			xfs_ilock(ip, lockflags);
- 		} else {
- 			/*
- 			 * Take an extra reference, because we'll return
-@@ -1922,15 +1903,12 @@ xfs_qm_vop_dqalloc(
- 	if ((flags & XFS_QMOPT_GQUOTA) && XFS_IS_GQUOTA_ON(mp)) {
- 		ASSERT(O_gdqpp);
- 		if (!gid_eq(inode->i_gid, gid)) {
--			xfs_iunlock(ip, lockflags);
- 			error = xfs_qm_dqget(mp, from_kgid(user_ns, gid),
- 					XFS_DQTYPE_GROUP, true, &gq);
- 			if (error) {
- 				ASSERT(error != -ENOENT);
- 				goto error_rele;
- 			}
--			lockflags = XFS_ILOCK_SHARED;
--			xfs_ilock(ip, lockflags);
- 		} else {
- 			ASSERT(ip->i_gdquot);
- 			gq = xfs_qm_dqhold(ip->i_gdquot);
-@@ -1939,15 +1917,12 @@ xfs_qm_vop_dqalloc(
- 	if ((flags & XFS_QMOPT_PQUOTA) && XFS_IS_PQUOTA_ON(mp)) {
- 		ASSERT(O_pdqpp);
- 		if (ip->i_projid != prid) {
--			xfs_iunlock(ip, lockflags);
- 			error = xfs_qm_dqget(mp, prid,
- 					XFS_DQTYPE_PROJ, true, &pq);
- 			if (error) {
- 				ASSERT(error != -ENOENT);
- 				goto error_rele;
- 			}
--			lockflags = XFS_ILOCK_SHARED;
--			xfs_ilock(ip, lockflags);
- 		} else {
- 			ASSERT(ip->i_pdquot);
- 			pq = xfs_qm_dqhold(ip->i_pdquot);
-@@ -1955,7 +1930,6 @@ xfs_qm_vop_dqalloc(
- 	}
- 	trace_xfs_dquot_dqalloc(ip);
- 
--	xfs_iunlock(ip, lockflags);
- 	if (O_udqpp)
- 		*O_udqpp = uq;
- 	else
--- 
-2.47.3
-
+Diffstat:
+ block/bdev.c            |    2 
+ fs/9p/vfs_file.c        |   17 +------
+ fs/btrfs/defrag.c       |    4 -
+ fs/btrfs/extent_io.c    |    3 -
+ fs/btrfs/file.c         |    2 
+ fs/btrfs/inode.c        |   52 +++++++---------------
+ fs/btrfs/reflink.c      |    2 
+ fs/btrfs/super.c        |    2 
+ fs/ext4/inline.c        |    2 
+ fs/ext4/inode.c         |    6 +-
+ fs/fat/inode.c          |    2 
+ fs/fs-writeback.c       |    6 +-
+ fs/jfs/jfs_logmgr.c     |    2 
+ fs/ocfs2/journal.c      |   11 ----
+ fs/sync.c               |   11 ++--
+ fs/xfs/xfs_file.c       |    2 
+ include/linux/pagemap.h |    8 +--
+ mm/fadvise.c            |    3 -
+ mm/filemap.c            |  109 +++++++++++++++++++-----------------------------
+ mm/khugepaged.c         |    2 
+ 20 files changed, 95 insertions(+), 153 deletions(-)
 
