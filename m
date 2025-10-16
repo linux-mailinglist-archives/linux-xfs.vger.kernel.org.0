@@ -1,156 +1,182 @@
-Return-Path: <linux-xfs+bounces-26581-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-26583-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DD61BE5241
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Oct 2025 20:59:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D419BE5B08
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Oct 2025 00:33:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4125C586166
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Oct 2025 18:59:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEA683B4D07
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Oct 2025 22:33:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 927AF24676C;
-	Thu, 16 Oct 2025 18:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED1AA21FF5F;
+	Thu, 16 Oct 2025 22:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MpINT1vf"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="ho4QRk8x"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08B22472B1
-	for <linux-xfs@vger.kernel.org>; Thu, 16 Oct 2025 18:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9D63BB5A
+	for <linux-xfs@vger.kernel.org>; Thu, 16 Oct 2025 22:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760641134; cv=none; b=ugY96GOsmmX20gH6HVH2fK+XU95BH0ZgyUh+h0/yyEQgvEdoYEHobSzwBalKmEmNjQ9yKbD8nxfXfZE6bp8LnFQmVr4BdR7SQqZ9GnTgHTAh5FWHmA7Mdf/hYCCGW6qVWftGY96Q+8iunpv/7lO4pN4VH5Qxof6pS2hwvdu2olA=
+	t=1760654001; cv=none; b=KLXSAyOVKkbE4GCQuCI5DlrwkyVdQEzvGajCY7qaRydOraF8PoqgCbH3VRzo8hhMzr3mt/Wy9kRgG4fA2L1fCUA5yvvlVLNolzvYGHlaWhw6W6BXrYUUFuC+k+2aBRzG8W84GA/D4elkE2C1X+pazLOBtQTtcGtr54j7QiBdVrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760641134; c=relaxed/simple;
-	bh=ILVKYWMrn5HwhEEzUBx9t+nfxZahhmiN0WzpKFpnehk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=msn6E9xBXfD27WN8mIJdvLnNkrLsmpx1b/afDn+qhdlVR6YFV6QykhX2BFTXaYVV1hlOXiP627muqCsqnKVTDx3Oo7+NFuzZqhO54UPhrUsjkBVIVwIexYUSMg05NczxAOvihP94VkeI6D/G6huYLNXvq4nd9BmIzLtmeogTnEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MpINT1vf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760641130;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SvTHeHOBSjo/iB4mce4qpWNJliemXij9tbG2pMt9IGM=;
-	b=MpINT1vf351tBRlpJOSJ2Z655kS18s7O4BVNtl5a4QpJ8433zlgY2BXqHFCVaNeZ6ZiGNl
-	O7GEb4VUIFoogXIwuuQjIWwZyYA6H6K41F9gWy2iNGn+2u7ryioDP4jhcwaKe5FxYiqcpn
-	KuMlv6KSnODR7wBL3NsGFHa6GJUxUC8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-518-NlSXjThVMQu-gP8a1SQELA-1; Thu,
- 16 Oct 2025 14:58:49 -0400
-X-MC-Unique: NlSXjThVMQu-gP8a1SQELA-1
-X-Mimecast-MFC-AGG-ID: NlSXjThVMQu-gP8a1SQELA_1760641128
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7607118001E2;
-	Thu, 16 Oct 2025 18:58:48 +0000 (UTC)
-Received: from bfoster.redhat.com (unknown [10.22.65.116])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EC7D81956056;
-	Thu, 16 Oct 2025 18:58:47 +0000 (UTC)
-From: Brian Foster <bfoster@redhat.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: [PATCH 6/6] xfs: replace zero range flush with folio batch
-Date: Thu, 16 Oct 2025 15:03:03 -0400
-Message-ID: <20251016190303.53881-7-bfoster@redhat.com>
-In-Reply-To: <20251016190303.53881-1-bfoster@redhat.com>
-References: <20251016190303.53881-1-bfoster@redhat.com>
+	s=arc-20240116; t=1760654001; c=relaxed/simple;
+	bh=5HeHjJKQT+heuRAfANSmHQCiXgQ0Glwl31BAOVaoUn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTVwt0EKm4WnT+ybJAGZvY6QT88rimttTcp/9bx5IoJ4ZWaflR2bUiZDPajY6gGWVJUpeT7SBMndX7PBYmLUYeF5A64srbaiFFKYVJJchIiC/0yxvMAcAqOG5RIJM8g7zzqnJOMvVkUl+PUo0plbiBm/TzLDQPFY8nttgwIiGUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=ho4QRk8x; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-27d3540a43fso13545875ad.3
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Oct 2025 15:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1760653999; x=1761258799; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cyHszjXwr011mdavyBxcCiQ2SmN5DwUbyqKyrEqEbK8=;
+        b=ho4QRk8xqBKzQHLQCzMUjHycKPCCF0aiKDh61soOT3K487PRs0FwWllHtj8lLurwgb
+         3Pbou3uJWIB+kqqjrONe/ABPtHzC4u9oyAlZXTY5Pwe+YVkEEP4UmAZVkVn3GETxv63/
+         8VX5v6qkNUCFOKagtD0YgoCva7zTOB431RFi/9RQhBDDILaBTabwvPPbr/rguhS27uKJ
+         oZ+X8Vnxa7iLAxcAgD1ed/xMnLvMjc99Q/9w56k4gg7TgAf2uMxSmXbse6ZT3aHe9DLS
+         9PsoSDsPHA0QoWZOdsnzC8tkPTUQC4U1D112yZR7O75R0nyVRr5rABY9U8iAZfzDDlBE
+         cY/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760653999; x=1761258799;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cyHszjXwr011mdavyBxcCiQ2SmN5DwUbyqKyrEqEbK8=;
+        b=hY1b2gpXJlzOvI0MKDY8aqj7JP/9QYiE2+Cfhe3wf6Ru8yR6mbJ8Ns8dn3Mp1mVv28
+         LmTHfg7EC3Hk71eCSRK1rqDGwMNdzHQ+usfIzbkpxyoprB/fT7/cT/JifqEnQhGMseY4
+         9q3Kgv+m6aGOMN9N7LwVDUMW3fl1RAZcgIG3IdFwuBFOVRn05jSzeC29dqOgdfEppIwK
+         Yp+8WMa+7sISg4k5mtuLIlMlpzNWhKWIerq19MqHwcUqVWmjQ6pSrLD2gZVfOukZpKG5
+         jZLoZKZqmgGVHvxD6RSxgnJx+dkCrp4HHtkXoqtr4+h1Xzuq1eIy11uoPYAr05+CmNf2
+         7fFg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Bd7jnfN0X/qCz8rKGOUJG5rKbZlpE3CED5XMSQQQPXFUuTnIJswizTX4WriZEE1SVsI7xOk8okA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxmnfX4ys0Sx48hZCsQpfTbF4Mm7C7s5s8Ga0bkrFRWs4dLt8r
+	+E/8697b7QA3hp8/m/MtCIBoh4RcU9Xolgre4394RpVPIv+Od3mnGKtDC6g3/tgHZaI=
+X-Gm-Gg: ASbGncuGIM4VSSFs4Kv6UuQ2zpiMrtHflf0q2462bTyfcpreeRcDbUhmhJ8mXjcelSP
+	h2QNddUbPSed1IGBbAiOICQKLNse3eHyr1wMJDweKTVJyBDsOJ0YjRrTRIFVN6VG80gxfNGg9dR
+	OflxfXXnawGjDjmrNiLtYH8C/rBrrq/dpVi7HwWuSLPJs78VJU2fIfmNmNfw3FlubBdcjkV865D
+	7KxW5nz+zbYEx9Rn6NT8U0HXQ+Cx9Dk4d1OxuGaaWneajRfJS1fhquijY8Efnl9nzXaSOKKOGfW
+	+LITXM9L6b5nQNQJZh/av4+8PpHDcTalJlf3gNx+MhsCKNcLq84vzucgQUoMkumQxH0tRlVx/te
+	SPtqEvdGt2thtKImCpOGPX5OkM6Ha6xd+gmSlMfYGnPmq2abSWdrORZeBipGdfe4K5gDxefjg8o
+	btIYZ7dg6+ex0fGUFFJnUHgGBtD1bmHIfhx055nf2xVSJKeVJSOJRowPzz03Lb8A==
+X-Google-Smtp-Source: AGHT+IHA0ri7OHJpZ/4Fd97oTXQUCyc/5am6RLXoYkFT5WMoFCFwAYWAWovMfIuEjWrsvgSaZLmzvA==
+X-Received: by 2002:a17:902:f70b:b0:267:af07:6528 with SMTP id d9443c01a7336-290caf83079mr16312385ad.35.1760653999244;
+        Thu, 16 Oct 2025 15:33:19 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-91-142.pa.nsw.optusnet.com.au. [49.180.91.142])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7992b060c4esm23661111b3a.14.2025.10.16.15.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Oct 2025 15:33:18 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98.2)
+	(envelope-from <david@fromorbit.com>)
+	id 1v9WX5-0000000FmFe-2Hry;
+	Fri, 17 Oct 2025 09:33:15 +1100
+Date: Fri, 17 Oct 2025 09:33:15 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Kiryl Shutsemau <kirill@shutemov.name>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Pankaj Raghav <p.raghav@samsung.com>, Zorro Lang <zlang@redhat.com>,
+	akpm@linux-foundation.org, linux-mm <linux-mm@kvack.org>,
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	xfs <linux-xfs@vger.kernel.org>
+Subject: Re: Regression in generic/749 with 8k fsblock size on 6.18-rc1
+Message-ID: <aPFyqwdv1prLXw5I@dread.disaster.area>
+References: <20251014175214.GW6188@frogsfrogsfrogs>
+ <rymlydtl4fo4k4okciiifsl52vnd7pqs65me6grweotgsxagln@zebgjfr3tuep>
+ <20251015175726.GC6188@frogsfrogsfrogs>
+ <bknltdsmeiapy37jknsdr2gat277a4ytm5dzj3xrcbjdf3quxm@ej2anj5kqspo>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bknltdsmeiapy37jknsdr2gat277a4ytm5dzj3xrcbjdf3quxm@ej2anj5kqspo>
 
-Now that the zero range pagecache flush is purely isolated to
-providing zeroing correctness in this case, we can remove it and
-replace it with the folio batch mechanism that is used for handling
-unwritten extents.
+On Thu, Oct 16, 2025 at 11:22:00AM +0100, Kiryl Shutsemau wrote:
+> On Wed, Oct 15, 2025 at 10:57:26AM -0700, Darrick J. Wong wrote:
+> > On Wed, Oct 15, 2025 at 04:59:03PM +0100, Kiryl Shutsemau wrote:
+> > > On Tue, Oct 14, 2025 at 10:52:14AM -0700, Darrick J. Wong wrote:
+> > > > Hi there,
+> > > > 
+> > > > On 6.18-rc1, generic/749[1] running on XFS with an 8k fsblock size fails
+> > > > with the following:
+> > > > 
+> > > > --- /run/fstests/bin/tests/generic/749.out	2025-07-15 14:45:15.170416031 -0700
+> > > > +++ /var/tmp/fstests/generic/749.out.bad	2025-10-13 17:48:53.079872054 -0700
+> > > > @@ -1,2 +1,10 @@
+> > > >  QA output created by 749
+> > > > +Expected SIGBUS when mmap() reading beyond page boundary
+> > > > +Expected SIGBUS when mmap() writing beyond page boundary
+> > > > +Expected SIGBUS when mmap() reading beyond page boundary
+> > > > +Expected SIGBUS when mmap() writing beyond page boundary
+> > > > +Expected SIGBUS when mmap() reading beyond page boundary
+> > > > +Expected SIGBUS when mmap() writing beyond page boundary
+> > > > +Expected SIGBUS when mmap() reading beyond page boundary
+> > > > +Expected SIGBUS when mmap() writing beyond page boundary
+> > > >  Silence is golden
+> > > > 
+> > > > This test creates small files of various sizes, maps the EOF block, and
+> > > > checks that you can read and write to the mmap'd page up to (but not
+> > > > beyond) the next page boundary.
+> > > > 
+> > > > For 8k fsblock filesystems on x86, the pagecache creates a single 8k
+> > > > folio to cache the entire fsblock containing EOF.  If EOF is in the
+> > > > first 4096 bytes of that 8k fsblock, then it should be possible to do a
+> > > > mmap read/write of the first 4k, but not the second 4k.  Memory accesses
+> > > > to the second 4096 bytes should produce a SIGBUS.
+> > > 
+> > > Does anybody actually relies on this behaviour (beyond xfstests)?
+> > 
+> > Beats me, but the mmap manpage says:
+> ...
+> > POSIX 2024 says:
+> ...
+> > From both I would surmise that it's a reasonable expectation that you
+> > can't map basepages beyond EOF and have page faults on those pages
+> > succeed.
+> 
+> <Added folks form the commit that introduced generic/749>
+> 
+> Modern kernel with large folios blurs the line of what is the page.
+> 
+> I don't want play spec lawyer. Let's look at real workloads.
 
-This is still slightly odd in that XFS reports a hole vs. a mapping
-that reflects the COW fork extents, but that has always been the
-case in this situation and so a separate issue. We drop the iomap
-warning that assumes the folio batch is always associated with
-unwritten mappings, but this is mainly a development assertion as
-otherwise the core iomap fbatch code doesn't care much about the
-mapping type if it's handed the set of folios to process.
+Or, more importantly, consider the security-related implications of
+the change....
 
-Signed-off-by: Brian Foster <bfoster@redhat.com>
----
- fs/iomap/buffered-io.c |  4 ----
- fs/xfs/xfs_iomap.c     | 16 ++++------------
- 2 files changed, 4 insertions(+), 16 deletions(-)
+> If there's anything that actually relies on this SIGBUS corner case,
+> let's see how we can fix the kernel. But it will cost some CPU cycles.
+> 
+> If it only broke syntactic test case, I'm inclined to say WONTFIX.
+> 
+> Any opinions?
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index d6de689374c3..7bc4b8d090ee 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1534,10 +1534,6 @@ iomap_zero_range(struct inode *inode, loff_t pos, loff_t len, bool *did_zero,
- 	while ((ret = iomap_iter(&iter, ops)) > 0) {
- 		const struct iomap *srcmap = iomap_iter_srcmap(&iter);
- 
--		if (WARN_ON_ONCE((iter.iomap.flags & IOMAP_F_FOLIO_BATCH) &&
--				 srcmap->type != IOMAP_UNWRITTEN))
--			return -EIO;
--
- 		if (!(iter.iomap.flags & IOMAP_F_FOLIO_BATCH) &&
- 		    (srcmap->type == IOMAP_HOLE ||
- 		     srcmap->type == IOMAP_UNWRITTEN)) {
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 29f1462819fa..5a845a0ded79 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1704,7 +1704,6 @@ xfs_buffered_write_iomap_begin(
- {
- 	struct iomap_iter	*iter = container_of(iomap, struct iomap_iter,
- 						     iomap);
--	struct address_space	*mapping = inode->i_mapping;
- 	struct xfs_inode	*ip = XFS_I(inode);
- 	struct xfs_mount	*mp = ip->i_mount;
- 	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
-@@ -1736,7 +1735,6 @@ xfs_buffered_write_iomap_begin(
- 	if (error)
- 		return error;
- 
--restart:
- 	error = xfs_ilock_for_iomap(ip, flags, &lockmode);
- 	if (error)
- 		return error;
-@@ -1812,16 +1810,10 @@ xfs_buffered_write_iomap_begin(
- 		xfs_trim_extent(&imap, offset_fsb,
- 			    cmap.br_startoff + cmap.br_blockcount - offset_fsb);
- 		start = XFS_FSB_TO_B(mp, imap.br_startoff);
--		end = XFS_FSB_TO_B(mp,
--				   imap.br_startoff + imap.br_blockcount) - 1;
--		if (filemap_range_needs_writeback(mapping, start, end)) {
--			xfs_iunlock(ip, lockmode);
--			error = filemap_write_and_wait_range(mapping, start,
--							     end);
--			if (error)
--				return error;
--			goto restart;
--		}
-+		end = XFS_FSB_TO_B(mp, imap.br_startoff + imap.br_blockcount);
-+		iomap_flags |= iomap_fill_dirty_folios(iter, &start, end);
-+		xfs_trim_extent(&imap, offset_fsb,
-+				XFS_B_TO_FSB(mp, start) - offset_fsb);
- 
- 		goto found_imap;
- 	}
+Mapping beyond EOF ranges into userspace address spaces is a
+potential security risk. If there is ever a zeroing-beyond-EOF bug
+related to large folios (history tells us we are *guaranteed* to
+screw this up somewhere in future), then allowing mapping all the
+way to the end of the large folio could expose a -lot more- stale
+kernel data to userspace than just what the tail of a PAGE_SIZE
+faulted region would expose.
+
+Hence allowing applications to successfully fault a (unpredictable)
+distance far beyond EOF because the page cache used a large folio
+spanning EOF seems, to me, to be a very undesirable behaviour to
+expose to userspace.
+
+-Dave.
 -- 
-2.51.0
-
+Dave Chinner
+david@fromorbit.com
 
