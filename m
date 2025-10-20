@@ -1,83 +1,85 @@
-Return-Path: <linux-xfs+bounces-26699-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-26702-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91717BF1AA5
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Oct 2025 15:56:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA9BBBF1AC6
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Oct 2025 15:57:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 694853A6122
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Oct 2025 13:56:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82B833ABA7B
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Oct 2025 13:56:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E5531B81B;
-	Mon, 20 Oct 2025 13:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20EBA31B81B;
+	Mon, 20 Oct 2025 13:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CX3ha1Vl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B142qzqn"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424AD3176EF
-	for <linux-xfs@vger.kernel.org>; Mon, 20 Oct 2025 13:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E19331DD82
+	for <linux-xfs@vger.kernel.org>; Mon, 20 Oct 2025 13:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760968557; cv=none; b=Ycud+7O79c/iqTnLdoPNUpuLsZzZ9V18N7NXXrIqzHqtijjWgoMURI+gvpkmcVgUncwKlE3FKeocsABpuwYmdGg67BZ3uEDfR2zqb7z7+urQTNzMSG9U7r0/HUgns/0vPQeDJY2Ge+GMkXyIRgyWZI+MCoCuSTl/YHswPZUyL00=
+	t=1760968573; cv=none; b=QC+2TiZBDimJVRsW9eECMGGpkpNEqFjcrmIRpAm/YSjFnWfPXqyn+Xxu0VsYKZaNIPw6HJEN7NQUU4ZZCLqVAdGcCrkbJvZ7072Pj56VTmaak9ZZlwAEEdjUBoFUknroGUVN3wrBa8aH6fV5RwnLqC/PuUxNILuv65RlWKbO5fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760968557; c=relaxed/simple;
-	bh=GmbQ2jXhDm7vy2iDgaO/7OoZbduITFdgv011FhLwyA4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DFNkE3FJ5Nvv0mCg+uRHARgLaoF3fdHgxLe2QBSChRt5xR7Grm64OTtaBjWkx81ErS8drDP0ob+Y4kSNp/f+FGX+YwnV/eQJKhfQ6tT2WqotHM6YxHGxQZ+pTMO575ka/ftOgldG8OvthlL0hNNQfCc14dwWppTy75u6BqwpXAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CX3ha1Vl; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1760968573; c=relaxed/simple;
+	bh=yGp/NxJkcclLX/oxsMmnaFG7uXGzDm3sgbQh2bb8Y2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SJltdfS8Gp2AKhDWyiRvlS6mZSOPSbk7UUQQdO7tqI7lQZRukz4KAKWeryMZhqWg57ISCS9jUtOiCooSqrtsjg/Tff6yzNce25QT8TN7tmhkqEtk6PjPVSjIqroKX4LTOEgJ3Hl8p8gYoTwg7S9aF5PeyLs5nEBQIzE+JdGY/PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B142qzqn; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760968555;
+	s=mimecast20190719; t=1760968571;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=6J67v77z2C8c8cpDHO3kHr83huPFvvnav5l9yd83eE4=;
-	b=CX3ha1VleIh+cunoyHcichkuzuXgGys1FR566es+d2fZtXHRZ49Hsq1xUukvdj8PThQzH6
-	3OG7f2AS6c9QulFSs1qENTQG5VrB6IJADu8Vvf/gLZsK+0YziGKF0BzVcuposZUG5D4wek
-	MDxDQUJReH9HrzYoxHvbhE3nwqunmnk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=joqZRkk4+TwVEW9KnzmZmcPW11H9Yujd1P1x2lAPzHE=;
+	b=B142qzqnFab8Md2AYk9GWT8tezKHUQUnxMl8axWMN2gQTiVS+KO5cgTDw6comhivXZLk46
+	EfHtWnIwcExDleUoWP/YhyaPSBrulWOxjKlpajIYhHqRCWxCUp6KOhT1rU8K9Wv4xy1W3Q
+	s1MVz1BvcBVodPUKyGwhznz46bVIKHc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-464-kozzmgU_M22rTJQp9KUrqw-1; Mon, 20 Oct 2025 09:55:53 -0400
-X-MC-Unique: kozzmgU_M22rTJQp9KUrqw-1
-X-Mimecast-MFC-AGG-ID: kozzmgU_M22rTJQp9KUrqw_1760968552
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-470fd5ba449so15568845e9.0
-        for <linux-xfs@vger.kernel.org>; Mon, 20 Oct 2025 06:55:52 -0700 (PDT)
+ us-mta-325--yQGqARiMliRt5RemKRCNg-1; Mon, 20 Oct 2025 09:56:04 -0400
+X-MC-Unique: -yQGqARiMliRt5RemKRCNg-1
+X-Mimecast-MFC-AGG-ID: -yQGqARiMliRt5RemKRCNg_1760968560
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-472ce95ed1dso9569315e9.3
+        for <linux-xfs@vger.kernel.org>; Mon, 20 Oct 2025 06:56:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760968551; x=1761573351;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6J67v77z2C8c8cpDHO3kHr83huPFvvnav5l9yd83eE4=;
-        b=wsZVHVCuKAd4m+eavg5k2ksYUtFvAqBNgnqHLjPKTPaEt7mUAZGAG9p2Wub/BzUGoo
-         yd35MgPYNd/hQ8q64530EQarAAnzfFh9Cb+OBGVSwyKLKLE3nClN3WHcj5axzItVHcIV
-         PqCrG4FzDyhw9RUrVFr1Hkecx+TxwmEvjOyXjUeqzpCMWanm36gdCAnU94fXbgRw1X4T
-         sz7FNbIiN1rzi4z1AR1ZVGi3c0qoiQJc0YzW7PnXItdZqkoh/j5iHxseDBIpzq9V7FNP
-         +FVt4c1YtvocdFv/79h0FgTHVwmUL9EOkc4A53D1CFakvL6cb744vnnkj+nVMxs1yEkA
-         A/PA==
-X-Gm-Message-State: AOJu0YwIRcTIu0038Bz1vTN1ecrWzXrKa/0FNuALf9+uztyRV+kfM7W4
-	fWN04stpY8EeBFWws5+au97ef01Ql16p+I6MjiQirM3YEg+9Mbn8wo8L8ydC2/y6v7fXdA0IsJM
-	OLcDWt1nWvmq8JyxzJnCfVY5It5TahWetJx1/9tTn2ISm+/D9qt5FfM6hlN3egi58hK5XfpgCpq
-	uDWIX2jv12Hxmpjn7dKDt7UbltfMQqELTbcImtgT3ubKaw
-X-Gm-Gg: ASbGncunHKeQ0F6vAIpOqF/yEnmorIltUClNdKcYDYQfzVv8TTEo55E3qw0cPfGd8wm
-	C0X1Fim35ynSWqEZqOQqEVIwM19u/HPCYK/iTCkQ4Jud55KITiKTN7XWKUK/GAvkzUpD51ZZHK5
-	4jc0As/3Vg8QFjD+8yJMRaVF6Ex3+yhn1rrBPkXmk/5o1GCRiQJjr5EY1LdCZaoyoMwB1UKO1z+
-	yC+DGl17j7VfsTPFxAbu0nIkiPtTqh7fI8IB+M588/QE7gplAa28JkG12hSYH7Oh4c0kLkIuGfj
-	XEjgCa0o7zL2mxWw44VcI70A3FYmpZ9U6HuMk4BDD/aRHzOuARfQ7TRP/gQT6OvCdwgGQN2ly2f
-	GxWojhKZwFcxl2uaS4zIeuNzeEEsZUMZQ9A==
-X-Received: by 2002:a05:600c:8183:b0:45f:29eb:2148 with SMTP id 5b1f17b1804b1-4711724e5bcmr97818405e9.7.1760968551407;
-        Mon, 20 Oct 2025 06:55:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEoNeNjAOEFjzezPaRjRgxNsc3TH8pxblhe4oKdUeogy3uxUDDRaVGenIo3sbIkIFY6QuXKhQ==
-X-Received: by 2002:a05:600c:8183:b0:45f:29eb:2148 with SMTP id 5b1f17b1804b1-4711724e5bcmr97818105e9.7.1760968550781;
-        Mon, 20 Oct 2025 06:55:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760968559; x=1761573359;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=joqZRkk4+TwVEW9KnzmZmcPW11H9Yujd1P1x2lAPzHE=;
+        b=fWeuy3pV2UKtz74YG7ykCpv1Ao14eIIykrZWfN5sZCltNxatonyo8Qhhs2EN80B8s+
+         c8KjWk49LblHCRX8ApPES9JPj1RTQTAxn9UuC4svVR0sB/b56RqtKts9jMbAStyC190H
+         fMu1EsYqN7+iwaZz6xORLs4NA19ED8KWmob4JmQWhPKBitR0pXQwWhc8S+gGETjRJai9
+         EE3Dq95nTDOq+Py5AxGB5LnxCIoJH/cdd9Mb/oxt5/jxja8wHpYyx3WIcDkYbpayxTu8
+         GyPc2psX+5W4nOVeJy7Dpi5MXNINGgzhWx7Wt/a15s3bUplQGn9C9Bi5QlOA2om3awoq
+         Wvyg==
+X-Gm-Message-State: AOJu0YxcnyQWzI8VEYzWbD8yLk/FzZFTk8kBN7cxYyuzQbnOErCI1Azc
+	OFKWyFxEiee+JOLjspncd1ERISMH6miQjP1/8Jl77SfaaihLVZL2S7rqiwKKrSZxus1+o370qzU
+	Y+lgOaYf95bqLYfDB8l7xRjPEEBuc3D8MkruQhT7VvKTsfJc8R2BLBtG4auk2V9rhcAIGErMG9V
+	0S42eBaT+LtXuF0CzeiPXBXV6N2+ECbkN3AJEJEaRpeDdb
+X-Gm-Gg: ASbGncvaEph3UNVaPm/GpeEnvx/vZBG5AzS6EickPhyz6y4POaCnQKleOj42XmjPmss
+	p26wYwplSNcsfNZg8HS4IKfjg7MrsEl2aZ1iWVIcSJrrX9VYhxtkdyKLwtYotk3uW055lc+pPSQ
+	XlipJTgZhy5GiLhfrnLMNzqRMuxdApXi18JnaBmGBIR26M9pTiU4sqsrVhPGZ8q/MTYNji4W2qT
+	iK2laG8O6aN+uWVBqR/JMV7/czRlrb+fnQVbcTkVD3ly2U/g/OOZ0h/BeoZWd2c/Hj+pdBmTkOv
+	IOojRvUIr+ay/ql8bdRd7wvYag/SgtyrfTidmvOSbu9b6CrOjzAUGcJyEAIz1CE705fF70HOaLO
+	Z/CXz6Jq3dnBkH0kzs+54HLTiR+zgVidMBA==
+X-Received: by 2002:a05:6000:2889:b0:428:3e6b:8deb with SMTP id ffacd0b85a97d-4283e6b8e84mr5337675f8f.61.1760968559260;
+        Mon, 20 Oct 2025 06:55:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IERmRBSiPso4Fx/JyEpbSHJUDtjom7V3U8lKN/pPy8a4YxPD063xQIzuzCItfdNELs2meiroA==
+X-Received: by 2002:a05:6000:2889:b0:428:3e6b:8deb with SMTP id ffacd0b85a97d-4283e6b8e84mr5337639f8f.61.1760968558643;
+        Mon, 20 Oct 2025 06:55:58 -0700 (PDT)
 Received: from thinky.redhat.com (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47152959b55sm151404645e9.6.2025.10.20.06.55.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47152959b55sm151404645e9.6.2025.10.20.06.55.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 06:55:50 -0700 (PDT)
+        Mon, 20 Oct 2025 06:55:58 -0700 (PDT)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
 To: linux-xfs@vger.kernel.org,
@@ -85,10 +87,12 @@ To: linux-xfs@vger.kernel.org,
 Cc: djwong@kernel.org,
 	zlang@redhat.com,
 	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: [PATCH 0/3] generic/772: split and fix
-Date: Mon, 20 Oct 2025 15:55:27 +0200
-Message-ID: <20251020135530.1391193-1-aalbersh@kernel.org>
+Subject: [PATCH 1/3] common/filter: add missing file attribute
+Date: Mon, 20 Oct 2025 15:55:28 +0200
+Message-ID: <20251020135530.1391193-2-aalbersh@kernel.org>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20251020135530.1391193-1-aalbersh@kernel.org>
+References: <20251020135530.1391193-1-aalbersh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -97,39 +101,26 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+Add n (nosymlinks) char according to xfsprogs io/attr.c
 
-This one add one missed file attribute flag (n). Then, the check for
-file_getattr/file_setattr on regular and special files is lifted to the
-common/ for futher test splitting. The generic/772 is split into two
-tests one for regular files and one for special files.
+Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+---
+ common/filter | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This one based on top of Darrick's "random fixes" patchset [1]
-
-To: fstests@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org
-Cc: zlang@redhat.com
-Cc: djwong@kernel.org
-
-[1]: https://lore.kernel.org/fstests/176054617853.2391029.10911105763476647916.stgit@frogsfrogsfrogs/T/#t
-
-Andrey Albershteyn (3):
-  common/filter: add missing file attribute
-  generic/772: require filesystem to support file_[g|s]etattr
-  generic/772: split this test into 772 and 773 for regular and special
-    files
-
- common/filter         |  2 +-
- common/rc             | 32 +++++++++++++++++
- tests/generic/772     | 41 ++-------------------
- tests/generic/772.out | 14 --------
- tests/generic/773     | 84 +++++++++++++++++++++++++++++++++++++++++++
- tests/generic/773.out | 20 +++++++++++
- tests/xfs/648         |  7 ++--
- 7 files changed, 142 insertions(+), 58 deletions(-)
- create mode 100755 tests/generic/773
- create mode 100644 tests/generic/773.out
-
+diff --git a/common/filter b/common/filter
+index c3a751dd0c39..28048b4b601b 100644
+--- a/common/filter
++++ b/common/filter
+@@ -692,7 +692,7 @@ _filter_sysfs_error()
+ _filter_file_attributes()
+ {
+ 	if [[ $1 == ~* ]]; then
+-		regex=$(echo "[aAcCdDeEfFijmNpPsrStTuxVX]" | tr -d "$1")
++		regex=$(echo "[aAcCdDeEfFijmnNpPrsStTuVxX]" | tr -d "$1")
+ 	else
+ 		regex="$1"
+ 	fi
 -- 
 2.50.1
 
