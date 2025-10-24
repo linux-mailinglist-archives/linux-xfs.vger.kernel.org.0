@@ -1,108 +1,127 @@
-Return-Path: <linux-xfs+bounces-26993-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-26996-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64257C07787
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Oct 2025 19:08:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF9DC077F9
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Oct 2025 19:12:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id CD7B534328C
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Oct 2025 17:08:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B4DE1C46A4B
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Oct 2025 17:11:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDE0A32B997;
-	Fri, 24 Oct 2025 17:08:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 802AF33FE10;
+	Fri, 24 Oct 2025 17:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GXCqLlKQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8IPDrVN"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584C631CA5A;
-	Fri, 24 Oct 2025 17:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF18253954;
+	Fri, 24 Oct 2025 17:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761325709; cv=none; b=dgAyZG6LiouEcZrU8rz9gLGGADi3W9s84RDWC6T+i6dZRLz0CIl4wRVTNoYKBvviNMbQKm7bCslnDY4rqNBbHWb9zyf6JnmCTqaljCq5o5BPyrj5bp3DeOwXRaDgoUKsT0imupCK+5R4CnaHXdJAFI60wNe24gyJfR9LSbdePLU=
+	t=1761325857; cv=none; b=mND3exUsqZWDrVZ6vt8aA6a1K++u0ZZasIy0bMtZBcOjF5Vnpim+4d7O4Z8yzzC0qrJ4ZCYKQzqDx8eFDmw6wsvrBK5jn2dB0BF2aWh5UfgJA4e2N1xbWONlT2g6vJ9kiCskvTU5Sf8rXQRz4vMz9JgmDXSAL1S+zEXXA/GLN38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761325709; c=relaxed/simple;
-	bh=5rxqm28jInhTvPZlo7Lb7NdtJBvFNa54w/E+WCxDquU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PaZ5ju055K4bWvqCSVt8fqv6zMac9qD5qXXmnjEatXvwFCQBMEqa80XSCKy81BUyLQUK08qB0rRbYkGGpdzc/pj0xccJgpYnTJKN3PQhsNaNuC6+GX4LtQXjOVQ9eeJRYLaGBwClghuoVi7C+GkO8U3ZpsZx6R2cEa3ZE5PCogg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GXCqLlKQ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=mdl7H6EKP/Vg6RTNb5AbJQkDdWcRFyzVVD++tdHodzA=; b=GXCqLlKQSm4gD6aaAm5fyLbXaL
-	RWlS1YFhYrt7Iliey66+/QuH7PQ2cqgUsIwwczY8/McUkzKyydljNphLURSRa+xuWoVKspmTxxIb2
-	/+zKSujY5wh7eBFgtm8+/WJMTZ+X9t4MPkbHRK7ANfCIz28raqB8DsHmaX3gH2Nq4i0CkW8UHboo7
-	W0e5IuX6IHxcjQflT+dYhQVgEs752seseloQExTwVceEBn+74lQMAono0e/lEG+F4jVXYKnLRtznR
-	6JW/Gi6FimjD8O93xqxnSSbirDm8juOeWfzhUZIkEEhPKH6OMoJuiBrcmpF7NWd58XI5I1t91FCPV
-	B+/RiRfA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vCLH7-00000005zM5-2PCb;
-	Fri, 24 Oct 2025 17:08:25 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: linux-fsdevel@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Carlos Maiolino <cem@kernel.org>,
+	s=arc-20240116; t=1761325857; c=relaxed/simple;
+	bh=iEjOOLJ0dXWgQLfSaNu50Gnh2bsbo1K+G0/Cr26Du2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSH3kMIzskVYmWqrqB1B2IWWDYF4CCZZ8mYyPnvuv/LhCJ4jiffoKvMxc9GCupmkWFHkpLZKiOV+HPXmQdg5fEQI/6D3k+KGXHB0UETZ7FDwjRtamLVNkS18edc6RNFLFAMoeQ5ymlgaaNXXBwZVSbdCBjK0FlZ2hhnxEalv/Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8IPDrVN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13979C4CEF1;
+	Fri, 24 Oct 2025 17:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761325857;
+	bh=iEjOOLJ0dXWgQLfSaNu50Gnh2bsbo1K+G0/Cr26Du2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A8IPDrVNYiQa3GUAtiE47yFrWSSEVd+gQTz4uX2UJJZicC+qtu9fKU07HXxX/Ul/M
+	 1uLQBt12x/1J7zx2E3Hj+FKvScMyVSCL6E9hUh9+P9+ifddZYf8nGfoGrVpghQWBCc
+	 ycMPXACXh/Hn1S03m6zdG/wgLW6hlfY+8aC323pw9v+bkHj3ugWyMm982ZSeG7484B
+	 lpN1A4ew6YkKlcPCxciQpsf8qPNGJeHd476xrjE9mXtcNQrRX7cqfDUCsT4exdc2dn
+	 KatlOGavhISWUQePX5BT6m2rrnfHyth/mgkwyYYdZDmTxapT3BwYbh46BgrS0WHWX2
+	 WmqyoeOGygQ1Q==
+Date: Fri, 24 Oct 2025 10:10:56 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: linux-fsdevel@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 09/10] xfs: Use folio_next_pos()
-Date: Fri, 24 Oct 2025 18:08:17 +0100
-Message-ID: <20251024170822.1427218-10-willy@infradead.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251024170822.1427218-1-willy@infradead.org>
+Subject: Re: [PATCH 07/10] iomap: Use folio_next_pos()
+Message-ID: <20251024171056.GJ4015566@frogsfrogsfrogs>
 References: <20251024170822.1427218-1-willy@infradead.org>
+ <20251024170822.1427218-8-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251024170822.1427218-8-willy@infradead.org>
 
-This is one instruction more efficient than open-coding folio_pos() +
-folio_size().  It's the equivalent of (x + y) << z rather than
-x << z + y << z.
+On Fri, Oct 24, 2025 at 06:08:15PM +0100, Matthew Wilcox (Oracle) wrote:
+> This is one instruction more efficient than open-coding folio_pos() +
+> folio_size().  It's the equivalent of (x + y) << z rather than
+> x << z + y << z.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: "Darrick J. Wong" <djwong@kernel.org>
+> Cc: linux-xfs@vger.kernel.org
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: Carlos Maiolino <cem@kernel.org>
-Cc: linux-xfs@vger.kernel.org
----
- fs/xfs/scrub/xfarray.c | 2 +-
- fs/xfs/xfs_aops.c      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Looks like a nice win, even if a small one
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
-diff --git a/fs/xfs/scrub/xfarray.c b/fs/xfs/scrub/xfarray.c
-index cdd13ed9c569..ed2e8c64b1a8 100644
---- a/fs/xfs/scrub/xfarray.c
-+++ b/fs/xfs/scrub/xfarray.c
-@@ -834,7 +834,7 @@ xfarray_sort_scan(
- 		si->first_folio_idx = xfarray_idx(si->array,
- 				folio_pos(si->folio) + si->array->obj_size - 1);
- 
--		next_pos = folio_pos(si->folio) + folio_size(si->folio);
-+		next_pos = folio_next_pos(si->folio);
- 		si->last_folio_idx = xfarray_idx(si->array, next_pos - 1);
- 		if (xfarray_pos(si->array, si->last_folio_idx + 1) > next_pos)
- 			si->last_folio_idx--;
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index a26f79815533..ad76d5d01dd1 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -271,7 +271,7 @@ xfs_discard_folio(
- 	 * folio itself and not the start offset that is passed in.
- 	 */
- 	xfs_bmap_punch_delalloc_range(ip, XFS_DATA_FORK, pos,
--				folio_pos(folio) + folio_size(folio), NULL);
-+				folio_next_pos(folio), NULL);
- }
- 
- /*
--- 
-2.47.2
+--D
 
+> ---
+>  fs/iomap/buffered-io.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 8b847a1e27f1..32a27f36372d 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -707,7 +707,7 @@ static int __iomap_write_begin(const struct iomap_iter *iter,
+>  	 * are not changing pagecache contents.
+>  	 */
+>  	if (!(iter->flags & IOMAP_UNSHARE) && pos <= folio_pos(folio) &&
+> -	    pos + len >= folio_pos(folio) + folio_size(folio))
+> +	    pos + len >= folio_next_pos(folio))
+>  		return 0;
+>  
+>  	ifs = ifs_alloc(iter->inode, folio, iter->flags);
+> @@ -1097,8 +1097,7 @@ static void iomap_write_delalloc_ifs_punch(struct inode *inode,
+>  	if (!ifs)
+>  		return;
+>  
+> -	last_byte = min_t(loff_t, end_byte - 1,
+> -			folio_pos(folio) + folio_size(folio) - 1);
+> +	last_byte = min_t(loff_t, end_byte - 1, folio_next_pos(folio) - 1);
+>  	first_blk = offset_in_folio(folio, start_byte) >> blkbits;
+>  	last_blk = offset_in_folio(folio, last_byte) >> blkbits;
+>  	for (i = first_blk; i <= last_blk; i++) {
+> @@ -1129,8 +1128,7 @@ static void iomap_write_delalloc_punch(struct inode *inode, struct folio *folio,
+>  	 * Make sure the next punch start is correctly bound to
+>  	 * the end of this data range, not the end of the folio.
+>  	 */
+> -	*punch_start_byte = min_t(loff_t, end_byte,
+> -				folio_pos(folio) + folio_size(folio));
+> +	*punch_start_byte = min_t(loff_t, end_byte, folio_next_pos(folio));
+>  }
+>  
+>  /*
+> @@ -1170,7 +1168,7 @@ static void iomap_write_delalloc_scan(struct inode *inode,
+>  				start_byte, end_byte, iomap, punch);
+>  
+>  		/* move offset to start of next folio in range */
+> -		start_byte = folio_pos(folio) + folio_size(folio);
+> +		start_byte = folio_next_pos(folio);
+>  		folio_unlock(folio);
+>  		folio_put(folio);
+>  	}
+> -- 
+> 2.47.2
+> 
 
