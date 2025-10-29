@@ -1,49 +1,55 @@
-Return-Path: <linux-xfs+bounces-27089-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27076-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DCF64C1C330
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 17:45:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7BA1C1C611
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 18:12:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 787EA1A2779D
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 16:38:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6CEB46653B
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 15:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31CB734C9BF;
-	Wed, 29 Oct 2025 16:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3902EA473;
+	Wed, 29 Oct 2025 15:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQ+BJqYP"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE922F5307;
-	Wed, 29 Oct 2025 16:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3A3325737
+	for <linux-xfs@vger.kernel.org>; Wed, 29 Oct 2025 15:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761755834; cv=none; b=D8JV/ARpRPXMinFhuikspuRJ0YsfeL7sON6iBTNYIWgUNoEp5LfZJsgJr5NyBn9j4mqzsdYN/KGsw2GXK2GTu2ObBAuKWaEZtUeBkrctHsJ8l3J6jzznB2FVL34WRYeMhe3LgLpO3XsoUx4S2QwgU8Ax783DEvwOEs8GNUeQVYo=
+	t=1761752304; cv=none; b=bVK3MIv5zyJaFlpEEUL17uf9xCTbxSe3UE0ubbe47xEpIzV0KZVy44xUDAjNzMO+Q4Ghxqs4tzjfS3rGaao7q4xIglVoNbGaHJTSao42iKxJYOyaeuHl2zmn5wpf2/jYqr/OqZPwk76OA5G3AOAYNhWaY0WmccNTQq2S1Fe79nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761755834; c=relaxed/simple;
-	bh=544zncZ8JVr5/MwT4Yh6pgPM/1JKpGhS6xAaRmMInas=;
+	s=arc-20240116; t=1761752304; c=relaxed/simple;
+	bh=JPd10LxnfUDSzA3Q7LHQGKN1zEztW60kTUiIx6tRHws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JteYZv3ftx0XFux1E8OPx4Ejxd4vYsKFWT2d8moXiGWoHfDrTXWDI8lrNCPP52uGlliqhz8zM3G9ykO2eyXzuGoSNIKMmKPPtdWhFabrgzXu2IDhR6ywzDyyqmPBCe/kIHiaP31W2JCz71nJ43vjtL1e+YA9qrFe6uHteWqQ1RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id BA7B2227A8E; Wed, 29 Oct 2025 17:37:08 +0100 (CET)
-Date: Wed, 29 Oct 2025 17:37:08 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH 2/4] fs: return writeback errors for IOCB_DONTCACHE in
- generic_write_sync
-Message-ID: <20251029163708.GC26985@lst.de>
-References: <20251029071537.1127397-1-hch@lst.de> <20251029071537.1127397-3-hch@lst.de> <20251029160101.GE3356773@frogsfrogsfrogs>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LcPjCCGTuzdJ5uRCgLQsj4omcduQ20j/L7T/uKrn1T63ZNu0u4qWtB8bDHSVMUtCTS8GOr3Ni074tcPUnfAJLhMVKzJiowqQHXMTA2nxB0UP1gY46Fmc3InEcFhc9iATO5Ln9IZ2LqtlvflKCIF/dbBollKYBVUdPw5pDIM1tMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQ+BJqYP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 088F5C4CEF7;
+	Wed, 29 Oct 2025 15:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761752304;
+	bh=JPd10LxnfUDSzA3Q7LHQGKN1zEztW60kTUiIx6tRHws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dQ+BJqYPNxveSoirqOOPH+hcY5ioSmHadlGrxXqTg5nxiNsaXxf1tziVIqk5knd9o
+	 4J1OLgngCCe6KzhALJ+LZw49jtpLnMmUvZN2t3h+SxkmkNUyPnQVyJYgugzdUCcXVj
+	 FVVVR7/BmfvU9wLnjfYHY/1lE36Hki5Uqk6iDXqgwC9ho5hEtnOT1zg5+SV0CqFVne
+	 EVZIz+Ntkpz+ivx1X3yZMDptOJioQs2vHeZ9V0YQiTEOw/PHlqs9nbrk9wQlByXa/u
+	 mRRzsm/Q472b2S6bd+QHC36yDL48rYOVwYtD/g07A049RUqpZXU/YVjK4YkmwNfSwz
+	 9JrCIWz5Q8S6A==
+Date: Wed, 29 Oct 2025 08:38:23 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/4] mkfs: move clearing LIBXFS_DIRECT into
+ check_device_type
+Message-ID: <20251029153823.GX3356773@frogsfrogsfrogs>
+References: <20251029090737.1164049-1-hch@lst.de>
+ <20251029090737.1164049-2-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -52,24 +58,81 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251029160101.GE3356773@frogsfrogsfrogs>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20251029090737.1164049-2-hch@lst.de>
 
-On Wed, Oct 29, 2025 at 09:01:01AM -0700, Darrick J. Wong wrote:
-> Hum.  So we kick writeback but don't wait for any of it to start, and
-> immediately sample wberr.  Does that mean that in the "bdev died" case,
-> the newly initiated writeback will have failed so quickly that
-> file_check_and_advance_wb_err will see that?
-
-Yes, this is primarily about catching errors in the submission path
-before it reaches the device, which are returned synchronously.
-
-> Or are we only reflecting
-> past write failures back to userspace on the *second* write after the
-> device dies?
+On Wed, Oct 29, 2025 at 10:07:29AM +0100, Christoph Hellwig wrote:
+> Keep it close to the block device vs regular file logic and remove
+> the checks for each device in the caller.
 > 
-> It would be helpful to know which fstests break, btw.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-generic/252 generic/329 xfs/237
+I guess it makes sense to move the clearing of LIBXFS_DIRECT to where we
+determine that one of the device paths pointed to a regular file...
 
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+
+--D
+
+> ---
+>  mkfs/xfs_mkfs.c | 27 ++++++++++++++-------------
+>  1 file changed, 14 insertions(+), 13 deletions(-)
+> 
+> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+> index cb7c20e3aa18..3ccd37920321 100644
+> --- a/mkfs/xfs_mkfs.c
+> +++ b/mkfs/xfs_mkfs.c
+> @@ -1330,6 +1330,7 @@ nr_cpus(void)
+>  
+>  static void
+>  check_device_type(
+> +	struct cli_params	*cli,
+>  	struct libxfs_dev	*dev,
+>  	bool			no_size,
+>  	bool			dry_run,
+> @@ -1375,6 +1376,13 @@ check_device_type(
+>  			dev->isfile = 1;
+>  		else if (!dry_run)
+>  			dev->create = 1;
+> +
+> +		/*
+> +		 * Explicitly disable direct IO for image files so we don't
+> +		 * error out on sector size mismatches between the new
+> +		 * filesystem and the underlying host filesystem.
+> +		 */
+> +		cli->xi->flags &= ~LIBXFS_DIRECT;
+>  		return;
+>  	}
+>  
+> @@ -2378,21 +2386,14 @@ validate_sectorsize(
+>  	 * Before anything else, verify that we are correctly operating on
+>  	 * files or block devices and set the control parameters correctly.
+>  	 */
+> -	check_device_type(&cli->xi->data, !cli->dsize, dry_run, "data", "d");
+> +	check_device_type(cli, &cli->xi->data, !cli->dsize, dry_run,
+> +			"data", "d");
+>  	if (!cli->loginternal)
+> -		check_device_type(&cli->xi->log, !cli->logsize, dry_run, "log",
+> -				"l");
+> +		check_device_type(cli, &cli->xi->log, !cli->logsize, dry_run,
+> +				"log", "l");
+>  	if (cli->xi->rt.name)
+> -		check_device_type(&cli->xi->rt, !cli->rtsize, dry_run, "RT",
+> -				"r");
+> -
+> -	/*
+> -	 * Explicitly disable direct IO for image files so we don't error out on
+> -	 * sector size mismatches between the new filesystem and the underlying
+> -	 * host filesystem.
+> -	 */
+> -	if (cli->xi->data.isfile || cli->xi->log.isfile || cli->xi->rt.isfile)
+> -		cli->xi->flags &= ~LIBXFS_DIRECT;
+> +		check_device_type(cli, &cli->xi->rt, !cli->rtsize, dry_run,
+> +				"RT", "r");
+>  
+>  	memset(ft, 0, sizeof(*ft));
+>  	get_topology(cli->xi, ft, force_overwrite);
+> -- 
+> 2.47.3
+> 
+> 
 
