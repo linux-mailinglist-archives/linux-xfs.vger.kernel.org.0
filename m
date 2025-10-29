@@ -1,65 +1,167 @@
-Return-Path: <linux-xfs+bounces-27075-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27077-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE426C1B865
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 16:04:01 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6653C1C123
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 17:28:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E19251888EB4
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 14:59:10 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 06F945A442D
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 15:39:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34222D47F2;
-	Wed, 29 Oct 2025 14:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 836AA3358D8;
+	Wed, 29 Oct 2025 15:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3kOGNvK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLTzKOAw"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5623358CD;
-	Wed, 29 Oct 2025 14:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433FF2DE70B
+	for <linux-xfs@vger.kernel.org>; Wed, 29 Oct 2025 15:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761749767; cv=none; b=K3yfRytE9hJYu392J5TVD8bQDXLxbimtyxps7W48NOkGlje0UGg4UwYlXfMkTvggzzAcOo0mTCb0PsSqlkO/ok/lpbpquchloOd0DCfD1Ujr/smfYtKsm3P+1QoF56uMLxQgOUk6GEto9LVFzh7xgjuhoktMw+DrHoMh8xMWFqE=
+	t=1761752363; cv=none; b=Qkylno9diUzc4G88kFYKfG2Kx6Pt6nSW9H+kWDbOeDfz1dpSK/e2JVLuT5iumAQhxbvxLQy2WhjtqLBfqQcYttwnm6/VZdZjASNLmOxnPYnQi6Rq/Y1/XQWUY/nfmYJiwhEcNGj2hVqOjdHKFQGAx5Le66z5n5vfAgRsBRd4uAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761749767; c=relaxed/simple;
-	bh=NWQryUjSwQW73bTKY8T3e0hgWS+XmWERKd3i/Y6xVUc=;
+	s=arc-20240116; t=1761752363; c=relaxed/simple;
+	bh=iZFeDyqGKJUOhyb15kOMPmGJ5C3IWOGfzlrPDuozD3o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hNxUfP85ze4KgWovYMQhQGPtsUAmnWlPV8EX39/tsKW2q8Rvs0Qjyy262ke9Bb7vIHcmrD7Lycqen+NahmR2o+6+xEpJEhBQIVHi0uzU0RurDg3VhL8QYXYBPWVa45lQCHIukxm5MLKwWCQKw48f3gEN2QfPXVOOGZwwOJhVSzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3kOGNvK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4D57C4CEF7;
-	Wed, 29 Oct 2025 14:56:04 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jedm37kQoZ0ZNyv4d1NfpvOk+0tihNlEcIcnCNCsk99o9SieskcfQlTnNBfA1Wz8cRJ0WcTrD1ks+ZVTeUnkigjSAMxToh863SVJ5S0jSvdxdLzowD1LkA6tJ4z9RtIYYviZ2owdsqiYA+eHX8+aRBfQpd53bIxAVSQReWdDwLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLTzKOAw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61DECC4CEF7;
+	Wed, 29 Oct 2025 15:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761749767;
-	bh=NWQryUjSwQW73bTKY8T3e0hgWS+XmWERKd3i/Y6xVUc=;
+	s=k20201202; t=1761752362;
+	bh=iZFeDyqGKJUOhyb15kOMPmGJ5C3IWOGfzlrPDuozD3o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P3kOGNvKTTaLITLdtrF8r6T+Xs78Yq4HQi6kWz236WATKXQdPp2XEX+cQxgJd/PFI
-	 jDd1y56NENE0CpUW8N86hTC+2HCqI14HBpgtwmWp1l9C4MDMfu7AMSEhBBDeD87QFD
-	 7EdmbNkHw6g6yC0WAp5a8LIu4RbyyZMQlm4EBheXTO9Bxb4P1RG6/3nUUu9XtdJ0c7
-	 n0poN9hUAk3VUHCZ8fVd22FibYZoakHk6wVajElsV4JoUcE5pQyN6MWGHOIhR/FPA+
-	 xxpHUb1k2SzFfqubY29hNkN9b8shoBOMgpW7t1G6cRuPmopl5JitHhndM5vZYFnyJ8
-	 hwZeU0iHaJT+Q==
-Date: Wed, 29 Oct 2025 15:56:02 +0100
-From: Christian Brauner <brauner@kernel.org>
+	b=XLTzKOAwYgWx4OmMbRwkv26euMhe81saMpFOz0l3HmYdm1yOioNMXH/wReYfBMj+S
+	 QLVDv4AQNNETk6DL3v+5ntNWNtPsJB/n/m9+VijB7Vk/qKxb29WOpJ0yCYyOQGh8QM
+	 RCzunipsnuQYk+mgSbs3WF03PUYY1K++xoHyQJamb8ugwQmXwvVKBZDlU3/rjc8GC2
+	 jUei4gqGjQswddlCSCrF4oNfMO5z7EnywyCE8lVDSu46iXdGqqkRDfyJ8kD53OrL9j
+	 imMLx+g3ROlQCFx8up8CGR+s8o3T0abmoX05KoVkY7vIb8V88y/Fm+V8Yl/ViT+XRd
+	 835cvdrQsY50g==
+Date: Wed, 29 Oct 2025 08:39:21 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
 To: Christoph Hellwig <hch@lst.de>
-Cc: Jan Kara <jack@suse.cz>, Carlos Maiolino <cem@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, willy@infradead.org, dlemoal@kernel.org, hans.holmberg@wdc.com, 
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: allow file systems to increase the minimum writeback chunk size
- v2
-Message-ID: <20251029-zielorientiert-pritsche-eedd6964dab0@brauner>
-References: <20251017034611.651385-1-hch@lst.de>
+Cc: Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/4] libxfs: cleanup get_topology
+Message-ID: <20251029153921.GY3356773@frogsfrogsfrogs>
+References: <20251029090737.1164049-1-hch@lst.de>
+ <20251029090737.1164049-3-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251017034611.651385-1-hch@lst.de>
+In-Reply-To: <20251029090737.1164049-3-hch@lst.de>
 
-Now queued and pushed out. Sorry for the delay.
+On Wed, Oct 29, 2025 at 10:07:30AM +0100, Christoph Hellwig wrote:
+> Add a libxfs_ prefix to the name, clear the structure in the helper
+> instead of in the callers, and use a bool to pass a boolean argument.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Looks good,
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+
+--D
+
+> ---
+>  libxfs/topology.c | 9 +++++----
+>  libxfs/topology.h | 7 ++-----
+>  mkfs/xfs_mkfs.c   | 3 +--
+>  repair/sb.c       | 3 +--
+>  4 files changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/libxfs/topology.c b/libxfs/topology.c
+> index 7764687beac0..366165719c84 100644
+> --- a/libxfs/topology.c
+> +++ b/libxfs/topology.c
+> @@ -224,7 +224,7 @@ static void
+>  blkid_get_topology(
+>  	const char		*device,
+>  	struct device_topology	*dt,
+> -	int			force_overwrite)
+> +	bool			force_overwrite)
+>  {
+>  	blkid_topology tp;
+>  	blkid_probe pr;
+> @@ -317,7 +317,7 @@ static void
+>  get_device_topology(
+>  	struct libxfs_dev	*dev,
+>  	struct device_topology	*dt,
+> -	int			force_overwrite)
+> +	bool			force_overwrite)
+>  {
+>  	struct stat		st;
+>  
+> @@ -364,11 +364,12 @@ get_device_topology(
+>  }
+>  
+>  void
+> -get_topology(
+> +libxfs_get_topology(
+>  	struct libxfs_init	*xi,
+>  	struct fs_topology	*ft,
+> -	int			force_overwrite)
+> +	bool			force_overwrite)
+>  {
+> +	memset(ft, 0, sizeof(*ft));
+>  	get_device_topology(&xi->data, &ft->data, force_overwrite);
+>  	get_device_topology(&xi->rt, &ft->rt, force_overwrite);
+>  	get_device_topology(&xi->log, &ft->log, force_overwrite);
+> diff --git a/libxfs/topology.h b/libxfs/topology.h
+> index f0ca65f3576e..3688d56b542f 100644
+> --- a/libxfs/topology.h
+> +++ b/libxfs/topology.h
+> @@ -25,11 +25,8 @@ struct fs_topology {
+>  	struct device_topology	log;
+>  };
+>  
+> -void
+> -get_topology(
+> -	struct libxfs_init	*xi,
+> -	struct fs_topology	*ft,
+> -	int			force_overwrite);
+> +void libxfs_get_topology(struct libxfs_init *xi, struct fs_topology *ft,
+> +		bool force_overwrite);
+>  
+>  extern void
+>  calc_default_ag_geometry(
+> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+> index 3ccd37920321..0ba7798eccf6 100644
+> --- a/mkfs/xfs_mkfs.c
+> +++ b/mkfs/xfs_mkfs.c
+> @@ -2395,8 +2395,7 @@ validate_sectorsize(
+>  		check_device_type(cli, &cli->xi->rt, !cli->rtsize, dry_run,
+>  				"RT", "r");
+>  
+> -	memset(ft, 0, sizeof(*ft));
+> -	get_topology(cli->xi, ft, force_overwrite);
+> +	libxfs_get_topology(cli->xi, ft, force_overwrite);
+>  
+>  	/* set configured sector sizes in preparation for checks */
+>  	if (!cli->sectorsize) {
+> diff --git a/repair/sb.c b/repair/sb.c
+> index 0e4827e04678..ee1cc63fae64 100644
+> --- a/repair/sb.c
+> +++ b/repair/sb.c
+> @@ -184,8 +184,7 @@ guess_default_geometry(
+>  	uint64_t		dblocks;
+>  	int			multidisk;
+>  
+> -	memset(&ft, 0, sizeof(ft));
+> -	get_topology(x, &ft, 1);
+> +	libxfs_get_topology(x, &ft, true);
+>  
+>  	/*
+>  	 * get geometry from get_topology result.
+> -- 
+> 2.47.3
+> 
+> 
 
