@@ -1,138 +1,189 @@
-Return-Path: <linux-xfs+bounces-27076-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27090-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7BA1C1C611
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 18:12:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 788FCC1CB15
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 19:10:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6CEB46653B
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 15:38:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1AC5D5832A5
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Oct 2025 17:53:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3902EA473;
-	Wed, 29 Oct 2025 15:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQ+BJqYP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F93D346A09;
+	Wed, 29 Oct 2025 17:53:50 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0.herbolt.com (mx0.herbolt.com [5.59.97.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3A3325737
-	for <linux-xfs@vger.kernel.org>; Wed, 29 Oct 2025 15:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B0928C5DE
+	for <linux-xfs@vger.kernel.org>; Wed, 29 Oct 2025 17:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.59.97.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761752304; cv=none; b=bVK3MIv5zyJaFlpEEUL17uf9xCTbxSe3UE0ubbe47xEpIzV0KZVy44xUDAjNzMO+Q4Ghxqs4tzjfS3rGaao7q4xIglVoNbGaHJTSao42iKxJYOyaeuHl2zmn5wpf2/jYqr/OqZPwk76OA5G3AOAYNhWaY0WmccNTQq2S1Fe79nA=
+	t=1761760430; cv=none; b=WMUZz3vj1SMzwbcmKlZB7YExUbpa0aKWZqlOkfEs+y0wREHs4qr6WY9mPyn5GzeLw2SXu4q4fp4MyZutMVcSml6lYuogHrkl8a1CkV3NHSclZUasT7aXtl/nZhf095pDd/stmt3btO5mS5F2bCWUyqhJP2rtKXos1TVKZpc2qqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761752304; c=relaxed/simple;
-	bh=JPd10LxnfUDSzA3Q7LHQGKN1zEztW60kTUiIx6tRHws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcPjCCGTuzdJ5uRCgLQsj4omcduQ20j/L7T/uKrn1T63ZNu0u4qWtB8bDHSVMUtCTS8GOr3Ni074tcPUnfAJLhMVKzJiowqQHXMTA2nxB0UP1gY46Fmc3InEcFhc9iATO5Ln9IZ2LqtlvflKCIF/dbBollKYBVUdPw5pDIM1tMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQ+BJqYP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 088F5C4CEF7;
-	Wed, 29 Oct 2025 15:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761752304;
-	bh=JPd10LxnfUDSzA3Q7LHQGKN1zEztW60kTUiIx6tRHws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dQ+BJqYPNxveSoirqOOPH+hcY5ioSmHadlGrxXqTg5nxiNsaXxf1tziVIqk5knd9o
-	 4J1OLgngCCe6KzhALJ+LZw49jtpLnMmUvZN2t3h+SxkmkNUyPnQVyJYgugzdUCcXVj
-	 FVVVR7/BmfvU9wLnjfYHY/1lE36Hki5Uqk6iDXqgwC9ho5hEtnOT1zg5+SV0CqFVne
-	 EVZIz+Ntkpz+ivx1X3yZMDptOJioQs2vHeZ9V0YQiTEOw/PHlqs9nbrk9wQlByXa/u
-	 mRRzsm/Q472b2S6bd+QHC36yDL48rYOVwYtD/g07A049RUqpZXU/YVjK4YkmwNfSwz
-	 9JrCIWz5Q8S6A==
-Date: Wed, 29 Oct 2025 08:38:23 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/4] mkfs: move clearing LIBXFS_DIRECT into
- check_device_type
-Message-ID: <20251029153823.GX3356773@frogsfrogsfrogs>
-References: <20251029090737.1164049-1-hch@lst.de>
- <20251029090737.1164049-2-hch@lst.de>
+	s=arc-20240116; t=1761760430; c=relaxed/simple;
+	bh=omML1QeVAyxxRlwnqsBGBBz1Bdi70FQgjDwDHoZ2VvI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=awzA3AI8fXNE/OINK59f6+y0b8Uxi2dJK/NWbsTRjHe/tjJsSsy5Z5e57nH2LRnbS0ydyzJG21bt4u08bjYBpVn0XGFrRe5Yd7Ppy11CZD/N70UZiyMtXSDM4X4x0tgVjiDkPNPXmVaB5izESGUD9bmRfjeKXUWpEj16RgE6QyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herbolt.com; spf=pass smtp.mailfrom=herbolt.com; arc=none smtp.client-ip=5.59.97.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herbolt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=herbolt.com
+Received: from mx0.herbolt.com (localhost [127.0.0.1])
+	by mx0.herbolt.com (Postfix) with ESMTP id 3A90B180F2C0;
+	Wed, 29 Oct 2025 18:53:32 +0100 (CET)
+Received: from trufa.intra.herbolt.com.herbolt.com ([172.168.31.30])
+	by mx0.herbolt.com with ESMTPSA
+	id uHGeA5xUAmlTbiMAKEJqOA
+	(envelope-from <lukas@herbolt.com>); Wed, 29 Oct 2025 18:53:32 +0100
+From: Lukas Herbolt <lukas@herbolt.com>
+To: yi.zhang@huaweicloud.com
+Cc: linux-xfs@vger.kernel.org,
+	Lukas Herbolt <lukas@herbolt.com>
+Subject: [PATCH v3] xfs: add FALLOC_FL_WRITE_ZEROES to XFS code base
+Date: Wed, 29 Oct 2025 18:53:14 +0100
+Message-ID: <20251029175313.3644646-2-lukas@herbolt.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <0e89b047-cacb-4c23-aa83-27de1eb235a5@huaweicloud.com>
+References: <0e89b047-cacb-4c23-aa83-27de1eb235a5@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029090737.1164049-2-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 29, 2025 at 10:07:29AM +0100, Christoph Hellwig wrote:
-> Keep it close to the block device vs regular file logic and remove
-> the checks for each device in the caller.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Add support for FALLOC_FL_WRITE_ZEROES if the underlying device enable
+the unmap write zeroes operation.
 
-I guess it makes sense to move the clearing of LIBXFS_DIRECT to where we
-determine that one of the device paths pointed to a regular file...
+v3 changes:
+ - fix formating
+ - fix check  on the return value of xfs_alloc_file_space
+ - add check if inode COW and return -EOPNOTSUPP
 
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Signed-off-by: Lukas Herbolt <lukas@herbolt.com>
+---
+ fs/xfs/xfs_bmap_util.c |  6 +++---
+ fs/xfs/xfs_bmap_util.h |  2 +-
+ fs/xfs/xfs_file.c      | 24 ++++++++++++++++++------
+ 3 files changed, 22 insertions(+), 10 deletions(-)
 
---D
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 06ca11731e430..ddbcf4b0cea17 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -646,7 +646,8 @@ int
+ xfs_alloc_file_space(
+ 	struct xfs_inode	*ip,
+ 	xfs_off_t		offset,
+-	xfs_off_t		len)
++	xfs_off_t		len,
++	uint32_t		flags)	/* XFS_BMAPI_... */
+ {
+ 	xfs_mount_t		*mp = ip->i_mount;
+ 	xfs_off_t		count;
+@@ -748,8 +749,7 @@ xfs_alloc_file_space(
+ 		 * will eventually reach the requested range.
+ 		 */
+ 		error = xfs_bmapi_write(tp, ip, startoffset_fsb,
+-				allocatesize_fsb, XFS_BMAPI_PREALLOC, 0, imapp,
+-				&nimaps);
++				allocatesize_fsb, flags, 0, imapp, &nimaps);
+ 		if (error) {
+ 			if (error != -ENOSR)
+ 				goto error;
+diff --git a/fs/xfs/xfs_bmap_util.h b/fs/xfs/xfs_bmap_util.h
+index c477b33616304..1fd4844d4ec64 100644
+--- a/fs/xfs/xfs_bmap_util.h
++++ b/fs/xfs/xfs_bmap_util.h
+@@ -56,7 +56,7 @@ int	xfs_bmap_last_extent(struct xfs_trans *tp, struct xfs_inode *ip,
+ 
+ /* preallocation and hole punch interface */
+ int	xfs_alloc_file_space(struct xfs_inode *ip, xfs_off_t offset,
+-		xfs_off_t len);
++		xfs_off_t len, uint32_t flags);
+ int	xfs_free_file_space(struct xfs_inode *ip, xfs_off_t offset,
+ 		xfs_off_t len, struct xfs_zone_alloc_ctx *ac);
+ int	xfs_collapse_file_space(struct xfs_inode *, xfs_off_t offset,
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index f96fbf5c54c99..38de47ffb8d39 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -1261,23 +1261,32 @@ xfs_falloc_zero_range(
+ 	struct xfs_zone_alloc_ctx *ac)
+ {
+ 	struct inode		*inode = file_inode(file);
++	struct xfs_inode	*ip = XFS_I(inode);
+ 	unsigned int		blksize = i_blocksize(inode);
+ 	loff_t			new_size = 0;
+ 	int			error;
+ 
+-	trace_xfs_zero_file_space(XFS_I(inode));
++	trace_xfs_zero_file_space(ip);
+ 
+ 	error = xfs_falloc_newsize(file, mode, offset, len, &new_size);
+ 	if (error)
+ 		return error;
+ 
+-	error = xfs_free_file_space(XFS_I(inode), offset, len, ac);
++	error = xfs_free_file_space(ip, offset, len, ac);
+ 	if (error)
+ 		return error;
+ 
+ 	len = round_up(offset + len, blksize) - round_down(offset, blksize);
+ 	offset = round_down(offset, blksize);
+-	error = xfs_alloc_file_space(XFS_I(inode), offset, len);
++	if (mode & FALLOC_FL_WRITE_ZEROES) {
++		if (xfs_is_cow_inode(ip) || !bdev_write_zeroes_unmap_sectors(
++				xfs_inode_buftarg(ip)->bt_bdev))
++			return -EOPNOTSUPP;
++		error = xfs_alloc_file_space(ip, offset, len, XFS_BMAPI_ZERO);
++	} else {
++		error = xfs_alloc_file_space(ip, offset, len,
++				XFS_BMAPI_PREALLOC);
++	}
+ 	if (error)
+ 		return error;
+ 	return xfs_falloc_setsize(file, new_size);
+@@ -1302,7 +1311,8 @@ xfs_falloc_unshare_range(
+ 	if (error)
+ 		return error;
+ 
+-	error = xfs_alloc_file_space(XFS_I(inode), offset, len);
++	error = xfs_alloc_file_space(XFS_I(inode),	offset, len,
++			XFS_BMAPI_PREALLOC);
+ 	if (error)
+ 		return error;
+ 	return xfs_falloc_setsize(file, new_size);
+@@ -1330,7 +1340,8 @@ xfs_falloc_allocate_range(
+ 	if (error)
+ 		return error;
+ 
+-	error = xfs_alloc_file_space(XFS_I(inode), offset, len);
++	error = xfs_alloc_file_space(XFS_I(inode), offset, len,
++			XFS_BMAPI_PREALLOC);
+ 	if (error)
+ 		return error;
+ 	return xfs_falloc_setsize(file, new_size);
+@@ -1340,7 +1351,7 @@ xfs_falloc_allocate_range(
+ 		(FALLOC_FL_ALLOCATE_RANGE | FALLOC_FL_KEEP_SIZE |	\
+ 		 FALLOC_FL_PUNCH_HOLE |	FALLOC_FL_COLLAPSE_RANGE |	\
+ 		 FALLOC_FL_ZERO_RANGE |	FALLOC_FL_INSERT_RANGE |	\
+-		 FALLOC_FL_UNSHARE_RANGE)
++		 FALLOC_FL_UNSHARE_RANGE | FALLOC_FL_WRITE_ZEROES)
+ 
+ STATIC long
+ __xfs_file_fallocate(
+@@ -1383,6 +1394,7 @@ __xfs_file_fallocate(
+ 	case FALLOC_FL_INSERT_RANGE:
+ 		error = xfs_falloc_insert_range(file, offset, len);
+ 		break;
++	case FALLOC_FL_WRITE_ZEROES:
+ 	case FALLOC_FL_ZERO_RANGE:
+ 		error = xfs_falloc_zero_range(file, mode, offset, len, ac);
+ 		break;
+-- 
+2.51.0
 
-> ---
->  mkfs/xfs_mkfs.c | 27 ++++++++++++++-------------
->  1 file changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index cb7c20e3aa18..3ccd37920321 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -1330,6 +1330,7 @@ nr_cpus(void)
->  
->  static void
->  check_device_type(
-> +	struct cli_params	*cli,
->  	struct libxfs_dev	*dev,
->  	bool			no_size,
->  	bool			dry_run,
-> @@ -1375,6 +1376,13 @@ check_device_type(
->  			dev->isfile = 1;
->  		else if (!dry_run)
->  			dev->create = 1;
-> +
-> +		/*
-> +		 * Explicitly disable direct IO for image files so we don't
-> +		 * error out on sector size mismatches between the new
-> +		 * filesystem and the underlying host filesystem.
-> +		 */
-> +		cli->xi->flags &= ~LIBXFS_DIRECT;
->  		return;
->  	}
->  
-> @@ -2378,21 +2386,14 @@ validate_sectorsize(
->  	 * Before anything else, verify that we are correctly operating on
->  	 * files or block devices and set the control parameters correctly.
->  	 */
-> -	check_device_type(&cli->xi->data, !cli->dsize, dry_run, "data", "d");
-> +	check_device_type(cli, &cli->xi->data, !cli->dsize, dry_run,
-> +			"data", "d");
->  	if (!cli->loginternal)
-> -		check_device_type(&cli->xi->log, !cli->logsize, dry_run, "log",
-> -				"l");
-> +		check_device_type(cli, &cli->xi->log, !cli->logsize, dry_run,
-> +				"log", "l");
->  	if (cli->xi->rt.name)
-> -		check_device_type(&cli->xi->rt, !cli->rtsize, dry_run, "RT",
-> -				"r");
-> -
-> -	/*
-> -	 * Explicitly disable direct IO for image files so we don't error out on
-> -	 * sector size mismatches between the new filesystem and the underlying
-> -	 * host filesystem.
-> -	 */
-> -	if (cli->xi->data.isfile || cli->xi->log.isfile || cli->xi->rt.isfile)
-> -		cli->xi->flags &= ~LIBXFS_DIRECT;
-> +		check_device_type(cli, &cli->xi->rt, !cli->rtsize, dry_run,
-> +				"RT", "r");
->  
->  	memset(ft, 0, sizeof(*ft));
->  	get_topology(cli->xi, ft, force_overwrite);
-> -- 
-> 2.47.3
-> 
-> 
 
