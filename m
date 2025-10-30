@@ -1,55 +1,55 @@
-Return-Path: <linux-xfs+bounces-27163-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27165-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 042CEC21442
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Oct 2025 17:44:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E40FAC21553
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Oct 2025 17:58:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9F2A3A4394
-	for <lists+linux-xfs@lfdr.de>; Thu, 30 Oct 2025 16:38:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A95A91A62DEB
+	for <lists+linux-xfs@lfdr.de>; Thu, 30 Oct 2025 16:55:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA6D023909F;
-	Thu, 30 Oct 2025 16:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D9ED2D661C;
+	Thu, 30 Oct 2025 16:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3J6CJlG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxlslxsE"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9523627F00A;
-	Thu, 30 Oct 2025 16:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075823AC15;
+	Thu, 30 Oct 2025 16:54:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761842307; cv=none; b=GxKrBUmh7YHpP/9dcyrn6ii7gGxsoWkix7K5OtIOyFovMBZc45Y9q/aXJXeOp0hc0IQsNb/0+6D5DnzF5Og5eBropUaqJISjdVxAt17U1SYb6BbLJteIxvDTW/HzUAW63VoRBo7R9vVlHMx8VXou4LCO4k2M0CYrM9Xhu7ogW1E=
+	t=1761843294; cv=none; b=EUgMf0Yt4/gLPwX/eL3unTMkALQUJTW+isBKMiLqljj1P46pVDr2B2GOcC1pEAYwEPWvvXr8eHjPKRCEq4328T83dUw73oBAJiolP2KTA9VT8Rnd3m/5Wk2ELuAXI/ypFM/p/Y7yIAbO1DvIaW42yFLdrsynDMNmU2W/QNkKsuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761842307; c=relaxed/simple;
-	bh=U30GzCcZQSgByZ0Vk2dS8MT2M8hgaMbL/AWaAA+Wu1o=;
+	s=arc-20240116; t=1761843294; c=relaxed/simple;
+	bh=SIM7yvuCx8TH3Ub+SD5olUtGmEgTddwF/xq+EDJJJm0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kA6TulgtbeghnonvmnqwjvgLArKT0GiHSN8IH9OdkP+6JKNBcskCMS+nLLTkrlaG8FliLn42nO0OPfiPjAD7Nn3vN+aO9JFjKIfHePJ52dW8WXSdWD+fVhN4WW48xgAsGw7O9R0jUd4pncS2Z99RBPyIhCnKDXdHhxSL3BagX7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3J6CJlG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FEFC4CEF1;
-	Thu, 30 Oct 2025 16:38:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vj1d0aFhjR9OVHkhCLWew2ZLfwIt+WFxS7bZJZCl/7Ry37G+cE7ld1b2W0bTHqWYqspMrZTCqN9kenOKiFguK+8r2oj6NgxhGO4fIm45J0MmlbQSg/K+kCDemWuOLIF55aKixjzEFMFlIaDjR8RRk4ZGtxbMaV6dCGUgKS71jrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxlslxsE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776D9C4CEF1;
+	Thu, 30 Oct 2025 16:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761842307;
-	bh=U30GzCcZQSgByZ0Vk2dS8MT2M8hgaMbL/AWaAA+Wu1o=;
+	s=k20201202; t=1761843293;
+	bh=SIM7yvuCx8TH3Ub+SD5olUtGmEgTddwF/xq+EDJJJm0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N3J6CJlGSP8KX1d+g0H0JNHswvddpr2dMeOqhfQO63WmjehcCyjRGNNslVVf0D4Zs
-	 OBo2Uhxuf/6h1yvRJW0T7PY6kpJG6MD0jLDiKtlIHX9nvyATngpJLuOSRdWhqXi5lE
-	 wCcleWjxhLu6gsAGAFZ6AG7f4nzzd5Jex/fG5rJEPMMQF2qfwmaJDh1V1k8EU2TVN/
-	 oacitd/0yRou5ofT1qg70NumZDvjExmns2G5OmSu1xiHImqXmCNpCilj21AT0BBfLt
-	 kdd+nCZN5Zm8Ssg1r3I3mRtQSJXcito+eVEwdk0JWUY2WEFridezT1whkhdXzBdHwo
-	 swmMxLwyyyDrA==
-Date: Thu, 30 Oct 2025 09:38:26 -0700
+	b=OxlslxsEUaoQTTh5EEH6k4nZatdQVxb3Fpny/Dk6XH69/RxAOTjnWj6u/KOGJiu6h
+	 5uFOt1OkALp+L+uXR4zwWOPDXu6v2vdsV1abSt3zRxaOvfavHIBpLCRmBWXDV9XqvW
+	 nM+BaMDHpHbT62jgQXay9iw2bJOoqCEsCrh2Mp0yarTHVVbC7PTKdUabdxVNg4+ys/
+	 0JUVv4h+CBCbx2n/pbW1mx5rJeNQddiVTmY2mXxjAby7Z7OC7Di/UNlnO1/0Nq+kkR
+	 lPV4jVKdM7NLTzLvG/1gMs2Dq6ZqKEgsC3k6ZbP8QePk//x7xxHkYuV21afKWNYp4i
+	 l9llzqNK7k7pw==
+Date: Thu, 30 Oct 2025 09:54:52 -0700
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org
 Cc: linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/19] docs: discuss autonomous self healing in the xfs
- online repair design doc
-Message-ID: <20251030163826.GN3356773@frogsfrogsfrogs>
+Subject: Re: [PATCH 11/19] xfs: create event queuing, formatting, and
+ discovery infrastructure
+Message-ID: <20251030165452.GO3356773@frogsfrogsfrogs>
 References: <176117744372.1025409.2163337783918942983.stgit@frogsfrogsfrogs>
- <176117744541.1025409.747197958715254738.stgit@frogsfrogsfrogs>
+ <176117744738.1025409.11165275452234575607.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -58,313 +58,1378 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <176117744541.1025409.747197958715254738.stgit@frogsfrogsfrogs>
+In-Reply-To: <176117744738.1025409.11165275452234575607.stgit@frogsfrogsfrogs>
 
-On Wed, Oct 22, 2025 at 05:01:07PM -0700, Darrick J. Wong wrote:
+On Wed, Oct 22, 2025 at 05:03:27PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Update the XFS online repair document to describe the motivation and
-> design of the autonomous filesystem healing agent known as xfs_healer.
+> Create the basic infrastructure that we need to report health events to
+> userspace.  We need a compact form for recording critical information
+> about an event and queueing them; a means to notice that we've lost some
+> events; and a means to format the events into something that userspace
+> can handle.
 > 
-> Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+> Here, we've chosen json to export information to userspace.  The
+> structured key-value nature of json gives us enormous flexibility to
+> modify the schema of what we'll send to userspace because we can add new
+> keys at any time.  Userspace can use whatever json parsers are available
+> to consume the events and will not be confused by keys they don't
+> recognize.
 
-/me decides (or rather it was pointed out to me) that there's a kernel
-component to xfs_healer, but no explicit discussion of it in section 5
-("Kernel Algorithms and Data Structures").  Also given the frequency of
-the question "why not reuse fsnotify?" I'll address the reasons for that
-here.
+Self-review: originally when I started designing this new subsystem, I
+wanted to explore data exchange formats that are more flexible and
+easier for humans to read than C structures.  The thought being that
+when we want to rev (or worse, enlarge) the event format, it ought to be
+trivially easy to do that in a way that doesn't break old userspace.
 
-I've added the following text, which will appear in the next revision:
+I looked at formats such as protobufs and capnproto.  These look really
+nice in that extending the wire format is fairly easy, you can give it a
+data schema and it generates the serialization code for you, handles
+endianness problems, etc.  The huge downside is that neither support C
+all that well.
 
- 5. Kernel Algorithms and Data Structures
- ========================================
+Too hard, and didn't want to port either of those huge sprawling
+libraries first to the kernel and then again to xfsprogs.  Then I
+thought, how about JSON?  Javascript objects are human readable, the
+kernel can emit json without much fuss (it's all just strings!) and
+there are plenty of interpreters for python/rust/c/etc.
 
-<snip>
+There's a proposed schema format for json, which means that xfs can
+publish a description of the events that kernel will emit.  Userspace
+consumers (e.g. xfsprogs/xfs_healer) can embed the same schema document
+and use it to validate the incoming events from the kernel, which means
+it can discard events that it doesn't understand, or garbage being
+emitted due to bugs.
 
-+Health Monitoring
-+-----------------
-+
-+A self-correcting filesystem responds to observations of problems by scheduling
-+repairs of the affected areas.
-+The filesystem must therefore create event objects in response to stimuli
-+(metadata corruption, file I/O errors, etc.) and dispatch these events to
-+downstream consumers.
-+Downstream consumers that are in the kernel itself are easy to implement with
-+the ``xfs_hooks`` infrastructure created for other parts of online repair; these
-+are basically indirect function calls.
-+
-+However, the decision to translate an adverse metadata health report into a
-+repair should be made by userspace, and the actual scheduling done by userspace.
-+Some users (e.g. containers) would prefer to fast-fail the container and restart
-+it on another node at a previous checkpoint.
-+For workloads running in isolation, repairs may be preferable; either way this
-+is something the system administrator knows, and not the kernel.
-+A userspace agent (``xfs_healer``, described later) will collect events from the
-+kernel and dispatch them appropriately.
-+
-+Exporting health events to userspace requires the creation of a new component,
-+known as the health monitor.
-+Because the monitor exposes itself to userspace to deliver information, a file
-+descriptor is the natural abstraction to use here.
-+The health monitor hooks all the relevant sources of metadata health events.
-+Upon activation of the hook, a new event object is created and added to a queue.
-+When the agent reads from the fd, event objects are pulled from the start of the
-+queue and formatted into the user's buffer.
-+The events are freed, and the read call returns to userspace to allow the agent
-+to perform some work.
-+Memory usage is constrained on a per-fd basis to prevent memory exhaustion; if
-+an event must be discarded, a special "lost event" event is delivered to the
-+agent.
-+
-+In short, health events are captured, queued, and eventually copied out to
-+userspace for dispatching.
-+
-+**Question**: Why use a pseudofile and not use existing notification methods?
-+
-+*Answer*: The pseudofile is a private filesystem interface only available to
-+processes with the CAP_SYS_ADMIN priviledge and the ability to open the root
-+directory.
-+Being private gives the kernel and ``xfs_healer`` the flexibility to change
-+or update the event format in the future without worrying about backwards
-+compatibility.
-+Using existing notifications means that the event format would be frozen in
-+the public fsnotify UAPI forever, which would affect two subsystems.
-+
-+The pseudofile can also accept ioctls, which gives ``xfs_healer`` a solid
-+means to validate that prior to a repair, its reopened mountpoint is actually
-+the same filesystem that is being monitored.
-+
-+**Question**: Why not reuse fs/notify?
-+
-+*Answer*: It's much simpler for the healthmon code to manage its own queue of
-+events and to wake up readers instead of reusing fsnotify because that's the
-+only part of fsnotify that would use.
-+
-+Before I get started, an introduction: fsnotify expects its users (e.g.
-+fanotify) to implement quite a bit of functionality; all it provides is a
-+wrapper around a simple queue and a lot of code to convey information about the
-+calling process to that user.
-+fanotify has to actually implement all the queue management code on its own,
-+and so would healthmon.
-+
-+So if healthmon used fsnotify, it would have to create its own fsnotify group
-+structure.
-+For our purposes, the group is a very large wrapper around a linked list, some
-+counters, and a mutex.
-+The group object is critical for ensuring that sees only its own events, and
-+that nobody else (e.g. regular fanotify) ever sees these events.
-+There's a lot more in there for controlling whether fanotify reports pids,
-+groups, file handles, etc. that healthmon doesn't care about.
-+
-+Starting from the fsnotify() function call:
-+
-+ - I /think/ we'd have to define a new "data type", which itself is just a plain
-+   int but I think they correspond to FSNOTIFY_EVENT_* values which themselves
-+   are actually part of an enum.
-+   The data type controls the typecasting options for the ``void *data``
-+   parameter, which I guess is how I'd pass the healthmon event info from the
-+   hooks into the fsnotify mechanism and back out to the healthmon code.
-+
-+ - Each filesystem that wants to do this probably has to add their own
-+   FSNOTIFY_EVENT_{XFS,BTRFS,BFS} data type value because that's a casting
-+   decision that's made inside the main fsnotify code.
-+   I think this can be avoided if each fs is careful never to leak events
-+   outside of the group.
-+   Either way, it's harder to follow the data flows here because fsnotify can
-+   only take and pass around ``void *`` pointers, and it makes various indirect
-+   function calls to manage events.
-+   Contrast this with doing everything with typed pointers and direct calls
-+   within ``xfs_healthmon.c``.
-+
-+ - Since healthmon is both producer and consumer of fsnotify events, we can
-+   probably define our own "mask" value.
-+   It's a relief that we don't have to interact with fanotify, because fanotify
-+   has used up 22 of its 32 mask bits.
-+
-+Once healthmon gets an event into fsnotify, fsnotify will call back (into
-+healthmon!) to tell it that it got an event.
-+From there, the fsnotify implementation (healthmon) has to allocate an event
-+object and add it to the event queue in the group, which is what it already does
-+now.
-+Overflow control is up to the fsnotify implementation, which healthmon already
-+implements.
-+
-+After the event is queued, the fsnotify implementation also has to implement its
-+own read file op to dequeue an event and copy it to the userspace buffer in
-+whatever format it likes.
-+Again, healthmon already does all this.
-+
-+In the end, replacing the homegrown event dispatching in healthmon with fsnotify
-+would make the data flows much harder to understand, and all we gain is a
-+generic event dispatcher that relies on indirect function calls instead of
-+direct ones.
-+We still have to implement the queuing discipline ourselves! :(
-+
-+**Future Work Question**: Should these events be exposed through the fanotify
-+filesystem error event interface?
-+
-+*Answer*: Yes.
-+fanotify is much more careful about filtering out events to processes that
-+aren't running with privileges.
-+These processes should have a means to receive simple notifications about
-+file errors.
-+However, this will require coordination between fanotify, ext4, and XFS, and
-+is (for now) outside the scope of this project.
+However, json has a huge crutch -- javascript is well known for its
+vague definitions of what are numbers.  This makes expressing a large
+number rather fraught, because the runtime is free to represent a number
+in nearly any way it wants.  Stupider ones will truncate values to word
+size, others will roll out doubles for uint52_t (yes, fifty-two) with
+the resulting loss of precision.  Not good when you're dealing with
+discrete units.
+
+It just so happens that python's json library is smart enough to see a
+sequence of digits and put them in a u64 (at least on x86_64/aarch64)
+but an actual javascript interpreter (pasting into Firefox) isn't
+necessarily so clever.
+
+It turns out that none of the proposed json schemas were ever ratified
+even in an open-consensus way, so json blobs are still just loosely
+structured blobs.  The parsing in userspace was also noticeably slow and
+memory-consumptive.
+
+As a result, I'm dropping all the json stuff from the codebase and
+leaving only the C structure event format.  Since this is a mostly
+private interface, we can always rev the format in the traditional ways
+if we ever have to; there are 254 remaining unused format values.
+
+I wanted to document the outcome of this experiment for posterity in a
+public place, and now I have done so.
 
 --D
 
+> Note that we do NOT allow sending json back to the kernel, nor is there
+> any intent to do that.
+> 
+> Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 > ---
->  .../filesystems/xfs/xfs-online-fsck-design.rst     |  102 ++++++++++++++++++++
->  1 file changed, 100 insertions(+), 2 deletions(-)
+>  fs/xfs/libxfs/xfs_fs.h                  |   50 ++
+>  fs/xfs/xfs_healthmon.h                  |   29 +
+>  fs/xfs/xfs_linux.h                      |    3 
+>  fs/xfs/xfs_trace.h                      |  171 +++++++
+>  fs/xfs/libxfs/xfs_healthmon.schema.json |  129 +++++
+>  fs/xfs/xfs_healthmon.c                  |  728 +++++++++++++++++++++++++++++++
+>  fs/xfs/xfs_trace.c                      |    2 
+>  lib/seq_buf.c                           |    1 
+>  8 files changed, 1106 insertions(+), 7 deletions(-)
+>  create mode 100644 fs/xfs/libxfs/xfs_healthmon.schema.json
 > 
 > 
-> diff --git a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-> index 189d1f5f40788d..bdbf338a9c9f0c 100644
-> --- a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-> +++ b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-> @@ -166,9 +166,12 @@ The current XFS tools leave several problems unsolved:
->     malicious actors **exploit quirks of Unicode** to place misleading names
->     in directories.
+> diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+> index dba7896f716092..4b642eea18b5ca 100644
+> --- a/fs/xfs/libxfs/xfs_fs.h
+> +++ b/fs/xfs/libxfs/xfs_fs.h
+> @@ -1003,6 +1003,45 @@ struct xfs_rtgroup_geometry {
+>  #define XFS_RTGROUP_GEOM_SICK_RMAPBT	(1U << 3)  /* reverse mappings */
+>  #define XFS_RTGROUP_GEOM_SICK_REFCNTBT	(1U << 4)  /* reference counts */
 >  
-> +8. **Site Reliability and Support Engineers** would like to reduce the
-> +   frequency of incidents requiring **manual intervention**.
+> +/* Health monitor event domains */
 > +
->  Given this definition of the problems to be solved and the actors who would
->  benefit, the proposed solution is a third fsck tool that acts on a running
-> -filesystem.
-> +filesystem, and an autononmous agent that fixes problems as they arise.
+> +/* affects the whole fs */
+> +#define XFS_HEALTH_MONITOR_DOMAIN_MOUNT		(0)
+> +
+> +/* Health monitor event types */
+> +
+> +/* status of the monitor itself */
+> +#define XFS_HEALTH_MONITOR_TYPE_RUNNING		(0)
+> +#define XFS_HEALTH_MONITOR_TYPE_LOST		(1)
+> +
+> +/* lost events */
+> +struct xfs_health_monitor_lost {
+> +	__u64	count;
+> +};
+> +
+> +struct xfs_health_monitor_event {
+> +	/* XFS_HEALTH_MONITOR_DOMAIN_* */
+> +	__u32	domain;
+> +
+> +	/* XFS_HEALTH_MONITOR_TYPE_* */
+> +	__u32	type;
+> +
+> +	/* Timestamp of the event, in nanoseconds since the Unix epoch */
+> +	__u64	time_ns;
+> +
+> +	/*
+> +	 * Details of the event.  The primary clients are written in python
+> +	 * and rust, so break this up because bindgen hates anonymous structs
+> +	 * and unions.
+> +	 */
+> +	union {
+> +		struct xfs_health_monitor_lost lost;
+> +	} e;
+> +
+> +	/* zeroes */
+> +	__u64	pad[2];
+> +};
+> +
+>  struct xfs_health_monitor {
+>  	__u64	flags;		/* flags */
+>  	__u8	format;		/* output format */
+> @@ -1010,6 +1049,17 @@ struct xfs_health_monitor {
+>  	__u64	pad2[2];	/* zeroes */
+>  };
 >  
->  This new third program has three components: an in-kernel facility to check
->  metadata, an in-kernel facility to repair metadata, and a userspace driver
-> @@ -203,6 +206,13 @@ Even if a piece of filesystem metadata can only be regenerated by scanning the
->  entire system, the scan can still be done in the background while other file
->  operations continue.
+> +/* Return all health status events, not just deltas */
+> +#define XFS_HEALTH_MONITOR_VERBOSE	(1ULL << 0)
+> +
+> +#define XFS_HEALTH_MONITOR_ALL		(XFS_HEALTH_MONITOR_VERBOSE)
+> +
+> +/* Return events in a C structure */
+> +#define XFS_HEALTH_MONITOR_FMT_CSTRUCT	(0)
+> +
+> +/* Return events in JSON format */
+> +#define XFS_HEALTH_MONITOR_FMT_JSON	(1)
+> +
+>  /*
+>   * ioctl commands that are used by Linux filesystems
+>   */
+> diff --git a/fs/xfs/xfs_healthmon.h b/fs/xfs/xfs_healthmon.h
+> index 07126e39281a0c..ea2d6a327dfb16 100644
+> --- a/fs/xfs/xfs_healthmon.h
+> +++ b/fs/xfs/xfs_healthmon.h
+> @@ -6,6 +6,35 @@
+>  #ifndef __XFS_HEALTHMON_H__
+>  #define __XFS_HEALTHMON_H__
 >  
-> +The autonomous self healing agent should listen for metadata health impact
-> +reports coming from the kernel and automatically schedule repairs for the
-> +damaged metadata.
-> +If the required repairs are larger in scope than a single metadata structure,
-> +``xfs_scrub`` should be invoked to perform a full analysis.
-> +``xfs_healer`` is the name of this program.
+> +enum xfs_healthmon_type {
+> +	XFS_HEALTHMON_RUNNING,	/* monitor running */
+> +	XFS_HEALTHMON_LOST,	/* message lost */
+> +};
 > +
->  In summary, online fsck takes advantage of resource sharding and redundant
->  metadata to enable targeted checking and repair operations while the system
->  is running.
-> @@ -850,11 +860,16 @@ variable in the following service files:
->  * ``xfs_scrub_all_fail.service``
+> +enum xfs_healthmon_domain {
+> +	XFS_HEALTHMON_MOUNT,	/* affects the whole fs */
+> +};
+> +
+> +struct xfs_healthmon_event {
+> +	struct xfs_healthmon_event	*next;
+> +
+> +	enum xfs_healthmon_type		type;
+> +	enum xfs_healthmon_domain	domain;
+> +
+> +	uint64_t			time_ns;
+> +
+> +	union {
+> +		/* lost events */
+> +		struct {
+> +			uint64_t	lostcount;
+> +		};
+> +		/* mount */
+> +		struct {
+> +			unsigned int	flags;
+> +		};
+> +	};
+> +};
+> +
+>  #ifdef CONFIG_XFS_HEALTH_MONITOR
+>  long xfs_ioc_health_monitor(struct xfs_mount *mp,
+>  		struct xfs_health_monitor __user *arg);
+> diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+> index 4dd747bdbccab2..e122db938cc06b 100644
+> --- a/fs/xfs/xfs_linux.h
+> +++ b/fs/xfs/xfs_linux.h
+> @@ -63,6 +63,9 @@ typedef __u32			xfs_nlink_t;
+>  #include <linux/xattr.h>
+>  #include <linux/mnt_idmapping.h>
+>  #include <linux/debugfs.h>
+> +#ifdef CONFIG_XFS_HEALTH_MONITOR
+> +# include <linux/seq_buf.h>
+> +#endif
 >  
->  The decision to enable the background scan is left to the system administrator.
-> -This can be done by enabling either of the following services:
-> +This can be done system-wide by enabling either of the following services:
+>  #include <asm/page.h>
+>  #include <asm/div64.h>
+> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+> index 79b8641880ab9d..17af5efee026c9 100644
+> --- a/fs/xfs/xfs_trace.h
+> +++ b/fs/xfs/xfs_trace.h
+> @@ -103,6 +103,8 @@ struct xfs_refcount_intent;
+>  struct xfs_metadir_update;
+>  struct xfs_rtgroup;
+>  struct xfs_open_zone;
+> +struct xfs_healthmon_event;
+> +struct xfs_health_update_params;
 >  
->  * ``xfs_scrub_all.timer`` on systemd systems
->  * ``xfs_scrub_all.cron`` on non-systemd systems
+>  #define XFS_ATTR_FILTER_FLAGS \
+>  	{ XFS_ATTR_ROOT,	"ROOT" }, \
+> @@ -5908,6 +5910,175 @@ DEFINE_EVENT(xfs_freeblocks_resv_class, name, \
+>  DEFINE_FREEBLOCKS_RESV_EVENT(xfs_freecounter_reserved);
+>  DEFINE_FREEBLOCKS_RESV_EVENT(xfs_freecounter_enospc);
 >  
-> +To enable online repair for specific filesystems, the ``autofsck``
-> +filesystem property should be set to ``repair``.
-> +To enable only scanning, the property should be set to ``check``.
-> +To disable online fsck entirely, the property should be set to ``none``.
+> +#ifdef CONFIG_XFS_HEALTH_MONITOR
+> +TRACE_EVENT(xfs_healthmon_lost_event,
+> +	TP_PROTO(const struct xfs_mount *mp, unsigned long long lost_prev),
+> +	TP_ARGS(mp, lost_prev),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(unsigned long long, lost_prev)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp ? mp->m_super->s_dev : 0;
+> +		__entry->lost_prev = lost_prev;
+> +	),
+> +	TP_printk("dev %d:%d lost_prev %llu",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->lost_prev)
+> +);
 > +
->  This automatic weekly scan is configured out of the box to perform an
->  additional media scan of all file data once per month.
->  This is less foolproof than, say, storing file data block checksums, but much
-> @@ -897,6 +912,36 @@ notifications and initiate a repair?
->  *Answer*: These questions remain unanswered, but should be a part of the
->  conversation with early adopters and potential downstream users of XFS.
+> +#define XFS_HEALTHMON_FLAGS_STRINGS \
+> +	{ XFS_HEALTH_MONITOR_VERBOSE,	"verbose" }
+> +#define XFS_HEALTHMON_FMT_STRINGS \
+> +	{ XFS_HEALTH_MONITOR_FMT_JSON,	"json" }, \
+> +	{ XFS_HEALTH_MONITOR_FMT_CSTRUCT,	"cstruct" }
+> +
+> +TRACE_EVENT(xfs_healthmon_create,
+> +	TP_PROTO(const struct xfs_mount *mp, u64 flags, u8 format),
+> +	TP_ARGS(mp, flags, format),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(u64, flags)
+> +		__field(u8, format)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp ? mp->m_super->s_dev : 0;
+> +		__entry->flags = flags;
+> +		__entry->format = format;
+> +	),
+> +	TP_printk("dev %d:%d flags %s format %s",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __print_flags(__entry->flags, "|", XFS_HEALTHMON_FLAGS_STRINGS),
+> +		  __print_symbolic(__entry->format, XFS_HEALTHMON_FMT_STRINGS))
+> +);
+> +
+> +TRACE_EVENT(xfs_healthmon_copybuf,
+> +	TP_PROTO(const struct xfs_mount *mp, const struct iov_iter *iov,
+> +		 const struct seq_buf *seqbuf, size_t outpos),
+> +	TP_ARGS(mp, iov, seqbuf, outpos),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(size_t, seqbuf_size)
+> +		__field(size_t, seqbuf_len)
+> +		__field(size_t, outpos)
+> +		__field(size_t, to_copy)
+> +		__field(size_t, iter_count)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp ? mp->m_super->s_dev : 0;
+> +		__entry->seqbuf_size = seqbuf->size;
+> +		__entry->seqbuf_len = seqbuf->len;
+> +		__entry->outpos = outpos;
+> +		__entry->to_copy = seqbuf->len - outpos;
+> +		__entry->iter_count = iov_iter_count(iov);
+> +	),
+> +	TP_printk("dev %d:%d seqsize %zu seqlen %zu out_pos %zu to_copy %zu iter_count %zu",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->seqbuf_size,
+> +		  __entry->seqbuf_len,
+> +		  __entry->outpos,
+> +		  __entry->to_copy,
+> +		  __entry->iter_count)
+> +);
+> +
+> +DECLARE_EVENT_CLASS(xfs_healthmon_class,
+> +	TP_PROTO(const struct xfs_mount *mp, unsigned int events,
+> +		 unsigned long long lost_prev),
+> +	TP_ARGS(mp, events, lost_prev),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(unsigned int, events)
+> +		__field(unsigned long long, lost_prev)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp ? mp->m_super->s_dev : 0;
+> +		__entry->events = events;
+> +		__entry->lost_prev = lost_prev;
+> +	),
+> +	TP_printk("dev %d:%d events %u lost_prev? %llu",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __entry->events,
+> +		  __entry->lost_prev)
+> +);
+> +#define DEFINE_HEALTHMON_EVENT(name) \
+> +DEFINE_EVENT(xfs_healthmon_class, name, \
+> +	TP_PROTO(const struct xfs_mount *mp, unsigned int events, \
+> +		 unsigned long long lost_prev), \
+> +	TP_ARGS(mp, events, lost_prev))
+> +DEFINE_HEALTHMON_EVENT(xfs_healthmon_read_start);
+> +DEFINE_HEALTHMON_EVENT(xfs_healthmon_read_finish);
+> +DEFINE_HEALTHMON_EVENT(xfs_healthmon_release);
+> +DEFINE_HEALTHMON_EVENT(xfs_healthmon_unmount);
+> +
+> +#define XFS_HEALTHMON_TYPE_STRINGS \
+> +	{ XFS_HEALTHMON_LOST,		"lost" }
+> +
+> +#define XFS_HEALTHMON_DOMAIN_STRINGS \
+> +	{ XFS_HEALTHMON_MOUNT,		"mount" }
+> +
+> +TRACE_DEFINE_ENUM(XFS_HEALTHMON_LOST);
+> +
+> +TRACE_DEFINE_ENUM(XFS_HEALTHMON_MOUNT);
+> +
+> +DECLARE_EVENT_CLASS(xfs_healthmon_event_class,
+> +	TP_PROTO(const struct xfs_mount *mp, const struct xfs_healthmon_event *event),
+> +	TP_ARGS(mp, event),
+> +	TP_STRUCT__entry(
+> +		__field(dev_t, dev)
+> +		__field(unsigned int, type)
+> +		__field(unsigned int, domain)
+> +		__field(unsigned int, mask)
+> +		__field(unsigned long long, ino)
+> +		__field(unsigned int, gen)
+> +		__field(unsigned int, group)
+> +		__field(unsigned long long, offset)
+> +		__field(unsigned long long, length)
+> +		__field(unsigned long long, lostcount)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->dev = mp ? mp->m_super->s_dev : 0;
+> +		__entry->type = event->type;
+> +		__entry->domain = event->domain;
+> +		__entry->mask = 0;
+> +		__entry->group = 0;
+> +		__entry->ino = 0;
+> +		__entry->gen = 0;
+> +		__entry->offset = 0;
+> +		__entry->length = 0;
+> +		__entry->lostcount = 0;
+> +		switch (__entry->domain) {
+> +		case XFS_HEALTHMON_MOUNT:
+> +			switch (__entry->type) {
+> +			case XFS_HEALTHMON_LOST:
+> +				__entry->lostcount = event->lostcount;
+> +				break;
+> +			}
+> +			break;
+> +		}
+> +	),
+> +	TP_printk("dev %d:%d type %s domain %s mask 0x%x ino 0x%llx gen 0x%x offset 0x%llx len 0x%llx group 0x%x lost %llu",
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		  __print_symbolic(__entry->type, XFS_HEALTHMON_TYPE_STRINGS),
+> +		  __print_symbolic(__entry->domain, XFS_HEALTHMON_DOMAIN_STRINGS),
+> +		  __entry->mask,
+> +		  __entry->ino,
+> +		  __entry->gen,
+> +		  __entry->offset,
+> +		  __entry->length,
+> +		  __entry->group,
+> +		  __entry->lostcount)
+> +);
+> +#define DEFINE_HEALTHMONEVENT_EVENT(name) \
+> +DEFINE_EVENT(xfs_healthmon_event_class, name, \
+> +	TP_PROTO(const struct xfs_mount *mp, const struct xfs_healthmon_event *event), \
+> +	TP_ARGS(mp, event))
+> +DEFINE_HEALTHMONEVENT_EVENT(xfs_healthmon_push);
+> +DEFINE_HEALTHMONEVENT_EVENT(xfs_healthmon_pop);
+> +DEFINE_HEALTHMONEVENT_EVENT(xfs_healthmon_format);
+> +DEFINE_HEALTHMONEVENT_EVENT(xfs_healthmon_format_overflow);
+> +DEFINE_HEALTHMONEVENT_EVENT(xfs_healthmon_drop);
+> +#endif /* CONFIG_XFS_HEALTH_MONITOR */
+> +
+>  #endif /* _TRACE_XFS_H */
 >  
-> +Autonomous Self Healing
-> +-----------------------
+>  #undef TRACE_INCLUDE_PATH
+> diff --git a/fs/xfs/libxfs/xfs_healthmon.schema.json b/fs/xfs/libxfs/xfs_healthmon.schema.json
+> new file mode 100644
+> index 00000000000000..68762738b04191
+> --- /dev/null
+> +++ b/fs/xfs/libxfs/xfs_healthmon.schema.json
+> @@ -0,0 +1,129 @@
+> +{
+> +	"$comment": [
+> +		"SPDX-License-Identifier: GPL-2.0-or-later",
+> +		"Copyright (c) 2024-2025 Oracle.  All Rights Reserved.",
+> +		"Author: Darrick J. Wong <djwong@kernel.org>",
+> +		"",
+> +		"This schema file describes the format of the json objects",
+> +		"readable from the fd returned by the XFS_IOC_HEALTHMON",
+> +		"ioctl."
+> +	],
 > +
-> +The autonomous self healing agent is a background system service that starts
-> +when the filesystem is mounted and runs until unmount.
-> +When starting up, the agent opens a special pseudofile under the specific
-> +mount.
-> +When the filesystem generates new adverse health events, the events will be
-> +made available for reading via the special pseudofile.
-> +The events need not be limited to metadata concerns; they can also reflect
-> +events outside of the filesystem's direct control such as file I/O errors.
+> +	"$schema": "https://json-schema.org/draft/2020-12/schema",
+> +	"$id": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/plain/fs/xfs/libxfs/xfs_healthmon.schema.json",
 > +
-> +The agent reads these events in a loop and responds to the events
-> +appropriately.
-> +For a single trouble report about metadata, the agent initiates a targeted
-> +repair of the specific structure.
-> +If that repair fails or the agent observes too many metadata trouble reports
-> +over a short interval, it should then initiate a full scan of the filesystem
-> +via the ``xfs_scrub`` service.
+> +	"title": "XFS Health Monitoring Events",
 > +
-> +The decision to enable the background scan is left to the system administrator.
-> +This can be done system-wide by enabling the following services:
+> +	"$comment": "Events must be one of the following types:",
+> +	"oneOf": [
+> +		{
+> +			"$ref": "#/$events/running"
+> +		},
+> +		{
+> +			"$ref": "#/$events/unmount"
+> +		},
+> +		{
+> +			"$ref": "#/$events/lost"
+> +		}
+> +	],
 > +
-> +* ``xfs_healer@.service`` on systemd systems
+> +	"$comment": "Simple data types are defined here.",
+> +	"$defs": {
+> +		"time_ns": {
+> +			"title": "Time of Event",
+> +			"description": "Timestamp of the event, in nanoseconds since the Unix epoch.",
+> +			"type": "integer"
+> +		},
+> +		"count": {
+> +			"title": "Count of events",
+> +			"description": "Number of events.",
+> +			"type": "integer",
+> +			"minimum": 1
+> +		}
+> +	},
 > +
-> +To enable autonomous healing for specific filesystems, the ``autofsck``
-> +filesystem property should be set to ``repair``.
-> +To disable self healing, the property should be set to ``check``,
-> +``optimize``, or ``none``.
+> +	"$comment": "Event types are defined here.",
+> +	"$events": {
+> +		"running": {
+> +			"title": "Health Monitoring Running",
+> +			"$comment": [
+> +				"The health monitor is actually running."
+> +			],
+> +			"type": "object",
 > +
->  5. Kernel Algorithms and Data Structures
->  ========================================
+> +			"properties": {
+> +				"type": {
+> +					"const": "running"
+> +				},
+> +				"time_ns": {
+> +					"$ref": "#/$defs/time_ns"
+> +				},
+> +				"domain": {
+> +					"const": "mount"
+> +				}
+> +			},
+> +
+> +			"required": [
+> +				"type",
+> +				"time_ns",
+> +				"domain"
+> +			]
+> +		},
+> +		"unmount": {
+> +			"title": "Filesystem Unmounted",
+> +			"$comment": [
+> +				"The filesystem was unmounted."
+> +			],
+> +			"type": "object",
+> +
+> +			"properties": {
+> +				"type": {
+> +					"const": "unmount"
+> +				},
+> +				"time_ns": {
+> +					"$ref": "#/$defs/time_ns"
+> +				},
+> +				"domain": {
+> +					"const": "mount"
+> +				}
+> +			},
+> +
+> +			"required": [
+> +				"type",
+> +				"time_ns",
+> +				"domain"
+> +			]
+> +		},
+> +		"lost": {
+> +			"title": "Health Monitoring Events Lost",
+> +			"$comment": [
+> +				"Previous health monitoring events were",
+> +				"dropped due to memory allocation failures",
+> +				"or queue limits."
+> +			],
+> +			"type": "object",
+> +
+> +			"properties": {
+> +				"type": {
+> +					"const": "lost"
+> +				},
+> +				"count": {
+> +					"$ref": "#/$defs/count"
+> +				},
+> +				"time_ns": {
+> +					"$ref": "#/$defs/time_ns"
+> +				},
+> +				"domain": {
+> +					"const": "mount"
+> +				}
+> +			},
+> +
+> +			"required": [
+> +				"type",
+> +				"count",
+> +				"time_ns",
+> +				"domain"
+> +			]
+> +		}
+> +	}
+> +}
+> diff --git a/fs/xfs/xfs_healthmon.c b/fs/xfs/xfs_healthmon.c
+> index 7b0d9f78b0a402..d5ca6ef8015c0e 100644
+> --- a/fs/xfs/xfs_healthmon.c
+> +++ b/fs/xfs/xfs_healthmon.c
+> @@ -40,12 +40,558 @@
+>   * so that the queueing and processing of the events do not pin the mount and
+>   * cannot slow down the main filesystem.  The healthmon object can exist past
+>   * the end of the filesystem mount.
+> + *
+> + * Please see the xfs_healthmon.schema.json file for a description of the
+> + * format of the json events that are conveyed to userspace.
+>   */
 >  
-> @@ -5071,6 +5116,59 @@ and report what has been lost.
->  For media errors in blocks owned by files, parent pointers can be used to
->  construct file paths from inode numbers for user-friendly reporting.
+> +/* Allow this many events to build up in memory per healthmon fd. */
+> +#define XFS_HEALTHMON_MAX_EVENTS \
+> +		(32768 / sizeof(struct xfs_healthmon_event))
+> +
+> +struct flag_string {
+> +	unsigned int	mask;
+> +	const char	*str;
+> +};
+> +
+>  struct xfs_healthmon {
+> +	/* lock for mp and eventlist */
+> +	struct mutex			lock;
+> +
+> +	/* waiter for signalling the arrival of events */
+> +	struct wait_queue_head		wait;
+> +
+> +	/* list of event objects */
+> +	struct xfs_healthmon_event	*first_event;
+> +	struct xfs_healthmon_event	*last_event;
+> +
+>  	struct xfs_mount		*mp;
+> +
+> +	/* number of events */
+> +	unsigned int			events;
+> +
+> +	/*
+> +	 * Buffer for formatting events.  New buffer data are appended to the
+> +	 * end of the seqbuf, and outpos is used to determine where to start
+> +	 * a copy_iter.  Both are protected by inode_lock.
+> +	 */
+> +	struct seq_buf			outbuf;
+> +	size_t				outpos;
+> +
+> +	/* XFS_HEALTH_MONITOR_FMT_* */
+> +	uint8_t				format;
+> +
+> +	/* do we want all events? */
+> +	bool				verbose;
+> +
+> +	/* did we lose previous events? */
+> +	unsigned long long		lost_prev_event;
+> +
+> +	/* total counts of events observed and lost events */
+> +	unsigned long long		total_events;
+> +	unsigned long long		total_lost;
+>  };
 >  
-> +Autonomous Self Healing
-> +-----------------------
+> +static inline void xfs_healthmon_bump_events(struct xfs_healthmon *hm)
+> +{
+> +	hm->events++;
+> +	hm->total_events++;
+> +}
 > +
-> +When a filesystem mounts, the Linux kernel initiates a uevent describing the
-> +mount and the path to the data device.
-> +A udev rule determines the initial mountpoint from the data device path
-> +and starts a mount-specific ``xfs_healer`` service instance.
-> +The ``xfs_healer`` service opens the mountpoint and issues the
-> +XFS_IOC_HEALTH_MONITOR ioctl to open a special health monitoring file.
-> +After that is set up, the mountpoint is closed to avoid pinning the mount.
+> +static inline void xfs_healthmon_bump_lost(struct xfs_healthmon *hm)
+> +{
+> +	hm->lost_prev_event++;
+> +	hm->total_lost++;
+> +}
 > +
-> +The health monitoring file hooks certain points of the filesystem so that it
-> +may receive events about metadata health, filesystem shutdowns, media errors,
-> +file I/O errors, and unmounting of the filesystem.
-> +Events are queued up for each health monitor file and encoded into a
-> +``struct xfs_health_monitor_event`` object when the agent calls ``read()`` on
-> +the file.
-> +All health events are dispatched to a background threadpool to reduce stalls
-> +in the main event loop.
-> +Events can be logged into the system log for further analysis.
+> +/* Remove an event from the head of the list. */
+> +static inline int
+> +xfs_healthmon_free_head(
+> +	struct xfs_healthmon		*hm,
+> +	struct xfs_healthmon_event	*event)
+> +{
+> +	struct xfs_healthmon_event	*head;
 > +
-> +For metadata health events, the specific details are used to construct a call
-> +to the scrub ioctl.
-> +The filesystem mountpoint is reopened, and the kernel is called.
-> +If events are lost or the repairs fail, a full scan will be initiated by
-> +starting up an ``xfs_scrub@.service`` for the given mountpoint.
+> +	mutex_lock(&hm->lock);
+> +	head = hm->first_event;
+> +	if (head != event) {
+> +		ASSERT(hm->first_event == event);
+> +		mutex_unlock(&hm->lock);
+> +		return -EFSCORRUPTED;
+> +	}
 > +
-> +A filesystem shutdown causes all future repair work to cease, and an unmount
-> +causes the agent to exit.
+> +	if (hm->last_event == head)
+> +		hm->last_event = NULL;
+> +	hm->first_event = head->next;
+> +	hm->events--;
+> +	mutex_unlock(&hm->lock);
 > +
-> +**Question**: Why use a pseudofile and not use existing notification methods?
+> +	trace_xfs_healthmon_pop(hm->mp, head);
+> +	kfree(event);
+> +	return 0;
+> +}
 > +
-> +*Answer*: The pseudofile is a private filesystem interface only available to
-> +processes with the CAP_SYS_ADMIN priviledge.
-> +Being private gives the kernel and ``xfs_healer`` the flexibility to change
-> +or update the event format in the future without worrying about backwards
-> +compatibility.
-> +Using existing notifications means that the event format would be frozen in
-> +public UAPI forever.
+> +/* Push an event onto the end of the list. */
+> +static inline void
+> +__xfs_healthmon_push(
+> +	struct xfs_healthmon		*hm,
+> +	struct xfs_healthmon_event	*event)
+> +{
+> +	if (!hm->first_event)
+> +		hm->first_event = event;
+> +	if (hm->last_event)
+> +		hm->last_event->next = event;
+> +	hm->last_event = event;
+> +	event->next = NULL;
+> +	xfs_healthmon_bump_events(hm);
+> +	wake_up(&hm->wait);
 > +
-> +The pseudofile can also accept ioctls, which gives ``xfs_healer`` a solid
-> +means to validate that prior to a repair, its reopened mountpoint is actually
-> +the same filesystem that is being monitored.
+> +	trace_xfs_healthmon_push(hm->mp, event);
+> +}
 > +
-> +**Future Work Question**: Should the healer daemon also register a dbus
-> +listener and publish events there?
+> +/* Push an event onto the end of the list if we're not full. */
+> +static inline int
+> +xfs_healthmon_push(
+> +	struct xfs_healthmon		*hm,
+> +	struct xfs_healthmon_event	*event)
+> +{
+> +	if (hm->events >= XFS_HEALTHMON_MAX_EVENTS) {
+> +		trace_xfs_healthmon_lost_event(hm->mp, hm->lost_prev_event);
 > +
-> +*Answer*: This is unclear -- if there's a demand for system monitoring daemons
-> +to consume this information and make decisions, then yes, this could be wired
-> +up in ``xfs_healer``.
-> +On the other hand, systemd is in the middle of a transition to varlink, so
-> +it makes more sense to wait and see what happens.
+> +		xfs_healthmon_bump_lost(hm);
+> +		return -ENOMEM;
+> +	}
 > +
->  7. Conclusion and Future Work
->  =============================
+> +	__xfs_healthmon_push(hm, event);
+> +	return 0;
+> +}
+> +
+> +/* Create a new event or record that we failed. */
+> +static struct xfs_healthmon_event *
+> +xfs_healthmon_alloc(
+> +	struct xfs_healthmon		*hm,
+> +	enum xfs_healthmon_type		type,
+> +	enum xfs_healthmon_domain	domain)
+> +{
+> +	struct timespec64		now;
+> +	struct xfs_healthmon_event	*event;
+> +
+> +	event = kzalloc(sizeof(*event), GFP_NOFS);
+> +	if (!event) {
+> +		trace_xfs_healthmon_lost_event(hm->mp, hm->lost_prev_event);
+> +
+> +		xfs_healthmon_bump_lost(hm);
+> +		return NULL;
+> +	}
+> +
+> +	event->type = type;
+> +	event->domain = domain;
+> +	ktime_get_coarse_real_ts64(&now);
+> +	event->time_ns = (now.tv_sec * NSEC_PER_SEC) + now.tv_nsec;
+> +
+> +	return event;
+> +}
+> +
+> +/*
+> + * Before we accept an event notification from a live update hook, we need to
+> + * clear out any previously lost events.
+> + */
+> +static inline int
+> +xfs_healthmon_start_live_update(
+> +	struct xfs_healthmon		*hm)
+> +{
+> +	struct xfs_healthmon_event	*event;
+> +
+> +	/* If the queue is already full.... */
+> +	if (hm->events >= XFS_HEALTHMON_MAX_EVENTS) {
+> +		trace_xfs_healthmon_lost_event(hm->mp, hm->lost_prev_event);
+> +
+> +		if (hm->last_event &&
+> +		    hm->last_event->type == XFS_HEALTHMON_LOST) {
+> +			/*
+> +			 * ...and the last event notes lost events, then add
+> +			 * the number of events we already lost, plus one for
+> +			 * this event that we're about to lose.
+> +			 */
+> +			hm->last_event->lostcount += hm->lost_prev_event + 1;
+> +			hm->lost_prev_event = 0;
+> +		} else {
+> +			/*
+> +			 * ...try to create a new lost event.  Add the number
+> +			 * of events we previously lost, plus one for this
+> +			 * event.
+> +			 */
+> +			event = xfs_healthmon_alloc(hm, XFS_HEALTHMON_LOST,
+> +					XFS_HEALTHMON_MOUNT);
+> +			if (!event) {
+> +				xfs_healthmon_bump_lost(hm);
+> +				return -ENOMEM;
+> +			}
+> +			event->lostcount = hm->lost_prev_event + 1;
+> +			hm->lost_prev_event = 0;
+> +
+> +			__xfs_healthmon_push(hm, event);
+> +		}
+> +
+> +		return -ENOSPC;
+> +	}
+> +
+> +	/* If we lost an event in the past, but the queue isn't yet full... */
+> +	if (hm->lost_prev_event) {
+> +		/*
+> +		 * ...try to create a new lost event.  Add the number of events
+> +		 * we previously lost, plus one for this event.
+> +		 */
+> +		event = xfs_healthmon_alloc(hm, XFS_HEALTHMON_LOST,
+> +				XFS_HEALTHMON_MOUNT);
+> +		if (!event) {
+> +			xfs_healthmon_bump_lost(hm);
+> +			return -ENOMEM;
+> +		}
+> +		event->lostcount = hm->lost_prev_event;
+> +		hm->lost_prev_event = 0;
+> +
+> +		/*
+> +		 * If adding this lost event pushes us over the limit, we're
+> +		 * going to lose the current event.  Note that in the lost
+> +		 * event count too.
+> +		 */
+> +		if (hm->events == XFS_HEALTHMON_MAX_EVENTS - 1)
+> +			event->lostcount++;
+> +
+> +		__xfs_healthmon_push(hm, event);
+> +		if (hm->events >= XFS_HEALTHMON_MAX_EVENTS) {
+> +			trace_xfs_healthmon_lost_event(hm->mp,
+> +					hm->lost_prev_event);
+> +			return -ENOSPC;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * The queue is not full and it is not currently the case that events
+> +	 * were lost.
+> +	 */
+> +	return 0;
+> +}
+> +
+> +/* Render the health update type as a string. */
+> +STATIC const char *
+> +xfs_healthmon_typestring(
+> +	const struct xfs_healthmon_event	*event)
+> +{
+> +	static const char *type_strings[] = {
+> +		[XFS_HEALTHMON_RUNNING]		= "running",
+> +		[XFS_HEALTHMON_LOST]		= "lost",
+> +	};
+> +
+> +	if (event->type >= ARRAY_SIZE(type_strings))
+> +		return "?";
+> +
+> +	return type_strings[event->type];
+> +}
+> +
+> +/* Render the health domain as a string. */
+> +STATIC const char *
+> +xfs_healthmon_domstring(
+> +	const struct xfs_healthmon_event	*event)
+> +{
+> +	static const char *dom_strings[] = {
+> +		[XFS_HEALTHMON_MOUNT]		= "mount",
+> +	};
+> +
+> +	if (event->domain >= ARRAY_SIZE(dom_strings))
+> +		return "?";
+> +
+> +	return dom_strings[event->domain];
+> +}
+> +
+> +/* Convert a flags bitmap into a jsonable string. */
+> +static inline int
+> +xfs_healthmon_format_flags(
+> +	struct seq_buf			*outbuf,
+> +	const struct flag_string	*strings,
+> +	size_t				nr_strings,
+> +	unsigned int			flags)
+> +{
+> +	const struct flag_string	*p;
+> +	ssize_t				ret;
+> +	unsigned int			i;
+> +	bool				first = true;
+> +
+> +	for (i = 0, p = strings; i < nr_strings; i++, p++) {
+> +		if (!(p->mask & flags))
+> +			continue;
+> +
+> +		ret = seq_buf_printf(outbuf, "%s\"%s\"",
+> +				first ? "" : ", ", p->str);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		first = false;
+> +		flags &= ~p->mask;
+> +	}
+> +
+> +	for (i = 0; flags != 0 && i < sizeof(flags) * NBBY; i++) {
+> +		if (!(flags & (1U << i)))
+> +			continue;
+> +
+> +		/* json doesn't support hexadecimal notation */
+> +		ret = seq_buf_printf(outbuf, "%s%u",
+> +				first ? "" : ", ", (1U << i));
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		first = false;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/* Convert the event mask into a jsonable string. */
+> +static inline int
+> +__xfs_healthmon_format_mask(
+> +	struct seq_buf			*outbuf,
+> +	const char			*descr,
+> +	const struct flag_string	*strings,
+> +	size_t				nr_strings,
+> +	unsigned int			mask)
+> +{
+> +	ssize_t				ret;
+> +
+> +	ret = seq_buf_printf(outbuf, "  \"%s\":  [", descr);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = xfs_healthmon_format_flags(outbuf, strings, nr_strings, mask);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return seq_buf_printf(outbuf, "],\n");
+> +}
+> +
+> +#define xfs_healthmon_format_mask(o, d, s, m) \
+> +	__xfs_healthmon_format_mask((o), (d), (s), ARRAY_SIZE(s), (m))
+> +
+> +static inline void
+> +xfs_healthmon_reset_outbuf(
+> +	struct xfs_healthmon		*hm)
+> +{
+> +	hm->outpos = 0;
+> +	seq_buf_clear(&hm->outbuf);
+> +}
+> +
+> +/* Render lost event mask as a string set */
+> +static int
+> +xfs_healthmon_format_lost(
+> +	struct seq_buf			*outbuf,
+> +	const struct xfs_healthmon_event *event)
+> +{
+> +	return seq_buf_printf(outbuf, "  \"count\":      %llu,\n",
+> +			event->lostcount);
+> +}
+> +
+> +/*
+> + * Format an event into json.  Returns 0 if we formatted the event.  If
+> + * formatting the event overflows the buffer, returns -1 with the seqbuf len
+> + * unchanged.
+> + */
+> +STATIC int
+> +xfs_healthmon_format_json(
+> +	struct xfs_healthmon		*hm,
+> +	const struct xfs_healthmon_event *event)
+> +{
+> +	struct seq_buf			*outbuf = &hm->outbuf;
+> +	size_t				old_seqlen = outbuf->len;
+> +	int				ret;
+> +
+> +	trace_xfs_healthmon_format(hm->mp, event);
+> +
+> +	ret = seq_buf_printf(outbuf, "{\n");
+> +	if (ret < 0)
+> +		goto overrun;
+> +
+> +	ret = seq_buf_printf(outbuf, "  \"domain\":     \"%s\",\n",
+> +			xfs_healthmon_domstring(event));
+> +	if (ret < 0)
+> +		goto overrun;
+> +
+> +	ret = seq_buf_printf(outbuf, "  \"type\":       \"%s\",\n",
+> +			xfs_healthmon_typestring(event));
+> +	if (ret < 0)
+> +		goto overrun;
+> +
+> +	switch (event->domain) {
+> +	case XFS_HEALTHMON_MOUNT:
+> +		switch (event->type) {
+> +		case XFS_HEALTHMON_RUNNING:
+> +			/* nothing to format */
+> +			break;
+> +		case XFS_HEALTHMON_LOST:
+> +			ret = xfs_healthmon_format_lost(outbuf, event);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +		break;
+> +	}
+> +	if (ret < 0)
+> +		goto overrun;
+> +
+> +	/* The last element in the json must not have a trailing comma. */
+> +	ret = seq_buf_printf(outbuf, "  \"time_ns\":    %llu\n",
+> +			event->time_ns);
+> +	if (ret < 0)
+> +		goto overrun;
+> +
+> +	ret = seq_buf_printf(outbuf, "}\n");
+> +	if (ret < 0)
+> +		goto overrun;
+> +
+> +	ASSERT(!seq_buf_has_overflowed(outbuf));
+> +	return 0;
+> +overrun:
+> +	/*
+> +	 * We overflowed the buffer and could not format the event.  Reset the
+> +	 * seqbuf and tell the caller not to delete the event.
+> +	 */
+> +	trace_xfs_healthmon_format_overflow(hm->mp, event);
+> +	outbuf->len = old_seqlen;
+> +	return -1;
+> +}
+> +
+> +static const unsigned int domain_map[] = {
+> +	[XFS_HEALTHMON_MOUNT]		= XFS_HEALTH_MONITOR_DOMAIN_MOUNT,
+> +};
+> +
+> +static const unsigned int type_map[] = {
+> +	[XFS_HEALTHMON_RUNNING]		= XFS_HEALTH_MONITOR_TYPE_RUNNING,
+> +	[XFS_HEALTHMON_LOST]		= XFS_HEALTH_MONITOR_TYPE_LOST,
+> +};
+> +
+> +/* Render event as a C structure */
+> +STATIC int
+> +xfs_healthmon_format_cstruct(
+> +	struct xfs_healthmon		*hm,
+> +	const struct xfs_healthmon_event *event)
+> +{
+> +	struct xfs_health_monitor_event	hme = {
+> +		.time_ns		= event->time_ns,
+> +	};
+> +	struct seq_buf			*outbuf = &hm->outbuf;
+> +	size_t				old_seqlen = outbuf->len;
+> +	int				ret;
+> +
+> +	trace_xfs_healthmon_format(hm->mp, event);
+> +
+> +	if (event->domain < 0 || event->domain >= ARRAY_SIZE(domain_map) ||
+> +	    event->type < 0   || event->type >= ARRAY_SIZE(type_map))
+> +		return -EFSCORRUPTED;
+> +
+> +	hme.domain = domain_map[event->domain];
+> +	hme.type = type_map[event->type];
+> +
+> +	/* fill in the event-specific details */
+> +	switch (event->domain) {
+> +	case XFS_HEALTHMON_MOUNT:
+> +		switch (event->type) {
+> +		case XFS_HEALTHMON_LOST:
+> +			hme.e.lost.count = event->lostcount;
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	ret = seq_buf_putmem(outbuf, &hme, sizeof(hme));
+> +	if (ret < 0) {
+> +		/*
+> +		 * We overflowed the buffer and could not format the event.
+> +		 * Reset the seqbuf and tell the caller not to delete the
+> +		 * event.
+> +		 */
+> +		trace_xfs_healthmon_format_overflow(hm->mp, event);
+> +		outbuf->len = old_seqlen;
+> +		return -1;
+> +	}
+> +
+> +	ASSERT(!seq_buf_has_overflowed(outbuf));
+> +	return 0;
+> +}
+> +
+> +/* How many bytes are waiting in the outbuf to be copied? */
+> +static inline size_t
+> +xfs_healthmon_outbuf_bytes(
+> +	struct xfs_healthmon	*hm)
+> +{
+> +	unsigned int		used = seq_buf_used(&hm->outbuf);
+> +
+> +	if (used > hm->outpos)
+> +		return used - hm->outpos;
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Do we have something for userspace to do?  This can mean unmount events,
+> + * events pending in the queue, or pending bytes in the outbuf.
+> + */
+> +static inline bool
+> +xfs_healthmon_has_eventdata(
+> +	struct xfs_healthmon	*hm)
+> +{
+> +	return hm->events > 0 || xfs_healthmon_outbuf_bytes(hm) > 0;
+> +}
+> +
+> +/* Try to copy the rest of the outbuf to the iov iter. */
+> +STATIC ssize_t
+> +xfs_healthmon_copybuf(
+> +	struct xfs_healthmon	*hm,
+> +	struct iov_iter		*to)
+> +{
+> +	size_t			to_copy;
+> +	size_t			w = 0;
+> +
+> +	trace_xfs_healthmon_copybuf(hm->mp, to, &hm->outbuf, hm->outpos);
+> +
+> +	to_copy = xfs_healthmon_outbuf_bytes(hm);
+> +	if (to_copy) {
+> +		w = copy_to_iter(hm->outbuf.buffer + hm->outpos, to_copy, to);
+> +		if (!w)
+> +			return -EFAULT;
+> +
+> +		hm->outpos += w;
+> +	}
+> +
+> +	/*
+> +	 * Nothing left to copy?  Reset the seqbuf pointers and outbuf to the
+> +	 * start since there's no live data in the buffer.
+> +	 */
+> +	if (xfs_healthmon_outbuf_bytes(hm) == 0)
+> +		xfs_healthmon_reset_outbuf(hm);
+> +	return w;
+> +}
+> +
+> +/*
+> + * See if there's an event waiting for us.  If the fs is no longer mounted,
+> + * don't bother sending any more events.
+> + */
+> +static inline struct xfs_healthmon_event *
+> +xfs_healthmon_peek(
+> +	struct xfs_healthmon	*hm)
+> +{
+> +	struct xfs_healthmon_event *event;
+> +
+> +	mutex_lock(&hm->lock);
+> +	if (hm->mp)
+> +		event = hm->first_event;
+> +	else
+> +		event = NULL;
+> +	mutex_unlock(&hm->lock);
+> +	return event;
+> +}
+> +
+>  /*
+>   * Convey queued event data to userspace.  First copy any remaining bytes in
+>   * the outbuf, then format the oldest event into the outbuf and copy that too.
+> @@ -55,7 +601,125 @@ xfs_healthmon_read_iter(
+>  	struct kiocb		*iocb,
+>  	struct iov_iter		*to)
+>  {
+> -	return -EIO;
+> +	struct file		*file = iocb->ki_filp;
+> +	struct inode		*inode = file_inode(file);
+> +	struct xfs_healthmon	*hm = file->private_data;
+> +	struct xfs_healthmon_event *event;
+> +	size_t			copied = 0;
+> +	ssize_t			ret = 0;
+> +
+> +	/* Wait for data to become available */
+> +	if (!(file->f_flags & O_NONBLOCK)) {
+> +		ret = wait_event_interruptible(hm->wait,
+> +				xfs_healthmon_has_eventdata(hm));
+> +		if (ret)
+> +			return ret;
+> +	} else if (!xfs_healthmon_has_eventdata(hm)) {
+> +		return -EAGAIN;
+> +	}
+> +
+> +	/* Allocate formatting buffer up to 64k if necessary */
+> +	if (hm->outbuf.size == 0) {
+> +		void		*outbuf;
+> +		size_t		bufsize = min(65536, max(PAGE_SIZE,
+> +							 iov_iter_count(to)));
+> +
+> +		outbuf = kzalloc(bufsize, GFP_KERNEL);
+> +		if (!outbuf) {
+> +			bufsize = PAGE_SIZE;
+> +			outbuf = kzalloc(bufsize, GFP_KERNEL);
+> +			if (!outbuf)
+> +				return -ENOMEM;
+> +		}
+> +
+> +		inode_lock(inode);
+> +		if (hm->outbuf.size == 0) {
+> +			seq_buf_init(&hm->outbuf, outbuf, bufsize);
+> +			hm->outpos = 0;
+> +		} else {
+> +			kfree(outbuf);
+> +		}
+> +	} else {
+> +		inode_lock(inode);
+> +	}
+> +
+> +	trace_xfs_healthmon_read_start(hm->mp, hm->events, hm->lost_prev_event);
+> +
+> +	/*
+> +	 * If there's anything left in the seqbuf, copy that before formatting
+> +	 * more events.
+> +	 */
+> +	ret = xfs_healthmon_copybuf(hm, to);
+> +	if (ret < 0)
+> +		goto out_unlock;
+> +	copied += ret;
+> +
+> +	while (iov_iter_count(to) > 0) {
+> +		/* Format the next events into the outbuf until it's full. */
+> +		while ((event = xfs_healthmon_peek(hm)) != NULL) {
+> +			switch (hm->format) {
+> +			case XFS_HEALTH_MONITOR_FMT_JSON:
+> +				ret = xfs_healthmon_format_json(hm, event);
+> +				break;
+> +			case XFS_HEALTH_MONITOR_FMT_CSTRUCT:
+> +				ret = xfs_healthmon_format_cstruct(hm, event);
+> +				break;
+> +			default:
+> +				ret = -EINVAL;
+> +				goto out_unlock;
+> +			}
+> +			if (ret < 0)
+> +				break;
+> +			ret = xfs_healthmon_free_head(hm, event);
+> +			if (ret)
+> +				goto out_unlock;
+> +		}
+> +
+> +		/* Copy it to userspace */
+> +		ret = xfs_healthmon_copybuf(hm, to);
+> +		if (ret <= 0)
+> +			break;
+> +
+> +		copied += ret;
+> +	}
+> +
+> +out_unlock:
+> +	trace_xfs_healthmon_read_finish(hm->mp, hm->events, hm->lost_prev_event);
+> +	inode_unlock(inode);
+> +	return copied ?: ret;
+> +}
+> +
+> +/* Poll for available events. */
+> +STATIC __poll_t
+> +xfs_healthmon_poll(
+> +	struct file			*file,
+> +	struct poll_table_struct	*wait)
+> +{
+> +	struct xfs_healthmon		*hm = file->private_data;
+> +	__poll_t			mask = 0;
+> +
+> +	poll_wait(file, &hm->wait, wait);
+> +
+> +	if (xfs_healthmon_has_eventdata(hm))
+> +		mask |= EPOLLIN;
+> +	return mask;
+> +}
+> +
+> +/* Free all events */
+> +STATIC void
+> +xfs_healthmon_free_events(
+> +	struct xfs_healthmon		*hm)
+> +{
+> +	struct xfs_healthmon_event	*event, *next;
+> +
+> +	event = hm->first_event;
+> +	while (event != NULL) {
+> +		trace_xfs_healthmon_drop(hm->mp, event);
+> +		next = event->next;
+> +		kfree(event);
+> +		event = next;
+> +	}
+> +	hm->first_event = hm->last_event = NULL;
+>  }
 >  
+>  /* Free the health monitoring information. */
+> @@ -66,6 +730,14 @@ xfs_healthmon_release(
+>  {
+>  	struct xfs_healthmon	*hm = file->private_data;
+>  
+> +	trace_xfs_healthmon_release(hm->mp, hm->events, hm->lost_prev_event);
+> +
+> +	wake_up_all(&hm->wait);
+> +
+> +	mutex_destroy(&hm->lock);
+> +	xfs_healthmon_free_events(hm);
+> +	if (hm->outbuf.size)
+> +		kfree(hm->outbuf.buffer);
+>  	kfree(hm);
+>  
+>  	return 0;
+> @@ -76,9 +748,10 @@ static inline bool
+>  xfs_healthmon_validate(
+>  	const struct xfs_health_monitor	*hmo)
+>  {
+> -	if (hmo->flags)
+> +	if (hmo->flags & ~XFS_HEALTH_MONITOR_ALL)
+>  		return false;
+> -	if (hmo->format)
+> +	if (hmo->format != XFS_HEALTH_MONITOR_FMT_JSON &&
+> +	    hmo->format != XFS_HEALTH_MONITOR_FMT_CSTRUCT)
+>  		return false;
+>  	if (memchr_inv(&hmo->pad1, 0, sizeof(hmo->pad1)))
+>  		return false;
+> @@ -89,6 +762,19 @@ xfs_healthmon_validate(
+>  
+>  /* Emit some data about the health monitoring fd. */
+>  #ifdef CONFIG_PROC_FS
+> +static const char *
+> +xfs_healthmon_format_string(const struct xfs_healthmon *hm)
+> +{
+> +	switch (hm->format) {
+> +	case XFS_HEALTH_MONITOR_FMT_JSON:
+> +		return "json";
+> +	case XFS_HEALTH_MONITOR_FMT_CSTRUCT:
+> +		return "blob";
+> +	}
+> +
+> +	return "";
+> +}
+> +
+>  static void
+>  xfs_healthmon_show_fdinfo(
+>  	struct seq_file		*m,
+> @@ -96,8 +782,13 @@ xfs_healthmon_show_fdinfo(
+>  {
+>  	struct xfs_healthmon	*hm = file->private_data;
+>  
+> -	seq_printf(m, "state:\talive\ndev:\t%s\n",
+> -			hm->mp->m_super->s_id);
+> +	mutex_lock(&hm->lock);
+> +	seq_printf(m, "state:\talive\ndev:\t%s\nformat:\t%s\nevents:\t%llu\nlost:\t%llu\n",
+> +			hm->mp->m_super->s_id,
+> +			xfs_healthmon_format_string(hm),
+> +			hm->total_events,
+> +			hm->total_lost);
+> +	mutex_unlock(&hm->lock);
+>  }
+>  #endif
+>  
+> @@ -107,6 +798,7 @@ static const struct file_operations xfs_healthmon_fops = {
+>  	.show_fdinfo	= xfs_healthmon_show_fdinfo,
+>  #endif
+>  	.read_iter	= xfs_healthmon_read_iter,
+> +	.poll		= xfs_healthmon_poll,
+>  	.release	= xfs_healthmon_release,
+>  };
+>  
+> @@ -121,6 +813,7 @@ xfs_ioc_health_monitor(
+>  {
+>  	struct xfs_health_monitor	hmo;
+>  	struct xfs_healthmon		*hm;
+> +	struct xfs_healthmon_event	*event;
+>  	int				fd;
+>  	int				ret;
+>  
+> @@ -137,6 +830,23 @@ xfs_ioc_health_monitor(
+>  	if (!hm)
+>  		return -ENOMEM;
+>  	hm->mp = mp;
+> +	hm->format = hmo.format;
+> +
+> +	seq_buf_init(&hm->outbuf, NULL, 0);
+> +	mutex_init(&hm->lock);
+> +	init_waitqueue_head(&hm->wait);
+> +
+> +	if (hmo.flags & XFS_HEALTH_MONITOR_VERBOSE)
+> +		hm->verbose = true;
+> +
+> +	/* Queue up the first event that lets the client know we're running. */
+> +	event = xfs_healthmon_alloc(hm, XFS_HEALTHMON_RUNNING,
+> +			XFS_HEALTHMON_MOUNT);
+> +	if (!event) {
+> +		ret = -ENOMEM;
+> +		goto out_mutex;
+> +	}
+> +	__xfs_healthmon_push(hm, event);
+>  
+>  	/*
+>  	 * Create the anonymous file.  If it succeeds, the file owns hm and
+> @@ -146,12 +856,16 @@ xfs_ioc_health_monitor(
+>  			O_CLOEXEC | O_RDONLY);
+>  	if (fd < 0) {
+>  		ret = fd;
+> -		goto out_hm;
+> +		goto out_mutex;
+>  	}
+>  
+> +	trace_xfs_healthmon_create(mp, hmo.flags, hmo.format);
+> +
+>  	return fd;
+>  
+> -out_hm:
+> +out_mutex:
+> +	mutex_destroy(&hm->lock);
+> +	xfs_healthmon_free_events(hm);
+>  	kfree(hm);
+>  	return ret;
+>  }
+> diff --git a/fs/xfs/xfs_trace.c b/fs/xfs/xfs_trace.c
+> index a60556dbd172ee..d42b864a3837a2 100644
+> --- a/fs/xfs/xfs_trace.c
+> +++ b/fs/xfs/xfs_trace.c
+> @@ -51,6 +51,8 @@
+>  #include "xfs_rtgroup.h"
+>  #include "xfs_zone_alloc.h"
+>  #include "xfs_zone_priv.h"
+> +#include "xfs_health.h"
+> +#include "xfs_healthmon.h"
+>  
+>  /*
+>   * We include this last to have the helpers above available for the trace
+> diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+> index f3f3436d60a940..f6a1fb46a1d6c9 100644
+> --- a/lib/seq_buf.c
+> +++ b/lib/seq_buf.c
+> @@ -245,6 +245,7 @@ int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len)
+>  	seq_buf_set_overflow(s);
+>  	return -1;
+>  }
+> +EXPORT_SYMBOL_GPL(seq_buf_putmem);
+>  
+>  #define MAX_MEMHEX_BYTES	8U
+>  #define HEX_CHARS		(MAX_MEMHEX_BYTES*2 + 1)
 > 
 > 
 
