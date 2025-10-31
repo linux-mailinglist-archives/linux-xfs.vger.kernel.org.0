@@ -1,37 +1,37 @@
-Return-Path: <linux-xfs+bounces-27191-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27192-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18ED0C23E2B
-	for <lists+linux-xfs@lfdr.de>; Fri, 31 Oct 2025 09:45:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 055D1C23E1D
+	for <lists+linux-xfs@lfdr.de>; Fri, 31 Oct 2025 09:45:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 295754E7FF7
-	for <lists+linux-xfs@lfdr.de>; Fri, 31 Oct 2025 08:45:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4AA3040329F
+	for <lists+linux-xfs@lfdr.de>; Fri, 31 Oct 2025 08:45:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357A83112D2;
-	Fri, 31 Oct 2025 08:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 667163148AD;
+	Fri, 31 Oct 2025 08:45:17 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EE92D7D2E;
-	Fri, 31 Oct 2025 08:45:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A243531352A;
+	Fri, 31 Oct 2025 08:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761900310; cv=none; b=cyVPHUMO0Q9CIzYO5QP556hFnMpg2ebjfn9d7/zNQQ+PVb3HLipBafut6C0eztNfGJQ3dWbvW8OlBZTEUQ+Ef3JY9WpNfZDGQkph9NC8Moj0EFz9aj+QF4NwBjDwZfO4Bi4zuSwXXQQanBe4XE/gLaY7bEZUnqQpL6Siudo/gxk=
+	t=1761900317; cv=none; b=YF22K+5GuKZz7FV5Tfx9IChQAjxu7WueH0vDxtxrWZE+MD0ekaSvWbq7N0aSL/uZ7q/EvRSRM6RtNL3OuN5FQYvvpHpSDjZnOjWqmCNC6d+9PEFYt3qp5I/xo+c+nVQSZjj9ufOoLpl+K76SIwUktx//5GC7r3KQTMhN8v2Sv4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761900310; c=relaxed/simple;
+	s=arc-20240116; t=1761900317; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UJTwVnhqFgxHb0GO5MZV6HE7oRvYg8+M8HYWggoMkW03Yodn7+KeIFV5tozL4Thhrox1lHSA8zSbS0JZd2U1QOit4SDMFSKDPW6CY/qAwicxxTJlglg6MZ3fSpzdfVE0yolt4m/IHnlRrSBKoLb7Gt7mSkk8mY68yyfPIezlgp0=
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjN0s1c8fIQKyqK5vrSVydAMi0c7hv3h7inqKuPOSOp+3f37876BRVTYSgL5ykm5angoBSFLRWbekzHfeBIh3Cf2HTgiZPsWcI1VDdpiG4wNapIArw+GLdViLx+qMw8T/98lpjs2fLIQoWS9UR58Ph1VXarwe2AaV63HFPQ/Vbs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 605EC227A88; Fri, 31 Oct 2025 09:44:56 +0100 (CET)
-Date: Fri, 31 Oct 2025 09:44:56 +0100
+	id D4F97227A88; Fri, 31 Oct 2025 09:45:10 +0100 (CET)
+Date: Fri, 31 Oct 2025 09:45:10 +0100
 From: Christoph Hellwig <hch@lst.de>
 To: Damien Le Moal <dlemoal@kernel.org>
 Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
@@ -43,9 +43,9 @@ Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
 	linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org,
 	Carlos Maiolino <cem@kernel.org>, linux-btrfs@vger.kernel.org,
 	David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH 01/13] block: freeze queue when updating zone resources
-Message-ID: <20251031084456.GA8798@lst.de>
-References: <20251031061307.185513-1-dlemoal@kernel.org> <20251031061307.185513-2-dlemoal@kernel.org>
+Subject: Re: [PATCH 02/13] block: cleanup blkdev_report_zones()
+Message-ID: <20251031084510.GB8798@lst.de>
+References: <20251031061307.185513-1-dlemoal@kernel.org> <20251031061307.185513-3-dlemoal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251031061307.185513-2-dlemoal@kernel.org>
+In-Reply-To: <20251031061307.185513-3-dlemoal@kernel.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
 Looks good:
