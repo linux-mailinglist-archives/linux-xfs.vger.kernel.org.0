@@ -1,49 +1,50 @@
-Return-Path: <linux-xfs+bounces-27308-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27301-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66FF3C2BE45
-	for <lists+linux-xfs@lfdr.de>; Mon, 03 Nov 2025 13:59:53 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id B75C8C2BF20
+	for <lists+linux-xfs@lfdr.de>; Mon, 03 Nov 2025 14:06:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id C0A95348DAF
-	for <lists+linux-xfs@lfdr.de>; Mon,  3 Nov 2025 12:59:46 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A6A414F6B16
+	for <lists+linux-xfs@lfdr.de>; Mon,  3 Nov 2025 12:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC01319862;
-	Mon,  3 Nov 2025 12:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F1A314A63;
+	Mon,  3 Nov 2025 12:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZy46lcd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrenRr+X"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2DF316900;
-	Mon,  3 Nov 2025 12:53:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A2230DD23;
+	Mon,  3 Nov 2025 12:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762174426; cv=none; b=t4Bo9JmaBogps6Kff72DjzvbiXl9kepFmUhalNs57JNKw+JTgXe8KOVG+WicAOPNlG5/Wr73KbvVwazwsuEPpJ3+unHjry1amqc3HRDr+pw20YygnNm9ZbAY9KrmAvhZiTzIeclIIu2wzygNvO4sNXYX9avL1JPq0xeBST8yZN0=
+	t=1762174401; cv=none; b=N+zgiN7awBgf4Sw2dyQ8NfB2y/JW8dbTCcDWgbFKmtp2TuDDq5fNJjchun5ffc9DysGD9KhUEFOHqXPDbiaMp/xml+Ye/vIclru/6ANo75Rhl6b5+veXCszp8aeS8hsN/4bUiXDcz5JfgocozgvhDG7bHTQUYndgy4l+980/BeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762174426; c=relaxed/simple;
-	bh=8uFhmfmnSTsd3LwYNioQRWlGjzSH6flkvXdmZ7xJmTo=;
+	s=arc-20240116; t=1762174401; c=relaxed/simple;
+	bh=9qqxYTmkti/XE0jnEtcrEK19pEka9QAsFL9WwL3RtFA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EbsEUkDF2UWRLq76QZq2IUIpLp/r0e0/Jd49uncc3NQ0d8/ldb+CBZgejQQ1aigxm7aZZMIbltepfeHpTkLeXZxqX4yzypemScabHMG34+Y6bqObMkBr8xJ7D3rKZ1efbgC7fTc+mwIJoC8gStjH6n/RjF+OtUhbIU2S29yz1xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZy46lcd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55065C4CEFD;
-	Mon,  3 Nov 2025 12:53:42 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=aRcvTj4bKNNetJqxhjdKKtV/CbbQBbO1zwtjUAteLxSuXckiUgbsxMVuNiA0KZ7jL5NOiaFRfuERESmuzEGiHkNzuYTtF5CQk48BOwz+1XS6zIsmaWgedlpsZAqciAHCbDwY7v2sdKKCuRyWTpwtE275zriYF5u4AYZJUE7aBaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrenRr+X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7788CC113D0;
+	Mon,  3 Nov 2025 12:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762174425;
-	bh=8uFhmfmnSTsd3LwYNioQRWlGjzSH6flkvXdmZ7xJmTo=;
+	s=k20201202; t=1762174401;
+	bh=9qqxYTmkti/XE0jnEtcrEK19pEka9QAsFL9WwL3RtFA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UZy46lcdxkdwdD7k/LcTRSceh8zX3S3g9dEPASZINosJ0wq4VudvTign/zucCqkhO
-	 U/HumBS/ogNj0UAHdCoLb9SWwMDbvJiUqJ8hO/g+9Jl33NZ8GpH2NTc7ceqGdQoyPL
-	 BPnu3Vo2PbaZM+NhGNbw+pmP9m7Se+cKjl60VcJj3pVNEIroOY2e/vxdaRbxo2QCOJ
-	 svPO6nesEO007JYL9lchSAERwiMnJ1IrXaDZbqweDgnH60fyvX2q2RTIdJoz7WnpuL
-	 ocjZA5DIerFY00vxv4cwzrHI24HTV5WG+WPYwPB+Z3UDfFj4N3/nwKY+h+rBiy7m3/
-	 8VMAOXSqRHDbA==
+	b=RrenRr+XJKzgRoR5koPB8mOl8niSorSfWE2rhDQKP61xKieAMY7R3vk8HhbMufvuC
+	 pqBfIcSWqBXTIh0K/h8ZGbJpIRRqqkqKuHznR4dZPsCnikF4N1Y8eJBbMCT/zXjYyo
+	 nQHACA1REZ2EZ43WdYkWvfzCFUsIGNNC8yLpTKE+J/kQmSG6sy4Z6ZM+Mj4j2l3+wR
+	 obueKTS/lOCxF/x8GwDkGPWrP6HgsWozXgbIXea5okGx2aBHFpH+h8RaV4kg/n9rpx
+	 An8qlRKYxsAyUQLvEyIyswTSQTg6ChH6KM9tXitjJ3voO36tUJ1ZR2x9/8cXK0co5a
+	 qUaVpHIF7frSQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 03 Nov 2025 07:52:44 -0500
-Subject: [PATCH v4 16/17] nfsd: wire up GET_DIR_DELEGATION handling
+Date: Mon, 03 Nov 2025 07:52:37 -0500
+Subject: [PATCH v4 09/17] vfs: add struct createdata for passing arguments
+ to vfs_create()
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-dir-deleg-ro-v4-16-961b67adee89@kernel.org>
+Message-Id: <20251103-dir-deleg-ro-v4-9-961b67adee89@kernel.org>
 References: <20251103-dir-deleg-ro-v4-0-961b67adee89@kernel.org>
 In-Reply-To: <20251103-dir-deleg-ro-v4-0-961b67adee89@kernel.org>
 To: Miklos Szeredi <miklos@szeredi.hu>, 
@@ -83,202 +84,290 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-xfs@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5577; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=8uFhmfmnSTsd3LwYNioQRWlGjzSH6flkvXdmZ7xJmTo=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpCKWfuwFT2jEz8HsBpKAxWSpBqIDGBnPTtbdUR
- TefQwcfJUiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQilnwAKCRAADmhBGVaC
- FQblEAC1N4C5LWOgklJgo3ot9s4EGU4EZzaVsg1uSo1fQyE41EdTxffLfjU0Mo54CyLSD2CyjCo
- m94VupgYqRs+L04sCL0oC9qBh83+5VaHycbjcNa/sikzRU5Pe72iyBZR7xYtPvuLtyHZG3J84W2
- Jm0J0QQ1vJW7aD5PbDpmoPASR8LETzr3C1NZ4YdcpQCkb86/YSBRlsnospRJWG5zTSDUf48bw+F
- J/qtiqQgVj7Dhp4r673icKUWEmjp0C2D8UDwbHFo41FWeBM9SsABprwFNfQI3OyFZdvsCoKGLfa
- 8SpvDo7scukAdm0YhZtTolDqdyxiYu7FvCbkquRlkzTRNn9U2jYke/4ntIJOTKXHGCb5xf+IAod
- MiuBd2h+IsKFYAgo8HkEOMH5jJHCrXF33E2CyWulWiE1dGPUmGGarFPg2wPxN1zokh851CGNmpC
- zhIMjcy15rjMfmYet6UodM/bG1lZ089cj1x5MiaV+N3a1nAzW6XkOONj+KrSul5Fsl4JV/+Pdae
- dI0hrXO1pSl4I2sUkeHBo2UtBjqUnzEKRijCc89toa2MPnM4zvON2SV6f3uUU4XVncvMZwieDZE
- wK5VDB+OerbT5mXhiSGRv681eW6Mm6ImtoeZdL8alkvXJHVPIjDD6uw+8TYxTQM34UBm/VOioQX
- /TD/1O2IKWZX56g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9801; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=9qqxYTmkti/XE0jnEtcrEK19pEka9QAsFL9WwL3RtFA=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpCKWd0zceYSjAxUd98e/4woWPyTt40Dx58/xAi
+ xId39+B9iSJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQilnQAKCRAADmhBGVaC
+ FdPREADDxDX/Z+gC0PeTBwW7obHMQ82gbnNRawmHnk7XR+rkgF3F3DhgIgMOSZJHofm5DgHLnOu
+ uQeJyg3SprXBdGtRxGT3EUKXekftnh5w6aekLepb5IGmCmT0h9nefQhwQea3z76hIEgbN9w6XoI
+ MUWiH5/yWLUIgTDBk9V3MwGEV9p3xFu6LGL++ytXne9WlS7/CYw5Sc+cqK/NDIuMWgzUDkSNlQW
+ +goh0yGVkYDfCXYA4nNSxlRAr8svUFOuVpiUoS7uW0duLzJiHKruDIYAeov2MH3TPFMjry1+ujq
+ r2n4agesaIMsiB2hvG3F3QyNfUX7YsT7yTqM2YKi2WpLygW1UDzrJ4MM21A6h6ucJu6uhEZEJvn
+ E2Ao4kereQEcLzkmjrzOdlAFO4HvTGt3TmXY6IfNgaSqxuQdgR2pwsc7WLdtqo8kjZeRMTPrr3T
+ sx+kfsjbL+EMTRnAUd1gPIL7ojFbFeyasxEtWF5uI+Ne/PIVG3j98Nt7Hgpxp4Vz2OLoVg0FUa6
+ rzaCwhd2YppD6XSJ3Nu7XZA2NdloBF9P9Kk6Tjf2vJS8z+Sz+9Us3ZMIsq4vayunKxCz19FqoXj
+ n5aPOo2iyRnKzLT4R2KLxov6XDrj6caZkA4i0UlMhwB1Z96kuPYlv5oWn5FKxRzfVWhsGiYz5m9
+ 4EEW2SYvMbLFKqw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Add a new routine for acquiring a read delegation on a directory. These
-are recallable-only delegations with no support for CB_NOTIFY. That will
-be added in a later phase.
+vfs_create() has grown an uncomfortably long argument list, and a
+following patch will add another. Convert it to take a new struct
+createdata pointer and fix up the callers to pass one in.
 
-Since the same CB_RECALL/DELEGRETURN infrastructure is used for regular
-and directory delegations, a normal nfs4_delegation is used to represent
-a directory delegation.
-
-Reviewed-by: NeilBrown <neil@brown.name>
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4proc.c  |  22 +++++++++++-
- fs/nfsd/nfs4state.c | 100 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/state.h     |   5 +++
- 3 files changed, 126 insertions(+), 1 deletion(-)
+ fs/ecryptfs/inode.c      | 11 ++++++++---
+ fs/namei.c               | 33 ++++++++++++++++++++-------------
+ fs/nfsd/nfs3proc.c       |  9 ++++++++-
+ fs/nfsd/vfs.c            | 19 ++++++++++++-------
+ fs/open.c                |  9 ++++++---
+ fs/overlayfs/overlayfs.h |  7 ++++++-
+ fs/smb/server/vfs.c      |  9 +++++++--
+ include/linux/fs.h       | 13 +++++++++++--
+ 8 files changed, 78 insertions(+), 32 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index e466cf52d7d7e1a78c3a469613a85ab3546d6d17..517968dddf4a33651313658d300f9f929f83c5af 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2341,6 +2341,13 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
- 			 union nfsd4_op_u *u)
+diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+index 88631291b32535f623a3fbe4ea9b6ed48a306ca0..51accd166dbf515eb5221b6a39b204622a6b0f7c 100644
+--- a/fs/ecryptfs/inode.c
++++ b/fs/ecryptfs/inode.c
+@@ -187,9 +187,14 @@ ecryptfs_do_create(struct inode *directory_inode,
+ 	struct inode *inode;
+ 
+ 	rc = lock_parent(ecryptfs_dentry, &lower_dentry, &lower_dir);
+-	if (!rc)
+-		rc = vfs_create(&nop_mnt_idmap, lower_dir,
+-				lower_dentry, mode, true);
++	if (!rc) {
++		struct createdata args = { .idmap = &nop_mnt_idmap,
++					   .dir = lower_dir,
++					   .dentry = lower_dentry,
++					   .mode = mode,
++					   .excl = true };
++		rc = vfs_create(&args);
++	}
+ 	if (rc) {
+ 		printk(KERN_ERR "%s: Failure to create dentry in lower fs; "
+ 		       "rc = [%d]\n", __func__, rc);
+diff --git a/fs/namei.c b/fs/namei.c
+index f439429bdfa271ccc64c937771ef4175597feb53..fdf4e78cd041de8c564b7d1d89a46ba2aaf79d53 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3460,23 +3460,22 @@ static inline umode_t vfs_prepare_mode(struct mnt_idmap *idmap,
+ 
+ /**
+  * vfs_create - create new file
+- * @idmap:	idmap of the mount the inode was found from
+- * @dir:	inode of the parent directory
+- * @dentry:	dentry of the child file
+- * @mode:	mode of the child file
+- * @want_excl:	whether the file must not yet exist
++ * @args:	struct createdata describing create to be done
+  *
+  * Create a new file.
+  *
+  * If the inode has been found through an idmapped mount the idmap of
+- * the vfsmount must be passed through @idmap. This function will then take
+- * care to map the inode according to @idmap before checking permissions.
++ * the vfsmount must be passed through @args->idmap. This function will then take
++ * care to map the inode according to @args->idmap before checking permissions.
+  * On non-idmapped mounts or if permission checking is to be performed on the
+  * raw inode simply pass @nop_mnt_idmap.
+  */
+-int vfs_create(struct mnt_idmap *idmap, struct inode *dir,
+-	       struct dentry *dentry, umode_t mode, bool want_excl)
++int vfs_create(struct createdata *args)
  {
- 	struct nfsd4_get_dir_delegation *gdd = &u->get_dir_delegation;
-+	struct nfs4_delegation *dd;
-+	struct nfsd_file *nf;
-+	__be32 status;
-+
-+	status = nfsd_file_acquire_dir(rqstp, &cstate->current_fh, &nf);
-+	if (status != nfs_ok)
-+		return status;
++	struct mnt_idmap *idmap = args->idmap;
++	struct inode *dir = args->dir;
++	struct dentry *dentry = args->dentry;
++	umode_t mode = args->mode;
+ 	int error;
  
- 	/*
- 	 * RFC 8881, section 18.39.3 says:
-@@ -2354,7 +2361,20 @@ nfsd4_get_dir_delegation(struct svc_rqst *rqstp,
- 	 * return NFS4_OK with a non-fatal status of GDD4_UNAVAIL in this
- 	 * situation.
- 	 */
--	gdd->gddrnf_status = GDD4_UNAVAIL;
-+	dd = nfsd_get_dir_deleg(cstate, gdd, nf);
-+	nfsd_file_put(nf);
-+	if (IS_ERR(dd)) {
-+		int err = PTR_ERR(dd);
-+
-+		if (err != -EAGAIN)
-+			return nfserrno(err);
-+		gdd->gddrnf_status = GDD4_UNAVAIL;
-+		return nfs_ok;
-+	}
-+
-+	gdd->gddrnf_status = GDD4_OK;
-+	memcpy(&gdd->gddr_stateid, &dd->dl_stid.sc_stateid, sizeof(gdd->gddr_stateid));
-+	nfs4_put_stid(&dd->dl_stid);
- 	return nfs_ok;
- }
+ 	error = may_create(idmap, dir, dentry);
+@@ -3490,7 +3489,7 @@ int vfs_create(struct mnt_idmap *idmap, struct inode *dir,
+ 	error = security_inode_create(dir, dentry, mode);
+ 	if (error)
+ 		return error;
+-	error = dir->i_op->create(idmap, dir, dentry, mode, want_excl);
++	error = dir->i_op->create(idmap, dir, dentry, mode, args->excl);
+ 	if (!error)
+ 		fsnotify_create(dir, dentry);
+ 	return error;
+@@ -4382,12 +4381,20 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
  
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index da66798023aba4c36c38208cec7333db237e46e0..8f8c9385101e15b64883eabec71775f26b14f890 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -9347,3 +9347,103 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct dentry *dentry,
- 	nfs4_put_stid(&dp->dl_stid);
- 	return status;
- }
+ 	idmap = mnt_idmap(path.mnt);
+ 	switch (mode & S_IFMT) {
+-		case 0: case S_IFREG:
+-			error = vfs_create(idmap, path.dentry->d_inode,
+-					   dentry, mode, true);
++		case 0:
++		case S_IFREG:
++		{
++			struct createdata args = { .idmap = idmap,
++						   .dir = path.dentry->d_inode,
++						   .dentry = dentry,
++						   .mode = mode,
++						   .excl = true };
 +
-+/**
-+ * nfsd_get_dir_deleg - attempt to get a directory delegation
-+ * @cstate: compound state
-+ * @gdd: GET_DIR_DELEGATION arg/resp structure
-+ * @nf: nfsd_file opened on the directory
-+ *
-+ * Given a GET_DIR_DELEGATION request @gdd, attempt to acquire a delegation
-+ * on the directory to which @nf refers. Note that this does not set up any
-+ * sort of async notifications for the delegation.
-+ */
-+struct nfs4_delegation *
-+nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
-+		   struct nfsd4_get_dir_delegation *gdd,
-+		   struct nfsd_file *nf)
-+{
-+	struct nfs4_client *clp = cstate->clp;
-+	struct nfs4_delegation *dp;
-+	struct file_lease *fl;
-+	struct nfs4_file *fp, *rfp;
-+	int status = 0;
++			error = vfs_create(&args);
+ 			if (!error)
+ 				security_path_post_mknod(idmap, dentry);
+ 			break;
++		}
+ 		case S_IFCHR: case S_IFBLK:
+ 			error = vfs_mknod(idmap, path.dentry->d_inode,
+ 					  dentry, mode, new_decode_dev(dev));
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index b6d03e1ef5f7a5e8dd111b0d56c061f1e91abff7..dcd7de465e7e33d1c66ee0272c4f220d55e85928 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -258,6 +258,7 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	struct nfsd_attrs attrs = {
+ 		.na_iattr	= iap,
+ 	};
++	struct createdata cargs = { };
+ 	__u32 v_mtime, v_atime;
+ 	struct inode *inode;
+ 	__be32 status;
+@@ -344,7 +345,13 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	status = fh_fill_pre_attrs(fhp);
+ 	if (status != nfs_ok)
+ 		goto out;
+-	host_err = vfs_create(&nop_mnt_idmap, inode, child, iap->ia_mode, true);
 +
-+	fp = nfsd4_alloc_file();
-+	if (!fp)
-+		return ERR_PTR(-ENOMEM);
-+
-+	nfsd4_file_init(&cstate->current_fh, fp);
-+
-+	rfp = nfsd4_file_hash_insert(fp, &cstate->current_fh);
-+	if (unlikely(!rfp)) {
-+		put_nfs4_file(fp);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (rfp != fp) {
-+		put_nfs4_file(fp);
-+		fp = rfp;
-+	}
-+
-+	/* if this client already has one, return that it's unavailable */
-+	spin_lock(&state_lock);
-+	spin_lock(&fp->fi_lock);
-+	/* existing delegation? */
-+	if (nfs4_delegation_exists(clp, fp)) {
-+		status = -EAGAIN;
-+	} else if (!fp->fi_deleg_file) {
-+		fp->fi_deleg_file = nfsd_file_get(nf);
-+		fp->fi_delegees = 1;
-+	} else {
-+		++fp->fi_delegees;
-+	}
-+	spin_unlock(&fp->fi_lock);
-+	spin_unlock(&state_lock);
-+
-+	if (status) {
-+		put_nfs4_file(fp);
-+		return ERR_PTR(status);
-+	}
-+
-+	/* Try to set up the lease */
-+	status = -ENOMEM;
-+	dp = alloc_init_deleg(clp, fp, NULL, NFS4_OPEN_DELEGATE_READ);
-+	if (!dp)
-+		goto out_delegees;
-+
-+	fl = nfs4_alloc_init_lease(dp);
-+	if (!fl)
-+		goto out_put_stid;
-+
-+	status = kernel_setlease(nf->nf_file,
-+				 fl->c.flc_type, &fl, NULL);
-+	if (fl)
-+		locks_free_lease(fl);
-+	if (status)
-+		goto out_put_stid;
-+
-+	/*
-+	 * Now, try to hash it. This can fail if we race another nfsd task
-+	 * trying to set a delegation on the same file. If that happens,
-+	 * then just say UNAVAIL.
-+	 */
-+	spin_lock(&state_lock);
-+	spin_lock(&clp->cl_lock);
-+	spin_lock(&fp->fi_lock);
-+	status = hash_delegation_locked(dp, fp);
-+	spin_unlock(&fp->fi_lock);
-+	spin_unlock(&clp->cl_lock);
-+	spin_unlock(&state_lock);
-+
-+	if (!status)
-+		return dp;
-+
-+	/* Something failed. Drop the lease and clean up the stid */
-+	kernel_setlease(fp->fi_deleg_file->nf_file, F_UNLCK, NULL, (void **)&dp);
-+out_put_stid:
-+	nfs4_put_stid(&dp->dl_stid);
-+out_delegees:
-+	put_deleg_file(fp);
-+	return ERR_PTR(status);
-+}
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 1e736f4024263ffa9c93bcc9ec48f44566a8cc77..b052c1effdc5356487c610db9728df8ecfe851d4 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -867,4 +867,9 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
++	cargs.idmap = &nop_mnt_idmap;
++	cargs.dir = inode;
++	cargs.dentry = child;
++	cargs.mode = iap->ia_mode;
++	cargs.excl = true;
++	host_err = vfs_create(&cargs);
+ 	if (host_err < 0) {
+ 		status = nfserrno(host_err);
+ 		goto out;
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index c400ea94ff2e837fd59719bf2c4b79ef1d064743..e4ed1952f02c0a66c64528e59453cc9b2352c18f 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1527,11 +1527,12 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		   struct nfsd_attrs *attrs,
+ 		   int type, dev_t rdev, struct svc_fh *resfhp)
+ {
+-	struct dentry	*dentry, *dchild;
+-	struct inode	*dirp;
+-	struct iattr	*iap = attrs->na_iattr;
+-	__be32		err;
+-	int		host_err = 0;
++	struct dentry		*dentry, *dchild;
++	struct inode		*dirp;
++	struct iattr		*iap = attrs->na_iattr;
++	__be32			err;
++	int			host_err = 0;
++	struct createdata	cargs = { };
  
- extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
- 		struct dentry *dentry, struct nfs4_delegation **pdp);
+ 	dentry = fhp->fh_dentry;
+ 	dirp = d_inode(dentry);
+@@ -1552,8 +1553,12 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	err = 0;
+ 	switch (type) {
+ 	case S_IFREG:
+-		host_err = vfs_create(&nop_mnt_idmap, dirp, dchild,
+-				      iap->ia_mode, true);
++		cargs.idmap = &nop_mnt_idmap;
++		cargs.dir = dirp;
++		cargs.dentry = dchild;
++		cargs.mode = iap->ia_mode;
++		cargs.excl = true;
++		host_err = vfs_create(&cargs);
+ 		if (!host_err)
+ 			nfsd_check_ignore_resizing(iap);
+ 		break;
+diff --git a/fs/open.c b/fs/open.c
+index fdaa6f08f6f4cac5c2fefd3eafa5e430e51f3979..006cc2aeb1fbbb3db48b32db798108da120f75c2 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1164,6 +1164,11 @@ struct file *dentry_open_nonotify(const struct path *path, int flags,
+ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+ 			   const struct cred *cred)
+ {
++	struct createdata cargs = { .idmap = mnt_idmap(path->mnt),
++				    .dir = d_inode(path->dentry->d_parent),
++				    .dentry = path->dentry,
++				    .mode = mode,
++				    .excl = true };
+ 	struct file *f;
+ 	int error;
+ 
+@@ -1171,9 +1176,7 @@ struct file *dentry_create(const struct path *path, int flags, umode_t mode,
+ 	if (IS_ERR(f))
+ 		return f;
+ 
+-	error = vfs_create(mnt_idmap(path->mnt),
+-			   d_inode(path->dentry->d_parent),
+-			   path->dentry, mode, true);
++	error = vfs_create(&cargs);
+ 	if (!error)
+ 		error = vfs_open(path, f);
+ 
+diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
+index d215d7349489686b66bb66e939b27046f7d836f6..5fa939ac842ed04df8f0088233f4cba4ac703c05 100644
+--- a/fs/overlayfs/overlayfs.h
++++ b/fs/overlayfs/overlayfs.h
+@@ -235,7 +235,12 @@ static inline int ovl_do_create(struct ovl_fs *ofs,
+ 				struct inode *dir, struct dentry *dentry,
+ 				umode_t mode)
+ {
+-	int err = vfs_create(ovl_upper_mnt_idmap(ofs), dir, dentry, mode, true);
++	struct createdata cargs = { .idmap = ovl_upper_mnt_idmap(ofs),
++				    .dir = dir,
++				    .dentry = dentry,
++				    .mode = mode,
++				    .excl = true };
++	int err = vfs_create(&cargs);
+ 
+ 	pr_debug("create(%pd2, 0%o) = %i\n", dentry, mode, err);
+ 	return err;
+diff --git a/fs/smb/server/vfs.c b/fs/smb/server/vfs.c
+index c5f0f3170d586cb2dc4d416b80948c642797fb82..fbc3c34e14b870f1750b945349335afb62d89d0d 100644
+--- a/fs/smb/server/vfs.c
++++ b/fs/smb/server/vfs.c
+@@ -173,6 +173,7 @@ void ksmbd_vfs_query_maximal_access(struct mnt_idmap *idmap,
+  */
+ int ksmbd_vfs_create(struct ksmbd_work *work, const char *name, umode_t mode)
+ {
++	struct createdata cargs = { };
+ 	struct path path;
+ 	struct dentry *dentry;
+ 	int err;
+@@ -188,8 +189,12 @@ int ksmbd_vfs_create(struct ksmbd_work *work, const char *name, umode_t mode)
+ 	}
+ 
+ 	mode |= S_IFREG;
+-	err = vfs_create(mnt_idmap(path.mnt), d_inode(path.dentry),
+-			 dentry, mode, true);
++	cargs.idmap = mnt_idmap(path.mnt);
++	cargs.dir = d_inode(path.dentry);
++	cargs.dentry = dentry;
++	cargs.mode = mode;
++	cargs.excl = true;
++	err = vfs_create(&cargs);
+ 	if (!err) {
+ 		ksmbd_vfs_inherit_owner(work, d_inode(path.dentry),
+ 					d_inode(dentry));
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 12873214e1c7811735ea5d2dee3d57e2a5604d8f..b61873767b37591aecadd147623d7dfc866bef82 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2111,8 +2111,17 @@ bool inode_owner_or_capable(struct mnt_idmap *idmap,
+ /*
+  * VFS helper functions..
+  */
+-int vfs_create(struct mnt_idmap *, struct inode *,
+-	       struct dentry *, umode_t, bool);
 +
-+struct nfsd4_get_dir_delegation;
-+struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
-+						struct nfsd4_get_dir_delegation *gdd,
-+						struct nfsd_file *nf);
- #endif   /* NFSD4_STATE_H */
++struct createdata {
++	struct mnt_idmap *idmap;	// idmap of the mount the inode was found from
++	struct inode *dir;		// inode of parent directory
++	struct dentry *dentry;		// dentry of the child file
++	umode_t mode;			// mode of the child file
++	bool excl;			// whether the file must not yet exist
++};
++
++int vfs_create(struct createdata *);
++
+ struct dentry *vfs_mkdir(struct mnt_idmap *, struct inode *,
+ 			 struct dentry *, umode_t, struct delegated_inode *);
+ int vfs_mknod(struct mnt_idmap *, struct inode *, struct dentry *,
 
 -- 
 2.51.1
