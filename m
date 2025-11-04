@@ -1,116 +1,115 @@
-Return-Path: <linux-xfs+bounces-27509-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27511-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96C09C330F1
-	for <lists+linux-xfs@lfdr.de>; Tue, 04 Nov 2025 22:28:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1CE4C3312D
+	for <lists+linux-xfs@lfdr.de>; Tue, 04 Nov 2025 22:30:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 40DA234C446
-	for <lists+linux-xfs@lfdr.de>; Tue,  4 Nov 2025 21:28:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF4B9188C068
+	for <lists+linux-xfs@lfdr.de>; Tue,  4 Nov 2025 21:30:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8891A304BB4;
-	Tue,  4 Nov 2025 21:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C19822FC89C;
+	Tue,  4 Nov 2025 21:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMXjp4sP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gT9vl5y3"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398673043D6;
-	Tue,  4 Nov 2025 21:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775CE2EFDA2;
+	Tue,  4 Nov 2025 21:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762291628; cv=none; b=dgA2DjV7j7dM3//8o44xIkqCmbnHBpzcRAfBeFqaf4P+rFh3YQBHdA+2M8AtmDNkmTBaMeszLsMcDI1xWqlpBh9LIh1H2B/jC2aPaAl9LDyAFzq7B7mZfVGl+f70kIK5L8Bg8pGB6sRItQ0yFt2PLA0yb6KH8pg01XwImeM97qg=
+	t=1762291795; cv=none; b=KJZVm1C44l+Q0l0UwpQVUI+d2u67pFqX9ug8plPM75PakFLbwxh6hMr15NIDdfCi69CVc0b9cu7TyzdpZv/xHG/ep58h89Ftg1N0pCqEm4sJ4pmF5/T3XXoWsELgvO50aIcJF04y2LSKPofUSKegsemGrsavvt66OAfZ2HKVgSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762291628; c=relaxed/simple;
-	bh=ZQitxpNbla8eatdIt11qa+C2wAmNOTfTTPJx07AuheM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OAAVVqJBL4YK2Lez8DdXWjPfhdR7XeL1JTW/CB9315vV+74GJaiH5yhsEr5wvJZR88EcC3NkMV+i0heZYg6RW15qOx3YMIKONOELtNNwRCZZ8rkxawmgvepp2Bj34UCtEmjgp/mKB1uyEzcd4/byMgKcNN/L/RPE0y0mMlC3X/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMXjp4sP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FEE0C16AAE;
-	Tue,  4 Nov 2025 21:27:06 +0000 (UTC)
+	s=arc-20240116; t=1762291795; c=relaxed/simple;
+	bh=mrRpMfTe3Bep9D/fnxQr/mofWMHONG4SnKlqpOiGoBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DlgOo3ZsuTm7hNP2+EP7+TR2d8UBjxnFUiw37/8f/oQ60eOBGPGzOfduZSrEJS+nA9Zn3LIKHNSUcGRrQkBx9rHyzuQmt7+Y/q3IzyyfA8j+0xEPJD3fMqBt/AH+09KaWRCBweB/X+IlNVac5xu+BpElvRmbwN+ijYfOEI46AU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gT9vl5y3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21400C4CEF7;
+	Tue,  4 Nov 2025 21:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762291628;
-	bh=ZQitxpNbla8eatdIt11qa+C2wAmNOTfTTPJx07AuheM=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=sMXjp4sPvYyhvfNDO+HaY+mz76FAj1m1xRua75qET13g6hbvwAUMi1sTxX6/xJ1Py
-	 2Xmc6XOrcPWCN7M/UQPpE3+nWvYzXhTVyZojCFhLRczFrRy12Pp8oWmxiB7Yu/kR3b
-	 xPcJzh1q2XwtJACOz0UmJq0HOezj6SW7KDA4DtfL8uIw9OL2YRFXBx860Se79uZZtS
-	 zqAIwtyfuC4vDKyv6DMg+1gutR68lcqCHLTvcyAyy1kGyGUnQQ9Zz/DCFQZ8F8ISvC
-	 dGt7p6TpMRnXI1YY+6RkeZM3ZONSrpzk8IvSD5yJXrwF3A+HfGWkM46G74s9GuEz2r
-	 H1OjBBMrQ4cGw==
-From: Damien Le Moal <dlemoal@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	Keith Busch <keith.busch@wdc.com>,
-	Christoph Hellwig <hch@lst.de>,
-	dm-devel@lists.linux.dev,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	Carlos Maiolino <cem@kernel.org>,
-	linux-btrfs@vger.kernel.org,
-	David Sterba <dsterba@suse.com>
-Subject: [PATCH v4 15/15] xfs: use blkdev_report_zones_cached()
-Date: Wed,  5 Nov 2025 06:22:49 +0900
-Message-ID: <20251104212249.1075412-16-dlemoal@kernel.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251104212249.1075412-1-dlemoal@kernel.org>
-References: <20251104212249.1075412-1-dlemoal@kernel.org>
+	s=k20201202; t=1762291795;
+	bh=mrRpMfTe3Bep9D/fnxQr/mofWMHONG4SnKlqpOiGoBo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gT9vl5y3uqGwa/ed4zRxOEeOJcCsbQBOBpsqmYR+IEIbeEKW+IuJ7C4Mg1WIXMf1V
+	 wbmwn5WsMpBte85oSkZU2msvXY7hg4TB2mDXhx+HKGCfb4U/yAOcIMrRQR7jH7jfnm
+	 /+u5gPay55lL1cwcWX0S8qj1H1KI7kIOgx1jU/yHDaS78f//cNtSkYe13tyg0fW48p
+	 QzOZe/98qSRyvcQ66D/E5b3eXO2pYuhXjBaBaC1dhgwwPM2wrxXjpo1FyHURRrIk8f
+	 QgVv6am5G0p0ClqHrX9RMDGXH0e1su8g6kdI1fG79eSl5SXva1us33DUS1LjrojzGk
+	 tkqwpKYYKjEFQ==
+Message-ID: <0a04e68d-5b2a-4f0b-8051-60a0b7381d17@kernel.org>
+Date: Wed, 5 Nov 2025 06:29:50 +0900
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/5] isofs: check the return value of
+ sb_min_blocksize() in isofs_fill_super
+To: Yongpeng Yang <yangyongpeng.storage@gmail.com>,
+ Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, Jan Kara <jack@suse.cz>,
+ Carlos Maiolino <cem@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Christoph Hellwig <hch@infradead.org>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-block@vger.kernel.org, stable@vger.kernel.org,
+ Matthew Wilcox <willy@infradead.org>, "Darrick J . Wong"
+ <djwong@kernel.org>, Yongpeng Yang <yangyongpeng@xiaomi.com>,
+ Christoph Hellwig <hch@lst.de>
+References: <20251104125009.2111925-2-yangyongpeng.storage@gmail.com>
+ <20251104125009.2111925-4-yangyongpeng.storage@gmail.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20251104125009.2111925-4-yangyongpeng.storage@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Modify xfs_mount_zones() to replace the call to blkdev_report_zones()
-with blkdev_report_zones_cached() to speed-up mount operations.
-Since this causes xfs_zone_validate_seq() to see zones with the
-BLK_ZONE_COND_ACTIVE condition, this function is also modified to acept
-this condition as valid.
+On 11/4/25 21:50, Yongpeng Yang wrote:
+> From: Yongpeng Yang <yangyongpeng@xiaomi.com>
+> 
+> sb_min_blocksize() may return 0. Check its return value to avoid
+> opt->blocksize and sb->s_blocksize is 0.
+> 
+> Cc: <stable@vger.kernel.org> # v6.15
+> Fixes: 1b17a46c9243e9 ("isofs: convert isofs to use the new mount API")
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Yongpeng Yang <yangyongpeng@xiaomi.com>
+> ---
+>  fs/isofs/inode.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
+> index 6f0e6b19383c..ad3143d4066b 100644
+> --- a/fs/isofs/inode.c
+> +++ b/fs/isofs/inode.c
+> @@ -610,6 +610,11 @@ static int isofs_fill_super(struct super_block *s, struct fs_context *fc)
+>  		goto out_freesbi;
+>  	}
+>  	opt->blocksize = sb_min_blocksize(s, opt->blocksize);
+> +	if (!opt->blocksize) {
+> +		printk(KERN_ERR
+> +		       "ISOFS: unable to set blocksize\n");
 
-With this change, mounting a freshly formatted large capacity (30 TB)
-SMR HDD completes under 2s compared to over 4.7s before.
+Nit: using pr_err() maybe better here ? Not sure what isofs prefers.
 
-Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
----
- fs/xfs/libxfs/xfs_zones.c | 1 +
- fs/xfs/xfs_zone_alloc.c   | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+> +		goto out_freesbi;
+> +	}
+>  
+>  	sbi->s_high_sierra = 0; /* default is iso9660 */
+>  	sbi->s_session = opt->session;
 
-diff --git a/fs/xfs/libxfs/xfs_zones.c b/fs/xfs/libxfs/xfs_zones.c
-index b0791a71931c..b40f71f878b5 100644
---- a/fs/xfs/libxfs/xfs_zones.c
-+++ b/fs/xfs/libxfs/xfs_zones.c
-@@ -95,6 +95,7 @@ xfs_zone_validate_seq(
- 	case BLK_ZONE_COND_IMP_OPEN:
- 	case BLK_ZONE_COND_EXP_OPEN:
- 	case BLK_ZONE_COND_CLOSED:
-+	case BLK_ZONE_COND_ACTIVE:
- 		return xfs_zone_validate_wp(zone, rtg, write_pointer);
- 	case BLK_ZONE_COND_FULL:
- 		return xfs_zone_validate_full(zone, rtg, write_pointer);
-diff --git a/fs/xfs/xfs_zone_alloc.c b/fs/xfs/xfs_zone_alloc.c
-index 040402240807..9c8587622692 100644
---- a/fs/xfs/xfs_zone_alloc.c
-+++ b/fs/xfs/xfs_zone_alloc.c
-@@ -1239,7 +1239,7 @@ xfs_mount_zones(
- 	trace_xfs_zones_mount(mp);
- 
- 	if (bdev_is_zoned(bt->bt_bdev)) {
--		error = blkdev_report_zones(bt->bt_bdev,
-+		error = blkdev_report_zones_cached(bt->bt_bdev,
- 				XFS_FSB_TO_BB(mp, mp->m_sb.sb_rtstart),
- 				mp->m_sb.sb_rgcount, xfs_get_zone_info_cb, &iz);
- 		if (error < 0)
+
 -- 
-2.51.0
-
+Damien Le Moal
+Western Digital Research
 
