@@ -1,49 +1,50 @@
-Return-Path: <linux-xfs+bounces-27614-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27602-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B876C36E73
-	for <lists+linux-xfs@lfdr.de>; Wed, 05 Nov 2025 18:04:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B21C37060
+	for <lists+linux-xfs@lfdr.de>; Wed, 05 Nov 2025 18:19:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58F921A24504
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 Nov 2025 17:00:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8880D684E62
+	for <lists+linux-xfs@lfdr.de>; Wed,  5 Nov 2025 16:55:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14A9534D906;
-	Wed,  5 Nov 2025 16:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370FE33E347;
+	Wed,  5 Nov 2025 16:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pIhafmxk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ssyu0wjB"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB5534D4F8;
-	Wed,  5 Nov 2025 16:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92C13385BC;
+	Wed,  5 Nov 2025 16:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762361697; cv=none; b=D1wS7efUE8ok0sGcW0O1pbd6V/SAZk0LadajmzGf5WV7JoQhBmvuAeOw7POm5pKqAwxdj6dOo3P+Yfu5O25nZVDQq4x7o1ZwsgdCKF23kI2sDlj7t18yhH781+QcxUiKxPiKoFsM4yHgYlmGu6Q5pYsvwkDemXLbnmC01OYHEx4=
+	t=1762361657; cv=none; b=ByOXqAmpuO04K5+1E2dgetf4O1lYVoO8BA+AS9stdqqalWEFaDlEb4AoGqyeCx8N03E2wnt2ewT0O84X3L5zzOfdtFNSuxW9FnXn3vO/ZboUTEkQTBRm6VRkJvIasCPswBw6uDVjqONtK55FzXbndI1dEr4PIm3z6NBRsdwWMP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762361697; c=relaxed/simple;
-	bh=G0m38I9O+Xy6gwLh+3apyDgrdcwDPUcZ3ukE2nInTzc=;
+	s=arc-20240116; t=1762361657; c=relaxed/simple;
+	bh=GnymqP1pjrUzX2EzwRGc2AVY+sxr9dx2mMhp63lQzMg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DFImf7jQe7C2LlwKsMWRdwNjHGKX6kaGn+B0YoGlJA5wtDNUTUOaQ/drocKLFUTY6vAS28OO2WbB9SYwlz5Vw+g6Pf/y0d0yJHCy/BDo/xUkxCQGLDxSL8WANieU0eX9cbXniFxD8wPP2Bo79g2l2vb5ODSJSwhEWx7PRM2FWyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pIhafmxk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C02BC4CEF8;
-	Wed,  5 Nov 2025 16:54:54 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=sUlb4x0Zs9VGOnl4YelYOWx9SiMqELC1YuMs9euKJm0FeOSz+2Ctpxtb4AH8vCyGp930R1HJNfWko3T2YfMisTK7JnA+wxwiFgd9QkXYCpmHD093NNZY1OyUMYsbaWGU2LYb1ZKCO9e4D936gKwDGhybYFtuwijBkz6J7bsbnt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ssyu0wjB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 374AFC116B1;
+	Wed,  5 Nov 2025 16:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762361697;
-	bh=G0m38I9O+Xy6gwLh+3apyDgrdcwDPUcZ3ukE2nInTzc=;
+	s=k20201202; t=1762361656;
+	bh=GnymqP1pjrUzX2EzwRGc2AVY+sxr9dx2mMhp63lQzMg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pIhafmxkLGXXxmHcDbfYFQrqONgdD2VU+s092OKlNEP3AkARYCls+yQChsUM9uvD7
-	 JHvleF9bXfw5G4lxvsDUafm1dz3Ns/SF3RCYR84yB5T/2ucGRzXEFDmcCCux1+gXb8
-	 FsX1A4XIdazQV3xxeUmvwIy8Luyh1PSnNhxOVakHH9CFJjpQn0KXh4S5vYLibGn81E
-	 S5R7f3LSjxZXdbHJYNCvk+4ix1P29Ok3H5568eoep7VZE3+N/8RybK4oQcaaZFHu8T
-	 wAEdA+RTKBF/Eln3kaqUyyRB0ddRi2K4ID4HhN2t14gLMP/Bo4GcDOeJ2rXM+YR9V9
-	 46GbgBpGw/ENw==
+	b=Ssyu0wjBLztyEO0NpAjSd5Ts5bVddB1l87h/A+XU0SqN12fdm4ykIkN5p69qAnSf4
+	 cuipg8BT+dwjlTG6KrUpWyo/63SqmP0o/yWuyAiCFHqsus3C4pZT8NAl5ToMdV+UYh
+	 WN6APCO/05bN3RJLIYPW6vJ3XKlblAUx/ZmyhIQwJQwDae3nNNBmEclsJkUgttls7+
+	 RjmQX7od4Y7PYC8pdcTMHmXUbIXm6susotUt0FfWn5xL/hvBTy6Q+8c95EGLQl36UQ
+	 Bn1fIvv+14zIdwGxWW9z+LqT9fOYMBjoRPWPlfr50TFZi2J9yzsLstJSgybK035eXG
+	 GZah8dVlzVUzQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 05 Nov 2025 11:54:00 -0500
-Subject: [PATCH v5 14/17] nfsd: allow filecache to hold S_IFDIR files
+Date: Wed, 05 Nov 2025 11:53:48 -0500
+Subject: [PATCH v5 02/17] filelock: rework the __break_lease API to use
+ flags
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251105-dir-deleg-ro-v5-14-7ebc168a88ac@kernel.org>
+Message-Id: <20251105-dir-deleg-ro-v5-2-7ebc168a88ac@kernel.org>
 References: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
 In-Reply-To: <20251105-dir-deleg-ro-v5-0-7ebc168a88ac@kernel.org>
 To: Miklos Szeredi <miklos@szeredi.hu>, 
@@ -83,212 +84,212 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-xfs@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7422; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=G0m38I9O+Xy6gwLh+3apyDgrdcwDPUcZ3ukE2nInTzc=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpC4EtIm6eYsYgxcntowp09WIkEvRyEAogXm4gX
- cx+mXnJvA6JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQuBLQAKCRAADmhBGVaC
- FWW2D/0c+om1Ucx1g8f4epimbGNM62WQniOoQEsEgLuQoVSUvdSzo4uKff3061ngMx2EquEvjc1
- kKC1vRKd6WYz2fqLgvYj1S4k6sg11DGAe4gOZTmDvzNTYGGR7lhY1zinO9fwRWgcLdmaorPnOyY
- jTmFk4Ngiy0WaxCYR71TzNPOnAX4Qf8Gtt6Jhf0szLIlvfPp/ucRckeqJKMjuOtDTZ5UdkBoUdS
- rXuZoDjQiW/AbU7edUlOjqzvtlbwTQIB7fpvVX1TvQCig51dIPSu2S30RTJCSWNsByWWMLP0dlP
- MFvFFKvtAFcL0NrvabuK4kkgbzQ0KkBLjkAsLpNQwbBggPi7XlMpkcawVwibHS4kY6iTAzfPFn2
- mvKxmLOa2i8z3kLSbPRApNiF75xRiHLkvgoDYbolzJ+Ze9ytm/xsgKOgPM00uFoMYxppGGnqYLI
- VewIqLjx3sBRRcXCfWbn9OUxd5Lk8ETT2Utfit664G5qJQ3xDx13BaY7iVlq/iGgy/NDVMfHI1D
- KBShlGckogIE37SXtLfDwG4xFPxJVd6UBG1ANP/QtExnC7KgfkRA6KVt2t9pn4MfJCOVBDOBFn9
- oJW/iI2/a7s25F7Rx0hgay4rxGN/RR5fwXxUPU3bKwd0U+VX5GB2msId2IjWXDwjb8TT8n6mFqr
- BtuPAMulxu/eCBg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7009; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=GnymqP1pjrUzX2EzwRGc2AVY+sxr9dx2mMhp63lQzMg=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpC4EqGpJT2uSMD0Zg5LVNzajiLtEt8+gmiWB3f
+ SofTpcQwNuJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaQuBKgAKCRAADmhBGVaC
+ FeiVEACrjPUYdZxXw/jUy1SdViYprZIaOpkdsQEeB9UdTO+uRoCZ43GNan4EUCQnHKZJCzEWFKF
+ Fxckex30N18LHml154x7MMwD7x5Q52tXJVhRof3T6SLPtmVLL3w7nLb/OJFXOEY8OVXKZelA+o3
+ G/AvyumQF345UhA3qe+0XOAeS0daPg8kqQs0LO6qMwnnEj4NiuLGBj1nNnKI5K4ZKHsh9uBmS+/
+ MbtOa0zXh5ND3/9zt4BFCSO8xNrPAoDOSQ2BDMdwgdR6kX0KMkYRYYs/UHHIznjc4FrC/sF+AZ4
+ aXD8UmW2UDLQN0dwSwRPTl5LhXbhHuiCXKO2YNqAgYwrybEd0ZxTHNcuYT/RGmxh1MmwvOBpl6r
+ cuToxSTTGRBYX99pd25E1ajultjfw4ZLYxGU8AjB1eV1Df7XKYToad2qcPD6yjur9nMA8XlMTnp
+ 6mYxJspJ3Z6ykY15K0JqZ0FzIXZQEi949IHduaqd3qD4K93Y0ItEiKyYW1CkHtZdm0brWfUFumj
+ iuApa3YjuY7PZrp0iQv0TwcWlJoQ3F3z+iWwihUNxoLS0yfbD4GPoOFlq+7rUFHNYpgd0dbLzlZ
+ W8+N7SctnNRwPU0gKD4dy+jQebdihOKZcESWY0WZqjbwkZYrtojt1qVcyFaXJgnCc5oF6nGSNXN
+ OCumg91RWmhQLrw==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-The filecache infrastructure will only handle S_IFREG files at the
-moment. Directory delegations will require adding support for opening
-S_IFDIR inodes.
+Currently __break_lease takes both a type and an openmode. With the
+addition of directory leases, that makes less sense. Declare a set of
+LEASE_BREAK_* flags that can be used to control how lease breaks work
+instead of requiring a type and an openmode.
 
-Plumb a "type" argument into nfsd_file_do_acquire() and have all of the
-existing callers set it to S_IFREG. Add a new nfsd_file_acquire_dir()
-wrapper that nfsd can call to request a nfsd_file that holds a directory
-open.
-
-For now, there is no need for a fsnotify_mark for directories, as
-CB_NOTIFY is not yet supported. Change nfsd_file_do_acquire() to avoid
-allocating one for non-S_IFREG inodes.
-
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: NeilBrown <neil@brown.name>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/filecache.c | 57 ++++++++++++++++++++++++++++++++++++++++-------------
- fs/nfsd/filecache.h |  2 ++
- fs/nfsd/vfs.c       |  5 +++--
- fs/nfsd/vfs.h       |  2 +-
- 4 files changed, 49 insertions(+), 17 deletions(-)
+ fs/locks.c               | 29 +++++++++++++++++----------
+ include/linux/filelock.h | 52 +++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 56 insertions(+), 25 deletions(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index a238b6725008a5c2988bd3da874d1f34ee778437..93798575b8075c63f95cd415b6d24df706ada0f6 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -1086,7 +1086,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
- 		     struct auth_domain *client,
- 		     struct svc_fh *fhp,
- 		     unsigned int may_flags, struct file *file,
--		     struct nfsd_file **pnf, bool want_gc)
-+		     umode_t type, bool want_gc, struct nfsd_file **pnf)
+diff --git a/fs/locks.c b/fs/locks.c
+index b33c327c21dcd49341fbeac47caeb72cdf7455db..3cdd84a0fbedc9bd1b47725a9cf963342aafbce9 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -1529,24 +1529,31 @@ any_leases_conflict(struct inode *inode, struct file_lease *breaker)
+ /**
+  *	__break_lease	-	revoke all outstanding leases on file
+  *	@inode: the inode of the file to return
+- *	@mode: O_RDONLY: break only write leases; O_WRONLY or O_RDWR:
+- *	    break all leases
+- *	@type: FL_LEASE: break leases and delegations; FL_DELEG: break
+- *	    only delegations
++ *	@flags: LEASE_BREAK_* flags
+  *
+  *	break_lease (inlined for speed) has checked there already is at least
+  *	some kind of lock (maybe a lease) on this file.  Leases are broken on
+- *	a call to open() or truncate().  This function can sleep unless you
+- *	specified %O_NONBLOCK to your open().
++ *	a call to open() or truncate().  This function can block waiting for the
++ *	lease break unless you specify LEASE_BREAK_NONBLOCK.
+  */
+-int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
++int __break_lease(struct inode *inode, unsigned int flags)
  {
- 	unsigned char need = may_flags & NFSD_FILE_MAY_MASK;
- 	struct nfsd_file *new, *nf;
-@@ -1097,13 +1097,13 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
- 	int ret;
- 
- retry:
--	if (rqstp) {
--		status = fh_verify(rqstp, fhp, S_IFREG,
-+	if (rqstp)
-+		status = fh_verify(rqstp, fhp, type,
- 				   may_flags|NFSD_MAY_OWNER_OVERRIDE);
--	} else {
--		status = fh_verify_local(net, cred, client, fhp, S_IFREG,
+-	int error = 0;
+-	struct file_lock_context *ctx;
+ 	struct file_lease *new_fl, *fl, *tmp;
++	struct file_lock_context *ctx;
+ 	unsigned long break_time;
+-	int want_write = (mode & O_ACCMODE) != O_RDONLY;
++	unsigned int type;
+ 	LIST_HEAD(dispose);
++	bool want_write = !(flags & LEASE_BREAK_OPEN_RDONLY);
++	int error = 0;
++
++	if (flags & LEASE_BREAK_LEASE)
++		type = FL_LEASE;
++	else if (flags & LEASE_BREAK_DELEG)
++		type = FL_DELEG;
++	else if (flags & LEASE_BREAK_LAYOUT)
++		type = FL_LAYOUT;
 +	else
-+		status = fh_verify_local(net, cred, client, fhp, type,
- 					 may_flags|NFSD_MAY_OWNER_OVERRIDE);
--	}
-+
- 	if (status != nfs_ok)
- 		return status;
- 	inode = d_inode(fhp->fh_dentry);
-@@ -1176,15 +1176,18 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
++		return -EINVAL;
  
- open_file:
- 	trace_nfsd_file_alloc(nf);
--	nf->nf_mark = nfsd_file_mark_find_or_create(inode);
--	if (nf->nf_mark) {
+ 	new_fl = lease_alloc(NULL, type, want_write ? F_WRLCK : F_RDLCK);
+ 	if (IS_ERR(new_fl))
+@@ -1595,7 +1602,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+ 	if (list_empty(&ctx->flc_lease))
+ 		goto out;
+ 
+-	if (mode & O_NONBLOCK) {
++	if (flags & LEASE_BREAK_NONBLOCK) {
+ 		trace_break_lease_noblock(inode, new_fl);
+ 		error = -EWOULDBLOCK;
+ 		goto out;
+diff --git a/include/linux/filelock.h b/include/linux/filelock.h
+index c2ce8ba05d068b451ecf8f513b7e532819a29944..47da6aa28d8dc9122618d02c6608deda0f3c4d3e 100644
+--- a/include/linux/filelock.h
++++ b/include/linux/filelock.h
+@@ -212,7 +212,14 @@ int locks_lock_inode_wait(struct inode *inode, struct file_lock *fl);
+ void locks_init_lease(struct file_lease *);
+ void locks_free_lease(struct file_lease *fl);
+ struct file_lease *locks_alloc_lease(void);
+-int __break_lease(struct inode *inode, unsigned int flags, unsigned int type);
 +
-+	if (type == S_IFREG)
-+		nf->nf_mark = nfsd_file_mark_find_or_create(inode);
++#define LEASE_BREAK_LEASE		BIT(0)	// break leases and delegations
++#define LEASE_BREAK_DELEG		BIT(1)	// break delegations only
++#define LEASE_BREAK_LAYOUT		BIT(2)	// break layouts only
++#define LEASE_BREAK_NONBLOCK		BIT(3)	// non-blocking break
++#define LEASE_BREAK_OPEN_RDONLY		BIT(4)	// readonly open event
 +
-+	if (type != S_IFREG || nf->nf_mark) {
- 		if (file) {
- 			get_file(file);
- 			nf->nf_file = file;
- 			status = nfs_ok;
- 			trace_nfsd_file_opened(nf, status);
- 		} else {
--			ret = nfsd_open_verified(fhp, may_flags, &nf->nf_file);
-+			ret = nfsd_open_verified(fhp, type, may_flags, &nf->nf_file);
- 			if (ret == -EOPENSTALE && stale_retry) {
- 				stale_retry = false;
- 				nfsd_file_unhash(nf);
-@@ -1246,7 +1249,7 @@ nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		     unsigned int may_flags, struct nfsd_file **pnf)
- {
- 	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL,
--				    fhp, may_flags, NULL, pnf, true);
-+				    fhp, may_flags, NULL, S_IFREG, true, pnf);
++int __break_lease(struct inode *inode, unsigned int flags);
+ void lease_get_mtime(struct inode *, struct timespec64 *time);
+ int generic_setlease(struct file *, int, struct file_lease **, void **priv);
+ int kernel_setlease(struct file *, int, struct file_lease **, void **);
+@@ -367,7 +374,7 @@ static inline int locks_lock_inode_wait(struct inode *inode, struct file_lock *f
+ 	return -ENOLCK;
  }
  
- /**
-@@ -1271,7 +1274,7 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		  unsigned int may_flags, struct nfsd_file **pnf)
+-static inline int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
++static inline int __break_lease(struct inode *inode, unsigned int flags)
  {
- 	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL,
--				    fhp, may_flags, NULL, pnf, false);
-+				    fhp, may_flags, NULL, S_IFREG, false, pnf);
+ 	return 0;
+ }
+@@ -428,6 +435,17 @@ static inline int locks_lock_file_wait(struct file *filp, struct file_lock *fl)
  }
  
- /**
-@@ -1314,8 +1317,8 @@ nfsd_file_acquire_local(struct net *net, struct svc_cred *cred,
- 	const struct cred *save_cred = get_current_cred();
- 	__be32 beres;
- 
--	beres = nfsd_file_do_acquire(NULL, net, cred, client,
--				     fhp, may_flags, NULL, pnf, false);
-+	beres = nfsd_file_do_acquire(NULL, net, cred, client, fhp, may_flags,
-+				     NULL, S_IFREG, false, pnf);
- 	put_cred(revert_creds(save_cred));
- 	return beres;
- }
-@@ -1344,7 +1347,33 @@ nfsd_file_acquire_opened(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 			 struct nfsd_file **pnf)
- {
- 	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL,
--				    fhp, may_flags, file, pnf, false);
-+				    fhp, may_flags, file, S_IFREG, false, pnf);
+ #ifdef CONFIG_FILE_LOCKING
++static inline unsigned int openmode_to_lease_flags(unsigned int mode)
++{
++	unsigned int flags = 0;
++
++	if ((mode & O_ACCMODE) == O_RDONLY)
++		flags |= LEASE_BREAK_OPEN_RDONLY;
++	if (mode & O_NONBLOCK)
++		flags |= LEASE_BREAK_NONBLOCK;
++	return flags;
 +}
 +
-+/**
-+ * nfsd_file_acquire_dir - Get a struct nfsd_file with an open directory
-+ * @rqstp: the RPC transaction being executed
-+ * @fhp: the NFS filehandle of the file to be opened
-+ * @pnf: OUT: new or found "struct nfsd_file" object
-+ *
-+ * The nfsd_file_object returned by this API is reference-counted
-+ * but not garbage-collected. The object is unhashed after the
-+ * final nfsd_file_put(). This opens directories only, and only
-+ * in O_RDONLY mode.
-+ *
-+ * Return values:
-+ *   %nfs_ok - @pnf points to an nfsd_file with its reference
-+ *   count boosted.
-+ *
-+ * On error, an nfsstat value in network byte order is returned.
-+ */
-+__be32
-+nfsd_file_acquire_dir(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		      struct nfsd_file **pnf)
-+{
-+	return nfsd_file_do_acquire(rqstp, SVC_NET(rqstp), NULL, NULL, fhp,
-+				    NFSD_MAY_READ|NFSD_MAY_64BIT_COOKIE,
-+				    NULL, S_IFDIR, false, pnf);
- }
- 
- /*
-diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-index e3d6ca2b60308e5e91ba4bb32d935f54527d8bda..b383dbc5b9218d21a29b852572f80fab08de9fa9 100644
---- a/fs/nfsd/filecache.h
-+++ b/fs/nfsd/filecache.h
-@@ -82,5 +82,7 @@ __be32 nfsd_file_acquire_opened(struct svc_rqst *rqstp, struct svc_fh *fhp,
- __be32 nfsd_file_acquire_local(struct net *net, struct svc_cred *cred,
- 			       struct auth_domain *client, struct svc_fh *fhp,
- 			       unsigned int may_flags, struct nfsd_file **pnf);
-+__be32 nfsd_file_acquire_dir(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		  struct nfsd_file **pnf);
- int nfsd_file_cache_stats_show(struct seq_file *m, void *v);
- #endif /* _FS_NFSD_FILECACHE_H */
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 28710da4cce7cc7fc1e14d29420239dc357316f6..8c3ffacc533e9de0d506fb2ec222387446ba8e9f 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -959,15 +959,16 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
- /**
-  * nfsd_open_verified - Open a regular file for the filecache
-  * @fhp: NFS filehandle of the file to open
-+ * @type: S_IFMT inode type allowed (0 means any type is allowed)
-  * @may_flags: internal permission flags
-  * @filp: OUT: open "struct file *"
-  *
-  * Returns zero on success, or a negative errno value.
-  */
- int
--nfsd_open_verified(struct svc_fh *fhp, int may_flags, struct file **filp)
-+nfsd_open_verified(struct svc_fh *fhp, umode_t type, int may_flags, struct file **filp)
+ static inline int break_lease(struct inode *inode, unsigned int mode)
  {
--	return __nfsd_open(fhp, S_IFREG, may_flags, filp);
-+	return __nfsd_open(fhp, type, may_flags, filp);
+ 	struct file_lock_context *flctx;
+@@ -443,11 +461,11 @@ static inline int break_lease(struct inode *inode, unsigned int mode)
+ 		return 0;
+ 	smp_mb();
+ 	if (!list_empty_careful(&flctx->flc_lease))
+-		return __break_lease(inode, mode, FL_LEASE);
++		return __break_lease(inode, LEASE_BREAK_LEASE | openmode_to_lease_flags(mode));
+ 	return 0;
  }
  
- /*
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 0c0292611c6de3daf6f3ed51e2c61c0ad2751de4..09de48c50cbef8e7c4828b38dcb663b529514a30 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -114,7 +114,7 @@ __be32		nfsd_setxattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- int 		nfsd_open_break_lease(struct inode *, int);
- __be32		nfsd_open(struct svc_rqst *, struct svc_fh *, umode_t,
- 				int, struct file **);
--int		nfsd_open_verified(struct svc_fh *fhp, int may_flags,
-+int		nfsd_open_verified(struct svc_fh *fhp, umode_t type, int may_flags,
- 				struct file **filp);
- __be32		nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				struct file *file, loff_t offset,
+-static inline int break_deleg(struct inode *inode, unsigned int mode)
++static inline int break_deleg(struct inode *inode, unsigned int flags)
+ {
+ 	struct file_lock_context *flctx;
+ 
+@@ -461,8 +479,10 @@ static inline int break_deleg(struct inode *inode, unsigned int mode)
+ 	if (!flctx)
+ 		return 0;
+ 	smp_mb();
+-	if (!list_empty_careful(&flctx->flc_lease))
+-		return __break_lease(inode, mode, FL_DELEG);
++	if (!list_empty_careful(&flctx->flc_lease)) {
++		flags |= LEASE_BREAK_DELEG;
++		return __break_lease(inode, flags);
++	}
+ 	return 0;
+ }
+ 
+@@ -470,7 +490,7 @@ static inline int try_break_deleg(struct inode *inode, struct inode **delegated_
+ {
+ 	int ret;
+ 
+-	ret = break_deleg(inode, O_WRONLY|O_NONBLOCK);
++	ret = break_deleg(inode, LEASE_BREAK_NONBLOCK);
+ 	if (ret == -EWOULDBLOCK && delegated_inode) {
+ 		*delegated_inode = inode;
+ 		ihold(inode);
+@@ -482,7 +502,7 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
+ {
+ 	int ret;
+ 
+-	ret = break_deleg(*delegated_inode, O_WRONLY);
++	ret = break_deleg(*delegated_inode, 0);
+ 	iput(*delegated_inode);
+ 	*delegated_inode = NULL;
+ 	return ret;
+@@ -491,20 +511,24 @@ static inline int break_deleg_wait(struct inode **delegated_inode)
+ static inline int break_layout(struct inode *inode, bool wait)
+ {
+ 	smp_mb();
+-	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease))
+-		return __break_lease(inode,
+-				wait ? O_WRONLY : O_WRONLY | O_NONBLOCK,
+-				FL_LAYOUT);
++	if (inode->i_flctx && !list_empty_careful(&inode->i_flctx->flc_lease)) {
++		unsigned int flags = LEASE_BREAK_LAYOUT;
++
++		if (!wait)
++			flags |= LEASE_BREAK_NONBLOCK;
++
++		return __break_lease(inode, flags);
++	}
+ 	return 0;
+ }
+ 
+ #else /* !CONFIG_FILE_LOCKING */
+-static inline int break_lease(struct inode *inode, unsigned int mode)
++static inline int break_lease(struct inode *inode, bool wait)
+ {
+ 	return 0;
+ }
+ 
+-static inline int break_deleg(struct inode *inode, unsigned int mode)
++static inline int break_deleg(struct inode *inode, unsigned int flags)
+ {
+ 	return 0;
+ }
 
 -- 
 2.51.1
