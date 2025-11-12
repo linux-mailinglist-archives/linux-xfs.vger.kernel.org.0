@@ -1,94 +1,56 @@
-Return-Path: <linux-xfs+bounces-27863-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-27865-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7707C51ECB
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Nov 2025 12:23:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62014C523CE
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Nov 2025 13:24:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 164CB50224C
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Nov 2025 11:11:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C2323B1388
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Nov 2025 12:15:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D9030F52B;
-	Wed, 12 Nov 2025 11:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D317231B80D;
+	Wed, 12 Nov 2025 12:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pOB7QhmM"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="21ubQ3rY"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72072FDC3C;
-	Wed, 12 Nov 2025 11:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D742331A813
+	for <linux-xfs@vger.kernel.org>; Wed, 12 Nov 2025 12:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762945732; cv=none; b=c+wGcg0pFbZ5z1j5pqbfLjk4eq7e7BqYh+hoHg0FEUUsBkYtmSVZ1RKXBuQs021WE/OPypdca5Ka4xGE2WrC/Uw5fc916Two1nGbb313XcsCooj+Bb4HPlTMogvQCgb2XaPDXxEL5lJLmr7Hejjfl0qmfDdjYDtnufGrtnOcm4s=
+	t=1762949706; cv=none; b=YtZWcqUkKSCg7BdqLKCGhl9/EY+T0prC4GxSsvYuBpS7cqjo/g9vr6L2Gz1qng+V6Yi78+YDJUOIu1UnlFW/xo2RcOok9aKhrkm4kC3u8CtxTgDhoALXENPcoTmlPGM98IB0Zk337ptAnaIM6gf0PYz84iZeNao8mHDRyi8/y3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762945732; c=relaxed/simple;
-	bh=7HYb7P746kTlQ448/enNTGByoCQvc5vWYJnuJdoRvhg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=relhJAN++1YU4mwqYfwvcON0EuEZuFmrxMR4MN1Z8I004J0JO5olA+x8SGhLulRUgXjC5E7Ubs7asNOi1RK7OHJ7q3l3F7Tzud+jWsSfaUvwtZC6QJmWMdbamwvkOmOi5oMgqXJrSedzvkR+DLWXgNwdBwAdlmqQqPgMnUpco6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pOB7QhmM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC6nTkG028520;
-	Wed, 12 Nov 2025 11:07:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=lS0PV8URMxmmce+9y
-	YxA6ZwV8ssL8Pfv2N3KgoOn0Oc=; b=pOB7QhmMKumE+2Ewk0J81JPbGPU/jfzXZ
-	lQgYDaIKG+gR9FpX3LyQ1Df17NPun1GTooeAH52oDLyC3C+QHRc9BFPG+AdHTtRK
-	wd3snm2oNdwwbMjZWANEa8pjXp4UVeYb3I35p1dPa9FkbsNLzBVusbf8HneBkgCu
-	WWdXYPdOb0shtMsvVEPkhTRbJLESYAZuFF9BVGl2dVaYR7atgSYipSdQ0/6K5ITD
-	8jjuzmu7DRI6F2rDTpTwvxzmkJ38HY6rb5/MRfSy6cIMNMotYCAvL+u/xFVOKmiv
-	7lCR91WMcv+TU7Cf9jENRnTa+9o3RoEiquKFyM7RakWr9H/okbCow==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5tjymnq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 11:07:29 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5ACB4SYB022695;
-	Wed, 12 Nov 2025 11:07:28 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5tjymnn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 11:07:28 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AC9QpsE014859;
-	Wed, 12 Nov 2025 11:07:28 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4aahpk7qe4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Nov 2025 11:07:27 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5ACB7Pg551118504
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Nov 2025 11:07:26 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D83932004F;
-	Wed, 12 Nov 2025 11:07:25 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F267120043;
-	Wed, 12 Nov 2025 11:07:20 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.210.190])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Nov 2025 11:07:20 +0000 (GMT)
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Christian Brauner <brauner@kernel.org>, djwong@kernel.org,
-        ritesh.list@gmail.com, john.g.garry@oracle.com, tytso@mit.edu,
-        willy@infradead.org, dchinner@redhat.com, hch@lst.de
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, jack@suse.cz, nilay@linux.ibm.com,
-        martin.petersen@oracle.com, rostedt@goodmis.org, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH 8/8] xfs: Lift the bs == ps restriction for HW buffered atomic writes
-Date: Wed, 12 Nov 2025 16:36:11 +0530
-Message-ID: <0f1f53d6fad8c25118b0348b0cb91dc2e4ecf456.1762945505.git.ojaswin@linux.ibm.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1762945505.git.ojaswin@linux.ibm.com>
-References: <cover.1762945505.git.ojaswin@linux.ibm.com>
+	s=arc-20240116; t=1762949706; c=relaxed/simple;
+	bh=qGS56OHIhS9QyQuGCBMKWKzUb91JcZNiRTIvo4f7hy0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iMf61pjLWFPrUlNwGI1rRf4L194q3c3a61d10CRbvgHmVeN251fwwCA3EXMXFLlqAsn4E5GRXN84Zv1r/WDB0yJwwyezHltFV8NkANNeOPQdoNT6q3OBOvAROClWt61ahnbttRKmIPjhUOmsRU+OtS1lblWjiAErY21HYdXYFuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=21ubQ3rY; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=ER8bQn36pSP2SdiIymdd9YrsSLt8cKFDRSHhJswc11s=; b=21ubQ3rY0I7ga1YiX3k/DNqIJr
+	QBEuDfgIcBRE2w/GzpOSBIHXR74ht/qFkksSsEog1FH6ueTBJrXBUAZgsYyVkNg5/hJxCDXwfpCHF
+	1uRazRzgw5Rijb/ThAgliwCuUlSZ82ZvNi9BcBK5x0jxIOS0uQ9QMIBLzcZ9lbBje5V8XpBrvwaWU
+	MmwVLzNHrxXCtDXjdYMfNQ71XkeClfV1VPV5NCEx3TaJ+umflqyAwRgG/4idiqun5xk5DvfEOejVh
+	N+xctb7fXoTijPsojOGH/lIn3hiXQiTgHlb7ymzv4GnOO6f20MBXiX5+Sf84Fm9yS48Hf/TTRzXMv
+	vEXdUZSQ==;
+Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vJ9kb-00000008l9z-487m;
+	Wed, 12 Nov 2025 12:15:02 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Carlos Maiolino <cem@kernel.org>
+Cc: linux-xfs@vger.kernel.org
+Subject: cleanup log item formatting v3
+Date: Wed, 12 Nov 2025 13:14:16 +0100
+Message-ID: <20251112121458.915383-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -96,68 +58,44 @@ List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ADQK4HD0lQecC7xUBvMAVAknMXJGVpEF
-X-Proofpoint-ORIG-GUID: iQAnc7Mvlf5AFos0tKRg3f3C_4ix3pmO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5OSBTYWx0ZWRfX52SSPqtKtk4i
- cOa+6iOjuAAo2h3dK97pN8YCSCEGsYjvxno1zsFcUvQEs8u8QFoS8EVe4pT0zpMsHpPdVwbWA1T
- 0zo5RABNZRExM0hTMZPRyOam0cl9R1euNDPgYUagq4a1jUJQXcD4MdbGR+DPYm19JsbetcQDbLp
- IQpdcmM02Hdswz10zt3coYGH2sQxqol1aaRs3Nno9T2vFNe2dBPp59Ks7j3Pe37MrPuoZmS3vVq
- +ks1ZnAEyrV5uifEEGDaPOsLzfMeDcTgtT/VBdftWRhkKkfyZsXRrAFwJW7wHSXcMsDjNIQg+am
- ejhzNtQRfiKZ7AuNzA5NnblMkDmXntu5WTp1V7TrOlqMmUnX3jgGAQAU45KJ5jLteLGR1AUaDQy
- OsFaBLrhNGF97igEbAhLryJJS6zuFA==
-X-Authority-Analysis: v=2.4 cv=V6xwEOni c=1 sm=1 tr=0 ts=69146a71 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=PLfzAVb2A4JWLM4niBMA:9 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-12_03,2025-11-11_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 malwarescore=0 impostorscore=0
- suspectscore=0 priorityscore=1501 phishscore=0 bulkscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080099
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Now that we support bs < ps for HW atomic writes, lift this restirction from XFS
-statx reporting
+Hi all,
 
-Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
----
- fs/xfs/xfs_iops.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+I dug into a rabit hole about the log item formatting recently,
+and noticed that the handling of the opheaders is still pretty
+ugly because it leaks pre-delayed logging implementation
+details into the log item implementations.
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 67d370947d95..5bd31aacf514 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -622,10 +622,9 @@ xfs_get_atomic_write_min(
- 			return bs;
- 	}
- 	/*
--	 * Buffered IO only supports hw single block atomic writes and bs == ps
--	 * configurations.
-+	 * Buffered IO only supports hw single block atomic writes
- 	 */
--	if (xfs_inode_can_hw_atomic_write(ip) && bs == PAGE_SIZE)
-+	if (xfs_inode_can_hw_atomic_write(ip))
- 		return bs;
- 
- 	return 0;
-@@ -661,10 +660,9 @@ xfs_get_atomic_write_max(
- 		return XFS_FSB_TO_B(mp, mp->m_groups[XG_TYPE_AG].awu_max);
- 	}
- 	/*
--	 * Buffered IO only supports hw single block atomic writes and bs == ps
--	 * configurations.
-+	 * Buffered IO only supports hw single block atomic writes
- 	 */
--	if (xfs_inode_can_hw_atomic_write(ip) && bs == PAGE_SIZE)
-+	if (xfs_inode_can_hw_atomic_write(ip))
- 		return bs;
- 
- 	return 0;
--- 
-2.51.0
+The core of this series is to remove the to reserve space in the
+CIL buffers/shadow buffers for the opheaders that already were
+generated more or less on the fly by the lowlevel log write
+code anyway, but there's lots of other cleanups around it.
 
+Changes since v2:
+ - rebased to the latest xfs-6.19-merge branch
+ - expand and improve a few commit messages
+ - add a Fixes tag
+
+Changes since v1:
+ - rebased and dropped the already merged patches
+
+Diffstat:
+ libxfs/xfs_log_format.h |    7 -
+ xfs_attr_item.c         |   27 +---
+ xfs_bmap_item.c         |   10 -
+ xfs_buf_item.c          |   19 +--
+ xfs_dquot_item.c        |    9 -
+ xfs_exchmaps_item.c     |   11 -
+ xfs_extfree_item.c      |   10 -
+ xfs_icreate_item.c      |    6 
+ xfs_inode_item.c        |   49 +++-----
+ xfs_log.c               |  292 ++++++++++++++++++------------------------------
+ xfs_log.h               |   65 +---------
+ xfs_log_cil.c           |  111 ++++++++++++++++--
+ xfs_log_priv.h          |   20 +++
+ xfs_refcount_item.c     |   10 -
+ xfs_rmap_item.c         |   10 -
+ xfs_trans.h             |    4 
+ 16 files changed, 313 insertions(+), 347 deletions(-)
 
