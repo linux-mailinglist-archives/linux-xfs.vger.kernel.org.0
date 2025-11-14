@@ -1,54 +1,85 @@
-Return-Path: <linux-xfs+bounces-28021-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28023-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36CB9C5E604
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Nov 2025 17:58:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DFB8C5E622
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Nov 2025 18:00:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sin.lore.kernel.org (Postfix) with ESMTPS id 0AE5B24154
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Nov 2025 16:58:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE889421913
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Nov 2025 16:58:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB5D340260;
-	Fri, 14 Nov 2025 16:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A384336EDE;
+	Fri, 14 Nov 2025 16:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fe2gxXyT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZMab8F9"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE8133FE28
-	for <linux-xfs@vger.kernel.org>; Fri, 14 Nov 2025 16:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEB332C923
+	for <linux-xfs@vger.kernel.org>; Fri, 14 Nov 2025 16:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763139316; cv=none; b=JDEuFjii91wz2lSy2OvFA00QVTkXtQZzmkRFnG1vd3Wndol/OmL6ECz0xhGeiPpZ17djrfElY3EQr8AuLtngC9rVCyPAhKr8X94myaQnzyMdeEdToLUg3J+9K3zKCQfTwDRLCC0Q2OGekhu9mo9Qog+h+BNqnc1spZ8sgbTxhFo=
+	t=1763139366; cv=none; b=iti2uGbPqn6ooqY+Cms7lI8nFCmDw6/SyXGRd1fkYM9QabzQIj4anWNPGPKSOeKiDQHlQmgvSVt9tFeRe4ogpBtFQ83oZDrqjCWFpPA2s5kiXkPzKkxw+c0Jv0JGfNaZly9VLOhgYFojESlY9RtERJZ6arjqtBPwHYfByDCMoCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763139316; c=relaxed/simple;
-	bh=E7c1muGXPOALS9FXCCHiFeKPw3B9cYXQO2fRSAtmKXg=;
+	s=arc-20240116; t=1763139366; c=relaxed/simple;
+	bh=6TSkTd8QYhGIkuJktBXMhRTbFnRorBPr9gWU+GWWeCY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EroSmC4byC5xrxeCzv/Z68/SHavZ8dVFsUYu/ADynvSdGppsUyr8SE5HmKZk4wHM8G2nUeAqIl/+WKGA3qpDY2RMJi5DXdUd6HvLuYjy0JPucimZpHTvMj3YvIlusiUmMFjbThtrnx0zERJNZBHsPkbiM56D0T4I3OWkeujaNxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fe2gxXyT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0631C116B1;
-	Fri, 14 Nov 2025 16:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763139315;
-	bh=E7c1muGXPOALS9FXCCHiFeKPw3B9cYXQO2fRSAtmKXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fe2gxXyTs3cba/XTsJZRsMQhxiRMfsreVi6NXv6HLTgBetbTjhMm/HFIWvWEGz3iz
-	 h+qi8yXQoBlxtHV8MX5CNYtlSM4YDYI6AJsCLXYoov3THUl/XVxowa1mT6Qv9SM9L/
-	 +Yg4at36bep+9vywjCRMpLEIfOf8+iWLgsSQftYqTyeegH1SokyeZ0EiX9LgBEeD3w
-	 iGhsKplPOM+hz9tiPADlxPH7+XaiD/kBZHAJYOyguha0uuHXSeXJEvImgeUpKV0tve
-	 S/Rxr2c3V9nbCe1QLPG5h9bEWjVn7fY30iKl8LOOKXtLkNJ3H0aZXxtg5M2NNOICYO
-	 SIbEkXGVc4DeQ==
-Date: Fri, 14 Nov 2025 08:55:14 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TY8yMfqQWfnNt9zCrRlRdj+PrBjKmgxtVwSrEB2OjcfbpbEIvY1F+y2RPpLXlqKzTfh9eJaJ4psgrMh4IFbqXokTwYmHXf+XAklPKZuoHtrLkKtuUpymaXfQ7dNTwP7R/cEL0wAWoIhlnx1CCTxjLasFDAWorBN5yd3DvjQdrH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FZMab8F9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763139363;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G+w7fTZt5yUvxxlHlhv9qFh5bl+En30eT9dJ3sbzFCY=;
+	b=FZMab8F9sEMWlmo1JhVuLYsItPORBWp8cFuYIjcFTzfc+A8ggyS2AIMkCLkvG5blD7M2Jz
+	jle050kO6ZUTkmGx1r+79KNOaR5+IDSwyjEvi72gcwWIcFDJPExp4busxZWUFNre0OAGjr
+	mY84cXU/9EG3DG7r7OY+5QCOA+ylPKY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-693-0Y7IkpOzNdGYfOhy4GdU6A-1; Fri,
+ 14 Nov 2025 11:55:59 -0500
+X-MC-Unique: 0Y7IkpOzNdGYfOhy4GdU6A-1
+X-Mimecast-MFC-AGG-ID: 0Y7IkpOzNdGYfOhy4GdU6A_1763139358
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DB9F019540E8;
+	Fri, 14 Nov 2025 16:55:57 +0000 (UTC)
+Received: from redhat.com (unknown [10.44.33.81])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E2B618004A3;
+	Fri, 14 Nov 2025 16:55:52 +0000 (UTC)
+Date: Fri, 14 Nov 2025 17:55:49 +0100
+From: Kevin Wolf <kwolf@redhat.com>
 To: Christoph Hellwig <hch@lst.de>
-Cc: Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/10] xfs: set lv_bytes in xlog_write_one_vec
-Message-ID: <20251114165514.GF196370@frogsfrogsfrogs>
-References: <20251112121458.915383-1-hch@lst.de>
- <20251112121458.915383-3-hch@lst.de>
+Cc: Jan Kara <jack@suse.cz>, Keith Busch <kbusch@kernel.org>,
+	Dave Chinner <david@fromorbit.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
+	linux-block@vger.kernel.org
+Subject: Re: fall back from direct to buffered I/O when stable writes are
+ required
+Message-ID: <aRdfFRw1vKUHXqIg@redhat.com>
+References: <aQTcb-0VtWLx6ghD@kbusch-mbp>
+ <20251031164701.GA27481@lst.de>
+ <kpk2od2fuqofdoneqse2l3gvn7wbqx3y4vckmnvl6gc2jcaw4m@hsxqmxshckpj>
+ <20251103122111.GA17600@lst.de>
+ <aRYXuwtSQUz6buBs@redhat.com>
+ <20251114053943.GA26898@lst.de>
+ <aRb2g3VLjz1Q_rLa@redhat.com>
+ <20251114120152.GA13689@lst.de>
+ <aRchGBJA1ExoGi8W@redhat.com>
+ <20251114153644.GA31395@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -57,61 +88,46 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251112121458.915383-3-hch@lst.de>
+In-Reply-To: <20251114153644.GA31395@lst.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, Nov 12, 2025 at 01:14:18PM +0100, Christoph Hellwig wrote:
-> lv_bytes is mostly just use by the CIL code, but has crept into the
-> low-level log writing code to decide on a full or partial iclog
-> write.  Ensure it is valid even for the special log writes that don't
-> go through the CIL by initializing it in xlog_write_one_vec.
+Am 14.11.2025 um 16:36 hat Christoph Hellwig geschrieben:
+> On Fri, Nov 14, 2025 at 01:31:20PM +0100, Kevin Wolf wrote:
+> > My main point above was that RAID and (potentially passed through) PI
+> > are independent of each other and I think that's still true with or
+> > without multiple stability levels.
+> > 
+> > If you don't have these levels, you just have to treat level 1 and 2 the
+> > same, i.e. bounce all the time if the kernel needs the guarantee (which
+> > is not for userspace PI, unless the same request needs the bounce buffer
+> > for another reason in a different place like RAID). That might be less
+> > optimal, but still correct and better than what happens today because at
+> > least you don't bounce for level 0 any more.
 > 
-> Note that even without this fix, the checkpoint commits would never
-> trigger a partial iclog write, as they have no payload beyond the
-> opheader.
+> Agreed.
 > 
-> The unmount record on the other hand could in theory trigger a an
-> overflow of the iclog, but given that is has never been seen in
-> the wild this has probably been masked by the small size of it
-> and the fact that the unmount process does multiple log forces
-> before writing the unmount record and we thus usually operate on
-> an empty or almost empty iclog.
+> > If there is something you can optimise by delegating the responsibility
+> > to userspace in some cases - like you can prove that only the
+> > application itself would be harmed by doing things wrong - then having
+> > level 1 separate could certainly be interesting. In this case, I'd
+> > consider adding an RWF_* flag for userspace to make the promise even
+> > outside PI passthrough. But while potentially worthwhile, it feels like
+> > this is a separate optimisation from what you tried to address here.
 > 
-> Fixes: 110dc24ad2ae ("xfs: log vector rounding leaks log space")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Agreed as well.
+> 
+> In fact I'm kinda lost what we're even arguing about :)
 
-Looks good,
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+Probably nothing then. :-) I was just confused because you called PI
+passthrough from userspace a complication, but it seems we agree that
+there is no real complication in the sense that it's hard to get
+correct and the approach can be implemented just like that.
 
---D
+That's really why I posted in the first place, to agree with you that
+this approach seems best to me, and because I don't want to see our
+O_DIRECT requests silently fall back to buffered I/O in more cases,
+especially with AIO.
 
-> ---
->  fs/xfs/xfs_log.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index ed83a0e3578e..382c55f4d8d2 100644
-> --- a/fs/xfs/xfs_log.c
-> +++ b/fs/xfs/xfs_log.c
-> @@ -858,14 +858,15 @@ xlog_write_one_vec(
->  	struct xfs_log_vec	lv = {
->  		.lv_niovecs	= 1,
->  		.lv_iovecp	= reg,
-> +		.lv_bytes	= reg->i_len,
->  	};
->  	LIST_HEAD		(lv_chain);
->  
->  	/* account for space used by record data */
-> -	ticket->t_curr_res -= reg->i_len;
-> +	ticket->t_curr_res -= lv.lv_bytes;
->  
->  	list_add(&lv.lv_list, &lv_chain);
-> -	return xlog_write(log, ctx, &lv_chain, ticket, reg->i_len);
-> +	return xlog_write(log, ctx, &lv_chain, ticket, lv.lv_bytes);
->  }
->  
->  /*
-> -- 
-> 2.47.3
-> 
-> 
+Kevin
+
 
