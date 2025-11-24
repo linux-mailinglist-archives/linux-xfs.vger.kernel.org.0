@@ -1,50 +1,51 @@
-Return-Path: <linux-xfs+bounces-28181-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28182-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32332C7F0AC
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Nov 2025 07:26:42 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 757BEC7F0C1
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Nov 2025 07:28:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D3C923467C6
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Nov 2025 06:26:41 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6E4774E2E64
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Nov 2025 06:28:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD99B2D12F5;
-	Mon, 24 Nov 2025 06:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 548542D131D;
+	Mon, 24 Nov 2025 06:28:00 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF4A26FDA8;
-	Mon, 24 Nov 2025 06:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A143026FDA8;
+	Mon, 24 Nov 2025 06:27:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763965595; cv=none; b=rk+/ZjN5RPiNQX3Z5amvfB8f2MfGBmOQ4hLjdWmQ93i/eXpYUSbse0NrQVggDnhZurZmAY3Y77bQtJbQqphzw4xN6g292jqc6q84An/pH3bgqQuNB3nuhXEKZwZtmeAUhzWrc3h1c0mDYTGdsr6TMkWzTJSqOXrcXMlTQ+GD/Dg=
+	t=1763965680; cv=none; b=kAUFZG5OZHZ6Kq8Oi25IGiDacelCXVKGSob1v3CtMylw+jGWgZdITbvuzrLyt/upm552MVrETgR+Pnz5OylRPSrMvDZT23OaecN2MRY5U1SS8kGgyl+ciSfXv/HrkE9lfMManiHM/qfsTa9zEDloDBGrHKQkDbVLio0rNAdo0ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763965595; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	s=arc-20240116; t=1763965680; c=relaxed/simple;
+	bh=BsuXYppzHhMWNMF03oT3P8lKKTAnmJIXsUzVEvjOdiU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pmXsKV0tjKAXk8TegPu4OMkeazVyIWJBF38zcA2HK9G4nGmxnnHLGx1PJQchWL1rzAWI6lx/yKRcKvdEg/GSzq45/lekcot5WqEoNyUgMkfM3yTlV6aIONwXfgb44aMCGvYYHww8nKYHqpYTH8QQbMsIhHER3+CaU/cxgwSbf0I=
+	 Content-Type:Content-Disposition:In-Reply-To; b=WTIEHuDbFcThtqqXrpC6MYr+/GxjxS4u26GJ9kunGSqhiKC8TWTPb79t8vqVrA+QGE4NMstbsHi8ha9pHkK5p8nw/06EsdgPkk7PUuyeSBmFzfX6PIIgWNu2cMFwemyO7BAVt1a8C6YTpwS+jXEKD1Z4G7XiyR1KlPqtoOOSrXA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 5F59968B05; Mon, 24 Nov 2025 07:26:29 +0100 (CET)
-Date: Mon, 24 Nov 2025 07:26:29 +0100
+	id 7A37968B05; Mon, 24 Nov 2025 07:27:54 +0100 (CET)
+Date: Mon, 24 Nov 2025 07:27:54 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org,
-	mpatocka@redhat.com, song@kernel.org, yukuai@fnnas.com, hch@lst.de,
-	sagi@grimberg.me, kch@nvidia.com, jaegeuk@kernel.org,
-	chao@kernel.org, cem@kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org, linux-nvme@lists.infradead.org,
+To: Yu Kuai <yukuai@fnnas.com>
+Cc: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>, axboe@kernel.dk,
+	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+	song@kernel.org, hch@lst.de, sagi@grimberg.me, kch@nvidia.com,
+	jaegeuk@kernel.org, chao@kernel.org, cem@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
 	linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: Re: [PATCH V2 1/5] block: ignore discard return value
-Message-ID: <20251124062629.GA16702@lst.de>
-References: <20251124025737.203571-1-ckulkarnilinux@gmail.com> <20251124025737.203571-2-ckulkarnilinux@gmail.com>
+Subject: Re: [PATCH V2 2/5] dm: ignore discard return value
+Message-ID: <20251124062754.GB16702@lst.de>
+References: <20251124025737.203571-1-ckulkarnilinux@gmail.com> <20251124025737.203571-3-ckulkarnilinux@gmail.com> <d86b820a-46c9-43b6-9fe2-dbd991b76520@fnnas.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -53,11 +54,16 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251124025737.203571-2-ckulkarnilinux@gmail.com>
+In-Reply-To: <d86b820a-46c9-43b6-9fe2-dbd991b76520@fnnas.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Looks good:
+On Mon, Nov 24, 2025 at 02:24:05PM +0800, Yu Kuai wrote:
+> mdraid and dm are different drivers, please split them.
+
+Yes.  Both parts looks fine to me, though.  So:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+for the next round.
 
 
