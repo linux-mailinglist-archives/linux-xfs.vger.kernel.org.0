@@ -1,125 +1,80 @@
-Return-Path: <linux-xfs+bounces-28459-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28461-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3617FC9F5BF
-	for <lists+linux-xfs@lfdr.de>; Wed, 03 Dec 2025 15:53:18 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0FBACA02A0
+	for <lists+linux-xfs@lfdr.de>; Wed, 03 Dec 2025 17:52:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by sto.lore.kernel.org (Postfix) with ESMTPS id 9A99230000B3
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Dec 2025 14:53:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3E2273048D53
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Dec 2025 16:48:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8CF9303C86;
-	Wed,  3 Dec 2025 14:53:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6F0335B14C;
+	Wed,  3 Dec 2025 16:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WM6bKsSj"
+	dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b="wyeIAbVF"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailly.debian.org (mailly.debian.org [82.195.75.114])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB6530276F
-	for <linux-xfs@vger.kernel.org>; Wed,  3 Dec 2025 14:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC0F36C593
+	for <linux-xfs@vger.kernel.org>; Wed,  3 Dec 2025 16:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764773590; cv=none; b=hkucXA10i3n3Z2Qn+sYYTmZ+Ahqh9iPh4NuJ5u/CJO5uCw5KOqI9mIJTY48hyISGoLOBlWyvxMdAL602HMhlV6hDS8302AlfARU3jnyEp8N575DaEwzQQTiHqARWS7QqL8TuuiNOPO4lYgduKfmwtKtsroKYhyQl7WG/UYv9kfY=
+	t=1764780484; cv=none; b=HNINGW08OuSuW7+vf1QDQdeae+TCg4gPEAWaeQm5cQBDuunIseUFkayYI2g5Nt87GXN7LiCiEp52gQciRqL7Il8hk0c0+iiRxES4Jo8HNjhnyC2VTgU+9XSUME555GEQOyaO49FLbduTMT5VWJd0BfiyoYYscd3O8g98OvXWHQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764773590; c=relaxed/simple;
-	bh=51vchZDDuCG99ZyXBOF75m/Ok9cyPANtpXmulk2ebMU=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dKzRUHwPoTuiZ4ojyM43qYECPU1Cs7TKHKjve139MR4MyYb3wluqOabUdoSluQcf12JJJUzQm96NW5hkm85IwqeWnn7lPWXGIcbnSRLIjHREREQSStCY7DiMvnOt0PsK6sV8EE7k84WfyPzX4OGEwedkTP/gi+2/63GKBcDicbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WM6bKsSj; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-44fff8c46bbso2085568b6e.1
-        for <linux-xfs@vger.kernel.org>; Wed, 03 Dec 2025 06:53:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1764773587; x=1765378387; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9tc9SBGUvFCRRJRAPBShVSwTVwLl3EJakXc/nqwdiPc=;
-        b=WM6bKsSjxRqS9fzQkNFqQljre1d1/U7jIbEFzdQ53xb/Ykf83vGWbz1fENNm/EM/IN
-         RgtJVNluLPT1CoQf6PPlW+ZhKRIA6LYzi7R5qgbujnjkFpRoIoXiufRnUxr08Y0Z7WBG
-         HBD9I7FNRf/kuR+Wyx0hMhVHcBKjlXjk2QyTwZeQHjyjezVFaYLwErac93LuwD/6n7SX
-         hqfnD7RN/Jv2J16t6xyFwTsq+VVtTvM9GuppO5bfUgSZKwrLgBT+Fo+ZKFy0H+62PQeT
-         3o3+RPKj92QSWZ9z0HYxk8yisd1tJ630sGzwJq7Yobv3dMsiZR6oHoa1vbG1xo61lKAc
-         dpeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764773587; x=1765378387;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9tc9SBGUvFCRRJRAPBShVSwTVwLl3EJakXc/nqwdiPc=;
-        b=Cigk2fXbMdOqjmcJX7rM3heFsHr4ZpmVR9Fkh5qmswgJ1lEK5Zy4Kl+z4oFjx4lOVA
-         b2sgQ0OvigGbpnK3jc0E45NVLsr9Ql6rnkxqu/0DhugTpXDALmaf5lXHp4hbypZM5VIR
-         0ynV5S8STZRT1iRVIW/2ifuG3Wv9DEx67wnxFU2Mqq18Qe14djW7ZYD0BeRILFHOBzhd
-         WXZ1kwPOJQzQyRaFchtqkE5aIUPAmdCYy6wsF9naFUO9XNAuj9vzJZgEJ6FU5RR4Fk6L
-         eS3R9HpF6G4/t1jDC7GLJPwqHDc5/RanHWU60pRvecsNbshC7E2XGQMBHiCmMJyiz6fZ
-         DYyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYv8aCWSwJf2b7GWy94C1WxG/Uv6Cbvjzi0qGf982rqDxZJg3FXl1BgtRq7Rrc5uBCjYXrs9VONVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBRJvzbKv/HarYvOIurs2O1HnInDRSrCN5TgLKzMD0OlgUmW3Q
-	BjfcS2XyR9uJWpxT2s+HMazwpw+Ri/+YJkwDW6ouqrFvsrSCEHubU8DAgSdC0qoZJMk=
-X-Gm-Gg: ASbGncvcGJF8/lb/KOv+Q7HzTLSrEO5Gcb7j9TB1Qhg1juyRvYuGz/1LOIqhleTvRbI
-	tDVjCjtAUjkN7OaGrEmF/QK5BgnUkKmc6s2fTEEJqwh3sIKwjmqGHQB6R0VjmwesOwiZi94Cr7D
-	EM5Kdoes1gd095xbImx7ZGh8hsup5asU4dplPUH9Ytma5vRz2iogWfPKmaVSRXI+bYv4Hy/tyA8
-	jrRSLQ5r2qw4N2LvoWABBh9Cmmzt4KDEcO56095HaY46lUaMSbmaZkg+xb+WZ1HzvLL1peaMiTg
-	OL/0fIKkyk1Dg9oa1dYBmrz3Dv8mlrVrbAqy1CqyZrC1h1jZ4Tv+G20k0Mf7YARzFwDfb07HWTL
-	B1hjG06TN9X6un2LMVagYkjffHtp9Qab9xxoXwFAfB7mLoMiOwtapM7yfdQ6vwe4GFB9ztsjxOw
-	WhCQ==
-X-Google-Smtp-Source: AGHT+IEmBEK6bTGKnMdujI3ujDy4UcJas/45ozXk4d/lBkl5ABzvdXswERHZW/FvxgYvWIyzTXS/0Q==
-X-Received: by 2002:a05:6808:1a08:b0:450:907:b523 with SMTP id 5614622812f47-4536e3af4f8mr1301320b6e.6.1764773587425;
-        Wed, 03 Dec 2025 06:53:07 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-65933cc55bfsm5953139eaf.9.2025.12.03.06.53.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Dec 2025 06:53:06 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
- asml.silence@gmail.com, willy@infradead.org, djwong@kernel.org, 
- hch@infradead.org, ritesh.list@gmail.com, linux-fsdevel@vger.kernel.org, 
- io-uring@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-ext4@vger.kernel.org, linux-block@vger.kernel.org, 
- ming.lei@redhat.com, linux-nvme@lists.infradead.org, 
- Fengnan Chang <changfengnan@bytedance.com>
-In-Reply-To: <20251114092149.40116-1-changfengnan@bytedance.com>
-References: <20251114092149.40116-1-changfengnan@bytedance.com>
-Subject: Re: [PATCH v3 0/2] block: enable per-cpu bio cache by default
-Message-Id: <176477358617.834078.6230499988908665369.b4-ty@kernel.dk>
-Date: Wed, 03 Dec 2025 07:53:06 -0700
+	s=arc-20240116; t=1764780484; c=relaxed/simple;
+	bh=ZyCJ4FPKFKmkAcNLhe5PsaiDrH2WiVIidCHX2TQjBdY=;
+	h=To:From:Subject:Date:Message-Id; b=T2MxcAz2R954DZJuBYt3O2pToXA0eXamErIogkPZmbl8CuVRsK3iXezVXdVPB+15lwIiOV/c3rqOq3UYtkvIT3foZ+silXbqeuo8wfV31EJJZg5SoWZO06IWCftgRYgQsXy5wPwq3XSXg/LLd8CDSsfs0GxifHs3j0YPy6oQ9Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org; spf=none smtp.mailfrom=ftp-master.debian.org; dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b=wyeIAbVF; arc=none smtp.client-ip=82.195.75.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp-master.debian.org
+Received: from usper.debian.org ([2603:400a:ffff:bb8::801f:45]:33046)
+	from C=NA,ST=NA,L=Ankh Morpork,O=Debian SMTP,OU=Debian SMTP CA,CN=usper.debian.org,EMAIL=hostmaster@usper.debian.org (verified)
+	by mailly.debian.org with esmtps (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <ftpmaster@ftp-master.debian.org>)
+	id 1vQpUi-003SRE-2N
+	for linux-xfs@vger.kernel.org;
+	Wed, 03 Dec 2025 16:14:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ftp-master.debian.org; s=smtpauto.usper; h=Message-Id:Date:Subject:From:To:
+	Reply-To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=K6CzcIrgkAVG9xOPf6nUmmWWklDYJWKgiXA7/iy1xJ4=; b=wyeIAbVFKi8n6qPUO1nuHzbz9D
+	iWdyWh9jUVc7rS7tm1wTVnJCAyHhZ4VC6TScZYKxjEayX/lKJjH4Wc5PwZrBCVIDJHhbrSEB435Xa
+	n8T7XWEP1RkvNIjPvH9Qb23NoHejzcZsolQOtV2hhcTd7DE0VFYCvtRIpWZHLvP836xIjB7dDXhhB
+	UThNtgd5zn5Sy8iIRjRjNJEkJL3OWQmh7FDHWf0GuvIzxY03EpF/D+xvVrR1DRvvkaGkgJp4GkMm9
+	aWnEQ+u2sqeTNlVYJW10R42wveCgegeezfKUQT50yTXuf1+C1ETF2ilyLex79VHfrz5uWVw8VLaU1
+	dyDj7CjQ==;
+Received: from dak-unpriv by usper.debian.org with local (Exim 4.96)
+	(envelope-from <ftpmaster@ftp-master.debian.org>)
+	id 1vQpUh-003XlT-2m
+	for linux-xfs@vger.kernel.org;
+	Wed, 03 Dec 2025 16:14:19 +0000
+To: linux-xfs@vger.kernel.org
+From: Debian FTP Masters <ftpmaster@ftp-master.debian.org>
+Subject: Processing of xfsprogs_6.17.0-1_source.changes
+Date: Wed, 03 Dec 2025 16:14:19 +0000
+X-Debian: DAK
+X-DAK: DAK
+Precedence: bulk
+Auto-Submitted: auto-generated
+X-Debian-Package: xfsprogs
+Message-Id: <E1vQpUh-003XlT-2m@usper.debian.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
 
+xfsprogs_6.17.0-1_source.changes uploaded successfully to localhost
+along with the files:
+  xfsprogs_6.17.0-1.dsc
+  xfsprogs_6.17.0.orig.tar.xz
+  xfsprogs_6.17.0-1.debian.tar.xz
+  xfsprogs_6.17.0-1_source.buildinfo
 
-On Fri, 14 Nov 2025 17:21:47 +0800, Fengnan Chang wrote:
-> For now, per-cpu bio cache was only used in the io_uring + raw block
-> device, filesystem also can use this to improve performance.
-> After discussion in [1], we think it's better to enable per-cpu bio cache
-> by default.
-> 
-> v3:
-> fix some build warnings.
-> 
-> [...]
+Greetings,
 
-Applied, thanks!
-
-[1/2] block: use bio_alloc_bioset for passthru IO by default
-      commit: a3ed57376382a72838c5a7bb4705bc6c8b8faf21
-[2/2] block: enable per-cpu bio cache by default
-      commit: de4590e1f1838345dfd5c93eda01bcff8890607f
-
-Best regards,
--- 
-Jens Axboe
-
-
-
+	Your Debian queue daemon (running on host usper.debian.org)
 
