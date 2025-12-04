@@ -1,44 +1,55 @@
-Return-Path: <linux-xfs+bounces-28504-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28506-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 379A2CA3031
-	for <lists+linux-xfs@lfdr.de>; Thu, 04 Dec 2025 10:34:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D868ACA3058
+	for <lists+linux-xfs@lfdr.de>; Thu, 04 Dec 2025 10:36:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8F0073013EF0
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Dec 2025 09:32:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9724F300FFBE
+	for <lists+linux-xfs@lfdr.de>; Thu,  4 Dec 2025 09:36:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39D9330D54;
-	Thu,  4 Dec 2025 09:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9BED2D8DD6;
+	Thu,  4 Dec 2025 09:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RBQ+dREC"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5A21917FB
-	for <linux-xfs@vger.kernel.org>; Thu,  4 Dec 2025 09:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A32C2BDC13
+	for <linux-xfs@vger.kernel.org>; Thu,  4 Dec 2025 09:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764840727; cv=none; b=i2D32l354oggZ6kZ3ZKApnvBlKNzP9UP0EzuUOeuPl9YRGmZOBwxn/fHWaTazIqaQHP/q5Bw0LgZzd9np1UIv62A0GY8Lvul3MKHNFGVtKE+uHhZTu50Y0eLYIK1vwxHShzLMCAFgoZBw6DkVAivADhYW0ITW1uRvCOotFgfEdk=
+	t=1764841001; cv=none; b=uc3InxmXlFlP05cg7JyXVdlZ1M9lBl+Y2oiK6x6Eu2bwjg2mEFhgXpxgUF8CwPTYVJyg7NYJFpimJWMhrwVke8+pK1OBsLcqs82LJZxChlzRpscsKoB0FdVJ0onK52uIQBFeGXKGrdo9lrjad6VqHOzGVnpYCpBCW0Hiy3WaF1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764840727; c=relaxed/simple;
-	bh=o1/gA76yom3wVfWKzDlbn9UWMFjoMslATToxh4Qid3c=;
+	s=arc-20240116; t=1764841001; c=relaxed/simple;
+	bh=4e8Bqik+eeTvNil2ktfC0wPKaorQaPMbRiAYDSydi/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ihFqHY0M3FjCD2BKmY0cILenVABYLNX7r110uWUUP7Yar66FXJimW2APxZebiOqJ6yOstkDsyk0dCeo9soKs60QRycwIn1pN4qRtcv1wh+O1FP1jPxhTLC7SVFVJc7z0/fjkslJJbmFh6cXLoXDDbKWcTj55SC/JoSexL3FnYbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id BCCEA227AAF; Thu,  4 Dec 2025 10:32:02 +0100 (CET)
-Date: Thu, 4 Dec 2025 10:32:02 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: linux-xfs@vger.kernel.org, aalbersh@kernel.org, cem@kernel.org,
-	cmaiolino@redhat.com, djwong@kernel.org, dlemoal@kernel.org,
-	hans.holmberg@wdc.com, hch@lst.de, preichl@redhat.com
-Subject: Re: [PATCH 23/33] xfs: convert xfs_buf_log_format_t typedef to
- struct
-Message-ID: <20251204093202.GC19971@lst.de>
-References: <cover.1764788517.patch-series@thinky> <qptxxayqxie4vwryddds36sofs44zufqo3wes6j4dfehl2jxoq@3ioxr4fnyynb>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lgMKe43xvMup2rfRRCxjgMPUeji/2A47pQazHdDV676S9kjEcr6NqnUMQCL1wmA/jd0pwTZhKPytoFGVwKuarByuwCGX4wY+Ky0FsfygUjosfLK7/y3FkllhvRAyK2awPhu7fyHle8pZtP7/Lap418OSTDj/YOEHnuhkHF6bmzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RBQ+dREC; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4e8Bqik+eeTvNil2ktfC0wPKaorQaPMbRiAYDSydi/w=; b=RBQ+dRECg5dXbyAj8Y4sTQHUqY
+	wFWdXnKAfe4TfFcWidsFGFqEkAcY3saKbPEw+GhamhT3E21X0N6AZwCedEHRVoR9QxUaK7oBAX0Ji
+	m6N4AMCS6k24yUvxrfns+xtjJi1QLut1cp/2hQqofTHD4sf2TyLhrfUeeE97X4/GVas8yZ5QApjoN
+	vQyUlvfA8oxqy//6lpgZH2ZcRZIKKQTnf1k1UbKSQXmCUHXm5I3kDagFHo/bIZZE3ucAjoLo0JONq
+	70alrIyrYqpD8i84hmjuy+PzLGORsjmWhpPTEoECUYKyhPELw7s6f2ICQghfhXKuFAl7ElRU9fgF+
+	UWS1J1fQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vR5lO-00000007mAR-1mrN;
+	Thu, 04 Dec 2025 09:36:38 +0000
+Date: Thu, 4 Dec 2025 01:36:38 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
+Cc: linux-xfs@vger.kernel.org, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
+	djwong@kernel.org, hch@infradead.org
+Subject: Re: [PATCH v1] xfs: Fix xfs_grow_last_rtg()
+Message-ID: <aTFWJrOYXEeFX1kY@infradead.org>
+References: <1e5fa7c83bd733871c04dd53b1060345599dcef9.1764765730.git.nirjhar.roy.lists@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -47,46 +58,25 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <qptxxayqxie4vwryddds36sofs44zufqo3wes6j4dfehl2jxoq@3ioxr4fnyynb>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1e5fa7c83bd733871c04dd53b1060345599dcef9.1764765730.git.nirjhar.roy.lists@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, Dec 03, 2025 at 08:09:48PM +0100, Andrey Albershteyn wrote:
-> Convert xfs_buf_log_format_t to struct and retab arguments for new
-> longer type.
+On Wed, Dec 03, 2025 at 06:15:45PM +0530, Nirjhar Roy (IBM) wrote:
+> The last rtg should be able to grow when the size of the
+> last is less than (and not equal to) sb_rgextents.
+> xfs_growfs with realtime groups fails without this
+> patch. The reason is that, xfs_growfs_rtg() tries
+> to grow the last rt group even when the last rt group
+> is at its maximal size i.e, sb_rgextents. It fails with
+> the following messages:
 
-I think all these patches should go before the removal?
+Please use up all 73 characters of the commit log to improve
+readability.
 
-> 
-> Reviewed-by: Andrey Albershteyn <aalbersh@kernel.org>
-> ---
->  include/xfs_trans.h      | 10 +++++-----
->  logprint/log_print_all.c | 18 +++++++++---------
->  2 files changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/include/xfs_trans.h b/include/xfs_trans.h
-> index d7d3904119..a3e8a000c9 100644
-> --- a/include/xfs_trans.h
-> +++ b/include/xfs_trans.h
-> @@ -46,11 +46,11 @@
->  };
->  
->  typedef struct xfs_buf_log_item {
-> -	xfs_log_item_t		bli_item;	/* common item structure */
-> -	struct xfs_buf		*bli_buf;	/* real buffer pointer */
-> -	unsigned int		bli_flags;	/* misc flags */
-> -	unsigned int		bli_recur;	/* recursion count */
-> -	xfs_buf_log_format_t	__bli_format;	/* in-log header */
-> +	xfs_log_item_t			bli_item;	/* common item structure */
+The change looks good:
 
-This should be struct xfs_log_item.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-> diff --git a/logprint/log_print_all.c b/logprint/log_print_all.c
-> index 39946f32d4..bbea6a8f07 100644
-> --- a/logprint/log_print_all.c
-> +++ b/logprint/log_print_all.c
-
-And this clashed with the series I had, which also splits things up.
-But I guess we should just do the quick conversion given that you've
-done all the work and I was too slow.
+Can you submit a test case for this to xfstests?
 
 
