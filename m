@@ -1,42 +1,43 @@
-Return-Path: <linux-xfs+bounces-28505-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28502-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A95ACA3028
-	for <lists+linux-xfs@lfdr.de>; Thu, 04 Dec 2025 10:33:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 627CBCA3016
+	for <lists+linux-xfs@lfdr.de>; Thu, 04 Dec 2025 10:32:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 285CC30202FD
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Dec 2025 09:33:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D3709306C2EA
+	for <lists+linux-xfs@lfdr.de>; Thu,  4 Dec 2025 09:28:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06453331A59;
-	Thu,  4 Dec 2025 09:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA148326D73;
+	Thu,  4 Dec 2025 09:28:30 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F020B334C0B
-	for <linux-xfs@vger.kernel.org>; Thu,  4 Dec 2025 09:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36484330D54
+	for <linux-xfs@vger.kernel.org>; Thu,  4 Dec 2025 09:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764840826; cv=none; b=lZ8h5rj9OrNu0skxfAw3uO3nhJrnLYLx2ZYQe/ZWtAgkIoE1F07tEc1LFH/ZIkeM482uxfkaYgNATbnB8Cq7+GyYeoMPxKwJtsTIAWhZq7DibTxeygH4HLjIBKxr3LQ/7sA15IKT/H5hGk0IeLCeO5rwhn/dhLt/mkk9CGwduLI=
+	t=1764840510; cv=none; b=jV7dlyY030c2YjxRGQEiabmbI1KSO/N3Wo30sUqXIPWliWPSpg76V8cVxMFzYM5832yd+lFczfnC7C8vOVfxGWPe4gz1WyjHEHb4fI5EFbZurFP9JVDHD/xg7VbRHoNZHRgf6ZuoxoPcDaE2eCpQu8v08i0Rl/fvOt6X5G9E7KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764840826; c=relaxed/simple;
-	bh=Ht/vlwV/Ey+a/L7idRGuYaUDPNdtdqrCNS2UcPT0TpA=;
+	s=arc-20240116; t=1764840510; c=relaxed/simple;
+	bh=hplsPlchB5WfyjtLdileqwBrdBIjYmObZYsQyafs5ZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovJtnXUo6Rja3DOWdnFVxaqXFq34s28N+FZOk1zwCaVVCNXDWG6UcDFtm3Wm2mEDtqTyegBgzPXarGpRVw34WavBJr+cz8P/AmelRsDa8WSlE98M8HhkmrojlVmSrr/MfLFPIXm//F7oShYmaB/MWsC2TTaTuG0/MM9pQg1SP6Q=
+	 Content-Type:Content-Disposition:In-Reply-To; b=L2GWHt8NO007YbzFz38wvcIGLP7g8U3jEev1bsOqI9UCl/LT7q580Z/JT1HAtSv95cizNvQFmZzWt2izMXJ1wexPz7QLmoFbiTYKuZkjxnRHrib7a3z8lDDjZ7XuNd5b7zYoEzyhs9ndAN/rz33BsYlVB2lakUi2/PhJ11rNiR4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 3C93E227AAC; Thu,  4 Dec 2025 10:23:41 +0100 (CET)
-Date: Thu, 4 Dec 2025 10:23:41 +0100
+	id 0D472227AAD; Thu,  4 Dec 2025 10:28:24 +0100 (CET)
+Date: Thu, 4 Dec 2025 10:28:23 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Christoph Hellwig <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH, RFC] rename xfs.h
-Message-ID: <20251204092340.GA19866@lst.de>
-References: <20251202133723.1928059-1-hch@lst.de> <aTFOsmgaPOhtaDeL@dread.disaster.area>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: linux-xfs@vger.kernel.org, aalbersh@kernel.org, cem@kernel.org,
+	cmaiolino@redhat.com, djwong@kernel.org, dlemoal@kernel.org,
+	hans.holmberg@wdc.com, hch@lst.de, preichl@redhat.com
+Subject: Re: [PATCH 0/34] xfsprogs: libxfs sync v6.18
+Message-ID: <20251204092823.GA19971@lst.de>
+References: <cover.1764788517.patch-series@thinky>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -45,15 +46,15 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aTFOsmgaPOhtaDeL@dread.disaster.area>
+In-Reply-To: <cover.1764788517.patch-series@thinky>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Dec 04, 2025 at 08:04:50PM +1100, Dave Chinner wrote:
-> fs/xfs/xfs.h is just a thin shim around fs/xfs/xfs_linux.h. Rather
-> than rename it, why not get rid of it and include xfs_linux.h
-> directly instead?  I don't think userspace has a xfs_linux.h header
-> file anywhere...
+On Wed, Dec 03, 2025 at 08:03:57PM +0100, Andrey Albershteyn wrote:
+> Hi all,
+> 
+> This is libxfs sync for v6.18. A lot of typedef cleanups mostly.
 
-Fine with me if that name is ok for shared code.
+Oh, I was trying to offload that from you by pre-sending patches.  I
+guess I wasn't quick enough, sorry.
 
 
