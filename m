@@ -1,102 +1,102 @@
-Return-Path: <linux-xfs+bounces-28550-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28552-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F1C9CA8468
-	for <lists+linux-xfs@lfdr.de>; Fri, 05 Dec 2025 16:57:35 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2AB8CA8507
+	for <lists+linux-xfs@lfdr.de>; Fri, 05 Dec 2025 17:08:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5AF4234A8E3E
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Dec 2025 15:46:21 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 57145334959B
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Dec 2025 15:38:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92DBC33BBCC;
-	Fri,  5 Dec 2025 15:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62AB933B975;
+	Fri,  5 Dec 2025 15:02:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MhjiON9g";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZWrm0Hd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HrODalbg";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="OldoK+OB"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941772E06EA
-	for <linux-xfs@vger.kernel.org>; Fri,  5 Dec 2025 15:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BEB32D0C0
+	for <linux-xfs@vger.kernel.org>; Fri,  5 Dec 2025 15:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764946971; cv=none; b=lUS/ESpvN5Ji84O1G8fH8xjAWzG9mNU04C79UYEDZS6FvhF8S/lnPPjsQNMHSXCcn/VntdJI5dsNE2jXNMOPZSpOAIQuMWtmVPA+WX5YRQrmrHEIB/ydMoqnf1YLcu+7EmNiAMJf4U/MDmh0b4HxoTkTmeu/7EUVn0wwmf7xEzE=
+	t=1764946977; cv=none; b=DXWBnMNdqhypP+onyemd9c0bnG9sty8ovZKZbF8IbS0+S7qDGrkV/ee8jL/Awo7qLunxc5DpZuHSQOADWtoyY8AlYp4W92PiAeaSy+DstAcyTtM+c7abSFH9lip/ezzoAJYqlWiy+mS31ftRxr+dzHvIbNqY+5JvTBtXNtmDI6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764946971; c=relaxed/simple;
-	bh=bjmCQju9hFpv6PameSZ4+sJuOILpW+FNz7yOClEk/Ls=;
+	s=arc-20240116; t=1764946977; c=relaxed/simple;
+	bh=fUmZS57XiZXtxrqbzJIbKW5XdJHlZTD7Q9UJlDvVqOY=;
 	h=From:Date:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hOD9mJ/eU1Ih1aY88qs3iHOxpKvtg+1+yHZYkeeeL7Gtc/hxAIrPTWIFeXl6/DAzqi8caV3T5dkIYG3ptWoi8x7gHAes+gp7WnB76GcF9B63ibi8wQPVsICExf8FMwGF749uPELOOLJQsSahkpyO53EYqcWw1ph/sh5/b10uZ5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MhjiON9g; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=aZWrm0Hd; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=hQ9IgVxhOXeyg8YGue4oMPKj7mDLSch6F76oEKrwM58LhsosuQs78ICDugrt3EMKb0mRIAt14O4763X6YwHHFiRukhQLG2Rx2zEVGp141xVVhshMGoIvvS0h5WJfFO37yTy/zmSudmaTEtaw/UhMrxx8yI2738lk91d4Z+ENFUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HrODalbg; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=OldoK+OB; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764946966;
+	s=mimecast20190719; t=1764946972;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=r3vstktrxlALiDnoiLLjTZhUvoxu7dGqUcOK7OIAecM=;
-	b=MhjiON9ggBVJxJhhUSKyYc1O5OXCw+K7nlMEAJJC/kS7RCT4HIDnF+cS1vEPN4BSaNWojW
-	BYHIoC+8Uvrt0WQFVypKwX6j38+T00O8rC91oIiEKYl6UBF5n4QsDDUrVNtO2Zqz+WNOH2
-	bV96dBNN0MJi5KspVggedQDtYHoSwow=
+	bh=wUx1UYoi2OkkiqI05TUTxZhizMlqWbWg3c7YqF4njvo=;
+	b=HrODalbg04u1Q76nGeazIFnUbks4mdjhFwpTYmUQZCMNauHrZFEEX5cuAVlsFpmblI3U3D
+	yd4AAVeNYQctCpQzlnU1hD2cNhxBi1JWtMm9UCs0WWM4Iv20aTq13Vl3ydCJzBQMt9jFAG
+	+w5F9ANBGSHw7raMucKqZmy/CmnTwn0=
 Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
  [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-145-D4ThHiVaM1-sU_6hicTgrg-1; Fri, 05 Dec 2025 10:02:45 -0500
-X-MC-Unique: D4ThHiVaM1-sU_6hicTgrg-1
-X-Mimecast-MFC-AGG-ID: D4ThHiVaM1-sU_6hicTgrg_1764946964
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-42b30184be7so1054655f8f.2
-        for <linux-xfs@vger.kernel.org>; Fri, 05 Dec 2025 07:02:45 -0800 (PST)
+ us-mta-365-o61MJhKTOOygMF58lWgdag-1; Fri, 05 Dec 2025 10:02:50 -0500
+X-MC-Unique: o61MJhKTOOygMF58lWgdag-1
+X-Mimecast-MFC-AGG-ID: o61MJhKTOOygMF58lWgdag_1764946969
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-42b570776a3so1108386f8f.3
+        for <linux-xfs@vger.kernel.org>; Fri, 05 Dec 2025 07:02:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1764946964; x=1765551764; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1764946969; x=1765551769; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r3vstktrxlALiDnoiLLjTZhUvoxu7dGqUcOK7OIAecM=;
-        b=aZWrm0Hdnjfz8V6IA1ZElYCX124jHNhy9DumaGNTTmMRzZt5HhIpmsiOdG3ANSYZzv
-         Qm8iMFOrM81REI+ULNWqzjm7Irf5uMC+vxkJMh6d6V7vOzkIWgLv5AuiQjIrEPZiBm9M
-         EmvehryN9ce9C92scUNU4oOvxr5BER9e2ZsGKSAL9LuaCe2a4o5ZjmXRwE7BgZ/F8E0B
-         25klZQ0/1aHJVWX9HoWDjORP4aRHe6HzT30tmwhw/db3zLEy3NBG+pF9So9A43Mv+N8Q
-         p1UAMBYd23Qfb90Kb4fgE6bjLe4Hm6SdimTVYkFOBCyZdDU3ONZVwXFZdl6yEzTiRbvL
-         zUnQ==
+        bh=wUx1UYoi2OkkiqI05TUTxZhizMlqWbWg3c7YqF4njvo=;
+        b=OldoK+OBbjbbD5juqOs1W0xhYwECX6iOJxBM3eaojcvnO5BT1UYBc0ACOUF4nON1Ad
+         dd8/apLrb+y1V5XecGQZ/JG8mC5NnLy8sBKCqRc6xsBf/Re/9QTiZ+gC5H6oNyBS3+4E
+         dAwn7I8kLhg646SRXgU7E3spfp2vx26eLz8myc3NNHMuCBlI2LIPnsPC3TT6vEveLwn8
+         JW5rijzNQN7PpYadAsGmxv7AkEBjAtDZr92qR7XSlmJ0+Lh2hXPC1jILRTvrWyUk3xHN
+         mbq+On+gYS6buAyeO2WkpD2MfV0gayCw/H1b6TAgIidnwRcNbKB1aPsy7bC4IrEJnh8I
+         ARVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764946964; x=1765551764;
+        d=1e100.net; s=20230601; t=1764946969; x=1765551769;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=r3vstktrxlALiDnoiLLjTZhUvoxu7dGqUcOK7OIAecM=;
-        b=ExCgfWCBo2SQ2gsUVw2XytB9/YYFbwc6Rh8jhw4pZ1a2ZhS5+p/n4kDx+ZxO1fn8B7
-         9bFHUS+yM4bI3vku8fY8VNYtlWkVcF2NpfWXLJW2yOp9pqeLnDCJt1gIo6EmVz/VsVA5
-         i0Hb60Z46GI3huYYU/Wo7Nz5PbMG9iCsNfDxezJAe0MfnFuom0fNJgx5Ee7wz7VS9WBu
-         FepQI4sqd7cn+plZgsowThdm/HdjS14ETw/OKIYEBbP0JxbHFAXu5rn9Ai0LrfFfOPJG
-         IuCpmUnFIsHqGOUcDCoNNZK5CWp4NPY22TvpDJAZJF625UmwiYO9qmZ9/gzhsLpKJfPT
-         xgMQ==
-X-Gm-Message-State: AOJu0YyLtPeo2zO80sYfjJRWx/OM7+URLMjZpNe6DY7JmtNmAp25+AmJ
-	ucZrz3P+4oL9JciOQnREdWHESpasQBFoPPQoHq/0gZ3JSzZnsvXCOPvBAC+0m4hgRDJWEoLdrS8
-	Ta1UmZ9MjeUw3mo7thJYOj4klbIi0E3GGnU0uWVQFxH8Y89JWc7fXyVTW8M2SMATePGvcT0vMt9
-	jape5bDsrlU8FS5aTxoC9q0x0Mw0CtCpo3frNYU83Z7OTj
-X-Gm-Gg: ASbGnctxM641AomfdZfOY1yfxx/buirFL4Bj4tb3egcp/3ql+Gv/3TkajML9p+iaJiI
-	nXYt96NxGSfGHuu9xlWZYILZfMQQ7JuEoKwT6JgFTVZEoVMG/cj+eeqZ7/QCa1jOHbtC/ogDXvL
-	1v6cLe1UqmxWkZyzfTZBqqsGJ+u3OTeKuHxwIq5T8ELmLgkx0uVAw8KqTeSj++0o4yVRjDKigu5
-	vV1U3jYQCeL/OGRfZVQc39QGJ6Bbgy4JYmwk8cm6fSTkLMvKomcGPxAVWQfjToolS7lBdFPdVF7
-	FTOl3pDEc7oplEVoZ6ycRYKlQS3fKg1sTk+ae6BbdmbGqCEQlKILKBDk3F9t3bEd5cXTbQNlxYM
+        bh=wUx1UYoi2OkkiqI05TUTxZhizMlqWbWg3c7YqF4njvo=;
+        b=VQU4G8sIpcVQuLVggVe0SvACbtXPcjjyheDrnH/BasPtWZCb7yeQpRMsB3j7+/QR2Q
+         D+fN0fIJTNt7hGZMnRDLWsRYlLjPLBzCrkaaaiM1TzBBBbR3cy9Q8SVLU/m6/VQ5iCI0
+         5SZs3eglJ3W9KQsJE/VDeglexycNZvu16CI3v87JoLiy+BK9+rGfzuBVmW4Zkq75VLGW
+         Ol1421I4WExOqab3IvdqID79bBuJSbUkCX9I+0h4jQoixCGwy5UwzFPD7jMMlKbqMrDP
+         ou+CN6zutfRDzi9r7BqUEx4rKfNO4MaxgYfOEKXVbbAjDAngkgrlpz2w6wC+DJc3b3GW
+         72zQ==
+X-Gm-Message-State: AOJu0YzGeEhPisP2md89JEUfuLJczEpAI/U+neq/DQgnqBtlJxcFHOEG
+	0XzAWLE5qJvCwh2fcT3J2nvYmK/+ibALtHkwMrK0HANJuuVKukihZRO5IH6LsOr9uTjzEVef3H7
+	fshpbCVltJ0yu67nkx/IQUb9dssSWUsQAjOFBdifGMU56tPUX1oy7HR6LQNZmXQ+lIFyLNCkry7
+	+O/+yTnMOjUxFsy0ooeHVy+e6Z/9Bo6LLiFfF2R+av5B+A
+X-Gm-Gg: ASbGncvZ/SJUhTWjh7cECA6TP4bl3rmLsvKOSGQlT0Hv5uae3+OdB2cNixwO1QW/dZK
+	r1UlJaqudlKcZVnMSLMZ1IlYRgBhegXKdHs8yNlvb/G/gY4yvVgjC1Dmda1y7vkoOgJmuCr7DON
+	tuJX49nzGGkV9XfbaLFILVCl525sw2QOnCKO67ZZ0qkFb+ykeAutjaFpsc7rs3uF0ghOPbrwkSz
+	YRBRdOkCR8uriZLQ2HWn6/4hnJnCs63jLjj8ra2IgsHazqSvnshKwCs9nWNpUxkiMnrnVkSTl0h
+	NBkU64tdElgQDquPNuQBQBkpUaoxNBQmYr/4wJAc6xb0GWN3IWFh/KO+k3LT/rS1q2tYg+lyR/M
 	=
-X-Received: by 2002:a05:6000:144c:b0:42b:30f9:79b6 with SMTP id ffacd0b85a97d-42f731ee8e3mr11065990f8f.58.1764946964001;
-        Fri, 05 Dec 2025 07:02:44 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHW3lzZMNTCk5sKS0Tw9WYyJPXXGJnmPR+Kphr3upOS99l4CibedmkpeIhsvKOT1gsjbOmX3A==
-X-Received: by 2002:a05:6000:144c:b0:42b:30f9:79b6 with SMTP id ffacd0b85a97d-42f731ee8e3mr11065915f8f.58.1764946963291;
-        Fri, 05 Dec 2025 07:02:43 -0800 (PST)
+X-Received: by 2002:a5d:494b:0:b0:42f:8816:a50a with SMTP id ffacd0b85a97d-42f8816a549mr426687f8f.63.1764946968670;
+        Fri, 05 Dec 2025 07:02:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGz8YUXziIcdcJGxd2yY6oVO/ftyrhjjEkjiOEX9tg2NmuuuTDn26PnHMgfYLYK8uJpcAleJw==
+X-Received: by 2002:a5d:494b:0:b0:42f:8816:a50a with SMTP id ffacd0b85a97d-42f8816a549mr426605f8f.63.1764946967882;
+        Fri, 05 Dec 2025 07:02:47 -0800 (PST)
 Received: from thinky ([217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfee50sm9269869f8f.14.2025.12.05.07.02.42
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbfee50sm9270200f8f.14.2025.12.05.07.02.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 07:02:43 -0800 (PST)
+        Fri, 05 Dec 2025 07:02:47 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Fri, 5 Dec 2025 16:02:42 +0100
+Date: Fri, 5 Dec 2025 16:02:46 +0100
 To: linux-xfs@vger.kernel.org, aalbersh@kernel.org, cem@kernel.org, 
 	cmaiolino@redhat.com, djwong@kernel.org, dlemoal@kernel.org, hans.holmberg@wdc.com, 
 	hch@lst.de, preichl@redhat.com
-Subject: [PATCH v2 14/33] xfs: remove the xlog_op_header_t typedef
-Message-ID: <ck7ooq24lxhdxgorjp2apcg524mmoi3uqltnqxhnameu6agfvs@zrbr2od3erpu>
+Subject: [PATCH v2 15/33] xfs: remove the xfs_trans_header_t typedef
+Message-ID: <33b3bvlg67nntatmrlnvjok37n5oonyb7hfzyfihgavdzoy7vy@i36h4rpeznkj>
 References: <cover.1764946339.patch-series@thinky>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -110,7 +110,7 @@ In-Reply-To: <cover.1764946339.patch-series@thinky>
 
 From: Christoph Hellwig <hch@lst.de>
 
-Source kernel commit: eff8668607888988cad7b31528ff08d8883c5d7e
+Source kernel commit: 05f17dcbfd5dbe309af310508d8830ac4e0c5d4c
 
 There are almost no users of the typedef left, kill it and switch the
 remaining users to use the underlying struct.
@@ -120,30 +120,42 @@ Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Carlos Maiolino <cem@kernel.org>
 Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 ---
- libxfs/xfs_log_format.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ libxfs/xfs_log_format.h  | 4 ++--
+ libxfs/xfs_log_recover.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/libxfs/xfs_log_format.h b/libxfs/xfs_log_format.h
-index 0d637c276d..367dfdece9 100644
+index 367dfdece9..2c3c5e67f7 100644
 --- a/libxfs/xfs_log_format.h
 +++ b/libxfs/xfs_log_format.h
-@@ -141,14 +141,13 @@
- #define XLOG_END_TRANS		0x10	/* End a continued transaction */
- #define XLOG_UNMOUNT_TRANS	0x20	/* Unmount a filesystem transaction */
- 
--
--typedef struct xlog_op_header {
-+struct xlog_op_header {
- 	__be32	   oh_tid;	/* transaction id of operation	:  4 b */
- 	__be32	   oh_len;	/* bytes in data region		:  4 b */
- 	__u8	   oh_clientid;	/* who sent me this		:  1 b */
- 	__u8	   oh_flags;	/*				:  1 b */
- 	__u16	   oh_res2;	/* 32 bit align			:  2 b */
--} xlog_op_header_t;
+@@ -212,12 +212,12 @@
+  * Do not change the below structure without redoing the code in
+  * xlog_recover_add_to_trans() and xlog_recover_add_to_cont_trans().
+  */
+-typedef struct xfs_trans_header {
++struct xfs_trans_header {
+ 	uint		th_magic;		/* magic number */
+ 	uint		th_type;		/* transaction type */
+ 	int32_t		th_tid;			/* transaction id (unused) */
+ 	uint		th_num_items;		/* num items logged by trans */
+-} xfs_trans_header_t;
 +};
  
- /* valid values for h_fmt */
- #define XLOG_FMT_UNKNOWN  0
+ #define	XFS_TRANS_HEADER_MAGIC	0x5452414e	/* TRAN */
+ 
+diff --git a/libxfs/xfs_log_recover.h b/libxfs/xfs_log_recover.h
+index 95de230950..9e712e6236 100644
+--- a/libxfs/xfs_log_recover.h
++++ b/libxfs/xfs_log_recover.h
+@@ -111,7 +111,7 @@
+ struct xlog_recover {
+ 	struct hlist_node	r_list;
+ 	xlog_tid_t		r_log_tid;	/* log's transaction id */
+-	xfs_trans_header_t	r_theader;	/* trans header for partial */
++	struct xfs_trans_header	r_theader;	/* trans header for partial */
+ 	int			r_state;	/* not needed */
+ 	xfs_lsn_t		r_lsn;		/* xact lsn */
+ 	struct list_head	r_itemq;	/* q for items */
 
 -- 
 - Andrey
