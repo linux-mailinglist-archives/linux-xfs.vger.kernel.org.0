@@ -1,161 +1,193 @@
-Return-Path: <linux-xfs+bounces-28536-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28538-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3A26CA80AC
-	for <lists+linux-xfs@lfdr.de>; Fri, 05 Dec 2025 15:58:52 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37D68CA810A
+	for <lists+linux-xfs@lfdr.de>; Fri, 05 Dec 2025 16:03:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 7B6FF311BD9D
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Dec 2025 14:43:27 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 140B43087F14
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Dec 2025 15:01:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EAAE2727EB;
-	Fri,  5 Dec 2025 14:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA4CA33B964;
+	Fri,  5 Dec 2025 15:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GidbRiyW";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="oyCEAtvs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iCQECTF5";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="F7nPnVKn"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4B02F0C48
-	for <linux-xfs@vger.kernel.org>; Fri,  5 Dec 2025 14:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E805133BBCC
+	for <linux-xfs@vger.kernel.org>; Fri,  5 Dec 2025 15:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764945214; cv=none; b=bivf5D6HkoYMoCXfxIitGrgj/w1bX+RdZxjxsLTY555blo4M2xJepjxYq94504pC3CwHVx5VDxqaiLWiRdpOgW+Eak+rHFw7DkhUS+nqVGXgioM0/dVaTYRMRLdxVIWyRTU7xVWr+6fHbVeya9GKa1D9vAY4/6Qir6pP08O8rXc=
+	t=1764946916; cv=none; b=nAQ5ArQ/Y6k64Y+KFyvmUzqioCLg0hStrpngLsQWdfB/zPI6niR7J5isrYnxHRwGDR2hp7/SaAs0EOCt/EWPbn5uK9wNhpPNN4lyxozqarWXOjcKi+rhqrdICCjEQMUXi0NJVtkczVstT3EX+GBKIFFjhCkza3XLIa1PbSUY1yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764945214; c=relaxed/simple;
-	bh=cBX2Dfe8+w0KhWNzJXHFLGerpFC0sx5Ws8pQaHRsu7s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dn0HvuYp7Qcihhz/2iL9ZAEErAjlP7UCCsNSEAl7NEpsHRM4JGIj1yIcqEZ5jUx8dNjEMxwlHv4HbYxD3Mld57OFPbf63/Dc9ETZZxmH6QV+HLAM6H8FN0wQFGP/gJQqN57aK09Jbue0YjTg41yi4uY9mWrmhCPb83HvwCqTp+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GidbRiyW; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=oyCEAtvs; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1764946916; c=relaxed/simple;
+	bh=Rq7P1uOlHFBmEXkIBOBzTVK4a+xqA2H0Wlm5iWY1gQE=;
+	h=From:Date:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lT42ShMZlwwnSnJ32zg+ih+ozo7lydToRqLFMriEFKvdxwhb8POWua+7skqxNEwF8G3Gwu6l3e8Oc8vNBipvf7F656ODXLJc81quBGK143w5nB2+WhzPwueMMyVWaaea1l3dPX559RIAYpl3WqL5wfckBAPUKh6I5xnuNdQJBMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iCQECTF5; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=F7nPnVKn; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764945207;
+	s=mimecast20190719; t=1764946890;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=46sfcgBm/v2MHE7c+9yQUdlqktAkzr+1+1VVFVNVbyM=;
-	b=GidbRiyWcz5Rc58H12Qevn7HVSiJRtxGzIl02qpYWSf4OqliIxHtXNzTcbDcj5f84q2icu
-	v52GXcew1ih7BBTYYjzS6azeLHbqZoyzi7wMYYvAocgiwtg2ndCuEOnY4TVpQuN/ok9P/L
-	hqBBkUoIQy4nGIP9xliWBUbpaievtvk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:mime-version:mime-version:content-type:content-type;
+	bh=FfFYJwXyR60fbWNNYL0ZlNE7PC4PHOHPG5MSkL6eawY=;
+	b=iCQECTF5E1xzuxDdSO3D4PfrpkAigxX/VjZi3WTMkq4oGFGmq5jgfDZvcDodqQOYxb4loj
+	YDghJqcPT+kasA0k/rzBNXbdvn2TUJJOu/B0jmp2lnKUX0JfEt4LXxWsZe5Zs1Yq2Md/BF
+	kosdsUGVo9hNiAHPULETcc3UViK588c=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-176-BKWRaiQqMLy0xvzM1OC_ng-1; Fri, 05 Dec 2025 09:33:26 -0500
-X-MC-Unique: BKWRaiQqMLy0xvzM1OC_ng-1
-X-Mimecast-MFC-AGG-ID: BKWRaiQqMLy0xvzM1OC_ng_1764945205
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-42e2e2389aeso1183348f8f.1
-        for <linux-xfs@vger.kernel.org>; Fri, 05 Dec 2025 06:33:26 -0800 (PST)
+ us-mta-235-jSnCOpzPMOK9TS_Jk3J8Qw-1; Fri, 05 Dec 2025 10:01:29 -0500
+X-MC-Unique: jSnCOpzPMOK9TS_Jk3J8Qw-1
+X-Mimecast-MFC-AGG-ID: jSnCOpzPMOK9TS_Jk3J8Qw_1764946888
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-47918084ac1so18537805e9.2
+        for <linux-xfs@vger.kernel.org>; Fri, 05 Dec 2025 07:01:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1764945205; x=1765550005; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=46sfcgBm/v2MHE7c+9yQUdlqktAkzr+1+1VVFVNVbyM=;
-        b=oyCEAtvsJayw+SPI87wm0qXsQ+vzxoVO1UN1fyv+pOAvWJUUH/LHTOHHvrcN0XG+AU
-         GHrY0LqteB/WWhTWOL1ar9O0H5g96AbfHbXAzzvNrTzMoPUMV1QkR392Z6MQLAEDUXmx
-         iYTz6gmM4If2+x/Jms6XjywlOqBw7rfNins/bpBWHB9PlNIt8YB6hh0a1V83BMe93DSC
-         XALLgnpcyLJuNmClwBz5zNGWznS5LLFVDu+O34xInBoe7gY6ad8NU/m472xxsM+bHqi7
-         v+H6C/PL0BCrbvYM0CQjxxWd+0tuvLAyj6kKiC7AqG91rRKfBJ+9kMw1B2EJZ2n/D1BT
-         o7BQ==
+        d=redhat.com; s=google; t=1764946887; x=1765551687; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FfFYJwXyR60fbWNNYL0ZlNE7PC4PHOHPG5MSkL6eawY=;
+        b=F7nPnVKn9pPTSlX3nxQdEGojbVCOLrfcY3PzWKvogtGjQ6UXL1qKMLTcT0EObGPGFV
+         uVdQXZefWi1VsJCFF5jjOX+J6oMpnXbylG0b4Ee611h2pGdIhejvjxvrOG4c6INQUScB
+         vFoiBJFEjKhJovS5xpihEPUyUTAwDwNJgnXsep2tJQzT1H6kUAFPuMc4MVIn351TRYYK
+         AgRQ6iCXPgZ7ZBmDHnxesCEYkDQPxADinA9lHWA+ExCUIWcuR1zpwSikN8/6UKogmMpe
+         Oaz9GHNXKTJIGDP4d9R90u6Em/Roga4txzkpsjQctY4cclmQHq4aFeUlMqay3zvTGqcn
+         V9PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764945205; x=1765550005;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=46sfcgBm/v2MHE7c+9yQUdlqktAkzr+1+1VVFVNVbyM=;
-        b=daTjxQPLG8Pq5bvpdNu3I/DKnuA+gd9xXD7ucMXl5js3Mv9MKMf5EWIkbz//9k0JwD
-         ZsW00PeuC0I4ajt6+T7IbbzB2hA0N1x8R2/O1lnf+GKwA0ra5W1R/Qx4Lz8RAcSQOSUu
-         TlZ4EvlFt4sZSB5K4eNZP3tSz5qG9P2eIhqtTJU8LtxePh6APAB6EMvVhGuVxrGR7Luh
-         lC/yxXDKFIRXoVZyh9Z+9TcApk8BnKgXWAUjPyoKRDIvxlJtbKxB/rEgsir36L70Zj0I
-         5MTtCdAsdrGTAAKrdOcVcpJFLT1aM4X1pPKjmJXwFMHSBYhG+4ANbxatuOXI/FpXkocR
-         uXWQ==
-X-Gm-Message-State: AOJu0YwGN6DDp8Q84qWo/skia7PNSTTB/YurSo1MeBFK9j8BTN727L0k
-	QOeA6ANU5VOTZEqd1DkCcwz27tAWozHqR+Q3QKFO+er+FD43qFDKGWmwcFbZ6fPEilwsis3fxKd
-	wlqcGJ/SvEdFIVJgQj0tVbE8hUbZ9DOyafRr6EHiXM3T8ypRiwSRiWMv/qPHB/b/IW83J6Hkczo
-	7C9yxQl7br/L3gFxQrOsq9viqTiPlF0m1yMZGFkXevWJLf
-X-Gm-Gg: ASbGncug4YPL8tyqFll5M4l80G3YWCqOo/nnUYU8JfC7GtqBGnT18/hGo+aOOx3+MhZ
-	ilLNVWsZUmRR8CsUhinZRoXnbjUg5KJzsBI2tBUql3NoiNsxGDAMDIHEr50KRGqgMa8nC8qpDhV
-	rAOqVd0tetYVrW1xV7hBBbbuRSD5Kjetspbf1seIqkV5EBXVRiRFElz3MmtEmkKF90FmKWd+u7k
-	hAcvGwXxox0HPybmz55WEXDnzNWmwXvtweDRFxY/rF1Jvaz5cakqbNcrx36qrHKDnPohsEiOwOt
-	O+yqpobsp5EdQYIyIRGDYdX+eWpgTNnix98QDffGFpT66pczYNVWjbZKIIOwqISuTeml/gXOVM5
-	nTbmmcFpotpCCjT5Cx9VkMcs=
-X-Received: by 2002:a5d:5d87:0:b0:42b:2b07:8630 with SMTP id ffacd0b85a97d-42f731a5541mr10913559f8f.31.1764945204657;
-        Fri, 05 Dec 2025 06:33:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF1m+Wfi1YCJ7yMF6ZTRvIaIHLzPZjg1tnU5ADHU5sDDUm11aiEGIn/N/QBPZ4yIrR2AdDUng==
-X-Received: by 2002:a5d:5d87:0:b0:42b:2b07:8630 with SMTP id ffacd0b85a97d-42f731a5541mr10913509f8f.31.1764945203901;
-        Fri, 05 Dec 2025 06:33:23 -0800 (PST)
-Received: from thinky.door.alberand.com ([217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7cbe8a7bsm9078733f8f.4.2025.12.05.06.33.23
+        d=1e100.net; s=20230601; t=1764946887; x=1765551687;
+        h=content-disposition:mime-version:message-id:subject:to:date:from
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FfFYJwXyR60fbWNNYL0ZlNE7PC4PHOHPG5MSkL6eawY=;
+        b=v4exhk9wxq4bop9xp486naQdn1si4FJjIKRCfQjJ9C935NJvbqK2liTJof9/6RS7vb
+         DVKo4GYrZlqozm+tQ/OqNSKwJXC0zbIlT/d8ZztNPAqb3FSbUCO1TxcIds7x9LEIRKBG
+         gNCvyCebZodfxcJGlMU2Lo1htY2jqgBE6d9czKs4jUQuJEwcAdr0cRhGQapnn70Kl1xi
+         mNPxJh3dXw0uRvIBChbBxxBC6BlUU7YDT05Pv1rw1qOrQxl4VAZTifWvbYe42h2+Qcpq
+         MV1Kocu69AE5apJCVLyz/yBYUkfvXRYEXdid099+FO0n6Z0d2EZjqB7LyYVCDnKuf7Zo
+         BG1g==
+X-Gm-Message-State: AOJu0YyOSUo5FOhMVZ8tJaoTM1WLAcOPHA8BMgBqYYUMvhZWdMnFDaOQ
+	K4A3wx+4K3jYPK8uRXbFUhf6C+j9N2mRA+P2Nzp1i2ZeWbCoydo6wp/dcmqLOQDi786Bsm0YW+z
+	LNexB1ZNAh8lGp8DtS3c8d4CKwIbbdFQXuu/5WR6Bg7n5o5IE4fW3Rj1PrQmG1haoCStYsnyJ7L
+	xT1E/Y2XcpuZEKqqxI2n9Rgp3NBPr4bG+T/A13b0biBHd+
+X-Gm-Gg: ASbGncvLZiOfHu3UMIGKyu3Fnh6B2kj1Q9eUPRLGK+Y6b0enSO1sA2ONiogUMbhe8Nk
+	oFLUXGPp4DSE/Epjb6Yv6KDNpSSqRZnwJE5Z0m/p17qkiCtzw9rakbYAF1gCXwJSDDO3Hhp0PpF
+	f4Pxn3bSF2Iqbq0a51+dNO8Ig8xQ1bLyJ2Ps8+886kIsP1x1Ho6dVmAh/+WeIK+Agm13flAIEf1
+	VgRCW14ud0dFe/x9u8DsWi/tiyk3dD7M9Cj0IprEdOv1SaFSg0Ed+f5J1vifsKdQPeRF9QlvDd1
+	UbUPwKSaXvdSeqPWMKMDuWDFTCeDEOy5bLPTbit4uLftffBvV2C7rXu58JoDzShNkGwfUdl6G28
+	=
+X-Received: by 2002:a05:600c:1c2a:b0:477:8985:4039 with SMTP id 5b1f17b1804b1-4792af1b697mr126327605e9.17.1764946887432;
+        Fri, 05 Dec 2025 07:01:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHbaYa8Ws9aKWeNVd+cpiYDo1+nqkFgQypqkQ2FTLkgTtmfxpx/ukBuB3zKTNBq6MNzRVEPfw==
+X-Received: by 2002:a05:600c:1c2a:b0:477:8985:4039 with SMTP id 5b1f17b1804b1-4792af1b697mr126326725e9.17.1764946886779;
+        Fri, 05 Dec 2025 07:01:26 -0800 (PST)
+Received: from thinky ([217.30.74.39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4792b04e1c1sm60331165e9.5.2025.12.05.07.01.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 06:33:23 -0800 (PST)
+        Fri, 05 Dec 2025 07:01:26 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-To: linux-xfs@vger.kernel.org
-Cc: Andrey Albershteyn <aalbersh@kernel.org>
-Subject: [PATCH] libfrog: fix incorrect FS_IOC_FSSETXATTR argument to ioctl()
-Date: Fri,  5 Dec 2025 15:31:48 +0100
-Message-ID: <20251205143154.366055-2-aalbersh@kernel.org>
-X-Mailer: git-send-email 2.50.1
+Date: Fri, 5 Dec 2025 16:01:25 +0100
+To: linux-xfs@vger.kernel.org, aalbersh@kernel.org, cem@kernel.org, 
+	cmaiolino@redhat.com, djwong@kernel.org, dlemoal@kernel.org, hans.holmberg@wdc.com, 
+	hch@lst.de, preichl@redhat.com
+Subject: [PATCH v2 0/34] xfsprogs: libxfs sync v6.18
+Message-ID: <cover.1764946339.patch-series@thinky>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Arkadiusz Miśkiewicz <arekm@maven.pl>
+Hi all,
 
-xfsprogs 6.17.0 has broken project quota due to incorrect argument
-passed to FS_IOC_FSSETXATTR ioctl(). Instead of passing struct fsxattr,
-struct file_attr was passed.
+This is libxfs sync for v6.18. A lot of typedef cleanups mostly.
 
-# LC_ALL=C /usr/sbin/xfs_quota -x -c "project -s -p /home/xxx 389701" /home
-Setting up project 389701 (path /home/xxx)...
-xfs_quota: cannot set project on /home/xxx: Invalid argument
-Processed 1 (/etc/projects and cmdline) paths for project 389701 with
-recursion depth infinite (-1).
+I replaced removed typedefs throughout xfsprogs and adjusted formating a
+bit around these changes, and updated XFS_TEST_ERROR() macro in the
+original commit to ignore expr argument. Nothing else changed.
 
-ioctl(5, FS_IOC_FSSETXATTR, {fsx_xflags=FS_XFLAG_PROJINHERIT|FS_XFLAG_HASATTR, fsx_extsize=0, fsx_projid=0, fsx_cowextsize=389701}) = -1 EINVAL (Invalid argument)
+v2:
+- Moved all newly added "convert ... typedef to struct" before typedef
+  removal commits
+- Remove some retabs to not interfere with futher typedef cleanups
 
-There seems to be a double mistake which hides the original ioctl()
-argument bug on old kernel with xfsprogs built against it. The size of
-fa_xflags was also wrong in xfsprogs's linux.h header. This way when
-xfsprogs is compiled on newer kernel but used with older kernel this bug
-uncovers.
+Andrey Albershteyn <aalbersh@kernel.org>:
+  xfs: remove deprecated mount options
+  xfs: remove deprecated sysctl knobs
+  xfs: convert xfs_buf_log_format_t typedef to struct
+  xfs: convert xlog_op_header_t typedef to struct
+  xfs: convert xfs_trans_header_t typdef to struct
+  xfs: convert xfs_log_iovec_t typedef to struct
+  xfs: convert xfs_qoff_logformat_t typedef to struct
+  xfs: convert xfs_dq_logformat_t typedef to struct
+  xfs: convert xfs_efi_log_format typedef to struct
+  xfs: convert xfs_efd_log_format_t typedef to struct
+  xfs: convert xfs_efi_log_format_32_t typedef to struct
+  xfs: convert xfs_extent_t typedef to struct
+  xfs: convert xfs_efi_log_format_64_t typedef to struct
+  xfs: remove the xlog_op_header_t typedef
+  xfs: remove the xfs_trans_header_t typedef
+  xfs: remove the xfs_extent_t typedef
+  xfs: remove the xfs_extent32_t typedef
+  xfs: remove the xfs_extent64_t typedef
+  xfs: remove the xfs_efi_log_format_t typedef
+  xfs: remove the xfs_efi_log_format_32_t typedef
+  xfs: remove the xfs_efi_log_format_64_t typedef
+  xfs: remove the xfs_efd_log_format_t typedef
+  xfs: remove the unused xfs_efd_log_format_32_t typedef
+  xfs: remove the unused xfs_efd_log_format_64_t typedef
+  xfs: remove the unused xfs_buf_log_format_t typedef
+  xfs: remove the unused xfs_dq_logformat_t typedef
+  xfs: remove the unused xfs_qoff_logformat_t typedef
+  xfs: remove the unused xfs_log_iovec_t typedef
+  xfs: fix log CRC mismatches between i386 and other architectures
+  xfs: move the XLOG_REG_ constants out of xfs_log_format.h
+  xfs: remove the expr argument to XFS_TEST_ERROR
+  xfs: improve default maximum number of open zones
+  xfs: prevent gc from picking the same zone twice
 
-Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
----
- include/linux.h     | 2 +-
- libfrog/file_attr.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Diffstat:
+  include/xfs_trans.h       |   2 +-
+  libxfs/defer_item.c       |   2 +-
+  libxfs/libxfs_priv.h      |   2 +-
+  libxfs/rdwr.c             |   4 ++--
+  libxfs/util.c             |  10 +++++-----
+  libxfs/xfs_ag_resv.c      |   7 +++----
+  libxfs/xfs_alloc.c        |   5 ++---
+  libxfs/xfs_attr_leaf.c    |  25 ++++++-------------------
+  libxfs/xfs_bmap.c         |  31 +++++++++++--------------------
+  libxfs/xfs_btree.c        |   2 +-
+  libxfs/xfs_da_btree.c     |   2 +-
+  libxfs/xfs_dir2.c         |   2 +-
+  libxfs/xfs_exchmaps.c     |   4 ++--
+  libxfs/xfs_ialloc.c       |   6 +++---
+  libxfs/xfs_inode_buf.c    |   4 ++--
+  libxfs/xfs_inode_fork.c   |   3 +--
+  libxfs/xfs_inode_util.c   |  11 -----------
+  libxfs/xfs_log_format.h   | 150 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--------------------------------------------------------------------------------
+  libxfs/xfs_log_recover.h  |   2 +-
+  libxfs/xfs_metafile.c     |   2 +-
+  libxfs/xfs_ondisk.h       |   2 ++
+  libxfs/xfs_refcount.c     |   7 +++----
+  libxfs/xfs_rmap.c         |   2 +-
+  libxfs/xfs_rtbitmap.c     |   2 +-
+  libxfs/xfs_rtgroup.h      |   6 ++++++
+  libxfs/xfs_sb.c           |   9 +++------
+  libxfs/xfs_zones.h        |   7 +++++++
+  libxlog/xfs_log_recover.c |  20 ++++++++++----------
+  logprint/log_print_all.c  |  14 +++++++-------
+  logprint/log_redo.c       |  89 +++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------
+  logprint/logprint.h       |   2 +-
+  31 files changed, 203 insertions(+), 233 deletions(-)
 
-diff --git a/include/linux.h b/include/linux.h
-index cea468d2b9..3ea9016272 100644
---- a/include/linux.h
-+++ b/include/linux.h
-@@ -214,7 +214,7 @@
-  * fsxattr
-  */
- struct file_attr {
--	__u32	fa_xflags;
-+	__u64	fa_xflags;
- 	__u32	fa_extsize;
- 	__u32	fa_nextents;
- 	__u32	fa_projid;
-diff --git a/libfrog/file_attr.c b/libfrog/file_attr.c
-index c2cbcb4e14..6801c54588 100644
---- a/libfrog/file_attr.c
-+++ b/libfrog/file_attr.c
-@@ -114,7 +114,7 @@
- 
- 	file_attr_to_fsxattr(fa, &fsxa);
- 
--	error = ioctl(fd, FS_IOC_FSSETXATTR, fa);
-+	error = ioctl(fd, FS_IOC_FSSETXATTR, &fsxa);
- 	close(fd);
- 
- 	return error;
+-- 
+- Andrey
 
 
