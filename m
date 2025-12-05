@@ -1,102 +1,102 @@
-Return-Path: <linux-xfs+bounces-28556-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28554-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7F01CA8659
-	for <lists+linux-xfs@lfdr.de>; Fri, 05 Dec 2025 17:36:15 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CA45CA8402
+	for <lists+linux-xfs@lfdr.de>; Fri, 05 Dec 2025 16:48:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id ECF5C302B26E
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Dec 2025 16:33:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4CCA332A5243
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Dec 2025 15:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79F5D33B6EA;
-	Fri,  5 Dec 2025 15:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F4E033BBDD;
+	Fri,  5 Dec 2025 15:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R87KIiEe";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="DbiIHmvv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQF5hRj8";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="kEJBb7Gf"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B763C26E6F4
-	for <linux-xfs@vger.kernel.org>; Fri,  5 Dec 2025 15:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE95132D0C0
+	for <linux-xfs@vger.kernel.org>; Fri,  5 Dec 2025 15:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764946998; cv=none; b=KwlwsFitHkUQZR4FJu7rCyr52Y9tdEjyr8lcZ0T0Nmbb39NtYxHDjhcA1D9Bni+GVnOliHTDoFdddWuuUZ3toePYw/95PQ250BOQYhAqalHx6aY5EfpnY+5rrHStCDiStB9gA4CdbLMWXD9VigrjzW5qpwLa03wzkT8/Gyqih88=
+	t=1764946991; cv=none; b=WzA1pBQRN0rTnOHnebK9Zw8KX7JAB0IPrf7uxsIYnbxtlZ4x8ybFkrCLtJ0q/xbHLHrzgSNpxYrLPkXDRZ7cnmCMqhYUt1ssoQa5/eYhP87pGSnYqTRjudnPPGPw58Gf1cmztTr8+rEjw0uAcYx2sd+Z7tPbBn8UmGximW6K3Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764946998; c=relaxed/simple;
-	bh=lNn/Vvf5AdE6XYLJuazj08oR3cwwVoUZHD3GNYGtBNk=;
+	s=arc-20240116; t=1764946991; c=relaxed/simple;
+	bh=R9ufTgffLwr5dgM2bkrN6oW6a6Ab3ndjFlMjc7rf6LI=;
 	h=From:Date:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qJ0XBZfVFmMD2fyp7MuKvOeZDTlMwzCtiaKSLf2T56o8JAuHW7CHlagPdbvXqSLwhHGqdP4ZeaeB3zYsZsm+tEBMlnJwIK6kQ6a8ykD2p4LuA26DbxIjzHv+rUWpMlKGpDytN1Hy6uBryBEkcOLZmp20P8AElmXG1HAuVCAx/bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R87KIiEe; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=DbiIHmvv; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=a33l1lZhtJdSob/nXZpRvxh7AamLT+re/+TKQAgWDZQwRmsOmKBQSVwJnP9GGTUX3zK9iO3C8ssmZkZs9t5Cq+Uvy0gMNTv6xYSrSomIscF9XHupIG4PISW8rpBn8Oy5wKR3V6Xse1JAxyDxhKRB57/2RK5lnLBMWz4B00BFQos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JQF5hRj8; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=kEJBb7Gf; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1764946992;
+	s=mimecast20190719; t=1764946985;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rxuqGqStKu3g0VIGl8jdF5NgY5MUoXC6lqrYa9c4EJg=;
-	b=R87KIiEeFFPUc8inZres+PFa8jPPqVVfMudTdgVYEWJQl7WNDCXlBhCfJoHZDCdLXaeBRi
-	nbGX7iqUdMGOzzD15JQmos+qLonk+YdFH3FSVAOkpDnWB5iUXnAO/LaTdIMLEam6Jmbkvv
-	9rrJRJtOlzk47pPjviqbdA7IbbZ67wY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=71WUXu42cHi1As9ucxBB+At21gIBVahH9X9tB07JqNk=;
+	b=JQF5hRj85RyCOrvQIUX7URnTtpIN4VO9ZT71AIt5FdEhW7mND9ezVg00y/xxLLi52H412f
+	AnK15GbzOF6dcGM/hni/5LfKnSFVmw8SNycTOiYQxAg8I4vhdNxNFPfY7oQNYFzDwWMsOv
+	tdMZ15Rszvqe2snuA7rmf4/Kit+NMPI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-346-iANeeX7eNY6kOq7A2Nk8xg-1; Fri, 05 Dec 2025 10:02:59 -0500
-X-MC-Unique: iANeeX7eNY6kOq7A2Nk8xg-1
-X-Mimecast-MFC-AGG-ID: iANeeX7eNY6kOq7A2Nk8xg_1764946979
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-47788165c97so13713085e9.0
-        for <linux-xfs@vger.kernel.org>; Fri, 05 Dec 2025 07:02:59 -0800 (PST)
+ us-mta-389-x0e7l5IlPvWXwZSnAaq7Cg-1; Fri, 05 Dec 2025 10:03:04 -0500
+X-MC-Unique: x0e7l5IlPvWXwZSnAaq7Cg-1
+X-Mimecast-MFC-AGG-ID: x0e7l5IlPvWXwZSnAaq7Cg_1764946983
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-42b2b9c7ab6so1079736f8f.2
+        for <linux-xfs@vger.kernel.org>; Fri, 05 Dec 2025 07:03:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1764946978; x=1765551778; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1764946983; x=1765551783; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rxuqGqStKu3g0VIGl8jdF5NgY5MUoXC6lqrYa9c4EJg=;
-        b=DbiIHmvvkirl4q9PbSdqGDTUPm5essddFNgq6BIZ+nlHZlvkNu7JCHLdTji9JEAiPa
-         3onKpB9mY5f3MsEYepru4cwfYDbOG0qvnVJl4XwaMalMLIom5y6Y551Za2825wby89yH
-         mQua3Ax3kXrY8d0+jzlDgml7CIkqxj7gAfkbn9hHY8XYEMIjd5uUTCZBAqdt0xDO9o2I
-         p6CSDePYs1UzXG9pND5luipxoYWr4j4Tf6js9CcrL+7lSVIVnY5kI0EfIH++q5M07QRr
-         dipbgkIPQNoAtl8Cimz5xbygEWxI8DRf2wN/zq46TdRHAJctEGJJNvYgGDFFn2+4F3l0
-         kmFA==
+        bh=71WUXu42cHi1As9ucxBB+At21gIBVahH9X9tB07JqNk=;
+        b=kEJBb7Gf2dk5q4rG1hgdJzFiDSVhTXH7eBuIFQ7FZ4inwQcuc9l2IOT6piQpnXR6eV
+         RSVJWTmzjLJaB+l4OX6IbbWtJ2TZgUw33GTsPlZ4fa3nmFMEVOnuqPv96TLm4rhPjBCa
+         hSKswmc8PwOWMO7tIqQkASRnPBCDHyxYKKEzr5EocobItt19681qjcdoekj7Mv6XGiCy
+         mVlw5CDXPC8QExvrsyLGNZAE3OT4TUmpQyZMunkqMlSlPK38KCVmC1y2nDHqGwtY0KhZ
+         3nKiRhQi5zD/6byoWGWfqFPa7sATVE0MgBPEIYLmFF5rObyWYloT5SAL32GCF3i8UyFx
+         biuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764946978; x=1765551778;
+        d=1e100.net; s=20230601; t=1764946983; x=1765551783;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=rxuqGqStKu3g0VIGl8jdF5NgY5MUoXC6lqrYa9c4EJg=;
-        b=AQB040QYRNTQ46q7zR7112jJDJXxNZ94fHaI5DmAX87+nt8m6VDqy2KZ774uRJMFH0
-         UaMHE4DKP8NbnPNuWrzGpwP7N8uDXS+0ziKpmzM9pgEqv5kWLPjq80jr8AasmSVE1IW7
-         bpwDgtgr3BZChCWuK6byQxJf0HR12d5obsXdVw+iaIibkMfFLZB70GS0p9wynZKw73Du
-         icqEyrClrxrtdYOKAmusQhLlflbFVYYSdNF3CwEsMoPbPMfyqsgdzcmxBv5/ftRHDLjU
-         6sY8T/Uu3T02SCgODsKEzDCasNA0fvPoD+gCxkh00NbW/o0YPwNCZ61aRCvBI1PYSvtI
-         QnHA==
-X-Gm-Message-State: AOJu0YyUayBMxyrBQM86nA0j3N5AgXZrNPOmYFTzSw/i3oPaL8abmCWU
-	/AsK+p+AR75535p/UPoa2CmVMy764x3qGIXywaitZL0v4kAoc5ZaaatFJatGoHgkFWREKoTe5bx
-	ek+sQ4nWkhoPbMtOUAPvOOYWlMBnWjqbCMc3T4H/sqzd9XFpo0XsLNHa8tb9JB9Dg1V3LTGsIQt
-	M6F2qWce5R9ZwQ4cgMzus3DN01R+w7InH4qUCoCbbjtIiC
-X-Gm-Gg: ASbGnctLWlNmtZ80R/3c6asv9Hdq3Q4YaGQFkO5nKIHm2OFLUvulY5bIIR7lTnuNZh0
-	bAPmg5X0wOKon60pSBaC5IgXvBSIjIFLiOzFHqENg19F4xooDpvjGEBNUqLkX0TT8dnGjVaK9W2
-	nN0n0DhS2t+h885DZoJkZ4qCgG0Pv0OBt118f7kl4Qh/CVXNc1XlK911h081u+5ferOWQ716XdQ
-	7A3oC2vVYvVTpZRwDqFW7Pm4Krh80xzXzrF+NJ1AEf8Z0Yq3Wi+2A33C4f40G1REaZSQHPL3BAV
-	JAYNt0zopKxsCENzXUmfQOv1ZS0JjBDggp1jsPI4vcgdiomRUMQAdlwOXTLxuV7Pj5c45q4oyF4
+        bh=71WUXu42cHi1As9ucxBB+At21gIBVahH9X9tB07JqNk=;
+        b=naTbhulALRyyhQ1i6r6eny0h1l/IKCm/qStz3pgmGeClWDEpX4vll5v/+k6r1bSZUM
+         olnTd6iZadj6tPuaLN8rvWmbZQBVUQ7Ak1//T243Q8h2VpMP8RStMMCfWhBW2fbEmt4F
+         uLdDTJ40tUZnqY8gZlILlRk26cGDWrgHGU0l6SNh37EOFFXQ27FLmrhu8bQewx0yFV28
+         iH0eIzebPVSnhKTbQu/QGXFzY0yDd1VmNU8IXXVMcX9rsyGcXIcH1xB/O7GZYD3/GMoo
+         fjKo16BXacSSy2Y/F1kkD4GeSF/rRPOyNc2dhmU8Gffpo4Fprb5dr/oUsfGssRaAnNUn
+         wGig==
+X-Gm-Message-State: AOJu0YxLPIw1IyZn99L2nBEb13qQU+vB17z/pm7VNveveaN0qV0nIIFj
+	A3OTD+jQmlIzlKj9qD0dPAu/xpdRlEK5USEH91oobegOjieBFTZHwP2oQLFOPkoslN5hz3W5uQa
+	fIDH0Y++aqhk0sBMjtpcQdeacdjxiJHOm5GHZLwGAdcmHX2KmKcOYQagl0zab3BKmeob9ik/EwJ
+	ND/lgFLMJBMuAUtagCxFFZkS257CBMgfeDXdiQqWBmCo1a
+X-Gm-Gg: ASbGncu5Xbn96ZamYtDeRSQjnbsVLP7hxWbIFI0KFTe6XRmCya1CWERkHafWrjaT6By
+	bktN2OEkGbUH+cm38E2EydEl0fugWSNantEB3iM38D2i+L1dVd1XbJrK+gtAtVOHfz/semMjSRM
+	PiLXIjcn64gQx3U7ulWR9VhxuCvPpPzzxzz+i6RXtXvH5sEXzOK/V07WuB7RRq9BT2ijLrDAt76
+	HS+lcUm9V3Ze4EGF8Q7M/1dv1brfzt8eR7C0KTiUlzg5Y50JGRmYl8u49v3qAnjnq7qFu6ngxp6
+	Wh0yjuZdTmfJxSHXNPqZcLp7JoLPWt8el3exOTw00QujcfVbN3fMmat+f2os93hbNBmiO8P0J5U
 	=
-X-Received: by 2002:a05:600c:4fc5:b0:477:a977:b8c5 with SMTP id 5b1f17b1804b1-4792af505ffmr128238055e9.31.1764946978042;
-        Fri, 05 Dec 2025 07:02:58 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF5ypWJBSFuS1bcE1YBQUVpHNhqcbv91SifMQI3rs32JgYiMqphd97YvQMKpQ/PZS41/cYIYg==
-X-Received: by 2002:a05:600c:4fc5:b0:477:a977:b8c5 with SMTP id 5b1f17b1804b1-4792af505ffmr128237245e9.31.1764946977351;
-        Fri, 05 Dec 2025 07:02:57 -0800 (PST)
+X-Received: by 2002:a05:6000:2507:b0:42b:3e0a:64af with SMTP id ffacd0b85a97d-42f7317205bmr10730529f8f.11.1764946982839;
+        Fri, 05 Dec 2025 07:03:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF1z7uwZGNcjbdTIWD5BT7Enu2lKDyIEdJDkWzZmPbHu9pAaGxcvKtuQ2kUmmK3DVdWRCg1tQ==
+X-Received: by 2002:a05:6000:2507:b0:42b:3e0a:64af with SMTP id ffacd0b85a97d-42f7317205bmr10730472f8f.11.1764946982283;
+        Fri, 05 Dec 2025 07:03:02 -0800 (PST)
 Received: from thinky ([217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4792b1776besm74460345e9.7.2025.12.05.07.02.56
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42f7d2231dfsm9392082f8f.26.2025.12.05.07.03.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Dec 2025 07:02:56 -0800 (PST)
+        Fri, 05 Dec 2025 07:03:02 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Fri, 5 Dec 2025 16:02:56 +0100
+Date: Fri, 5 Dec 2025 16:03:01 +0100
 To: linux-xfs@vger.kernel.org, aalbersh@kernel.org, cem@kernel.org, 
 	cmaiolino@redhat.com, djwong@kernel.org, dlemoal@kernel.org, hans.holmberg@wdc.com, 
 	hch@lst.de, preichl@redhat.com
-Subject: [PATCH v2 17/33] xfs: remove the xfs_extent32_t typedef
-Message-ID: <vhm3lsonwbosdv2h4psft6nrn3lvwvcwhmlfjsggvs7xmkzrci@adfn2lippzy5>
+Subject: [PATCH v2 18/33] xfs: remove the xfs_extent64_t typedef
+Message-ID: <6thj4xgt4maavng6trlz4ykdmnpbwhr7iiq73mn5otm5rsoytw@gn6x4c65fce3>
 References: <cover.1764946339.patch-series@thinky>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -110,7 +110,7 @@ In-Reply-To: <cover.1764946339.patch-series@thinky>
 
 From: Christoph Hellwig <hch@lst.de>
 
-Source kernel commit: 7eaf684bc48923b5584fc119e8c477be2cdb3eb2
+Source kernel commit: 72628b6f459ea4fed3003db8161b52ee746442d0
 
 There are almost no users of the typedef left, kill it and switch the
 remaining users to use the underlying struct.
@@ -124,38 +124,39 @@ Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/libxfs/xfs_log_format.h b/libxfs/xfs_log_format.h
-index 6d0cad455a..f11ba20a16 100644
+index f11ba20a16..2b270912e5 100644
 --- a/libxfs/xfs_log_format.h
 +++ b/libxfs/xfs_log_format.h
-@@ -617,10 +617,10 @@
-  *
-  * Provide the different variants for use by a conversion routine.
-  */
--typedef struct xfs_extent_32 {
-+struct xfs_extent_32 {
+@@ -622,11 +622,11 @@
+ 	uint32_t	ext_len;
+ } __attribute__((packed));
+ 
+-typedef struct xfs_extent_64 {
++struct xfs_extent_64 {
  	uint64_t	ext_start;
  	uint32_t	ext_len;
--} __attribute__((packed)) xfs_extent_32_t;
-+} __attribute__((packed));
+ 	uint32_t	ext_pad;
+-} xfs_extent_64_t;
++};
  
- typedef struct xfs_extent_64 {
- 	uint64_t	ext_start;
-@@ -654,7 +654,7 @@
+ /*
+  * This is the structure used to lay out an efi log item in the
+@@ -670,7 +670,7 @@
  	uint16_t		efi_size;	/* size of this item */
  	uint32_t		efi_nextents;	/* # extents to free */
  	uint64_t		efi_id;		/* efi identifier */
--	xfs_extent_32_t		efi_extents[];	/* array of extents to free */
-+	struct xfs_extent_32	efi_extents[];	/* array of extents to free */
- } __attribute__((packed)) xfs_efi_log_format_32_t;
+-	xfs_extent_64_t		efi_extents[];	/* array of extents to free */
++	struct xfs_extent_64	efi_extents[];	/* array of extents to free */
+ } xfs_efi_log_format_64_t;
  
  static inline size_t
-@@ -707,7 +707,7 @@
+@@ -723,7 +723,7 @@
  	uint16_t		efd_size;	/* size of this item */
  	uint32_t		efd_nextents;	/* # of extents freed */
  	uint64_t		efd_efi_id;	/* id of corresponding efi */
--	xfs_extent_32_t		efd_extents[];	/* array of extents freed */
-+	struct xfs_extent_32	efd_extents[];	/* array of extents freed */
- } __attribute__((packed)) xfs_efd_log_format_32_t;
+-	xfs_extent_64_t		efd_extents[];	/* array of extents freed */
++	struct xfs_extent_64	efd_extents[];	/* array of extents freed */
+ } xfs_efd_log_format_64_t;
  
  static inline size_t
 
