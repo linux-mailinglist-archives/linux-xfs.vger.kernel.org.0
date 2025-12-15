@@ -1,54 +1,56 @@
-Return-Path: <linux-xfs+bounces-28778-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28780-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FA15CBF981
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Dec 2025 20:47:03 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62693CBF9B1
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Dec 2025 20:52:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D02EB30380DA
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Dec 2025 19:42:06 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CE021301BEBD
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Dec 2025 19:52:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA9073451CE;
-	Mon, 15 Dec 2025 19:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D69826E6F3;
+	Mon, 15 Dec 2025 19:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRCcR2/k"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihoQWjQU"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967973451CA;
-	Mon, 15 Dec 2025 19:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2872B1CDFD5;
+	Mon, 15 Dec 2025 19:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765827226; cv=none; b=pScpULycanDH2DLy7fJ/EIK1RG4jd9Cca7BcB1ZJIJ/nzlVjKRAvaPdvudND95tKM3RgLQP6idQU7uhRNucUF9F3Tx+XGnOjB7bO+ecDD8zKijmqahUG257nRrA3hVRNenvViVglyBFuLdjnywwuBeskd+Ai9Rm0K9eEjmfnH8I=
+	t=1765827680; cv=none; b=osK66fUEiGxYTKLOY9E+rdClOP69To8id3y1NiCf9k1pzBn/c85h7iTUC+/0URMyPM9/fw06CDduhEOiVUZe/wxNtfMCzENrzOdQz2SFxtrCW3lSoJGVjUziBtH3FX0G0i0TKMRmg4QII9NmeMQNEKNYh0R5HloSmxLoCOMNQjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765827226; c=relaxed/simple;
-	bh=0s5EcIFiND0XMGM+9m1O7YQGiGqO2Dc1fabTBo/ggeo=;
+	s=arc-20240116; t=1765827680; c=relaxed/simple;
+	bh=GhJJF3osCt9kBmMGEStzqIm16/inVHzkWj3g/fixxC4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mw3ZfTX+jDHDXc4RBfQhlhx5lpjntKCOakf7pkWkMZSGlMBCFi6ywPROxfUBCTvPeKZqsahKx7E8Ll672chV/gEq0xuHdN+U7gB4eNl/0KGcwhhE0a9lpOMJTiWObla1qU3NoIbzBoP0fjRo7oZh9W7aDjcWpR9LJha6jfOtQ34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRCcR2/k; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B634C116B1;
-	Mon, 15 Dec 2025 19:33:46 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=KdcbnOh2Afhpd3/fSHYN7EZKNDkmdE6zXLeWrkDHgVZj1RcTyf1URTkoknjVS2WUw9pcSXmtimPoS5eY2+28sM566QPJjB4mbaTbkinrXjmcotC70o4WXqg85es38UBb8sZGA1S7ZobPOLvcyL1k3N+f1B3KqsumgKgEpCP8l+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihoQWjQU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AA5EC4CEF5;
+	Mon, 15 Dec 2025 19:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765827226;
-	bh=0s5EcIFiND0XMGM+9m1O7YQGiGqO2Dc1fabTBo/ggeo=;
+	s=k20201202; t=1765827679;
+	bh=GhJJF3osCt9kBmMGEStzqIm16/inVHzkWj3g/fixxC4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FRCcR2/kMUwEDEFfsvyqknF/pToIGLhtuTN2jDpiSgPyUkX5ILcTaFV53DZWQSGyK
-	 /otQNNg7weIbe/2Z8Zq6QXBpVhUnfeGnI0vLrnLFnXLkSm8iVnu7ees7tde3QLo9kv
-	 7kePmNSmcbud3KbU6mtV49dpaXGnJae1Yrl2RE0cEp2lspqDo4GJwOpNtGmnSOxgsv
-	 qV/u0tGWXD7Vn9rM2P2j+ILdNnRW86nP+wCTbaD+bIJhkP8JXuQYCk+fkx8Gar8Z6t
-	 lZn+svF9ai90f7Qb5XvdBs1kHlkGO33bwEkvjKn8iyQTQY+PvfNJDbp4VtiHM5EmfB
-	 h63YdgpFbFRaw==
-Date: Mon, 15 Dec 2025 11:33:45 -0800
+	b=ihoQWjQU8kCNVXD62+sTTet+SXxHQUeHh+BfMZ9tlK6/pwdbqr8FeCOfORusAiKy9
+	 19S6wptgW+ld+l9t2Rdahjj3cljmKbCK3o6o3rOVdzJ79h3eakqWTpvoxtTCLbrzAy
+	 6uWsLUPm3PLX2XwQEJT9UhhzBm7wkKHscOuV4R8KWlmdOt8eoUGa3G4xrQTP8hMR1z
+	 E9GSALAl6NU5GoVyYs6Op9OyrYXJ063KRy2e5UA7qIPVN3LBivHHNU/aFC2jl+Afh7
+	 ddKm5VnDh1YUWGuYbo9p5BOL+ksLmgcwLSVpXfBayqOmFWayktxONXs0liRSkIbap5
+	 o2TmL+uF6w0uw==
+Date: Mon, 15 Dec 2025 11:41:18 -0800
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: Christoph Hellwig <hch@lst.de>
-Cc: Zorro Lang <zlang@kernel.org>, fstests@vger.kernel.org,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] xfs: add a test that zoned file systems with rump
- RTG can't be mounted
-Message-ID: <20251215193345.GM7725@frogsfrogsfrogs>
-References: <20251215095036.537938-1-hch@lst.de>
- <20251215095036.537938-2-hch@lst.de>
+Cc: Zorro Lang <zlang@kernel.org>, Anand Jain <asj@kernel.org>,
+	Filipe Manana <fdmanana@suse.com>, fstests@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/13] dmflakey: override SCRATCH_DEV in _init_flakey
+Message-ID: <20251215194118.GN7725@frogsfrogsfrogs>
+References: <20251212082210.23401-1-hch@lst.de>
+ <20251212082210.23401-2-hch@lst.de>
+ <20251212201142.GF7716@frogsfrogsfrogs>
+ <20251215052913.GB30524@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -57,100 +59,32 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251215095036.537938-2-hch@lst.de>
+In-Reply-To: <20251215052913.GB30524@lst.de>
 
-On Mon, Dec 15, 2025 at 10:50:27AM +0100, Christoph Hellwig wrote:
-> Garbage collection assumes all zones contain the full amount of blocks.
-> Mkfs already ensures this happens, but the kernel mount code did not
-> verify this.  Instead such a file system would eventually fail scrub.
+On Mon, Dec 15, 2025 at 06:29:13AM +0100, Christoph Hellwig wrote:
+> On Fri, Dec 12, 2025 at 12:11:42PM -0800, Darrick J. Wong wrote:
+> > Ok, so _init_flakey still sets FLAKEY_TABLE_ERROR...
+> > 
+> > >  	_dmsetup_create $FLAKEY_NAME --table "$FLAKEY_TABLE" || \
+> > >  		_fatal "failed to create flakey device"
+> > >  
 > 
-> Add a test to verify the new superblock verifier check.
+> > >  # no error will be injected
+> > >  _init_flakey
+> > 
+> > ...but won't _init_flakey clobber the value of FLAKEY_TABLE_ERROR set
+> > by make_xfs_scratch_flakey_table?
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  tests/xfs/651     | 30 ++++++++++++++++++++++++++++++
->  tests/xfs/651.out |  2 ++
->  2 files changed, 32 insertions(+)
->  create mode 100755 tests/xfs/651
->  create mode 100644 tests/xfs/651.out
-> 
-> diff --git a/tests/xfs/651 b/tests/xfs/651
-> new file mode 100755
-> index 000000000000..1fa9627098f6
-> --- /dev/null
-> +++ b/tests/xfs/651
-> @@ -0,0 +1,30 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2025 Christoph Hellwig.
-> +#
-> +# FS QA Test No. 651
-> +#
-> +# Test that the sb verifier rejects zoned file system with rump RTGs.
-> +#
-> +. ./common/preamble
-> +_begin_fstest auto quick zone
-> +
-> +. ./common/zoned
-> +
-> +_require_scratch_nocheck
-> +
-> +_scratch_mkfs > /dev/null 2>&1
-> +blocks=$(_scratch_xfs_db -c 'sb 0' -c 'print rblocks' | awk '{print $3}')
-> +blocks=$((blocks - 4096))
-> +_scratch_xfs_db -x -c 'sb 0' -c "write -d rblocks $blocks" > /dev/null 2>&1
-> +_scratch_xfs_db -x -c 'sb 0' -c "write -d rextents $blocks" > /dev/null 2>&1
+> I think so.  But nothing really changed here except for a variable
+> name, so the whatever clobber was there before is the same and apparently
+> worked?
 
-You could put both of the write commands in the same invocation, e.g.
-
-_scratch_xfs_db -x \
-	-c 'sb 0' \
-	-c "write -d rblocks $blocks" \
-	-c "write -d rextents $blocks" > /dev/null 2>&1
-
-For a little bit lower runtime.
-
-> +
-> +if _try_scratch_mount >/dev/null 2>&1; then
-> +	# for non-zoned file systems this can succeed just fine
-> +	_require_xfs_scratch_non_zoned
-
-The logic in this test looks fine to me, but I wonder: have you (or
-anyone else) gone to Debian 13 and noticed this:
-
-# mount /dev/sda /mnt
-# mount /dev/sda /mnt
-# grep /mnt /proc/mounts
-/dev/sda /mnt xfs rw,relatime,inode64,logbufs=8,logbsize=32k,noquota 0 0
-/dev/sda /mnt xfs rw,relatime,inode64,logbufs=8,logbsize=32k,noquota 0 0
-
-It looks like util-linux switched to the new fsopen mount API between
-Debian 12 and 13, and whereas the old mount(8) would fail if the fs was
-already mounted, the new one just creates two mounts, which both then
-must be unmounted.  So now I'm hunting around for unbalanced
-mount/unmount pairs in fstests. :(
-
-Anyhow the test looks fine, so
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+I suppose it could work (I haven't tried), but
+make_xfs_scratch_flakey_table redefines FLAKEY_TABLE_ERROR so that
+internal log writes continue to work but everything else doesn't,
+because it's testing that write failures during AIL push operations
+don't set us up to hang the system.  It's not testing iclog write
+failures themselves.
 
 --D
-
-> +fi
-> +
-> +echo "Can't mount rump RTG file system (good)"
-> +
-> +status=0
-> +exit
-> diff --git a/tests/xfs/651.out b/tests/xfs/651.out
-> new file mode 100644
-> index 000000000000..5d491b1894ea
-> --- /dev/null
-> +++ b/tests/xfs/651.out
-> @@ -0,0 +1,2 @@
-> +QA output created by 651
-> +Can't mount rump RTG file system (good)
-> -- 
-> 2.47.3
-> 
-> 
 
