@@ -1,53 +1,53 @@
-Return-Path: <linux-xfs+bounces-28947-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28948-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB272CCF2C7
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Dec 2025 10:42:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A325CCF2CA
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Dec 2025 10:42:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 31C853014BE7
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Dec 2025 09:42:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0FAC430150D5
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Dec 2025 09:42:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBE662FE598;
-	Fri, 19 Dec 2025 09:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4D692FE598;
+	Fri, 19 Dec 2025 09:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clOTlM97"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3lSGIZp"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7412FE057
-	for <linux-xfs@vger.kernel.org>; Fri, 19 Dec 2025 09:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AEA2FF147
+	for <linux-xfs@vger.kernel.org>; Fri, 19 Dec 2025 09:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766137361; cv=none; b=mCHjir4E1wujy491KZ4jxG/aXffRs8NyJ+AQ4oD1cY2QoUvI8KpyPK8A4xVoTjHb7uNoxvfyC2JZrAKNJrZKlIFpQ0q2UO3JiLzCTrqVswJ2mHeTh7MHq8kO/GVODtvkf4SJmUeKVAoE10mOP0agRB+TssppxY/M5a/WSnXkyBo=
+	t=1766137362; cv=none; b=hq+Rlv0xZphE5BDIEaCOXaFUzL/T8dtoUMu4nJMbssbBs8udlal+x2svVBCi7c/61RYt3qNoHn0zZLWdbQlemebs7/rLwzKFVv+v4jLOtJ0q8UhEDB4VrukXEIcy8d6V6oe/PVtv1+DgqvGlhoR2Cx/s7ZTV0upgxMuMivNCRG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766137361; c=relaxed/simple;
-	bh=bsNqwImZgQ1Rl6AKdL++vq/619ud/XJJ/DCs+X3J23c=;
+	s=arc-20240116; t=1766137362; c=relaxed/simple;
+	bh=5YENZ+jIWB1IhUegHACL5MtUuqDlBKHzPu9sENRlb9A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IfCp9ZfBPUc8oPy8hX5yCogHZmlhOG9k+GR4CLCyNPvh6jtOzjYi9mCvbrRg1xqojRyIhyQo+DzxYn9wZYXP0AD1xa6SgMyz/5pRlCgF5gdotvZ5FpsrMsmzsbWPl3xCTZag8TqqcyrTskGkodUIGD9Olw89Udv7N5yTxHR7Sxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clOTlM97; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7582EC4CEF1;
-	Fri, 19 Dec 2025 09:42:40 +0000 (UTC)
+	 MIME-Version; b=nneC10vCKBq7RQ10YQZCdULFa3f/5eZvQzWlMtzqEchxN+QK7cDyp+PsXDBN+SHa1ra7tWxazgev2iIi96345fNPNsfX/+TZMa5CImx+20NenKyGfsfJnBUL1Elx/2up9CvPT8js4dRLr+89AdUY0unbDVJ54yWw9sOcsjGpFq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3lSGIZp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50309C116D0;
+	Fri, 19 Dec 2025 09:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1766137361;
-	bh=bsNqwImZgQ1Rl6AKdL++vq/619ud/XJJ/DCs+X3J23c=;
+	bh=5YENZ+jIWB1IhUegHACL5MtUuqDlBKHzPu9sENRlb9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=clOTlM97GofRFtL76Lb9ycTPQ3XWNBLIUHmf/H7tcrUCgrnxqsgr7Cw4QnBpuY6dq
-	 HkIuP+Z9EP0HcMgrAdLJZU3sMJOiNRzQ7j9eBJFxYotpl98qqzwvdxdZOKBEjgxJGH
-	 Z6s8jTmBi87/ngxsQ0pZEmORdQoVoVtvvBSt4+VG6ZihyZJjCNeLnoEjdoh/ynfrWl
-	 v2Eud8fGZFsdgLyCB3fwCmtOM4B05vTApmrkCRkChTlCiqPWSdzUJc5tXMyeabNC/F
-	 Es7AzL8ZfKhE5ZjmRHcQXOINgZMgbSy+YoPcoJxXIXPe6s+svPDynkP+nFsPr3J0Zz
-	 dEuDmAPQUBGug==
+	b=G3lSGIZp50RYr4GEpNS8FzvCzsRl5iGz70oOD7cbHO0Z7rg/fF/vLM8xOldcOmRZK
+	 B4aAA/TcE2YQvbNbiYUXENru0aPG62W+sbfwwtdT44jl0tEV6KqU2RfcDETwf/wyQN
+	 WM/+ZdRhefu7pVBMTX+1W+o5U0WhYPUmLd473yeDfd9FWkHZHq0SvDUfiEa6TZuYxQ
+	 017BvMkh+ru7BV6BpSKhvt3shcQbEcUBvFASYGgiieUpx29w2R8Gn+Gtzb18HfLk2u
+	 BCQeMi0UMj40xZcajkG3KxMePmJ3r6BmIDUjqTxZORElESmbXUJI9I+GjBpDi2EE4Y
+	 NOiMZl6neqs7Q==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-xfs@vger.kernel.org,
 	Andrey Albershteyn <aalbersh@kernel.org>,
 	"Darrick J . Wong" <djwong@kernel.org>
 Cc: Christoph Hellwig <hch@lst.de>,
 	Carlos Maiolino <cem@kernel.org>
-Subject: [PATCH v2 2/3] mkfs: use cached report zone
-Date: Fri, 19 Dec 2025 18:38:09 +0900
-Message-ID: <20251219093810.540437-3-dlemoal@kernel.org>
+Subject: [PATCH v2 3/3] repair: use cached report zone
+Date: Fri, 19 Dec 2025 18:38:10 +0900
+Message-ID: <20251219093810.540437-4-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251219093810.540437-1-dlemoal@kernel.org>
 References: <20251219093810.540437-1-dlemoal@kernel.org>
@@ -65,18 +65,16 @@ BLKREPORTZONE ioctl() which is slower as it uses the device to get the
 zone report.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-[hch: split out BLKREPORTZONEV2 and BLK_ZONE_REP_CACHED definition into
-another patch]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- mkfs/xfs_mkfs.c | 7 ++++++-
+ repair/zoned.c | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index bc6a28b63c24..59c673532ad6 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -2623,8 +2623,13 @@ _("Failed to allocate memory for zone reporting.\n"));
+diff --git a/repair/zoned.c b/repair/zoned.c
+index 206b0158f95f..1e4891c483ee 100644
+--- a/repair/zoned.c
++++ b/repair/zoned.c
+@@ -82,8 +82,13 @@ check_zones(
  		memset(rep, 0, rep_size);
  		rep->sector = sector;
  		rep->nr_zones = ZONES_PER_IOCTL;
@@ -89,8 +87,8 @@ index bc6a28b63c24..59c673532ad6 100644
 +			ret = ioctl(fd, BLKREPORTZONE, rep);
 +		}
  		if (ret) {
- 			fprintf(stderr,
- _("ioctl(BLKREPORTZONE) failed: %d!\n"), -errno);
+ 			do_error(_("ioctl(BLKREPORTZONE) failed: %d!\n"), ret);
+ 			goto out_free;
 -- 
 2.52.0
 
