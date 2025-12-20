@@ -1,53 +1,53 @@
-Return-Path: <linux-xfs+bounces-28963-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28964-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7427ACD25EA
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 03:58:16 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A76FACD25F0
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 03:58:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A2ADB3020C69
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 02:58:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 849853022F11
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 02:58:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C6F8244664;
-	Sat, 20 Dec 2025 02:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D34F2417DE;
+	Sat, 20 Dec 2025 02:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZSzZ0Yv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0nMYIrY"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF9C23D7CE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E071C1C84A0
 	for <linux-xfs@vger.kernel.org>; Sat, 20 Dec 2025 02:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766199481; cv=none; b=pjJ3dG6PMvQzCdsKeWhEDV13fg6zQn7Tbxxqs8CMhQA5d+Dd2iNpwu+rEzM3H2zuA6ze24DVKBDaq1iyDRC5lRM4EIiV9rxnRZAqt+05P1JuroOQpwKKuHY/eLYoDYfmDs5WZNO41BBQKcl/tlV05GCohnRmVtZK8JOJNdY+Llo=
+	t=1766199483; cv=none; b=YCLMnPyCzq4jBYzm+qYg2c8VMchUf+QqBN31KRzdcP8R854lQMZQrE4Ug9yL+iBtSfa59siE4DTuPmc/camWWijuW7c33Sgecb33q34EpmVPJg6Yc8jl+doFWFxEaK7Q43Mogm8Ypt/SN9l1uZX18TCMLlrdIwRi6sDvcK766PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766199481; c=relaxed/simple;
-	bh=XxilWoJWVVEry/mEgGqShdNGHYJxpG2cBIQkGZVCCZM=;
+	s=arc-20240116; t=1766199483; c=relaxed/simple;
+	bh=z77u65O7Vp4bQvA0POOcB0A19cq0v5xOXrEAj0oJUO4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f5SBtiaXlnY+xC/x1j+FNHwpaES2JiWlhakPd/qksCykAdPzXHEPdoK+rFS/mjbsgEeAF61ZmIXhs2hfsg1Qigel4LqXX5WatzOOjoQdbQr+yfIghU/taUhky+cLPWsO6NHTVu+ckPjnB3q4Pm8P+wadotVns7UXEvkB6rsG1jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZSzZ0Yv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E47C16AAE;
-	Sat, 20 Dec 2025 02:58:00 +0000 (UTC)
+	 MIME-Version; b=BoyXCYsiJtG5UkQy7L9Ae2+SsliMTuZvAhMf/Hg2vu3sLwPRoinpz36dwbavSMCB/NLGllDU0Hd+9USV9cZ1WRg9xW5fN4XuzskqP6DQB9HuQwMvic9Pgu6u0rrBlg0/ENIccJgsZvf/kCaL/qnElRgdgk6kNoQfKybcwDbVKZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0nMYIrY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33EA6C116C6;
+	Sat, 20 Dec 2025 02:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766199480;
-	bh=XxilWoJWVVEry/mEgGqShdNGHYJxpG2cBIQkGZVCCZM=;
+	s=k20201202; t=1766199481;
+	bh=z77u65O7Vp4bQvA0POOcB0A19cq0v5xOXrEAj0oJUO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mZSzZ0YvTzs1o18XjullFGwmsMB0HZbOirlVLw4GNIUp3jeCkBwjc6fuY4Ajw+WjR
-	 82a/jKXzqpnG0gkEOQnpXgpxzJt4Dqf7pv88lEWz7LKIhaMvbNGX8d/VL4sEXDtCZH
-	 1snBhKD6c4AkB34E6eBSAQUaHFktEpn2jjsQ/w4yaplh8CT5tHgFC60gzGhhzWUjW2
-	 wUPYqDGR4XVKsn10g+O/vLCsQs/kBIIhBvjO2LGeXVTSC3wy89BVcvKPLeCoOixnAv
-	 22drgZ1XWlZ+YC9bG4bm/lgqOmleVqh9y/KsEeEDXnRwsv3sd6Hy6D1D0OSZtJM9HI
-	 O8kNlLMlI2q5A==
+	b=R0nMYIrYKL4tHjEei3YverNUjSCX1qEmxGtTKgHNcf1aNHGPvQFU4lkxm4Xn+S8Vi
+	 qJqAMRVqLLVGFgUIWbTo24gyOmP/8riCbiAh1/KA3BIAgnjAxwYUOwSMta+u0yCFre
+	 nsn30Nq/KrYVL8sNEKd5FsolMEkQ8STiUCOONULK5FPysKMSfd2r1LwChmQ3AaJxfb
+	 Lsi5LMvqWAdQAlbhzwv8RBUF1ZIWVLumrpmYkIJ9FDUZbJv6wFSrP+xXhS/Dxn7hCP
+	 bPqMDbXvYhV0duiQ5Bftco69Nm3MxwJAjNkmSNKPq42uwZknwNSmFpArVXpg6+P/Jv
+	 RRqjyxuZqwb5A==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-xfs@vger.kernel.org,
 	Andrey Albershteyn <aalbersh@kernel.org>
 Cc: "Darrick J . Wong" <djwong@kernel.org>,
 	Christoph Hellwig <hch@lst.de>,
 	Carlos Maiolino <cem@kernel.org>
-Subject: [PATCH v3 3/6] libfrog: introduce xfrog_report_zones
-Date: Sat, 20 Dec 2025 11:53:23 +0900
-Message-ID: <20251220025326.209196-4-dlemoal@kernel.org>
+Subject: [PATCH v3 4/6] mkfs: use xfrog_report_zones()
+Date: Sat, 20 Dec 2025 11:53:24 +0900
+Message-ID: <20251220025326.209196-5-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251220025326.209196-1-dlemoal@kernel.org>
 References: <20251220025326.209196-1-dlemoal@kernel.org>
@@ -59,114 +59,95 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Define the new helper function xfrog_report_zones() to report zones of
-a zoned block device. This function is implemented in the new file
-libfrog/zones.c and defined in the header file libfrog/zones.h.
-
-xfrog_report_zones() allocates and returns a struct blk_zone_report
-structure. It is the responsibility of the caller to free this
-structure after use.
+Use the function xfrog_report_zones() to obtain zone information from
+a zoned device instead of directly issuing a BLKREPORTZONE ioctl.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- libfrog/Makefile |  6 ++++--
- libfrog/zones.c  | 42 ++++++++++++++++++++++++++++++++++++++++++
- libfrog/zones.h  | 13 +++++++++++++
- 3 files changed, 59 insertions(+), 2 deletions(-)
- create mode 100644 libfrog/zones.c
- create mode 100644 libfrog/zones.h
+ mkfs/xfs_mkfs.c | 35 +++++++++--------------------------
+ 1 file changed, 9 insertions(+), 26 deletions(-)
 
-diff --git a/libfrog/Makefile b/libfrog/Makefile
-index 268fa26638d7..9f405ffe3475 100644
---- a/libfrog/Makefile
-+++ b/libfrog/Makefile
-@@ -35,7 +35,8 @@ radix-tree.c \
- randbytes.c \
- scrub.c \
- util.c \
--workqueue.c
-+workqueue.c \
-+zones.c
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 550fc011b614..ac7ad0661805 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -6,7 +6,6 @@
+ #include "libfrog/util.h"
+ #include "libxfs.h"
+ #include <ctype.h>
+-#include <linux/blkzoned.h>
+ #include "libxfs/xfs_zones.h"
+ #include "xfs_multidisk.h"
+ #include "libxcmd.h"
+@@ -15,6 +14,7 @@
+ #include "libfrog/crc32cselftest.h"
+ #include "libfrog/dahashselftest.h"
+ #include "libfrog/fsproperties.h"
++#include "libfrog/zones.h"
+ #include "proto.h"
+ #include <ini.h>
  
- HFILES = \
- avl64.h \
-@@ -65,7 +66,8 @@ radix-tree.h \
- randbytes.h \
- scrub.h \
- statx.h \
--workqueue.h
-+workqueue.h \
-+zones.h
+@@ -2566,20 +2566,16 @@ struct zone_topology {
+ 	struct zone_info	log;
+ };
  
- GETTEXT_PY = \
- 	gettext.py
-diff --git a/libfrog/zones.c b/libfrog/zones.c
-new file mode 100644
-index 000000000000..0187edce5fa4
---- /dev/null
-+++ b/libfrog/zones.c
-@@ -0,0 +1,42 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025, Western Digital Corporation or its affiliates.
-+ */
-+#include "platform_defs.h"
-+#include "zones.h"
-+#include <sys/ioctl.h>
-+
-+/* random size that allows efficient processing */
-+#define ZONES_PER_REPORT		16384
-+
-+struct blk_zone_report	*
-+xfrog_report_zones(
-+	int			fd,
-+	uint64_t		sector)
-+{
-+	struct blk_zone_report	*rep;
-+	size_t			rep_size;
-+	int			ret;
-+
-+	rep_size = sizeof(struct blk_zone_report) +
-+		   sizeof(struct blk_zone) * ZONES_PER_REPORT;
-+	rep = calloc(1, rep_size);
-+	if (!rep) {
-+		fprintf(stderr,
-+_("Failed to allocate memory for reporting zones.\n"));
-+		return NULL;
-+	}
-+
-+	rep->sector = sector;
-+	rep->nr_zones = ZONES_PER_REPORT;
-+
-+	ret = ioctl(fd, BLKREPORTZONE, rep);
-+	if (ret) {
-+		fprintf(stderr,
-+_("ioctl(BLKREPORTZONE) failed: %d!\n"), -errno);
+-/* random size that allows efficient processing */
+-#define ZONES_PER_IOCTL			16384
+-
+ static void
+ report_zones(
+ 	const char		*name,
+ 	struct zone_info	*zi)
+ {
+-	struct blk_zone_report	*rep;
++	struct blk_zone_report	*rep = NULL;
+ 	bool			found_seq = false;
+-	int			fd, ret = 0;
++	int			fd;
+ 	uint64_t		device_size;
+ 	uint64_t		sector = 0;
+-	size_t			rep_size;
+ 	unsigned int		i, n = 0;
+ 	struct stat		st;
+ 
+@@ -2606,31 +2602,18 @@ report_zones(
+ 	zi->nr_zones = device_size / zi->zone_size;
+ 	zi->nr_conv_zones = 0;
+ 
+-	rep_size = sizeof(struct blk_zone_report) +
+-		   sizeof(struct blk_zone) * ZONES_PER_IOCTL;
+-	rep = malloc(rep_size);
+-	if (!rep) {
+-		fprintf(stderr,
+-_("Failed to allocate memory for zone reporting.\n"));
+-		exit(1);
+-	}
+-
+ 	while (n < zi->nr_zones) {
+-		struct blk_zone *zones = (struct blk_zone *)(rep + 1);
++		struct blk_zone *zones;
+ 
+-		memset(rep, 0, rep_size);
+-		rep->sector = sector;
+-		rep->nr_zones = ZONES_PER_IOCTL;
+-
+-		ret = ioctl(fd, BLKREPORTZONE, rep);
+-		if (ret) {
+-			fprintf(stderr,
+-_("ioctl(BLKREPORTZONE) failed: %d!\n"), -errno);
 +		free(rep);
-+		return NULL;
-+	}
++		rep = xfrog_report_zones(fd, sector);
++		if (!rep)
+ 			exit(1);
+-		}
 +
-+	return rep;
-+}
-diff --git a/libfrog/zones.h b/libfrog/zones.h
-new file mode 100644
-index 000000000000..66df7a426a27
---- /dev/null
-+++ b/libfrog/zones.h
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025, Western Digital Corporation or its affiliates.
-+ */
-+#ifndef __LIBFROG_ZONE_H__
-+#define __LIBFROG_ZONE_H__
-+
-+#include <stdint.h>
-+#include <linux/blkzoned.h>
-+
-+struct blk_zone_report	*xfrog_report_zones(int	fd, uint64_t sector);
-+
-+#endif /* __LIBFROG_ZONE_H__ */
+ 		if (!rep->nr_zones)
+ 			break;
+ 
++		zones = (struct blk_zone *)(rep + 1);
+ 		for (i = 0; i < rep->nr_zones; i++) {
+ 			if (n >= zi->nr_zones)
+ 				break;
 -- 
 2.52.0
 
