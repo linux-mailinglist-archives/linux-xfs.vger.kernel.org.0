@@ -1,53 +1,53 @@
-Return-Path: <linux-xfs+bounces-28965-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-28966-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DCABCD25ED
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 03:58:21 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00790CD25E1
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 03:58:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6C0633021FA3
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 02:58:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 69785302C5F2
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Dec 2025 02:58:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D2E523EAB9;
-	Sat, 20 Dec 2025 02:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 083582367CE;
+	Sat, 20 Dec 2025 02:58:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yxx7T5cK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGYyu+qd"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0784231832
-	for <linux-xfs@vger.kernel.org>; Sat, 20 Dec 2025 02:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9211C84A0
+	for <linux-xfs@vger.kernel.org>; Sat, 20 Dec 2025 02:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766199483; cv=none; b=nc/cXv8tlCHwD8vekPRpmNWMEJhHDFY8YS/Ccmt2iQukAnsqsev3F4A1NHdcPC5Xqls8QtE+1tbnbn1uxmEJFQfy2WObf774xyTKXf1L60Nh03ju+lfAQVZ1A1OSysoHyOf+QvmWlrYLOt1PkfPxedkToxYyDzSvfdiT8hvPpx0=
+	t=1766199483; cv=none; b=aJz4kN4C0wgQ4muNxv/8Y63l9EP+/IOnUf+BZu6Sv7LzanysjcjWVjeKJWHnQx6IndZyZPVAB2p9lanJx6ZUHjD4/vNYdEx6jcqJI/lNhwKyJXgG3H5yxvx8rQyLI6JDiMHSmXgnwEk9aDFkugpGP7acK1Z/PekQGSw8wRlJAdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1766199483; c=relaxed/simple;
-	bh=l1B/FKef0JWqNx5yuMkw9lztG/yXHptyonKceBW8I7I=;
+	bh=rOQIlJnt7D8agvlPsVrbAGVofv4lX2DJBi2OwaufFQU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oJl5bGIU+INhrE6LqVMzIHlUueAlyuRA4Vfb7ciQCM6Dqal8kdcjRcFANWqW+h7i8vmtkQeqiLyjbZMEeuXVOeIApiY8ePdrsA4e/noFyDamI45PfSRW633r9fskc6ll9q9BRKfFhM0cfAfs6pfcwR0yJmY3r3/+Dy++pdKwIi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yxx7T5cK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F32C116D0;
-	Sat, 20 Dec 2025 02:58:01 +0000 (UTC)
+	 MIME-Version; b=oYSSu26Dow0W3nXKJm+RYSlYmao0ZtB9C+yosBK4vwHGOCVVFY1iiTIyS+YQAeLFvB88Jghx6LgrJIJk1SZqvK0EK3qOeagf11pIk40/A0PItVOkbujR29vdH6EIdnKUfTXiCUE2xczmQh8HmNS17WSgE21E6uYnaR1m+3xTEUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGYyu+qd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF932C16AAE;
+	Sat, 20 Dec 2025 02:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766199482;
-	bh=l1B/FKef0JWqNx5yuMkw9lztG/yXHptyonKceBW8I7I=;
+	s=k20201202; t=1766199483;
+	bh=rOQIlJnt7D8agvlPsVrbAGVofv4lX2DJBi2OwaufFQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Yxx7T5cKgqCQWMo8ueWcuQNSoRMo1XX3qufrP5WX21IWp0uwGqNDuUBxIlCr/Dmbr
-	 kWyG/NwEi2OFq9x75l7ZK781JlhglBRuR2xanOQsEjnP2OgqdajlmyX/sxzoQ5kF13
-	 mx5p4+dcihLMdMu9vcTGj8ZMdFz7GyDHSBSJclJeYhspJewGuKZd2lHI9V2yHmcFbo
-	 buWklQ6d419cG8wq/DtGZgxG2PfegjJQaQ2KR7Huf4pPeF/xLMjoA3S2vy1ZrdBzfu
-	 P2BBdhRmttriJJf2zIsuW/eyuGzIK7cnhTALSftrmAmVWZBnbZem3UV1rVjg6v5EGV
-	 HBsSDga1/5hKQ==
+	b=BGYyu+qd0PgM/nxVozKa7GpXJDR7GjYco/PXjfEM1oojjS/OW7YrRN6jZjtSYFuDM
+	 k+G7+YQ4rEwpD56H6jSBiCi65v3BORoxufkBXfbbs/bMtLN8ILOWfjf+9kOQfMO3fT
+	 +9RYstfQgCn8+w8txYO/5tk0ioH8X/YSptTbO96vcDMLROD0kj2L+pCI6MTqY9ZBwr
+	 P4P+wvdG8s5ZWlDd7epSc5BGwt2+SnAiPfXLoggkuTp6uAi8ThgFW8s3MDvaGBEIpx
+	 Th10QEZIaYAuo7WLcZvtO7ePch9F6WrJurybr3HUKdUeqFS17hEBZlUWZ+jP6zS5sd
+	 JmI4NX0Qd58Yw==
 From: Damien Le Moal <dlemoal@kernel.org>
 To: linux-xfs@vger.kernel.org,
 	Andrey Albershteyn <aalbersh@kernel.org>
 Cc: "Darrick J . Wong" <djwong@kernel.org>,
 	Christoph Hellwig <hch@lst.de>,
 	Carlos Maiolino <cem@kernel.org>
-Subject: [PATCH v3 5/6] repair: use xfrog_report_zones()
-Date: Sat, 20 Dec 2025 11:53:25 +0900
-Message-ID: <20251220025326.209196-6-dlemoal@kernel.org>
+Subject: [PATCH v3 6/6] libfrog: enable cached report zones
+Date: Sat, 20 Dec 2025 11:53:26 +0900
+Message-ID: <20251220025326.209196-7-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20251220025326.209196-1-dlemoal@kernel.org>
 References: <20251220025326.209196-1-dlemoal@kernel.org>
@@ -59,74 +59,95 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the function xfrog_report_zones() to obtain zones information from
-a zoned device instead of directly issuing a BLKREPORTZONE ioctl.
+Modify the function xfrog_report_zones() to default to always trying
+first a cached report zones using the BLKREPORTZONEV2 ioctl.
+If the kernel does not support BLKREPORTZONEV2, fall back to the
+(slower) regular report zones BLKREPORTZONE ioctl.
+
+TO enable this feature even if xfsprogs is compiled on a system where
+linux/blkzoned.h does not define BLKREPORTZONEV2, this ioctl is defined
+in libfrog/zones.h, together with the BLK_ZONE_REP_CACHED flag and the
+BLK_ZONE_COND_ACTIVE zone condition.
+
+Since a cached report zone  always return the condition
+BLK_ZONE_COND_ACTIVE for any zone that is implicitly open, explicitly
+open or closed, the function xfs_zone_validate_seq() is modified to
+handle this new condition as being equivalent to the implicit open,
+explicit open or closed conditions.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- repair/zoned.c | 29 ++++++++---------------------
- 1 file changed, 8 insertions(+), 21 deletions(-)
+ libfrog/zones.c    | 11 ++++++++++-
+ libfrog/zones.h    |  9 +++++++++
+ libxfs/xfs_zones.c |  3 ++-
+ 3 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/repair/zoned.c b/repair/zoned.c
-index 206b0158f95f..c211e02448da 100644
---- a/repair/zoned.c
-+++ b/repair/zoned.c
-@@ -3,7 +3,7 @@
-  * Copyright (c) 2024 Christoph Hellwig.
-  */
- #include <ctype.h>
--#include <linux/blkzoned.h>
-+#include "libfrog/zones.h"
- #include "libxfs_priv.h"
- #include "libxfs.h"
- #include "xfs_zones.h"
-@@ -51,8 +51,7 @@ check_zones(
- 	uint64_t		sector = XFS_FSB_TO_BB(mp, mp->m_sb.sb_rtstart);
- 	unsigned int		zone_size, zone_capacity;
- 	uint64_t		device_size;
--	size_t			rep_size;
--	struct blk_zone_report	*rep;
-+	struct blk_zone_report	*rep = NULL;
- 	unsigned int		i, n = 0;
- 
- 	if (ioctl(fd, BLKGETSIZE64, &device_size))
-@@ -67,30 +66,18 @@ check_zones(
- 		return;
+diff --git a/libfrog/zones.c b/libfrog/zones.c
+index 0187edce5fa4..8b45066de176 100644
+--- a/libfrog/zones.c
++++ b/libfrog/zones.c
+@@ -27,10 +27,19 @@ _("Failed to allocate memory for reporting zones.\n"));
+ 		return NULL;
  	}
  
--	rep_size = sizeof(struct blk_zone_report) +
--		   sizeof(struct blk_zone) * ZONES_PER_IOCTL;
--	rep = malloc(rep_size);
--	if (!rep) {
--		do_warn(_("malloc failed for zone report\n"));
--		return;
--	}
--
- 	while (n < mp->m_sb.sb_rgcount) {
--		struct blk_zone *zones = (struct blk_zone *)(rep + 1);
--		int ret;
-+		struct blk_zone *zones;
++	/*
++	 * Try cached report zones first. If this fails, fallback to the regular
++	 * (slower) report zones.
++	 */
+ 	rep->sector = sector;
+ 	rep->nr_zones = ZONES_PER_REPORT;
++	rep->flags = BLK_ZONE_REP_CACHED;
  
--		memset(rep, 0, rep_size);
--		rep->sector = sector;
--		rep->nr_zones = ZONES_PER_IOCTL;
-+		free(rep);
-+		rep = xfrog_report_zones(fd, sector);
-+		if (!rep)
-+			return;
+-	ret = ioctl(fd, BLKREPORTZONE, rep);
++	ret = ioctl(fd, BLKREPORTZONEV2, rep);
++	if (ret < 0 && errno == ENOTTY) {
++		rep->flags = 0;
++		ret = ioctl(fd, BLKREPORTZONE, rep);
++	}
+ 	if (ret) {
+ 		fprintf(stderr,
+ _("ioctl(BLKREPORTZONE) failed: %d!\n"), -errno);
+diff --git a/libfrog/zones.h b/libfrog/zones.h
+index 66df7a426a27..4605aea93114 100644
+--- a/libfrog/zones.h
++++ b/libfrog/zones.h
+@@ -8,6 +8,15 @@
+ #include <stdint.h>
+ #include <linux/blkzoned.h>
  
--		ret = ioctl(fd, BLKREPORTZONE, rep);
--		if (ret) {
--			do_error(_("ioctl(BLKREPORTZONE) failed: %d!\n"), ret);
--			goto out_free;
--		}
- 		if (!rep->nr_zones)
- 			break;
++/*
++ * Cached report ioctl (/usr/include/linux/blkzoned.h)
++ */
++#ifndef BLKREPORTZONEV2
++#define BLKREPORTZONEV2		_IOWR(0x12, 142, struct blk_zone_report)
++#define BLK_ZONE_REP_CACHED	(1U << 31)
++#define BLK_ZONE_COND_ACTIVE	0xff
++#endif
++
+ struct blk_zone_report	*xfrog_report_zones(int	fd, uint64_t sector);
  
-+		zones = (struct blk_zone *)(rep + 1);
- 		for (i = 0; i < rep->nr_zones; i++) {
- 			if (n >= mp->m_sb.sb_rgcount)
- 				break;
+ #endif /* __LIBFROG_ZONE_H__ */
+diff --git a/libxfs/xfs_zones.c b/libxfs/xfs_zones.c
+index 7a81d83f5b3e..3c89a89ca21e 100644
+--- a/libxfs/xfs_zones.c
++++ b/libxfs/xfs_zones.c
+@@ -3,7 +3,7 @@
+  * Copyright (c) 2023-2025 Christoph Hellwig.
+  * Copyright (c) 2024-2025, Western Digital Corporation or its affiliates.
+  */
+-#include <linux/blkzoned.h>
++#include <libfrog/zones.h>
+ #include "libxfs_priv.h"
+ #include "xfs.h"
+ #include "xfs_fs.h"
+@@ -97,6 +97,7 @@ xfs_zone_validate_seq(
+ 	case BLK_ZONE_COND_IMP_OPEN:
+ 	case BLK_ZONE_COND_EXP_OPEN:
+ 	case BLK_ZONE_COND_CLOSED:
++	case BLK_ZONE_COND_ACTIVE:
+ 		return xfs_zone_validate_wp(zone, rtg, write_pointer);
+ 	case BLK_ZONE_COND_FULL:
+ 		return xfs_zone_validate_full(zone, rtg, write_pointer);
 -- 
 2.52.0
 
