@@ -1,264 +1,248 @@
-Return-Path: <linux-xfs+bounces-29116-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29118-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C937CFFA8A
-	for <lists+linux-xfs@lfdr.de>; Wed, 07 Jan 2026 20:11:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1762ACFFAFA
+	for <lists+linux-xfs@lfdr.de>; Wed, 07 Jan 2026 20:17:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ACE7E302783E
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Jan 2026 19:10:43 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8F5D132CA435
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Jan 2026 19:01:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F610318138;
-	Wed,  7 Jan 2026 18:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B5BD344026;
+	Wed,  7 Jan 2026 18:50:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="tWAGtITr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eepL2e8b"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from forward202d.mail.yandex.net (forward202d.mail.yandex.net [178.154.239.219])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1890F33D4EC;
-	Wed,  7 Jan 2026 18:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1953733032C;
+	Wed,  7 Jan 2026 18:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767811417; cv=none; b=UrBwlYQZjXGgftn3B+/OT+oyM0pjva8F9ou96F2ESx9hNRsFYe0PYFg61EBPJi94KvUrFmKPK/baplnOGB/LnZWOo1erYbhkTu1BhzDHG/9GPzB7Vqi0z8oaJ0LxYAxbxR8EcTbOu4eQ0HNm6J010lLq/iYSNCVaetg4AKVa+ZY=
+	t=1767811857; cv=none; b=ljIwzTmwzC+h08hx3JrLGbT6Mqpf6XUavpKNxdTpnoV9Z/QCnjP6rp+0aQtUzRYfuqFjwpUPbQARtb8JYFIhATLaWYA77EgPOlX7I15a4gHVztLx1zR0fqZzCjp7EAcZEPpTIo7/+cHwTp34LDLmFwY+xjar97nrQl31Ow3/HxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767811417; c=relaxed/simple;
-	bh=f3uM2b0FHSZS8XWuUb78Jc6HLLvTgHaijo6/o7R7NHI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B4Nx/9d3LOPAwFuhrnB73C+pwqqjlNjUd9ZKJP6mYaoMWMLtiGp3NUwtETYE0XzGLQnFz6UJao7liV3XuCTTI+w/PX/Fo7qP6HdNhc3RjsEBiJGAysp/dTnY/ctbldpsuP9ySXKA6q9fD9mGJ5EhKzrtTdHbHoBw74OOZMTBgZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=tWAGtITr; arc=none smtp.client-ip=178.154.239.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Received: from forward103d.mail.yandex.net (forward103d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d103])
-	by forward202d.mail.yandex.net (Yandex) with ESMTPS id EDC6D86E04;
-	Wed, 07 Jan 2026 21:36:38 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:2dcb:0:640:715b:0])
-	by forward103d.mail.yandex.net (Yandex) with ESMTPS id CC7A4C0048;
-	Wed, 07 Jan 2026 21:36:30 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id SaSuiV7Gl8c0-otNeae5L;
-	Wed, 07 Jan 2026 21:36:30 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1767810990; bh=EfYQS/sL8mS5ytfWEvnlVPoQeGJEqgFyFRH5wFal9J8=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=tWAGtITrsrLjTPqk0eaD7Prg/Oij3wOtwHtrHZRHwPhQoc5hDCVXWuOWtUUAUpzLB
-	 lAYvQRf+JDOYAIRdi7+o77nP+hvwPQpp7sdpxBvhD0cMzw8uDSyuZSU+vFzhxbnY+f
-	 9A1/EtfNIUc7cAOfsZICe6R7XhiGs7MLw6lkMK1A=
-Authentication-Results: mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Carlos Maiolino <cem@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-xfs@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH v2] xfs: adjust handling of a few numerical mount options
-Date: Wed,  7 Jan 2026 21:36:14 +0300
-Message-ID: <20260107183614.782245-2-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260107183614.782245-1-dmantipov@yandex.ru>
-References: <20260107183614.782245-1-dmantipov@yandex.ru>
+	s=arc-20240116; t=1767811857; c=relaxed/simple;
+	bh=dcntz5yo7TL16JzdRfI26eb3bdr9fVlucOOmZVw+5l4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K8dsjCbWKQgqnTUz8jl7q9z5F8ZqjM3CDSRAjDDMH+xBzm0gz6M+Dq7h/XImzwWKQEPFKKLQxkAQoWBT3rPuBx//2h2wc2+Nx5eoHavLvaeIA+JmoDNjqXZfBF1Lyc0XgkQj9/cVHhzzlCcluzYTeKwqY3r62wW8ai/WL+3ziZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eepL2e8b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A10C4CEF1;
+	Wed,  7 Jan 2026 18:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767811856;
+	bh=dcntz5yo7TL16JzdRfI26eb3bdr9fVlucOOmZVw+5l4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eepL2e8bw2rgHoVt+eomHM3ZWROeuFY38JxwVluacU6ST9E0H+v0VnE77fEv+yfhJ
+	 jl8+08QKkQBEBipmIiLNhZ++Innn113kyyycBKdQoY8NB0QIebnvPu+extxnMv388j
+	 yXcN+GRtBsHb3KkUk2EizWAuWjLnMTyFgUYoAhPyBbfymWXcJPQFItk59mOZvozVE1
+	 +BvzPN5tGoY4rVg9jv/1PiOHyaN4f49Ub+zFxzBW2B1f6VG4WAz6VtR4DSfM82aNH1
+	 O2DT+E2eR+DbSTa97hVcAi284Cf9HMc5HoOySj29UEYE/NlXR1QZDRhrqQf9zrDKWf
+	 M6qriGzhJz56A==
+Date: Wed, 7 Jan 2026 10:50:55 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: cem@kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 02/11] xfs: start creating infrastructure for health
+ monitoring
+Message-ID: <20260107185055.GE15551@frogsfrogsfrogs>
+References: <176766637179.774337.3663793412524347917.stgit@frogsfrogsfrogs>
+ <176766637289.774337.11016648296945814848.stgit@frogsfrogsfrogs>
+ <20260107091713.GB22838@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260107091713.GB22838@lst.de>
 
-Prefer recently introduced 'memvalue()' over an ad-hoc 'suffix_kstrtoint()'
-and 'suffix_kstrtoull()' to parse and basically validate the values passed
-via 'logbsize', 'allocsize', and 'max_atomic_write' mount options, and
-reject non-power-of-two values passed via the first and second one early
-in 'xfs_fs_parse_param()' rather than in 'xfs_fs_validate_params()'.
+On Wed, Jan 07, 2026 at 10:17:13AM +0100, Christoph Hellwig wrote:
+> On Mon, Jan 05, 2026 at 11:11:08PM -0800, Darrick J. Wong wrote:
+> > +struct xfs_health_monitor {
+> > +	__u64	flags;		/* flags */
+> > +	__u8	format;		/* output format */
+> > +	__u8	pad1[7];	/* zeroes */
+> > +	__u64	pad2[2];	/* zeroes */
+> > +};
+> 
+> Why not use a single __u8-based padding field?
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
-v2: rely on 'memvalue()' as (well, IIUC) suggested by Christoph and
-    handle both 'logbsize' and 'allocsize' in 'xfs_fs_parse_param()'
----
- fs/xfs/xfs_super.c | 123 ++++++++++-----------------------------------
- 1 file changed, 27 insertions(+), 96 deletions(-)
+Ok.
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index bc71aa9dcee8..3ee63f7b5a4a 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1319,77 +1319,6 @@ static const struct super_operations xfs_super_operations = {
- 	.show_stats		= xfs_fs_show_stats,
- };
- 
--static int
--suffix_kstrtoint(
--	const char	*s,
--	unsigned int	base,
--	int		*res)
--{
--	int		last, shift_left_factor = 0, _res;
--	char		*value;
--	int		ret = 0;
--
--	value = kstrdup(s, GFP_KERNEL);
--	if (!value)
--		return -ENOMEM;
--
--	last = strlen(value) - 1;
--	if (value[last] == 'K' || value[last] == 'k') {
--		shift_left_factor = 10;
--		value[last] = '\0';
--	}
--	if (value[last] == 'M' || value[last] == 'm') {
--		shift_left_factor = 20;
--		value[last] = '\0';
--	}
--	if (value[last] == 'G' || value[last] == 'g') {
--		shift_left_factor = 30;
--		value[last] = '\0';
--	}
--
--	if (kstrtoint(value, base, &_res))
--		ret = -EINVAL;
--	kfree(value);
--	*res = _res << shift_left_factor;
--	return ret;
--}
--
--static int
--suffix_kstrtoull(
--	const char		*s,
--	unsigned int		base,
--	unsigned long long	*res)
--{
--	int			last, shift_left_factor = 0;
--	unsigned long long	_res;
--	char			*value;
--	int			ret = 0;
--
--	value = kstrdup(s, GFP_KERNEL);
--	if (!value)
--		return -ENOMEM;
--
--	last = strlen(value) - 1;
--	if (value[last] == 'K' || value[last] == 'k') {
--		shift_left_factor = 10;
--		value[last] = '\0';
--	}
--	if (value[last] == 'M' || value[last] == 'm') {
--		shift_left_factor = 20;
--		value[last] = '\0';
--	}
--	if (value[last] == 'G' || value[last] == 'g') {
--		shift_left_factor = 30;
--		value[last] = '\0';
--	}
--
--	if (kstrtoull(value, base, &_res))
--		ret = -EINVAL;
--	kfree(value);
--	*res = _res << shift_left_factor;
--	return ret;
--}
--
- static inline void
- xfs_fs_warn_deprecated(
- 	struct fs_context	*fc,
-@@ -1427,8 +1356,8 @@ xfs_fs_parse_param(
- {
- 	struct xfs_mount	*parsing_mp = fc->s_fs_info;
- 	struct fs_parse_result	result;
--	int			size = 0;
- 	int			opt;
-+	unsigned long long	val;
- 
- 	BUILD_BUG_ON(XFS_QFLAGS_MNTOPTS & XFS_MOUNT_QUOTA_ALL);
- 
-@@ -1444,8 +1373,19 @@ xfs_fs_parse_param(
- 		parsing_mp->m_logbufs = result.uint_32;
- 		return 0;
- 	case Opt_logbsize:
--		if (suffix_kstrtoint(param->string, 10, &parsing_mp->m_logbsize))
-+		val = memvalue(param->string);
-+		if (val == ULLONG_MAX)
- 			return -EINVAL;
-+		if (val != 0 &&
-+		    (val < XLOG_MIN_RECORD_BSIZE ||
-+		     val > XLOG_MAX_RECORD_BSIZE ||
-+		     !is_power_of_2(val))) {
-+			xfs_warn(parsing_mp,
-+				 "invalid logbsize %llu: not a power-of-two in [%u..%u]",
-+				 val, XLOG_MIN_RECORD_BSIZE, XLOG_MAX_RECORD_BSIZE);
-+			return -EINVAL;
-+		}
-+		parsing_mp->m_logbsize = val;
- 		return 0;
- 	case Opt_logdev:
- 		kfree(parsing_mp->m_logname);
-@@ -1460,9 +1400,18 @@ xfs_fs_parse_param(
- 			return -ENOMEM;
- 		return 0;
- 	case Opt_allocsize:
--		if (suffix_kstrtoint(param->string, 10, &size))
-+		val = memvalue(param->string);
-+		if (val == ULLONG_MAX)
-+			return -EINVAL;
-+		if (val < (1ULL << XFS_MIN_IO_LOG) ||
-+		    val > (1ULL << XFS_MAX_IO_LOG) ||
-+		    !is_power_of_2(val)) {
-+			xfs_warn(parsing_mp,
-+				 "invalid allocsize %llu: not a power-of-two in [%u..%u]",
-+				 val, 1 << XFS_MIN_IO_LOG, 1 << XFS_MAX_IO_LOG);
- 			return -EINVAL;
--		parsing_mp->m_allocsize_log = ffs(size) - 1;
-+		}
-+		parsing_mp->m_allocsize_log = ffs(val) - 1;
- 		parsing_mp->m_features |= XFS_FEAT_ALLOCSIZE;
- 		return 0;
- 	case Opt_grpid:
-@@ -1570,12 +1519,13 @@ xfs_fs_parse_param(
- 		parsing_mp->m_features |= XFS_FEAT_NOLIFETIME;
- 		return 0;
- 	case Opt_max_atomic_write:
--		if (suffix_kstrtoull(param->string, 10,
--				     &parsing_mp->m_awu_max_bytes)) {
-+		val = memvalue(param->string);
-+		if (val == ULLONG_MAX) {
- 			xfs_warn(parsing_mp,
-  "max atomic write size must be positive integer");
- 			return -EINVAL;
- 		}
-+		parsing_mp->m_awu_max_bytes = val;
- 		return 0;
- 	default:
- 		xfs_warn(parsing_mp, "unknown mount option [%s].", param->key);
-@@ -1629,25 +1579,6 @@ xfs_fs_validate_params(
- 		return -EINVAL;
- 	}
- 
--	if (mp->m_logbsize != -1 &&
--	    mp->m_logbsize !=  0 &&
--	    (mp->m_logbsize < XLOG_MIN_RECORD_BSIZE ||
--	     mp->m_logbsize > XLOG_MAX_RECORD_BSIZE ||
--	     !is_power_of_2(mp->m_logbsize))) {
--		xfs_warn(mp,
--			"invalid logbufsize: %d [not 16k,32k,64k,128k or 256k]",
--			mp->m_logbsize);
--		return -EINVAL;
--	}
--
--	if (xfs_has_allocsize(mp) &&
--	    (mp->m_allocsize_log > XFS_MAX_IO_LOG ||
--	     mp->m_allocsize_log < XFS_MIN_IO_LOG)) {
--		xfs_warn(mp, "invalid log iosize: %d [not %d-%d]",
--			mp->m_allocsize_log, XFS_MIN_IO_LOG, XFS_MAX_IO_LOG);
--		return -EINVAL;
--	}
--
- 	return 0;
- }
- 
--- 
-2.52.0
+> > +struct xfs_healthmon {
+> > +	/*
+> > +	 * Weak reference to the xfs filesystem that is being monitored.  It
+> > +	 * will be set to zero when the filesystem detaches from the monitor.
+> > +	 * Do not dereference this pointer.
+> > +	 */
+> > +	uintptr_t			mount_cookie;
+> > +
+> > +	/*
+> > +	 * Device number of the filesystem being monitored.  This is for
+> > +	 * consistent tracing even after unmount.
+> > +	 */
+> > +	dev_t				dev;
+> 
+> It isn't really used for tracking, but just in a single print, right?
 
+It's used for tracepoints and fdinfo.
+
+> > + * be parsed easily by userspace.  Then we hook various parts of the filesystem
+> 
+> Is the hooking terminology still right?
+
+I still think of the entry points as hooks, but I'll reword it to avoid
+confusion with the actual xfs_hooks:
+
+"When those internal events occur, the filesystem will call this health
+monitor to convey them to userspace."
+
+> > + * The healthmon abstraction has a weak reference to the host filesystem mount
+> > + * so that the queueing and processing of the events do not pin the mount and
+> > + * cannot slow down the main filesystem.  The healthmon object can exist past
+> > + * the end of the filesystem mount.
+> > + */
+> > +
+> > +/* sign of a detached health monitor */
+> > +#define DETACHED_MOUNT_COOKIE		((uintptr_t)0)
+> 
+> This almost looks like a not performance optimized version of hazard
+> pointers.  Not that we care much about performance here.
+
+Yep.  AFAIK the kernel doesn't have an actual hazard pointer
+implementation that we could latch onto, right?
+
+> > +/*
+> > + * Free the health monitor after an RCU grace period to eliminate possibility
+> > + * of races with xfs_healthmon_get.
+> > + */
+> > +static inline void
+> > +xfs_healthmon_free(
+> > +	struct xfs_healthmon		*hm)
+> > +{
+> > +	kfree_rcu_mightsleep(hm);
+> > +}
+> 
+> Is there much of a point in this wrapper vs just open coding the call to
+> kfree_rcu_mightsleep in the only caller?
+
+No, and indeed this could be compressed into _healthmon_put:
+
+	if (refcount_dec_and_test(&hm->ref)) {
+		while (hm->first_event) {
+			/* free hm->first_event */
+		}
+		kfree(hm->buffer);
+		mutex_destroy(&hm->lock);
+		kfree_rcu_mightsleep(hm);
+	}
+
+which would be much easier to think about.
+
+> > +/* Is this health monitor active? */
+> > +static inline bool
+> > +xfs_healthmon_activated(
+> > +	struct xfs_healthmon	*hm)
+> > +{
+> > +	return hm->mount_cookie != DETACHED_MOUNT_COOKIE;
+> > +}
+> > +
+> > +/* Is this health monitor watching the given filesystem? */
+> > +static inline bool
+> > +xfs_healthmon_covers_fs(
+> > +	struct xfs_healthmon	*hm,
+> > +	struct super_block	*sb)
+> > +{
+> > +	return hm->mount_cookie == (uintptr_t)sb;
+> > +}
+> 
+> Is there much of a point in these helpers vs open coding them in the callers?
+> (no caller yet in this patch of the second one anyway).  Especially as we
+> need to hold a lock for them to be safe.
+
+The only one really worth keeping is _healthmon_activated because it
+gets called from various places.  And even then, it now only has three
+callsites so maybe it'll just go away.
+
+> > +
+> > +/* Attach a health monitor to an xfs_mount.  Only one allowed at a time. */
+> > +STATIC int
+> > +xfs_healthmon_attach(
+> > +	struct xfs_mount	*mp,
+> > +	struct xfs_healthmon	*hm)
+> > +{
+> > +	int			ret = 0;
+> > +
+> > +	spin_lock(&xfs_healthmon_lock);
+> > +	if (mp->m_healthmon == NULL) {
+> > +		mp->m_healthmon = hm;
+> > +		hm->mount_cookie = (uintptr_t)mp->m_super;
+> > +		refcount_inc(&hm->ref);
+> > +	} else {
+> > +		ret = -EEXIST;
+> > +	}
+> > +	spin_unlock(&xfs_healthmon_lock);
+> > +
+> > +	return ret;
+> 
+> Maybe just me, but I'd do away with the ret variable and just handle the
+> EEXIST case directly:
+> 
+> 	spin_lock(&xfs_healthmon_lock);
+> 	if (mp->m_healthmon) {
+> 		spin_unlock(&xfs_healthmon_lock);
+> 		return -EEXIST;
+> 	}
+> 	refcount_inc(&hm->ref);
+> 	mp->m_healthmon = hm;
+> 	hm->mount_cookie = (uintptr_t)mp->m_super;
+> 	spin_unlock(&xfs_healthmon_lock);
+> 	return 0;
+> 
+> > +/* Detach a xfs mount from a specific healthmon instance. */
+> > +STATIC void
+> > +xfs_healthmon_detach(
+> > +	struct xfs_healthmon	*hm)
+> > +{
+> > +	spin_lock(&xfs_healthmon_lock);
+> > +	if (xfs_healthmon_activated(hm)) {
+> > +		struct xfs_mount	*mp =
+> > +			XFS_M((struct super_block *)hm->mount_cookie);
+> > +
+> > +		mp->m_healthmon = NULL;
+> > +		hm->mount_cookie = DETACHED_MOUNT_COOKIE;
+> > +	} else {
+> > +		hm = NULL;
+> > +	}
+> > +	spin_unlock(&xfs_healthmon_lock);
+> > +
+> > +	if (hm)
+> > +		xfs_healthmon_put(hm);
+> > +}
+> 
+> Kinda similar here:
+> 
+> 	struct xfs_mount	*mp;
+> 
+> 	spin_lock(&xfs_healthmon_lock);
+> 	if (hm->mount_cookie == DETACHED_MOUNT_COOKIE) {
+> 		spin_unlock(&xfs_healthmon_lock);
+> 		return;
+> 	}
+> 
+> 	XFS_M((struct super_block *)hm->mount_cookie)->m_healthmon = NULL;
+> 	hm->mount_cookie = DETACHED_MOUNT_COOKIE;
+> 	spin_unlock(&xfs_healthmon_lock);
+> 
+> 	xfs_healthmon_put(hm);
+
+Will change.  And get rid of some of the mount cookie helpers.
+
+Thanks for reading!
+
+--D
 
