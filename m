@@ -1,84 +1,126 @@
-Return-Path: <linux-xfs+bounces-29113-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29115-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1A7BCFFD96
-	for <lists+linux-xfs@lfdr.de>; Wed, 07 Jan 2026 20:51:28 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF5B5CFFA7F
+	for <lists+linux-xfs@lfdr.de>; Wed, 07 Jan 2026 20:10:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F1C583275104
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Jan 2026 19:15:36 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7D96530069B3
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Jan 2026 19:10:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981E13446DA;
-	Wed,  7 Jan 2026 17:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDF8C25A322;
+	Wed,  7 Jan 2026 18:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KoA9xVYM"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="qRHJX/Go"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward202d.mail.yandex.net (forward202d.mail.yandex.net [178.154.239.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BCE332EBB
-	for <linux-xfs@vger.kernel.org>; Wed,  7 Jan 2026 17:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2DF313E07;
+	Wed,  7 Jan 2026 18:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767806549; cv=none; b=tzyJ1Wc5G2HMrCUJUq3A+/uc+GAxZzv37Bagua8KFhKnbDFKc03BNom0QjfQSduZO/CVavnNVr6E03gcn64Wig4fvPjPx5LJjlHDJv6FKjLMnvafqUfTND/kRSKny2SDWPeYOeOQHyfKzgJvDhk4voIzb3sWH5QqvLQydvAMnrY=
+	t=1767811416; cv=none; b=EIjzRq16jnYgOzqMyS8hVzevIHhyDhcwgmj/9E2WzWt2xtKJFyKkVgyTCTmtkYoAKxod0egXv6PF/KjZC1Nrn+8oVAl8IdeOfAy32dfT+Hp/eoXW0R1syFyAbeWTurb/kMshPpzeLxyBH9vEh3gxC9yRYLdo2FpQG/URzvD/SKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767806549; c=relaxed/simple;
-	bh=u9IS1Pvu6E8pY4bIebXJItQXovXREjibnjdHilX8itA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k9mU32NR29JBBJKOz5mhfk7ljoMPG2HIRqCFhn7ZRlMfhJyPkW6uVCOM5UsSVnTe1gi38M7gvzRo5Q36vns4qTLlhsO93VqB/ZUEY3enpK43Prvk4UrOa0wQPWauFeBVwNYVKNaIJMQRFj2Yy1I4s+GAt0kmXi8eXs2FALARWg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KoA9xVYM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DA64C4CEF1;
-	Wed,  7 Jan 2026 17:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767806546;
-	bh=u9IS1Pvu6E8pY4bIebXJItQXovXREjibnjdHilX8itA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KoA9xVYMmMw3h6wjXbbU7FQmpU8pznU4OVl+L+owrSd7YeiJjtxNQY8rW1HNf/Gxd
-	 4D2HxzM7AT3FGjznXfeUkoi2Qm8Ok8PYvy5Ome0IplvobpnrmHS7ATCumfS5i6bsQY
-	 q/WlMA2WV1bTWGchpMjFBBKdZ9mah4tASPLEtQv4nE6+AHRedN4W/ZhF8/SqTRVHU1
-	 09hTt6Drxtm+68tKp8O28jRMuDtBr6ltJteL5NOE3WOYkBQltd+hNN5OBc+X9WcqAl
-	 qr+rIL4yhYZ6Jn2hM/St+eJqMFltVz+3Wx05PT2EEWQZKkjV+UKDI5GuDDkSTwzbwQ
-	 D582z2sgIZpyw==
-Date: Wed, 7 Jan 2026 09:22:25 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>,
-	xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] xfs_mdrestore: fix restoration on filesystems with 4k
- sectors
-Message-ID: <20260107172225.GD15551@frogsfrogsfrogs>
-References: <20260106184827.GI191501@frogsfrogsfrogs>
- <aV35OUeSf-g99rbY@infradead.org>
+	s=arc-20240116; t=1767811416; c=relaxed/simple;
+	bh=a90Z8nQ2W052PHISezo3OIlyc6anDAZ5L4dIv147JsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DuhNE1rYARZhr4ixWBICtS9Z/La4nhaLR3CbXlzmn1fiVKZFPlQaw97kiLkxETGrUO1Itb5pkfGD9FD7T7BGc906OYyOz6lkdE/YqeJdIS0DUODmcgbnDKVDatwKYAJarHfISBC2btjmLJcIZet3/6Sl9NZLUCSH9S3hnfo/Mkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=qRHJX/Go; arc=none smtp.client-ip=178.154.239.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
+	by forward202d.mail.yandex.net (Yandex) with ESMTPS id C3D5486E01;
+	Wed, 07 Jan 2026 21:36:38 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:2dcb:0:640:715b:0])
+	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 26157C0051;
+	Wed, 07 Jan 2026 21:36:30 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id SaSuiV7Gl8c0-3UejPh7x;
+	Wed, 07 Jan 2026 21:36:29 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1767810989; bh=CNwylmWZiMvqp9zMGa86ZSqv3JoZzXkcWAYbmEN7tbs=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=qRHJX/GoFBFqqLdNW9P7i9hUsNhXHX+18Z7k2/s9wl1yNxb6yZau7KE+jB29AFWOH
+	 +9z/rt7Z2AbP1KoUy077xr/QCLu7mDBirkgIEvL/+4+jOy6fRXMwzLL+Lrw2kTI9+S
+	 ooYTEHYqL1rFbQQ6urFid7SHmrzOAlhqPGiORm+E=
+Authentication-Results: mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Carlos Maiolino <cem@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-xfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH] lib: introduce simple error-checking wrapper for memparse()
+Date: Wed,  7 Jan 2026 21:36:13 +0300
+Message-ID: <20260107183614.782245-1-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aV35OUeSf-g99rbY@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 06, 2026 at 10:12:09PM -0800, Christoph Hellwig wrote:
-> On Tue, Jan 06, 2026 at 10:48:27AM -0800, Darrick J. Wong wrote:
-> > +	/*
-> > +	 * The first block must be the primary super, which is at the start of
-> > +	 * the data device, which is device 0.
-> > +	 */
-> > +	if (xme.xme_addr != 0)
-> > +		fatal("Invalid superblock disk address 0x%llx\n",
-> > +				be64_to_cpu(xme.xme_addr));
-> >  
-> >  	len = BBTOB(be32_to_cpu(xme.xme_len));
-> >  
-> > +	/* The primary superblock is always a single filesystem sector. */
-> > +	if (len < BBTOB(1) || len > 1U << XFS_MAX_SECTORSIZE_LOG)
-> 
-> I'd use XFS_MAX_SECTORSIZE here instead of open coding the shift.
-> 
-> Otherwise looks good.
+Introduce 'memvalue()' which uses 'memparse()' to parse a string with
+optional memory suffix into a number and returns this number or ULLONG_MAX
+if the number is negative or an unrecognized character was encountered.
 
-Fixed, thanks for reading! :)
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+ include/linux/string.h |  1 +
+ lib/cmdline.c          | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
---D
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 1b564c36d721..c63bcff820a1 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -319,6 +319,7 @@ DEFINE_FREE(argv_free, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
+ extern int get_option(char **str, int *pint);
+ extern char *get_options(const char *str, int nints, int *ints);
+ extern unsigned long long memparse(const char *ptr, char **retptr);
++extern unsigned long long memvalue(const char *ptr);
+ extern bool parse_option_str(const char *str, const char *option);
+ extern char *next_arg(char *args, char **param, char **val);
+ 
+diff --git a/lib/cmdline.c b/lib/cmdline.c
+index 90ed997d9570..e2455a6d17ff 100644
+--- a/lib/cmdline.c
++++ b/lib/cmdline.c
+@@ -190,6 +190,27 @@ unsigned long long memparse(const char *ptr, char **retptr)
+ }
+ EXPORT_SYMBOL(memparse);
+ 
++/**
++ *	memvalue -  Wrap memparse() with simple error detection
++ *	@ptr: Where parse begins
++ *
++ *	Unconditionally returns ULLONG_MAX for a presumably negative value.
++ *	Otherwise uses memparse() to parse a string into a number and returns
++ *	this number or ULLONG_MAX if an unrecognized character was encountered.
++ */
++
++unsigned long long memvalue(const char *ptr)
++{
++	unsigned long long ret;
++	char *end;
++
++	if (*ptr == '-')
++		return ULLONG_MAX;
++	ret = memparse(ptr, &end);
++	return *end ? ULLONG_MAX : ret;
++}
++EXPORT_SYMBOL(memvalue);
++
+ /**
+  *	parse_option_str - Parse a string and check an option is set or not
+  *	@str: String to be parsed
+-- 
+2.52.0
+
 
