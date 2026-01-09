@@ -1,54 +1,54 @@
-Return-Path: <linux-xfs+bounces-29223-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29221-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A595FD0ACAD
-	for <lists+linux-xfs@lfdr.de>; Fri, 09 Jan 2026 16:05:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1750D0ACC3
+	for <lists+linux-xfs@lfdr.de>; Fri, 09 Jan 2026 16:06:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2B8183044B99
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 Jan 2026 15:03:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2F20A30DD8AE
+	for <lists+linux-xfs@lfdr.de>; Fri,  9 Jan 2026 15:03:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD870314D0D;
-	Fri,  9 Jan 2026 15:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3EB8319877;
+	Fri,  9 Jan 2026 15:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGStLacL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G46U0/m8"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71381311C35;
-	Fri,  9 Jan 2026 15:03:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE03148BB;
+	Fri,  9 Jan 2026 15:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767971032; cv=none; b=LL2WS/G6tMr1Y1YnBCZQybw0CWhiw+BsOK216Sv7u9mTGefS5/PuQW86dKsQZK3mDvaoIvBuKnRw3P7RWcTjPOXGa88QdteEf/ivyP1ju8BxY/8q18jOXpN11oqo+XCfWdh7B1opbEOKZHeh6AktUQDhLghcrqohY43uBaIX8W4=
+	t=1767971026; cv=none; b=iYxeHNUBv64v3AK4zgQaeoo8Tgf2LcNcOeABHXqEzvoWoD5GKwvZD+6pCPZmpHA6rZ6Ws/cCHy+dvfGxq9kWPQc3XCXmnWVyNfMsX8eCM4MyU5VKnapH34hxCtSF3VM55TPnPUOAr8sJKfSCtZFNCREQijjgfsf2Gmdg9mbnfcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767971032; c=relaxed/simple;
-	bh=pbLPYpzdk8kWolx7kwYDUbVMxRo563GXMNxZLBos7v8=;
+	s=arc-20240116; t=1767971026; c=relaxed/simple;
+	bh=MU4L6YrIscxHINz9rWxdKBEEhkbpzgLsEuPMp8ps2Bc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=dJcnz73uOMAXy4zvkpHdrR7Rhwjr3ClNbEp4OyboWrM33Dz02frwuwNfnJO+3iM3ZHs1O7mb0R3RRO79LYBoLMuyPoZjE3PCE59xnKJ/mDCVhEuQDshVo1MVyM2WDl0/UAJfuHrssfiPAT6S3lDHOU++6QyRbbHnm+93fJHVZPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGStLacL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC1F9C19423;
-	Fri,  9 Jan 2026 15:03:48 +0000 (UTC)
+	 MIME-Version:Content-Type; b=LORIUWknqvIgRtFFihdt4XULBdrmtjj3A+naJd5uP5xiTH1mLPgW62Fa6Y7aMEV5Dv+E8Ul/Hj+LX6Ba6DmlQVrAswE0IPwTAImJjRiz5UOmxX/s9GGKogRwaMepbj3F5y0oW92+r/qwl+9MzYtKCS3jWnRSfcM0Dtzm7x1yf3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G46U0/m8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15EA0C4CEF1;
+	Fri,  9 Jan 2026 15:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767971030;
-	bh=pbLPYpzdk8kWolx7kwYDUbVMxRo563GXMNxZLBos7v8=;
+	s=k20201202; t=1767971026;
+	bh=MU4L6YrIscxHINz9rWxdKBEEhkbpzgLsEuPMp8ps2Bc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=bGStLacL2eAXuy5dfayU8ActyXU5RGx7zxaxPlVpNFg5V8fvyWjC+kylkp04ftClo
-	 aODHLSIF6V2N933W1wEUxN2S0ONnAW8psGtJQOG2CU+DA1Vlk4V9VuKtvB92J4d1t5
-	 GY5ASkuWtlIeCDV6LleDF6C/77hoW7t0RO6VHxlxUkMCUUUoG040/qkHb0smp8eRXt
-	 SHwevsTN8MP2Y+aLzTBP40iSsCAxl93vGVEk8YpeZrvJYKeuDdHW5rOB4hAR8s792A
-	 OOOQRiMsNpxDrJnhkP+aEGHyThsFGhnXqHm0/JvGEWLLNVIs6dVz/qPnl0+HoWdtR1
-	 xm1ux6tMLBEqQ==
+	b=G46U0/m8aaQ3uMsNZZIZ8qEMSkZf5LnjP5rlzG1edLnINv/fKLkHtJhA3dhkihSZV
+	 8MG6E6yGe/S2zeU2Avwm5pWXY/vGTUVEelAdECh9kKfgKH+L2ROnw3A4O4wbU0YVNs
+	 n3vCH3BKUr9BJaXMryWXM8h0qX5NirW9j2HrWndEq98Zcfs2w5pBylLhJsFUDdWtCx
+	 OmVEv2+6p4vaOrGMUkCMwacA1nWoegj6NIcdl6ll494U1dVCe1qmh6tXw9dXRZKYyb
+	 aT+EmJfNvQkWHlJdUNmwRK44zG3DeE3eUVAhSKko4gvJ+Rw1ABZ0waJck8W94foilX
+	 spQcnp9DY7vvw==
 From: Carlos Maiolino <cem@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
-Cc: Damien Le Moal <dlemoal@kernel.org>, 
- Hans Holmberg <hans.holmberg@wdc.com>, linux-block@vger.kernel.org, 
- linux-xfs@vger.kernel.org
-In-Reply-To: <20260106075914.1614368-1-hch@lst.de>
-References: <20260106075914.1614368-1-hch@lst.de>
-Subject: Re: improve zoned XFS GC buffer management v2
-Message-Id: <176797102841.430235.1465892466150330026.b4-ty@kernel.org>
-Date: Fri, 09 Jan 2026 16:03:48 +0100
+To: Christoph Hellwig <hch@lst.de>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <aUUqDiGqwfmDcY_p@stanley.mountain>
+References: <aUUqDiGqwfmDcY_p@stanley.mountain>
+Subject: Re: [PATCH next] xfs: fix memory leak in xfs_growfs_check_rtgeom()
+Message-Id: <176797102479.430235.6714661375529863593.b4-ty@kernel.org>
+Date: Fri, 09 Jan 2026 16:03:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -59,24 +59,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
 
-On Tue, 06 Jan 2026 08:58:51 +0100, Christoph Hellwig wrote:
-> the zoned XFS GC code currently uses a weird bank switching strategy to
-> manage the scratch buffer.  The reason for that was that I/O could be
-> proceed out of order in the early days, but that actually changed before
-> the code was upstreamed to avoid fragmentation.  This replaced the logic
-> with a simple ring buffer, which makes the buffer space utilization much
-> more efficient.
+On Fri, 19 Dec 2025 13:33:50 +0300, Dan Carpenter wrote:
+> Free the "nmp" allocation before returning -EINVAL.
 > 
-> [...]
+> 
 
 Applied to for-next, thanks!
 
-[1/3] block: add a bio_reuse helper
-      commit: 8b7b3fa4c5dffef6cef56fad42d0d4bc525200a8
-[2/3] xfs: use bio_reuse in the zone GC code
-      commit: ac6d78b0277ba32b8b60c4cf02dd4d7b77fdfe94
-[3/3] xfs: rework zone GC buffer management
-      commit: 07e59f94f4d2a01e1858ef5e872f16c75665568c
+[1/1] xfs: fix memory leak in xfs_growfs_check_rtgeom()
+      commit: 8dad31f85c7b91fd8bdbc6d0f27abc53bd8b1ffe
 
 Best regards,
 -- 
