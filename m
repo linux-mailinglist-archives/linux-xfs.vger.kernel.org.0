@@ -1,103 +1,103 @@
-Return-Path: <linux-xfs+bounces-29314-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29294-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F4BBD1368A
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 16:02:46 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70747D13807
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 16:11:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BBB4D31080FC
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 14:52:49 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E833B302E611
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 14:50:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94C502BDC32;
-	Mon, 12 Jan 2026 14:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 464912D1F6B;
+	Mon, 12 Jan 2026 14:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fd9uyu4L";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="hG07ugsH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gPAnW30O";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="IdrZZgFN"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6DC2BE057
-	for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 14:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6052D5C8E
+	for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 14:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768229553; cv=none; b=Jrtz3jIohd35C32RqEXjUorowqwiCc34EIdFOEEZO7U+jZHyfCW7dE5ORz1q1w5j5Bf1zyh1/3yt1GYnDNN2nxjqkrUIu5VDVLn/Q1oY8m0vnpSCvfAw5+1gKHp83woPj4SR/xyytH0WdkqUm1YV9RCvgZpF0ZXO+mt9bf9z8vg=
+	t=1768229415; cv=none; b=Kwb0rHRndTL7RF/LNzshapqcddXy5wcVtZXf0crRxlxYwZcYFD1DGwty/O6f5sD/maISWd5i9uwzpVgNSWNi4zpkF0UGSBd64iUe3HV/aF9oDKqOjCbaopBCiDewlIHTP3AD5hkUKIkPtwv6VMUQrhyadOUHfIgFMbU7AtVL6l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768229553; c=relaxed/simple;
-	bh=4oN3KsYgjU1gziBXcCV2JxaplDe0MjbcejD0zRksvRk=;
+	s=arc-20240116; t=1768229415; c=relaxed/simple;
+	bh=lB7wBAy3M3z8P6ED/Qvh7FHLytVcPytGJfFQJNDXzlw=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bC6F847SMK559XKAqjftLxeQHs5t5p/hg0MFRsz7ABRBAmB/PRHBYERGaSOWF+6pSvQS8xo3HXFulYPciplywBUKA0l4dEFTgHMfl+VdozCcwJTy2xNkui1mnfuPliQTpuQSdpD935wb8VmTPkwceASQOlvsousf+o2vOarx+Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fd9uyu4L; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=hG07ugsH; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=nWFlPNvIIeW4xbLRsAwHUuWfKwBIrNK1gzPGzZgTXJGlTYguqP9RtJNwh/DLDZAeJRGxxGKsxUN71XcHeHiD19yirqsYg0GdoDgqRRpmB+BPOwL6iZza6EGYNKt6+ztwDdxTi6fN5dFK6VpUysmRofhwGITv3FEPeHsXTYkb33g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gPAnW30O; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=IdrZZgFN; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768229551;
+	s=mimecast20190719; t=1768229412;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=27c0RwsiUqQbIRsQgbUzvN/pOWTjcdmLaKAYvxOvoHg=;
-	b=fd9uyu4Ld1MH0zagbDtPsFUvjoQf9F8PmO6jkpm8Rr4foqLPDrg/16BGflUet5+P9465Hy
-	61kes/SHKbh2plyASI+gNpvIgWRZ0+FuY1LVQtLv3FlrI6/yfdOr/vGiqmntiSmSDM/Zx3
-	/iS0kIpi6Dilbs4FCgyHieMxu6rkBWc=
+	bh=H9nqGXF7VZB/t40lccwLaOeVR9kiIu9hGxW7Aiixpys=;
+	b=gPAnW30O3PBXbZDACxKTll0q710i0ZnjzUSLsrHDWxzBfgxKz9Y7E6RZv9cKCuUbp1twpl
+	01hfjwGbWRJJ2/EAHRIDNspSGdb0gGhcCF01EvNgyv7XY4JpLPPtTgBYBPjj4NaeBtUDmL
+	Qg8Ct6eMnb83OX6QzwxZ1YZglSMUUFo=
 Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
  [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-357-aF_fLwb3P_WRaNN-oWNRTQ-1; Mon, 12 Jan 2026 09:52:29 -0500
-X-MC-Unique: aF_fLwb3P_WRaNN-oWNRTQ-1
-X-Mimecast-MFC-AGG-ID: aF_fLwb3P_WRaNN-oWNRTQ_1768229548
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b8701569041so246650366b.2
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 06:52:29 -0800 (PST)
+ us-mta-425-VnczdRWxN5yLnsnpW1U7Xg-1; Mon, 12 Jan 2026 09:50:09 -0500
+X-MC-Unique: VnczdRWxN5yLnsnpW1U7Xg-1
+X-Mimecast-MFC-AGG-ID: VnczdRWxN5yLnsnpW1U7Xg_1768229408
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-b831e10ba03so949111466b.1
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 06:50:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768229548; x=1768834348; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1768229408; x=1768834208; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=27c0RwsiUqQbIRsQgbUzvN/pOWTjcdmLaKAYvxOvoHg=;
-        b=hG07ugsHB2HIRTMIwCF0OCtBqNaeuaiN9aueXT1Ohedd52/yttCGaFFYwmS9rqpA/T
-         rngerTTiUdwzisnyyoAaMxmCg+uKpp6qXm0HYnFu2SEs50cM7R4d1xP8+IveQ+1nGGoC
-         xHP5HHINzOuJchZ+Cd93CIE73I3ZSUbfNj7DPSYPNbY2Xtku4VbwLK5/Ot7cDnXEvxXy
-         1ZpXZAgorkPC4gjEDmKEECY0znP/k5OOB90Vh+TXFVq6k3oZZKr4TPmHuzfxHrXtJMNa
-         lpmHG8HCMC8AdDJmkn6AuQL00VedGrgjVG7qUs1AKuK5iBs1VkzTXGk3qEQFpHX23wJk
-         YsCA==
+        bh=H9nqGXF7VZB/t40lccwLaOeVR9kiIu9hGxW7Aiixpys=;
+        b=IdrZZgFNLD16ASFcHfA8aL+VXrVJ0JKTDsZ/g2KvLLoBvQnTBx1GTbgVJHQ/VVHMAL
+         XtOHN4BjRQyX7iRFHBpJhH4r57YQ+aESYXoULm/I7JsV2EF8vXHfFt2ZLqZUHEw/qTBH
+         30lFOPVtXHXHCzzoSMKACkbumLGF+7oHuMCMaIfUt5IOzXHueBaOM1EEuPuV3O76Svsl
+         dFPJZt6Tzju5DJlwYUoPEaSUNXKlmAyD81MT/JHVcmjzE4AtC3yWT+lHFPOP6X7wNZ/f
+         cS8/2KtKmxkMLI6svT63jXfq65SWb3hrqWP4HQDGpbPsE6PhF/wfTNylux/8PkUCqHXE
+         8U8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768229548; x=1768834348;
+        d=1e100.net; s=20230601; t=1768229408; x=1768834208;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=27c0RwsiUqQbIRsQgbUzvN/pOWTjcdmLaKAYvxOvoHg=;
-        b=goqK31cqZdeX+SASfcAU+scZsE4nh7Kx8v/1t3S8sLMsNCtpN8nG3HM2cCh4omzD80
-         UrQhXJ1h1eF0kwVHb4MTZEG5fKdtBCPfCyHyrL7OtN6yQVQ0XCya46hQ/V6afS0DcYAt
-         nrpSEhgQMCJlK/1ZxwuL3JlTwW1AGev7oyRXoNr2qryUp/A35HrhpadjuGvsuwZwTGWi
-         uwe9Ju1Yw25v++kDgY604pEdaguA/LX2H8VWJiB5W6waL/ZukpUvDgwU19fA+cvdWlnH
-         cQY40m96CG7yfc2uzSwN3c2w7n0ibNcz4jwqKaZPgYCwW0R1Y/RNxHgkpw2N/MVo4p66
-         qQMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOu3eHM+j2h22m4cEUq7Y7/U7LkdSLVvpWAq/FoVpO3T/nlqV+Prnm9jkTUsdndeFTVz68YFEYv2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzskYPZ+VGyJwkoTkfXQeaakN9+9XuPYJ8d3oQpYu6Jw6oWKo9N
-	I7oXBVQm35PMCnw8w4SlU3jLajl0kE2PXNln+vpMYhHhfpi91lacil3GzUrftmKG5nWL5/fdR0i
-	I5I37ERbA8C0Ywl+1rifKMQxfQ0J8jcGzMVtB1OKjqDeTV15h9PNlxZVa+jWI
-X-Gm-Gg: AY/fxX6Ho7bGE71JObXYNhH00Cd+WRXqlB40aDs+hI84LEBm6NQgCv00S9/WK4FbZdX
-	6ylcmPnN4NMY9ouHehrovRnby3oeIOCZUkDOwBR98nvgqq52boEJ2+5SSdeKvqHbQyR+xGZvz2w
-	Dp6rNrqvSjIGKSk84663/eSKm/AOBN9xIdfKu7LAwYDpFhC/UYW8EPp/Bc0s8Z5EFIfwufhEVNT
-	nrIxehECJ1mw831sPERN+zkLrbVvHPP2AFX0uPlDsfp0AuK+FsvRvved8cxBj2C+45N7Pfn5eD7
-	8NqTeZA+7wj0BLJ2YfFkJR9V4Tn+ioxMKSsCFZfFRLWmtsfdrZAVX2BUKKgKGtRCsBV3fEMo9ag
+        bh=H9nqGXF7VZB/t40lccwLaOeVR9kiIu9hGxW7Aiixpys=;
+        b=NtzcxYpZ931t6nC3HdBNbpPLFYDK6JoPG0B6eJ1Zz207SLnyParkUwNVGdNhGBn7O3
+         r3ZT3uM3HzoChWDwSdhLNcb7JiVnlFqeq4ldpEQTmYBSzM5u1XS7v1Lis5yg2tblWTZm
+         AheB63gz14oiNELHb24Pezo7Qz5euDnVXfnreoVqbvyyZ3uybg6ciRqgVtTHaFBO8zu4
+         F41N7Hx2KwzbUiWyUf8jkZlGilaLto1gXAs57Ntc40oUrj1CE9optqIRgOCwvHC4zgsi
+         iWKozlInbrmxDdXW/8gQ2zBJxSf6GCQwsLviHsC4gv2buDI9hJ6CQ46UQUt302vSGIRf
+         6fTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj8CO8GNySAuYe0hmL8YoOXd2c7Xkc8LEiXRsNAaRcMNzb+i5FlYiFIdHosf394nG64kp7k/cQsEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNce3qnIMfzX7+ZwtZGePfJH9hkF7l3EsuQdxn9Jm5sOWjY0iZ
+	fw1R3UBoQ7TjqUP9z1ETL6OFsrzrMsvGX1UAOAbnjcrPeuRoeTA3NtHMlobeMXKKRT1OXI7/hUE
+	de3AjWDoX5ZM0v5WgR7a23SUeWouO4tXA+8CS8tj2S44Ig1rzpEbusjqF6VsH
+X-Gm-Gg: AY/fxX5eT1v9a1nzuQYUNYaW9aupVn1W26Y22D29AwGMThk5eqhQ/6+DFtyb6DGjqQk
+	N5aIHkXyVjQuSy/5eUezV0m+KNawaJspXqE74OI+f/Dbdzo3fXkuAWiQJx/sdsFwhQNFFGx4NvA
+	yaeia0/yFCmLpyTjSBHpElDAf4br4X1nGy62yuE21zayNurf8F5+6WqG24Dt/2M8a0gcnKWILi7
+	b15WEhS6vmh/xvRtM+DdYiuICoAWUQr0yIHqlMm4B6O6xWzkZHoaegtSuN0iJd0d+HHplAafTJ/
+	Y8q+HVS/Sm77/P9xZruSu41YMbmhQ2CVDdzbMUTbCATIIomR9QcfqlWzoqHrRL2Bbi1SyUo53Mw
 	=
-X-Received: by 2002:a17:906:ef0d:b0:b76:7f64:77a5 with SMTP id a640c23a62f3a-b8444f21c49mr1822211066b.20.1768229548320;
-        Mon, 12 Jan 2026 06:52:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHdX+T72PLi+rN64BMH3u11dTZ5cmvdk1ssM9FQvlRjQjwZTrPkhU4nI7/e1E+OEM+96ED/HA==
-X-Received: by 2002:a17:906:ef0d:b0:b76:7f64:77a5 with SMTP id a640c23a62f3a-b8444f21c49mr1822207566b.20.1768229547833;
-        Mon, 12 Jan 2026 06:52:27 -0800 (PST)
+X-Received: by 2002:a17:907:3f8d:b0:b87:117f:b6ed with SMTP id a640c23a62f3a-b87117fc7e0mr436716266b.21.1768229407945;
+        Mon, 12 Jan 2026 06:50:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEqMxLNiTQozzXuSioBg+1XMgAdT8qg+RoHIsG2zDVIHtJhfMKwuQp3tBwxWEI5jhYze2cXDg==
+X-Received: by 2002:a17:907:3f8d:b0:b87:117f:b6ed with SMTP id a640c23a62f3a-b87117fc7e0mr436712466b.21.1768229407405;
+        Mon, 12 Jan 2026 06:50:07 -0800 (PST)
 Received: from thinky ([217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b870bcd342bsm475411366b.56.2026.01.12.06.52.27
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b842a27cc6bsm1966748766b.23.2026.01.12.06.50.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 06:52:27 -0800 (PST)
+        Mon, 12 Jan 2026 06:50:07 -0800 (PST)
 From: Andrey Albershteyn <aalbersh@redhat.com>
 X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
-Date: Mon, 12 Jan 2026 15:52:26 +0100
+Date: Mon, 12 Jan 2026 15:50:05 +0100
 To: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, 
 	ebiggers@kernel.org, linux-fsdevel@vger.kernel.org, aalbersh@kernel.org, 
 	aalbersh@redhat.com, djwong@kernel.org
 Cc: djwong@kernel.org, david@fromorbit.com, hch@lst.de
-Subject: [PATCH v2 22/22] xfs: enable ro-compat fs-verity flag
-Message-ID: <t2mwgqd6j3lknok5yexswvdba6nbji24efthhcqhvtqirzeahf@wdlnxaoaupam>
+Subject: [PATCH v2 3/22] iomap: introduce IOMAP_F_BEYOND_EOF
+Message-ID: <d5fc72ldfwyzbgiypzlhn5diiqyijxaicpa3w6obx4iismuko3@kttpcgqjy6i5>
 References: <cover.1768229271.patch-series@thinky>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -109,33 +109,89 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1768229271.patch-series@thinky>
 
-Finalize fs-verity integration in XFS by making kernel fs-verity
-aware with ro-compat flag.
+Flag to indicate to iomap that read/write is happening beyond EOF and no
+isize checks/update is needed.
 
 Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-[djwong: add spaces]
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_format.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/iomap/buffered-io.c | 13 ++++++++-----
+ fs/iomap/trace.h       |  3 ++-
+ include/linux/iomap.h  |  5 +++++
+ 3 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index d67b404964..f5e43909f0 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -378,8 +378,9 @@
- #define XFS_SB_FEAT_RO_COMPAT_ALL \
- 		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
- 		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
--		 XFS_SB_FEAT_RO_COMPAT_REFLINK| \
--		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT)
-+		 XFS_SB_FEAT_RO_COMPAT_REFLINK | \
-+		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT | \
-+		 XFS_SB_FEAT_RO_COMPAT_VERITY)
- #define XFS_SB_FEAT_RO_COMPAT_UNKNOWN	~XFS_SB_FEAT_RO_COMPAT_ALL
- static inline bool
- xfs_sb_has_ro_compat_feature(
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index e5c1ca440d..cc1cbf2a4c 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -533,7 +533,8 @@
+ 			return 0;
+ 
+ 		/* zero post-eof blocks as the page may be mapped */
+-		if (iomap_block_needs_zeroing(iter, pos)) {
++		if (iomap_block_needs_zeroing(iter, pos) &&
++		    !(iomap->flags & IOMAP_F_BEYOND_EOF)) {
+ 			folio_zero_range(folio, poff, plen);
+ 			iomap_set_range_uptodate(folio, poff, plen);
+ 		} else {
+@@ -1130,13 +1131,14 @@
+ 		 * unlock and release the folio.
+ 		 */
+ 		old_size = iter->inode->i_size;
+-		if (pos + written > old_size) {
++		if (pos + written > old_size &&
++		    !(iter->flags & IOMAP_F_BEYOND_EOF)) {
+ 			i_size_write(iter->inode, pos + written);
+ 			iter->iomap.flags |= IOMAP_F_SIZE_CHANGED;
+ 		}
+ 		__iomap_put_folio(iter, write_ops, written, folio);
+ 
+-		if (old_size < pos)
++		if (old_size < pos && !(iter->flags & IOMAP_F_BEYOND_EOF))
+ 			pagecache_isize_extended(iter->inode, old_size, pos);
+ 
+ 		cond_resched();
+@@ -1815,8 +1817,9 @@
+ 
+ 	trace_iomap_writeback_folio(inode, pos, folio_size(folio));
+ 
+-	if (!iomap_writeback_handle_eof(folio, inode, &end_pos))
+-		return 0;
++	if (!(wpc->iomap.flags & IOMAP_F_BEYOND_EOF) &&
++	    !iomap_writeback_handle_eof(folio, inode, &end_pos))
++ 		return 0;
+ 	WARN_ON_ONCE(end_pos <= pos);
+ 
+ 	if (i_blocks_per_folio(inode, folio) > 1) {
+diff --git a/fs/iomap/trace.h b/fs/iomap/trace.h
+index 532787277b..f1895f7ae5 100644
+--- a/fs/iomap/trace.h
++++ b/fs/iomap/trace.h
+@@ -118,7 +118,8 @@
+ 	{ IOMAP_F_ATOMIC_BIO,	"ATOMIC_BIO" }, \
+ 	{ IOMAP_F_PRIVATE,	"PRIVATE" }, \
+ 	{ IOMAP_F_SIZE_CHANGED,	"SIZE_CHANGED" }, \
+-	{ IOMAP_F_STALE,	"STALE" }
++	{ IOMAP_F_STALE,	"STALE" }, \
++	{ IOMAP_F_BEYOND_EOF,	"BEYOND_EOF" }
+ 
+ 
+ #define IOMAP_DIO_STRINGS \
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 520e967cb5..7a7e31c499 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -86,6 +86,11 @@
+ #define IOMAP_F_PRIVATE		(1U << 12)
+ 
+ /*
++ * IO happens beyound inode EOF
++ */
++#define IOMAP_F_BEYOND_EOF	(1U << 13)
++
++/*
+  * Flags set by the core iomap code during operations:
+  *
+  * IOMAP_F_SIZE_CHANGED indicates to the iomap_end method that the file size
 
 -- 
 - Andrey
