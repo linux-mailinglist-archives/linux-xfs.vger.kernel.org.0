@@ -1,208 +1,229 @@
-Return-Path: <linux-xfs+bounces-29312-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29315-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44C17D13729
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 16:06:24 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CC52D14890
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 18:51:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E5D573077623
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 14:52:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0BC3F310D076
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 17:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6662D9780;
-	Mon, 12 Jan 2026 14:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D530837F10D;
+	Mon, 12 Jan 2026 17:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K8ExZSbI";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="b4v30Tzm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9S2WVf5"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FEE2D5C6C
-	for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 14:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF8030F7F9;
+	Mon, 12 Jan 2026 17:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768229542; cv=none; b=WulRiU3QEFCjO36QJ0lmbjqdaUgF5hVZqezic8y/4S7elehHx7IB34EQ5o2BlU87zArHjEdsPdXvfVS/VpcReex/lLrLu5e+23c3TSW3VhhUWVTVFVtzotNa2XER+5+lTTwtWdJdK87SGqBdtzBtCgJKj1DnsHoNRr3GGoKP0jc=
+	t=1768240001; cv=none; b=AXZ+QoaAY3rOo2zBGYSDNAYIkipYtOE9khPa7p6K4tNH9ua9DcWH3nCHwc01neOl4BAZe9uG9gnU/o8ZHV5l8lr06qDVmMltIXW3kFniGP5oZBzZvXL2V6SM5d6mMJeODWvgREyN0RET7gMms0crYkxMqH3KGQQCZWNgTaw+ews=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768229542; c=relaxed/simple;
-	bh=DqGbPHihgvouI+HlmdtnScxnStrH4+HE2WznQSyP4j4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MFUXWsCJBcEKScY3IkCh/noguXP7WAyS3ptaOEbg666G607OqT52Vdm35ZZ3uCiy/M2I8xfr96RBPPaTZ/nLeSrwXC8kyquSh6bY8n84y8G1iqvglQcNJI3A5bnksqIqXRtABqLRdH7aZ1526AZrxxDzVdwPLSmbgwWdJC6YDZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K8ExZSbI; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=b4v30Tzm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768229540;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xPYPAB6be13BNA+rNTQIlJZgdC6UYp82gudM/SKVgcg=;
-	b=K8ExZSbIwk4ICjnjy3BLJYRO0xIA+XLCOsv9MEnDdIXEAbWzvVOK6Ckck6z0Fb8Egp6KEa
-	sjzHh6rs7g+N9YlnDbZwnBTko7x5r+rvfAzp9VTSUT9dhl5az9HW3gWutMbuBGxUt7fVO4
-	ZZ2GhbZrPdgVE/3LRv+RQ+e1+Qcv6rk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-21-BBItgpJxOVe5QD9TmlnhcA-1; Mon, 12 Jan 2026 09:52:17 -0500
-X-MC-Unique: BBItgpJxOVe5QD9TmlnhcA-1
-X-Mimecast-MFC-AGG-ID: BBItgpJxOVe5QD9TmlnhcA_1768229536
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b7a29e6f9a0so646377466b.1
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 06:52:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768229536; x=1768834336; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xPYPAB6be13BNA+rNTQIlJZgdC6UYp82gudM/SKVgcg=;
-        b=b4v30TzmZAiJn9WiNu5L73uSDOfZ8yG/XQDvq4YGLnx58I2mO9hW4/h0lyYlpAa6WV
-         PtEtHKpmF9nKzCOGvUjunvMp0dsTUhOppjIwAqf6GwyTbg5MhKpeYrLjT/XyeuWNKOSg
-         ybexhQQ3A3V1xsDi6QR0LaS3gZpE9qMwBNfj1tBHYg1CSQYbf60oYW5HPw6XmsygnFU1
-         sgpXaait7Xy+s+b52HCSX8NOq8GHYoUEBQsj1KsDbdeqHqL0AdkJGIPenH3/gQX1rtLR
-         lxlaw6/Bc86cihJPxWwzDTlBrGHpD0ujVejNiU7GQb8ZV5U0Uqm2UIqxOBe54FAW0N5a
-         7N2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768229536; x=1768834336;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xPYPAB6be13BNA+rNTQIlJZgdC6UYp82gudM/SKVgcg=;
-        b=kIPDo9X4BAvtjUi7AuvKquP1onzNM8ZAuzSa039Mjf6qxzhty495mMMkfoYC3RSFT9
-         cg5NLLIPHgG8HG0hnzXPEAQ7Oyoq/Zsr0JGQxkFwftjbSfQMzGiqGyLIKa5mZPjg+NJh
-         tKLH06Z3W/97nv7CE4ckGdotd4yiQLdgC0zYyy7wEnz3Ile9udCO3xbT+YcEkFS+4ppt
-         b3aBQA5p+fKDu+9nElpMXzWX5n4QaBWjX0jOjBb1S8oSiNQlmsfUgURirFV6C/p3VZZO
-         ZI5qXXs+AAD6RjMUJ7HlLAr5rbIllz4TBeofgl4IJ9cPXubcb32XEQFOEk0JolA2KtCX
-         ykYw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8aAUaRu7BLVlflD2/e/upHPDPiOQIGHG/TRtGVr45IaeS1fqUWPQvppMfqsgw1evHMyb48pI7PVw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL3vU584AxoFSJRnxRWV3h4e9s1wxepdNBnWgqcwi4P8PkL+I0
-	u7a4Db4RW5K6QWwZAfzFk3dAjN/MoO5tXaR1aIhkJBXZW8v1NQ9AhJ8Tg9KVECgGeG2ScquBUvb
-	FjVPn8G/5gf4aUfoh4qC1+UoxLzLf7LOszda8Q7+GyAPhbJydQAg7UntpMN7U
-X-Gm-Gg: AY/fxX5xOgUh6cGHWsXQEEoN5a4sNVMxtNvOPHDGuGflO6SRVMrQ22ftnBYlgDG0r50
-	CCQTYqho3Mj+OASP94tyBcKLqIwuPiQgVFeifnIiklf8LFCa5FsVo1ujxNXZIY1tPjGBSpFgv0K
-	lZSXv/zYB+inukXu67v7IP5Ri3+5QNchI5YFyY6AJbyOTB6E81TuQOB4u9j3HzuCLI5tvaRMYLl
-	fX7HYdan6G7TAAQTXO9NHwrPjThSSMF+cJFSYcgrY4WXIBZtzEUrJ1Aoph4lefawE9z5rgxWpSF
-	wWwUk469HUCndC3eHTWz5cEGBskEsENF+HrsOayOYXv6y5iDeoAJcNaXUlJW8UCCA+KH5BzY
-X-Received: by 2002:a17:907:841:b0:b83:9767:c8ba with SMTP id a640c23a62f3a-b84451b5d1dmr1635823466b.17.1768229535751;
-        Mon, 12 Jan 2026 06:52:15 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH+AXG1fXAqNi7crMM7QiDNAwZR8bNUqqDvj5BznuxA4nKTk8GLk6KKY85CmsHuZWbeWD797w==
-X-Received: by 2002:a17:907:841:b0:b83:9767:c8ba with SMTP id a640c23a62f3a-b84451b5d1dmr1635820866b.17.1768229535247;
-        Mon, 12 Jan 2026 06:52:15 -0800 (PST)
-Received: from thinky ([217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm1985599466b.0.2026.01.12.06.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 06:52:14 -0800 (PST)
-From: "Darrick J. Wong" <aalbersh@redhat.com>
-X-Google-Original-From: "Darrick J. Wong" <djwong@kernel.org>
-Date: Mon, 12 Jan 2026 15:52:13 +0100
-To: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, 
-	ebiggers@kernel.org, linux-fsdevel@vger.kernel.org, aalbersh@kernel.org, 
-	aalbersh@redhat.com, djwong@kernel.org
-Cc: djwong@kernel.org, david@fromorbit.com, hch@lst.de
-Subject: [PATCH v2 20/22] xfs: report verity failures through the health
- system
-Message-ID: <i4tsa4dqqhjfutocdlk6mqm6ovvzea7ki2w32j6mcew66aegay@tsllwgeogm3f>
-References: <cover.1768229271.patch-series@thinky>
+	s=arc-20240116; t=1768240001; c=relaxed/simple;
+	bh=Vhd/gJtrTHzGsQ/Fg40yOnQHfXkavG5IIk9pHgkRG+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BDZleCyTsHm1xschbuBZkW9Nqo+KoB8k1SJuSCLGQLz6Bf1uNdiiy1+S6TL2a538e7gbhOhBzX56meoVwKg6q7YXobAuagiOPqcl9Ayy7b6rdU0zWT1XPsp8JQnCDQFfcU9H+WEoZ+hSBw4nHNbGN06TzbnUhgyYloDNxINXULA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9S2WVf5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D988C2BCB3;
+	Mon, 12 Jan 2026 17:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768239996;
+	bh=Vhd/gJtrTHzGsQ/Fg40yOnQHfXkavG5IIk9pHgkRG+A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=q9S2WVf5sUkHZ/fiYUqo+pNTFpgLuS1m1+j82so5SM1uWC1GzuEK4i8ZZJlhb8XYs
+	 xYdz+HG/47VRihARGgXP9b60kDGjaUh+2CaeSY2yrJp5Qx0V9Z3xklgbjMfRGK4FvM
+	 CxHqE9pGlVsjK07Slg6rVRYUVM+4wr9/bBtdInQotDAjQS6I82prq2zdaP2HBmdkTZ
+	 DRXBnyd6HpfQ1vmh6tmyBSKu6xHOx81rluCTMBlqatLn6JGd2PmUebbun3Xqp558VE
+	 JcdZGc4LcvSdMpVYk9fh9uoDGukookDopcit0KedCxOPE3+5QShDfoORlkdKB01orT
+	 w0A+HlWUE/83A==
+From: Chuck Lever <cel@kernel.org>
+To: vira@web.codeaurora.org, Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: <linux-fsdevel@vger.kernel.org>,
+	linux-ext4@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	<linux-nfs@vger.kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net,
+	hirofumi@mail.parknet.co.jp,
+	linkinjeon@kernel.org,
+	sj1557.seo@samsung.com,
+	yuezhang.mo@sony.com,
+	almaz.alexandrovich@paragon-software.com,
+	slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de,
+	frank.li@vivo.com,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	cem@kernel.org,
+	sfrench@samba.org,
+	pc@manguebit.org,
+	ronniesahlberg@gmail.com,
+	sprasad@microsoft.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	hansg@kernel.org,
+	senozhatsky@chromium.org,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v3 00/16] Exposing case folding behavior
+Date: Mon, 12 Jan 2026 12:46:13 -0500
+Message-ID: <20260112174629.3729358-1-cel@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1768229271.patch-series@thinky>
+Content-Transfer-Encoding: 8bit
 
-Record verity failures and report them through the health system.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Andrey Albershteyn <aalbersh@redhat.com>
-Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+Following on from
+
+https://lore.kernel.org/linux-nfs/20251021-zypressen-bazillus-545a44af57fd@brauner/T/#m0ba197d75b7921d994cf284f3cef3a62abb11aaa
+
+I'm attempting to implement enough support in the Linux VFS to
+enable file services like NFSD and ksmbd (and user space
+equivalents) to provide the actual status of case folding support
+in local file systems. The default behavior for local file systems
+not explicitly supported in this series is to reflect the usual
+POSIX behaviors:
+
+  case-insensitive = false
+  case-preserving = true
+
+The case-insensitivity and case-preserving booleans can be consumed
+immediately by NFSD. These two booleans have been part of the NFSv3
+and NFSv4 protocols for decades, in order to support NFS clients on
+non-POSIX systems.
+
+Support for user space file servers is why this series exposes case
+folding information via a user-space API. I don't know of any other
+category of user-space application that requires access to case
+folding info.
+
+
+The Linux NFS community has a growing interest in supporting NFS
+clients on Windows and MacOS platforms, where file name behavior does
+not align with traditional POSIX semantics.
+
+One example of a Windows-based NFS client is [1]. This client
+implementation explicitly requires servers to report
+FATTR4_WORD0_CASE_INSENSITIVE = TRUE for proper operation, a hard
+requirement for Windows client interoperability because Windows
+applications expect case-insensitive behavior. When an NFS client
+knows the server is case-insensitive, it can avoid issuing multiple
+LOOKUP/READDIR requests to search for case variants, and applications
+like Win32 programs work correctly without manual workarounds or
+code changes.
+
+Even the Linux client can take advantage of this information. Trond
+merged patches 4 years ago [2] that introduce support for case
+insensitivity, in support of the Hammerspace NFS server. In
+particular, when a client detects a case-insensitive NFS share,
+negative dentry caching must be disabled (a lookup for "FILE.TXT"
+failing shouldn't cache a negative entry when "file.txt" exists)
+and directory change invalidation must clear all cached case-folded
+file name variants.
+
+Hammerspace servers and several other NFS server implementations
+operate in multi-protocol environments, where a single file service
+instance caters to both NFS and SMB clients. In those cases, things
+work more smoothly for everyone when the NFS client can see and adapt
+to the case folding behavior that SMB users rely on and expect. NFSD
+needs to support the case-insensitivity and case-preserving booleans
+properly in order to participate as a first-class citizen in such
+environments.
+
+Series based on v6.19-rc5.
+
+[1] https://github.com/kofemann/ms-nfs41-client
+
+[2] https://patchwork.kernel.org/project/linux-nfs/cover/20211217203658.439352-1-trondmy@kernel.org/
+
 ---
- fs/xfs/libxfs/xfs_fs.h     |  1 +
- fs/xfs/libxfs/xfs_health.h |  4 +++-
- fs/xfs/xfs_fsverity.c      | 11 +++++++++++
- fs/xfs/xfs_health.c        |  1 +
- 4 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 3db9beb579..b82fef9a1f 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -422,6 +422,7 @@
- #define XFS_BS_SICK_SYMLINK	(1 << 6)  /* symbolic link remote target */
- #define XFS_BS_SICK_PARENT	(1 << 7)  /* parent pointers */
- #define XFS_BS_SICK_DIRTREE	(1 << 8)  /* directory tree structure */
-+#define XFS_BS_SICK_DATA	(1 << 9)  /* file data */
- 
- /*
-  * Project quota id helpers (previously projid was 16bit only
-diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-index b31000f719..fa91916ad0 100644
---- a/fs/xfs/libxfs/xfs_health.h
-+++ b/fs/xfs/libxfs/xfs_health.h
-@@ -104,6 +104,7 @@
- /* Don't propagate sick status to ag health summary during inactivation */
- #define XFS_SICK_INO_FORGET	(1 << 12)
- #define XFS_SICK_INO_DIRTREE	(1 << 13)  /* directory tree structure */
-+#define XFS_SICK_INO_DATA	(1 << 14)  /* file data */
- 
- /* Primary evidence of health problems in a given group. */
- #define XFS_SICK_FS_PRIMARY	(XFS_SICK_FS_COUNTERS | \
-@@ -140,7 +141,8 @@
- 				 XFS_SICK_INO_XATTR | \
- 				 XFS_SICK_INO_SYMLINK | \
- 				 XFS_SICK_INO_PARENT | \
--				 XFS_SICK_INO_DIRTREE)
-+				 XFS_SICK_INO_DIRTREE | \
-+				 XFS_SICK_INO_DATA)
- 
- #define XFS_SICK_INO_ZAPPED	(XFS_SICK_INO_BMBTD_ZAPPED | \
- 				 XFS_SICK_INO_BMBTA_ZAPPED | \
-diff --git a/fs/xfs/xfs_fsverity.c b/fs/xfs/xfs_fsverity.c
-index 691dc60778..f53a404578 100644
---- a/fs/xfs/xfs_fsverity.c
-+++ b/fs/xfs/xfs_fsverity.c
-@@ -18,6 +18,7 @@
- #include "xfs_quota.h"
- #include "xfs_fsverity.h"
- #include "xfs_iomap.h"
-+#include "xfs_health.h"
- #include <linux/fsverity.h>
- #include <linux/pagemap.h>
- 
-@@ -363,6 +364,15 @@
- 	return xfs_fsverity_write(ip, position, size, buf);
- }
- 
-+static void
-+xfs_fsverity_file_corrupt(
-+	struct inode		*inode,
-+	loff_t			pos,
-+	size_t			len)
-+{
-+	xfs_inode_mark_sick(XFS_I(inode), XFS_SICK_INO_DATA);
-+}
-+
- const ptrdiff_t info_offs = (int)offsetof(struct xfs_inode, i_verity_info) -
- 			    (int)offsetof(struct xfs_inode, i_vnode);
- 
-@@ -373,4 +383,5 @@
- 	.get_verity_descriptor		= xfs_fsverity_get_descriptor,
- 	.read_merkle_tree_page		= xfs_fsverity_read_merkle,
- 	.write_merkle_tree_block	= xfs_fsverity_write_merkle,
-+	.file_corrupt			= xfs_fsverity_file_corrupt,
- };
-diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index 3c1557fb1c..b851651c02 100644
---- a/fs/xfs/xfs_health.c
-+++ b/fs/xfs/xfs_health.c
-@@ -487,6 +487,7 @@
- 	{ XFS_SICK_INO_DIR_ZAPPED,	XFS_BS_SICK_DIR },
- 	{ XFS_SICK_INO_SYMLINK_ZAPPED,	XFS_BS_SICK_SYMLINK },
- 	{ XFS_SICK_INO_DIRTREE,	XFS_BS_SICK_DIRTREE },
-+	{ XFS_SICK_INO_DATA,	XFS_BS_SICK_DATA },
- };
- 
- /* Fill out bulkstat health info. */
+Changes since v2:
+- Remove unicode labels
+- Replace vfs_get_case_info
+- Add support for several more local file system implementations
+- Add support for in-kernel SMB server
+
+Changes since RFC:
+- Use file_getattr instead of statx
+- Postpone exposing Unicode version until later
+- Support NTFS and ext4 in addition to FAT
+- Support NFSv4 fattr4 in addition to NFSv3 PATHCONF
+
+
+Chuck Lever (16):
+  fs: Add case sensitivity info to file_kattr
+  fat: Implement fileattr_get for case sensitivity
+  exfat: Implement fileattr_get for case sensitivity
+  ntfs3: Implement fileattr_get for case sensitivity
+  hfs: Implement fileattr_get for case sensitivity
+  hfsplus: Report case sensitivity in fileattr_get
+  ext4: Report case sensitivity in fileattr_get
+  xfs: Report case sensitivity in fileattr_get
+  cifs: Implement fileattr_get for case sensitivity
+  nfs: Implement fileattr_get for case sensitivity
+  f2fs: Add case sensitivity reporting to fileattr_get
+  vboxsf: Implement fileattr_get for case sensitivity
+  isofs: Implement fileattr_get for case sensitivity
+  nfsd: Report export case-folding via NFSv3 PATHCONF
+  nfsd: Implement NFSv4 FATTR4_CASE_INSENSITIVE and
+    FATTR4_CASE_PRESERVING
+  ksmbd: Report filesystem case sensitivity via FS_ATTRIBUTE_INFORMATION
+
+ fs/exfat/exfat_fs.h      |  2 ++
+ fs/exfat/file.c          | 17 +++++++++++++++--
+ fs/exfat/namei.c         |  1 +
+ fs/ext4/ioctl.c          |  8 ++++++++
+ fs/f2fs/file.c           |  8 ++++++++
+ fs/fat/fat.h             |  3 +++
+ fs/fat/file.c            | 18 ++++++++++++++++++
+ fs/fat/namei_msdos.c     |  1 +
+ fs/fat/namei_vfat.c      |  1 +
+ fs/file_attr.c           | 10 ++++++++++
+ fs/hfs/dir.c             |  1 +
+ fs/hfs/hfs_fs.h          |  2 ++
+ fs/hfs/inode.c           | 13 +++++++++++++
+ fs/hfsplus/inode.c       |  9 +++++++++
+ fs/isofs/dir.c           | 11 +++++++++++
+ fs/nfs/client.c          |  9 +++++++--
+ fs/nfs/inode.c           | 18 ++++++++++++++++++
+ fs/nfs/internal.h        |  3 +++
+ fs/nfs/nfs3proc.c        |  2 ++
+ fs/nfs/nfs3xdr.c         |  7 +++++--
+ fs/nfs/nfs4proc.c        |  2 ++
+ fs/nfs/proc.c            |  3 +++
+ fs/nfs/symlink.c         |  3 +++
+ fs/nfsd/nfs3proc.c       | 18 ++++++++++--------
+ fs/nfsd/nfs4xdr.c        | 30 ++++++++++++++++++++++++++----
+ fs/nfsd/vfs.c            | 25 +++++++++++++++++++++++++
+ fs/nfsd/vfs.h            |  2 ++
+ fs/ntfs3/file.c          | 23 +++++++++++++++++++++++
+ fs/ntfs3/inode.c         |  1 +
+ fs/ntfs3/namei.c         |  2 ++
+ fs/ntfs3/ntfs_fs.h       |  1 +
+ fs/smb/client/cifsfs.c   | 19 +++++++++++++++++++
+ fs/smb/server/smb2pdu.c  | 30 ++++++++++++++++++++++++------
+ fs/vboxsf/dir.c          |  1 +
+ fs/vboxsf/file.c         |  6 ++++--
+ fs/vboxsf/super.c        |  4 ++++
+ fs/vboxsf/utils.c        | 31 +++++++++++++++++++++++++++++++
+ fs/vboxsf/vfsmod.h       |  6 ++++++
+ fs/xfs/xfs_ioctl.c       |  7 +++++++
+ include/linux/fileattr.h |  3 +++
+ include/linux/nfs_xdr.h  |  2 ++
+ 41 files changed, 337 insertions(+), 26 deletions(-)
 
 -- 
-- Andrey
+2.52.0
 
 
