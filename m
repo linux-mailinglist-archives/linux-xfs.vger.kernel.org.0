@@ -1,103 +1,103 @@
-Return-Path: <linux-xfs+bounces-29310-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29312-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5276D1371D
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 16:06:16 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44C17D13729
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 16:06:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 324AD30AFE8F
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 14:52:29 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E5D573077623
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jan 2026 14:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 375D82C0294;
-	Mon, 12 Jan 2026 14:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB6662D9780;
+	Mon, 12 Jan 2026 14:52:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X6PTjrGY";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="BPXjEGyO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K8ExZSbI";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="b4v30Tzm"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BCE2701CB
-	for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 14:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FEE2D5C6C
+	for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 14:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768229532; cv=none; b=eDZ/4C5znAnymwqIuJY/rZ0qzj5yZLjYdc+ng3yLLHnF5rTlbTGhyWwmghuXl7StZTNiXwMoanYnpJtr8icAXUP6Ec8N6NYHuZ3uiRmPAKrm5r7+NBE0hLVx/rbWdv2xljYJBBKwQzbsesmS+a9WCaA2kpdoQIZuDROUKN/12BU=
+	t=1768229542; cv=none; b=WulRiU3QEFCjO36QJ0lmbjqdaUgF5hVZqezic8y/4S7elehHx7IB34EQ5o2BlU87zArHjEdsPdXvfVS/VpcReex/lLrLu5e+23c3TSW3VhhUWVTVFVtzotNa2XER+5+lTTwtWdJdK87SGqBdtzBtCgJKj1DnsHoNRr3GGoKP0jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768229532; c=relaxed/simple;
-	bh=w1I6PwvwzLsgyGpHJFKwtxkJvjQ0CES+ZFjhSTB9vDs=;
+	s=arc-20240116; t=1768229542; c=relaxed/simple;
+	bh=DqGbPHihgvouI+HlmdtnScxnStrH4+HE2WznQSyP4j4=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJK79kCecUYGEjtDJdIKHuzyotQrQ6D24U3jx8C/9QczoipVTLBqGA0kkckqonoe/+lwtWgZEgRHGKKMS4T8xupZkGpEWRY/62adXbXsLAcOG6CT4xSbV+kXNo1mPAR2OqWhWROhv9ifb2HIm+lL1ymdPA8G8ooVzK+q87CACeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X6PTjrGY; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=BPXjEGyO; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=MFUXWsCJBcEKScY3IkCh/noguXP7WAyS3ptaOEbg666G607OqT52Vdm35ZZ3uCiy/M2I8xfr96RBPPaTZ/nLeSrwXC8kyquSh6bY8n84y8G1iqvglQcNJI3A5bnksqIqXRtABqLRdH7aZ1526AZrxxDzVdwPLSmbgwWdJC6YDZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K8ExZSbI; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=b4v30Tzm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1768229529;
+	s=mimecast20190719; t=1768229540;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rxT4TpIEnXfcR0i9Em+M35vPC8aSThrR47NkUhIyHDQ=;
-	b=X6PTjrGY3JQQC+4/PeNjTjO4dcqlpP4segBEHWwzdMexTsahuca+uFdkfwofRjZsO5kSwl
-	LisBnGz+7LilmdD+pO1YlFSVoQY+lYcgPWdeEJkrJS16NvsgGWd46wkdPDTFCF29m2XIuh
-	20afI5XCdVYRRybxp0m5nSrFb/dTI7c=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=xPYPAB6be13BNA+rNTQIlJZgdC6UYp82gudM/SKVgcg=;
+	b=K8ExZSbIwk4ICjnjy3BLJYRO0xIA+XLCOsv9MEnDdIXEAbWzvVOK6Ckck6z0Fb8Egp6KEa
+	sjzHh6rs7g+N9YlnDbZwnBTko7x5r+rvfAzp9VTSUT9dhl5az9HW3gWutMbuBGxUt7fVO4
+	ZZ2GhbZrPdgVE/3LRv+RQ+e1+Qcv6rk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-212-Bir4CvNzN0m-FohKJBqamg-1; Mon, 12 Jan 2026 09:52:03 -0500
-X-MC-Unique: Bir4CvNzN0m-FohKJBqamg-1
-X-Mimecast-MFC-AGG-ID: Bir4CvNzN0m-FohKJBqamg_1768229522
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-64b4b64011dso10994411a12.2
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 06:52:03 -0800 (PST)
+ us-mta-21-BBItgpJxOVe5QD9TmlnhcA-1; Mon, 12 Jan 2026 09:52:17 -0500
+X-MC-Unique: BBItgpJxOVe5QD9TmlnhcA-1
+X-Mimecast-MFC-AGG-ID: BBItgpJxOVe5QD9TmlnhcA_1768229536
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-b7a29e6f9a0so646377466b.1
+        for <linux-xfs@vger.kernel.org>; Mon, 12 Jan 2026 06:52:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1768229522; x=1768834322; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1768229536; x=1768834336; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rxT4TpIEnXfcR0i9Em+M35vPC8aSThrR47NkUhIyHDQ=;
-        b=BPXjEGyOgKjPUJJC2ZjtLpTvVAbHQf75kSpUnfCI25pSlE+Up/dP1i4a/PRRoRL70I
-         tdFpU2sagKQI5fnCG2SQXA5d0RBSlkZ60JkerwyX6lBUhFIKKbv6WlAvNtCsk/MJPSab
-         eu5plH71VivZkancdPOjCZNeGtWHco+OGoCJNK5WIZj6EQhU+9LfZ/17P9Q0uSh8Q63j
-         bydlkXv2VKCohWodIM1CakCqFdThAMyRGDr9xepwbbcRnTU+U6rYtcTgl/a1yjL8Cxt0
-         s1UJut0ueJxN6aayohDTZyEw9Bk431eGnt0nJYgiiN+NuDGW7uffGETQGHPaYgbvjaOS
-         R9Ng==
+        bh=xPYPAB6be13BNA+rNTQIlJZgdC6UYp82gudM/SKVgcg=;
+        b=b4v30TzmZAiJn9WiNu5L73uSDOfZ8yG/XQDvq4YGLnx58I2mO9hW4/h0lyYlpAa6WV
+         PtEtHKpmF9nKzCOGvUjunvMp0dsTUhOppjIwAqf6GwyTbg5MhKpeYrLjT/XyeuWNKOSg
+         ybexhQQ3A3V1xsDi6QR0LaS3gZpE9qMwBNfj1tBHYg1CSQYbf60oYW5HPw6XmsygnFU1
+         sgpXaait7Xy+s+b52HCSX8NOq8GHYoUEBQsj1KsDbdeqHqL0AdkJGIPenH3/gQX1rtLR
+         lxlaw6/Bc86cihJPxWwzDTlBrGHpD0ujVejNiU7GQb8ZV5U0Uqm2UIqxOBe54FAW0N5a
+         7N2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768229522; x=1768834322;
+        d=1e100.net; s=20230601; t=1768229536; x=1768834336;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rxT4TpIEnXfcR0i9Em+M35vPC8aSThrR47NkUhIyHDQ=;
-        b=unOiOTpdzCTaRVbIn5W6JDyxxUkPNjpV9q037t5+oQCpyJCZcv9Mkk4fbLHTIwd0Qu
-         hqj50vvCEMV4r7tOcIzWBLrnsmAVpIh3FcAWJpkoGqZrc3pOqfXle9A976ubI3uoi3zW
-         7uqw/GAjr6WbtwymPf9jTEZfS6SpD3DiXH00i5phSax2Sg7CvlfRhjl+OMmDKYI8LJOl
-         BWuJ/bkvTI2ZBnul2v6ZgwlbGBmGQud4rv6MfWPa8BPlCFT4sp0mGzSt2CVJmJ9GBvn1
-         EART5H1cX2YSvabOXmuAFkN8c2jQT7RcLzSXqL6m/M1KH7iH2BFxAuIoGqVMFyK+QVWv
-         B5qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPk54qoXREYJ6tOH+KLpDaMNMj1SmP+V8GkOC8/tVbuOLfcBVDBS1393q96skJiTfPf26UnCIApOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfZVsv+elWILBo4ysBowPw/7f9pKKO4XznBLK9mwOMgO9Ucxgf
-	66LzXQLgpAnZKp1hpP+ifK0lCmKWB8acLZMTOXX+TviF5yy9zZQMSd5g8NwaAbKq6z0ZgiP0ZEb
-	VCCVpu+hA3DW/MXjWbN2LKOf63mrLtbkHCgOm9xZseM75ybVTq1Hx8FiDBeqGrkBWZ7/h
-X-Gm-Gg: AY/fxX6LDUy/oWfHng2i2YsOv+ToHUJNI2/I4zgOwH8dwi0QnQbgirKn1qjQP4iXFZG
-	uVuYpgj0Eq1TQpVicXw4fSXPntR8pTgcLocxINCgZKNF8Hx3pfDtER4QWCqjt2ppaJdnRlAJ/Nq
-	zUJ/2R9EOSSGWajy52oy6uhC2RM/yBimXWD11qcwlj7vOuKH1Z0jAtjyyVLvfK5uM+Xu7Jq93Xq
-	s/arRWKN2OA24QdCsd0d7WrbGtq2jSMXV1bJnrhd65W1MtEf+SdW3iR3H3AmiBg7RHXe3Wc1cGk
-	epQoI8kG0qvDZLdZeibA3sIZWpENSI0SYam1EausVMQ1fya3oJFndFSIVUUDCodcX0USs2L1
-X-Received: by 2002:a05:6402:4309:b0:64d:65d:2315 with SMTP id 4fb4d7f45d1cf-65097e8e3b3mr17114482a12.30.1768229522142;
-        Mon, 12 Jan 2026 06:52:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF5HedpXYEVDgdb3na03m1dE9g5d9SGRCXlO36Bm8gCzP1H5KKM5v9HNGEWEFxIDCR45EpR/w==
-X-Received: by 2002:a05:6402:4309:b0:64d:65d:2315 with SMTP id 4fb4d7f45d1cf-65097e8e3b3mr17114452a12.30.1768229521690;
-        Mon, 12 Jan 2026 06:52:01 -0800 (PST)
+        bh=xPYPAB6be13BNA+rNTQIlJZgdC6UYp82gudM/SKVgcg=;
+        b=kIPDo9X4BAvtjUi7AuvKquP1onzNM8ZAuzSa039Mjf6qxzhty495mMMkfoYC3RSFT9
+         cg5NLLIPHgG8HG0hnzXPEAQ7Oyoq/Zsr0JGQxkFwftjbSfQMzGiqGyLIKa5mZPjg+NJh
+         tKLH06Z3W/97nv7CE4ckGdotd4yiQLdgC0zYyy7wEnz3Ile9udCO3xbT+YcEkFS+4ppt
+         b3aBQA5p+fKDu+9nElpMXzWX5n4QaBWjX0jOjBb1S8oSiNQlmsfUgURirFV6C/p3VZZO
+         ZI5qXXs+AAD6RjMUJ7HlLAr5rbIllz4TBeofgl4IJ9cPXubcb32XEQFOEk0JolA2KtCX
+         ykYw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8aAUaRu7BLVlflD2/e/upHPDPiOQIGHG/TRtGVr45IaeS1fqUWPQvppMfqsgw1evHMyb48pI7PVw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL3vU584AxoFSJRnxRWV3h4e9s1wxepdNBnWgqcwi4P8PkL+I0
+	u7a4Db4RW5K6QWwZAfzFk3dAjN/MoO5tXaR1aIhkJBXZW8v1NQ9AhJ8Tg9KVECgGeG2ScquBUvb
+	FjVPn8G/5gf4aUfoh4qC1+UoxLzLf7LOszda8Q7+GyAPhbJydQAg7UntpMN7U
+X-Gm-Gg: AY/fxX5xOgUh6cGHWsXQEEoN5a4sNVMxtNvOPHDGuGflO6SRVMrQ22ftnBYlgDG0r50
+	CCQTYqho3Mj+OASP94tyBcKLqIwuPiQgVFeifnIiklf8LFCa5FsVo1ujxNXZIY1tPjGBSpFgv0K
+	lZSXv/zYB+inukXu67v7IP5Ri3+5QNchI5YFyY6AJbyOTB6E81TuQOB4u9j3HzuCLI5tvaRMYLl
+	fX7HYdan6G7TAAQTXO9NHwrPjThSSMF+cJFSYcgrY4WXIBZtzEUrJ1Aoph4lefawE9z5rgxWpSF
+	wWwUk469HUCndC3eHTWz5cEGBskEsENF+HrsOayOYXv6y5iDeoAJcNaXUlJW8UCCA+KH5BzY
+X-Received: by 2002:a17:907:841:b0:b83:9767:c8ba with SMTP id a640c23a62f3a-b84451b5d1dmr1635823466b.17.1768229535751;
+        Mon, 12 Jan 2026 06:52:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH+AXG1fXAqNi7crMM7QiDNAwZR8bNUqqDvj5BznuxA4nKTk8GLk6KKY85CmsHuZWbeWD797w==
+X-Received: by 2002:a17:907:841:b0:b83:9767:c8ba with SMTP id a640c23a62f3a-b84451b5d1dmr1635820866b.17.1768229535247;
+        Mon, 12 Jan 2026 06:52:15 -0800 (PST)
 Received: from thinky ([217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6507b8c4048sm18254819a12.2.2026.01.12.06.52.01
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8429fdf4e7sm1985599466b.0.2026.01.12.06.52.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jan 2026 06:52:01 -0800 (PST)
+        Mon, 12 Jan 2026 06:52:14 -0800 (PST)
 From: "Darrick J. Wong" <aalbersh@redhat.com>
 X-Google-Original-From: "Darrick J. Wong" <djwong@kernel.org>
-Date: Mon, 12 Jan 2026 15:52:00 +0100
+Date: Mon, 12 Jan 2026 15:52:13 +0100
 To: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org, 
 	ebiggers@kernel.org, linux-fsdevel@vger.kernel.org, aalbersh@kernel.org, 
 	aalbersh@redhat.com, djwong@kernel.org
 Cc: djwong@kernel.org, david@fromorbit.com, hch@lst.de
-Subject: [PATCH v2 18/22] xfs: advertise fs-verity being available on
- filesystem
-Message-ID: <n54xljh4z2vdvxsifux2hue2hnjixlw6jtq3azudreah3lt4de@en2vz44o4vz7>
+Subject: [PATCH v2 20/22] xfs: report verity failures through the health
+ system
+Message-ID: <i4tsa4dqqhjfutocdlk6mqm6ovvzea7ki2w32j6mcew66aegay@tsllwgeogm3f>
 References: <cover.1768229271.patch-series@thinky>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -109,41 +109,98 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1768229271.patch-series@thinky>
 
-Advertise that this filesystem supports fsverity.
+Record verity failures and report them through the health system.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Andrey Albershteyn <aalbersh@redhat.com>
 Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
 ---
- fs/xfs/libxfs/xfs_fs.h | 1 +
- fs/xfs/libxfs/xfs_sb.c | 2 ++
- 2 files changed, 3 insertions(+), 0 deletions(-)
+ fs/xfs/libxfs/xfs_fs.h     |  1 +
+ fs/xfs/libxfs/xfs_health.h |  4 +++-
+ fs/xfs/xfs_fsverity.c      | 11 +++++++++++
+ fs/xfs/xfs_health.c        |  1 +
+ 4 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index b73458a7c2..3db9beb579 100644
+index 3db9beb579..b82fef9a1f 100644
 --- a/fs/xfs/libxfs/xfs_fs.h
 +++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -250,6 +250,7 @@
- #define XFS_FSOP_GEOM_FLAGS_PARENT	(1 << 25) /* linux parent pointers */
- #define XFS_FSOP_GEOM_FLAGS_METADIR	(1 << 26) /* metadata directories */
- #define XFS_FSOP_GEOM_FLAGS_ZONED	(1 << 27) /* zoned rt device */
-+#define XFS_FSOP_GEOM_FLAGS_VERITY	(1 << 28) /* fs-verity */
+@@ -422,6 +422,7 @@
+ #define XFS_BS_SICK_SYMLINK	(1 << 6)  /* symbolic link remote target */
+ #define XFS_BS_SICK_PARENT	(1 << 7)  /* parent pointers */
+ #define XFS_BS_SICK_DIRTREE	(1 << 8)  /* directory tree structure */
++#define XFS_BS_SICK_DATA	(1 << 9)  /* file data */
  
  /*
-  * Minimum and maximum sizes need for growth checks.
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index 744bd8480b..fe400bffa5 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -1587,6 +1587,8 @@
- 		geo->flags |= XFS_FSOP_GEOM_FLAGS_METADIR;
- 	if (xfs_has_zoned(mp))
- 		geo->flags |= XFS_FSOP_GEOM_FLAGS_ZONED;
-+	if (xfs_has_verity(mp))
-+		geo->flags |= XFS_FSOP_GEOM_FLAGS_VERITY;
- 	geo->rtsectsize = sbp->sb_blocksize;
- 	geo->dirblocksize = xfs_dir2_dirblock_bytes(sbp);
+  * Project quota id helpers (previously projid was 16bit only
+diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
+index b31000f719..fa91916ad0 100644
+--- a/fs/xfs/libxfs/xfs_health.h
++++ b/fs/xfs/libxfs/xfs_health.h
+@@ -104,6 +104,7 @@
+ /* Don't propagate sick status to ag health summary during inactivation */
+ #define XFS_SICK_INO_FORGET	(1 << 12)
+ #define XFS_SICK_INO_DIRTREE	(1 << 13)  /* directory tree structure */
++#define XFS_SICK_INO_DATA	(1 << 14)  /* file data */
  
+ /* Primary evidence of health problems in a given group. */
+ #define XFS_SICK_FS_PRIMARY	(XFS_SICK_FS_COUNTERS | \
+@@ -140,7 +141,8 @@
+ 				 XFS_SICK_INO_XATTR | \
+ 				 XFS_SICK_INO_SYMLINK | \
+ 				 XFS_SICK_INO_PARENT | \
+-				 XFS_SICK_INO_DIRTREE)
++				 XFS_SICK_INO_DIRTREE | \
++				 XFS_SICK_INO_DATA)
+ 
+ #define XFS_SICK_INO_ZAPPED	(XFS_SICK_INO_BMBTD_ZAPPED | \
+ 				 XFS_SICK_INO_BMBTA_ZAPPED | \
+diff --git a/fs/xfs/xfs_fsverity.c b/fs/xfs/xfs_fsverity.c
+index 691dc60778..f53a404578 100644
+--- a/fs/xfs/xfs_fsverity.c
++++ b/fs/xfs/xfs_fsverity.c
+@@ -18,6 +18,7 @@
+ #include "xfs_quota.h"
+ #include "xfs_fsverity.h"
+ #include "xfs_iomap.h"
++#include "xfs_health.h"
+ #include <linux/fsverity.h>
+ #include <linux/pagemap.h>
+ 
+@@ -363,6 +364,15 @@
+ 	return xfs_fsverity_write(ip, position, size, buf);
+ }
+ 
++static void
++xfs_fsverity_file_corrupt(
++	struct inode		*inode,
++	loff_t			pos,
++	size_t			len)
++{
++	xfs_inode_mark_sick(XFS_I(inode), XFS_SICK_INO_DATA);
++}
++
+ const ptrdiff_t info_offs = (int)offsetof(struct xfs_inode, i_verity_info) -
+ 			    (int)offsetof(struct xfs_inode, i_vnode);
+ 
+@@ -373,4 +383,5 @@
+ 	.get_verity_descriptor		= xfs_fsverity_get_descriptor,
+ 	.read_merkle_tree_page		= xfs_fsverity_read_merkle,
+ 	.write_merkle_tree_block	= xfs_fsverity_write_merkle,
++	.file_corrupt			= xfs_fsverity_file_corrupt,
+ };
+diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
+index 3c1557fb1c..b851651c02 100644
+--- a/fs/xfs/xfs_health.c
++++ b/fs/xfs/xfs_health.c
+@@ -487,6 +487,7 @@
+ 	{ XFS_SICK_INO_DIR_ZAPPED,	XFS_BS_SICK_DIR },
+ 	{ XFS_SICK_INO_SYMLINK_ZAPPED,	XFS_BS_SICK_SYMLINK },
+ 	{ XFS_SICK_INO_DIRTREE,	XFS_BS_SICK_DIRTREE },
++	{ XFS_SICK_INO_DATA,	XFS_BS_SICK_DATA },
+ };
+ 
+ /* Fill out bulkstat health info. */
 
 -- 
 - Andrey
