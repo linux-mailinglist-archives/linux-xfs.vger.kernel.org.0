@@ -1,72 +1,146 @@
-Return-Path: <linux-xfs+bounces-29442-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29444-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id C931ED1A580
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Jan 2026 17:40:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39544D1A6B3
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Jan 2026 17:52:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5E919306D51F
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Jan 2026 16:36:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6E2FB303271E
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Jan 2026 16:51:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF61A27FB37;
-	Tue, 13 Jan 2026 16:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q3jmgY0T"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5000433CE86;
+	Tue, 13 Jan 2026 16:51:12 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4263329D27D;
-	Tue, 13 Jan 2026 16:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7DD2F2607
+	for <linux-xfs@vger.kernel.org>; Tue, 13 Jan 2026 16:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768322209; cv=none; b=J4zKVxogWJrVbaaop+gXZM+G5Q4YPRhEDAKfXVO3gkMfVIsdSz9twoYZndbW6TR4viwau77ODDLNfdDkDuINuQk8QA7Z+krn+ixP0LHfbQcniqoecBJsqa1J2USTIobNnYpdx/B0mDMbzSgY8cOx4AFzttzs+mEfnxAHXSStt2Y=
+	t=1768323072; cv=none; b=eLVFxNRyqvy6sKO9g32hhrdGyJn2z92JuseZnQmbccgv2gxplXuk7wZGxF1zgCPQxdIGVkvEU+yQd0FoiwyhMlcEGbXkScieHlzqOrJnHy59uMP4EbOsTQtWAoLXO7S9W1U/b0wbXS+d5SYouaHRi+MCg9Stfex47ZhkkdcIsT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768322209; c=relaxed/simple;
-	bh=IMkOO6Zc4yhuZg1yzQK+w2Bp/BdGAWInBxXY74VNhMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9oZ0/U5suU8VpGjW3DZimT6QjLzUW1ThEGV1NbF+cXLgwoRI+SG2JXDx31r+NNlE+6u/HH9teA+tXbUKSqmfj52G88Gn6tO2ENSWu1rdWjk/1IxrEDhSBkdmleNsgtx1Yi5uflTgchf/n1gISbTC3wza4U/x9ksajFZtUABlog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q3jmgY0T; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bUxWTnK1QbCgjrUYIs0Qsd9Vhlvn6TGbfq2LUKED7So=; b=q3jmgY0TlCA0o7WFV5Z39f2vBH
-	tp2ge+v5hF1mwyBqCHQmMEyauJ/QfDxHLhpTWnirEq6aIGShClfknmGziM70L8dVCySvqcY+0AdQo
-	SPMbTRFYVpA906vH8DYHVudTdmJN3gerGQAFqyCmEZLQqEXn3kZHw5gLAMM2aDbtOcndfDrN1zR+6
-	C4VXGvpan09WJMqIielGkLpdh0TNNX8HTg62JGCqxuS8EzDOHLxlSUP4X9R4hh2Zf2EhhKlFHwvGT
-	OGqNcW3dSNXKO/gyap5ZgALhQU2ArysHYCcsE3HuJisdiHIxaVKYBaVqCSOvfsnhDnNtSy7i5ec02
-	aNxdsbgQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfhNs-00000004y8Y-2UsQ;
-	Tue, 13 Jan 2026 16:36:44 +0000
-Date: Tue, 13 Jan 2026 16:36:44 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-	ebiggers@kernel.org, linux-fsdevel@vger.kernel.org,
-	aalbersh@kernel.org, djwong@kernel.org, david@fromorbit.com,
-	hch@lst.de
-Subject: Re: [PATCH v2 0/23] fs-verity support for XFS with post EOF merkle
- tree
-Message-ID: <aWZ0nJNVTnyuFTmM@casper.infradead.org>
-References: <cover.1768229271.patch-series@thinky>
+	s=arc-20240116; t=1768323072; c=relaxed/simple;
+	bh=Hm+hFkCxE6lVbQx4eQObQxXAcvrq9lVQw90Wa4bRafg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CCwx7z7RFKuQoPRp9Yx+EHBkjlIjMh7OcOq1Et2voO/HLlyEhjxp5hm6PG+06U67i5fI3hLOf5dSRhuMPoxBOzFPcpuZIRUUwSlB7NVW4V/KmDy1ei06PCwOvXw7Q3wwnW8D7IsLv0qjjXQcMvuNnCqH62DqwIRau+x8FTuEM8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-450b2715b6cso4520185b6e.0
+        for <linux-xfs@vger.kernel.org>; Tue, 13 Jan 2026 08:51:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768323070; x=1768927870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gc7yqO7D0eseyKYDyefBFLldfXSHU35zlyHiXIvs8J4=;
+        b=EWeahEDjgGDFyw6RxIlYwgt5p5RIZFBtk+eeX96YGZj7LGlt4gVB2xNUvptfnV/20E
+         /GBU7FIQDRVbN+PDOayODJn0vEBYU2UOmochpMv2+TeXOvWVaMAleyVubERNNhdmC48P
+         Zj7Y2GmuWUDSNw7gtqXlyWTrmqUdBI5cP1Wll3TTNnGs+ZT3N0TF37A7jH27VD1hZ1MW
+         uryjZqmVycpZ0PKElZNtpeGZyoEO01ZuwE5ya4+0vnEIBo38nrPQtSfiBRlv1RZ/RvMN
+         MSAoPFAA1UAWOzF60iLKuzcsEFllHW+bxbS4OwCjUmcPwchS7aMupIwpb3TTPM8tfNYO
+         Xo0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXtr/YPKK/I+t6IH5Q9B8kq8/ktkNJSHHAVXYumCd+C980c6Z1leHkRtpMhiItHzz7NbuC6hJ77pBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9IM6o/zoJipm4t6t08Vp5eBWlf5De2zMhg2GACWfnWZBgzSi8
+	jZiq0JVQHITrt9L228YWsiLQZ586g38XRSjjeSI06aqDaIzTMw1qWmkcyoZzow==
+X-Gm-Gg: AY/fxX44K5BTuvwENZ3BaRWsYE/ZBxqqe71K77GSABKdmaCV4ScbQcyeoMMnQLejqWG
+	fWIBFrxijGJrqtEoCwuh0G8y+NWvk2bi12fjXiWlM+U6qVIGAlt3dhU6mID2t90DX90yj4IPUsH
+	7CkU/QiID84ePGV4NIW0DvotFn2hzCGv90wm5JIlHpDxjkoLLdsbtjHiw7BlLMasRUZQC5xbzwJ
+	OGcUYerNWoGf9vFlip86gZBqlzTmbscI+zvJ9MMuqixdGnG/cS+ZBIvVUb1FB9LWipFBlN0U5Gj
+	kX+1W/ltb0FuBraWfdmDJ386MYUF4A+ySIU3vwjXztQ5UDmSEej04XkOsi9zXoz2rfub/fPfanl
+	ZLM5uPVEHBjERoa4G5bMqH6DYTqrrzMMMRCHL/nRZlAMvK7SKv03IKMxb3gc5vPHOE94mjMbcMw
+	1Q0BjRnfMWaBtZ1tmv30aeeUyIp1L5rN/hqZ3YJo9cbWB3RdMJDRDI99vmI57D/HzJ7XEoL7ii
+X-Google-Smtp-Source: AGHT+IHLzyvgk2SZ7Y0LwfgyENILUqtm+RUQImPcSDt89+g5QFEwqJHQKA7m7cgV1+2NjUDF8STUOw==
+X-Received: by 2002:a05:6808:2016:b0:450:760b:cc9f with SMTP id 5614622812f47-45a6bde857amr11743526b6e.30.1768323069660;
+        Tue, 13 Jan 2026 08:51:09 -0800 (PST)
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com. [209.85.210.44])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-3ffa515f4dasm14723761fac.21.2026.01.13.08.51.09
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jan 2026 08:51:09 -0800 (PST)
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7cfb21a52a8so1493958a34.2
+        for <linux-xfs@vger.kernel.org>; Tue, 13 Jan 2026 08:51:09 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWzpK2Vh4QWUGfLqH/xg/loWDxwyuE5t8viD9a3j3NGbZKRMu/M7jKLiY9iCaj41uKXQ1PZO1nHoJ8=@vger.kernel.org
+X-Received: by 2002:a05:6830:2e04:b0:7bb:7a28:51ba with SMTP id
+ 46e09a7af769-7ce50a6def5mr10521137a34.26.1768322616531; Tue, 13 Jan 2026
+ 08:43:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1768229271.patch-series@thinky>
+References: <20260112174629.3729358-1-cel@kernel.org> <20260112174629.3729358-9-cel@kernel.org>
+ <20260113160223.GA15522@frogsfrogsfrogs>
+In-Reply-To: <20260113160223.GA15522@frogsfrogsfrogs>
+From: Neal Gompa <neal@gompa.dev>
+Date: Tue, 13 Jan 2026 11:43:00 -0500
+X-Gmail-Original-Message-ID: <CAEg-Je8LGZGGAQ3XLMQg8=XmJjvvJNShT3zkE-o2t2fv=VGeHw@mail.gmail.com>
+X-Gm-Features: AZwV_QiAh8VN4kaDD2E2Q52MaqDS5cW88U1qWaL9kDfC-E_siYu-7adEi4A7eM4
+Message-ID: <CAEg-Je8LGZGGAQ3XLMQg8=XmJjvvJNShT3zkE-o2t2fv=VGeHw@mail.gmail.com>
+Subject: Re: [PATCH v3 08/16] xfs: Report case sensitivity in fileattr_get
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Chuck Lever <cel@kernel.org>, vira@web.codeaurora.org, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, 
+	linkinjeon@kernel.org, sj1557.seo@samsung.com, yuezhang.mo@sony.com, 
+	almaz.alexandrovich@paragon-software.com, slava@dubeyko.com, 
+	glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, pc@manguebit.org, 
+	ronniesahlberg@gmail.com, sprasad@microsoft.com, trondmy@kernel.org, 
+	anna@kernel.org, jaegeuk@kernel.org, chao@kernel.org, hansg@kernel.org, 
+	senozhatsky@chromium.org, Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 12, 2026 at 03:49:44PM +0100, Andrey Albershteyn wrote:
-> The tree is read by iomap into page cache at offset 1 << 53. This is far
-> enough to handle any supported file size.
+On Tue, Jan 13, 2026 at 11:02=E2=80=AFAM Darrick J. Wong <djwong@kernel.org=
+> wrote:
+>
+> On Mon, Jan 12, 2026 at 12:46:21PM -0500, Chuck Lever wrote:
+> > From: Chuck Lever <chuck.lever@oracle.com>
+> >
+> > Upper layers such as NFSD need to query whether a filesystem is
+> > case-sensitive. Populate the case_insensitive and case_preserving
+> > fields in xfs_fileattr_get(). XFS always preserves case. XFS is
+> > case-sensitive by default, but supports ASCII case-insensitive
+> > lookups when formatted with the ASCIICI feature flag.
+> >
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>
+> Well as a pure binary statement of xfs' capabilities, this is correct so:
+> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+>
+> [add ngompa]
+>
+> But the next obvious question I would have as a userspace programmer is
+> "case insensitive how, exactly?", which was the topic of the previous
+> revision.  Somewhere out there there's a program / emulation layer that
+> will want to know the exact transformation when doing a non-memcmp
+> lookup.  Probably Winderz casefolding has behaved differently every
+> release since the start of NTFS, etc.
+>
 
-What happens on 32-bit systems?  (I presume you mean "offset" as
-"index", so this is 1 << 65 bytes on machines with a 4KiB page size)
+NTFS itself is case preserving and has a namespace for Win32k entries
+(case-insensitive) and SFU/SUA/LXSS entries (case-sensitive). I'm not
+entirely certain of the nature of *how* those entries are managed, but
+I *believe* it's from the personalities themselves.
+
+> I don't know how to solve that, other than the fs compiles its
+> case-flattening code into a bpf program and exports that where someone
+> can read() it and run/analyze/reverse engineer it.  But ugh, Linus is
+> right that this area is a mess. :/
+>
+
+The biggie is that it has to be NLS aware. That's where it gets
+complicated since there are different case rules for different
+languages.
+
+
+
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
 
