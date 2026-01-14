@@ -1,290 +1,146 @@
-Return-Path: <linux-xfs+bounces-29492-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29508-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DAC3D1CE44
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jan 2026 08:42:05 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC20ED1CF9D
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jan 2026 08:59:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 67CD730060DB
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jan 2026 07:42:02 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id C44AF301050E
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jan 2026 07:59:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBC19379961;
-	Wed, 14 Jan 2026 07:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 679CD313550;
+	Wed, 14 Jan 2026 07:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICkBm14S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfDgOx7g";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="muCquDrG"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D773624C8
-	for <linux-xfs@vger.kernel.org>; Wed, 14 Jan 2026 07:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AA32D5C97
+	for <linux-xfs@vger.kernel.org>; Wed, 14 Jan 2026 07:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768376518; cv=none; b=AcELtSld98I/ETkV6qIUku37bNjPhOYLUIw/usTmYWRAC6Ul0gikhfXpT3kKHjwmYasa8mK/6WoiObcX9Cdc3AhF5kZJEOzbYF/WfBYTrZERocUhERlhHMCLvEL3TDgNeW4McUuR0B7f/rEJ2PUXcOfOxn/IZEUpxqKR+7Uw9m8=
+	t=1768377576; cv=none; b=Y71Kmpa0VFWqkaM2qfXYRVwl4dc10dixlvZtBwxisHY/hI4WOs6MtVDbxZ5fJ/Gb1nnwk6Og7MWFJIPe8KHI+cVQAusYqX0ppJ0GdYNGoghDnoQ5ea/jKq+Wbr84JaSyTdD0aJwasHNUSQO9QFIcvcU8lVTckRPrbAb/87B9d+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768376518; c=relaxed/simple;
-	bh=+H3aAh+H9MYWBdA3obltdIOF5BErV3p/RdjTsRHDREA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZMzqfr5AKU2l6gROisygyDiR7BgGzLgBZPkdzjvy54OkJBpKusamC+J/FLhpP2+qzDmV2vnzwacb+twsvntVJa/NiBTsbIas4lquuOEsbgn/fEm0qMjerj7gTRhxESS3PJ0jXLT6WuLbALo/75RtGVghZHA3eu3F/e4EDugKnyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICkBm14S; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29f102b013fso76537185ad.2
-        for <linux-xfs@vger.kernel.org>; Tue, 13 Jan 2026 23:41:48 -0800 (PST)
+	s=arc-20240116; t=1768377576; c=relaxed/simple;
+	bh=1aUKYIRl2BwEm914CynRUZT9PGBuxECbpl4PjADuaek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdOW8qXkP88KoGUVlcbd+u9hYmMTRGZe/SpMuXEHmKoln+p5enBp9NPRM2iaHpI1seaFOJvcEarpSTBa8iYZ9O0ezr6kljBES8YbvBhpC5r/RvAqqxbx8gbibfftGlml9P0UYb7BX9I1UvYXrinsbnjUfBDSeFRAAHcp350+SXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PfDgOx7g; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=muCquDrG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768377570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ttw7mSCoUtfFUMLK1cUNknHOhK7ms79WYyJovBvM2fs=;
+	b=PfDgOx7gu56odT1roEdkxiGvX6ooinSo3vWWYtIRisZkfwyjRJY7NfuVfOKYCv8saaw7sA
+	zT8LcLOPmEa2OLr9CP4vZnu1Wi+PyDfP0+T8Cb5dHiTHSVw6FGOnwGvibyIWTk/Sd8lZJq
+	kx9isWhQaLhjYQWLgq4PHhN8Zfit2xM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-629-HqpMnhAaMpaOZCLx3cx-2g-1; Wed, 14 Jan 2026 02:59:28 -0500
+X-MC-Unique: HqpMnhAaMpaOZCLx3cx-2g-1
+X-Mimecast-MFC-AGG-ID: HqpMnhAaMpaOZCLx3cx-2g_1768377567
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-47d62cc05daso54842595e9.3
+        for <linux-xfs@vger.kernel.org>; Tue, 13 Jan 2026 23:59:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768376505; x=1768981305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=snBrbkipsnG2NrPPSCJsD8qwO3TtVqHYjFPmR+kbTww=;
-        b=ICkBm14SWIotz6yZrsGoMpdITnqLw483a4lo4R7iflmomOVI5ibeA/69PxFJJwuq0M
-         ZBYwMdF14IzJLYOfdWNrsV8wXzLHBPI5+vRvdrtvv1iwfHu/8UiBQMvQi8nRaz95W/99
-         H6LA0p4EiucanWHc5Sd1tjuB95X8TrL6bZp7jHFuer0plZJabBfEVpCevxIKYBZYymoF
-         WiC8pC2CqkOiDuBbADjI8ApJXno/nMgPgPArpkxM7txXvzdHOhk2Lb1VypkLhDtOxbW2
-         zZ5l2MaSPivQJiD7JSfXf40doDhf6SJBEZGJOOh9gKI7uIItwpJsbF0wbEnSBvJ8EvpR
-         LfTw==
+        d=redhat.com; s=google; t=1768377567; x=1768982367; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ttw7mSCoUtfFUMLK1cUNknHOhK7ms79WYyJovBvM2fs=;
+        b=muCquDrGNfBFYex6dW5o3kdcTn9fFxcmeyd5rLbS2Mgk69P+L5JvjRd9FERAb3jPNN
+         XGe7E4ZyRFrUpn+OtMhBmJ3evLgrNyJCesM03rLHZR8UUShf8ZyTCsUVwFs4+j98FNbP
+         d7ny4i8ZaHLX81s51hFAIHNFwSpkmlxhCXnuBnEpOzr9LmJ6oeAdcQfUT6Ed4y0jmruE
+         tdQL9YIRjG/iZ0aOtKBbrR5r2/+q4sERsnk4u6a/NeOZg4KoNib2hUasIMemijDN5tk/
+         QZsRCiG9fNDqR/6IkwPAsqCaBwKLnqJHzlnMXqQoJ66GoMcP5GOC9dI2zpXy3bHohbHy
+         GG1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768376505; x=1768981305;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=snBrbkipsnG2NrPPSCJsD8qwO3TtVqHYjFPmR+kbTww=;
-        b=ZpfipQAIdypexbd1YI8GKAhVRGQX/nm2AAVrKaZsOygN1gWs0yPT7EBxiaR3SQ21Am
-         Nxgkk8wrNuppeVx9oaZO7Q072s4bqYz0Vao7TTv4vkOsw+5ZzUxxj/QzToWIb58uHZP9
-         C06+8hOTX+47vB1rDXJOepsIwx+Ehy420ztcY68v9YgDRZqpLN/MNao3XT2ooS5qV7qq
-         l0vsuDgNjGldspObzLfzDFwo0UjwQ63Rzw/Z2tbDUQfI70877ZCiLRmbVa5Fpi15yzL5
-         aibGIZ0wOfRswfom7D3F0OYzGSeKs+NZa/hQAAdgvgEqPAz3rnqzQodGKv2ge3DN1NQd
-         zs5A==
-X-Gm-Message-State: AOJu0YxARKPdgSKV9cdBqYchPooP3YoTsB3SvYchlnroK35qGN1h79eQ
-	iLmLB+gfbpaNp4CVFsennxw8YYdF3qouICQuqxKaHGo6RZIUpkaJaUCj
-X-Gm-Gg: AY/fxX6i3P91g6z9F893PhNA3e+Nl4ne5Vup3V6N8LY3Xq2i2Wn9LPQFSsTvkfHe5oh
-	vCOg6/3geAbJ6kRbdDRHHwUtkeAgMCL9hTnLN4+Vz7uhHRE7MsGJ8WWtmt/ZfcJ0uk18FRXhonO
-	Z7va5s+CjA1TfLd0xHBHF9UzosKacawLAVl3MyhWzO2TCbvfJk0A+Ek4DCCZ4Lz5Lr4G9GtKgjd
-	7zIct9dzjoS52umNJ1lhQY5HAknf/oWN6RYIacVwTiQS5cJJwUJu6uoeSkMY40lMUs4qjm1buh7
-	VYEqfwrfBJ1tkYzjEU6SjqpOsfl7c6ZdD5Ji4fHbHVnYaBb1eg2z79xSjH5sxF7bg5M7dkIweDg
-	uW5hFHujoNFTQqAALw3KBe/FBqIzNP12DjmcXvyXRXHDa5wcDPWNzAyoy66Qt2JcyW49uZpQilb
-	2ayV9KMJZOvaozYNqiWY7io/d8+Ag7kw==
-X-Received: by 2002:a17:902:d506:b0:2a5:99e9:569d with SMTP id d9443c01a7336-2a599e9579amr22476575ad.18.1768376505152;
-        Tue, 13 Jan 2026 23:41:45 -0800 (PST)
-Received: from n232-175-066.byted.org ([36.110.163.107])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cb2debsm221476875ad.65.2026.01.13.23.41.42
+        d=1e100.net; s=20230601; t=1768377567; x=1768982367;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ttw7mSCoUtfFUMLK1cUNknHOhK7ms79WYyJovBvM2fs=;
+        b=QtJyq8+dgy22a8L9kuH3VKnvOBo78B/00A5/UoPoADa2lNeIm3vT0oTBNXcwxrKRaP
+         FPmUZm+DO66ckoKULWYM0J2wQESRk87SrIEaq0/m1mIZD2AFmLEwpsVaEJZKxMuRO0p1
+         3y/Zh/26KgfZrZeD7Usrzx2WyazFUJWabWZm33BPGqwW4AwORhN35dlboxP9r9uzBxUj
+         6Ro/7PTfQAhQ1wbvUXxpd8glaET4q2w8GiaYJWvJjoM6fBO5RH2ZjBxY+GcqOoxkS/JS
+         tEtIWMu3a1uytOlSmDQCADA3FpfVxhFxO5okidBRLALwYLUamzPyyRxPor2T/j1uGWtx
+         SQEg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIOIOj+GVKBeFIlUEHdd3kWmaaF/W8ieclfKHlcdVem4+I1pyhp3beP9CKjfmSQrKSVYwjMbsRcIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRwOq8/mer0gZYQ34Xfo6qba+DHnVq5jh6h/b3aMOCFGt8aEn4
+	CB8/Mx9+2wVXY/8N0bUeXk7p0uuy/9RBa1H93JfHQzH3jQ8VUzGdYv0qRi+fQ4Pp3r7/FmSNdmb
+	8GCeiguet5LO1QQApewb5LSZE+jULjl0CKl/qPv0yhW5h3/zPFagJuqBCeDOr
+X-Gm-Gg: AY/fxX7mlO6d8xJz0LFmZkoLljTzfTQqiz/Lf7QdJ4dnIWNY1e6kAsL/qNjx3GW34Mi
+	KZckj8ddsGHmG4CiY9fOazU4G72Y9G9YGKk/AclnqfqnoYg8Dx1so8zbYs4UTdZdkBiiK22AIob
+	o2XLJpv5HX0FHedrTDq7L41gxx5kJ2CRQTulOp5lkxySXAkz3R7Oy5ULg1krKAu+tkacZfWAbVz
+	8o1jcJ44qhUeX967fwPx2GZ4VroRZFM6CMHcVtHH8V9qHQjELGVThyU2dtpsNata17F6ClHk4Vc
+	sBmPp/kHZzS/+tlSEACyw6VYcqeF4qBjhoxEXnrZBVYZTvJRaHAON05ZdTRo1Vj6O3Bl53TOK9w
+	=
+X-Received: by 2002:a05:600c:4f4d:b0:477:b48d:ba7a with SMTP id 5b1f17b1804b1-47ee338a84cmr18465415e9.32.1768377567233;
+        Tue, 13 Jan 2026 23:59:27 -0800 (PST)
+X-Received: by 2002:a05:600c:4f4d:b0:477:b48d:ba7a with SMTP id 5b1f17b1804b1-47ee338a84cmr18465175e9.32.1768377566779;
+        Tue, 13 Jan 2026 23:59:26 -0800 (PST)
+Received: from thinky ([217.30.74.39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47ee54b8c9bsm14967685e9.3.2026.01.13.23.59.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 23:41:44 -0800 (PST)
-From: guzebing <guzebing1612@gmail.com>
-To: brauner@kernel.org,
-	djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	guzebing <guzebing1612@gmail.com>,
-	Fengnan Chang <changfengnan@bytedance.com>
-Subject: [PATCH v2] iomap: add allocation cache for iomap_dio
-Date: Wed, 14 Jan 2026 15:41:13 +0800
-Message-Id: <20260114074113.151089-1-guzebing1612@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 13 Jan 2026 23:59:26 -0800 (PST)
+Date: Wed, 14 Jan 2026 08:59:25 +0100
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, fsverity@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, ebiggers@kernel.org, linux-fsdevel@vger.kernel.org, 
+	aalbersh@kernel.org, david@fromorbit.com
+Subject: Re: [PATCH v2 13/22] xfs: introduce XFS_FSVERITY_REGION_START
+ constant
+Message-ID: <dktp3ghx5h4eqcfgam6dj2eaajfbje6kis2z27ofovuz63lfe2@37pwttncu4ki>
+References: <cover.1768229271.patch-series@thinky>
+ <qwtd222f5dtszwvacl5ywnommg2xftdtunco2eq4sni4pyyps7@ritrh57jm2eg>
+ <20260112224631.GO15551@frogsfrogsfrogs>
+ <5ax7476dl472kpg3djnlojoxo2k4pmfbzwzsw4mo4jnaoqumeh@t3l4aesjfhwz>
+ <20260113180655.GY15551@frogsfrogsfrogs>
+ <20260114064735.GD10876@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260114064735.GD10876@lst.de>
 
-As implemented by the bio structure, we do the same thing on the
-iomap-dio structure. Add a per-cpu cache for iomap_dio allocations,
-enabling us to quickly recycle them instead of going through the slab
-allocator.
+On 2026-01-14 07:47:35, Christoph Hellwig wrote:
+> On Tue, Jan 13, 2026 at 10:06:55AM -0800, Darrick J. Wong wrote:
+> > > hmm right, check in begin_enable() will be probably enough
+> > 
+> > I think that would probably be more of a mount-time prohibition?
+> > 
+> > Which would be worse -- any fsverity filesystem refuses to mount on
+> > 32-bit; or it mounts but none of the fsverity files are readable?
+> > 
+> > Alternately I guess for 32-bit you could cheat in ->iomap_begin
+> > by loading the fsverity artifacts into the pagecache at 1<<39 instead of
+> > 1<<53, provided the file is smaller than 1<<39 bytes.  Writing the
+> > fsverity metadata would perform the reverse translation.
+> > 
+> > (Or again we just don't allow mounting of fsverity on 32-bit kernels.)
+> 
+> What are the other file systems doing here?  Unless we have a good
+> reason to differ we should just follow the precedence.
+> 
 
-By making such changes, we can reduce memory allocation on the direct
-IO path, so that direct IO will not block due to insufficient system
-memory. In addition, for direct IO, the read performance of io_uring
-is improved by about 2.6%.
+The ext4/f2fs/btrfs does this
 
-v2:
-Factor percpu cache into common code and the iomap module uses it.
+	round_up(inode->i_size, 65536);
 
-v1:
-https://lore.kernel.org/all/20251121090052.384823-1-guzebing1612@gmail.com/
+It's not fixed offset but next block after EOF. As EOF won't move
+this is fine. So, this works for both 32/64bits
 
-Suggested-by: Fengnan Chang <changfengnan@bytedance.com>
-Signed-off-by: guzebing <guzebing1612@gmail.com>
----
- fs/iomap/direct-io.c | 135 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 132 insertions(+), 3 deletions(-)
-
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 5d5d63efbd57..b152fd2c7042 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -56,6 +56,132 @@ struct iomap_dio {
- 	};
- };
- 
-+#define PCPU_CACHE_IRQ_THRESHOLD	16
-+#define PCPU_CACHE_ELEMENT_SIZE(pcpu_cache_list) \
-+	(sizeof(struct pcpu_cache_element) + pcpu_cache_list->element_size)
-+#define PCPU_CACHE_ELEMENT_GET_HEAD_FROM_PAYLOAD(payload) \
-+	((struct pcpu_cache_element *)((unsigned long)(payload) - \
-+				       sizeof(struct pcpu_cache_element)))
-+#define PCPU_CACHE_ELEMENT_GET_PAYLOAD_FROM_HEAD(head) \
-+	((void *)((unsigned long)(head) + sizeof(struct pcpu_cache_element)))
-+
-+struct pcpu_cache_element {
-+	struct pcpu_cache_element	*next;
-+	char	payload[];
-+};
-+struct pcpu_cache {
-+	struct pcpu_cache_element	*free_list;
-+	struct pcpu_cache_element	*free_list_irq;
-+	int		nr;
-+	int		nr_irq;
-+};
-+struct pcpu_cache_list {
-+	struct pcpu_cache __percpu *cache;
-+	size_t element_size;
-+	int max_nr;
-+};
-+
-+static struct pcpu_cache_list *pcpu_cache_list_create(int max_nr, size_t size)
-+{
-+	struct pcpu_cache_list *pcpu_cache_list;
-+
-+	pcpu_cache_list = kmalloc(sizeof(struct pcpu_cache_list), GFP_KERNEL);
-+	if (!pcpu_cache_list)
-+		return NULL;
-+
-+	pcpu_cache_list->element_size = size;
-+	pcpu_cache_list->max_nr = max_nr;
-+	pcpu_cache_list->cache = alloc_percpu(struct pcpu_cache);
-+	if (!pcpu_cache_list->cache) {
-+		kfree(pcpu_cache_list);
-+		return NULL;
-+	}
-+	return pcpu_cache_list;
-+}
-+
-+static void pcpu_cache_list_destroy(struct pcpu_cache_list *pcpu_cache_list)
-+{
-+	free_percpu(pcpu_cache_list->cache);
-+	kfree(pcpu_cache_list);
-+}
-+
-+static void irq_cache_splice(struct pcpu_cache *cache)
-+{
-+	unsigned long flags;
-+
-+	/* cache->free_list must be empty */
-+	if (WARN_ON_ONCE(cache->free_list))
-+		return;
-+
-+	local_irq_save(flags);
-+	cache->free_list = cache->free_list_irq;
-+	cache->free_list_irq = NULL;
-+	cache->nr += cache->nr_irq;
-+	cache->nr_irq = 0;
-+	local_irq_restore(flags);
-+}
-+
-+static void *pcpu_cache_list_alloc(struct pcpu_cache_list *pcpu_cache_list)
-+{
-+	struct pcpu_cache *cache;
-+	struct pcpu_cache_element *cache_element;
-+
-+	cache = per_cpu_ptr(pcpu_cache_list->cache, get_cpu());
-+	if (!cache->free_list) {
-+		if (READ_ONCE(cache->nr_irq) >= PCPU_CACHE_IRQ_THRESHOLD)
-+			irq_cache_splice(cache);
-+		if (!cache->free_list) {
-+			cache_element = kmalloc(PCPU_CACHE_ELEMENT_SIZE(pcpu_cache_list),
-+									GFP_KERNEL);
-+			if (!cache_element) {
-+				put_cpu();
-+				return NULL;
-+			}
-+			put_cpu();
-+			return PCPU_CACHE_ELEMENT_GET_PAYLOAD_FROM_HEAD(cache_element);
-+		}
-+	}
-+
-+	cache_element = cache->free_list;
-+	cache->free_list = cache_element->next;
-+	cache->nr--;
-+	put_cpu();
-+	return PCPU_CACHE_ELEMENT_GET_PAYLOAD_FROM_HEAD(cache_element);
-+}
-+
-+static void pcpu_cache_list_free(void *payload, struct pcpu_cache_list *pcpu_cache_list)
-+{
-+	struct pcpu_cache *cache;
-+	struct pcpu_cache_element *cache_element;
-+
-+	cache_element = PCPU_CACHE_ELEMENT_GET_HEAD_FROM_PAYLOAD(payload);
-+
-+	cache = per_cpu_ptr(pcpu_cache_list->cache, get_cpu());
-+	if (READ_ONCE(cache->nr_irq) + cache->nr >= pcpu_cache_list->max_nr)
-+		goto out_free;
-+
-+	if (in_task()) {
-+		cache_element->next = cache->free_list;
-+		cache->free_list = cache_element;
-+		cache->nr++;
-+	} else if (in_hardirq()) {
-+		lockdep_assert_irqs_disabled();
-+		cache_element->next = cache->free_list_irq;
-+		cache->free_list_irq = cache_element;
-+		cache->nr_irq++;
-+	} else {
-+		goto out_free;
-+	}
-+	put_cpu();
-+	return;
-+out_free:
-+	put_cpu();
-+	kfree(cache_element);
-+}
-+
-+#define DIO_ALLOC_CACHE_MAX		256
-+static struct pcpu_cache_list *dio_pcpu_cache_list;
-+
- static struct bio *iomap_dio_alloc_bio(const struct iomap_iter *iter,
- 		struct iomap_dio *dio, unsigned short nr_vecs, blk_opf_t opf)
- {
-@@ -135,7 +261,7 @@ ssize_t iomap_dio_complete(struct iomap_dio *dio)
- 			ret += dio->done_before;
- 	}
- 	trace_iomap_dio_complete(iocb, dio->error, ret);
--	kfree(dio);
-+	pcpu_cache_list_free(dio, dio_pcpu_cache_list);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(iomap_dio_complete);
-@@ -620,7 +746,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	if (!iomi.len)
- 		return NULL;
- 
--	dio = kmalloc(sizeof(*dio), GFP_KERNEL);
-+	dio = pcpu_cache_list_alloc(dio_pcpu_cache_list);
- 	if (!dio)
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -804,7 +930,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	return dio;
- 
- out_free_dio:
--	kfree(dio);
-+	pcpu_cache_list_free(dio, dio_pcpu_cache_list);
- 	if (ret)
- 		return ERR_PTR(ret);
- 	return NULL;
-@@ -834,6 +960,9 @@ static int __init iomap_dio_init(void)
- 	if (!zero_page)
- 		return -ENOMEM;
- 
-+	dio_pcpu_cache_list = pcpu_cache_list_create(DIO_ALLOC_CACHE_MAX, sizeof(struct iomap_dio));
-+	if (!dio_pcpu_cache_list)
-+		return -ENOMEM;
- 	return 0;
- }
- fs_initcall(iomap_dio_init);
 -- 
-2.20.1
+- Andrey
 
 
