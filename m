@@ -1,84 +1,128 @@
-Return-Path: <linux-xfs+bounces-29604-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29600-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52668D25D16
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 17:46:12 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56F6DD25732
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 16:43:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7F86C3022198
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 16:45:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 55372300A7AD
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 15:43:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC603A9624;
-	Thu, 15 Jan 2026 16:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FB723A8FE5;
+	Thu, 15 Jan 2026 15:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="XDziS0Z6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HguNlUr0"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732163BC4FD
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Jan 2026 16:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B6537E2EB;
+	Thu, 15 Jan 2026 15:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768495540; cv=none; b=Jt0WymxV21q34wU54d1xEoMh9f0BVHTxjnwEMAd3zTLrStVt1MI0dQsOE7+9ceUDzIVjbICpTDN8TNVVAfo+eBgnh5sEpWLS+xtPxKhmQ/g1b3kh5tcB1GxcE6dhNxBWrtvgZc/63Jlzh4D+FhtA3egvy28IDlpo3Udu2RuqSGg=
+	t=1768491787; cv=none; b=t4045dLLoOBEwvkXuMJy+7O2IUqOfzUZLXh0athxUIbqjcMtItmRWGeFej4WSN7N9+g0BIz4isj0Tih6b2nfL7zz3xXmnKq1eDn70lLWnixLKaiT5kMQM63CNplQYm/Qe1z/O/zKxgl/dC6GrKvE+Pd2GRK4d0WWLiWW9LwAsJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768495540; c=relaxed/simple;
-	bh=2HCmH5r8cl1tEDSLFBelNClzMABzMx70/iUher6kjok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LySxqZZe0AmE5ODj++qPNOcEUEuePKKigwze3Ocw5HQiOZ5DRJfhVCHJYOtcW2Ri8DSO6GA/L6rMXtRubh2a2TeYCtEa3LYR7TE5RtJJlsYIZj88aVdeH5bw+2j2F+jjsgk1zv3l4G6zcTrqROqNHkkHhrtvDRN+gJExtDP9vZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=XDziS0Z6; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from macsyma.thunk.org ([37.140.223.84])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 60FGjBda015346
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 Jan 2026 11:45:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1768495516; bh=h5p4xDv48spuLP8tOq8jDpufYPNxaKi3ct01jIsuNmY=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=XDziS0Z68J3RmCV+61gyKCx0PtMCi2SAErasQZiD/W3OYv18oUyIEd0XULXSSLx/U
-	 4ZJEBqGtHDSN0/j63Ey0PsAIDc3lLOut9fBF8vOPkaC4P4bWosJySAs7MwXsqsSrXW
-	 AhDiOqyFPtMyAgIEy1P+DyDpkTBcag5eKyGkvObenZrIBNqr4ojAyALE5+3JzkfXgI
-	 +1iqiMCf+WpNNPHoQ2cU+jLXYbGzKgmbIYDebZLDLH2uVrutlpniKHrUMQiRSHnV0z
-	 dg1bC8awLacyy2Z0EfBJ+Qa/ikA8YpYE6ZjWOYD7OLiipYqYkF4OdbFBVDSanZf2io
-	 tTXyUqAoxf1Aw==
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id B4C4554CC0A3; Thu, 15 Jan 2026 06:29:38 -0900 (AKST)
-Date: Thu, 15 Jan 2026 06:29:38 -0900
-From: "Theodore Tso" <tytso@mit.edu>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: brauner@kernel.org, hch@lst.de, jack@suse.cz, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gabriel@krisman.be, amir73il@gmail.com
-Subject: Re: [PATCH 6/6] ext4: convert to new fserror helpers
-Message-ID: <20260115152938.GD19200@macsyma.local>
-References: <176826402528.3490369.2415315475116356277.stgit@frogsfrogsfrogs>
- <176826402693.3490369.5875002879192895558.stgit@frogsfrogsfrogs>
+	s=arc-20240116; t=1768491787; c=relaxed/simple;
+	bh=rUEcB7TOUQxUA2rPuRw81Bl6Sk+qHwI2NjU4Pq9USqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cYW2yEQTChx6DyixLbAj6jyUJacufPPn1lvvuBiyEJAK3vI5Rds/PHbkdu8WrBxmHmFoBq5XqPK6YH/LfEmwACltGrLcrRpenxsRna5PzWtXDXtnOMAU9vdbZQbJZmEob3VPKnxx/9dxqQNFucdeeR3UBrNfSzfoqZpyrwNiSEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HguNlUr0; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cxcJJIvDm/hgUftodX3R1dDrr90bvmh2id0jz8mp7T4=; b=HguNlUr0JGNrv7hpUSfHspXJq4
+	mlYKL5oYPiG7yRQgwO0+ibsRK7Kt2sYlvhBjf4UULcPdCv0103Gru8r9ON5FIiVHy4XXOu+PJfP0P
+	2aSRz2jKp+ReL27N/HPTbpn7WF0VycCbQ+NMIur14gNveWXjV6oHEG9In5DCZaNBL5ewsNFSKW8Uo
+	YHhIgcPTdD5ni+5T9xXp1Gl0/a4VWADcu1kctpGjP1mfEN3lwE4JJOoSSFBUwABQOVRpdexXuH1IH
+	mdA79g/RvX47tKL9KGlUZjc0ZejZu4OYCGb9nWsa6QVY6kJa4xNWdGuf0k0x7IbM5+2ZTwhHuQJW/
+	uwge2iMA==;
+Received: from [177.139.22.247] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1vgPUd-005nio-C4; Thu, 15 Jan 2026 16:42:39 +0100
+Message-ID: <22b16e24-d10e-43f6-bc2b-eeaa94310e3a@igalia.com>
+Date: Thu, 15 Jan 2026 12:42:33 -0300
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <176826402693.3490369.5875002879192895558.stgit@frogsfrogsfrogs>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] ovl: Use real disk UUID for origin file handles
+To: Christoph Hellwig <hch@lst.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ Carlos Maiolino <cem@kernel.org>, Amir Goldstein <amir73il@gmail.com>,
+ Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+ Miklos Szeredi <miklos@szeredi.hu>, Christian Brauner <brauner@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Qu Wenruo <wqu@suse.com>, linux-btrfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, kernel-dev@igalia.com
+References: <20260114-tonyk-get_disk_uuid-v1-0-e6a319e25d57@igalia.com>
+ <20260114-tonyk-get_disk_uuid-v1-3-e6a319e25d57@igalia.com>
+ <20260114062608.GB10805@lst.de>
+ <5334ebc6-ceee-4262-b477-6b161c5ca704@igalia.com>
+ <20260115062944.GA9590@lst.de>
+ <633bb5f3-4582-416c-b8b9-fd1f3b3452ab@suse.com>
+ <20260115072311.GA10352@lst.de>
+Content-Language: en-US
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <20260115072311.GA10352@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 12, 2026 at 04:32:27PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Use the new fserror functions to report metadata errors to fsnotify.
-> Note that ext4 inconsistently passes around negative and positive error
-> numbers all over the codebase, so we force them all to negative for
-> consistency in what we report to fserror, and fserror ensures that only
-> positive error numbers are passed to fanotify, per the fanotify(7)
-> manpage.
-> 
-> Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Jan Kara <jack@suse.cz>
+Em 15/01/2026 04:23, Christoph Hellwig escreveu:
 
-Acked-by: Theodore Ts'o <tytso@mit.edu>
+[...]
+
+> 
+> I still wonder what the use case is here.  Looking at André's original
+> mail it states:
+> 
+> "However, btrfs mounts may have volatiles UUIDs. When mounting the exact same
+> disk image with btrfs, a random UUID is assigned for the following disks each
+> time they are mounted, stored at temp_fsid and used across the kernel as the
+> disk UUID. `btrfs filesystem show` presents that. Calling statfs() however
+> shows the original (and duplicated) UUID for all disks."
+> 
+> and this doesn't even talk about multiple mounts, but looking at
+> device_list_add it seems to only set the temp_fsid flag when set
+> same_fsid_diff_dev is set by find_fsid_by_device, which isn't documented
+> well, but does indeed seem to be done transparently when two file systems
+> with the same fsid are mounted.
+> 
+> So André, can you confirm this what you're worried about?  And btrfs
+> developers, I think the main problem is indeed that btrfs simply allows
+> mounting the same fsid twice.  Which is really fatal for anything using
+> the fsid/uuid, such NFS exports, mount by fs uuid or any sb->s_uuid user.
+> 
+
+Yes, I'm would like to be able to mount two cloned btrfs images and to 
+use overlayfs with them. This is useful for SteamOS A/B partition scheme.
+
+>> If so, I think it's time to revert the behavior before it's too late.
+>> Currently the main usage of such duplicated fsids is for Steam deck to
+>> maintain A/B partitions, I think they can accept a new compat_ro flag for
+>> that.
+> 
+> What's an A/B partition?  And how are these safely used at the same time?
+> 
+
+The Steam Deck have two main partitions to install SteamOS updates 
+atomically. When you want to update the device, assuming that you are 
+using partition A, the updater will write the new image in partition B, 
+and vice versa. Then after the reboot, the system will mount the new 
+image on B.
+
+Android used to support A/B scheme as well: 
+https://source.android.com/docs/core/ota/ab
 
