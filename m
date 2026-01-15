@@ -1,206 +1,204 @@
-Return-Path: <linux-xfs+bounces-29603-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29605-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B425D25B1E
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 17:20:53 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 608A5D27B7F
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 19:43:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id D9B8D3014E81
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 16:19:12 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id F07B030CAC74
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jan 2026 17:48:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42BE4287503;
-	Thu, 15 Jan 2026 16:19:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A07213BFE29;
+	Thu, 15 Jan 2026 17:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X18wQ0q0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sv2wZs8W"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18F73B8D4C
-	for <linux-xfs@vger.kernel.org>; Thu, 15 Jan 2026 16:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DCE3BF2F6;
+	Thu, 15 Jan 2026 17:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768493950; cv=none; b=rk3pZ+0kD4HVWKrfCUrRILzxq8VDa451WGD6P7wMaDA2yINTnUNWX1hQOmU7wMBJ2A6XdfXgQBU0rFJhHdYAuNMDZ9cAcLWriiUhScCYjvKWgsRIgOBwz3FGEylxfQ4JJZAxcJfSJGyz5lWDKOo/Sj6X3tsUl034n7rytH45eKo=
+	t=1768499282; cv=none; b=LH8vQq7prCvD+4iih/TJR9/uUEZaH0rW97MRLW8iZM8BTRNHbNHNkQsI0HWUFlxSm+lP3t+mpKl1msd2yFfQfsJ96MerBwvsozic+cTOz4F+uhT7Fqk7HAnC/U8t93J2LtCr56yKkt7M0uDxIvn1m9kvEJb7ctySHqGN/MdelHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768493950; c=relaxed/simple;
-	bh=hhiKQwstXbTmMtEtRW0TinBTBubtQbSF3SNh7nnCjFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IvZXD6IH055S7RjRvMjJyR8sWK3Ez+ar70qnBIVoPFM2gcJECC2YZaM1Rh4hhOwSEURnfrzySgqYBXuz/0F+AQJPTQLAYMXRwATz75jZmr8z4yVr48EryDYES5felD00VXTmGEHGZ8d3EWKt5u6XTQ29BRCS7CjgfeDsMCH47Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X18wQ0q0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 909CFC4AF09;
-	Thu, 15 Jan 2026 16:19:09 +0000 (UTC)
+	s=arc-20240116; t=1768499282; c=relaxed/simple;
+	bh=Jgrg+43s0ldgv37NKbEktTlLcn8JlZ4Z62/aDsJl2fE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CujYPFGutf/UKSzzB9mUg8xSAjsxk+hfR2VTrWMsOrY1IWpDdpjgpZEid4pkF5DXxUmxBjenSGlV7d97fBc/otdENxEaIuYjPrUqHYVmrmnk6dZsEaFyc5892YFXpC7UBbBx98oGimLga8BDcCxIxxKfYFlR8T4l9toyOStidIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sv2wZs8W; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6A44C16AAE;
+	Thu, 15 Jan 2026 17:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768493949;
-	bh=hhiKQwstXbTmMtEtRW0TinBTBubtQbSF3SNh7nnCjFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X18wQ0q0oNT5s01/kfhqJDhjMO5OsudI+E8WSXW7715hNdPOzvjMQ+ssXUH6epbUy
-	 Cj2Z7qpectc/jxa75z5cDncirLn2oqHZDP0FemOYpnTyk+Lj0S+Vj/quYJiMryx01M
-	 YDl4bxppQ/vbFplVQk3uj3PlSPiAbFIfreCbGizV5ivItbC0omsXbRHpSd0EaU05qE
-	 RvsDJXCShhkdWoLHTAFNpUmPMicFOTiRbThDNL8nIUcKbQqRT/nuqv3oDmV0Lrx3AJ
-	 1GU+j0s+JEHuxjViLiErTSZC5bkhnDdDemDllmmo21rmpVGeWlS8jaxJods3HI8Lz3
-	 tI++NtvPqADog==
-Date: Thu, 15 Jan 2026 08:19:08 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Lukas Herbolt <lukas@herbolt.com>
-Cc: linux-xfs@vger.kernel.org, cem@kernel.org,
-	Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH RESEND v6] xfs: add FALLOC_FL_WRITE_ZEROES to XFS code
- base
-Message-ID: <20260115161908.GV15551@frogsfrogsfrogs>
-References: <20260115092615.21110-1-lukas@herbolt.com>
+	s=k20201202; t=1768499282;
+	bh=Jgrg+43s0ldgv37NKbEktTlLcn8JlZ4Z62/aDsJl2fE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=sv2wZs8WpKeI0wpddsdCzx5FPuJfiv0htyo+0abzJrCCFK9q4146ZE28BG441jorg
+	 Qo1tIee7N/1MnShJaAey62z4lfLsmhIXMLkZMLSEMlmEhDwdr2qsSYaFrVZPxb77cF
+	 i3aSCJl0gIo+M7JBkTxdAg7VvCpYnqzbG7R2Ohvdin1j12CbILNcI3w/DNWL7f9jbe
+	 DBukUrRoDDoNluFnmhgrGDxPlIkvSUMcrjLUpjjJ1T7VqZOaz0YENa8tKyKu6CaX47
+	 KOmCoEsEsYyGz5wli5gj5MnM7JWLaAPtkHWHG4sSZOBoGuAC5psY5ECRaP4FTl6A5n
+	 5/8prxsy2NgBw==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 00/29] fs: require filesystems to explicitly opt-in to nfsd
+ export support
+Date: Thu, 15 Jan 2026 12:47:31 -0500
+Message-Id: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260115092615.21110-1-lukas@herbolt.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/x3MQQqAIBBA0avErBMcyaKuEi0kx5qNhhMRiHdPW
+ r7F/wWEMpPA0hXI9LBwig3Yd7CfLh6k2DeD0WbUiIOi90r5DqJiEK/QWLR6MjS7GVpzZQr8/r9
+ 1q/UDI1yMc18AAAA=
+X-Change-ID: 20260114-exportfs-nfsd-12515072e9a9
+To: Christian Brauner <brauner@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Amir Goldstein <amir73il@gmail.com>, 
+ Hugh Dickins <hughd@google.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, 
+ Chunhai Guo <guochunhai@vivo.com>, Carlos Maiolino <cem@kernel.org>, 
+ Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
+ Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
+ David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
+ Salah Triki <salah.triki@gmail.com>, 
+ Phillip Lougher <phillip@squashfs.org.uk>, Steve French <sfrench@samba.org>, 
+ Paulo Alcantara <pc@manguebit.org>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, 
+ Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+ Mike Marshall <hubcap@omnibond.com>, 
+ Martin Brandenburg <martin@omnibond.com>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Dave Kleikamp <shaggy@kernel.org>, David Woodhouse <dwmw2@infradead.org>, 
+ Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
+ Andreas Gruenbacher <agruenba@redhat.com>, 
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+ Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-ext4@vger.kernel.org, 
+ linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
+ ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+ linux-unionfs@vger.kernel.org, devel@lists.orangefs.org, 
+ ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
+ linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
+ linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
+ linux-f2fs-devel@lists.sourceforge.net, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4009; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Jgrg+43s0ldgv37NKbEktTlLcn8JlZ4Z62/aDsJl2fE=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpaSg9V9dGf/ZUraP4b1Pq5RtyBLPKPHN6qkaxn
+ 8S9nULay2GJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWkoPQAKCRAADmhBGVaC
+ FU2HEACr1dom+IcUewiIOnk7xEbGWbqcKSzh/u8bfD7LubFnaY7GNt5n6p3PgjmIFAgE/Lfk2v+
+ Do5G648LuI9AgNBffpq3Rou0EGw9+wxjXyRaSItdEWDshxbLnMS5D2dtmXeB4x2mF6Xo8wPho9c
+ ncOUEwjZL61T/UOLGxpSOojluUsBXenixeUCTgPYWeDSKZSd1PrbfIIvNT3wwmmIpQAv0lasork
+ Zl4qe+BiG1G0IPtketcJGFYIgXNp76Hnll+P8/EqVrDG+4nPn8MGAy3xqMQyq4+dCzENDy0DmS3
+ AJMlGepQMU/y0tAmS4R1R2P27jpCMwpBj8HhdNo0JThYFgmCYeGwPxsTOTNG8XmrWn4zye1BAl9
+ Oz/kXfQnSFwMzweZ9J7fT16IxYVpb12aXvYdwcnZ+IE/Suh66Nx8n52d4tuSwNkKYQf6d05G1bU
+ I+lA7kAnXjIh/p4o4pNnALEld2Rn49OAx/yxtN5VOYrjpBIK6yRyYTXjz0PnCRFsn3V65+xhhPM
+ CJTSVK9ZzU4nspmDSK5hdCvs1pnGqYR9dLF7QV60eUBpiDYnfsiOG+KZmrsLuWOd2/7/8V8giqf
+ SBbuLOXJmeBQ1IbyaaZbzwsaK+7PAPY92+HTJ8jsZ6+vQhAXLJ40Y1ug6UAG1bGirhSbW+Ru3JH
+ SgoO6jBDoISNHpA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Thu, Jan 15, 2026 at 10:26:15AM +0100, Lukas Herbolt wrote:
-> Add support for FALLOC_FL_WRITE_ZEROES if the underlying device enable
-> the unmap write zeroes operation.
-> 
-> Signed-off-by: Lukas Herbolt <lukas@herbolt.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+In recent years, a number of filesystems that can't present stable
+filehandles have grown struct export_operations. They've mostly done
+this for local use-cases (enabling open_by_handle_at() and the like).
+Unfortunately, having export_operations is generally sufficient to make
+a filesystem be considered exportable via nfsd, but that requires that
+the server present stable filehandles.
 
-Looks good to me now, thanks for taking this on!
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+This patchset declares a new EXPORT_OP_STABLE_HANDLES flag, adds it to
+all of the filesystems that have stable filehandles, and then adds a
+check in nfsd to ensure that that flag is set for any filesystem to
+which it has been presented a handle. When a filesystem doesn't have
+this flag, it will treat the filehandle as stale.
 
---D
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (29):
+      exportfs: add new EXPORT_OP_STABLE_HANDLES flag
+      tmpfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ext4: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ext2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      erofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      efs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      xfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ceph: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      btrfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      befs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ufs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      udf: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      affs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      squashfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      smb/client: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ovl: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      orangefs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ocfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ntfs3: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nilfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      jfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      jffs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      isofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      gfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      fuse: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      fat: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      f2fs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nfsd: only allow filesystems that set EXPORT_OP_STABLE_HANDLES
 
-> ---
->  fs/xfs/xfs_bmap_util.c | 10 ++++++++--
->  fs/xfs/xfs_bmap_util.h |  2 +-
->  fs/xfs/xfs_file.c      | 25 +++++++++++++++++++------
->  3 files changed, 28 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> index 06ca11731e430..ee5765bf52944 100644
-> --- a/fs/xfs/xfs_bmap_util.c
-> +++ b/fs/xfs/xfs_bmap_util.c
-> @@ -642,11 +642,17 @@ xfs_free_eofblocks(
->  	return error;
->  }
->  
-> +/*
-> + * Callers can specify bmapi_flags, if XFS_BMAPI_ZERO is used there are no
-> + * further checks whether the hard ware supports and it can fallback to
-> + * software zeroing.
-> + */
->  int
->  xfs_alloc_file_space(
->  	struct xfs_inode	*ip,
->  	xfs_off_t		offset,
-> -	xfs_off_t		len)
-> +	xfs_off_t		len,
-> +	uint32_t		bmapi_flags)
->  {
->  	xfs_mount_t		*mp = ip->i_mount;
->  	xfs_off_t		count;
-> @@ -748,7 +754,7 @@ xfs_alloc_file_space(
->  		 * will eventually reach the requested range.
->  		 */
->  		error = xfs_bmapi_write(tp, ip, startoffset_fsb,
-> -				allocatesize_fsb, XFS_BMAPI_PREALLOC, 0, imapp,
-> +				allocatesize_fsb, bmapi_flags, 0, imapp,
->  				&nimaps);
->  		if (error) {
->  			if (error != -ENOSR)
-> diff --git a/fs/xfs/xfs_bmap_util.h b/fs/xfs/xfs_bmap_util.h
-> index c477b33616304..2895cc97a5728 100644
-> --- a/fs/xfs/xfs_bmap_util.h
-> +++ b/fs/xfs/xfs_bmap_util.h
-> @@ -56,7 +56,7 @@ int	xfs_bmap_last_extent(struct xfs_trans *tp, struct xfs_inode *ip,
->  
->  /* preallocation and hole punch interface */
->  int	xfs_alloc_file_space(struct xfs_inode *ip, xfs_off_t offset,
-> -		xfs_off_t len);
-> +		xfs_off_t len, uint32_t bmapi_flags);
->  int	xfs_free_file_space(struct xfs_inode *ip, xfs_off_t offset,
->  		xfs_off_t len, struct xfs_zone_alloc_ctx *ac);
->  int	xfs_collapse_file_space(struct xfs_inode *, xfs_off_t offset,
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index f96fbf5c54c99..040e4407a8a07 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -1261,23 +1261,33 @@ xfs_falloc_zero_range(
->  	struct xfs_zone_alloc_ctx *ac)
->  {
->  	struct inode		*inode = file_inode(file);
-> +	struct xfs_inode	*ip = XFS_I(inode);
->  	unsigned int		blksize = i_blocksize(inode);
->  	loff_t			new_size = 0;
->  	int			error;
->  
-> -	trace_xfs_zero_file_space(XFS_I(inode));
-> +	trace_xfs_zero_file_space(ip);
->  
->  	error = xfs_falloc_newsize(file, mode, offset, len, &new_size);
->  	if (error)
->  		return error;
->  
-> -	error = xfs_free_file_space(XFS_I(inode), offset, len, ac);
-> +	error = xfs_free_file_space(ip, offset, len, ac);
->  	if (error)
->  		return error;
->  
->  	len = round_up(offset + len, blksize) - round_down(offset, blksize);
->  	offset = round_down(offset, blksize);
-> -	error = xfs_alloc_file_space(XFS_I(inode), offset, len);
-> +	if (mode & FALLOC_FL_WRITE_ZEROES) {
-> +		if (xfs_is_always_cow_inode(ip) ||
-> +		    !bdev_write_zeroes_unmap_sectors(
-> +				xfs_inode_buftarg(ip)->bt_bdev))
-> +			return -EOPNOTSUPP;
-> +		error = xfs_alloc_file_space(ip, offset, len, XFS_BMAPI_ZERO);
-> +	} else {
-> +		error = xfs_alloc_file_space(ip, offset, len,
-> +				XFS_BMAPI_PREALLOC);
-> +	}
->  	if (error)
->  		return error;
->  	return xfs_falloc_setsize(file, new_size);
-> @@ -1302,7 +1312,8 @@ xfs_falloc_unshare_range(
->  	if (error)
->  		return error;
->  
-> -	error = xfs_alloc_file_space(XFS_I(inode), offset, len);
-> +	error = xfs_alloc_file_space(XFS_I(inode), offset, len,
-> +			XFS_BMAPI_PREALLOC);
->  	if (error)
->  		return error;
->  	return xfs_falloc_setsize(file, new_size);
-> @@ -1330,7 +1341,8 @@ xfs_falloc_allocate_range(
->  	if (error)
->  		return error;
->  
-> -	error = xfs_alloc_file_space(XFS_I(inode), offset, len);
-> +	error = xfs_alloc_file_space(XFS_I(inode), offset, len,
-> +			XFS_BMAPI_PREALLOC);
->  	if (error)
->  		return error;
->  	return xfs_falloc_setsize(file, new_size);
-> @@ -1340,7 +1352,7 @@ xfs_falloc_allocate_range(
->  		(FALLOC_FL_ALLOCATE_RANGE | FALLOC_FL_KEEP_SIZE |	\
->  		 FALLOC_FL_PUNCH_HOLE |	FALLOC_FL_COLLAPSE_RANGE |	\
->  		 FALLOC_FL_ZERO_RANGE |	FALLOC_FL_INSERT_RANGE |	\
-> -		 FALLOC_FL_UNSHARE_RANGE)
-> +		 FALLOC_FL_UNSHARE_RANGE | FALLOC_FL_WRITE_ZEROES)
->  
->  STATIC long
->  __xfs_file_fallocate(
-> @@ -1383,6 +1395,7 @@ __xfs_file_fallocate(
->  	case FALLOC_FL_INSERT_RANGE:
->  		error = xfs_falloc_insert_range(file, offset, len);
->  		break;
-> +	case FALLOC_FL_WRITE_ZEROES:
->  	case FALLOC_FL_ZERO_RANGE:
->  		error = xfs_falloc_zero_range(file, mode, offset, len, ac);
->  		break;
-> -- 
-> 2.51.1
-> 
-> 
+ fs/affs/namei.c          |  1 +
+ fs/befs/linuxvfs.c       |  1 +
+ fs/btrfs/export.c        |  1 +
+ fs/ceph/export.c         |  1 +
+ fs/efs/super.c           |  1 +
+ fs/erofs/super.c         |  1 +
+ fs/ext2/super.c          |  1 +
+ fs/ext4/super.c          |  1 +
+ fs/f2fs/super.c          |  1 +
+ fs/fat/nfs.c             |  2 ++
+ fs/fuse/inode.c          |  2 ++
+ fs/gfs2/export.c         |  1 +
+ fs/isofs/export.c        |  1 +
+ fs/jffs2/super.c         |  1 +
+ fs/jfs/super.c           |  1 +
+ fs/nfs/export.c          |  3 ++-
+ fs/nfsd/nfsfh.c          |  4 ++++
+ fs/nilfs2/namei.c        |  1 +
+ fs/ntfs3/super.c         |  1 +
+ fs/ocfs2/export.c        |  1 +
+ fs/orangefs/super.c      |  1 +
+ fs/overlayfs/export.c    |  2 ++
+ fs/smb/client/export.c   |  1 +
+ fs/squashfs/export.c     |  3 ++-
+ fs/udf/namei.c           |  1 +
+ fs/ufs/super.c           |  1 +
+ fs/xfs/xfs_export.c      |  1 +
+ include/linux/exportfs.h | 16 +++++++++-------
+ mm/shmem.c               |  1 +
+ 29 files changed, 45 insertions(+), 9 deletions(-)
+---
+base-commit: c537e12daeecaecdcd322c56a5f70659d2de7bde
+change-id: 20260114-exportfs-nfsd-12515072e9a9
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
