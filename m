@@ -1,194 +1,141 @@
-Return-Path: <linux-xfs+bounces-29813-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29823-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25127D3B2A9
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 17:55:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF89ED3B221
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 17:48:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ACA8F3186E94
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 16:38:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BF8473111E9D
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 16:44:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449283A9D9C;
-	Mon, 19 Jan 2026 16:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D8133195E3;
+	Mon, 19 Jan 2026 16:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPMPTrY/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4cbXzy0";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQtyYZXY"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE823A9D8F
-	for <linux-xfs@vger.kernel.org>; Mon, 19 Jan 2026 16:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10E231B13B
+	for <linux-xfs@vger.kernel.org>; Mon, 19 Jan 2026 16:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768840200; cv=none; b=HRnVsr9tj66dT3OCsHakodTpSWjQkzzk4NvIqGlvIv4LLB/XlSKdyTPHAPC3CRn+o3kb1CvU06oW1HLQ6m9x65Ypoq4N3vEaUcE7hfdv2u7BbEhcDgaKhb/FATvoi20fF7S5wM9v0IVAzEwmLuM/yc1ykQdwUzY4Ylys6mDyDPY=
+	t=1768840396; cv=none; b=BifoRozt/lVDucC7MDW79+yAXMh4e6l6SmLJSKEQODm4xsKnYev20ql8zixGsCp3KO7QnPx+1AT9IUa/g++ogbFBJ49PgBn9SUSwBdHvXgKSOUkw1prwvaxQExTvejR1TrXYg5pMdTNeNEu4tV14/2SNzIoBx6Cv6zpXhxZI41Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768840200; c=relaxed/simple;
-	bh=9SnA7U1kOlcGyRa7RgTDJgJmZH6Pf9hQjZQvclzvfAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M5aSxuO2QzENUD9lBdMCl+6Xw9iZGQiO9YDuR5rHu0VH0TMoUajPSy4H4iLTlYKQfTwkqJj+3BT96kO6B+05kFgD3ow8K0w0ytLxCucCt6IFcAJ8/+02R3ODIYd0EvWJbzH6kWTWFRI2MJ9RNFjdeYvqKzWQFQmo1d07WmaneuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPMPTrY/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768840199; x=1800376199;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9SnA7U1kOlcGyRa7RgTDJgJmZH6Pf9hQjZQvclzvfAc=;
-  b=IPMPTrY/OrH0Tu5oOIBRU9PuyqONKKuLRWFmk0jwrk+++JaSP/QgBYHl
-   QZQN7Hs4nbSFhbsaLrBqI0Gazf1uEKcrBo3GSkrVr0dKkZBsF/8YOKojw
-   OuiGWPq5IVwlMe/mwzHnkIvZDKoipocxksZzSv2WGnGh+5kNsR6vRWPMJ
-   IXaZDsQ5upQ5fBUFSYZBzh1nHxy4aXpjcFCaQt/FQ4C/1AyWtoqWr3LAw
-   kAB2OKOm3VaJ8ejM8p1yCpXU5T3uM/Pl47kjRkKZNPHsKEuRe1WlAA6Qx
-   HCAA7xbw9PJjF9INZNTzhzDqAUyohtL02E0ODNaoQvez/r4sMfKroVLVb
-   Q==;
-X-CSE-ConnectionGUID: QuQaPAI6RqKSHiQim8sHfg==
-X-CSE-MsgGUID: Z3MqTR73S26RgzXEX9DqMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70026120"
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="70026120"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 08:29:58 -0800
-X-CSE-ConnectionGUID: 5rceCgnBTNe8nw7dduJovw==
-X-CSE-MsgGUID: R7AclV/ZRa+rxSGJOlghoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
-   d="scan'208";a="205809037"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 19 Jan 2026 08:29:55 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vhs8X-00000000O2d-2rK3;
-	Mon, 19 Jan 2026 16:29:53 +0000
-Date: Tue, 20 Jan 2026 00:29:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>,
-	linux-xfs@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ritesh.list@gmail.com,
-	ojaswin@linux.ibm.com, djwong@kernel.org, hch@infradead.org,
-	nirjhar.roy.lists@gmail.com
-Subject: Re: [PATCH v1] xfs: Fix calculation of m_rtx_per_rbmblock
-Message-ID: <202601200031.0j1vAGWr-lkp@intel.com>
-References: <2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists@gmail.com>
+	s=arc-20240116; t=1768840396; c=relaxed/simple;
+	bh=Xowcft0xkXz2W3N0nUhU7g4atdzwl1x5G7ysxX9HdPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s3gEayr+0QtSqQHM8Nl4zuDsNhANn0Fe/H/Jwqr0jC8Do9Ks0vuwZa66pAM9HbsWiar0V6mIl5Rv+J2p9NG+dJLuekwqFB5Em91OLgFU6OkyfGOb/X5wNa69WDJvdG8G5dv6xXg4byt1FQwho+Gw+4jwtfcCBsQUZVxovRahs74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R4cbXzy0; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=SQtyYZXY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768840393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=L4aL0yBezLwure4s/o1FNp4K3UMiRrxxgbdH76Eri30=;
+	b=R4cbXzy0fqZCqAAf7p2keUtD4JtMdvfdQCZAYfel2Z1+VtNAVRtIGGWOlZc/SMOewBMJLR
+	uPPgfGcPYwEypbpKMQcfZzBvzHAHuaP2eCD4uREpKi9iHceZk4VDbcq6Rxh0g1e8JATq+t
+	seSN9AyFyuvuIs98+Dp6VEPbU0FO42Q=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-6kp7biLwMdOEiEjPL7SAKA-1; Mon, 19 Jan 2026 11:33:12 -0500
+X-MC-Unique: 6kp7biLwMdOEiEjPL7SAKA-1
+X-Mimecast-MFC-AGG-ID: 6kp7biLwMdOEiEjPL7SAKA_1768840391
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-4325b182e3cso2767258f8f.2
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Jan 2026 08:33:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1768840391; x=1769445191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L4aL0yBezLwure4s/o1FNp4K3UMiRrxxgbdH76Eri30=;
+        b=SQtyYZXYrV9fdv4om7pMxNw9TjKjKcTq2cHsOqvcgtYClypO286zPG4T3JSdW/t3KB
+         hMXxlZs4Z/3EknO8KiO7i99AYagd2ox7BFwiiCLqDA8tiF8MHZziWBAG62byhQF+NXrP
+         qsQ7l0XEqkcGUjwj5v8ntZsJDAOcaojQQvAdmfgSOs8mzEQQDychfaBxwTk8P9llOwCw
+         mSH5dw8DI/iUnMH4G+8arSDoBZAcIGr478VKl7wN239X8fC7mbCIewE7+tm7D6gqt/H5
+         6m2kksOQfdTGLr+vJiz9jLfUU3thJiLCdpxPhXNk+UJgk3NaHQxjhMn718wYBXxkW306
+         p95A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768840391; x=1769445191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L4aL0yBezLwure4s/o1FNp4K3UMiRrxxgbdH76Eri30=;
+        b=fhisdxwq8hbiyKr6QhnOWdzP7mQ5xdZsILYnxkZvr2Gg8RFykZWAvcz/i4TDyWQQPj
+         nv2MXny5dD0vJtW6pzUMOAO2m9YUrfwmX691z7gxUxItvfbkf+zRMug/yYzH44udtSjR
+         HrsSbx6ZjoWaV5CSr3bKfFR9XreC7uQYPWArLUPHQKyOgYhV245LX9QZfDjN169Jz6el
+         HQxrmEUlhIFkNjNpUAcbhHD2rLCGqKdwd9tpVEBQp+v4KQKpqOqOhKr0gaIaxaE7hcxT
+         sSMnNq/Yh12ZlY/bSOf9sdedeyitkl/UG1+mN0u6VWvCU8X9NhNgQ35sUe+UEcSFMBNH
+         yl0Q==
+X-Gm-Message-State: AOJu0Ywk23zU4wPmRN3fxRjiUn/IiVNgnnaJMxzQLtcT9awOQBjSCNHJ
+	1uAilFlByK6v/FPPF/FSJvNBd4wIl2aH+kFcZpflwvxyOdu4wvcnGkJpNG+8NWVk2NggQx4EFhM
+	w5X3wu0Tb8czCmsAsYreE9V9k3BU+TdDqmYJBfNkS441+O5nsnNxwBXxeTgeTh6nH5AWWfs1QPh
+	e8efmmeBp+5yGJqfKGzXdKKqe9NzowWEJZAn4boPEejwlW
+X-Gm-Gg: AZuq6aLh4lzTfkdYKDpZjOY5ysaxQPzKlLNPYRSpJh1r5dJA7h60ZFJJ7I2wc4MiaCV
+	KncCwE+LSBJZjjjpyLvR62ls85eMZUkA/PVfs0+dxjNL+8g4S14UvWmPhaQx43CPO8SPoZJ/SNf
+	0mPfNOue7h/pB2iJn/SfxmnyPlBKzV0Ka5/a88yMfigCUTtqZITxmKaJurZgFB4SRjRiG2Oztlq
+	wicBH3GPeh3eIUmdaywuGDUP+qiR0Qv2pmr5J6gyw3LIt28xKd1zKc4bmilzo1q/3HHOT1cnxlx
+	oIyaBD0jS5AqETaDFv7x77EYZDME5k9rH8vSKJvO75Y7cKLbP3VMC+7w3I4qaxB8CfkfLjNTlQ/
+	ryGsgzDz4tDqr4A==
+X-Received: by 2002:a05:6000:2389:b0:431:3ba:1188 with SMTP id ffacd0b85a97d-43569972ef3mr14458647f8f.3.1768840390751;
+        Mon, 19 Jan 2026 08:33:10 -0800 (PST)
+X-Received: by 2002:a05:6000:2389:b0:431:3ba:1188 with SMTP id ffacd0b85a97d-43569972ef3mr14458602f8f.3.1768840390290;
+        Mon, 19 Jan 2026 08:33:10 -0800 (PST)
+Received: from thinky.redhat.com ([217.30.74.39])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43569998240sm23524318f8f.43.2026.01.19.08.33.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jan 2026 08:33:09 -0800 (PST)
+From: Andrey Albershteyn <aalbersh@redhat.com>
+X-Google-Original-From: Andrey Albershteyn <aalbersh@kernel.org>
+To: linux-xfs@vger.kernel.org,
+	fstests@vger.kernel.org,
+	ebiggers@kernel.org
+Cc: Andrey Albershteyn <aalbersh@kernel.org>,
+	djwong@kernel.org
+Subject: [PATCH v2 0/2] Add traces and file attributes for fs-verity
+Date: Mon, 19 Jan 2026 17:32:08 +0100
+Message-ID: <20260119163222.2937003-2-aalbersh@kernel.org>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Nirjhar,
+Hi all,
 
-kernel test robot noticed the following build errors:
+This two small patches grew from fs-verity XFS patchset. I think they're
+self-contained improvements which could go without XFS implementation.
 
-[auto build test ERROR on xfs-linux/for-next]
-[also build test ERROR on linus/master v6.19-rc6 next-20260116]
-[cannot apply to riteshharjani/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+v2:
+- Update kernel version in the docs to v7.0
+- Move trace point before merkle tree block hash check
+- Update commit message in patch 2
+- Add VERITY to FS_COMMON_FL and FS_XFLAG_COMMON constants
+- Fix block index argument in the tree block hash trace point
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nirjhar-Roy-IBM/xfs-Fix-calculation-of-m_rtx_per_rbmblock/20260119-195408
-base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
-patch link:    https://lore.kernel.org/r/2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists%40gmail.com
-patch subject: [PATCH v1] xfs: Fix calculation of m_rtx_per_rbmblock
-config: riscv-randconfig-001-20260119 (https://download.01.org/0day-ci/archive/20260120/202601200031.0j1vAGWr-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260120/202601200031.0j1vAGWr-lkp@intel.com/reproduce)
+Andrey Albershteyn (2):
+  fs: add FS_XFLAG_VERITY for fs-verity files
+  fsverity: add tracepoints
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601200031.0j1vAGWr-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   fs/xfs/libxfs/xfs_sb.c: In function 'xfs_sb_mount_common':
->> fs/xfs/libxfs/xfs_sb.c:1271:27: error: implicit declaration of function 'xfs_rtbitmap_rtx_per_rbmblock'; did you mean 'xfs_rtx_to_rbmblock'? [-Werror=implicit-function-declaration]
-     mp->m_rtx_per_rbmblock = xfs_rtbitmap_rtx_per_rbmblock(mp);
-                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                              xfs_rtx_to_rbmblock
-   cc1: some warnings being treated as errors
-
-
-vim +1271 fs/xfs/libxfs/xfs_sb.c
-
-  1245	
-  1246	/*
-  1247	 * xfs_mount_common
-  1248	 *
-  1249	 * Mount initialization code establishing various mount
-  1250	 * fields from the superblock associated with the given
-  1251	 * mount structure.
-  1252	 *
-  1253	 * Inode geometry are calculated in xfs_ialloc_setup_geometry.
-  1254	 */
-  1255	void
-  1256	xfs_sb_mount_common(
-  1257		struct xfs_mount	*mp,
-  1258		struct xfs_sb		*sbp)
-  1259	{
-  1260		struct xfs_groups	*ags = &mp->m_groups[XG_TYPE_AG];
-  1261	
-  1262		mp->m_agfrotor = 0;
-  1263		atomic_set(&mp->m_agirotor, 0);
-  1264		mp->m_maxagi = mp->m_sb.sb_agcount;
-  1265		mp->m_blkbit_log = sbp->sb_blocklog + XFS_NBBYLOG;
-  1266		mp->m_blkbb_log = sbp->sb_blocklog - BBSHIFT;
-  1267		mp->m_sectbb_log = sbp->sb_sectlog - BBSHIFT;
-  1268		mp->m_agno_log = xfs_highbit32(sbp->sb_agcount - 1) + 1;
-  1269		mp->m_blockmask = sbp->sb_blocksize - 1;
-  1270		mp->m_blockwsize = xfs_rtbmblock_size(sbp) >> XFS_WORDLOG;
-> 1271		mp->m_rtx_per_rbmblock = xfs_rtbitmap_rtx_per_rbmblock(mp);
-  1272	
-  1273		ags->blocks = mp->m_sb.sb_agblocks;
-  1274		ags->blklog = mp->m_sb.sb_agblklog;
-  1275		ags->blkmask = xfs_mask32lo(mp->m_sb.sb_agblklog);
-  1276	
-  1277		xfs_sb_mount_rextsize(mp, sbp);
-  1278	
-  1279		mp->m_alloc_mxr[0] = xfs_allocbt_maxrecs(mp, sbp->sb_blocksize, true);
-  1280		mp->m_alloc_mxr[1] = xfs_allocbt_maxrecs(mp, sbp->sb_blocksize, false);
-  1281		mp->m_alloc_mnr[0] = mp->m_alloc_mxr[0] / 2;
-  1282		mp->m_alloc_mnr[1] = mp->m_alloc_mxr[1] / 2;
-  1283	
-  1284		mp->m_bmap_dmxr[0] = xfs_bmbt_maxrecs(mp, sbp->sb_blocksize, true);
-  1285		mp->m_bmap_dmxr[1] = xfs_bmbt_maxrecs(mp, sbp->sb_blocksize, false);
-  1286		mp->m_bmap_dmnr[0] = mp->m_bmap_dmxr[0] / 2;
-  1287		mp->m_bmap_dmnr[1] = mp->m_bmap_dmxr[1] / 2;
-  1288	
-  1289		mp->m_rmap_mxr[0] = xfs_rmapbt_maxrecs(mp, sbp->sb_blocksize, true);
-  1290		mp->m_rmap_mxr[1] = xfs_rmapbt_maxrecs(mp, sbp->sb_blocksize, false);
-  1291		mp->m_rmap_mnr[0] = mp->m_rmap_mxr[0] / 2;
-  1292		mp->m_rmap_mnr[1] = mp->m_rmap_mxr[1] / 2;
-  1293	
-  1294		mp->m_rtrmap_mxr[0] = xfs_rtrmapbt_maxrecs(mp, sbp->sb_blocksize, true);
-  1295		mp->m_rtrmap_mxr[1] = xfs_rtrmapbt_maxrecs(mp, sbp->sb_blocksize, false);
-  1296		mp->m_rtrmap_mnr[0] = mp->m_rtrmap_mxr[0] / 2;
-  1297		mp->m_rtrmap_mnr[1] = mp->m_rtrmap_mxr[1] / 2;
-  1298	
-  1299		mp->m_refc_mxr[0] = xfs_refcountbt_maxrecs(mp, sbp->sb_blocksize, true);
-  1300		mp->m_refc_mxr[1] = xfs_refcountbt_maxrecs(mp, sbp->sb_blocksize, false);
-  1301		mp->m_refc_mnr[0] = mp->m_refc_mxr[0] / 2;
-  1302		mp->m_refc_mnr[1] = mp->m_refc_mxr[1] / 2;
-  1303	
-  1304		mp->m_rtrefc_mxr[0] = xfs_rtrefcountbt_maxrecs(mp, sbp->sb_blocksize,
-  1305				true);
-  1306		mp->m_rtrefc_mxr[1] = xfs_rtrefcountbt_maxrecs(mp, sbp->sb_blocksize,
-  1307				false);
-  1308		mp->m_rtrefc_mnr[0] = mp->m_rtrefc_mxr[0] / 2;
-  1309		mp->m_rtrefc_mnr[1] = mp->m_rtrefc_mxr[1] / 2;
-  1310	
-  1311		mp->m_bsize = XFS_FSB_TO_BB(mp, 1);
-  1312		mp->m_alloc_set_aside = xfs_alloc_set_aside(mp);
-  1313		mp->m_ag_max_usable = xfs_alloc_ag_max_usable(mp);
-  1314	}
-  1315	
+ Documentation/filesystems/fsverity.rst |  16 +++
+ MAINTAINERS                            |   1 +
+ fs/file_attr.c                         |   4 +
+ fs/verity/enable.c                     |   4 +
+ fs/verity/fsverity_private.h           |   2 +
+ fs/verity/init.c                       |   1 +
+ fs/verity/verify.c                     |   9 ++
+ include/linux/fileattr.h               |   6 +-
+ include/trace/events/fsverity.h        | 143 +++++++++++++++++++++++++
+ include/uapi/linux/fs.h                |   1 +
+ 10 files changed, 184 insertions(+), 3 deletions(-)
+ create mode 100644 include/trace/events/fsverity.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.52.0
+
 
