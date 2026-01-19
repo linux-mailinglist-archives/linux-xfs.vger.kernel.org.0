@@ -1,207 +1,67 @@
-Return-Path: <linux-xfs+bounces-29750-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29739-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9D7FD3A090
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 08:51:06 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECC84D3A049
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 08:45:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id DF04130B9B90
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 07:45:45 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5AD4630263EF
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 07:44:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 583943382D0;
-	Mon, 19 Jan 2026 07:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCB17337BAC;
+	Mon, 19 Jan 2026 07:44:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HmigF/rI"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KGVb0T6M"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63213382CD;
-	Mon, 19 Jan 2026 07:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F5B271A6D
+	for <linux-xfs@vger.kernel.org>; Mon, 19 Jan 2026 07:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768808745; cv=none; b=eOwjA/RIS97E2aveGqegR7h/KChHdQXbeC0DQ8gtxz6IcFpMrVfqqYelRwmemIZqLiJ8V7ScT5ovbxccxxQiAIKprFI7zYlpKWxToRNXXBuulK4AJwjH8l/aZLWsOkMPLhnC2nl83LoXMW1QPjM1ftCf/YNyzAhi28zb9/LFK+U=
+	t=1768808688; cv=none; b=shmdGstJU7pSkHJo4PGMhfMGK7L//yJQIo4WEmTn8WprevekD2l8x1ZBgkvsMf4PAE9+cKriJran5nH0AKnS0xfTUA/7xRFW8lPvekKrEyp14S7Icwg59R1/DYe57qNMu99GvqheTST5+2AeWed4ULc0apCR8An//6B6pltImsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768808745; c=relaxed/simple;
-	bh=fstN+ttGR1Tkx/SMD4pdGVMR3RICmjyBVfAOdypRaVs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uVVBejqckJdVfh2gYHKDjXDjBwOx4FtHYQJqtWu0ed2A8eTNvqRxwViexluzSNsZGZfjJg90TrKIRIpqtwzZlhdmTh5Nwok2NjtvIOa4ZYV06PlWSMPbZJZ6x5IFG2M9qXIslPfEnXQvmScE3CMCoEIu0YccGhr0Mzq2gB651Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HmigF/rI; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+	s=arc-20240116; t=1768808688; c=relaxed/simple;
+	bh=I3u2Y6LR7bxaQuWTJZmWXONfo6WHa78LcNsuLgqcYbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPs+blG06UDIU3BoMemO5nT3wU3NV+pqJyM+4AbiuwMgXA7h6ZwoiK/v3iy7CveEQSGipMFd/Q4ZZuEFW5SV3d0c2NjjJY/L5cJ1rumNMYGc5HsppL/QfAYM17m/zKIwsVaCGmOipowT+U92Btf97f/Nlpa0ESMgrgRslPzb9ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KGVb0T6M; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=Vs0qF2w8oC2H8MjhYecenftcyABjbWpdGAO4a8GAGaY=; b=HmigF/rIdev4qHiRIXdX1qGD7h
-	15u0t5OKZRJu2u29qXknxBf/H7MMB6QgyzVoBz14Qm0POs4b0OLBe6WDOXeqHaW+/I+7htf3Cz3bT
-	4GXOFox7cRwuKvQLPfbjnf5ZtZVvzvMiaEdYQhUPr+BoerXcYYwgidfiQkU5OC5QPkvrYLkrLEN5s
-	mYOoeC/FeVBABN0xmO3+waF3wxYeGL9KPfX7Vwn7ZA8RevylEOf2uOdj/E5zYHS4AM0iUa0Wh8sS/
-	3JnKH/MNzyxFH9K+BTMN16AbGwKl7xKiLupNxrAq6/HOlNY5VxTzvFUUUZ2pPJpwfxK+CPrEIHrOi
-	d6Y9anxA==;
-Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vhjxD-00000001WHG-44F0;
-	Mon, 19 Jan 2026 07:45:43 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Jens Axboe <axboe@kernel.dk>,
-	Christian Brauner <brauner@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	Qu Wenruo <wqu@suse.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-block@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 14/14] xfs: use bounce buffering direct I/O when the device requires stable pages
-Date: Mon, 19 Jan 2026 08:44:21 +0100
-Message-ID: <20260119074425.4005867-15-hch@lst.de>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260119074425.4005867-1-hch@lst.de>
-References: <20260119074425.4005867-1-hch@lst.de>
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=I3u2Y6LR7bxaQuWTJZmWXONfo6WHa78LcNsuLgqcYbY=; b=KGVb0T6M+5PgFPSB/YbJNt2LFA
+	UzfpWnW154k9VQ23ZOxFEFgOSs2Wf9pnK6jCkMqS4CcYzQXoEgnpLMXtuN6rIeRRviSvYomXVZjA9
+	FXoPHefN82ZD4xXv4l9SvonGwJGY2JWO6B1Sj4L9slZaUlmvsswN6u9qTRcksnNnk2ACVZQqbPgx0
+	niR2MeWXrdC3x4D+gO0+qDAEigRLgG4AcHdPXjySLl5otmC1vCyrunHmBn2C9ouyBfmjT4UQrymfW
+	Q7vkIvjDMQZAQ6xRfeEiL0T52xWpfOaJWWVaGjpSNSnoddoXlVJP/UAZmRfnJd7/CY50bBccK8u9w
+	r6hLTRoQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vhjwK-00000001WAu-1XBk;
+	Mon, 19 Jan 2026 07:44:44 +0000
+Date: Sun, 18 Jan 2026 23:44:44 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: syzbot+0391d34e801643e2809b@syzkaller.appspotmail.com
+Cc: linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] Monthly xfs report (Oct 2025)
+Message-ID: <aW3g7G_dWk4cbx0_@infradead.org>
+References: <6901e360.050a0220.32483.0208.GAE@google.com>
+ <aQMPqDAxyM3i3pQk@infradead.org>
+ <aQMbZoAAVWxxx6wc@infradead.org>
+ <aW3J5Cc3ezll_601@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aW3J5Cc3ezll_601@infradead.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Fix direct I/O on devices that require stable pages by asking iomap
-to bounce buffer.  To support this, ioends are used for direct reads
-in this case to provide a user context for copying data back from the
-bounce buffer.
-
-This fixes qemu when used on devices using T10 protection information
-and probably other cases like iSCSI using data digests.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_aops.c |  8 ++++++--
- fs/xfs/xfs_file.c | 41 ++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 44 insertions(+), 5 deletions(-)
-
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 56a544638491..c3c1e149fff4 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -103,7 +103,7 @@ xfs_ioend_put_open_zones(
-  * IO write completion.
-  */
- STATIC void
--xfs_end_ioend(
-+xfs_end_ioend_write(
- 	struct iomap_ioend	*ioend)
- {
- 	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
-@@ -202,7 +202,11 @@ xfs_end_io(
- 			io_list))) {
- 		list_del_init(&ioend->io_list);
- 		iomap_ioend_try_merge(ioend, &tmp);
--		xfs_end_ioend(ioend);
-+		if (bio_op(&ioend->io_bio) == REQ_OP_READ)
-+			iomap_finish_ioends(ioend,
-+				blk_status_to_errno(ioend->io_bio.bi_status));
-+		else
-+			xfs_end_ioend_write(ioend);
- 		cond_resched();
- 	}
- }
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 7874cf745af3..f6cc63dcf961 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -224,12 +224,34 @@ xfs_ilock_iocb_for_write(
- 	return 0;
- }
- 
-+/*
-+ * Bounce buffering dio reads need a user context to copy back the data.
-+ * Use an ioend to provide that.
-+ */
-+static void
-+xfs_dio_read_bounce_submit_io(
-+	const struct iomap_iter	*iter,
-+	struct bio		*bio,
-+	loff_t			file_offset)
-+{
-+	iomap_init_ioend(iter->inode, bio, file_offset, IOMAP_IOEND_DIRECT);
-+	bio->bi_end_io = xfs_end_bio;
-+	submit_bio(bio);
-+}
-+
-+static const struct iomap_dio_ops xfs_dio_read_bounce_ops = {
-+	.submit_io	= xfs_dio_read_bounce_submit_io,
-+	.bio_set	= &iomap_ioend_bioset,
-+};
-+
- STATIC ssize_t
- xfs_file_dio_read(
- 	struct kiocb		*iocb,
- 	struct iov_iter		*to)
- {
- 	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
-+	unsigned int		dio_flags = 0;
-+	const struct iomap_dio_ops *dio_ops = NULL;
- 	ssize_t			ret;
- 
- 	trace_xfs_file_direct_read(iocb, to);
-@@ -242,7 +264,12 @@ xfs_file_dio_read(
- 	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
- 	if (ret)
- 		return ret;
--	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL, 0, NULL, 0);
-+	if (mapping_stable_writes(iocb->ki_filp->f_mapping)) {
-+		dio_ops = &xfs_dio_read_bounce_ops;
-+		dio_flags |= IOMAP_DIO_BOUNCE;
-+	}
-+	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, dio_ops, dio_flags,
-+			NULL, 0);
- 	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
- 
- 	return ret;
-@@ -703,6 +730,8 @@ xfs_file_dio_write_aligned(
- 		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
- 		iolock = XFS_IOLOCK_SHARED;
- 	}
-+	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-+		dio_flags |= IOMAP_DIO_BOUNCE;
- 	trace_xfs_file_direct_write(iocb, from);
- 	ret = iomap_dio_rw(iocb, from, ops, dops, dio_flags, ac, 0);
- out_unlock:
-@@ -750,6 +779,7 @@ xfs_file_dio_write_atomic(
- {
- 	unsigned int		iolock = XFS_IOLOCK_SHARED;
- 	ssize_t			ret, ocount = iov_iter_count(from);
-+	unsigned int		dio_flags = 0;
- 	const struct iomap_ops	*dops;
- 
- 	/*
-@@ -777,8 +807,10 @@ xfs_file_dio_write_atomic(
- 	}
- 
- 	trace_xfs_file_direct_write(iocb, from);
--	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops,
--			0, NULL, 0);
-+	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-+		dio_flags |= IOMAP_DIO_BOUNCE;
-+	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops, dio_flags,
-+			NULL, 0);
- 
- 	/*
- 	 * The retry mechanism is based on the ->iomap_begin method returning
-@@ -867,6 +899,9 @@ xfs_file_dio_write_unaligned(
- 	if (flags & IOMAP_DIO_FORCE_WAIT)
- 		inode_dio_wait(VFS_I(ip));
- 
-+	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-+		flags |= IOMAP_DIO_BOUNCE;
-+
- 	trace_xfs_file_direct_write(iocb, from);
- 	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
- 			   &xfs_dio_write_ops, flags, NULL, 0);
--- 
-2.47.3
-
+#syz test git://git.infradead.org/users/hch/xfs.git xfs-buf-hash
 
