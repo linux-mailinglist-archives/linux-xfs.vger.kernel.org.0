@@ -1,239 +1,194 @@
-Return-Path: <linux-xfs+bounces-29822-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29813-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F06DD3B1D3
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 17:44:18 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25127D3B2A9
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 17:55:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 28A1D3085F95
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 16:43:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ACA8F3186E94
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 16:38:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAFBD3C1975;
-	Mon, 19 Jan 2026 16:31:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449283A9D9C;
+	Mon, 19 Jan 2026 16:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2eWuvDH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPMPTrY/"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6691C3C1967;
-	Mon, 19 Jan 2026 16:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE823A9D8F
+	for <linux-xfs@vger.kernel.org>; Mon, 19 Jan 2026 16:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768840263; cv=none; b=t/wJw3DUzP7MY9CpPmknPgBIw27N1lGdUfvpiVEI3uI0q8WwAkEdNGHPoWhYx6F4v4PDURRhUmUJgmIgk/HiqnFtvkEwJvPoFpjVle0LrYYyuRwJOMHbjO005N9kYL74iUDv5QRxhtMAE4Ji8af5af0ApNnPwhctth4de/rWRSw=
+	t=1768840200; cv=none; b=HRnVsr9tj66dT3OCsHakodTpSWjQkzzk4NvIqGlvIv4LLB/XlSKdyTPHAPC3CRn+o3kb1CvU06oW1HLQ6m9x65Ypoq4N3vEaUcE7hfdv2u7BbEhcDgaKhb/FATvoi20fF7S5wM9v0IVAzEwmLuM/yc1ykQdwUzY4Ylys6mDyDPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768840263; c=relaxed/simple;
-	bh=YvhqTu858V2nHA/DvphvNPgy0WWoXV1XH8O4vHs3r6s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hQDsF9EttYuVcqT8VGo0T23Te8h7hyhWB+ID+1nhNfs2cCMleb14r4dNEPKVwNvSnWZN9hcufxapm2zr7hAgWCVrZ40sHUfu8oRRUrohOictb+wPc0VThHUP99HdU7h/3oqlm8fI9qN13xnlRFKg5P2FVE2SPS83/UW8tAraens=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2eWuvDH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4CBEC2BC86;
-	Mon, 19 Jan 2026 16:30:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768840263;
-	bh=YvhqTu858V2nHA/DvphvNPgy0WWoXV1XH8O4vHs3r6s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=h2eWuvDHO+FHNVWC0HtfYiwQLGD+wYaxR9D3B3Ed9tIu0JUYT/Du8NCPJr2Kni+6j
-	 FzBHjGuc/OLKKlytLlDDSMvG6K/lZ+1yYDEkp/N9zqPCokk75ZABfwL6avEwi42vps
-	 0f/64rbZnR08cTk3Jklqr4LP4IF+Xj2tBebaD1y0phkAa+Asd/Q4cqS9Zfs0k0IMkF
-	 Wcd+HNSs1kfJ+gcQ5lC7WEcMywntkKV3L2fJFu0mtjX/DfTm1UQD/RZLxzC0HuvTay
-	 SahYNV1qOWaAxchZUrdKt84Zn3hO16NvxYRmiTOmxr3zcnvDdJtPkIgDlJWEZ0vCK2
-	 XLTl9TlK3VJ0g==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 19 Jan 2026 11:26:48 -0500
-Subject: [PATCH v2 31/31] nfsd: convert dprintks in check_export() to
- tracepoints
+	s=arc-20240116; t=1768840200; c=relaxed/simple;
+	bh=9SnA7U1kOlcGyRa7RgTDJgJmZH6Pf9hQjZQvclzvfAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M5aSxuO2QzENUD9lBdMCl+6Xw9iZGQiO9YDuR5rHu0VH0TMoUajPSy4H4iLTlYKQfTwkqJj+3BT96kO6B+05kFgD3ow8K0w0ytLxCucCt6IFcAJ8/+02R3ODIYd0EvWJbzH6kWTWFRI2MJ9RNFjdeYvqKzWQFQmo1d07WmaneuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPMPTrY/; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768840199; x=1800376199;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9SnA7U1kOlcGyRa7RgTDJgJmZH6Pf9hQjZQvclzvfAc=;
+  b=IPMPTrY/OrH0Tu5oOIBRU9PuyqONKKuLRWFmk0jwrk+++JaSP/QgBYHl
+   QZQN7Hs4nbSFhbsaLrBqI0Gazf1uEKcrBo3GSkrVr0dKkZBsF/8YOKojw
+   OuiGWPq5IVwlMe/mwzHnkIvZDKoipocxksZzSv2WGnGh+5kNsR6vRWPMJ
+   IXaZDsQ5upQ5fBUFSYZBzh1nHxy4aXpjcFCaQt/FQ4C/1AyWtoqWr3LAw
+   kAB2OKOm3VaJ8ejM8p1yCpXU5T3uM/Pl47kjRkKZNPHsKEuRe1WlAA6Qx
+   HCAA7xbw9PJjF9INZNTzhzDqAUyohtL02E0ODNaoQvez/r4sMfKroVLVb
+   Q==;
+X-CSE-ConnectionGUID: QuQaPAI6RqKSHiQim8sHfg==
+X-CSE-MsgGUID: Z3MqTR73S26RgzXEX9DqMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="70026120"
+X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
+   d="scan'208";a="70026120"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 08:29:58 -0800
+X-CSE-ConnectionGUID: 5rceCgnBTNe8nw7dduJovw==
+X-CSE-MsgGUID: R7AclV/ZRa+rxSGJOlghoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
+   d="scan'208";a="205809037"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 19 Jan 2026 08:29:55 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vhs8X-00000000O2d-2rK3;
+	Mon, 19 Jan 2026 16:29:53 +0000
+Date: Tue, 20 Jan 2026 00:29:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>,
+	linux-xfs@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, ritesh.list@gmail.com,
+	ojaswin@linux.ibm.com, djwong@kernel.org, hch@infradead.org,
+	nirjhar.roy.lists@gmail.com
+Subject: Re: [PATCH v1] xfs: Fix calculation of m_rtx_per_rbmblock
+Message-ID: <202601200031.0j1vAGWr-lkp@intel.com>
+References: <2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260119-exportfs-nfsd-v2-31-d93368f903bd@kernel.org>
-References: <20260119-exportfs-nfsd-v2-0-d93368f903bd@kernel.org>
-In-Reply-To: <20260119-exportfs-nfsd-v2-0-d93368f903bd@kernel.org>
-To: Christian Brauner <brauner@kernel.org>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Amir Goldstein <amir73il@gmail.com>, 
- Hugh Dickins <hughd@google.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, 
- Chunhai Guo <guochunhai@vivo.com>, Carlos Maiolino <cem@kernel.org>, 
- Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
- Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
- David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
- Salah Triki <salah.triki@gmail.com>, 
- Phillip Lougher <phillip@squashfs.org.uk>, Steve French <sfrench@samba.org>, 
- Paulo Alcantara <pc@manguebit.org>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, 
- Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
- Mike Marshall <hubcap@omnibond.com>, 
- Martin Brandenburg <martin@omnibond.com>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
- Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- Dave Kleikamp <shaggy@kernel.org>, David Woodhouse <dwmw2@infradead.org>, 
- Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
- Andreas Gruenbacher <agruenba@redhat.com>, 
- OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
- Jaegeuk Kim <jaegeuk@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: David Laight <david.laight.linux@gmail.com>, 
- Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
- linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
- linux-xfs@vger.kernel.org, ceph-devel@vger.kernel.org, 
- linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
- samba-technical@lists.samba.org, linux-unionfs@vger.kernel.org, 
- devel@lists.orangefs.org, ocfs2-devel@lists.linux.dev, 
- ntfs3@lists.linux.dev, linux-nilfs@vger.kernel.org, 
- jfs-discussion@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
- gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net, 
- linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4169; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=YvhqTu858V2nHA/DvphvNPgy0WWoXV1XH8O4vHs3r6s=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpbltg7KaYG+cOnqGQwFogykRFEv2vvWPelc3rm
- NkydLb2mGCJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaW5bYAAKCRAADmhBGVaC
- FWqbEACWyEMei5YgEgZwLPtZYTWHb8tmOW7eGn745dbexN721w1XJin+y0uFuiiEqpYtbB01+nV
- 8eGJXblAwZWOM56qXzH8kIp9IF0Do5UMXMJTyUb79WR1Vxz5+svm6rH4ORCbDMoohslm0Ey+odn
- Zx62FtcwzZ/STJY531c69lQu2bhr3cC/ykvj+MnpDF1L6iyuPTl056aSkCGs+2TRjxpwsRGp0tV
- 7FV1mQVZyW+b344OwsU12+VtzNEUh3CAPnxW20OYd9f0s9HFEpZK4Y9Ep/WsEqP0165/LeBaVXZ
- Tihw250Wgn1dTNDwYC3840yoGmtFEjRpYdrQxlR1fxUi+1e02u+G+A2z8VPXC2UMtR7HTpWR3kq
- 0gpbEU4+t6RXYZ2KSP1Qp1R60LWabc62qCpOU1l2LsxieR9zzMNQzgrLEkvEzam75nzR1SYp0M1
- MAZjAICvnrvk2txw2ibnrnHJErb9vl+kLuB3btLLAaMmNVQQO9QZiA3QpDitFCH5aU6ZVYP8fdD
- r/l2xb9t2bkCY+uL5zGtY5a9B+sKZHy6JRgOd3o/SiUBbmV6dnxq4JqqdXpdxKAPH7RgwPtK224
- H9hNJK7Mkv5H+8Si6seHr0qbAPwccoRdGVCztXQ1fdG5MLjNTJb3M6cVTt5Wicf6NlgjQa664oA
- Z9sNNAkM0OHYjQA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists@gmail.com>
 
-Get rid of the dprintk messages in check_export(). Instead add new
-tracepoints that show the terminal inode and the flags.
+Hi Nirjhar,
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/export.c | 11 ++++++-----
- fs/nfsd/trace.h  | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 58 insertions(+), 5 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index bc703cf58bfa210c7c57d49f22f15bc10d7cfc91..3cc336b953b38573966c43000f31cd341380837b 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -435,31 +435,32 @@ static int check_export(const struct path *path, int *flags, unsigned char *uuid
- 	if (!(inode->i_sb->s_type->fs_flags & FS_REQUIRES_DEV) &&
- 	    !(*flags & NFSEXP_FSID) &&
- 	    uuid == NULL) {
--		dprintk("exp_export: export of non-dev fs without fsid\n");
-+		trace_nfsd_check_export_need_fsid(inode, *flags);
- 		return -EINVAL;
- 	}
- 
- 	if (!exportfs_can_decode_fh(inode->i_sb->s_export_op)) {
--		dprintk("exp_export: export of invalid fs type.\n");
-+		trace_nfsd_check_export_invalid_fstype(inode, *flags);
- 		return -EINVAL;
- 	}
- 
- 	if (!(inode->i_sb->s_export_op->flags & EXPORT_OP_STABLE_HANDLES)) {
--		dprintk("%s: fs does not provide stable filehandles!\n", __func__);
-+		trace_nfsd_check_export_no_stable_fh(inode, *flags);
- 		return -EINVAL;
- 	}
- 
- 	if (is_idmapped_mnt(path->mnt)) {
- 		dprintk("exp_export: export of idmapped mounts not yet supported.\n");
-+		trace_nfsd_check_export_idmapped(inode, *flags);
- 		return -EINVAL;
- 	}
- 
- 	if (inode->i_sb->s_export_op->flags & EXPORT_OP_NOSUBTREECHK &&
- 	    !(*flags & NFSEXP_NOSUBTREECHECK)) {
--		dprintk("%s: %s does not support subtree checking!\n",
--			__func__, inode->i_sb->s_type->name);
-+		trace_nfsd_check_export_subtree(inode, *flags);
- 		return -EINVAL;
- 	}
-+	trace_nfsd_check_export_success(inode, *flags);
- 	return 0;
- }
- 
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 5ae2a611e57f4b4e51a4d9eb6e0fccb66ad8d288..e3f5fe1181b605b34cb70d53f32739c3ef9b82f6 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -339,6 +339,58 @@ DEFINE_EVENT_CONDITION(nfsd_fh_err_class, nfsd_##name,	\
- DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badexport);
- DEFINE_NFSD_FH_ERR_EVENT(set_fh_dentry_badhandle);
- 
-+#define show_export_flags(val)						\
-+	__print_flags(val, "|",						\
-+		{ NFSEXP_READONLY,		"READONLY" },		\
-+		{ NFSEXP_INSECURE_PORT,		"INSECURE" },		\
-+		{ NFSEXP_ROOTSQUASH,		"ROOTSQUASH" },		\
-+		{ NFSEXP_ALLSQUASH,		"ALLSQUASH" },		\
-+		{ NFSEXP_ASYNC,			"ASYNC" },		\
-+		{ NFSEXP_GATHERED_WRITES,	"GATHERED_WRITES" },	\
-+		{ NFSEXP_NOREADDIRPLUS,		"NOREADDIRPLUS" },	\
-+		{ NFSEXP_SECURITY_LABEL,	"SECURITY_LABEL" },	\
-+		{ NFSEXP_NOHIDE,		"NOHIDE" },		\
-+		{ NFSEXP_NOSUBTREECHECK,	"NOSUBTREECHECK" },	\
-+		{ NFSEXP_NOAUTHNLM,		"NOAUTHNLM" },		\
-+		{ NFSEXP_MSNFS,			"MSNFS" },		\
-+		{ NFSEXP_FSID,			"FSID" },		\
-+		{ NFSEXP_CROSSMOUNT,		"CROSSMOUNT" },		\
-+		{ NFSEXP_NOACL,			"NOACL" },		\
-+		{ NFSEXP_V4ROOT,		"V4ROOT" },		\
-+		{ NFSEXP_PNFS,			"PNFS" })
-+
-+DECLARE_EVENT_CLASS(nfsd_check_export_class,
-+	TP_PROTO(const struct inode *inode,
-+		 int flags),
-+	TP_ARGS(inode, flags),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(ino_t, ino)
-+		__field(int, flags)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = inode->i_sb->s_dev;
-+		__entry->ino = inode->i_ino;
-+		__entry->flags = flags;
-+	),
-+	TP_printk("dev=%u:%u:%lu flags=%s",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->ino, show_export_flags(__entry->flags))
-+)
-+
-+#define DEFINE_NFSD_CHECK_EXPORT_EVENT(name)			\
-+DEFINE_EVENT(nfsd_check_export_class, nfsd_check_export_##name,	\
-+	TP_PROTO(const struct inode *inode,			\
-+		 int flags),					\
-+	TP_ARGS(inode, flags))
-+
-+DEFINE_NFSD_CHECK_EXPORT_EVENT(need_fsid);
-+DEFINE_NFSD_CHECK_EXPORT_EVENT(invalid_fstype);
-+DEFINE_NFSD_CHECK_EXPORT_EVENT(no_stable_fh);
-+DEFINE_NFSD_CHECK_EXPORT_EVENT(idmapped);
-+DEFINE_NFSD_CHECK_EXPORT_EVENT(subtree);
-+DEFINE_NFSD_CHECK_EXPORT_EVENT(success);
-+
- TRACE_EVENT(nfsd_exp_find_key,
- 	TP_PROTO(const struct svc_expkey *key,
- 		 int status),
+[auto build test ERROR on xfs-linux/for-next]
+[also build test ERROR on linus/master v6.19-rc6 next-20260116]
+[cannot apply to riteshharjani/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nirjhar-Roy-IBM/xfs-Fix-calculation-of-m_rtx_per_rbmblock/20260119-195408
+base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
+patch link:    https://lore.kernel.org/r/2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists%40gmail.com
+patch subject: [PATCH v1] xfs: Fix calculation of m_rtx_per_rbmblock
+config: riscv-randconfig-001-20260119 (https://download.01.org/0day-ci/archive/20260120/202601200031.0j1vAGWr-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260120/202601200031.0j1vAGWr-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601200031.0j1vAGWr-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   fs/xfs/libxfs/xfs_sb.c: In function 'xfs_sb_mount_common':
+>> fs/xfs/libxfs/xfs_sb.c:1271:27: error: implicit declaration of function 'xfs_rtbitmap_rtx_per_rbmblock'; did you mean 'xfs_rtx_to_rbmblock'? [-Werror=implicit-function-declaration]
+     mp->m_rtx_per_rbmblock = xfs_rtbitmap_rtx_per_rbmblock(mp);
+                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                              xfs_rtx_to_rbmblock
+   cc1: some warnings being treated as errors
+
+
+vim +1271 fs/xfs/libxfs/xfs_sb.c
+
+  1245	
+  1246	/*
+  1247	 * xfs_mount_common
+  1248	 *
+  1249	 * Mount initialization code establishing various mount
+  1250	 * fields from the superblock associated with the given
+  1251	 * mount structure.
+  1252	 *
+  1253	 * Inode geometry are calculated in xfs_ialloc_setup_geometry.
+  1254	 */
+  1255	void
+  1256	xfs_sb_mount_common(
+  1257		struct xfs_mount	*mp,
+  1258		struct xfs_sb		*sbp)
+  1259	{
+  1260		struct xfs_groups	*ags = &mp->m_groups[XG_TYPE_AG];
+  1261	
+  1262		mp->m_agfrotor = 0;
+  1263		atomic_set(&mp->m_agirotor, 0);
+  1264		mp->m_maxagi = mp->m_sb.sb_agcount;
+  1265		mp->m_blkbit_log = sbp->sb_blocklog + XFS_NBBYLOG;
+  1266		mp->m_blkbb_log = sbp->sb_blocklog - BBSHIFT;
+  1267		mp->m_sectbb_log = sbp->sb_sectlog - BBSHIFT;
+  1268		mp->m_agno_log = xfs_highbit32(sbp->sb_agcount - 1) + 1;
+  1269		mp->m_blockmask = sbp->sb_blocksize - 1;
+  1270		mp->m_blockwsize = xfs_rtbmblock_size(sbp) >> XFS_WORDLOG;
+> 1271		mp->m_rtx_per_rbmblock = xfs_rtbitmap_rtx_per_rbmblock(mp);
+  1272	
+  1273		ags->blocks = mp->m_sb.sb_agblocks;
+  1274		ags->blklog = mp->m_sb.sb_agblklog;
+  1275		ags->blkmask = xfs_mask32lo(mp->m_sb.sb_agblklog);
+  1276	
+  1277		xfs_sb_mount_rextsize(mp, sbp);
+  1278	
+  1279		mp->m_alloc_mxr[0] = xfs_allocbt_maxrecs(mp, sbp->sb_blocksize, true);
+  1280		mp->m_alloc_mxr[1] = xfs_allocbt_maxrecs(mp, sbp->sb_blocksize, false);
+  1281		mp->m_alloc_mnr[0] = mp->m_alloc_mxr[0] / 2;
+  1282		mp->m_alloc_mnr[1] = mp->m_alloc_mxr[1] / 2;
+  1283	
+  1284		mp->m_bmap_dmxr[0] = xfs_bmbt_maxrecs(mp, sbp->sb_blocksize, true);
+  1285		mp->m_bmap_dmxr[1] = xfs_bmbt_maxrecs(mp, sbp->sb_blocksize, false);
+  1286		mp->m_bmap_dmnr[0] = mp->m_bmap_dmxr[0] / 2;
+  1287		mp->m_bmap_dmnr[1] = mp->m_bmap_dmxr[1] / 2;
+  1288	
+  1289		mp->m_rmap_mxr[0] = xfs_rmapbt_maxrecs(mp, sbp->sb_blocksize, true);
+  1290		mp->m_rmap_mxr[1] = xfs_rmapbt_maxrecs(mp, sbp->sb_blocksize, false);
+  1291		mp->m_rmap_mnr[0] = mp->m_rmap_mxr[0] / 2;
+  1292		mp->m_rmap_mnr[1] = mp->m_rmap_mxr[1] / 2;
+  1293	
+  1294		mp->m_rtrmap_mxr[0] = xfs_rtrmapbt_maxrecs(mp, sbp->sb_blocksize, true);
+  1295		mp->m_rtrmap_mxr[1] = xfs_rtrmapbt_maxrecs(mp, sbp->sb_blocksize, false);
+  1296		mp->m_rtrmap_mnr[0] = mp->m_rtrmap_mxr[0] / 2;
+  1297		mp->m_rtrmap_mnr[1] = mp->m_rtrmap_mxr[1] / 2;
+  1298	
+  1299		mp->m_refc_mxr[0] = xfs_refcountbt_maxrecs(mp, sbp->sb_blocksize, true);
+  1300		mp->m_refc_mxr[1] = xfs_refcountbt_maxrecs(mp, sbp->sb_blocksize, false);
+  1301		mp->m_refc_mnr[0] = mp->m_refc_mxr[0] / 2;
+  1302		mp->m_refc_mnr[1] = mp->m_refc_mxr[1] / 2;
+  1303	
+  1304		mp->m_rtrefc_mxr[0] = xfs_rtrefcountbt_maxrecs(mp, sbp->sb_blocksize,
+  1305				true);
+  1306		mp->m_rtrefc_mxr[1] = xfs_rtrefcountbt_maxrecs(mp, sbp->sb_blocksize,
+  1307				false);
+  1308		mp->m_rtrefc_mnr[0] = mp->m_rtrefc_mxr[0] / 2;
+  1309		mp->m_rtrefc_mnr[1] = mp->m_rtrefc_mxr[1] / 2;
+  1310	
+  1311		mp->m_bsize = XFS_FSB_TO_BB(mp, 1);
+  1312		mp->m_alloc_set_aside = xfs_alloc_set_aside(mp);
+  1313		mp->m_ag_max_usable = xfs_alloc_ag_max_usable(mp);
+  1314	}
+  1315	
 
 -- 
-2.52.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
