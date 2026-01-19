@@ -1,322 +1,318 @@
-Return-Path: <linux-xfs+bounces-29834-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29836-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F5B0D3B439
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 18:28:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D68AD3B4DB
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 18:49:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 039AF3116E4C
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 16:57:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 446D23001CB0
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 17:35:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 453EE2C158F;
-	Mon, 19 Jan 2026 16:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06029324718;
+	Mon, 19 Jan 2026 17:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QGEMF9Js"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vpfo5gjG"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D69238C0A;
-	Mon, 19 Jan 2026 16:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C0A329C69;
+	Mon, 19 Jan 2026 17:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768841822; cv=none; b=LGZby2x+esbQ8yuvhqiaKuKsZekWdXO8QhtAJkUtCTxmG4UTH7PnghLMVUODLx9IdMdCh4Ekt6hqBiFcv/cHP/JTZEYrIeL5rHfUu2HPmW4E8NR4EU46sDoQ+cJi6H8yIkiNyAIwtFKIB8MhazPvWnzKEVHJnfcWIu8RQDZhCPM=
+	t=1768844144; cv=none; b=CUW5jhNw3KNuIel6Z5zMlJqk+fN2VTCWFiU3+wp2VvwhpwCxek7iJDrqxfx3fNmyFwuvR2cXV/PZ7jJloGTrer1kgwvWF5+A8542aJSiI/ncRN8867As8/oXxMgDmSDy0VfhBAiBgqleOJdXAQQfkyHloVIoU4rg0v61GPOtbBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768841822; c=relaxed/simple;
-	bh=FI4NI8dl6jSoy/l8FdXI8/RsUN0G2gTdmtm2I6gBCHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sW4N04Q/H+LAIrsjXUwgxXhh8DhTdYS7t00rR4knqP/aSOkEcpxbL1ZSKeS/I3Tj/JzmZtWaAxpGd/ZVqEd2tFJ+hJnhCfzuW1FJQVaOl48ZzW1d0VThAroJtzTUdJOqyAWkAYto6H9+nv/BVEeAsPAqR1BqliUeTDGFJTYX/3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QGEMF9Js; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA42C16AAE;
-	Mon, 19 Jan 2026 16:57:00 +0000 (UTC)
+	s=arc-20240116; t=1768844144; c=relaxed/simple;
+	bh=kFzynpRCnZlst/3w4DM3gAbVgknggmBfSxxX45P6hyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I04Qx1CKqnOarlYu4weglBFscUw7heQYr1YQien6CHgPDvzNqcDMgDiNxP09De/N4Qf8ehp+ilWsYweuug8tVHSoRcqFfWiQ0ZVeweNYuJEwH33Gr4fDzraMTxNawDDID0Y8ZmdfZr7pFN+lEwBGdpRRW2la61bQQlpHUb6AaLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vpfo5gjG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118AAC116C6;
+	Mon, 19 Jan 2026 17:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768841822;
-	bh=FI4NI8dl6jSoy/l8FdXI8/RsUN0G2gTdmtm2I6gBCHw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QGEMF9JscDXIATIn7Uo6TC5oh5iykDA0iDWxITF0DroSiPrde11TSvhcH/LC5dp2L
-	 HoE9FMHMf/506VXUE/P2x3V1zbZ/Fi05WOgg7Kj/OBZb+2GBviKo4jCL0aPVAASXVk
-	 /ccEH4nD7UsMWpSFr269GC7KQhpQcSLQKU8q6h8OEWRElrvf8iiCimHcUsTUJfu9sF
-	 2+ZxZPZeLlvcvVzedUIeeJsunrlLISPLeApCQyDdSZEMq/dcTXM82GzIoeHn4TOEUv
-	 Z+24f5Fiahbf2nFd9uWtTly+r9rRoTzMjwXVO5Marg8h19PcmDEM++v+5ECd6/ArBL
-	 SCkycNukpzQoQ==
-From: Andrey Albershteyn <aalbersh@kernel.org>
-To: linux-xfs@vger.kernel.org,
-	fstests@vger.kernel.org,
-	ebiggers@kernel.org
-Cc: Andrey Albershteyn <aalbersh@kernel.org>,
-	djwong@kernel.org
-Subject: [PATCH v2 2/2] fsverity: add tracepoints
-Date: Mon, 19 Jan 2026 17:56:43 +0100
-Message-ID: <20260119165644.2945008-3-aalbersh@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260119165644.2945008-1-aalbersh@kernel.org>
-References: <20260119165644.2945008-1-aalbersh@kernel.org>
+	s=k20201202; t=1768844144;
+	bh=kFzynpRCnZlst/3w4DM3gAbVgknggmBfSxxX45P6hyk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vpfo5gjGsJb2tHajhvEt4uwdisXhw46NJqGqMX2ZRgEGIRcmgaS63W1sDmCK/YHlk
+	 7LpuSzd8grFFfNSAh0E3sx5CjZRLEERsd4HXK8jFmYirKsqzamQpWmHk1ZwuUMvgka
+	 WzDDRML2+tFTQqZ1T9UgmFlMqHzp+IegWvgiqOiWr5wBTMADSnsr70MDEmYAulF2Df
+	 sU0XiYiD4qan1c1unIHqk6s/ZcwLumgVxwu+n4IfABaLeSEYB52HIaDEgu/vqSyXHN
+	 S3Az+rsX/yNHI7ckWG1pCZJbhXESJd/N6Z9a0gbrptdAOqQOwH3y+1IgKUi/SoZLxA
+	 HQ3xKqkMmuRLg==
+Date: Mon, 19 Jan 2026 09:35:43 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: cem@kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 11/11] xfs: add media verification ioctl
+Message-ID: <20260119173543.GZ15551@frogsfrogsfrogs>
+References: <176852588473.2137143.1604994842772101197.stgit@frogsfrogsfrogs>
+ <176852588776.2137143.7103003682733018282.stgit@frogsfrogsfrogs>
+ <20260119155639.GA10822@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260119155639.GA10822@lst.de>
 
-fs-verity previously had debug printk but it was removed. This patch
-adds trace points to similar places, as a better alternative.
+On Mon, Jan 19, 2026 at 04:56:39PM +0100, Christoph Hellwig wrote:
+> On Thu, Jan 15, 2026 at 09:44:53PM -0800, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > Add a new privileged ioctl so that xfs_scrub can ask the kernel to
+> > verify the media of the devices backing an xfs filesystem, and have any
+> > resulting media errors reported to fsnotify and xfs_healer.
+> 
+> I really wish this would explain the approach (reading data into a
+> kernel buffer, and the choices of the buffer size and I/O pattern)
+> and their rationale a bit better here.
 
-Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-[djwong: fix formatting]
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- MAINTAINERS                     |   1 +
- fs/verity/enable.c              |   4 +
- fs/verity/fsverity_private.h    |   2 +
- fs/verity/init.c                |   1 +
- fs/verity/verify.c              |   9 ++
- include/trace/events/fsverity.h | 143 ++++++++++++++++++++++++++++++++
- 6 files changed, 160 insertions(+)
- create mode 100644 include/trace/events/fsverity.h
+How about:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 12f49de7fe03..17607340dfab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10311,6 +10311,7 @@ T:	git https://git.kernel.org/pub/scm/fs/fsverity/linux.git
- F:	Documentation/filesystems/fsverity.rst
- F:	fs/verity/
- F:	include/linux/fsverity.h
-+F:	include/trace/events/fsverity.h
- F:	include/uapi/linux/fsverity.h
- 
- FT260 FTDI USB-HID TO I2C BRIDGE DRIVER
-diff --git a/fs/verity/enable.c b/fs/verity/enable.c
-index 95ec42b84797..8718d943b428 100644
---- a/fs/verity/enable.c
-+++ b/fs/verity/enable.c
-@@ -222,6 +222,8 @@ static int enable_verity(struct file *filp,
- 	if (err)
- 		goto out;
- 
-+	trace_fsverity_enable(inode, &params);
-+
- 	/*
- 	 * Start enabling verity on this file, serialized by the inode lock.
- 	 * Fail if verity is already enabled or is already being enabled.
-@@ -264,6 +266,8 @@ static int enable_verity(struct file *filp,
- 		goto rollback;
- 	}
- 
-+	trace_fsverity_tree_done(inode, vi, &params);
-+
- 	/*
- 	 * Tell the filesystem to finish enabling verity on the file.
- 	 * Serialized with ->begin_enable_verity() by the inode lock.
-diff --git a/fs/verity/fsverity_private.h b/fs/verity/fsverity_private.h
-index dd20b138d452..4b7ae1748f4e 100644
---- a/fs/verity/fsverity_private.h
-+++ b/fs/verity/fsverity_private.h
-@@ -161,4 +161,6 @@ static inline void fsverity_init_signature(void)
- 
- void __init fsverity_init_workqueue(void);
- 
-+#include <trace/events/fsverity.h>
-+
- #endif /* _FSVERITY_PRIVATE_H */
-diff --git a/fs/verity/init.c b/fs/verity/init.c
-index 6e8d33b50240..d65206608583 100644
---- a/fs/verity/init.c
-+++ b/fs/verity/init.c
-@@ -5,6 +5,7 @@
-  * Copyright 2019 Google LLC
-  */
- 
-+#define CREATE_TRACE_POINTS
- #include "fsverity_private.h"
- 
- #include <linux/ratelimit.h>
-diff --git a/fs/verity/verify.c b/fs/verity/verify.c
-index 86067c8b40cf..940b8b956d7e 100644
---- a/fs/verity/verify.c
-+++ b/fs/verity/verify.c
-@@ -135,6 +135,9 @@ static bool verify_data_block(struct inode *inode, struct fsverity_info *vi,
- 		/* Byte offset of the wanted hash relative to @addr */
- 		unsigned int hoffset;
- 	} hblocks[FS_VERITY_MAX_LEVELS];
-+
-+	trace_fsverity_verify_data_block(inode, params, data_pos);
-+
- 	/*
- 	 * The index of the previous level's block within that level; also the
- 	 * index of that block's hash within the current level.
-@@ -214,6 +217,9 @@ static bool verify_data_block(struct inode *inode, struct fsverity_info *vi,
- 			want_hash = _want_hash;
- 			kunmap_local(haddr);
- 			put_page(hpage);
-+			trace_fsverity_merkle_hit(inode, data_pos, hblock_idx,
-+					level,
-+					hoffset >> params->log_digestsize);
- 			goto descend;
- 		}
- 		hblocks[level].page = hpage;
-@@ -232,6 +238,9 @@ static bool verify_data_block(struct inode *inode, struct fsverity_info *vi,
- 		unsigned long hblock_idx = hblocks[level - 1].index;
- 		unsigned int hoffset = hblocks[level - 1].hoffset;
- 
-+		trace_fsverity_verify_merkle_block(inode, hblock_idx,
-+				level, hoffset >> params->log_digestsize);
-+
- 		fsverity_hash_block(params, haddr, real_hash);
- 		if (memcmp(want_hash, real_hash, hsize) != 0)
- 			goto corrupted;
-diff --git a/include/trace/events/fsverity.h b/include/trace/events/fsverity.h
-new file mode 100644
-index 000000000000..1825f87a00d6
---- /dev/null
-+++ b/include/trace/events/fsverity.h
-@@ -0,0 +1,143 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM fsverity
-+
-+#if !defined(_TRACE_FSVERITY_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_FSVERITY_H
-+
-+#include <linux/tracepoint.h>
-+
-+struct fsverity_descriptor;
-+struct merkle_tree_params;
-+struct fsverity_info;
-+
-+TRACE_EVENT(fsverity_enable,
-+	TP_PROTO(const struct inode *inode,
-+		 const struct merkle_tree_params *params),
-+	TP_ARGS(inode, params),
-+	TP_STRUCT__entry(
-+		__field(ino_t, ino)
-+		__field(u64, data_size)
-+		__field(unsigned int, block_size)
-+		__field(unsigned int, num_levels)
-+		__field(u64, tree_size)
-+	),
-+	TP_fast_assign(
-+		__entry->ino = inode->i_ino;
-+		__entry->data_size = i_size_read(inode);
-+		__entry->block_size = params->block_size;
-+		__entry->num_levels = params->num_levels;
-+		__entry->tree_size = params->tree_size;
-+	),
-+	TP_printk("ino %lu data size %llu tree size %llu block size %u levels %u",
-+		(unsigned long) __entry->ino,
-+		__entry->data_size,
-+		__entry->tree_size,
-+		__entry->block_size,
-+		__entry->num_levels)
-+);
-+
-+TRACE_EVENT(fsverity_tree_done,
-+	TP_PROTO(const struct inode *inode, const struct fsverity_info *vi,
-+		 const struct merkle_tree_params *params),
-+	TP_ARGS(inode, vi, params),
-+	TP_STRUCT__entry(
-+		__field(ino_t, ino)
-+		__field(unsigned int, levels)
-+		__field(unsigned int, block_size)
-+		__field(u64, tree_size)
-+		__dynamic_array(u8, root_hash, params->digest_size)
-+		__dynamic_array(u8, file_digest, params->digest_size)
-+	),
-+	TP_fast_assign(
-+		__entry->ino = inode->i_ino;
-+		__entry->levels = params->num_levels;
-+		__entry->block_size = params->block_size;
-+		__entry->tree_size = params->tree_size;
-+		memcpy(__get_dynamic_array(root_hash), vi->root_hash, __get_dynamic_array_len(root_hash));
-+		memcpy(__get_dynamic_array(file_digest), vi->file_digest, __get_dynamic_array_len(file_digest));
-+	),
-+	TP_printk("ino %lu levels %d block_size %d tree_size %lld root_hash %s digest %s",
-+		(unsigned long) __entry->ino,
-+		__entry->levels,
-+		__entry->block_size,
-+		__entry->tree_size,
-+		__print_hex_str(__get_dynamic_array(root_hash), __get_dynamic_array_len(root_hash)),
-+		__print_hex_str(__get_dynamic_array(file_digest), __get_dynamic_array_len(file_digest)))
-+);
-+
-+TRACE_EVENT(fsverity_verify_data_block,
-+	TP_PROTO(const struct inode *inode,
-+		 const struct merkle_tree_params *params,
-+		 u64 data_pos),
-+	TP_ARGS(inode, params, data_pos),
-+	TP_STRUCT__entry(
-+		__field(ino_t, ino)
-+		__field(u64, data_pos)
-+		__field(unsigned int, block_size)
-+	),
-+	TP_fast_assign(
-+		__entry->ino = inode->i_ino;
-+		__entry->data_pos = data_pos;
-+		__entry->block_size = params->block_size;
-+	),
-+	TP_printk("ino %lu pos %lld merkle_blocksize %u",
-+		(unsigned long) __entry->ino,
-+		__entry->data_pos,
-+		__entry->block_size)
-+);
-+
-+TRACE_EVENT(fsverity_merkle_hit,
-+	TP_PROTO(const struct inode *inode, u64 data_pos,
-+		 unsigned long hblock_idx, unsigned int level,
-+		 unsigned int hidx),
-+	TP_ARGS(inode, data_pos, hblock_idx, level, hidx),
-+	TP_STRUCT__entry(
-+		__field(ino_t, ino)
-+		__field(u64, data_pos)
-+		__field(unsigned long, hblock_idx)
-+		__field(unsigned int, level)
-+		__field(unsigned int, hidx)
-+	),
-+	TP_fast_assign(
-+		__entry->ino = inode->i_ino;
-+		__entry->data_pos = data_pos;
-+		__entry->hblock_idx = hblock_idx;
-+		__entry->level = level;
-+		__entry->hidx = hidx;
-+	),
-+	TP_printk("ino %lu data_pos %llu hblock_idx %lu level %u hidx %u",
-+		(unsigned long) __entry->ino,
-+		__entry->data_pos,
-+		__entry->hblock_idx,
-+		__entry->level,
-+		__entry->hidx)
-+);
-+
-+TRACE_EVENT(fsverity_verify_merkle_block,
-+	TP_PROTO(const struct inode *inode, unsigned long index,
-+		 unsigned int level, unsigned int hidx),
-+	TP_ARGS(inode, index, level, hidx),
-+	TP_STRUCT__entry(
-+		__field(ino_t, ino)
-+		__field(unsigned long, index)
-+		__field(unsigned int, level)
-+		__field(unsigned int, hidx)
-+	),
-+	TP_fast_assign(
-+		__entry->ino = inode->i_ino;
-+		__entry->index = index;
-+		__entry->level = level;
-+		__entry->hidx = hidx;
-+	),
-+	TP_printk("ino %lu hblock_idx %lu level %u hidx %u",
-+		(unsigned long) __entry->ino,
-+		__entry->index,
-+		__entry->level,
-+		__entry->hidx)
-+);
-+
-+#endif /* _TRACE_FSVERITY_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
--- 
-2.52.0
+"Add a new privileged ioctl so that xfs_scrub can ask the kernel to
+verify the media of the devices backing an xfs filesystem, and have any
+resulting media errors reported to fsnotify and xfs_healer.
 
+"To accomplish this, the kernel allocates a folio between the base page
+size and 1MB, and issues read IOs to a gradually incrementing range of
+one of the storage devices underlying an xfs filesystem.  If any error
+occurs, that raw error is reported to the calling process.  If the error
+happens to be one of the ones that the kernel considers indicative of
+data loss, then it will also be reported to xfs_healthmon and fsnotify.
+
+"Driving the verification from the kernel enables xfs (and by extension
+xfs_scrub) to have precise control over the size and error handling of
+IOs that are issued to the underlying block device, and to emit
+notifications about problems to other relevant kernel subsystems
+immediately.
+
+"Note that the caller is also allowed to reduce the size of the IO and
+to ask for a relaxation period after each IO."
+
+> > +
+> > +struct xfs_group_data_lost {
+> > +	xfs_agblock_t		startblock;
+> > +	xfs_extlen_t		blockcount;
+> > +};
+> > +
+> > +/* Report lost file data from rmap records */
+> > +STATIC int
+> > +xfs_verify_report_data_lost(
+> > +	struct xfs_btree_cur		*cur,
+> > +	const struct xfs_rmap_irec	*rec,
+> > +	void				*data)
+> > +{
+> > +	struct xfs_mount		*mp = cur->bc_mp;
+> > +	struct xfs_inode		*ip;
+> > +	struct xfs_group_data_lost	*lost = data;
+> > +	xfs_fileoff_t			fileoff = rec->rm_offset;
+> > +	xfs_extlen_t			blocks = rec->rm_blockcount;
+> > +	const bool			is_attr =
+> > +			(rec->rm_flags & XFS_RMAP_ATTR_FORK);
+> > +	const xfs_agblock_t		lost_end =
+> > +			lost->startblock + lost->blockcount;
+> > +	const xfs_agblock_t		rmap_end =
+> > +			rec->rm_startblock + rec->rm_blockcount;
+> > +	int				error = 0;
+> > +
+> > +	if (XFS_RMAP_NON_INODE_OWNER(rec->rm_owner))
+> > +	       return 0;
+> > +
+> > +	error = xfs_iget(mp, cur->bc_tp, rec->rm_owner, 0, 0, &ip);
+> > +	if (error)
+> > +		return 0;
+> > +
+> > +	if (rec->rm_flags & XFS_RMAP_BMBT_BLOCK) {
+> > +		xfs_bmap_mark_sick(ip, is_attr ? XFS_ATTR_FORK : XFS_DATA_FORK);
+> > +		goto out_rele;
+> > +	}
+> > +
+> > +	if (is_attr) {
+> > +		xfs_inode_mark_sick(ip, XFS_SICK_INO_XATTR);
+> > +		goto out_rele;
+> > +	}
+> > +
+> > +	if (lost->startblock > rec->rm_startblock) {
+> > +		fileoff += lost->startblock - rec->rm_startblock;
+> > +		blocks -= lost->startblock - rec->rm_startblock;
+> > +	}
+> > +	if (rmap_end > lost_end)
+> > +		blocks -= rmap_end - lost_end;
+> > +
+> > +	fserror_report_data_lost(VFS_I(ip), XFS_FSB_TO_B(mp, fileoff),
+> > +			XFS_FSB_TO_B(mp, blocks), GFP_NOFS);
+> > +
+> > +out_rele:
+> > +	xfs_irele(ip);
+> > +	return 0;
+> > +}
+> > +
+> > +/* Walk reverse mappings to look for all file data loss */
+> > +STATIC int
+> > +xfs_verify_report_losses(
+> > +	struct xfs_mount	*mp,
+> > +	enum xfs_group_type	type,
+> > +	xfs_daddr_t		daddr,
+> > +	u64			bblen)
+> > +{
+> > +	struct xfs_group	*xg = NULL;
+> > +	struct xfs_trans	*tp;
+> > +	xfs_fsblock_t		start_bno, end_bno;
+> > +	uint32_t		start_gno, end_gno;
+> > +	int			error;
+> > +
+> > +	if (type == XG_TYPE_RTG) {
+> > +		start_bno = xfs_daddr_to_rtb(mp, daddr);
+> > +		end_bno = xfs_daddr_to_rtb(mp, daddr + bblen - 1);
+> > +	} else {
+> > +		start_bno = XFS_DADDR_TO_FSB(mp, daddr);
+> > +		end_bno = XFS_DADDR_TO_FSB(mp, daddr + bblen - 1);
+> > +	}
+> > +
+> > +	tp = xfs_trans_alloc_empty(mp);
+> > +	start_gno = xfs_fsb_to_gno(mp, start_bno, type);
+> > +	end_gno = xfs_fsb_to_gno(mp, end_bno, type);
+> > +	while ((xg = xfs_group_next_range(mp, xg, start_gno, end_gno, type))) {
+> > +		struct xfs_buf		*agf_bp = NULL;
+> > +		struct xfs_rtgroup	*rtg = NULL;
+> > +		struct xfs_btree_cur	*cur;
+> > +		struct xfs_rmap_irec	ri_low = { };
+> > +		struct xfs_rmap_irec	ri_high;
+> > +		struct xfs_group_data_lost lost;
+> > +
+> > +		if (type == XG_TYPE_AG) {
+> > +			struct xfs_perag	*pag = to_perag(xg);
+> > +
+> > +			error = xfs_alloc_read_agf(pag, tp, 0, &agf_bp);
+> > +			if (error) {
+> > +				xfs_perag_put(pag);
+> > +				break;
+> > +			}
+> > +
+> > +			cur = xfs_rmapbt_init_cursor(mp, tp, agf_bp, pag);
+> > +		} else {
+> > +			rtg = to_rtg(xg);
+> > +			xfs_rtgroup_lock(rtg, XFS_RTGLOCK_RMAP);
+> > +			cur = xfs_rtrmapbt_init_cursor(tp, rtg);
+> > +		}
+> > +
+> > +		/*
+> > +		 * Set the rmap range from ri_low to ri_high, which represents
+> > +		 * a [start, end] where we looking for the files or metadata.
+> > +		 */
+> > +		memset(&ri_high, 0xFF, sizeof(ri_high));
+> > +		if (xg->xg_gno == start_gno)
+> > +			ri_low.rm_startblock =
+> > +				xfs_fsb_to_gbno(mp, start_bno, type);
+> > +		if (xg->xg_gno == end_gno)
+> > +			ri_high.rm_startblock =
+> > +				xfs_fsb_to_gbno(mp, end_bno, type);
+> > +
+> > +		lost.startblock = ri_low.rm_startblock;
+> > +		lost.blockcount = min(xg->xg_block_count,
+> > +				      ri_high.rm_startblock + 1) -
+> > +							ri_low.rm_startblock;
+> > +
+> > +		error = xfs_rmap_query_range(cur, &ri_low, &ri_high,
+> > +				xfs_verify_report_data_lost, &lost);
+> > +		xfs_btree_del_cursor(cur, error);
+> > +		if (agf_bp)
+> > +			xfs_trans_brelse(tp, agf_bp);
+> > +		if (rtg)
+> > +			xfs_rtgroup_unlock(rtg, XFS_RTGLOCK_RMAP);
+> > +		if (error) {
+> > +			xfs_group_put(xg);
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	xfs_trans_cancel(tp);
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> > + * Compute the desired verify IO size.
+> > + *
+> > + * To minimize command overhead, we'd like to create bios that are 1MB, though
+> > + * we allow the user to ask for a smaller size.
+> > + */
+> > +STATIC unsigned int
+> > +xfs_verify_iosize(
+> > +	const struct xfs_verify_media	*me,
+> > +	struct xfs_buftarg		*btp,
+> > +	uint64_t			bbcount)
+> > +{
+> > +	unsigned int			iosize =
+> > +			min_not_zero(SZ_1M, me->me_max_io_size);
+> > +
+> > +	BUILD_BUG_ON(BBSHIFT != SECTOR_SHIFT);
+> > +	ASSERT(BBTOB(bbcount) >= bdev_logical_block_size(btp->bt_bdev));
+> > +
+> > +	return clamp(iosize, bdev_logical_block_size(btp->bt_bdev),
+> > +			BBTOB(bbcount));
+> > +}
+> 
+> > +/* Allocate as much memory as we can get for verification buffer. */
+> > +STATIC struct folio *
+> 
+> Can we please retired STATIC already?
+
+Ok.
+
+> > +STATIC void
+> > +xfs_verify_media_error(
+> > +	struct xfs_mount	*mp,
+> > +	struct xfs_verify_media	*me,
+> > +	struct xfs_buftarg	*btp,
+> > +	xfs_daddr_t		daddr,
+> > +	unsigned int		bio_bbcount,
+> > +	blk_status_t		bio_status)
+> > +{
+> > +	trace_xfs_verify_media_error(mp, me, btp->bt_bdev->bd_dev, daddr,
+> > +			bio_bbcount, bio_status);
+> > +
+> > +	/*
+> > +	 * Pass any I/O error up to the caller if we didn't successfully verify
+
+"Pass any error, I/O or otherwise, up to the caller..."
+
+> > +	 * any bytes at all.
+> > +	 */
+> > +	if (me->me_start_daddr == daddr)
+> > +		me->me_ioerror = -blk_status_to_errno(bio_status);
+> > +
+> > +	/*
+> > +	 * PI validation failures, medium errors, or general IO errors are
+> > +	 * treated as indicators of data loss.  Everything else are (hopefully)
+> > +	 * transient errors and are not reported.
+> > +	 */
+> 
+> But still left in me->me_ioerror.  Is that intentional?
+
+Yeah.  All errors are reported to the ioctl caller, but only the ones
+that sound like data loss get passed to healthmon/fsnotify.
+
+> > +	switch (me->me_dev) {
+> > +	case XFS_DEV_DATA:
+> > +		xfs_verify_report_losses(mp, XG_TYPE_AG, daddr, bio_bbcount);
+> > +		break;
+> > +	case XFS_DEV_RT:
+> > +		xfs_verify_report_losses(mp, XG_TYPE_RTG, daddr, bio_bbcount);
+> > +		break;
+> > +	}
+> 
+> At some point we really need dev_to_group_type and vice versa helpers.
+
+Heh, yes.  Do you want that /now/ or when we add a second user?
+
+It also occurs to me that I could probably speed up the verify code a
+tiny bit more by hoisting the bio variable scope outside the loop and
+using bio_reuse to reset bi_iter and bi_sector, rather than freeing it
+and allocating a new one.
+
+--D
 
