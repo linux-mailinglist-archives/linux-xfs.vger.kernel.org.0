@@ -1,209 +1,137 @@
-Return-Path: <linux-xfs+bounces-29840-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29842-lists+linux-xfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49409D3B4F2
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 18:56:11 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CB47D3B4DA
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 18:49:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A67563047120
-	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 17:45:40 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5E29F30741AA
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jan 2026 17:48:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B26903033FA;
-	Mon, 19 Jan 2026 17:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B9AF32B98C;
+	Mon, 19 Jan 2026 17:48:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5XRitry"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FEoNrXLU"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2302FFFA4;
-	Mon, 19 Jan 2026 17:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB72F2C11F0
+	for <linux-xfs@vger.kernel.org>; Mon, 19 Jan 2026 17:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768844738; cv=none; b=paF1/pjpEKrRTxHWaJBW1e3aSkeMQ5h35Xthx0Rtw+Z6VWA+2GMEJZmTuMLzv444LUeF3xGc7IKUx9sp6aZXJ44uJHRZF9P2WSRsAm3eYYHhCdJET0P6CNzXalzJCxJV+yt272TdZ7cpxQxcDr881us1BWc1c8SH0X5zY4c9GXE=
+	t=1768844933; cv=none; b=T6Vxf0T5Esu4TT8fch4CoKIU99L3vGTTCuF15oLvFXfLVL6bF6fpgqguiuXl/8UqqNcQYUEhnUZInTgFCNes/INs/6e8rbbld+E/5Pu6dbuyNQ9OqzeZcxj9Jfn3Py4b3LzsyW2wDo77ZpSyopO9uwRZsW+i4RgH2BNsRzzWMa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768844738; c=relaxed/simple;
-	bh=GPpH+lrbGOkUO+HU9Chxi5Q9b/lVJMf37L9lUr7ORSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZAt7XMeyn6XaRzwLVKJoySz9CMWaaF+M0sYjmyeivm6CfZEfQ/ujXe2Pa2pwdcaLbcehCm6iNDjjwjZHdibs2GyPOsrwPiIgwRs+Xabk+k+37MmCxPC+63lstYn5pgjUqY1c+Vn1/M8z47I1VEFRc11trDZd4uT0jF1mR65tX3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5XRitry; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 264B7C116C6;
-	Mon, 19 Jan 2026 17:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768844738;
-	bh=GPpH+lrbGOkUO+HU9Chxi5Q9b/lVJMf37L9lUr7ORSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C5XRitryyvB369UvpUUl4ZByVUzZnV/Os70U8sb5qN7qyvUay3fkYqXuMerG1KiaK
-	 uiCUCQPF45PW7tt+hEkQzAKhgO2IXjJlJGMPNTIhEbYTIEDRde7TbzUW7Odwa6CiU0
-	 RYgOM/1POMEt5PwTYJmmkKJ2iPsOrShfOjrk4tKwSREc4rPj5kvQv+/m8qkx1xYOoq
-	 GfbiOA5x4FLcNJ3KgUtHdwWYiCpSHNMLSQdDRWPLKD2/Pf4n9wXkJhSCG/7GMnVUS8
-	 xboHbYe45dKIdeVZUtIKXcTbU53+OBiVlxyAlKjzZbwJ+7XYrwiro3TzMUuc86s/u6
-	 7JcdUFJL9s1kg==
-Date: Mon, 19 Jan 2026 09:45:37 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>,
-	Carlos Maiolino <cem@kernel.org>, Qu Wenruo <wqu@suse.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-block@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 14/14] xfs: use bounce buffering direct I/O when the
- device requires stable pages
-Message-ID: <20260119174537.GD15551@frogsfrogsfrogs>
-References: <20260119074425.4005867-1-hch@lst.de>
- <20260119074425.4005867-15-hch@lst.de>
+	s=arc-20240116; t=1768844933; c=relaxed/simple;
+	bh=7lhi6dC4hjqb2o/WtHOmm6+TrckUAwWkajDHUNU3nls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=euY9eNzrsRAw7bl6DIVy8myGl9T0g6ZtPt4lJmEQwfydHQyc+oLc+vImGyOYb8PvTsR8us5QUQ3BmoOmbCZHsKokmw843SGrOPwh5nXEveChgV/o4HtzBAi5jeWJ0xbvLpIve6BevpOL92wRTBy7HcjrzxhfPKn0h9N7HZFD6ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FEoNrXLU; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-34abc7da414so2787517a91.0
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Jan 2026 09:48:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768844931; x=1769449731; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kgJ96kKXRX1r9FKbMkdGhgK+mi4fabcbRigLxxVlAGE=;
+        b=FEoNrXLUWl1W0FDDNeoLKKHshZ5aLrEYSpglYrkHxQxfk0Dq6cMIjrBDPOJ2v2Jtgi
+         VZ9bwFoQf/78zhMfHecugwHiqYPB0544yk8HM3RyQbHxBjW3o688G4jiy55FyiV8Y4G+
+         lLaMqDszsS+jIx/U6k1Tv0sV1RKX7/VynleQW+rm4xW7COF+PexfVYXCY+pO061QOmVt
+         3L8r2fOhVhfDdTii8wTbam3qWB0/tYDhrHhhUweVinUSVszSmnL0rUNT2adjsmmDqSPN
+         xcb/kcKd55I/hm43aljY1swSwWnquenUHu0jCm4ZMZAE3RWJG3ol9nScJ/IbL1540F9h
+         rOcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768844931; x=1769449731;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kgJ96kKXRX1r9FKbMkdGhgK+mi4fabcbRigLxxVlAGE=;
+        b=vz6NDhtvDqYbWiD9WyJrIsHJAqNHmkcXYo3tJagkqJc5TCyHf2ZvBFubrMNYQ5NaXh
+         jTBmYpAobgKPr6/UJOtzyZ6L6tfksrGJ6PTHZQTVtY+qxOGr1jTPoTyvOwn3zRFexmjb
+         uCo12tKN30RmGgKaeU0F0nfXd7iRmMvlqY4qIDVpaF8CSk/L0zy2hlajrhj1dLpEeQU0
+         F+RG11CEGY3AAZQzmAip0ebPqbJ4R9itXmpzXAOrv5XHV8Uu7cQwYKyIl8q/1kXjNQx3
+         QCbpSekbg7HEYmBFkNuja6VKpNr6dvIUKOz7FWYus1nQJoVAKxnSMcT808TNQ62nvwPb
+         nRcA==
+X-Gm-Message-State: AOJu0Yzpc8EpUrHh0f6f3nWyjd0JIwzUW8RKzUxwBlvCFo8e8Q18zqtN
+	UK4JXjsNwltOxEK5BcLpGK1Szl0rPpiyZwB7wTlLxUTE6gJ3RNvW8xMFOS16Jg==
+X-Gm-Gg: AZuq6aL0cro1I6qGMI7jLeD4v3RIJzgJkIcaUyZFCdIp3mMe8QGwZ/xATSdYgZDaDqL
+	i6p+n/IbbYcp/J7ANth2ZQKQTkT8NwxTB5PavTcTdVCcvVrYDb25cy9/2Xw2sXbJso3czLICA5t
+	QOueB6bD5ybU/hRtjoGoE92gczDXcs3YziDQE6yBFj6wMV/00kLtiFe+F/+cOLC3pFcOfPJpr0x
+	kL3nmTemfV+1odh3NG+s5aSOf5q7zdahQA1Q8jzpJegXFqOTG8K5dx52sZS9Hwr0jfZqKp2xFvT
+	HlEcSNw8w8T+qiUda/SNbJSdstUm9/G7zunhsMmxLTC+l/O9u10kyInVTTToDJLb+vf5ApuTWOe
+	U8r1kMuJdo/a818ANX8/bXNn8UEj/DUiHKGor/OBUBY/wAyeWpjIEwPeKHdnU71Tf8BWAP3FJL5
+	aQ93V6ui3QLx/I2aex6nIlBQ==
+X-Received: by 2002:a17:90b:384f:b0:34c:3cbc:db8e with SMTP id 98e67ed59e1d1-35272f891c7mr9345071a91.25.1768844930684;
+        Mon, 19 Jan 2026 09:48:50 -0800 (PST)
+Received: from [192.168.0.120] ([49.207.204.230])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3527313c2a9sm9841385a91.17.2026.01.19.09.48.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Jan 2026 09:48:50 -0800 (PST)
+Message-ID: <d231892c-596c-4185-9683-db20ad442288@gmail.com>
+Date: Mon, 19 Jan 2026 23:18:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260119074425.4005867-15-hch@lst.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] xfs: Fix calculation of m_rtx_per_rbmblock
+To: linux-xfs@vger.kernel.org
+Cc: ritesh.list@gmail.com, ojaswin@linux.ibm.com, djwong@kernel.org,
+ hch@infradead.org
+References: <2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists@gmail.com>
+Content-Language: en-US
+From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
+In-Reply-To: <2e0f36968b112303466c5e07a88c7e9949f769fe.1768822986.git.nirjhar.roy.lists@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 19, 2026 at 08:44:21AM +0100, Christoph Hellwig wrote:
-> Fix direct I/O on devices that require stable pages by asking iomap
-> to bounce buffer.  To support this, ioends are used for direct reads
-> in this case to provide a user context for copying data back from the
-> bounce buffer.
-> 
-> This fixes qemu when used on devices using T10 protection information
-> and probably other cases like iSCSI using data digests.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Ahaha, I forgot in the last round that s_dio_done_wq is not at all the
-place for doing bio completions.
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-
---D
-
+On 1/19/26 17:16, Nirjhar Roy (IBM) wrote:
+> m_rtx_per_rbmblock of struct xfs_mount should use the function
+> xfs_rtbitmap_rtx_per_rbmblock() to calculate the number of rt
+> extents tracked per bitmap file block instead of always
+> calculating it as mp->m_blockwsize << XFS_NBWORDLOG.
+> When metadir/rtgroups is enabled, the number of tracked extents
+> per bitmap file block is slightly less than sizeof(fsblock) in
+> bits, since some bytes are reserved by struct xfs_rtbuf_blkinfo.
+>
+> Signed-off-by: Nirjhar Roy (IBM) <nirjhar.roy.lists@gmail.com>
 > ---
->  fs/xfs/xfs_aops.c |  8 ++++++--
->  fs/xfs/xfs_file.c | 41 ++++++++++++++++++++++++++++++++++++++---
->  2 files changed, 44 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 56a544638491..c3c1e149fff4 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -103,7 +103,7 @@ xfs_ioend_put_open_zones(
->   * IO write completion.
->   */
->  STATIC void
-> -xfs_end_ioend(
-> +xfs_end_ioend_write(
->  	struct iomap_ioend	*ioend)
->  {
->  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
-> @@ -202,7 +202,11 @@ xfs_end_io(
->  			io_list))) {
->  		list_del_init(&ioend->io_list);
->  		iomap_ioend_try_merge(ioend, &tmp);
-> -		xfs_end_ioend(ioend);
-> +		if (bio_op(&ioend->io_bio) == REQ_OP_READ)
-> +			iomap_finish_ioends(ioend,
-> +				blk_status_to_errno(ioend->io_bio.bi_status));
-> +		else
-> +			xfs_end_ioend_write(ioend);
->  		cond_resched();
->  	}
->  }
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 7874cf745af3..f6cc63dcf961 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -224,12 +224,34 @@ xfs_ilock_iocb_for_write(
->  	return 0;
->  }
->  
-> +/*
-> + * Bounce buffering dio reads need a user context to copy back the data.
-> + * Use an ioend to provide that.
-> + */
-> +static void
-> +xfs_dio_read_bounce_submit_io(
-> +	const struct iomap_iter	*iter,
-> +	struct bio		*bio,
-> +	loff_t			file_offset)
-> +{
-> +	iomap_init_ioend(iter->inode, bio, file_offset, IOMAP_IOEND_DIRECT);
-> +	bio->bi_end_io = xfs_end_bio;
-> +	submit_bio(bio);
-> +}
-> +
-> +static const struct iomap_dio_ops xfs_dio_read_bounce_ops = {
-> +	.submit_io	= xfs_dio_read_bounce_submit_io,
-> +	.bio_set	= &iomap_ioend_bioset,
-> +};
-> +
->  STATIC ssize_t
->  xfs_file_dio_read(
->  	struct kiocb		*iocb,
->  	struct iov_iter		*to)
->  {
->  	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
-> +	unsigned int		dio_flags = 0;
-> +	const struct iomap_dio_ops *dio_ops = NULL;
->  	ssize_t			ret;
->  
->  	trace_xfs_file_direct_read(iocb, to);
-> @@ -242,7 +264,12 @@ xfs_file_dio_read(
->  	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
->  	if (ret)
->  		return ret;
-> -	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL, 0, NULL, 0);
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping)) {
-> +		dio_ops = &xfs_dio_read_bounce_ops;
-> +		dio_flags |= IOMAP_DIO_BOUNCE;
-> +	}
-> +	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, dio_ops, dio_flags,
-> +			NULL, 0);
->  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
->  
->  	return ret;
-> @@ -703,6 +730,8 @@ xfs_file_dio_write_aligned(
->  		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
->  		iolock = XFS_IOLOCK_SHARED;
->  	}
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-> +		dio_flags |= IOMAP_DIO_BOUNCE;
->  	trace_xfs_file_direct_write(iocb, from);
->  	ret = iomap_dio_rw(iocb, from, ops, dops, dio_flags, ac, 0);
->  out_unlock:
-> @@ -750,6 +779,7 @@ xfs_file_dio_write_atomic(
->  {
->  	unsigned int		iolock = XFS_IOLOCK_SHARED;
->  	ssize_t			ret, ocount = iov_iter_count(from);
-> +	unsigned int		dio_flags = 0;
->  	const struct iomap_ops	*dops;
->  
->  	/*
-> @@ -777,8 +807,10 @@ xfs_file_dio_write_atomic(
->  	}
->  
->  	trace_xfs_file_direct_write(iocb, from);
-> -	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops,
-> -			0, NULL, 0);
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-> +		dio_flags |= IOMAP_DIO_BOUNCE;
-> +	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops, dio_flags,
-> +			NULL, 0);
->  
->  	/*
->  	 * The retry mechanism is based on the ->iomap_begin method returning
-> @@ -867,6 +899,9 @@ xfs_file_dio_write_unaligned(
->  	if (flags & IOMAP_DIO_FORCE_WAIT)
->  		inode_dio_wait(VFS_I(ip));
->  
-> +	if (mapping_stable_writes(iocb->ki_filp->f_mapping))
-> +		flags |= IOMAP_DIO_BOUNCE;
-> +
->  	trace_xfs_file_direct_write(iocb, from);
->  	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
->  			   &xfs_dio_write_ops, flags, NULL, 0);
-> -- 
-> 2.47.3
-> 
-> 
+>   fs/xfs/libxfs/xfs_sb.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+> index 94c272a2ae26..b2b4d7f21a5d 100644
+> --- a/fs/xfs/libxfs/xfs_sb.c
+> +++ b/fs/xfs/libxfs/xfs_sb.c
+> @@ -1268,7 +1268,7 @@ xfs_sb_mount_common(
+>   	mp->m_agno_log = xfs_highbit32(sbp->sb_agcount - 1) + 1;
+>   	mp->m_blockmask = sbp->sb_blocksize - 1;
+>   	mp->m_blockwsize = xfs_rtbmblock_size(sbp) >> XFS_WORDLOG;
+> -	mp->m_rtx_per_rbmblock = mp->m_blockwsize << XFS_NBWORDLOG;
+> +	mp->m_rtx_per_rbmblock = xfs_rtbitmap_rtx_per_rbmblock(mp);
+
+Okay, so there are some build failures with this change (reported by 
+kernel test robot). It looks like xfs_rtbitmap_rtx_per_rbmblock() gets 
+conditionally compiled and xfs_rtbmblock_size() takes care of the 
+metadir enable/disablement. I will keep the present code unchanged and 
+cancel this patch.
+
+--NR
+
+>   
+>   	ags->blocks = mp->m_sb.sb_agblocks;
+>   	ags->blklog = mp->m_sb.sb_agblklog;
+
+-- 
+Nirjhar Roy
+Linux Kernel Developer
+IBM, Bangalore
+
 
