@@ -1,210 +1,244 @@
-Return-Path: <linux-xfs+bounces-29933-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29935-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OIzhLImxb2nMKgAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29933-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:47:05 +0100
+	id CEMXB4rVb2mgMQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29935-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:20:42 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59A1447E82
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:47:05 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DC624A2F2
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:20:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0598E70D3CA
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 16:11:56 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2E2A45AD512
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 16:18:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8097742980A;
-	Tue, 20 Jan 2026 15:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31F3C47A0A5;
+	Tue, 20 Jan 2026 16:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5tEurI9"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kR9gOAj5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hcwcLU9t"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow-b8-smtp.messagingengine.com (flow-b8-smtp.messagingengine.com [202.12.124.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBD01B4F2C
-	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 15:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A391A311967;
+	Tue, 20 Jan 2026 16:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768924410; cv=none; b=geH+XIgVlQkQvjw2XY8z5nIgk+91UXtaNpVURL5OBj8RUEEn3UChGOprS1K4wwdUjidvvqJp8lIEnWwS/5dqPOEhtApG5U/yY+1KDizLoVpfiINGGs0/VJb7qvfsCcxL6xz9ReoeepEgApKe+m4WzJAB2nRmG12c9DjQO1C0vY8=
+	t=1768924863; cv=none; b=Q+RZoKlKpLAyLu1OCCPzY9wIebDUfBNoU2xBQkxunQjlJ5OlrgMPOP9bAzd5lfGbXvusOqfq9454kzeOcid+tAGC4KevDG+yuvz1ireb7Fw1Ht9/RmbEu1XEU8bSiK/iuDbsjGua4787xrpvnE3GjQ44IsQuVshFHDskFTCUeU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768924410; c=relaxed/simple;
-	bh=GiZ2QTATZIeMZAtIsB1kbUzhoodwTZXnrzoWV+VFt0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tPJZxUVsce6j8H81oSB9j8qollpz9JjjXxZelvrNxOXpGETJwtcINPk7GAO2fMRgfgB3K0thDKondAd80nwPrebySbzx2vKEVxjjlx56QesIeDNeNykXkl9r1GV2eeeozceqPglbu7zIZUkhKGTuYfeXySlaPuYW76FCzVKphaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5tEurI9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E93A4C16AAE;
-	Tue, 20 Jan 2026 15:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768924410;
-	bh=GiZ2QTATZIeMZAtIsB1kbUzhoodwTZXnrzoWV+VFt0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t5tEurI9Zt0E8w+oU6BXS9e3aDXhB89ie85Gbm4i7vtxwoGsNnHyUvZ47ypzuDtI7
-	 1D/rvSiOkkOkHTsBdfi7DO5PaDLmohBeQ6HpSaghrXZbJdCK01df6Kq4PwzIUfzZoA
-	 IqhqKgND3xLD3m5+lDg34nzfqNHWX2uZQRhLbz8z1dbteikYux5ip+0Ckh9sh3i91p
-	 e8boNz90locUwDF8bhmvHWqglWWKU2LckluNPes7rEauSxwWWQwWB8cYwM8Zp/hWFX
-	 DG+4pl26iNP3P6mLoHO+Wm1pmUpacWOanmI7Qo4Dk0GYYmvoA8iRhgAEc+N/2PgWeH
-	 LkSz/tCMLD2kg==
-Date: Tue, 20 Jan 2026 07:53:29 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Hans Holmberg <hans.holmberg@wdc.com>
-Cc: linux-xfs@vger.kernel.org, Carlos Maiolino <cem@kernel.org>,
-	Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@lst.de>,
-	dlemoal@kernel.org, johannes.thumshirn@wdc.com
-Subject: Re: [PATCH] xfs: always allocate the free zone with the lowest index
-Message-ID: <20260120155329.GM15551@frogsfrogsfrogs>
-References: <20260120085746.29980-1-hans.holmberg@wdc.com>
+	s=arc-20240116; t=1768924863; c=relaxed/simple;
+	bh=XntaNhMOb3ljN0OUod4vqOUNi4wPltdCRFCEO3POz5k=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=hTrzCie9REUOI6UPUmBxZfotDQie3fsip/O4uWuch5OxX6GI+kx86BL2A21d3VSeYtrpApkEGKTSz4mQ2HMixFStK9mEu/hvCVJzqTEcGdnpNmHtUxnhAIQKIwYLv2h9cTaOehuht6pIH8dEqcPr/L9ShjPgGwaReaTMR+Pl6gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kR9gOAj5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hcwcLU9t; arc=none smtp.client-ip=202.12.124.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.stl.internal (Postfix) with ESMTP id A7CFA13012B5;
+	Tue, 20 Jan 2026 11:00:57 -0500 (EST)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-04.internal (MEProxy); Tue, 20 Jan 2026 11:00:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1768924857;
+	 x=1768932057; bh=KfkVnVcFie+8lJSMwr+BM1cQg1+WZ1F7itYYKxiYDxA=; b=
+	kR9gOAj5pXn1HlvyIPf1Dn2UnaJAS+jRzIAsaR2XzWmwVU3duRgbE0mh5JHntjXj
+	cuWYepTHKUWzhsOhC73++QR5yvZK4X1S2AwaIcjIrwElOhOnB7qBma9Rt3sk4wEp
+	WApUxciyhayGX/RZcK8fKFz6xIdI+xP0DrR1lTAATkjc8XoS7YDkMHYuYZCNVtBX
+	4oGFoRnhTrXR+Av/H+nXr31W99ztPY8wV3R2x29p9i/J68icSSg69RfuDb4y8YAC
+	s4LhKb2VHYYXAgITpUrU4ktCyPGwkOI9lIgNBoXcky3A3mVVfmLH/JHxew6hI9Hi
+	veL08yMhuZP0sXK/DL5Ezw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768924857; x=
+	1768932057; bh=KfkVnVcFie+8lJSMwr+BM1cQg1+WZ1F7itYYKxiYDxA=; b=h
+	cwcLU9t2Na5NvYNY+HqrNgOlIOAEx2zdTmluSgjajfn4eJ5F+JIB4BRW8ErmbMJb
+	5ljggxqqdQPdg2SZtb56c1NTdnpBu5weRDSXaiQR+Mg0Ub9iThiAQ79EUDX9yysa
+	If4/Knasx1iPLLZBRyvYpz8FhOYnlESn3fgeQPRrN8KMwKv6jSRpu0DLxO2sSNsb
+	R4TQnDC+MhnR+ow7ZS/sYxRoTgI4V6asIPb1zuVNFs2Fc8BB9RtG2146jooAzX5l
+	vcbjXpebeDkjFdxXkF3/V9TJ8Omw44E5cSge6Qts1idwHBYUlshPhSE1PbPF8M3M
+	EM/yfREYAwG76Llyugm5Q==
+X-ME-Sender: <xms:tqZvabeGsRgVUmYbJYubbEJsMblBOKkMPVUcZJSAcArtFN7R0_JmeQ>
+    <xme:tqZvacCZ4cB2mdxuaWLwjQTUSZDxD3Bf1wqfkWuap9G_bNa-8cI9R9Kjk_UIAoevp
+    8e2nWPX3vkW-eL_zNn3-aozty1UyyBCIwgt3SJui6DtRU08gGv2zDs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugedtkeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhgu
+    uceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvg
+    hrnhephfdthfdvtdefhedukeetgefggffhjeeggeetfefggfevudegudevledvkefhvdei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnh
+    gusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepgeefpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehjrghnihdrnhhikhhulhgrsehlihhnuhigrdhinhhtvghlrdgtoh
+    hmpdhrtghpthhtohepjhhoohhnrghsrdhlrghhthhinhgvnheslhhinhhugidrihhnthgv
+    lhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuh
+    igrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhn
+    uggrthhiohhnrdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfh
+    hrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehinhhtvghlqdhgfhigsehlihhs
+    thhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepnhhtfhhsfeeslhhish
+    htshdrlhhinhhugidruggvvhdprhgtphhtthhopehnvhguihhmmheslhhishhtshdrlhhi
+    nhhugidruggvvhdprhgtphhtthhopeguvghvvghlsehlihhsthhsrdhorhgrnhhgvghfsh
+    drohhrgh
+X-ME-Proxy: <xmx:tqZvaWR4-8YE2KZu1y5jvyNQljKoCBlYcV9QkUPtn5Ni7W-NSZMsUw>
+    <xmx:tqZvaRktxaBWwwSZcFROAg2TG6_nap3Qro5Wk-tlRgwqau7F5lM2lA>
+    <xmx:tqZvaZLjBCOSgCLQJimLJKR8KCf21qGLd9xPnpeFgrHRnOQFa7r4YA>
+    <xmx:tqZvacVW_XYjP20S7nkpndFaafpNrDdhIyeeUuIH4hGwRfJO4DQR5A>
+    <xmx:uaZvadqcdmsUnvEM9LNX4jzRraMdQCDjpzpx0jFAVDSf99K8t-JGJM_0>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A67DD70006A; Tue, 20 Jan 2026 11:00:54 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260120085746.29980-1-hans.holmberg@wdc.com>
-X-Spamd-Result: default: False [-1.46 / 15.00];
+X-ThreadId: AWSx1lsrOtaB
+Date: Tue, 20 Jan 2026 17:00:28 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>,
+ "Jason Gunthorpe" <jgg@nvidia.com>
+Cc: "Andrew Morton" <akpm@linux-foundation.org>,
+ "Jarkko Sakkinen" <jarkko@kernel.org>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Thomas Gleixner" <tglx@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Dan Williams" <dan.j.williams@intel.com>,
+ "Vishal Verma" <vishal.l.verma@intel.com>,
+ "Dave Jiang" <dave.jiang@intel.com>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+ "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Dave Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Jani Nikula" <jani.nikula@linux.intel.com>,
+ "Joonas Lahtinen" <joonas.lahtinen@linux.intel.com>,
+ "Rodrigo Vivi" <rodrigo.vivi@intel.com>,
+ "Tvrtko Ursulin" <tursulin@ursulin.net>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Huang Rui" <ray.huang@amd.com>, "Matthew Auld" <matthew.auld@intel.com>,
+ "Matthew Brost" <matthew.brost@intel.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Benjamin LaHaise" <bcrl@kvack.org>, "Gao Xiang" <xiang@kernel.org>,
+ "Chao Yu" <chao@kernel.org>, "Yue Hu" <zbestahu@gmail.com>,
+ "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+ "Sandeep Dhavale" <dhavale@google.com>,
+ "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
+ "Theodore Ts'o" <tytso@mit.edu>,
+ "Andreas Dilger" <adilger.kernel@dilger.ca>,
+ "Muchun Song" <muchun.song@linux.dev>,
+ "Oscar Salvador" <osalvador@suse.de>,
+ "David Hildenbrand (Red Hat)" <david@kernel.org>,
+ "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
+ "Mike Marshall" <hubcap@omnibond.com>,
+ "Martin Brandenburg" <martin@omnibond.com>,
+ "Tony Luck" <tony.luck@intel.com>,
+ "Reinette Chatre" <reinette.chatre@intel.com>,
+ "Dave Martin" <Dave.Martin@arm.com>, "James Morse" <james.morse@arm.com>,
+ "Babu Moger" <babu.moger@amd.com>, "Carlos Maiolino" <cem@kernel.org>,
+ "Damien Le Moal" <dlemoal@kernel.org>,
+ "Naohiro Aota" <naohiro.aota@wdc.com>,
+ "Johannes Thumshirn" <jth@kernel.org>,
+ "Matthew Wilcox" <willy@infradead.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, "Mike Rapoport" <rppt@kernel.org>,
+ "Suren Baghdasaryan" <surenb@google.com>,
+ "Michal Hocko" <mhocko@suse.com>, "Hugh Dickins" <hughd@google.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Zi Yan" <ziy@nvidia.com>,
+ "Nico Pache" <npache@redhat.com>, "Ryan Roberts" <ryan.roberts@arm.com>,
+ "Dev Jain" <dev.jain@arm.com>, "Barry Song" <baohua@kernel.org>,
+ "Lance Yang" <lance.yang@linux.dev>, "Jann Horn" <jannh@google.com>,
+ "Pedro Falcato" <pfalcato@suse.de>,
+ "David Howells" <dhowells@redhat.com>,
+ "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ "Yury Norov" <yury.norov@gmail.com>,
+ "Rasmus Villemoes" <linux@rasmusvillemoes.dk>, linux-sgx@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+ linux-aio@kvack.org, linux-erofs@lists.ozlabs.org,
+ linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
+ devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
+ keyrings@vger.kernel.org, linux-security-module@vger.kernel.org
+Message-Id: <1617ac60-6261-483d-aeb5-13aba5f477af@app.fastmail.com>
+In-Reply-To: <488a0fd8-5d64-4907-873b-60cefee96979@lucifer.local>
+References: <cover.1768857200.git.lorenzo.stoakes@oracle.com>
+ <baac396f309264c6b3ff30465dba0fbd63f8479c.1768857200.git.lorenzo.stoakes@oracle.com>
+ <20260119231403.GS1134360@nvidia.com>
+ <36abc616-471b-4c7b-82f5-db87f324d708@lucifer.local>
+ <20260120133619.GZ1134360@nvidia.com>
+ <488a0fd8-5d64-4907-873b-60cefee96979@lucifer.local>
+Subject: Re: [PATCH RESEND 09/12] mm: make vm_area_desc utilise vma_flags_t only
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [0.35 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[arndb.de : No valid SPF, No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_FROM(0.00)[bounces-29933-lists,linux-xfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,linux.intel.com,redhat.com,alien8.de,zytor.com,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
 	TO_DN_SOME(0.00)[];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,wdc.com:email]
-X-Rspamd-Queue-Id: 59A1447E82
+	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[93];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[arnd@arndb.de,linux-xfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	TAGGED_FROM(0.00)[bounces-29935-lists,linux-xfs=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 7DC624A2F2
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 09:57:46AM +0100, Hans Holmberg wrote:
-> Zones in the beginning of the address space are typically mapped to
-> higer bandwidth tracks on HDDs than those at the end of the address
-> space. So, in stead of allocating zones "round robin" across the whole
-> address space, always allocate the zone with the lowest index.
+On Tue, Jan 20, 2026, at 16:10, Lorenzo Stoakes wrote:
+> On Tue, Jan 20, 2026 at 09:36:19AM -0400, Jason Gunthorpe wrote:
+>
+> I am not sure about this 'idiomatic kernel style' thing either, it feels rather
+> conjured. Yes you wouldn't ordinarily pass something larger than a register size
+> by-value, but here the intent is for it to be inlined anyway right?
+>
+> It strikes me that the key optimisation here is the inlining, now if the issue
+> is that ye olde compiler might choose not to inline very small functions (seems
+> unlikely) we could always throw in an __always_inline?
 
-Does it make any difference if it's a zoned ssd?  I'd imagine not, but I
-wonder if there are any longer term side effects like lower-numbered
-zones filling up and getting gc'd more often?
+I can think of three specific things going wrong with structures passed
+by value:
 
---D
+- functions that cannot be inlined are bound by the ELF ABI, and
+  several of them require structs to be passed on the stack regardless
+  of the size. Most of the popular architectures seem fine here, but
+  mips and powerpc look like they are affected.
 
-> This increases average write bandwidth for overwrite workloads
-> when less than the full capacity is being used. At ~50% utilization
-> this improves bandwidth for a random file overwrite benchmark
-> with 128MiB files and 256MiB zone capacity by 30%.
-> 
-> Running the same benchmark with small 2-8 MiB files at 67% capacity
-> shows no significant difference in performance. Due to heavy
-> fragmentation the whole zone range is in use, greatly limiting the 
-> number of free zones with high bw.
-> 
-> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
-> ---
-> 
->  fs/xfs/xfs_zone_alloc.c | 47 +++++++++++++++--------------------------
->  fs/xfs/xfs_zone_priv.h  |  1 -
->  2 files changed, 17 insertions(+), 31 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_zone_alloc.c b/fs/xfs/xfs_zone_alloc.c
-> index bbcf21704ea0..d6c97026f733 100644
-> --- a/fs/xfs/xfs_zone_alloc.c
-> +++ b/fs/xfs/xfs_zone_alloc.c
-> @@ -408,31 +408,6 @@ xfs_zone_free_blocks(
->  	return 0;
->  }
->  
-> -static struct xfs_group *
-> -xfs_find_free_zone(
-> -	struct xfs_mount	*mp,
-> -	unsigned long		start,
-> -	unsigned long		end)
-> -{
-> -	struct xfs_zone_info	*zi = mp->m_zone_info;
-> -	XA_STATE		(xas, &mp->m_groups[XG_TYPE_RTG].xa, start);
-> -	struct xfs_group	*xg;
-> -
-> -	xas_lock(&xas);
-> -	xas_for_each_marked(&xas, xg, end, XFS_RTG_FREE)
-> -		if (atomic_inc_not_zero(&xg->xg_active_ref))
-> -			goto found;
-> -	xas_unlock(&xas);
-> -	return NULL;
-> -
-> -found:
-> -	xas_clear_mark(&xas, XFS_RTG_FREE);
-> -	atomic_dec(&zi->zi_nr_free_zones);
-> -	zi->zi_free_zone_cursor = xg->xg_gno;
-> -	xas_unlock(&xas);
-> -	return xg;
-> -}
-> -
->  static struct xfs_open_zone *
->  xfs_init_open_zone(
->  	struct xfs_rtgroup	*rtg,
-> @@ -472,13 +447,25 @@ xfs_open_zone(
->  	bool			is_gc)
->  {
->  	struct xfs_zone_info	*zi = mp->m_zone_info;
-> +	XA_STATE		(xas, &mp->m_groups[XG_TYPE_RTG].xa, 0);
->  	struct xfs_group	*xg;
->  
-> -	xg = xfs_find_free_zone(mp, zi->zi_free_zone_cursor, ULONG_MAX);
-> -	if (!xg)
-> -		xg = xfs_find_free_zone(mp, 0, zi->zi_free_zone_cursor);
-> -	if (!xg)
-> -		return NULL;
-> +	/*
-> +	 * Pick the free zone with lowest index. Zones in the beginning of the
-> +	 * address space typically provides higher bandwidth than those at the
-> +	 * end of the address space on HDDs.
-> +	 */
-> +	xas_lock(&xas);
-> +	xas_for_each_marked(&xas, xg, ULONG_MAX, XFS_RTG_FREE)
-> +		if (atomic_inc_not_zero(&xg->xg_active_ref))
-> +			goto found;
-> +	xas_unlock(&xas);
-> +	return NULL;
-> +
-> +found:
-> +	xas_clear_mark(&xas, XFS_RTG_FREE);
-> +	atomic_dec(&zi->zi_nr_free_zones);
-> +	xas_unlock(&xas);
->  
->  	set_current_state(TASK_RUNNING);
->  	return xfs_init_open_zone(to_rtg(xg), 0, write_hint, is_gc);
-> diff --git a/fs/xfs/xfs_zone_priv.h b/fs/xfs/xfs_zone_priv.h
-> index ce7f0e2f4598..8fbf9a52964e 100644
-> --- a/fs/xfs/xfs_zone_priv.h
-> +++ b/fs/xfs/xfs_zone_priv.h
-> @@ -72,7 +72,6 @@ struct xfs_zone_info {
->  	/*
->  	 * Free zone search cursor and number of free zones:
->  	 */
-> -	unsigned long		zi_free_zone_cursor;
->  	atomic_t		zi_nr_free_zones;
->  
->  	/*
-> -- 
-> 2.40.1
-> 
-> 
+- The larger the struct is, the more architectures are affected.
+  Parts of the amdgpu driver and the bcachefs file system ran into this
+  with 64-bit structures passed by value on 32-bit architectures
+  causing horrible codegen even with inlining. I think it's
+  usually fine up to a single register size.
+
+- clang's inlining algorithm works the other way round from gcc's:
+  inlining into the root caller first and sometimes leaving tiny
+  leaf function out of line unless you add __always_inline.
+
+      Arnd
 
