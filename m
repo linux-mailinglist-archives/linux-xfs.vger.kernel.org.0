@@ -1,62 +1,121 @@
-Return-Path: <linux-xfs+bounces-29954-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29893-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qJtNN7XOb2mgMQAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29954-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:51:33 +0100
+	id oHVSLiJccWnLGAAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29893-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Jan 2026 00:07:14 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79EA749CDB
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:51:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 604ED5F3EC
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Jan 2026 00:07:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id BDB2B44DE3E
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 18:01:22 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D8F4948B6D9
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 11:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B61AD361DCA;
-	Tue, 20 Jan 2026 18:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CEF1425CCE;
+	Tue, 20 Jan 2026 11:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQxlZ4MG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kj03KAvz";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jlhb9xlL"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897EA33D4FA;
-	Tue, 20 Jan 2026 18:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF083B8BB2
+	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 11:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768932041; cv=none; b=qsiEA15JG8DNoCDEtOUvl5deS+zAdYBGUb7gGJKUdesZSB3LqYTZjNzep+Sz8HWgdDjCIHr0mT8GVajbKn6YlYg9h1k8Nf22vcVoxjYudmrnGUTfElwnuyqyxhu0qmRfTHmpiOOm4RDxb58YRkIFMke050hrk02iVrsicEuYVBQ=
+	t=1768909467; cv=none; b=cOuXrkMXdGD7ZU7+1b741V2BFz32gZLACs4+6fiSAuL32iCKwr9x9tDuj5oOSqq2FyPgb0XXCU1iGVkj2eTZ6kg13zizkaAgtsNpvzK5Zfip+HzDwB2SAgsFOZwO4FYX6qCScVZuF8xB1yENeuXF/MhoeR8BgkkCVvWCeprIjgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768932041; c=relaxed/simple;
-	bh=ncigG/ePE2ZSWRzUXnkvsuMiY0IalkDBdmaSUX8A6DQ=;
+	s=arc-20240116; t=1768909467; c=relaxed/simple;
+	bh=TiiXYzQUqQAZpwrQs2Qyyc4v41VwLgKHuTM7jdyKi+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/ihi2bjIulYUKAI0RNs1EnmDI9Obk/Ou82jH0jnjkzLD3BPGqfGxeu/aNA9FJKiVRFWyrQDAffvhzGfNAH7dmipm/CYcw6XcEltJLlIyyejS4OMCWFC283zeOnncLKZWZ/dNX0ZLkue/wPjlJ9X+vqSHehpVwrEkLE/OSjc2+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQxlZ4MG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0319FC16AAE;
-	Tue, 20 Jan 2026 18:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768932041;
-	bh=ncigG/ePE2ZSWRzUXnkvsuMiY0IalkDBdmaSUX8A6DQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lQxlZ4MGc+TNGsdrGubT4ynqhlBY1QVPqAJFHiDQpCF69YpiKaQf1XWzEABmUYIsM
-	 dY78fDOp75gPArmD9pDdRQiTsdacoZ3alj6QkpyRX8PAtxiPOBNn9xnY3IExCtZw/3
-	 heAZM7zaIu1QdKQfPizvnFPaKAiR6mIrP5PeGYsr4QLEDEvUxvEVh+7nIkSwXaTdT1
-	 8YYIPJER95dm47DNaKyK9Se+D/Pp7q83xpdA5t0HVp70J0Y+gT5RggedZd+iXc40hj
-	 igszrudS0U+MlIutgwZ4CwpSu+QYCIuVjGrJID4cn0ThxqfJGenhzrF0foEBdYHOZR
-	 4gYlkn8r0dGvw==
-Date: Tue, 20 Jan 2026 10:00:40 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TY/ahQcVMie3NLecUX0fXyyU9rWUwWvi2yv4lCxaB8MR9T0A4Fjix3CBstYit+KHVJriXKcpRUq09gViCbgWrVKDMV4HWuWGQXX/XU3YCtA3WZSGovtrj8FH9wF/3JSZNbO2slb06dFg00q0ZQcuvpmTS94gokrh5M5pKkmItSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kj03KAvz; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jlhb9xlL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1768909464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VXQVvpxNNsGjingzXc9wZFJEzzxIAdMJuzmc45mqLJ4=;
+	b=Kj03KAvzSwftwjUz/cwETMU66pUwRmPJRxUyPX4IxMQ1SnSJ1R7jqT4nwn6pXbmW2ZgQPf
+	8I67/qddsRY+GXxsAyhf968qWb3Ouu4rH/tlxJA8OKQP3VuguU+75oQtKsxKE5y7OAifLP
+	Z+t3miqekuQSoLnjcoM91dOhKWEeM58=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-629-waCrCArEP1mDJagJInZ2oA-1; Tue, 20 Jan 2026 06:44:22 -0500
+X-MC-Unique: waCrCArEP1mDJagJInZ2oA-1
+X-Mimecast-MFC-AGG-ID: waCrCArEP1mDJagJInZ2oA_1768909462
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-47ee8808ffbso39904945e9.2
+        for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 03:44:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1768909462; x=1769514262; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VXQVvpxNNsGjingzXc9wZFJEzzxIAdMJuzmc45mqLJ4=;
+        b=Jlhb9xlLSsTj8aJQQ7cCewi2PV+zlb+TPM6H/HSJO9rSv3SNJ9zeUMEJhwLSsf17Oo
+         hVavBbjxarROty7oHmlmdahE6Vpf+IgFmoKqD43GFNBqZBWZEt3jzrtYBQVyr/i0+oRF
+         YD56el9nyAb8+5nukkqpRXaw+t1VgiEytE7kKVnpgZjwr3PPRb/IBejOX4xXNILTISVP
+         AM/mMtF/J9MP9Bx4fwFhe7idzyX3Sg67l+5DTQfDzI8XsaQ0q9LOITgZanoU7MR0CiQ2
+         t4cmfmAvg9PTXZsSKM4H0yQ02CeiFYmxY9GUbvY+C4RBuoXgwMX0H008aKaSVhyW51Ez
+         5NHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768909462; x=1769514262;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VXQVvpxNNsGjingzXc9wZFJEzzxIAdMJuzmc45mqLJ4=;
+        b=qs0g8Fa9DzExogW1oXuzf3aIlycJzAh0PEkEzaMASJYroCmzAeQvBixPSpTRdPbtTb
+         CFHfvXhMPZRzsKjfbEprYBw83UmUOo0dryGILV6IZ4HRYwyH2Q2C4L71XKkwjrFmDljV
+         +SHH1V8y6vTz6A5EdoGJ9mvr7JH4iTBVQiXoW/lyRIA354Es7A7MjF9udoVIarqo/E16
+         9nMHKNwFOTtSx2jKfOEsiyeTMG9DF3SWArHHUJu/mxcaoX+ip8f77CsKpQcfxhOd//9h
+         w09uSWOFiWK3C2f2A3uSyhNi4gHLcUJhrnNE4UTFtggNN+dmmLkOqYmhhM7sjMAsNEDf
+         4dQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrGkoF2Wm2d8D3brLEdUgWWiTYHguRvRyRBOqP1V9w/dR2uz/H+Hwcrm/mQ64MLl9a1cL1MZMR9r4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrrlCxvs02Rq1Zqna6ADNfmJRuVipLWQCJ+J1vJSasV76GscjF
+	uvdaOLSNROQ9rczwPU2v6JvqjfaGJxojVOvK1yhj/uqal5K0K1ydbxyFx11Uod+xf1MfHvcefDY
+	OH7OD1rikGhzAyIvawTccz5JTug7d5BjKoAmhg6mWz8yvGQXNK8BDF7odUBuv
+X-Gm-Gg: AY/fxX60y0KSJukZszuuaJvdqNRYijWdaPcqP+/ZPb/sb/tgWNn1sRGTYVfhJ3NnZmw
+	XZPsSWlOH2kqXYrPZFnKs1QQEZUxxKAOrUd167U5dSAHjEWM8eRUmmDe84Tb3B+ylS0hRWlzyFR
+	Kkty5ADDsUhxc10m7u7r8nqe+obNfgVxYTEnuFWWDL7jIA4BnvSbj5aBRee3Q6RddRbyxF2G44F
+	NI6N5X9xhBX5s+tZQ5z7yvnRtI5tBDPkt9p6FTJTO+eYFidkiFpmAT/t1/NlfnZvbdYqAI8gwc7
+	e7C4juc//1Or/DLyvkWqLvOrSfXN1nGVLT2qGoJqzDIH0/GdzZyARg1FBs4ZiRjNyAOOwO7i2Hg
+	=
+X-Received: by 2002:a05:600c:4448:b0:47e:e20e:bbb4 with SMTP id 5b1f17b1804b1-4801e345c8amr179356665e9.26.1768909461628;
+        Tue, 20 Jan 2026 03:44:21 -0800 (PST)
+X-Received: by 2002:a05:600c:4448:b0:47e:e20e:bbb4 with SMTP id 5b1f17b1804b1-4801e345c8amr179356335e9.26.1768909461124;
+        Tue, 20 Jan 2026 03:44:21 -0800 (PST)
+Received: from thinky ([217.30.74.39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47f42907141sm300491595e9.9.2026.01.20.03.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 03:44:20 -0800 (PST)
+Date: Tue, 20 Jan 2026 12:44:19 +0100
+From: Andrey Albershteyn <aalbersh@redhat.com>
 To: Christoph Hellwig <hch@lst.de>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6.1 11/11] xfs: add media verification ioctl
-Message-ID: <20260120180040.GU15551@frogsfrogsfrogs>
-References: <176852588473.2137143.1604994842772101197.stgit@frogsfrogsfrogs>
- <176852588776.2137143.7103003682733018282.stgit@frogsfrogsfrogs>
- <20260120041226.GJ15551@frogsfrogsfrogs>
- <20260120071830.GA5686@lst.de>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, 
+	Eric Biggers <ebiggers@kernel.org>, Matthew Wilcox <willy@infradead.org>, fsverity@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, aalbersh@kernel.org, 
+	david@fromorbit.com, tytso@mit.edu, linux-ext4@vger.kernel.org, jaegeuk@kernel.org, 
+	chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: fsverity metadata offset, was: Re: [PATCH v2 0/23] fs-verity
+ support for XFS with post EOF merkle tree
+Message-ID: <5tse47xskuaofuworccgwhyftyymx5xj3mc6opwz7nfxa225u6@uvbk4gc2rktd>
+References: <aWZ0nJNVTnyuFTmM@casper.infradead.org>
+ <op5poqkjoachiv2qfwizunoeg7h6w5x2rxdvbs4vhryr3aywbt@cul2yevayijl>
+ <aWci_1Uu5XndYNkG@casper.infradead.org>
+ <20260114061536.GG15551@frogsfrogsfrogs>
+ <5z5r6jizgxqz5axvzwbdmtkadehgdf7semqy2oxsfytmzzu6ik@zfvhexcp3fz2>
+ <6r24wj3o3gctl3vz4n3tdrfjx5ftkybdjmmye2hejdcdl6qseh@c2yvpd5d4ocf>
+ <20260119063349.GA643@lst.de>
+ <20260119193242.GB13800@sol>
+ <20260119195816.GA15583@frogsfrogsfrogs>
+ <20260120073218.GA6757@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -65,60 +124,74 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260120071830.GA5686@lst.de>
-X-Spamd-Result: default: False [-1.46 / 15.00];
+In-Reply-To: <20260120073218.GA6757@lst.de>
+X-Rspamd-Server: lfdr
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	DATE_IN_PAST(1.00)[35];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-29954-lists,linux-xfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-29893-lists,linux-xfs=lfdr.de];
+	DMARC_POLICY_ALLOW(0.00)[redhat.com,quarantine];
+	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	FROM_NEQ_ENVFROM(0.00)[aalbersh@redhat.com,linux-xfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-xfs];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,lst.de:email]
-X-Rspamd-Queue-Id: 79EA749CDB
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:helo,ams.mirrors.kernel.org:rdns]
+X-Rspamd-Queue-Id: 604ED5F3EC
 X-Rspamd-Action: no action
-X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 08:18:30AM +0100, Christoph Hellwig wrote:
+On 2026-01-20 08:32:18, Christoph Hellwig wrote:
+> On Mon, Jan 19, 2026 at 11:58:16AM -0800, Darrick J. Wong wrote:
+> > > >  a) not all architectures are reasonable.  As Darrick pointed out
+> > > >     hexagon seems to support page size up to 1MiB.  While I don't know
+> > > >     if they exist in real life, powerpc supports up to 256kiB pages,
+> > > >     and I know they are used for real in various embedded settings
+> > 
+> > They *did* way back in the day, I worked with some seekrit PPC440s early
+> > in my career.  I don't know that any of them still exist, but the code
+> > is still there...
 > 
-> > +		unsigned int	bio_bbcount;
-> > +		blk_status_t	bio_status;
-> > +
-> > +		bio_reset(bio, btp->bt_bdev, REQ_OP_READ);
-> > +		bio->bi_iter.bi_sector = daddr;
-> > +		bio_add_folio_nofail(bio, folio,
-> > +				min(bbcount << SECTOR_SHIFT, folio_size(folio)),
-> > +				0);
+> Sorry, I meant I don't really know how real the hexagon large page
+> sizes are.  I know about the ppcs one personally, too.
 > 
-> You could actually use bio_reuse as you implied in the previous mail here
-> and save the bio_add_folio_nofail call.  Not really going to make much
-> of a difference, so:
+> > > If we do need to fix this, there are a couple things we could consider
+> > > doing without changing the on-disk format in ext4 or f2fs: putting the
+> > > data in the page cache at a different offset than it exists on-disk, or
+> > > using "small" pages for EOF specifically.
+> > 
+> > I'd leave the ondisk offset as-is, but change the pagecache offset to
+> > roundup(i_size_read(), mapping_max_folio_size_supported()) just to keep
+> > file data and fsverity metadata completely separate.
+> 
+> Can we find a way to do that in common code and make ext4 and f2fs do
+> the same?
 
-Hrm.  Is that bio_reuse patch queued for upstream?  Though maybe it'd be
-easier to make a mental note (ha!) to clean this up once both appear
-upstream.
+hmm I don't see what else we could do except providing common offset
+and then use it to map blocks
 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+loff_t fsverity_metadata_offset(struct inode *inode)
+{
+	return roundup(i_size_read(), mapping_max_folio_size_supported());
+}
 
-Thanks!
+-- 
+- Andrey
 
---D
 
