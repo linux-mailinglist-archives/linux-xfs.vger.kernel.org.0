@@ -1,81 +1,67 @@
-Return-Path: <linux-xfs+bounces-29944-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29949-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CKDgF5/gb2n8RwAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29944-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 21:07:59 +0100
+	id SLPdAwPdb2n8RwAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29949-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:52:35 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id C90674B06C
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 21:07:58 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id D55D14ACA8
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:52:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2A702A40923
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:27:12 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E869B52DCE3
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:51:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BF75407567;
-	Tue, 20 Jan 2026 17:26:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE12C421EF5;
+	Tue, 20 Jan 2026 17:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQAOvnfH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyhjlCO7"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F0B2C326A;
-	Tue, 20 Jan 2026 17:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BCA33ADAB
+	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 17:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768929969; cv=none; b=ehw1rCVbftTCxZWEtbQ3zlZgajHxUOLuQIPbSo3/zL8H6/IdP98Y+4B/xLO4VcgctUHmThzASD2OILzQbDKY1icn+mMCh2tU1pL6r/w1NFZZ8gFnthMKYrYEgCZBRUyilwa9YHmf5BcUcqPxIkzb6zDMTigeiP3ZguTFEVkaOiw=
+	t=1768931449; cv=none; b=u1UybDhrGZX+3yd/KXZDww1138xI6cH1mA2KxcipOluSOQAxUqszYaB3cVOusTEMDSwHj63cjZzTjeM39/WkgvwfWVPj4whLpCsLOkPZ0qmhpy9X8xSJ5vbYQTnMsoHwRrLRBAb27PoDtPqU9VRzfKqkWTq3faKLjVLC8nkTOdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768929969; c=relaxed/simple;
-	bh=FIUbtAnKi1f9Ixtwf6Hj98EMVx/0loFgVG2T3r6WF14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uuqKHIxlQgongijrSMsYLa9qqvlCvGf6CbZMUhabkAdHuBoBpnGXI2z6nSm9aqvT3wLwPGALnVVz/ZFCy3tfmyBsv+i2rz+XO8s8gPxhjGNiLjYiTFI4jSX2dDwCPDlftpd1pvHPGlHP4Ssz49ywwylX+UvvlRusc9D9gmIOpkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQAOvnfH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B773DC16AAE;
-	Tue, 20 Jan 2026 17:26:08 +0000 (UTC)
+	s=arc-20240116; t=1768931449; c=relaxed/simple;
+	bh=j7xojW866yafR4dCo5mwPktqd649/K9nE6/GtzrOtvA=;
+	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JquOu7pVDuCSlE5rGiXRrUZVOHD8JS2pN5bnK4cGZ/+re/7RzPQ3hLMBtm+2lvRl0N2/WMR5FX/fPCOtqZV8Vtvff/U6hpeb5Eb0Q9fRIe7aETHO11bJKF03Kj2WcOm5dmIbosNyYD5lr49nsrW/m0po8GYq7vbjSfiHO/yphfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyhjlCO7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3457FC16AAE;
+	Tue, 20 Jan 2026 17:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768929968;
-	bh=FIUbtAnKi1f9Ixtwf6Hj98EMVx/0loFgVG2T3r6WF14=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oQAOvnfHwE78eIgKAIRtjx3D0fJsMFdeUHLCzYJaYSbsVMAoIf8DavjI4p9Ig8W+r
-	 orNBrgopcnEGNUsPOjBzAw3CY8JmSYEyPwonLuWljP12QZDK9k3MWDBh53R+AWXwZ6
-	 zhJoY9tYkeJqyfT9hbLB93MtK5Q0MgWiSkMhTjBy0ekfYujLfB+lI9+/dM3OQagJx3
-	 KpaO7nNxt5kXF7WpJGeywfLb2Ddy67/JvMP7PRrIPh6x0xVzraeG5oEBBV3YCDNXaG
-	 xu0rFDdtGxZHncy0o74bYgvxpzKcenLojcGLkF/BiK1TaFC4mzmUTGPYzxyaBxt7im
-	 NwSokwvhiUT7A==
-Date: Tue, 20 Jan 2026 09:26:08 -0800
+	s=k20201202; t=1768931449;
+	bh=j7xojW866yafR4dCo5mwPktqd649/K9nE6/GtzrOtvA=;
+	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+	b=GyhjlCO7kvkWOxH4KwMRBPtoERL247rO+b+JDqOanAgKfTWlzO8wMKSBCGIuKyQgi
+	 QZBMxX0KN+efCdCqj5ndK8v5SNo9AD2v7zO92JvqofJe2Kna8ptPWdCN8L4Fk1ldGR
+	 zHxhQ0ele3MTl9wbP23hsHrJGaRDGjdBz+fFC9tshnCfx58Q/yHcvAtNL9YJsI7dsy
+	 HJ27zPAAVUcCRzl9UEcbSMnNn1F7Ws1kJ3jRKwQaULyb+KI9QDRIoppnCkR/ovyKYp
+	 1sAuOdHQLRzdQcr3IrOr3hQm2BaFel7MV/o9X917iO0lO7ixfuRfSO9G0cBpn3fKsW
+	 mAjPEwlrrILNQ==
+Date: Tue, 20 Jan 2026 09:50:48 -0800
+Subject: [PATCH 1/5] mkfs: set rtstart from user-specified dblocks
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org,
-	sj1557.seo@samsung.com, yuezhang.mo@sony.com,
-	almaz.alexandrovich@paragon-software.com, slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu,
-	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org,
-	pc@manguebit.org, ronniesahlberg@gmail.com, sprasad@microsoft.com,
-	trondmy@kernel.org, anna@kernel.org, jaegeuk@kernel.org,
-	chao@kernel.org, hansg@kernel.org, senozhatsky@chromium.org,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v6 01/16] fs: Add case sensitivity flags to file_kattr
-Message-ID: <20260120172608.GQ15551@frogsfrogsfrogs>
-References: <20260120142439.1821554-1-cel@kernel.org>
- <20260120142439.1821554-2-cel@kernel.org>
+To: aalbersh@kernel.org, djwong@kernel.org
+Cc: linux-xfs@vger.kernel.org, linux-xfs@vger.kernel.org
+Message-ID: <176893137089.1079372.9346420785447726442.stgit@frogsfrogsfrogs>
+In-Reply-To: <176893137046.1079372.10421059565558082402.stgit@frogsfrogsfrogs>
+References: <176893137046.1079372.10421059565558082402.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260120142439.1821554-2-cel@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
@@ -84,179 +70,115 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-29944-lists,linux-xfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	TAGGED_FROM(0.00)[bounces-29949-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	RCPT_COUNT_TWELVE(0.00)[32];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_NONE(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: C90674B06C
+	TAGGED_RCPT(0.00)[linux-xfs];
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: D55D14ACA8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 09:24:24AM -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> Enable upper layers such as NFSD to retrieve case sensitivity
-> information from file systems by adding FS_XFLAG_CASEFOLD and
-> FS_XFLAG_CASENONPRESERVING flags.
-> 
-> Filesystems report case-insensitive or case-nonpreserving behavior
-> by setting these flags directly in fa->fsx_xflags. The default
-> (flags unset) indicates POSIX semantics: case-sensitive and
-> case-preserving. These flags are read-only; userspace cannot set
-> them via ioctl.
-> 
-> Relocate struct file_kattr initialization from fileattr_fill_xflags()
-> and fileattr_fill_flags() to vfs_fileattr_get() and the ioctl/syscall
-> call sites. This allows filesystem ->fileattr_get() callbacks to set
-> flags directly in fa->fsx_xflags before invoking the fill functions,
-> which previously would have zeroed those values. Callers that bypass
-> vfs_fileattr_get() must now zero-initialize the struct themselves.
-> 
-> Case sensitivity information is exported to userspace via the
-> fa_xflags field in the FS_IOC_FSGETXATTR ioctl and file_getattr()
-> system call.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/file_attr.c           | 14 ++++++--------
->  fs/xfs/xfs_ioctl.c       |  2 +-
->  include/linux/fileattr.h |  3 ++-
->  include/uapi/linux/fs.h  |  2 ++
+From: Darrick J. Wong <djwong@kernel.org>
 
-This ought to go to linux-api because you're changing the userspace api.
-Granted it's only adding a flag definition to an existing ioctl, but
-FS_XFLAG_CASEFOLD /does/ collide with Andrey's fsverity xflag patch...
+generic/211 fails to format the disk on a system with an internal zoned
+device.  Poking through the shell scripts, it's apparently doing this:
 
-(The rest of the changes looks ok to me.)
+# mkfs.xfs -d size=629145600 -r size=629145600 -b size=4096 -m metadir=1,autofsck=1,uquota,gquota,pquota, -r zoned=1 -d rtinherit=1 /dev/sdd
+size 629145600 specified for data subvolume is too large, maximum is 131072 blocks
 
---D
+Strange -- we asked for 629M data and rt sections, the device is 20GB in
+size, but it claims insufficient space in the data subvolume.
 
->  4 files changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/file_attr.c b/fs/file_attr.c
-> index 13cdb31a3e94..2700200c5b9c 100644
-> --- a/fs/file_attr.c
-> +++ b/fs/file_attr.c
-> @@ -15,12 +15,10 @@
->   * @fa:		fileattr pointer
->   * @xflags:	FS_XFLAG_* flags
->   *
-> - * Set ->fsx_xflags, ->fsx_valid and ->flags (translated xflags).  All
-> - * other fields are zeroed.
-> + * Set ->fsx_xflags, ->fsx_valid and ->flags (translated xflags).
->   */
->  void fileattr_fill_xflags(struct file_kattr *fa, u32 xflags)
->  {
-> -	memset(fa, 0, sizeof(*fa));
->  	fa->fsx_valid = true;
->  	fa->fsx_xflags = xflags;
->  	if (fa->fsx_xflags & FS_XFLAG_IMMUTABLE)
-> @@ -46,11 +44,9 @@ EXPORT_SYMBOL(fileattr_fill_xflags);
->   * @flags:	FS_*_FL flags
->   *
->   * Set ->flags, ->flags_valid and ->fsx_xflags (translated flags).
-> - * All other fields are zeroed.
->   */
->  void fileattr_fill_flags(struct file_kattr *fa, u32 flags)
->  {
-> -	memset(fa, 0, sizeof(*fa));
->  	fa->flags_valid = true;
->  	fa->flags = flags;
->  	if (fa->flags & FS_SYNC_FL)
-> @@ -84,6 +80,8 @@ int vfs_fileattr_get(struct dentry *dentry, struct file_kattr *fa)
->  	struct inode *inode = d_inode(dentry);
->  	int error;
->  
-> +	memset(fa, 0, sizeof(*fa));
-> +
->  	if (!inode->i_op->fileattr_get)
->  		return -ENOIOCTLCMD;
->  
-> @@ -323,7 +321,7 @@ int ioctl_setflags(struct file *file, unsigned int __user *argp)
->  {
->  	struct mnt_idmap *idmap = file_mnt_idmap(file);
->  	struct dentry *dentry = file->f_path.dentry;
-> -	struct file_kattr fa;
-> +	struct file_kattr fa = {};
->  	unsigned int flags;
->  	int err;
->  
-> @@ -355,7 +353,7 @@ int ioctl_fssetxattr(struct file *file, void __user *argp)
->  {
->  	struct mnt_idmap *idmap = file_mnt_idmap(file);
->  	struct dentry *dentry = file->f_path.dentry;
-> -	struct file_kattr fa;
-> +	struct file_kattr fa = {};
->  	int err;
->  
->  	err = copy_fsxattr_from_user(&fa, argp);
-> @@ -434,7 +432,7 @@ SYSCALL_DEFINE5(file_setattr, int, dfd, const char __user *, filename,
->  	struct filename *name __free(putname) = NULL;
->  	unsigned int lookup_flags = 0;
->  	struct file_attr fattr;
-> -	struct file_kattr fa;
-> +	struct file_kattr fa = {};
->  	int error;
->  
->  	BUILD_BUG_ON(sizeof(struct file_attr) < FILE_ATTR_SIZE_VER0);
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 59eaad774371..f0417c4d1fca 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -496,7 +496,7 @@ xfs_ioc_fsgetxattra(
->  	xfs_inode_t		*ip,
->  	void			__user *arg)
->  {
-> -	struct file_kattr	fa;
-> +	struct file_kattr	fa = {};
->  
->  	xfs_ilock(ip, XFS_ILOCK_SHARED);
->  	xfs_fill_fsxattr(ip, XFS_ATTR_FORK, &fa);
-> diff --git a/include/linux/fileattr.h b/include/linux/fileattr.h
-> index f89dcfad3f8f..709de829659f 100644
-> --- a/include/linux/fileattr.h
-> +++ b/include/linux/fileattr.h
-> @@ -16,7 +16,8 @@
->  
->  /* Read-only inode flags */
->  #define FS_XFLAG_RDONLY_MASK \
-> -	(FS_XFLAG_PREALLOC | FS_XFLAG_HASATTR)
-> +	(FS_XFLAG_PREALLOC | FS_XFLAG_HASATTR | \
-> +	 FS_XFLAG_CASEFOLD | FS_XFLAG_CASENONPRESERVING)
->  
->  /* Flags to indicate valid value of fsx_ fields */
->  #define FS_XFLAG_VALUES_MASK \
-> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-> index 66ca526cf786..919148beaa8c 100644
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -253,6 +253,8 @@ struct file_attr {
->  #define FS_XFLAG_FILESTREAM	0x00004000	/* use filestream allocator */
->  #define FS_XFLAG_DAX		0x00008000	/* use DAX for IO */
->  #define FS_XFLAG_COWEXTSIZE	0x00010000	/* CoW extent size allocator hint */
-> +#define FS_XFLAG_CASEFOLD	0x00020000	/* case-insensitive lookups */
-> +#define FS_XFLAG_CASENONPRESERVING 0x00040000	/* case not preserved */
->  #define FS_XFLAG_HASATTR	0x80000000	/* no DIFLAG for this	*/
->  
->  /* the read-only stuff doesn't really belong here, but any other place is
-> -- 
-> 2.52.0
-> 
-> 
+Further analysis shows that open_devices is setting rtstart to 1% of the
+size of the data volume (or no less than 300M) and rounding that up to
+the nearest power of two (512M).  Hence the 131072 number.
+
+But wait, we said that we wanted a 629M data section.  Let's set rtstart
+to the same value if the user didn't already provide one, instead of
+using the default value.
+
+Cc: <linux-xfs@vger.kernel.org> # v6.15.0
+Fixes: 2e5a737a61d34e ("xfs_mkfs: support creating file system with zoned RT devices")
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+---
+ mkfs/xfs_mkfs.c |   42 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
+
+
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index b34407725f76df..a90160b26065b7 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -3696,6 +3696,36 @@ _("log stripe unit (%d bytes) is too large (maximum is 256KiB)\n"
+ 
+ }
+ 
++static uint64_t
++calc_rtstart(
++	const struct mkfs_params	*cfg,
++	const struct libxfs_init	*xi)
++{
++	uint64_t			rt_target_size;
++	uint64_t			rtstart = 1;
++
++	if (cfg->dblocks) {
++		/*
++		 * If the user specified the size of the data device but not
++		 * the start of the internal rt device, set the internal rt
++		 * volume to start at the end of the data device.
++		 */
++		return cfg->dblocks << (cfg->blocklog - BBSHIFT);
++	}
++
++	/*
++	 * By default reserve at 1% of the total capacity (rounded up to the
++	 * next power of two) for metadata, but match the minimum we enforce
++	 * elsewhere. This matches what SMR HDDs provide.
++	 */
++	rt_target_size = max((xi->data.size + 99) / 100,
++			     BTOBB(300 * 1024 * 1024));
++
++	while (rtstart < rt_target_size)
++		rtstart <<= 1;
++	return rtstart;
++}
++
+ static void
+ open_devices(
+ 	struct mkfs_params	*cfg,
+@@ -3720,17 +3750,7 @@ open_devices(
+ 		zt->rt.zone_capacity = zt->data.zone_capacity;
+ 		zt->rt.nr_zones = zt->data.nr_zones - zt->data.nr_conv_zones;
+ 	} else if (cfg->sb_feat.zoned && !cfg->rtstart && !xi->rt.dev) {
+-		/*
+-		 * By default reserve at 1% of the total capacity (rounded up to
+-		 * the next power of two) for metadata, but match the minimum we
+-		 * enforce elsewhere. This matches what SMR HDDs provide.
+-		 */
+-		uint64_t rt_target_size = max((xi->data.size + 99) / 100,
+-					      BTOBB(300 * 1024 * 1024));
+-
+-		cfg->rtstart = 1;
+-		while (cfg->rtstart < rt_target_size)
+-			cfg->rtstart <<= 1;
++		cfg->rtstart = calc_rtstart(cfg, xi);
+ 	}
+ 
+ 	if (cfg->rtstart) {
+
 
