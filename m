@@ -1,81 +1,81 @@
-Return-Path: <linux-xfs+bounces-29925-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29927-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eMzgDD2vb2lBGgAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29925-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:37:17 +0100
+	id wDurHH7Db2lsMQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29927-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:03:42 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90D5F47B92
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:37:16 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9B8949078
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:03:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E1551749098
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 14:59:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 875129AB4B2
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 15:16:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3499143D4E9;
-	Tue, 20 Jan 2026 14:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D964611FB;
+	Tue, 20 Jan 2026 14:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QalHLqLP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Avlk0NnZ"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A980A26158C;
-	Tue, 20 Jan 2026 14:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0C343DA4B;
+	Tue, 20 Jan 2026 14:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768920385; cv=none; b=u8D1Zjmj3ksfi3Tei9xwnoXI9PNKQD5gu1nGvv+IHkjJmlLZ44pss01WTJCOqkd95yEau5++z4puXw09VdZoYT6J+4NY4CX1uAKZipuQxFEurZ4lEJEwPNOAaGi9el8cGZ+lhv2q+Q8U38agnSFbHltt70cYiKBRBdmx8q6q6C8=
+	t=1768921159; cv=none; b=PM3I1aToRnzm/nOpbR4HXMzlUdP+aWtgZK7s4RbHFD25MF7d840ABOgV/lx17dlPTz57NkKn6tJN4mbmoQSgQbXk/8aoucxkVDuWbEJsQ7D9qHHMVSyx+Ktdm5CtmKNrqmWsb33POY5W5ybPzo0uu1ID2YQUfNP2L5x7DYJpqME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768920385; c=relaxed/simple;
-	bh=fZ5BDlbsrcOtNdtnCPOAUECbflqzsxpExs7rvu2zbRQ=;
+	s=arc-20240116; t=1768921159; c=relaxed/simple;
+	bh=2ldYkMxiEJRC61/dpns8O88y8jpxGdodYgDxP3g17Q4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tAPMk0nqGMQLZJCjoj5qlLr3XoQW1QWlmkU5vVMuFSrV5QDQyAgAhxGkQ6x6buNnu+0N2nQEt9cII5ON30bq3pcUQW/WnFbjjbC9PmMt01MvAKDD706ZSFICEqg+825GjRMq54Y1UxByEMEPQjFnfbf2erlr/iubWxgwuUs7jJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QalHLqLP; arc=none smtp.client-ip=198.175.65.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=bpns+aNxHLBeKhqfCcJohr6Ak4/H4EMhHTXgeN5naJeJpShLmiVUl99CEzLIclXTm+B42v2sCtC2qrMf6Ts5AZbia76DnrFpowAvQqXQEkaAXpvEWOopUafKqpGnn1CK6Q1V4vXZFjJLXC5GGYGT2eI9cVgQLECR0VdUXVRSNpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Avlk0NnZ; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768920384; x=1800456384;
+  t=1768921157; x=1800457157;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=fZ5BDlbsrcOtNdtnCPOAUECbflqzsxpExs7rvu2zbRQ=;
-  b=QalHLqLPF1ZHhVPhsoGVkiKVMbB6HUdxejr3KldSp8QJMkaX89rraViT
-   JIY9Gl7SF69uwFc536XtLyz6TJBkBMcHF7Vb5yKHBGfN/SZcXpIx2G4Sl
-   ufsgrEWLQSRkBVrwtdDkIqembuetJvejJwwMh2yHJKBSjvym+fUETOpyW
-   k7S+oQusXjP7bOGmy3pwX4lBsL/1CCMGsJog/HsWKJZNNjdZJmymspnL+
-   bZ6a6wxllm8nIA6irmrW4N3a+jbfG6oc3KZaF/520UGuEh3rJThBgdDeO
-   p3YEgtpkHUdgYz8KsrQJmqVlo4BRpXFp555rEZ+7moS7zummtipL/tmLe
-   w==;
-X-CSE-ConnectionGUID: oA26+ghrSMyooPWtWQiYJg==
-X-CSE-MsgGUID: nw25/DoiT3G+YiYS40EVGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="70034836"
+  bh=2ldYkMxiEJRC61/dpns8O88y8jpxGdodYgDxP3g17Q4=;
+  b=Avlk0NnZCUuJ0vIUChOws8hzX31nGG/fVVSQzMhsgP+eqHIssuCx5Yrt
+   +iEWgWq8Y/UNsKxpqlq6PI3vn1CwPhMLnZ5zB+QG9XVTjnbbzA/vywDyt
+   YmQxa7ChiKHG+c0oOx+6Ezb6rUzaWIMqNnmMe6js8e6XULkemAF+hfpY/
+   SjHPAp8TOqmrzAMl4qsZheJY2NsjRNsObDZ4wHnQK3OescWOOuRVs/Yh3
+   df4pNv854XIstz+LkTRMFV1LC9cui92l2dCwhQDBaNlxcyQ/myCGIFCcs
+   xEKDktD9o9NkwF3X6zs65K+DHtxZu40Fk4B2vaiQ7MKknyJIGwN/Mj7P2
+   g==;
+X-CSE-ConnectionGUID: pVk9iLgnRIe0GtHW4RZq8A==
+X-CSE-MsgGUID: FaHnvhtZQHqa7pGIXvOGOw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="69863786"
 X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="70034836"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:46:23 -0800
-X-CSE-ConnectionGUID: g4vb0DYRS6e2rXppykHI/Q==
-X-CSE-MsgGUID: wJ4VOXNKQJekOn+jVA71Rg==
+   d="scan'208";a="69863786"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:59:17 -0800
+X-CSE-ConnectionGUID: BY4M+HYSTVa/l1Nz/hHR4g==
+X-CSE-MsgGUID: erUACityTTSFNiiHmWvK8w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="206558066"
+   d="scan'208";a="210633075"
 Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.244.240])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:46:21 -0800
-Date: Tue, 20 Jan 2026 16:46:18 +0200
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:59:14 -0800
+Date: Tue, 20 Jan 2026 16:59:11 +0200
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: Dmitry Antipov <dmantipov@yandex.ru>
 Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
 	Carlos Maiolino <cem@kernel.org>,
 	Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] lib: introduce simple error-checking wrapper for
- memparse()
-Message-ID: <aW-VOtHVHh-2RLHd@smile.fi.intel.com>
+Subject: Re: [PATCH v4 3/3] xfs: adjust handling of a few numerical mount
+ options
+Message-ID: <aW-YP7wCEvRJzyfR@smile.fi.intel.com>
 References: <20260119160623.a762c3d64f230936198dc17e@linux-foundation.org>
  <20260120141229.356513-1-dmantipov@yandex.ru>
- <aW-VDu4aPV6kZv80@smile.fi.intel.com>
+ <20260120141229.356513-3-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aW-VDu4aPV6kZv80@smile.fi.intel.com>
+In-Reply-To: <20260120141229.356513-3-dmantipov@yandex.ru>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Spamd-Result: default: False [-1.96 / 15.00];
@@ -94,7 +94,7 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-29925-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-29927-lists,linux-xfs=lfdr.de];
 	DKIM_TRACE(0.00)[intel.com:+];
 	DMARC_POLICY_ALLOW(0.00)[intel.com,none];
 	RCVD_TLS_LAST(0.00)[];
@@ -105,7 +105,7 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-xfs@vger.kernel.org];
@@ -114,20 +114,35 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	RCPT_COUNT_SEVEN(0.00)[7];
 	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 90D5F47B92
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,intel.com:dkim,smile.fi.intel.com:mid]
+X-Rspamd-Queue-Id: D9B8949078
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 04:45:39PM +0200, Andy Shevchenko wrote:
-> On Tue, Jan 20, 2026 at 05:12:27PM +0300, Dmitry Antipov wrote:
-> > Introduce 'memvalue()' which uses 'memparse()' to parse a string
-> > with optional memory suffix into a non-negative number. If parsing
-> > has succeeded, returns 0 and stores the result at the location
-> > specified by the second argument. Otherwise returns -EINVAL and
-> > leaves the location untouched.
+On Tue, Jan 20, 2026 at 05:12:29PM +0300, Dmitry Antipov wrote:
+> Prefer recently introduced 'memvalue()' over an ad-hoc 'suffix_kstrtoint()'
+> and 'suffix_kstrtoull()' to parse and basically validate the values passed
+> via 'logbsize', 'allocsize', and 'max_atomic_write' mount options, and
+> reject non-power-of-two values passed via the first and second one early
+> in 'xfs_fs_parse_param()' rather than in 'xfs_fs_validate_params()'.
 
-Also this misses the cover letter to explain the motivation, changelog, etc.
+...
+
+> -	if (kstrtoint(value, base, &_res))
+> -		ret = -EINVAL;
+> -	kfree(value);
+> -	*res = _res << shift_left_factor;
+> -	return ret;
+
+_res is int, if negative the above is UB in accordance with C standard.
+So, if ever this code runs to the shifting left negative numbers it goes
+to a slippery slope (I think it works as intended, but...).
+
+That said, I assume this code was never designed to get a negative value
+to the _res.
+
+With all this, I do not see the point of having a new API.
+Also, where are the test cases for it?
 
 -- 
 With Best Regards,
