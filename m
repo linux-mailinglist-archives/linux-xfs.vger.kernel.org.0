@@ -1,57 +1,58 @@
-Return-Path: <linux-xfs+bounces-29949-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29952-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SLPdAwPdb2n8RwAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29949-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:52:35 +0100
+	id KPcpFtTjb2n8RwAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29952-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 21:21:40 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id D55D14ACA8
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:52:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 069964B34B
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 21:21:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id E869B52DCE3
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:51:49 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 393B538D985
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:52:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE12C421EF5;
-	Tue, 20 Jan 2026 17:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D3C83B8D62;
+	Tue, 20 Jan 2026 17:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyhjlCO7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTT2f+om"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BCA33ADAB
-	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 17:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D17C33EB00
+	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 17:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768931449; cv=none; b=u1UybDhrGZX+3yd/KXZDww1138xI6cH1mA2KxcipOluSOQAxUqszYaB3cVOusTEMDSwHj63cjZzTjeM39/WkgvwfWVPj4whLpCsLOkPZ0qmhpy9X8xSJ5vbYQTnMsoHwRrLRBAb27PoDtPqU9VRzfKqkWTq3faKLjVLC8nkTOdY=
+	t=1768931496; cv=none; b=mp9TbkBlmPYOe/8tpHL9wf60tVRia6mj6j6YanLP+SyUvge11nzsHSN+9XjUDZpZywkttdrhlwR9m0khdTObzlulRVZ1yC4U/M5WX10AXoEIK7cj/1Fuq8JvMzK+ulz5E7qh7+wDKUoFLkc/FSrvwwqzv6OZ+B5wz6ySPhFZnXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768931449; c=relaxed/simple;
-	bh=j7xojW866yafR4dCo5mwPktqd649/K9nE6/GtzrOtvA=;
+	s=arc-20240116; t=1768931496; c=relaxed/simple;
+	bh=OOUpqs2qSIujfbdPBleri2xPPsD3OqjFqlopQJcyKyo=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JquOu7pVDuCSlE5rGiXRrUZVOHD8JS2pN5bnK4cGZ/+re/7RzPQ3hLMBtm+2lvRl0N2/WMR5FX/fPCOtqZV8Vtvff/U6hpeb5Eb0Q9fRIe7aETHO11bJKF03Kj2WcOm5dmIbosNyYD5lr49nsrW/m0po8GYq7vbjSfiHO/yphfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyhjlCO7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3457FC16AAE;
-	Tue, 20 Jan 2026 17:50:49 +0000 (UTC)
+	 MIME-Version:Content-Type; b=OkJsD917gViTIcST3HlXtFIBPXaZfzpDUkhj/lRiTQYpIdimQhcjfWMOs7wrwbgGkb8DkASjIjH6XEgGtF3Qn6lLprjHta6u2KfR8+OWqXkm1aTAti/4xXclLkyiZfrRFv0FJRT2ALF4nR9t+tCm6KEYXzXPainRHKLt3B9VYus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTT2f+om; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 132DEC16AAE;
+	Tue, 20 Jan 2026 17:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768931449;
-	bh=j7xojW866yafR4dCo5mwPktqd649/K9nE6/GtzrOtvA=;
+	s=k20201202; t=1768931496;
+	bh=OOUpqs2qSIujfbdPBleri2xPPsD3OqjFqlopQJcyKyo=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=GyhjlCO7kvkWOxH4KwMRBPtoERL247rO+b+JDqOanAgKfTWlzO8wMKSBCGIuKyQgi
-	 QZBMxX0KN+efCdCqj5ndK8v5SNo9AD2v7zO92JvqofJe2Kna8ptPWdCN8L4Fk1ldGR
-	 zHxhQ0ele3MTl9wbP23hsHrJGaRDGjdBz+fFC9tshnCfx58Q/yHcvAtNL9YJsI7dsy
-	 HJ27zPAAVUcCRzl9UEcbSMnNn1F7Ws1kJ3jRKwQaULyb+KI9QDRIoppnCkR/ovyKYp
-	 1sAuOdHQLRzdQcr3IrOr3hQm2BaFel7MV/o9X917iO0lO7ixfuRfSO9G0cBpn3fKsW
-	 mAjPEwlrrILNQ==
-Date: Tue, 20 Jan 2026 09:50:48 -0800
-Subject: [PATCH 1/5] mkfs: set rtstart from user-specified dblocks
+	b=RTT2f+omKBAYZ0clCIn7SedmInpve6XZx1Uj7uKpLwwdjn/xNu2i2pmQCYTCIkGQm
+	 22FAAq5pF/IEkd+5jeWoWS8SEG/JshIGpOKzqafmRx5SI1G7FVszwhIeMkp9rcKfU2
+	 caM3wOvhCmYqf/LGitssfXzTnzJB+vOUB0iwHJxqeQffcF7BDQoqqTdok0s+jT7VCq
+	 Q58SAcCn/bRl+z5gcXSNRrjf5u9crcgWuIQWVBkom2qNrFrqRs7sGIXBbRKZ6C3+4n
+	 jJN1xR8+caanclPOYh0QBJmHYxjR0nmtw1GhXJrn8wAzvasgJncm6VJqiC7z9v4luN
+	 S7HWXMpSYR0qw==
+Date: Tue, 20 Jan 2026 09:51:35 -0800
+Subject: [PATCH 4/5] xfs_mdrestore: fix restoration on filesystems with 4k
+ sectors
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: aalbersh@kernel.org, djwong@kernel.org
 Cc: linux-xfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Message-ID: <176893137089.1079372.9346420785447726442.stgit@frogsfrogsfrogs>
+Message-ID: <176893137144.1079372.18089929345976968624.stgit@frogsfrogsfrogs>
 In-Reply-To: <176893137046.1079372.10421059565558082402.stgit@frogsfrogsfrogs>
 References: <176893137046.1079372.10421059565558082402.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -72,7 +73,7 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_FROM(0.00)[bounces-29949-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-29952-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -89,96 +90,92 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: D55D14ACA8
+X-Rspamd-Queue-Id: 069964B34B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-generic/211 fails to format the disk on a system with an internal zoned
-device.  Poking through the shell scripts, it's apparently doing this:
+Running xfs/129 on a disk with 4k LBAs produces the following failure:
 
-# mkfs.xfs -d size=629145600 -r size=629145600 -b size=4096 -m metadir=1,autofsck=1,uquota,gquota,pquota, -r zoned=1 -d rtinherit=1 /dev/sdd
-size 629145600 specified for data subvolume is too large, maximum is 131072 blocks
+ --- /run/fstests/bin/tests/xfs/129.out	2025-07-15 14:41:40.210489431 -0700
+ +++ /run/fstests/logs/xfs/129.out.bad	2026-01-05 21:43:08.814485633 -0800
+ @@ -2,3 +2,8 @@ QA output created by 129
+  Create the original file blocks
+  Reflink every other block
+  Create metadump file, restore it and check restored fs
+ +xfs_mdrestore: Invalid superblock disk address/length
+ +mount: /opt: can't read superblock on /dev/loop0.
+ +       dmesg(1) may have more information after failed mount system call.
+ +mount /dev/loop0 /opt failed
+ +(see /run/fstests/logs/xfs/129.full for details)
 
-Strange -- we asked for 629M data and rt sections, the device is 20GB in
-size, but it claims insufficient space in the data subvolume.
+This is a failure to restore a v2 metadump to /dev/loop0.  Looking at
+the metadump itself, the first xfs_meta_extent contains:
 
-Further analysis shows that open_devices is setting rtstart to 1% of the
-size of the data volume (or no less than 300M) and rounding that up to
-the nearest power of two (512M).  Hence the 131072 number.
+{
+	.xme_addr = 0,
+	.xme_len = 8,
+}
 
-But wait, we said that we wanted a 629M data section.  Let's set rtstart
-to the same value if the user didn't already provide one, instead of
-using the default value.
+Hrm.  This is the primary superblock on the data device, with a length
+of 8x512B = 4K.  The original filesystem has this geometry:
 
-Cc: <linux-xfs@vger.kernel.org> # v6.15.0
-Fixes: 2e5a737a61d34e ("xfs_mkfs: support creating file system with zoned RT devices")
+# xfs_info /dev/sda4
+meta-data=/dev/sda4              isize=512    agcount=4, agsize=2183680 blks
+         =                       sectsz=4096  attr=2, projid32bit=1
+
+In other words, a sector size of 4k because the device's LBA size is 4k.
+Regrettably, the metadump validation in mdrestore assumes that the
+primary superblock is only 512 bytes long, which is not correct for this
+scenario.
+
+Fix this by allowing an xme_len value of up to the maximum sector size
+for xfs, which is 32k.  Also remove a redundant and confusing mask check
+for the xme_addr.
+
+Note that this error was masked (at least on little-endian platforms
+that most of us test on) until recent commit 98f05de13e7815 ("mdrestore:
+fix restore_v2() superblock length check") which is why I didn't spot it
+earlier.
+
+Cc: <linux-xfs@vger.kernel.org> # v6.6.0
+Fixes: fa9f484b79123c ("mdrestore: Define mdrestore ops for v2 format")
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- mkfs/xfs_mkfs.c |   42 +++++++++++++++++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 11 deletions(-)
+ mdrestore/xfs_mdrestore.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
 
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index b34407725f76df..a90160b26065b7 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -3696,6 +3696,36 @@ _("log stripe unit (%d bytes) is too large (maximum is 256KiB)\n"
+diff --git a/mdrestore/xfs_mdrestore.c b/mdrestore/xfs_mdrestore.c
+index b6e8a6196a795a..90908fe0ff6c2c 100644
+--- a/mdrestore/xfs_mdrestore.c
++++ b/mdrestore/xfs_mdrestore.c
+@@ -437,13 +437,21 @@ restore_v2(
+ 	if (fread(&xme, sizeof(xme), 1, md_fp) != 1)
+ 		fatal("error reading from metadump file\n");
  
- }
- 
-+static uint64_t
-+calc_rtstart(
-+	const struct mkfs_params	*cfg,
-+	const struct libxfs_init	*xi)
-+{
-+	uint64_t			rt_target_size;
-+	uint64_t			rtstart = 1;
-+
-+	if (cfg->dblocks) {
-+		/*
-+		 * If the user specified the size of the data device but not
-+		 * the start of the internal rt device, set the internal rt
-+		 * volume to start at the end of the data device.
-+		 */
-+		return cfg->dblocks << (cfg->blocklog - BBSHIFT);
-+	}
-+
+-	if (xme.xme_addr != 0 || be32_to_cpu(xme.xme_len) != 1 ||
+-	    (be64_to_cpu(xme.xme_addr) & XME_ADDR_DEVICE_MASK) !=
+-			XME_ADDR_DATA_DEVICE)
+-		fatal("Invalid superblock disk address/length\n");
 +	/*
-+	 * By default reserve at 1% of the total capacity (rounded up to the
-+	 * next power of two) for metadata, but match the minimum we enforce
-+	 * elsewhere. This matches what SMR HDDs provide.
++	 * The first block must be the primary super, which is at the start of
++	 * the data device, which is device 0.
 +	 */
-+	rt_target_size = max((xi->data.size + 99) / 100,
-+			     BTOBB(300 * 1024 * 1024));
-+
-+	while (rtstart < rt_target_size)
-+		rtstart <<= 1;
-+	return rtstart;
-+}
-+
- static void
- open_devices(
- 	struct mkfs_params	*cfg,
-@@ -3720,17 +3750,7 @@ open_devices(
- 		zt->rt.zone_capacity = zt->data.zone_capacity;
- 		zt->rt.nr_zones = zt->data.nr_zones - zt->data.nr_conv_zones;
- 	} else if (cfg->sb_feat.zoned && !cfg->rtstart && !xi->rt.dev) {
--		/*
--		 * By default reserve at 1% of the total capacity (rounded up to
--		 * the next power of two) for metadata, but match the minimum we
--		 * enforce elsewhere. This matches what SMR HDDs provide.
--		 */
--		uint64_t rt_target_size = max((xi->data.size + 99) / 100,
--					      BTOBB(300 * 1024 * 1024));
--
--		cfg->rtstart = 1;
--		while (cfg->rtstart < rt_target_size)
--			cfg->rtstart <<= 1;
-+		cfg->rtstart = calc_rtstart(cfg, xi);
- 	}
++	if (xme.xme_addr != 0)
++		fatal("Invalid superblock disk address 0x%llx\n",
++				be64_to_cpu(xme.xme_addr));
  
- 	if (cfg->rtstart) {
+ 	len = BBTOB(be32_to_cpu(xme.xme_len));
+ 
++	/* The primary superblock is always a single filesystem sector. */
++	if (len < BBTOB(1) || len > XFS_MAX_SECTORSIZE)
++		fatal("Invalid superblock disk length 0x%x\n",
++				be32_to_cpu(xme.xme_len));
++
+ 	if (fread(block_buffer, len, 1, md_fp) != 1)
+ 		fatal("error reading from metadump file\n");
+ 
 
 
