@@ -1,111 +1,157 @@
-Return-Path: <linux-xfs+bounces-29892-lists+linux-xfs=lfdr.de@vger.kernel.org>
-X-Original-To: lists+linux-xfs@lfdr.de
+Return-Path: <linux-xfs+bounces-29902-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67BD8D3C636
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 11:54:09 +0100 (CET)
+Received: from mail.lfdr.de
+	by lfdr with LMTP
+	id SFjJNvSib2l7DgAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29902-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 16:44:52 +0100
+X-Original-To: lists+linux-xfs@lfdr.de
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BAF646857
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 16:44:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id B047D5C39E2
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 10:36:00 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D8B6454D157
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 14:27:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBD03F23CD;
-	Tue, 20 Jan 2026 10:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A29EB428497;
+	Tue, 20 Jan 2026 14:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkYiavwj"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="csG3+x2z"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward206a.mail.yandex.net (forward206a.mail.yandex.net [178.154.239.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632CF3F0767;
-	Tue, 20 Jan 2026 10:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C21438FFE;
+	Tue, 20 Jan 2026 14:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768905271; cv=none; b=txrIbon5uBjfXD1k3rp+C8FMswsf75Nj/iaybjhdbzSwuac15QF+RnZTjspIQKjt2WOT4hR15JkECOyyJDVeIWDvSJ1VuQ5v67GJFmi7TGxuQQkD8gJ0+Sr+JTYzo3yuhH42b7dCMNSWHl0RIXgr7tshTjcVOnJ1rYRIpSDz0lA=
+	t=1768918892; cv=none; b=YmC3nWtbVXlNbtrLaEOOEhK2LgojGAnVgD366JjyciYSqSMzI7Wgz1HOIjywTwZFglc9/HmJi4PLW8fEV9aeUycf7egZeerCd/1YfA7i4VD86BJ/xmyPPJYzk1VYzNiYp3ueHbKb8/0l6NtjHfNO4BvhsuKx+OtpGj282HRQv/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768905271; c=relaxed/simple;
-	bh=ofM75JqEotc0v7XRCKkNO2AMeaUn3xH4tlqNjm8W0YQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VKNv7NH0u39ycOWk5ybv9OhrJp+Yt9gbap2XDSVL+H8FawgWfLAd8J0kJ48gKH2SxVg9gHbJAbROTtOY0cicQEg16fGCEhc4isoDTI0MU1IZmDM8c2ntQ9+MD3cQBzRiKPTGXtTuMfKmHjG6+9gL9wbvhcLtFkWlM7FwlFHSpNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkYiavwj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04B6C16AAE;
-	Tue, 20 Jan 2026 10:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768905271;
-	bh=ofM75JqEotc0v7XRCKkNO2AMeaUn3xH4tlqNjm8W0YQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dkYiavwjArBw+8JM3Doyt4vFEjXCjTBOooZATw7ybtJyDWfHOsWo6vfR+lTcrWca0
-	 84g12kcedULlbCjwN3OhgKihsyS+8LP34glFKHjjboChPwnx87Mgd4ye5oYrptvwcU
-	 IR130p8sJwGfsM12J432DDMgzJBXrhBvvtKpy/9JDcG+rvOkHRKRbslb+hAqYozEy4
-	 8HXCy/UDUBGKe0SB1WSHTXCGpraNDHfp54t2En1JQCop3QwMKo4TzMN4znHIRfj92N
-	 0amrFzP0cYXKJTlNdj7dkkgVOhyK03N9xYYfKakG8ehUjpIPXdBq3+jcGxXnzZWvCP
-	 JUo4/sRFClXEw==
-Date: Tue, 20 Jan 2026 11:34:13 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, 
-	Carlos Maiolino <cem@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, 
-	Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
-	David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
-	Salah Triki <salah.triki@gmail.com>, Phillip Lougher <phillip@squashfs.org.uk>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
-	Andreas Gruenbacher <agruenba@redhat.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-ext4@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, ceph-devel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	devel@lists.orangefs.org, ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
-	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
-	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
- nfsd export support
-Message-ID: <20260120-bindung-eselsfell-fadec0d95909@brauner>
-References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
- <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
- <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
- <176877859306.16766.15009835437490907207@noble.neil.brown.name>
- <aW3SAKIr_QsnEE5Q@infradead.org>
- <176880736225.16766.4203157325432990313@noble.neil.brown.name>
- <20260119-kanufahren-meerjungfrau-775048806544@brauner>
- <176885553525.16766.291581709413217562@noble.neil.brown.name>
- <aW8w2SRyFnmA2uqk@infradead.org>
- <176890126683.16766.5241619788613840985@noble.neil.brown.name>
+	s=arc-20240116; t=1768918892; c=relaxed/simple;
+	bh=OljuYT46PDcKG606jpSgRx5a7qO0e5RSI226ZhlQbuk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=a+dXzFV7f7+3/wBKoe2I62eWqoUlIBrv9yrsIOaOGMK3FOR/2QAQJ0ZFeH5HIl0ubJdyy+0/GL0qrZcLETB+98Bv9iDoL+bass4GdsNc+Ru1kQ2LhR04GqXil3F/Ms517zOnEsU0QOmeqhij97l5rZc76esh5Z4Lcc9GOUGIgbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=csG3+x2z; arc=none smtp.client-ip=178.154.239.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+Received: from forward103a.mail.yandex.net (forward103a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d103])
+	by forward206a.mail.yandex.net (Yandex) with ESMTPS id C09BB86137;
+	Tue, 20 Jan 2026 17:16:00 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2804:0:640:a3ea:0])
+	by forward103a.mail.yandex.net (Yandex) with ESMTPS id 5220C80ACD;
+	Tue, 20 Jan 2026 17:15:52 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id nFbKhtwHIOs0-77xn6yF1;
+	Tue, 20 Jan 2026 17:15:51 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1768918551; bh=8Pf3ro56B2f2l6pIzVRaeha34TphGLgSxqupNiXLAkQ=;
+	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=csG3+x2z62Qd+/jQe5m99272gSK0n1bpWsjsll/sCceknk8B8xGBa/dcHfEYkUnwj
+	 HeyuoyjL0SI+F7n5kCYuX6LP1wBPBmzDGzkoOdPm6aIku/EN5etBRdsbEGxq4+uPRE
+	 z+8PjnDb6+NdfHviCukSZbqglB9GYEy/AAcxHh1I=
+Authentication-Results: mail-nwsmtp-smtp-production-main-97.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+From: Dmitry Antipov <dmantipov@yandex.ru>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>
+Cc: Carlos Maiolino <cem@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	linux-xfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>
+Subject: [PATCH v4 2/3] lib: fix a few comments to match kernel-doc -Wreturn style
+Date: Tue, 20 Jan 2026 17:12:28 +0300
+Message-ID: <20260120141229.356513-2-dmantipov@yandex.ru>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260120141229.356513-1-dmantipov@yandex.ru>
+References: <20260119160623.a762c3d64f230936198dc17e@linux-foundation.org>
+ <20260120141229.356513-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <176890126683.16766.5241619788613840985@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.46 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[yandex.ru:s=mail];
+	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_SOME(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[yandex.ru,none];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-29902-lists,linux-xfs=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,infradead.org,intel.com,vger.kernel.org,yandex.ru];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[yandex.ru:+];
+	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	FREEMAIL_FROM(0.00)[yandex.ru];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dmantipov@yandex.ru,linux-xfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,intel.com:email]
+X-Rspamd-Queue-Id: 6BAF646857
+X-Rspamd-Action: no action
+X-Rspamd-Server: lfdr
 
-> It took me a while to sift through the code/patches/comments and come to
-> this understanding and I apologise if I wasn't as clear earlier.  But
-> my intuition was always that file handle stability was never the real
-> issue, and maintainer choice was.  Hence my rejection of the
+Fix 'get_option()', 'memparse()' and 'parse_option_str()' comments
+to match the commonly used style as suggested by kernel-doc -Wreturn.
 
-I very much agree with that assessment. Yet we so far have failed to
-even agree that this is an acceptable position. Hence my irritation.
+Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+---
+v4: initial version to join the series
+---
+ lib/cmdline.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-And apologies on my part if I'm curt. I'm simply annoyed by the very
-lengthy and to me somewhat pointless debate here at times.
+diff --git a/lib/cmdline.c b/lib/cmdline.c
+index 28048d05eb35..6922ddd90e7c 100644
+--- a/lib/cmdline.c
++++ b/lib/cmdline.c
+@@ -43,7 +43,7 @@ static int get_range(char **str, int *pint, int n)
+  *	When @pint is NULL the function can be used as a validator of
+  *	the current option in the string.
+  *
+- *	Return values:
++ *	Return:
+  *	0 - no int in string
+  *	1 - int found, no subsequent comma
+  *	2 - int found including a subsequent comma
+@@ -145,6 +145,9 @@ EXPORT_SYMBOL(get_options);
+  *
+  *	Parses a string into a number.  The number stored at @ptr is
+  *	potentially suffixed with K, M, G, T, P, E.
++ *
++ *	Return: The value as recognized by simple_strtoull() multiplied
++ *	by the value as specified by suffix, if any.
+  */
+ 
+ unsigned long long memparse(const char *ptr, char **retptr)
+@@ -224,7 +227,7 @@ EXPORT_SYMBOL(memvalue);
+  *	This function parses a string containing a comma-separated list of
+  *	strings like a=b,c.
+  *
+- *	Return true if there's such option in the string, or return false.
++ *	Return: True if there's such option in the string or false otherwise.
+  */
+ bool parse_option_str(const char *str, const char *option)
+ {
+-- 
+2.52.0
+
 
