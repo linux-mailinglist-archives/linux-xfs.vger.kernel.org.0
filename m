@@ -1,198 +1,167 @@
-Return-Path: <linux-xfs+bounces-29921-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29924-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KAIaB2K8b2kOMQAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29921-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 18:33:22 +0100
+	id IAcZJCbAb2kOMQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29924-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 18:49:26 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9D44489F9
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 18:33:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0810348D8A
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 18:49:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 9FFCC94DA21
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 14:32:19 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 99EF050B357
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 14:58:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B126544BC9A;
-	Tue, 20 Jan 2026 14:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B93429806;
+	Tue, 20 Jan 2026 14:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJ6Fblv2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6bEg6il"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ABC44BC96;
-	Tue, 20 Jan 2026 14:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B7722126D;
+	Tue, 20 Jan 2026 14:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768919122; cv=none; b=NJx/vqNgxIWkZMtdyg6o06pyargeX4eeIM1zp/WSSNbgehyPCZ1JgT0XFAJ/zaCBH7VMFakYCovWek/qeTaJbLLOE0/8VwLL/K0pVp7d8ZLFnh4TzU4i6ICVWVmB8ZbrEqgfo94m3/byNWdDGggGBhNYLe62wBAH0ZJzTvjYvEg=
+	t=1768920341; cv=none; b=iFP5RQPrbH3mmo0omf+5VRL2Y5yjZXqvDqPPrhpVCw5ebNkXjvIbmW0G17x/GV0y8sHJGC7Vgbvnyg7VvFBxTlDl4MXTDQ9ysuhmRh+t5uWwhpDnWThbEDha1tgBY+G1OG0y9jLxQIOtq1CZ5RkV+hO0NaRPwSVdG65lLiRuHJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768919122; c=relaxed/simple;
-	bh=cWXqjiYSCBw218vhYxZFFr2kBXjHfrbsfjhWPCfq4hM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V1+onuDmUsi5OCNdyVmw1evJ6nUFe5HX+pHp+KU9qYYnWWhHxbf7qLxbJfXxzs/vxqSUDULgx4y/gVv0KQbZJUVGzyVTENjiHjUaenTgRL3cYAWrPHenuGz0OPJ9ZkKRcT8KY6TZp8yr/kD4PBVBXn4XK7wr4avL6BhGNY7qJa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJ6Fblv2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD91BC16AAE;
-	Tue, 20 Jan 2026 14:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768919122;
-	bh=cWXqjiYSCBw218vhYxZFFr2kBXjHfrbsfjhWPCfq4hM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iJ6Fblv2qO5UvJg1OEulK5ftXItW8uXaGc2NMLqyGH1Wl4uYXjDvIzxIyCIW34me7
-	 roQstI1W1kQzW7f/voI3HkNp5c05XXFXyur1WMkblF2oh3xGAffuaMQ4PfJ03mmw6I
-	 CanZVoQGsc6x6BFOz2JYbeUSIo/rXcSpghB+BeevOvHclZMR89pammzN7/rQfpJROY
-	 /SkpwKqF+5NzyeSMMOL83xhvsVaezUhewsHQTjtEDC3KX+R84zoOKZZEjAE302tvMU
-	 GQMdObB2scsDnVC8URrNofXM3cMi3DTl4stLNOiueoVuFKJmOTTonWRRkN8kgUS9vu
-	 QFPTMmm8c5+rw==
-From: Chuck Lever <cel@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>
-Cc: <linux-fsdevel@vger.kernel.org>,
-	linux-ext4@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	<linux-nfs@vger.kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net,
-	hirofumi@mail.parknet.co.jp,
-	linkinjeon@kernel.org,
-	sj1557.seo@samsung.com,
-	yuezhang.mo@sony.com,
-	almaz.alexandrovich@paragon-software.com,
-	slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de,
-	frank.li@vivo.com,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	cem@kernel.org,
-	sfrench@samba.org,
-	pc@manguebit.org,
-	ronniesahlberg@gmail.com,
-	sprasad@microsoft.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	jaegeuk@kernel.org,
-	chao@kernel.org,
-	hansg@kernel.org,
-	senozhatsky@chromium.org,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v6 16/16] ksmbd: Report filesystem case sensitivity via FS_ATTRIBUTE_INFORMATION
-Date: Tue, 20 Jan 2026 09:24:39 -0500
-Message-ID: <20260120142439.1821554-17-cel@kernel.org>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260120142439.1821554-1-cel@kernel.org>
-References: <20260120142439.1821554-1-cel@kernel.org>
+	s=arc-20240116; t=1768920341; c=relaxed/simple;
+	bh=QBfEP+C/xISMlaE8DYcsjQ9gGkagm0k0iRvZF6AwllQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CrCaraY+vg5eJNV+PmzQ9Qkjd+lY/DJnB73D6MvuaXs3rDv01VWFWj3/ML93Hmiggf3kTSnXjHWbjkjwB8PNq2q9kwYa05cOby/t9mYFv0CF0FQDdFmJLBD/YgrC7ysiohxK4QKdj7OCUYNyS/hqUvZva+i41taSchMSxbHRKTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6bEg6il; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768920341; x=1800456341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QBfEP+C/xISMlaE8DYcsjQ9gGkagm0k0iRvZF6AwllQ=;
+  b=a6bEg6il3cFOAdxubEJ5hD2npBdV+H+K4c5Zf+weGoj9OzgwfCY0TcFM
+   1ljNrWEX35FW83zCOD2UkrXWpeijHBEy2I3Ux9zk4kiOYVEIh32R09+kl
+   MVSPFSW8IemR1TGi26WnTsSnDRBJ7r4qeMJaSf6FrqjZ6+IH31q/sgw64
+   33XR1Dsah5sKSZWRV+Ykz+lnTSPnXcto0YwxmfPnKXzzYF6OctUKm3RjG
+   qtYYs24kCEf3+hskoe4KX68HrBBG3+pf3BScHJIk+vZv8PeISjcdD+Inx
+   6WqTS0S9/nC2tU9xm/AlIDkb6531/frWrHBfr8WnOXqqYwjGbPMezbU8s
+   w==;
+X-CSE-ConnectionGUID: RR/gHNgGSoekRHTdv/V+6g==
+X-CSE-MsgGUID: shkIkzGiROmrnLa4IVvuxQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11677"; a="72716102"
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="72716102"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:45:40 -0800
+X-CSE-ConnectionGUID: /TPYZZGVT+iFV68oPoEvyQ==
+X-CSE-MsgGUID: HA53ymmbQvSiQEtiA0e9Ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
+   d="scan'208";a="210628230"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.244.240])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 06:45:37 -0800
+Date: Tue, 20 Jan 2026 16:45:34 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] lib: introduce simple error-checking wrapper for
+ memparse()
+Message-ID: <aW-VDu4aPV6kZv80@smile.fi.intel.com>
+References: <20260119160623.a762c3d64f230936198dc17e@linux-foundation.org>
+ <20260120141229.356513-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.46 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260120141229.356513-1-dmantipov@yandex.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-29921-lists,linux-xfs=lfdr.de];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-29924-lists,linux-xfs=lfdr.de];
+	DKIM_TRACE(0.00)[intel.com:+];
+	DMARC_POLICY_ALLOW(0.00)[intel.com,none];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cel@kernel.org,linux-xfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-xfs];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_TO(0.00)[yandex.ru];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,oracle.com:email]
-X-Rspamd-Queue-Id: A9D44489F9
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-xfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,smile.fi.intel.com:mid,intel.com:dkim]
+X-Rspamd-Queue-Id: 0810348D8A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Tue, Jan 20, 2026 at 05:12:27PM +0300, Dmitry Antipov wrote:
+> Introduce 'memvalue()' which uses 'memparse()' to parse a string
+> with optional memory suffix into a non-negative number. If parsing
+> has succeeded, returns 0 and stores the result at the location
+> specified by the second argument. Otherwise returns -EINVAL and
+> leaves the location untouched.
 
-ksmbd hard-codes FILE_CASE_SENSITIVE_SEARCH and
-FILE_CASE_PRESERVED_NAMES in FS_ATTRIBUTE_INFORMATION responses,
-incorrectly indicating all exports are case-sensitive. This breaks
-clients accessing case-insensitive filesystems like exFAT or
-ext4/f2fs directories with casefold enabled.
+...
 
-Query actual case behavior via vfs_fileattr_get() and report accurate
-attributes to SMB clients. Filesystems without ->fileattr_get continue
-reporting default POSIX behavior (case-sensitive, case-preserving).
+> +/**
+> + *	memvalue -  Wrap memparse() with simple error detection
+> + *	@ptr: Where parse begins
+> + *	@valptr: Where to store result
+> + *
+> + *	Uses memparse() to parse a string into a number stored at
+> + *	@valptr, leaving memory at @valptr untouched in case of error.
+> + *
+> + *	Return: -EINVAL for a presumably negative value or if an
+> + *	unrecognized character was encountered, and 0 otherwise.
+> + */
+> +int __must_check memvalue(const char *ptr, unsigned long long *valptr)
+> +{
+> +	unsigned long long ret;
+> +	char *end;
+> +
+> +	if (*ptr == '-')
+> +		return -EINVAL;
+> +	ret = memparse(ptr, &end);
+> +	if (*end)
+> +		return -EINVAL;
+> +	*valptr = ret;
+> +	return 0;
+> +}
 
-SMB's FS_ATTRIBUTE_INFORMATION reports per-share attributes from the
-share root, not per-file. Shares mixing casefold and non-casefold
-directories report the root directory's behavior.
+My questions seem left unsettled:
+- why -EINVAL in the first place and not -ERANGE in the first place;
+- why do we need this patch _at all_ based on the how callers are
+doing now (w.o. this change), i.o.w. why the memparse() can't be
+used directly.
 
-Acked-by: Namjae Jeon <linkinjeon@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/smb/server/smb2pdu.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-index 2fcd0d4d1fb0..257da9282bcf 100644
---- a/fs/smb/server/smb2pdu.c
-+++ b/fs/smb/server/smb2pdu.c
-@@ -13,6 +13,7 @@
- #include <linux/falloc.h>
- #include <linux/mount.h>
- #include <linux/filelock.h>
-+#include <linux/fileattr.h>
- 
- #include "glob.h"
- #include "smbfsctl.h"
-@@ -5486,16 +5487,28 @@ static int smb2_get_info_filesystem(struct ksmbd_work *work,
- 	case FS_ATTRIBUTE_INFORMATION:
- 	{
- 		FILE_SYSTEM_ATTRIBUTE_INFO *info;
-+		struct file_kattr fa = {};
- 		size_t sz;
-+		u32 attrs;
-+		int err;
- 
- 		info = (FILE_SYSTEM_ATTRIBUTE_INFO *)rsp->Buffer;
--		info->Attributes = cpu_to_le32(FILE_SUPPORTS_OBJECT_IDS |
--					       FILE_PERSISTENT_ACLS |
--					       FILE_UNICODE_ON_DISK |
--					       FILE_CASE_PRESERVED_NAMES |
--					       FILE_CASE_SENSITIVE_SEARCH |
--					       FILE_SUPPORTS_BLOCK_REFCOUNTING);
-+		attrs = FILE_SUPPORTS_OBJECT_IDS |
-+			FILE_PERSISTENT_ACLS |
-+			FILE_UNICODE_ON_DISK |
-+			FILE_SUPPORTS_BLOCK_REFCOUNTING;
- 
-+		err = vfs_fileattr_get(path.dentry, &fa);
-+		if (err && err != -ENOIOCTLCMD) {
-+			path_put(&path);
-+			return err;
-+		}
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASEFOLD))
-+			attrs |= FILE_CASE_SENSITIVE_SEARCH;
-+		if (!(fa.fsx_xflags & FS_XFLAG_CASENONPRESERVING))
-+			attrs |= FILE_CASE_PRESERVED_NAMES;
-+
-+		info->Attributes = cpu_to_le32(attrs);
- 		info->Attributes |= cpu_to_le32(server_conf.share_fake_fscaps);
- 
- 		if (test_share_config_flag(work->tcon->share_conf,
 -- 
-2.52.0
+With Best Regards,
+Andy Shevchenko
+
 
 
