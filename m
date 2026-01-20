@@ -1,60 +1,60 @@
-Return-Path: <linux-xfs+bounces-29942-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29943-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cL2mOnPTb2mgMQAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29942-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:11:47 +0100
+	id EP+9GSa/b2kOMQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29943-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 18:45:10 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDFB24A123
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 20:11:47 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4808248C68
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 18:45:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9BB7952DA5D
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:20:44 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0CFAB865110
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:25:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EA573A9DBD;
-	Tue, 20 Jan 2026 17:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF4943EDAC2;
+	Tue, 20 Jan 2026 17:23:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egD1d6zX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="napCvG9p"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589BF39524B
-	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 17:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7DF425CEC
+	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 17:23:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768929640; cv=none; b=sg6tVFkpBuBQYa+sZNmCuF4szJSJvSNjuvDSnWlnUmShFzMuF990bFl+10PN95dyZvwYE7s1nulqMdvBILPikBTqxypr+cx536mJ+5yes3Cn2/89So/KXa80elNutCFBx4sltHZSI9RGjg880WQk6rSL3jV6byRSLXzozdS4Wp8=
+	t=1768929836; cv=none; b=BCA6T6KUE5QfvYd3DWnQvPloVpyYN1WO19BgiGjUSqdYgyoJQIfK8VuizLVMQ1AyQKPtD3RlgL2iHCMiF8MG/1p5PEfP2lN3L9dE0lkXBVQLwNaRp+kzrGi566ldVgD1yJqUXXEf+Jj4Kd6gAZeAdFibEsyMGJgEIUfY/icU5fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768929640; c=relaxed/simple;
-	bh=1y0JRc2WEfCdzapfFWwd6TzDlVjewTabiy7Srr8RVkk=;
+	s=arc-20240116; t=1768929836; c=relaxed/simple;
+	bh=r9B+o1VVJC/f9cfpYSHIQ2jtwhg722KVe/34I15Wa+U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPdkostm1m1KxEhLpVAKFmdeliczJn8PYS0tBXNdMeagAaS0Oyrt1p8uAkY1Jak798IUJVnuEfoZi2ClfGcoV3Ec5NqyCe6R50gROSwmNrnw2PaE0XLNyiDoaqPKMtv7yvw3X+RjX5sbbl/hqwQsMyvXEIi5JExVzge/Q8iBE7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egD1d6zX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270D1C16AAE;
-	Tue, 20 Jan 2026 17:20:40 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpHEOGsILFvh7AU3JwLxG/+zph7VdwU3Oux6D4Dtr9Myqzh5DHJHnuK6FrYbExV1igZHuqgXFIXjlkrWTRMTRSsVUq6DFmQx6gYmZXkfjd7I15PAhLQwUpfNtfaLSK4PYnV3EJCwEUrtkKq6eQ+cabSRk7+imx6N7gjXc3oEdiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=napCvG9p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FEFC16AAE;
+	Tue, 20 Jan 2026 17:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768929640;
-	bh=1y0JRc2WEfCdzapfFWwd6TzDlVjewTabiy7Srr8RVkk=;
+	s=k20201202; t=1768929836;
+	bh=r9B+o1VVJC/f9cfpYSHIQ2jtwhg722KVe/34I15Wa+U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=egD1d6zXOE+PP/65ACQhFvSyetHVOjA17CYnELl8XwH5rurhWR+IZgk70SJEsDIqK
-	 QqBcg9bmS3lzL23op0WY98u9OfIael0fkzgRN4t7+aqnZUy7CQ896mi4/l/L9CQhsd
-	 1+w7GzOCe/cVdp04LATTiJWCB3p3ugqrecb/ysvJRCyRbpl8vlTz4wUfmDNnKY4I5A
-	 xoEsmKSTim3fx6foOlRAESO18/DErhXA/UWU/gbrVk0GS0hgd2n0cNwpI1LIAOzSYZ
-	 htHU3KxAtKhXpLOa/zxWeBFv2tuSCdi4Kq9FGjJ8M6eyzGUGrqn74WuV2xMsjAtDTn
-	 4LiLpOd5aqU/w==
-Date: Tue, 20 Jan 2026 09:20:39 -0800
+	b=napCvG9p3cWUO+EYd4zjLXeyYtWDrVb1lD4Xo0qDIdY/uMTbmDhJaC9BjZTxCou9T
+	 77hEm4UyKFRAUKueHvjSOt23q/oxVWpx6/OZOJPoufdZijljVBhwmUUahjIPTwMXjQ
+	 SrFWsp2jgDiMaoHROPhQisgqg7tvovddYNFXEVkF2b/q9KvXLL5YFVHY8UH/iBMHPO
+	 XdhNXMC0nbNNs2QH7orGgH+IagMrWiWDG8R5g4NvnTOQvUmfX3rYwPfQvWpL24Y606
+	 WEidNGt75WTbVXQ24TdUCnzaO8Iu9nR6IBUhQLqN7cNeequvPGZYtg6hQ4sokhfmq0
+	 WFWzqE3NohhFw==
+Date: Tue, 20 Jan 2026 09:23:55 -0800
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org
 Cc: aalbersh@redhat.com, linux-xfs@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] libfrog: make xfrog_defragrange return a
- positive valued
-Message-ID: <20260120172039.GO15551@frogsfrogsfrogs>
+Subject: Re: [RFC PATCH 2/2] fsr: Always print error messages from
+ xfrog_defragrange()
+Message-ID: <20260120172355.GP15551@frogsfrogsfrogs>
 References: <20260119142724.284933-1-cem@kernel.org>
- <20260119142724.284933-2-cem@kernel.org>
+ <20260119142724.284933-3-cem@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260119142724.284933-2-cem@kernel.org>
+In-Reply-To: <20260119142724.284933-3-cem@kernel.org>
 X-Spamd-Result: default: False [-1.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
@@ -74,7 +74,7 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_FROM(0.00)[bounces-29942-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-29943-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -89,73 +89,69 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	TO_DN_NONE(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: CDFB24A123
+X-Rspamd-Queue-Id: 4808248C68
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Jan 19, 2026 at 03:26:50PM +0100, cem@kernel.org wrote:
+On Mon, Jan 19, 2026 at 03:26:51PM +0100, cem@kernel.org wrote:
 > From: Carlos Maiolino <cem@kernel.org>
 > 
-> Currently, the only user for xfrog_defragrange is xfs_fsr's packfile(),
-> which expects error to be a positive value.
+> Error messages when xfrog_defragrange() are only printed when
+> verbose/debug flages are used.
 > 
-> Whenever xfrog_defragrange fails, the switch case always falls into the
-> default clausule, making the error message pointless.
+> We had reports from users complaining it's hard to find out error
+> messages in the middle of dozens of other informational messages.
+> 
+> Particularly I think error messages are better to be printed
+> independently of verbose/debug flags, so unconditionally print those.
 > 
 > Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
-> ---
->  libfrog/file_exchange.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/libfrog/file_exchange.c b/libfrog/file_exchange.c
-> index e6c3f486b0ff..31bbc6da60c3 100644
-> --- a/libfrog/file_exchange.c
-> +++ b/libfrog/file_exchange.c
-> @@ -232,7 +232,7 @@ xfrog_defragrange(
->  	if (ret) {
->  		if (errno == EOPNOTSUPP || errno != ENOTTY)
->  			goto legacy_fallback;
-> -		return -errno;
-> +		return errno;
 
-Hrmm.  If you're going to change the polarity of the error numbers (e.g.
-negative to positive) then please update the comments.
+That seems like a reasonable behavior to me.  On some level these
+errors probably ought to be printed to stderr instead of stdout, but
+nothing else in packfile() seems to do that so maybe we just leave that
+alone?
 
-That said, I'd prefer to keep the errno polarity the same at least
-within a .c file ... even though libfrog is a mess of different error
-number return strategies.  What if the callsite changed to:
+Anyway silently dropping "did not actually defrag the file" errors by
+default seems counterintuitive so
 
-	/* Swap the extents */
-	error = -xfrog_defragrange(...);
-
-and
-
-	/* Snapshot file_fd before we start copying data... */
-	error = -xfrog_defragrange_prep(...);
-
-(and I guess io/exchrange.c also needs a fix)
-
-	/* Snapshot the original file metadata in anticipation... */
-	ret = -xfrog_commitrange_prep(...);
-
-Hrm?
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
 --D
 
->  	}
->  
->  	return 0;
-> @@ -240,7 +240,7 @@ xfrog_defragrange(
->  legacy_fallback:
->  	ret = xfrog_ioc_swapext(file2_fd, xdf);
->  	if (ret)
-> -		return -errno;
-> +		return errno;
->  
->  	return 0;
->  }
+> ---
+>  fsr/xfs_fsr.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
+> index 8845ff172fcb..fadb53af062d 100644
+> --- a/fsr/xfs_fsr.c
+> +++ b/fsr/xfs_fsr.c
+> @@ -1464,19 +1464,15 @@ packfile(
+>  		case 0:
+>  			break;
+>  	case ENOTSUP:
+> -		if (vflag || dflag)
+> -			fsrprintf(_("%s: file type not supported\n"), fname);
+> +		fsrprintf(_("%s: file type not supported\n"), fname);
+>  		break;
+>  	case EFAULT:
+>  		/* The file has changed since we started the copy */
+> -		if (vflag || dflag)
+> -			fsrprintf(_("%s: file modified defrag aborted\n"),
+> -					fname);
+> +		fsrprintf(_("%s: file modified defrag aborted\n"), fname);
+>  		break;
+>  	case EBUSY:
+>  		/* Timestamp has changed or mmap'ed file */
+> -		if (vflag || dflag)
+> -			fsrprintf(_("%s: file busy\n"), fname);
+> +		fsrprintf(_("%s: file busy\n"), fname);
+>  		break;
+>  	default:
+>  		fsrprintf(_("XFS_IOC_SWAPEXT failed: %s: %s\n"),
 > -- 
 > 2.52.0
 > 
