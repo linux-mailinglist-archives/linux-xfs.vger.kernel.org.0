@@ -1,57 +1,57 @@
-Return-Path: <linux-xfs+bounces-29951-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-29953-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yDE+DuTEb2lsMQAAu9opvQ
-	(envelope-from <linux-xfs+bounces-29951-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:09:40 +0100
+	id UIP+D6TJb2mgMQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-29953-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:29:56 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D71324923B
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:09:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A8F9E4978E
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 19:29:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id AF59B6245CB
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:52:33 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1A302624A67
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jan 2026 17:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0CE4441037;
-	Tue, 20 Jan 2026 17:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 453E0428460;
+	Tue, 20 Jan 2026 17:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oVG5lJ3j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehoW1hxg"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B80441056
-	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 17:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A05E34FF65
+	for <linux-xfs@vger.kernel.org>; Tue, 20 Jan 2026 17:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768931480; cv=none; b=kZf8cMqD/TZ+7lG9nukpxjcemzwfMNFPL6kIAsoCx4SYsXvQWxHpzJvLD6/1mS5M8zmANIdH23ntV8yw9CWBgXZPpmiiOwcVueP5cx6qEGVb8YcVAnJmPNTYlNCHSTZ28MkW553mPf3W+CAGm8O7lLIfPpcCErWq/yPKlITDk0A=
+	t=1768931513; cv=none; b=XYb2ZimztgTtIJh2JbXaXqfpP9PKRBLwItMpPTQD7lqvWfSQKadAK6QTp3G59yR+MeQrXwjhpnjQUEX82ykxqxTqRW2DTT6q6mOAQR7Nz89kYnJPUZ8Ok0mK/9s1ZXtBO20hKBljxa1iYLi0GoTyWhfJ+v7zHqKpKzIUxDsFy+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768931480; c=relaxed/simple;
-	bh=xHOy4DPx4HJyjF0v9JMr4cNnGkCMARqaHZNfjkH09hk=;
+	s=arc-20240116; t=1768931513; c=relaxed/simple;
+	bh=UhADA2HyEWepsYT5DPNLpXHD9RXrnz8ED1vQem6UeQ8=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZqPxagYySP9l6auy1AZXoK7+x0FPQIPf+0R9HaEZVcLdu3yr0i3uprF/BuP/vIKA72vPeKTezPCIiwBKdMujUvAagh0tFB4lejvLQgSgRcQ0aQxssjZP/sHmU6WG7TbKa4a8MSkctZKyQWypAraQiT6bDBC7H0Bzs175EWZKPBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oVG5lJ3j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E236C16AAE;
-	Tue, 20 Jan 2026 17:51:20 +0000 (UTC)
+	 MIME-Version:Content-Type; b=brmaYReZto7cobA8siiwUihyDd0uYmaPHpgw6cL6ArM3XgSAQrYeVJyRr+JdoU6IHDBxXwjx3KLCeu0XH/6uc1XKyhxrQlspXpvOMgfu70oPxUnhC9z9BhFqM6Zkwb3xCqPy7kUNrBVqPV5+4e634OSt6geVDhfWY0+9pZxLKQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehoW1hxg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD14EC16AAE;
+	Tue, 20 Jan 2026 17:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768931480;
-	bh=xHOy4DPx4HJyjF0v9JMr4cNnGkCMARqaHZNfjkH09hk=;
+	s=k20201202; t=1768931511;
+	bh=UhADA2HyEWepsYT5DPNLpXHD9RXrnz8ED1vQem6UeQ8=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=oVG5lJ3jYOg4KyXcoE/5aEBYcQGHI9yL50wQ3qd/3zER5nJ6VKj5UIkQ93eeNdqSj
-	 yCcyXFCRbMOvop5k1GaOaC29U2qm66JK11CMtgBYoSU8gOIrWQP/jhrkeJfIwq4eqk
-	 M5z76SZYojHxwi8JhhdMxTV5v5fuM6L4wk58L1Wtt6bdElGMXo4FfhTxWCNsw0uH+I
-	 M01GdKRRDGaaW8026Xsggnf8RQdtHTPHsYBHofCP2Tpx/Zc8+PmliUZZEREZXXEJCk
-	 glYf7Fk1+79XnPeBAo6Wq9VwpoRzBtGQ9xscIX4iwwIHXR16uga8cH5v+4xeO2i+Av
-	 jY+UaEFypydIQ==
-Date: Tue, 20 Jan 2026 09:51:19 -0800
-Subject: [PATCH 3/5] mkfs: quiet down warning about insufficient write zones
+	b=ehoW1hxgdXKzKZxrRSZhNNg0w31X+ey7mep0uy5cNaoj0UbVI+u6//4Nxx6/HOUqR
+	 EIPwaGb7aYu077I6/zpBanDy4xywl74jRtyXo5iLRwDLJZEHejwLPNaxavfBlVVkgx
+	 VHj0DCQ/FBNAgRudS6q+ASLja47HRzxWMvWEGQrTNmOCK3nI2l0pHOQMIKG/679CPI
+	 /4Mt1GHndjCLpMEb5jxRGqCZ2jiobOf9klyaw2rNZAnAhG8X/+bbcKy76/okecxx9a
+	 GirkLCsnnc/BnAsTK83jtd1SW3ydXl81+blP6IxoxGFPutBpVAASwE+fCht6LQ8md5
+	 CTynzuoec5AYg==
+Date: Tue, 20 Jan 2026 09:51:51 -0800
+Subject: [PATCH 5/5] debian: don't explicitly reload systemd from postinst
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: aalbersh@kernel.org, djwong@kernel.org
-Cc: linux-xfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Message-ID: <176893137126.1079372.2017206002280736908.stgit@frogsfrogsfrogs>
+Cc: linux-xfs@vger.kernel.org
+Message-ID: <176893137162.1079372.6375654891810082088.stgit@frogsfrogsfrogs>
 In-Reply-To: <176893137046.1079372.10421059565558082402.stgit@frogsfrogsfrogs>
 References: <176893137046.1079372.10421059565558082402.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -72,7 +72,7 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_FROM(0.00)[bounces-29951-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-29953-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -83,62 +83,42 @@ X-Spamd-Result: default: False [-1.46 / 15.00];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_THREE(0.00)[3];
 	TO_DN_NONE(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: D71324923B
+X-Rspamd-Queue-Id: A8F9E4978E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-xfs/067 fails with the following weird mkfs message:
+Now that we use dh_installsystemd, it's no longer necessary to run
+systemctl daemon-reload explicitly from postinst because
+dh_installsystemd will inject that into the DEBHELPER section on its
+own.
 
- --- tests/xfs/067.out	2025-07-15 14:41:40.191273467 -0700
- +++ /run/fstests/logs/xfs/067.out.bad	2026-01-06 16:59:11.907677987 -0800
- @@ -1,4 +1,8 @@
-  QA output created by 067
- +Warning: not enough zones (134/133) for backing requested rt size due to
- +over-provisioning needs, writable size will be less than (null)
- +Warning: not enough zones (134/133) for backing requested rt size due to
- +over-provisioning needs, writable size will be less than (null)
-
-In this case, MKFS_OPTIONS is set to: "-rrtdev=/dev/sdb4 -m
-metadir=1,autofsck=1,uquota,gquota,pquota -d rtinherit=1 -r zoned=1
-/dev/sda4"
-
-In other words, we didn't pass an explicit rt volume size to mkfs, so
-the message is a bit bogus.  Let's skip printing the message when
-the user did not provide an explicit rtsize parameter.
-
-Cc: <linux-xfs@vger.kernel.org> # v6.18.0
-Fixes: b5d372d96db1ad ("mkfs: adjust_nr_zones for zoned file system on conventional devices")
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- mkfs/xfs_mkfs.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ debian/postinst |    3 ---
+ 1 file changed, 3 deletions(-)
 
 
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index a90160b26065b7..f539c91db251fd 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -4579,10 +4579,11 @@ adjust_nr_zones(
- 				cfg->rgsize;
+diff --git a/debian/postinst b/debian/postinst
+index 2ad9174658ceb4..d11c8d94a3cbe4 100644
+--- a/debian/postinst
++++ b/debian/postinst
+@@ -8,9 +8,6 @@ case "${1}" in
+ 		then
+ 			update-initramfs -u
+ 		fi
+-		if [ -x /bin/systemctl ]; then
+-			/bin/systemctl daemon-reload 2>&1 || true
+-		fi
+ 		;;
  
- 	if (cfg->rgcount > max_zones) {
--		fprintf(stderr,
-+		if (cli->rtsize)
-+			fprintf(stderr,
- _("Warning: not enough zones (%lu/%u) for backing requested rt size due to\n"
-   "over-provisioning needs, writable size will be less than %s\n"),
--			cfg->rgcount, max_zones, cli->rtsize);
-+				cfg->rgcount, max_zones, cli->rtsize);
- 		cfg->rgcount = max_zones;
- 	}
- 	new_rtblocks = (cfg->rgcount * cfg->rgsize);
+ 	abort-upgrade|abort-remove|abort-deconfigure)
 
 
