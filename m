@@ -1,49 +1,62 @@
-Return-Path: <linux-xfs+bounces-30027-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30028-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IEnxEyp7cGktYAAAu9opvQ
-	(envelope-from <linux-xfs+bounces-30027-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Jan 2026 08:07:22 +0100
+	id eEEYC297cGktYAAAu9opvQ
+	(envelope-from <linux-xfs+bounces-30028-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Jan 2026 08:08:31 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F84D5295D
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Jan 2026 08:07:22 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBD0A529A1
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Jan 2026 08:08:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2A0304F8365
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Jan 2026 07:06:12 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 130BB4E2455
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Jan 2026 07:08:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C822F6586;
-	Wed, 21 Jan 2026 07:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2263144CACE;
+	Wed, 21 Jan 2026 07:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UrCLBqJ9"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8536D4FF;
-	Wed, 21 Jan 2026 07:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0B743901F
+	for <linux-xfs@vger.kernel.org>; Wed, 21 Jan 2026 07:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768979163; cv=none; b=T9kOcN+oWGCNHgUvQSQc7UIbIj0EaRx1OKNg4vL1K/MZTLrC5Vxvrq+qNd5I3Rk0oPCblJWVct94khxe+J+iXasSWuaFGb+YsBZ8G0zrMoywbjtnFg8+EZEx1hB/BmGbHvY+hXidpyN/ljnboEnESBiwQAtN/efF+Imuw2Mulyc=
+	t=1768979261; cv=none; b=k7maCCUQ9nhph9tc2TZph2YFZz2Aj59wbSsiZPdG4jFXxQ7iIgzqDYABlF3fXYjisTN004tR8sUV6yc+/pIMRoFMvUOBNTKx8FBP0yYuguNrJ1ybu8nSA+cCojmay9GPs2sgtn945xJlN+zx1Mp4n18F1buxJnd6cX2PoYSzfI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768979163; c=relaxed/simple;
-	bh=A2KfSkJuhESCLyE4jZ0Ge4N1CSVaBszfju+1MHdCnvk=;
+	s=arc-20240116; t=1768979261; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mTLSvE2q8yq8H8KP5q68HjVW4oetEI2COlYjv2ntPMesujtgqeqj8gMHYVKIuKN9D6tuiTTUuTGHMmMRlfIhGZ93l96tNmp31ycBENDmvxbfhtpaPDcC1sJOO/3KNIw9gJY1OMSOz4eb23DW7F0Q0OZQ1XBzqfk4NYjW/Fyw/ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 4A902227AAC; Wed, 21 Jan 2026 08:05:57 +0100 (CET)
-Date: Wed, 21 Jan 2026 08:05:56 +0100
-From: Christoph Hellwig <hch@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pIq38jq199HBAQZPKi8A2xs5puXdMsvOuvuKUOpi/0Zgd9pK/PpRnciypAFgJ/GsR9L3Nf5Sl3rnn7vH8Hy55vIT/ay4O7/hTtR3jeuTrPbaASMldpOBa6E8obK2WnB+CJ4CTl9733iKT163SMouzNNvuChpC0EV+YPtXPqtP8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UrCLBqJ9; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=UrCLBqJ9oOSACxNN8PPBJG3rPU
+	QeREBoN/yovMZd4Od9jfOk6xg87hW0AdV0Umr44kLlOM/VKscO6YY8TMAWp78dNpLdoXjXUaLs5UF
+	7EdkLj5CLiNFU8+fJvALw27tDbVMdGcFJCBFa9iRpWN7q6nSoDDT502x5Bze0+0X6hF7GZjBkV2rw
+	WfmEQWZVSwDk+Z0zjXxt3yV8HAYq12fBdbqaRPTh6vMRey3Dxdwh/ziIzfABxxfKdgpzajffzdBhx
+	i/pepqjU7ljJqAsV7U8nK8x1Mi++BCVPRVrB4jW8O1OxwmWWL8hK+4EVecFews9pn+UpW4AcNBEYT
+	/XPpUhQg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1viSJR-00000004zDV-1WwG;
+	Wed, 21 Jan 2026 07:07:33 +0000
+Date: Tue, 20 Jan 2026 23:07:33 -0800
+From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, cem@kernel.org,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v6.1 11/11] xfs: add media verification ioctl
-Message-ID: <20260121070556.GA11882@lst.de>
-References: <176852588473.2137143.1604994842772101197.stgit@frogsfrogsfrogs> <176852588776.2137143.7103003682733018282.stgit@frogsfrogsfrogs> <20260120041226.GJ15551@frogsfrogsfrogs> <20260120071830.GA5686@lst.de> <20260120180040.GU15551@frogsfrogsfrogs>
+Cc: aalbersh@kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/5] mkfs: set rtstart from user-specified dblocks
+Message-ID: <aXB7NXcw5_9gy_z0@infradead.org>
+References: <176893137046.1079372.10421059565558082402.stgit@frogsfrogsfrogs>
+ <176893137089.1079372.9346420785447726442.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -52,55 +65,40 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260120180040.GU15551@frogsfrogsfrogs>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spamd-Result: default: False [-1.16 / 15.00];
+In-Reply-To: <176893137089.1079372.9346420785447726442.stgit@frogsfrogsfrogs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : No valid SPF, No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-30028-lists,linux-xfs=lfdr.de];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30027-lists,linux-xfs=lfdr.de];
-	R_SPF_SOFTFAIL(0.00)[~all:c];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,lst.de:mid]
-X-Rspamd-Queue-Id: 0F84D5295D
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_POLICY_ALLOW(0.00)[infradead.org,none];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-xfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,lst.de:email,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: BBD0A529A1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Jan 20, 2026 at 10:00:40AM -0800, Darrick J. Wong wrote:
-> On Tue, Jan 20, 2026 at 08:18:30AM +0100, Christoph Hellwig wrote:
-> > 
-> > > +		unsigned int	bio_bbcount;
-> > > +		blk_status_t	bio_status;
-> > > +
-> > > +		bio_reset(bio, btp->bt_bdev, REQ_OP_READ);
-> > > +		bio->bi_iter.bi_sector = daddr;
-> > > +		bio_add_folio_nofail(bio, folio,
-> > > +				min(bbcount << SECTOR_SHIFT, folio_size(folio)),
-> > > +				0);
-> > 
-> > You could actually use bio_reuse as you implied in the previous mail here
-> > and save the bio_add_folio_nofail call.  Not really going to make much
-> > of a difference, so:
-> 
-> Hrm.  Is that bio_reuse patch queued for upstream?  Though maybe it'd be
-> easier to make a mental note (ha!) to clean this up once both appear
-> upstream.
+Looks good:
 
-It is queued up in the xfs for-next tree.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 
