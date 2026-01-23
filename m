@@ -1,55 +1,57 @@
-Return-Path: <linux-xfs+bounces-30190-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30191-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6BcMNbwdc2kzsgAAu9opvQ
-	(envelope-from <linux-xfs+bounces-30190-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 08:05:32 +0100
+	id 8CryBt4dc2kzsgAAu9opvQ
+	(envelope-from <linux-xfs+bounces-30191-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 08:06:06 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0621B71638
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 08:05:32 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5547165E
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 08:06:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id ADF50300D24D
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 07:00:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7AA4730293EA
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 07:01:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4653C318B80;
-	Fri, 23 Jan 2026 07:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4412E3446A0;
+	Fri, 23 Jan 2026 07:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7vW5if7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rco7efLk"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CBA33C528;
-	Fri, 23 Jan 2026 07:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C6032939D;
+	Fri, 23 Jan 2026 07:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769151657; cv=none; b=iHKp1G9mVFWtUUyG16u3YScrxOultZiLxs8JkFZs6HJh8JJF/ADzpLJbZHWvC72O+4B9l90gybGIJSq7kwRLEV3LKXc6PL91EI9KML57xeBtKj1nTkLwOTtYd5rZXFABo8I7wCi0r+IW+gPrgGZ2ZjM7OUjtEpr44mKinRPU26o=
+	t=1769151662; cv=none; b=FEZp03SMUrKqRwintSZ6Jtk1ROLsU22oogp/VgJ5EIcpuS9l39MqyaDKB3g4bunsKbC2QeAHQAaiLfKxZSPPFYLh8/YHyx+JzfKP+qNcdXYmVsPOoljJieLBGDDlGMTi4xRudSuiB1XZRyD2rG3mUnoE056EB6KrIDkC6SOzk9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769151657; c=relaxed/simple;
-	bh=C9spGjgvukd4cuwh+kz+G5Q1gZ7JEOxQWGfPkvcAkHA=;
-	h=Date:Subject:From:To:Cc:Message-ID:MIME-Version:Content-Type; b=N9PQUVdBKVUlIQbNF7JmB6oSl06/KDMooHB1f8YgKxmbYz6J7GRTK6Ixi2xoJQhjPmLspp6N00djP2tGYYTy02csr9a9L5WfJgk2o2LY2Th1eq6C+CzIVQleb31Ywl01118MGhofuGzIudAiYb4AokFUt+QlEdVn+TS6dDbl/js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7vW5if7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E006C19422;
-	Fri, 23 Jan 2026 07:00:56 +0000 (UTC)
+	s=arc-20240116; t=1769151662; c=relaxed/simple;
+	bh=1coq9RY1hDSojshdeTf2DUuQ2A9kRnwJ90pthJoBv44=;
+	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J1H3IJuZEzd2RlqjH5QYjbIJbpCLJOYAeET7GNidF0EqOkJ1VjWrVD+7rvIaE1Yuev/RfQCGSfi4GqOVvsfS+iPUI2mlmCEhitPTQbJpKvJJWlWgE1ocX8KQkzNcavrMJ4qn33f1KkEhJuLVGJNwrluwIKzdNPheP+ctcbAcPk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rco7efLk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E25C4CEF1;
+	Fri, 23 Jan 2026 07:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769151656;
-	bh=C9spGjgvukd4cuwh+kz+G5Q1gZ7JEOxQWGfPkvcAkHA=;
-	h=Date:Subject:From:To:Cc:From;
-	b=t7vW5if7ws0U5etCU3EM+U2s1qF8JFdYeCUgRfZkYP0eBjW/7NjE33Rxs8V7zqeSD
-	 EGgqs4hov75ONPzTJEUV2AKwVyvOpbdjKfLsEsJSfei9DJzNaV8LFqu3QPCmcaH8f7
-	 rTnke55EIhXRDnUqEH1TM82nh9kia8zKqRGqpvdaFGtvOSubrVzJCbanF73pqk/HUm
-	 jzcIHwmRpsgJSXLFpI5pjFrRa3fcl3GjBxBngamXxX51oZSctM/wMpctRaHdL/zneT
-	 H27KNtfxhhX2A55VlH6DPIf4U7U9AWxlz0yV7/qvdNEQdCA9jTB+3c4O3ifqy+RJpV
-	 O5nqp4RBnVShQ==
-Date: Thu, 22 Jan 2026 23:00:55 -0800
-Subject: [PATCHSET 3/3] xfs: syzbot fixes for online fsck
+	s=k20201202; t=1769151661;
+	bh=1coq9RY1hDSojshdeTf2DUuQ2A9kRnwJ90pthJoBv44=;
+	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+	b=rco7efLk7KZyNbalc5EnvZH/epMvaGEGi3YYvlThEALlg4/B8m/NxFbEGRNwC6giY
+	 +eVIiJyCaDy1hJy0YfwMnVGhOEVGhCs+TZHGbbOMu54SXqa6y3GGhu6PVYv6u9/FRe
+	 2XqZM+OytlZ6jeMGUwmg8m7dDKm97WHtPcuGHDmEVMnHdNPqeZUCOdd1wgtATNHxBd
+	 AD8ifi2rtdAi24Eopr0Dzpg7a5knyeGPwcVwD8Y7DCPJFAlpDn4KjW2mB8GIAUcs52
+	 QOP7JpU/PXsClAKcdvtY+LEdnZtKRk7KGOoIVs0pcDjaGsJZ5ed1BVswI+a/r1o5ZB
+	 BQGndzpCRbkZw==
+Date: Thu, 22 Jan 2026 23:01:01 -0800
+Subject: [PATCH 1/6] xfs: delete attr leaf freemap entries when empty
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: djwong@kernel.org, cem@kernel.org
-Cc: hch@lst.de, stable@vger.kernel.org, r772577952@gmail.com,
- linux-xfs@vger.kernel.org, r772577952@gmail.com, hch@lst.de
-Message-ID: <176915153667.1677852.8049980969235323328.stgit@frogsfrogsfrogs>
+Cc: hch@lst.de, stable@vger.kernel.org, linux-xfs@vger.kernel.org
+Message-ID: <176915153034.1677392.8452885009754140060.stgit@frogsfrogsfrogs>
+In-Reply-To: <176915152981.1677392.17448598289298023614.stgit@frogsfrogsfrogs>
+References: <176915152981.1677392.17448598289298023614.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -59,89 +61,100 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[lst.de,vger.kernel.org,gmail.com];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30190-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-30191-lists,linux-xfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.995];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0621B71638
+	TAGGED_RCPT(0.00)[linux-xfs];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:email]
+X-Rspamd-Queue-Id: 9E5547165E
 X-Rspamd-Action: no action
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Fix various syzbot complaints about scrub that Jiaming Zhang found.
+Back in commit 2a2b5932db6758 ("xfs: fix attr leaf header freemap.size
+underflow"), Brian Foster observed that it's possible for a small
+freemap at the end of the end of the xattr entries array to experience
+a size underflow when subtracting the space consumed by an expansion of
+the entries array.  There are only three freemap entries, which means
+that it is not a complete index of all free space in the leaf block.
 
-If you're going to start using this code, I strongly recommend pulling
-from my git trees, which are linked below.
+This code can leave behind a zero-length freemap entry with a nonzero
+base.  Subsequent setxattr operations can increase the base up to the
+point that it overlaps with another freemap entry.  This isn't in and of
+itself a problem because the code in _leaf_add that finds free space
+ignores any freemap entry with zero size.
 
-With a bit of luck, this should all go splendidly.
-Comments and questions are, as always, welcome.
+However, there's another bug in the freemap update code in _leaf_add,
+which is that it fails to update a freemap entry that begins midway
+through the xattr entry that was just appended to the array.  That can
+result in the freemap containing two entries with the same base but
+different sizes (0 for the "pushed-up" entry, nonzero for the entry
+that's actually tracking free space).  A subsequent _leaf_add can then
+allocate xattr namevalue entries on top of the entries array, leading to
+data loss.  But fixing that is for later.
 
-Unreviewed patches:
-[PATCHSET 3/3] xfs: syzbot fixes for online fsck
-  [PATCH 1/5] xfs: get rid of the xchk_xfile_*_descr calls
-  [PATCH 2/5] xfs: only call xf{array,blob}_destroy if we have a valid
-  [PATCH 5/5] xfs: check for deleted cursors when revalidating two
+For now, eliminate the possibility of confusion by zeroing out the base
+of any freemap entry that has zero size.  Because the freemap is not
+intended to be a complete index of free space, a subsequent failure to
+find any free space for a new xattr will trigger block compaction, which
+regenerates the freemap.
 
---D
+It looks like this bug has been in the codebase for quite a long time.
 
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-syzbot-fixes
+Cc: <stable@vger.kernel.org> # v2.6.12
+Fixes: 1da177e4c3f415 ("Linux-2.6.12-rc2")
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
-Commits in this patchset:
- * xfs: get rid of the xchk_xfile_*_descr calls
- * xfs: only call xf{array,blob}_destroy if we have a valid pointer
- * xfs: check return value of xchk_scrub_create_subord
- * xfs: fix UAF in xchk_btree_check_block_owner
- * xfs: check for deleted cursors when revalidating two btrees
----
- fs/xfs/scrub/common.h            |   25 -------------------------
- fs/xfs/scrub/agheader_repair.c   |   21 ++++++++++-----------
- fs/xfs/scrub/alloc_repair.c      |   20 ++++++++++++++++----
- fs/xfs/scrub/attr_repair.c       |   26 +++++++++-----------------
- fs/xfs/scrub/bmap_repair.c       |    6 +-----
- fs/xfs/scrub/btree.c             |    7 +++++--
- fs/xfs/scrub/common.c            |    3 +++
- fs/xfs/scrub/dir.c               |   13 ++++---------
- fs/xfs/scrub/dir_repair.c        |   19 +++++++++----------
- fs/xfs/scrub/dirtree.c           |   19 +++++++++----------
- fs/xfs/scrub/ialloc_repair.c     |   25 ++++++++++++++++++-------
- fs/xfs/scrub/nlinks.c            |    9 ++++-----
- fs/xfs/scrub/parent.c            |   11 +++--------
- fs/xfs/scrub/parent_repair.c     |   23 ++++++-----------------
- fs/xfs/scrub/quotacheck.c        |   13 +++----------
- fs/xfs/scrub/refcount_repair.c   |   13 ++-----------
- fs/xfs/scrub/repair.c            |    3 +++
- fs/xfs/scrub/rmap_repair.c       |    5 +----
- fs/xfs/scrub/rtbitmap_repair.c   |    6 ++----
- fs/xfs/scrub/rtrefcount_repair.c |   15 +++------------
- fs/xfs/scrub/rtrmap_repair.c     |    5 +----
- fs/xfs/scrub/rtsummary.c         |    7 ++-----
- fs/xfs/scrub/scrub.c             |    2 +-
- 23 files changed, 115 insertions(+), 181 deletions(-)
+ fs/xfs/libxfs/xfs_attr_leaf.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index 91c1b30ebaab31..33c6c468ad8d55 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -1580,6 +1580,19 @@ xfs_attr3_leaf_add_work(
+ 				min_t(uint16_t, ichdr->freemap[i].size,
+ 						sizeof(xfs_attr_leaf_entry_t));
+ 		}
++
++		/*
++		 * Don't leave zero-length freemaps with nonzero base lying
++		 * around, because we don't want the code in _remove that
++		 * matches on base address to get confused and create
++		 * overlapping freemaps.  If we end up with no freemap entries
++		 * then the next _add will compact the leaf block and
++		 * regenerate the freemaps.
++		 */
++		if (ichdr->freemap[i].size == 0 && ichdr->freemap[i].base > 0) {
++			ichdr->freemap[i].base = 0;
++			ichdr->holes = 1;
++		}
+ 	}
+ 	ichdr->usedbytes += xfs_attr_leaf_entsize(leaf, args->index);
+ }
 
 
