@@ -1,393 +1,189 @@
-Return-Path: <linux-xfs+bounces-30235-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30237-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WIhVFQlkc2mivQAAu9opvQ
-	(envelope-from <linux-xfs+bounces-30235-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:05:29 +0100
+	id CER3Mt5mc2mivQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-30237-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:17:34 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C956475887
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:05:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 30EE975A3E
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:17:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 40EF53014564
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 12:04:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EE7A130957F7
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 12:14:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D833D1B808;
-	Fri, 23 Jan 2026 12:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFE433242B1;
+	Fri, 23 Jan 2026 12:14:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpotWBV5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DWqqPd2z"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B517525BEF8
-	for <linux-xfs@vger.kernel.org>; Fri, 23 Jan 2026 12:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E663524E4A1
+	for <linux-xfs@vger.kernel.org>; Fri, 23 Jan 2026 12:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769169861; cv=none; b=oh7cPuFAuQSVVym7lTav2Luo67NkeP6s1o3OHjMqyPQ0uBb+6rYkXYzvRV2MTDCcLCz8uOW6kh8KhtltVR3WeNfA8zLrgJJmMvv/c75qChZvFQkVr/kkFydrbLmanbX4k5uI6cC0G/l2wAVSsu2LkgdJBwA8DklFkn6/U2l0jMk=
+	t=1769170493; cv=none; b=e0b3YZyZUcNk0dxA9YLKs3d/xyN4wP34FG1FpRKAmA+t5mBMuboDgsb38cJhsEwWkQds/nmQBlobumPY/zPoaaacubhf5mG0C1nQQywWnzkczcHd94ayA0LMhu7i5yhCcwdNQIlHcWfXsFqe4sMWazSOPMlSNgXN0c/MVYon5tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769169861; c=relaxed/simple;
-	bh=6F5lKmw7qu8OLXyk8Pp8ux5LAvz0ot388pfOcNCgeoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jLvKQhpm1rFxkp3Z7UIRfrSC5Cyh/6M7LenDynDrvPYYXwEOX1VvGpW5eqOmSI1J51B1nlHlflzLZPgA5VqKuh/cnQa/jNlvutgi1zGl2Id7L/oPW7+OQNgt30vUh1QV+/YuJaG/BlLYRcJY/Nyej4VjUsngtv0kyTdp+tS+37I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpotWBV5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43236C4CEF1;
-	Fri, 23 Jan 2026 12:04:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769169861;
-	bh=6F5lKmw7qu8OLXyk8Pp8ux5LAvz0ot388pfOcNCgeoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MpotWBV5KcyMT0AbwaeFa6pCENarp6v4lUqGL21DgEGO4dnCMNAH0bxEsrssYNFt8
-	 5xE41p5/q6y0hQB7FzfJK35RP9QzCMklzAb3xCCMJ59CoaUYupesw2PIm8pZE3IlZA
-	 HVZYwk0LBcuZKcBvXD+JoKDNc7xnB7LOmo+RUKDaljWdcrysjb59QNi+YM0ubPcjfw
-	 2+Kroevq7GcG8+tgFDI6abms6TIP5lM7ALalnxyqNdJUGwUpKM82EDncgaBkxhm0Yr
-	 lUoV9j7J5aIV53D6iSqHNwyaGXZRq3fcp++EaO25apiGDnRxmu7DhqHtvRTtPUMjTW
-	 TXQyDAP1vnkIg==
-Date: Fri, 23 Jan 2026 13:04:17 +0100
-From: Carlos Maiolino <cem@kernel.org>
+	s=arc-20240116; t=1769170493; c=relaxed/simple;
+	bh=7Fge6Fmkgld7YLUrywNY+EJQXw+yVu+zB01EPx2KCOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=eqlEoKuaALuU31q7d9uALqXHuF+Fm5gWRxsNdndUs/1f+04ZB6UtmGnk/o9ZLZA/DGNFzA+eAqzTefj03Vb3xOsD1yI6exgqwlEnvRSNSVZ7VoCfb1k2SUY4u6h3Hyu2SMwte7Y+a5E7nSabhz4vCrG3GeAWQ1o3+bm3A7pPu1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=DWqqPd2z; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260123121448epoutp0215d1811929cdd3530b56c2a8d80aaa00~NWy90ZYpy0302003020epoutp02S
+	for <linux-xfs@vger.kernel.org>; Fri, 23 Jan 2026 12:14:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260123121448epoutp0215d1811929cdd3530b56c2a8d80aaa00~NWy90ZYpy0302003020epoutp02S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1769170488;
+	bh=WjQNuY/LaNwimN1LsMDCa88dG7mBi2PdVExVV3Yfqn0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DWqqPd2z7EUAQMCM5Hs8H0gWCd+Gl4LMbQzF+RABtsbmBSLFlSAmcS3FVwLoL18Dh
+	 tkJW+NhBdXdaEmhQiYM41CceLySsACw7ZPIbAP+mDI0eSO3v2ybVxTPVG4xjLnKE8d
+	 gJrXcGEd6pbBbEOeWG6Ki+RHkvMwPPQ6jABfxyOI=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260123121446epcas5p38aff88f320af62074288f7e4ac6f9f13~NWy8i-g8u1610816108epcas5p3f;
+	Fri, 23 Jan 2026 12:14:46 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.93]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4dyH1K4xfKz3hhT7; Fri, 23 Jan
+	2026 12:14:45 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20260123121444epcas5p4e729259011e031a28be8379ea3b9b749~NWy6fJ6rc1107511075epcas5p4I;
+	Fri, 23 Jan 2026 12:14:44 +0000 (GMT)
+Received: from green245.gost (unknown [107.99.41.245]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260123121441epsmtip193ddadcef38cfbeda2b4fb04a9163535~NWy4CX07A0851408514epsmtip1x;
+	Fri, 23 Jan 2026 12:14:41 +0000 (GMT)
+Date: Fri, 23 Jan 2026 17:40:26 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
 To: Christoph Hellwig <hch@lst.de>
-Cc: Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org, 
-	"Darrick J. Wong" <djwong@kernel.org>
-Subject: Re: [PATCH 2/3] xfs: use a lockref for the buffer reference count
-Message-ID: <aXNjvJjmcIbi8rkN@nidhogg.toxiclabs.cc>
-References: <20260122052709.412336-1-hch@lst.de>
- <20260122052709.412336-3-hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, Carlos Maiolino <cem@kernel.org>, Qu
+	Wenruo <wqu@suse.com>, Al Viro <viro@zeniv.linux.org.uk>,
+	linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: bounce buffer direct I/O when stable pages are required v2
+Message-ID: <20260123121026.tujkvhxixr6pgz7c@green245.gost>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260122052709.412336-3-hch@lst.de>
+In-Reply-To: <20260119074425.4005867-1-hch@lst.de>
+X-CMS-MailID: 20260123121444epcas5p4e729259011e031a28be8379ea3b9b749
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_11f367_"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260123121444epcas5p4e729259011e031a28be8379ea3b9b749
+References: <20260119074425.4005867-1-hch@lst.de>
+	<CGME20260123121444epcas5p4e729259011e031a28be8379ea3b9b749@epcas5p4.samsung.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	CTYPE_MIXED_BOGUS(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
+	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_FROM(0.00)[bounces-30235-lists,linux-xfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[samsung.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cem@kernel.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30237-lists,linux-xfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[anuj20.g@samsung.com,linux-xfs@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-0.998];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: C956475887
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: 30EE975A3E
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026 at 06:26:56AM +0100, Christoph Hellwig wrote:
-> The lockref structure allows incrementing/decrementing counters like
-> an atomic_t for the fast path, while still allowing complex slow path
-> operations as if the counter was protected by a lock.  The only slow
-> path operations that actually need to take the lock are the final
-> put, LRU evictions and marking a buffer stale.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_11f367_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
+I ran experiments[1] on two devices - Samsung PM1733 and Intel Optane
+with PI enabled (4K + 8b format). On my setup, I didn't observe any
+noticeable difference for sequential write workloads. Sequential reads,
+however, show a clear performance drop while using bounce buffering,
+which is expected.
+Used these fio commands listed below[2]
 
-> ---
->  fs/xfs/xfs_buf.c   | 79 ++++++++++++++++++----------------------------
->  fs/xfs/xfs_buf.h   |  4 +--
->  fs/xfs/xfs_trace.h | 10 +++---
->  3 files changed, 38 insertions(+), 55 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> index aacdf080e400..348c91335163 100644
-> --- a/fs/xfs/xfs_buf.c
-> +++ b/fs/xfs/xfs_buf.c
-> @@ -31,20 +31,20 @@ struct kmem_cache *xfs_buf_cache;
->   *
->   * xfs_buf_stale:
->   *	b_sema (caller holds)
-> - *	  b_lock
-> + *	  b_lockref.lock
->   *	    lru_lock
->   *
->   * xfs_buf_rele:
-> - *	b_lock
-> + *	b_lockref.lock
->   *	  lru_lock
->   *
->   * xfs_buftarg_drain_rele
->   *	lru_lock
-> - *	  b_lock (trylock due to inversion)
-> + *	  b_lockref.lock (trylock due to inversion)
->   *
->   * xfs_buftarg_isolate
->   *	lru_lock
-> - *	  b_lock (trylock due to inversion)
-> + *	  b_lockref.lock (trylock due to inversion)
->   */
->  
->  static void xfs_buf_submit(struct xfs_buf *bp);
-> @@ -78,11 +78,11 @@ xfs_buf_stale(
->  	 */
->  	bp->b_flags &= ~_XBF_DELWRI_Q;
->  
-> -	spin_lock(&bp->b_lock);
-> +	spin_lock(&bp->b_lockref.lock);
->  	atomic_set(&bp->b_lru_ref, 0);
-> -	if (bp->b_hold >= 0)
-> +	if (!__lockref_is_dead(&bp->b_lockref))
->  		list_lru_del_obj(&bp->b_target->bt_lru, &bp->b_lru);
-> -	spin_unlock(&bp->b_lock);
-> +	spin_unlock(&bp->b_lockref.lock);
->  }
->  
->  static void
-> @@ -274,10 +274,8 @@ xfs_buf_alloc(
->  	 * inserting into the hash table are safe (and will have to wait for
->  	 * the unlock to do anything non-trivial).
->  	 */
-> -	bp->b_hold = 1;
-> +	lockref_init(&bp->b_lockref);
->  	sema_init(&bp->b_sema, 0); /* held, no waiters */
-> -
-> -	spin_lock_init(&bp->b_lock);
->  	atomic_set(&bp->b_lru_ref, 1);
->  	init_completion(&bp->b_iowait);
->  	INIT_LIST_HEAD(&bp->b_lru);
-> @@ -434,20 +432,6 @@ xfs_buf_find_lock(
->  	return 0;
->  }
->  
-> -static bool
-> -xfs_buf_try_hold(
-> -	struct xfs_buf		*bp)
-> -{
-> -	spin_lock(&bp->b_lock);
-> -	if (bp->b_hold == -1) {
-> -		spin_unlock(&bp->b_lock);
-> -		return false;
-> -	}
-> -	bp->b_hold++;
-> -	spin_unlock(&bp->b_lock);
-> -	return true;
-> -}
-> -
->  static inline int
->  xfs_buf_lookup(
->  	struct xfs_buf_cache	*bch,
-> @@ -460,7 +444,7 @@ xfs_buf_lookup(
->  
->  	rcu_read_lock();
->  	bp = rhashtable_lookup(&bch->bc_hash, map, xfs_buf_hash_params);
-> -	if (!bp || !xfs_buf_try_hold(bp)) {
-> +	if (!bp || !lockref_get_not_dead(&bp->b_lockref)) {
->  		rcu_read_unlock();
->  		return -ENOENT;
->  	}
-> @@ -511,7 +495,7 @@ xfs_buf_find_insert(
->  		error = PTR_ERR(bp);
->  		goto out_free_buf;
->  	}
-> -	if (bp && xfs_buf_try_hold(bp)) {
-> +	if (bp && lockref_get_not_dead(&bp->b_lockref)) {
->  		/* found an existing buffer */
->  		rcu_read_unlock();
->  		error = xfs_buf_find_lock(bp, flags);
-> @@ -853,16 +837,14 @@ xfs_buf_hold(
->  {
->  	trace_xfs_buf_hold(bp, _RET_IP_);
->  
-> -	spin_lock(&bp->b_lock);
-> -	bp->b_hold++;
-> -	spin_unlock(&bp->b_lock);
-> +	lockref_get(&bp->b_lockref);
->  }
->  
->  static void
->  xfs_buf_destroy(
->  	struct xfs_buf		*bp)
->  {
-> -	ASSERT(bp->b_hold < 0);
-> +	ASSERT(__lockref_is_dead(&bp->b_lockref));
->  	ASSERT(!(bp->b_flags & _XBF_DELWRI_Q));
->  
->  	if (!xfs_buf_is_uncached(bp)) {
-> @@ -888,19 +870,20 @@ xfs_buf_rele(
->  {
->  	trace_xfs_buf_rele(bp, _RET_IP_);
->  
-> -	spin_lock(&bp->b_lock);
-> -	if (!--bp->b_hold) {
-> +	if (lockref_put_or_lock(&bp->b_lockref))
-> +		return;
-> +	if (!--bp->b_lockref.count) {
->  		if (xfs_buf_is_uncached(bp) || !atomic_read(&bp->b_lru_ref))
->  			goto kill;
->  		list_lru_add_obj(&bp->b_target->bt_lru, &bp->b_lru);
->  	}
-> -	spin_unlock(&bp->b_lock);
-> +	spin_unlock(&bp->b_lockref.lock);
->  	return;
->  
->  kill:
-> -	bp->b_hold = -1;
-> +	lockref_mark_dead(&bp->b_lockref);
->  	list_lru_del_obj(&bp->b_target->bt_lru, &bp->b_lru);
-> -	spin_unlock(&bp->b_lock);
-> +	spin_unlock(&bp->b_lockref.lock);
->  
->  	xfs_buf_destroy(bp);
->  }
-> @@ -1471,18 +1454,18 @@ xfs_buftarg_drain_rele(
->  	struct xfs_buf		*bp = container_of(item, struct xfs_buf, b_lru);
->  	struct list_head	*dispose = arg;
->  
-> -	if (!spin_trylock(&bp->b_lock))
-> +	if (!spin_trylock(&bp->b_lockref.lock))
->  		return LRU_SKIP;
-> -	if (bp->b_hold > 0) {
-> +	if (bp->b_lockref.count > 0) {
->  		/* need to wait, so skip it this pass */
-> -		spin_unlock(&bp->b_lock);
-> +		spin_unlock(&bp->b_lockref.lock);
->  		trace_xfs_buf_drain_buftarg(bp, _RET_IP_);
->  		return LRU_SKIP;
->  	}
->  
-> -	bp->b_hold = -1;
-> +	lockref_mark_dead(&bp->b_lockref);
->  	list_lru_isolate_move(lru, item, dispose);
-> -	spin_unlock(&bp->b_lock);
-> +	spin_unlock(&bp->b_lockref.lock);
->  	return LRU_REMOVED;
->  }
->  
-> @@ -1564,10 +1547,10 @@ xfs_buftarg_isolate(
->  	struct list_head	*dispose = arg;
->  
->  	/*
-> -	 * We are inverting the lru lock vs bp->b_lock order here, so use a
-> -	 * trylock. If we fail to get the lock, just skip the buffer.
-> +	 * We are inverting the lru lock vs bp->b_lockref.lock order here, so
-> +	 * use a trylock. If we fail to get the lock, just skip the buffer.
->  	 */
-> -	if (!spin_trylock(&bp->b_lock))
-> +	if (!spin_trylock(&bp->b_lockref.lock))
->  		return LRU_SKIP;
->  
->  	/*
-> @@ -1575,9 +1558,9 @@ xfs_buftarg_isolate(
->  	 * free it.  It will be added to the LRU again when the reference count
->  	 * hits zero.
->  	 */
-> -	if (bp->b_hold > 0) {
-> +	if (bp->b_lockref.count > 0) {
->  		list_lru_isolate(lru, &bp->b_lru);
-> -		spin_unlock(&bp->b_lock);
-> +		spin_unlock(&bp->b_lockref.lock);
->  		return LRU_REMOVED;
->  	}
->  
-> @@ -1587,13 +1570,13 @@ xfs_buftarg_isolate(
->  	 * buffer, otherwise it gets another trip through the LRU.
->  	 */
->  	if (atomic_add_unless(&bp->b_lru_ref, -1, 0)) {
-> -		spin_unlock(&bp->b_lock);
-> +		spin_unlock(&bp->b_lockref.lock);
->  		return LRU_ROTATE;
->  	}
->  
-> -	bp->b_hold = -1;
-> +	lockref_mark_dead(&bp->b_lockref);
->  	list_lru_isolate_move(lru, item, dispose);
-> -	spin_unlock(&bp->b_lock);
-> +	spin_unlock(&bp->b_lockref.lock);
->  	return LRU_REMOVED;
->  }
->  
-> diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-> index 1117cd9cbfb9..3a1d066e1c13 100644
-> --- a/fs/xfs/xfs_buf.h
-> +++ b/fs/xfs/xfs_buf.h
-> @@ -14,6 +14,7 @@
->  #include <linux/dax.h>
->  #include <linux/uio.h>
->  #include <linux/list_lru.h>
-> +#include <linux/lockref.h>
->  
->  extern struct kmem_cache *xfs_buf_cache;
->  
-> @@ -154,8 +155,7 @@ struct xfs_buf {
->  
->  	xfs_daddr_t		b_rhash_key;	/* buffer cache index */
->  	int			b_length;	/* size of buffer in BBs */
-> -	spinlock_t		b_lock;		/* internal state lock */
-> -	unsigned int		b_hold;		/* reference count */
-> +	struct lockref		b_lockref;	/* refcount + lock */
->  	atomic_t		b_lru_ref;	/* lru reclaim ref count */
->  	xfs_buf_flags_t		b_flags;	/* status flags */
->  	struct semaphore	b_sema;		/* semaphore for lockables */
-> diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> index f70afbf3cb19..abf022d5ff42 100644
-> --- a/fs/xfs/xfs_trace.h
-> +++ b/fs/xfs/xfs_trace.h
-> @@ -736,7 +736,7 @@ DECLARE_EVENT_CLASS(xfs_buf_class,
->  		__entry->dev = bp->b_target->bt_dev;
->  		__entry->bno = xfs_buf_daddr(bp);
->  		__entry->nblks = bp->b_length;
-> -		__entry->hold = bp->b_hold;
-> +		__entry->hold = bp->b_lockref.count;
->  		__entry->pincount = atomic_read(&bp->b_pin_count);
->  		__entry->lockval = bp->b_sema.count;
->  		__entry->flags = bp->b_flags;
-> @@ -810,7 +810,7 @@ DECLARE_EVENT_CLASS(xfs_buf_flags_class,
->  		__entry->bno = xfs_buf_daddr(bp);
->  		__entry->length = bp->b_length;
->  		__entry->flags = flags;
-> -		__entry->hold = bp->b_hold;
-> +		__entry->hold = bp->b_lockref.count;
->  		__entry->pincount = atomic_read(&bp->b_pin_count);
->  		__entry->lockval = bp->b_sema.count;
->  		__entry->caller_ip = caller_ip;
-> @@ -854,7 +854,7 @@ TRACE_EVENT(xfs_buf_ioerror,
->  		__entry->dev = bp->b_target->bt_dev;
->  		__entry->bno = xfs_buf_daddr(bp);
->  		__entry->length = bp->b_length;
-> -		__entry->hold = bp->b_hold;
-> +		__entry->hold = bp->b_lockref.count;
->  		__entry->pincount = atomic_read(&bp->b_pin_count);
->  		__entry->lockval = bp->b_sema.count;
->  		__entry->error = error;
-> @@ -898,7 +898,7 @@ DECLARE_EVENT_CLASS(xfs_buf_item_class,
->  		__entry->buf_bno = xfs_buf_daddr(bip->bli_buf);
->  		__entry->buf_len = bip->bli_buf->b_length;
->  		__entry->buf_flags = bip->bli_buf->b_flags;
-> -		__entry->buf_hold = bip->bli_buf->b_hold;
-> +		__entry->buf_hold = bip->bli_buf->b_lockref.count;
->  		__entry->buf_pincount = atomic_read(&bip->bli_buf->b_pin_count);
->  		__entry->buf_lockval = bip->bli_buf->b_sema.count;
->  		__entry->li_flags = bip->bli_item.li_flags;
-> @@ -5181,7 +5181,7 @@ DECLARE_EVENT_CLASS(xfbtree_buf_class,
->  		__entry->xfino = file_inode(xfbt->target->bt_file)->i_ino;
->  		__entry->bno = xfs_buf_daddr(bp);
->  		__entry->nblks = bp->b_length;
-> -		__entry->hold = bp->b_hold;
-> +		__entry->hold = bp->b_lockref.count;
->  		__entry->pincount = atomic_read(&bp->b_pin_count);
->  		__entry->lockval = bp->b_sema.count;
->  		__entry->flags = bp->b_flags;
-> -- 
-> 2.47.3
-> 
+Feel free to add:
+Tested-by: Anuj Gupta <anuj20.g@samsung.com
+
+[1]
+Intel Optane:
+
+Sequential write
+   | size | zero copy  |  bounce    | 
+   +------+------------+------------+
+   |   4k | 158MiB/s   | 161MiB/s   |
+   |  64K | 4522MiB/s  | 4506MiB/s  |
+   |   1M | 4573MiB/s  | 4571MiB/s  |
+   +------+-------------------------+
+
+Sequential read
+   | size | zero copy  |  bounce    | 
+   +------+------------+------------+
+   |   4k | 1693MiB/s  | 1245MiB/s  |
+   |  64K | 6518MiB/s  | 4763MiB/s  |
+   |   1M | 6731MiB/s  | 5475MiB/s  |
+   +------+-------------------------+
+   
+   
+For Samsung PM1733:
+
+Sequential write
+   | size | zero copy  |  bounce    | 
+   +------+------------+------------+
+   |   4k | 155MiB/s   | 153MiB/s   |
+   |  64K | 3899MiB/s  | 3868MiB/s  |
+   |   1M | 4117MiB/s  | 4116MiB/s  |
+   +------+-------------------------+
+
+Sequential read
+   | size | zero copy  |  bounce    | 
+   +------+------------+------------+
+   |   4k | 602MiB/s   | 244MiB/s  |
+   |  64K | 4613MiB/s  | 2141MiB/s  |
+   |   1M | 5868MiB/s  | 5162MiB/s  |
+   +------+-------------------------+
+   
+
+[2]
+Write benchmark -
+fio --name=write_new_4k --filename=/mnt/writefile --rw=write --bs=4k --size=20G --ioengine=io_uring --direct=1 --iodepth=16 --numjobs=1 --time_based=1 --runtime=30 --group_reporting
+
+Read benchmark -
+Prepare the file:
+fio --name=prep_create_prepfile --filename=/mnt/prepfile --rw=write --bs=1M --size=20G --ioengine=io_uring --direct=1 --iodepth=16 --numjobs=1 --group_reporting
+
+Then run the read workload:
+fio --name=read_4k --filename=/mnt/prepfile --rw=read --bs=4k --size=20G --ioengine=io_uring --direct=1 --iodepth=16 --numjobs=1 --time_based=1 --runtime=30 --group_reporting
+
+------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_11f367_
+Content-Type: text/plain; charset="utf-8"
+
+
+------bVwHse4Nykw-L2c5iRRXKf-G.8k0lxUwrpcTFjGaDb9lfltx=_11f367_--
 
