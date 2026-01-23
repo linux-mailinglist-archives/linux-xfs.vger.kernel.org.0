@@ -1,108 +1,138 @@
-Return-Path: <linux-xfs+bounces-30236-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30238-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MJNqLMVlc2mivQAAu9opvQ
-	(envelope-from <linux-xfs+bounces-30236-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:12:53 +0100
+	id ADkpAn1nc2mivQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-30238-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:20:13 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54D3B7594C
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:12:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6A8A75AB4
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 13:20:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AAD77302F70A
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 12:12:35 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 9E3C1302E86C
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jan 2026 12:18:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49FA032549E;
-	Fri, 23 Jan 2026 12:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B157E1B808;
+	Fri, 23 Jan 2026 12:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTHL4Pou"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O6kpcJ/L"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D6430ACEE;
-	Fri, 23 Jan 2026 12:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E021C84BD
+	for <linux-xfs@vger.kernel.org>; Fri, 23 Jan 2026 12:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769170354; cv=none; b=XgjnEmvBpBrd+LCwoRQY8lFA3g3YyOayNuvfMfJWrAw3XO+BrXGb97vDtCVnNl7Q+jmmp+LMngQORw5SnMOpOnP5hXw/mywTEAhJioHvGtEXJtsAaZ6mKP5bzpRjRFLy7FcJdexgDPt4h2zowUG0g6Naf1WszuRgLdgHIzGVGs0=
+	t=1769170719; cv=none; b=LQjtXtPaui37oOCf0MXaoGiGw82nYxHBEJMQ+4aySVhXmOPQURFJfekErn/cfo43wyD6Orh1TB0siGDVKh7Uw2HfrKbrfyhL50d6ozSOkAoAggFtKs9ZEzye4ExxGXwGlY75suZYTjz4bA0AglCwY0TRfPt/2LJYHPiDq4Blh9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769170354; c=relaxed/simple;
-	bh=2PkYR9UHdcM082D5EGL+eh8dNzXnIjYg4vaNcq5QCmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xhhq8EnoJYim8GcrefHHPj/QstW0gMkAr5UuSK7bJZp2YbWazqnRhx/0x/gnDwCsAi6AVn0vfJHhBAxWLZMvhURQCHz/WAm5XPqZvPO9bs0ofi4axiFSZmiyLUpLaYp/252nyH3TjBwrboLsobV0k0DnLSCE2e12Vl/5q70rAUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTHL4Pou; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 173F8C19422;
-	Fri, 23 Jan 2026 12:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769170353;
-	bh=2PkYR9UHdcM082D5EGL+eh8dNzXnIjYg4vaNcq5QCmc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qTHL4Poufr50hv0ZoquiVLbCF40danNymQHUU56GSwl2XLv+LALmZ/HXYvFpocKv4
-	 k1h4Wlp9MnueK54p2CHrnc64EepZsrZ6nq5UI4NyQitG4zl8UJTbvfZxZqNs8nnH+l
-	 8KDuh+ARtJZcGD4F+rC2sZN9yXrf5B99Da0A+JDeYSgC09c0A6zoLDC8rr2CrtA1qn
-	 lwrLypBFq9b02SFhuBoWdQioaLqdVDKNzienquQWNEEXkX+8zBNoa7YfiZzgx7qUR5
-	 Ktyf5wFqAMNda4SN5LdIy/sjiYeJ3if0pbo4cjELzzF6sow0yQjN6buJ3ckypJ9FZt
-	 JqMMdi+HBlLjg==
-Date: Fri, 23 Jan 2026 13:12:24 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org, 
-	sj1557.seo@samsung.com, yuezhang.mo@sony.com, almaz.alexandrovich@paragon-software.com, 
-	slava@dubeyko.com, glaubitz@physik.fu-berlin.de, frank.li@vivo.com, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, cem@kernel.org, sfrench@samba.org, pc@manguebit.org, 
-	ronniesahlberg@gmail.com, sprasad@microsoft.com, trondmy@kernel.org, anna@kernel.org, 
-	jaegeuk@kernel.org, chao@kernel.org, hansg@kernel.org, senozhatsky@chromium.org, 
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v6 00/16] Exposing case folding behavior
-Message-ID: <20260123-zwirn-verfassen-c93175b7a1ee@brauner>
-References: <20260120142439.1821554-1-cel@kernel.org>
+	s=arc-20240116; t=1769170719; c=relaxed/simple;
+	bh=Ibv50jU/EOdekdVYIAJPI44nrpi7ec4RH5igVxtsObo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=bKL5aqGXbTJUux1iyE92s2yqq4j9OV501AilG/AzK1+QZoypg0/Ig+XziLXMn3IY57iOVHcCQ2osMJZEJdREoqeTvlhH8O3lgnVe/d9Lenvum3SeU7xGVwlntjeF16quIDxq4tLJbaVrKuAYCWrZtY4piyENFoXtEqrVys7sXtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=O6kpcJ/L; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260123121836epoutp0431008ee4cde7bba74ff0aba2f16e923a~NW2SSk-MD0694706947epoutp04w
+	for <linux-xfs@vger.kernel.org>; Fri, 23 Jan 2026 12:18:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260123121836epoutp0431008ee4cde7bba74ff0aba2f16e923a~NW2SSk-MD0694706947epoutp04w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1769170716;
+	bh=Ibv50jU/EOdekdVYIAJPI44nrpi7ec4RH5igVxtsObo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O6kpcJ/LOM5juIc2+PSBkjULkndByHLszHOhF4y1/wZkjKg0TlIbKcc78cC/WlHj9
+	 pis948jRu5Xad8R7HRNCUBKVe1iTX4Q9vDmIsLYd4Zqgg1e4uoGr677FaCe2+uef73
+	 T25Ia3foGItfQ6UNM3a4fT/q6jZhrfGSvKIr8Apc=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20260123121835epcas5p35edc9c7b887ace25845fb69073fd02c1~NW2R0pHFq0347603476epcas5p3F;
+	Fri, 23 Jan 2026 12:18:35 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.92]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4dyH5k4wG7z6B9m6; Fri, 23 Jan
+	2026 12:18:34 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260123121834epcas5p16908988385a372270e3f617c6b0a52d9~NW2Qj7lKT1530515305epcas5p1p;
+	Fri, 23 Jan 2026 12:18:34 +0000 (GMT)
+Received: from green245.gost (unknown [107.99.41.245]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260123121832epsmtip1ab33741bd6d15ae8a231c7e47e81dba4~NW2POcCiO1297612976epsmtip1P;
+	Fri, 23 Jan 2026 12:18:32 +0000 (GMT)
+Date: Fri, 23 Jan 2026 17:44:16 +0530
+From: Anuj Gupta <anuj20.g@samsung.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>, Carlos Maiolino <cem@kernel.org>, Qu
+	Wenruo <wqu@suse.com>, Al Viro <viro@zeniv.linux.org.uk>,
+	linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 01/14] block: refactor get_contig_folio_len
+Message-ID: <20260123121416.pdj5peze755kdnth@green245.gost>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260120142439.1821554-1-cel@kernel.org>
+In-Reply-To: <20260119074425.4005867-2-hch@lst.de>
+X-CMS-MailID: 20260123121834epcas5p16908988385a372270e3f617c6b0a52d9
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----IrfruICR4kMULzJWPGPqiSt5VhS9eUGYkVmPB-DHhmy0YhYM=_11f361_"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260123121834epcas5p16908988385a372270e3f617c6b0a52d9
+References: <20260119074425.4005867-1-hch@lst.de>
+	<20260119074425.4005867-2-hch@lst.de>
+	<CGME20260123121834epcas5p16908988385a372270e3f617c6b0a52d9@epcas5p1.samsung.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
+	CTYPE_MIXED_BOGUS(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
+	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	MIME_GOOD(-0.10)[multipart/mixed,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	DKIM_TRACE(0.00)[samsung.com:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30236-lists,linux-xfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,suse.cz,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.992];
+	TAGGED_FROM(0.00)[bounces-30238-lists,linux-xfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+,1:+,2:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-xfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[anuj20.g@samsung.com,linux-xfs@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.998];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 54D3B7594C
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: D6A8A75AB4
 X-Rspamd-Action: no action
 
-> Series based on v6.19-rc5.
+------IrfruICR4kMULzJWPGPqiSt5VhS9eUGYkVmPB-DHhmy0YhYM=_11f361_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-We're starting to cut it close even with the announced -rc8.
-So my current preference would be to wait for the 7.1 merge window.
+On 19/01/26 08:44AM, Christoph Hellwig wrote:
+>Move all of the logic to find the contigous length inside a folio into
+>get_contig_folio_len instead of keeping some of it in the caller.
+>
+>Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Reviewed-by: Anuj Gupta <anuj20.g@samsung.com
+
+------IrfruICR4kMULzJWPGPqiSt5VhS9eUGYkVmPB-DHhmy0YhYM=_11f361_
+Content-Type: text/plain; charset="utf-8"
+
+
+------IrfruICR4kMULzJWPGPqiSt5VhS9eUGYkVmPB-DHhmy0YhYM=_11f361_--
 
