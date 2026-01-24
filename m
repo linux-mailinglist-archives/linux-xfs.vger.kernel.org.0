@@ -1,129 +1,195 @@
-Return-Path: <linux-xfs+bounces-30273-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30274-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4NOIBJbAdGnU9QAAu9opvQ
-	(envelope-from <linux-xfs+bounces-30273-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Sat, 24 Jan 2026 13:52:38 +0100
+	id YV+QBp3DdGlP9gAAu9opvQ
+	(envelope-from <linux-xfs+bounces-30274-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Sat, 24 Jan 2026 14:05:33 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F9C07DA87
-	for <lists+linux-xfs@lfdr.de>; Sat, 24 Jan 2026 13:52:37 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8AD77DAB4
+	for <lists+linux-xfs@lfdr.de>; Sat, 24 Jan 2026 14:05:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 800B0300380D
-	for <lists+linux-xfs@lfdr.de>; Sat, 24 Jan 2026 12:52:34 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 279EA3002B69
+	for <lists+linux-xfs@lfdr.de>; Sat, 24 Jan 2026 13:05:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA11318B80;
-	Sat, 24 Jan 2026 12:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 242B82DC35C;
+	Sat, 24 Jan 2026 13:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+lF+5cw"
+	dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b="TCjwaw0C"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from muffat.debian.org (muffat.debian.org [209.87.16.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19BB2E0413;
-	Sat, 24 Jan 2026 12:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801D91A2C0B
+	for <linux-xfs@vger.kernel.org>; Sat, 24 Jan 2026 13:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.87.16.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769259150; cv=none; b=ZtMCSGujLIxCBL/crj532fpnKaLbvXS21sJ043mIG8LhDwOOBscvbrahFIxvK/MFtrne+27LR6nZU/pDaOqWXEWmVpBNecNdbGEKiGG/T0TTN+oT397+AKX0+6N8MELXccFQw0h0YYFXrbw8Dx/FiW5yGdxrImZRSw0k+ezeTN8=
+	t=1769259925; cv=none; b=NAyWwgjnyiUN+EkpS3w9wbRu8QvL6Bjw+cVlVMpNR2yaGy+v4+i3K7Zg0UZYHaGm7f+W97QQkN5APw2QH5/I9Eo2OMkCQtVsroz4weZzxkqR1I50LPPo41RGNzkMp+broDNujOYauAageiPNOSpeyF+3Z4ax9Yr3iSU31vNG31E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769259150; c=relaxed/simple;
-	bh=tF55d1hz2qgaV0ckyIKSTzXVHak1AXu30pHTv/T/mwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/Z8Kr1iWl2DlOTsFULo0yHlVT5iMT7nnRFoRFL1XEmF2ugSWKMPP3dVQC526uIt4cw6KQWjhbP+1cjddlb9St1PkmsKRqTokEOY/HH2NeAr0iMYK/5P1P44KkSxfXquV3KxK22Fi7JXyJY5EqdTGJs8r2m/NF8NJANHYOqYBhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+lF+5cw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8ABCC116D0;
-	Sat, 24 Jan 2026 12:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769259150;
-	bh=tF55d1hz2qgaV0ckyIKSTzXVHak1AXu30pHTv/T/mwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l+lF+5cwXE+InK8NAW7SdkJD0wOGPO5SHbCCzqKnVJfHTw275VH76hYus//Td+Gqs
-	 Zd+ZunPF3ILfSZEZzPBQpRyDiragiKRjGpqqXrVfONayxSjMvuvNmBwXKNLh/vvLAm
-	 XwUAFehKHHlLHHvzMfAfFR130CJe2Bs01+Vk5H5bsLGJC5WZh0mD0cIT1FfV+0m+yU
-	 xl/RAjmX7pv+oCD3w2KN/Jut3RWFMHoS2K8EKWWjti2e5+RI9BTpcSdXgrTszzeL3S
-	 EzZ9U0OxQ1KqFq4Z/qxBkgQWUSI9JWeUEuZPVdOoQqWWjA5+XbTPA+eiY7lIvCQzH6
-	 oDJu3FYpngXdA==
-Date: Sat, 24 Jan 2026 13:52:21 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
-	Yuezhang Mo <yuezhang.mo@sony.com>, almaz.alexandrovich@paragon-software.com, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, glaubitz@physik.fu-berlin.de, frank.li@vivo.com, 
-	Theodore Tso <tytso@mit.edu>, adilger.kernel@dilger.ca, Carlos Maiolino <cem@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	senozhatsky@chromium.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v6 00/16] Exposing case folding behavior
-Message-ID: <20260124-gezollt-vorbild-4f65079ab1f1@brauner>
-References: <20260120142439.1821554-1-cel@kernel.org>
- <20260123-zwirn-verfassen-c93175b7a1ee@brauner>
- <41b1274b-0720-451d-80db-210697cdb6ac@app.fastmail.com>
+	s=arc-20240116; t=1769259925; c=relaxed/simple;
+	bh=bwoEjbXTpKq1borgVIPxfpDJovGnpokid3OVEB6rXds=;
+	h=From:To:MIME-Version:Subject:Content-Type:Message-Id:Date; b=S3CuklVawep44l6fkQqHxga7FPYIog6a7/FLAAIJHXuiYCzMEhR4DMJKsRMNMBewOb4LAyQoYa2g/GaxhEIKebZxoMtZckuXzWXV+wu91a2ID6/IxStu3oCKqsj6rqaBLqLYLVfWkRNQPcPRC2VGfFhBxM5SJAQFfUmXarNiO8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org; spf=none smtp.mailfrom=ftp-master.debian.org; dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b=TCjwaw0C; arc=none smtp.client-ip=209.87.16.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp-master.debian.org
+Received: from [192.91.235.231] (port=35854 helo=fasolo.debian.org)
+	from C=NA,ST=NA,L=Ankh Morpork,O=Debian SMTP,OU=Debian SMTP CA,CN=fasolo.debian.org,EMAIL=hostmaster@fasolo.debian.org (verified)
+	by muffat.debian.org with esmtps (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <envelope@ftp-master.debian.org>)
+	id 1vjdKH-000xUq-0b
+	for linux-xfs@vger.kernel.org;
+	Sat, 24 Jan 2026 13:05:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ftp-master.debian.org; s=smtpauto.fasolo; h=Date:Message-Id:Content-Type:
+	Subject:MIME-Version:To:From:Reply-To:Cc:Content-Transfer-Encoding:Content-ID
+	:Content-Description:In-Reply-To:References;
+	bh=LeHhJGfT77vzHGhyTO1AQh7eHKBnJyANIZ9W5B1u0ZA=; b=TCjwaw0CM+uDaoK1jts+0dTKT7
+	Oo7YIsxX1skZq2+DrFeIcWeX3LneKWgKD2qGLZmEA0A2hpRACw7NqwtcwdEySDtWi1+h3HZ1/u9Xr
+	PqMYt7DkoVn2gv3V7iGibQmne/Z58UDQ42fPSO+IrQyRhM2/DMRyqDfhUKLy6eZIiBO0CVofVQJ1e
+	TsAkvoYr23dAUjNedQ2LH61adPSFnBGuOUjmw/H2JNeeCY0GCFxy5b151xNqWyAjTLnrQuLx72/MJ
+	nVK8hvj3u/9Fozqvbjd+LoCKU6aqhMCXUmN0+cci3hxkRBPRIpykwkxfrs5AV5u4c+BF0SCtV/VYF
+	bn7EjM8w==;
+Received: from dak by fasolo.debian.org with local (Exim 4.98.2)
+	(envelope-from <envelope@ftp-master.debian.org>)
+	id 1vjdKE-00000001bTW-1fnF;
+	Sat, 24 Jan 2026 13:05:14 +0000
+From: Debian FTP Masters <ftpmaster@ftp-master.debian.org>
+To: <bage@debian.org>, XFS Development Team <linux-xfs@vger.kernel.org>,
+ Nathan Scott <nathans@debian.org>
+X-DAK: dak process-upload
+X-Debian: DAK
+X-Debian-Package: xfsprogs
+Debian: DAK
+Debian-Changes: xfsprogs_6.18.0-1_source.changes
+Debian-Source: xfsprogs
+Debian-Version: 6.18.0-1
+Debian-Architecture: source
+Debian-Suite: unstable
+Debian-Archive-Action: accept
+Precedence: bulk
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <41b1274b-0720-451d-80db-210697cdb6ac@app.fastmail.com>
+Subject: xfsprogs_6.18.0-1_source.changes ACCEPTED into unstable
+Content-Type: multipart/signed; micalg="pgp-sha256";
+ protocol="application/pgp-signature";
+ boundary="===============3725845484149867839=="
+Message-Id: <E1vjdKE-00000001bTW-1fnF@fasolo.debian.org>
+Date: Sat, 24 Jan 2026 13:05:14 +0000
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-3.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64];
+	R_DKIM_ALLOW(-0.20)[ftp-master.debian.org:s=smtpauto.fasolo];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30273-lists,linux-xfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,suse.cz,vger.kernel.org,lists.sourceforge.net,mail.parknet.co.jp,kernel.org,samsung.com,sony.com,paragon-software.com,dubeyko.com,physik.fu-berlin.de,vivo.com,mit.edu,dilger.ca,samba.org,manguebit.org,gmail.com,microsoft.com,chromium.org,oracle.com];
-	RCPT_COUNT_TWELVE(0.00)[31];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	DMARC_NA(0.00)[debian.org];
+	TAGGED_FROM(0.00)[bounces-30274-lists,linux-xfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[ftp-master.debian.org:+];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-xfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[ftpmaster@ftp-master.debian.org,linux-xfs@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 1F9C07DA87
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,fasolo.debian.org:mid]
+X-Rspamd-Queue-Id: C8AD77DAB4
 X-Rspamd-Action: no action
 
-On Fri, Jan 23, 2026 at 10:39:55AM -0500, Chuck Lever wrote:
-> 
-> 
-> On Fri, Jan 23, 2026, at 7:12 AM, Christian Brauner wrote:
-> >> Series based on v6.19-rc5.
-> >
-> > We're starting to cut it close even with the announced -rc8.
-> > So my current preference would be to wait for the 7.1 merge window.
-> 
-> Hi Christian -
-> 
-> Do you have a preference about continuing to post this series
-> during the merge window? I ask because netdev generally likes
-> a quiet period during the merge window.
+--===============3725845484149867839==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-It's usually most helpful if people resend after -rc1 is out because
-then I can just pull it without having to worry about merge conflicts.
-But fwiw, I have you series in vfs-7.1.casefolding already. Let me push
-it out so you can see it.
+Thank you for your contribution to Debian.
+
+
+
+Accepted:
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Format: 1.8
+Date: Wed, 24 Dec 2025 16:34:32 +0100
+Source: xfsprogs
+Architecture: source
+Version: 6.18.0-1
+Distribution: unstable
+Urgency: low
+Maintainer: XFS Development Team <linux-xfs@vger.kernel.org>
+Changed-By: Nathan Scott <nathans@debian.org>
+Changes:
+ xfsprogs (6.18.0-1) unstable; urgency=3Dlow
+ .
+   * New upstream release
+Checksums-Sha1:
+ 55a45ce24645fa238c59fe0f8131d9ac4c18b6a2 2048 xfsprogs_6.18.0-1.dsc
+ bf759bf1b98adc31df27d424a1bfdf5b7ae3a64b 1563944 xfsprogs_6.18.0.orig.tar.xz
+ 3359b0bc0c38b491f3de2be4e91f426c669f7a4b 12024 xfsprogs_6.18.0-1.debian.tar.=
+xz
+ 7fa8f4d53432334ab600ba76c90e4e29f2be2a09 6383 xfsprogs_6.18.0-1_source.build=
+info
+Checksums-Sha256:
+ d8ca2e98f41476a0b83925e5d338bfa84418e7db98281eece61a16e7fcc8716a 2048 xfspro=
+gs_6.18.0-1.dsc
+ 3a6dc7b1245ce9bccd197bab00691f1b190bd3694d3ccc301d21b83afc133199 1563944 xfs=
+progs_6.18.0.orig.tar.xz
+ 06d215bc6f3405bb30bb9380ca7b246cfd3ee877755b983490bc5ee4782a2da6 12024 xfspr=
+ogs_6.18.0-1.debian.tar.xz
+ fc9ca55cfe70827324335c42c9f9722aa5b71943e4a0a0eca447721fa0f0c0c6 6383 xfspro=
+gs_6.18.0-1_source.buildinfo
+Files:
+ dc0c7791be62e3df4c3b01419ba78a88 2048 admin optional xfsprogs_6.18.0-1.dsc
+ f538782c07c81db5607db8c435348166 1563944 admin optional xfsprogs_6.18.0.orig=
+.tar.xz
+ 984d0adb1d987a2a5ee9f84c493bbdc0 12024 admin optional xfsprogs_6.18.0-1.debi=
+an.tar.xz
+ a69f9f7cd951456cf6e4aead576e249d 6383 admin optional xfsprogs_6.18.0-1_sourc=
+e.buildinfo
+
+-----BEGIN PGP SIGNATURE-----
+
+iQHEBAEBCgAuFiEEQGIgyLhVKAI3jM5BH1x6i0VWQxQFAml0vV8QHGJhZ2VAZGVi
+aWFuLm9yZwAKCRAfXHqLRVZDFN1BDACMMOtBQ+3ADuewHzLcCTgGcseL5ozKaDVZ
+J9YGRuq6/wg/7QaPmy78rbOFhOamcmVnGVJnDvueT0rLase95XmE+EWVCTJHCM9H
+FCrsTeEpYqpXruEOCnkYjXMn+zMhXPKwWA/y/mABUKfJfwPppN7EaMU3+uY+D2kG
+OUMc5WVdAw461yYYmkASuViikWi0FcTMFVRz+jWoJYLwVE/sLjXU6owqsGD+d9jb
+9M6Y5/PxXbRzcKYPGLd+tYyNgX7pIz24mM3MjXWYg8XM6029Vv0D8rj9xRjaSXsS
+3/AQ2k6cQkho4pU2c2kesC9iVoaWKJRUDU39qrC3Pq08tykLVeTps/iV9un6kebg
+gOHhETaz8DHQ3cWy05q1Wknk2osvESLQjvZCTxb0i67K9dJ7jxnx+CN1mvEdp4ht
+q/AsBFuA+R1ZRg3LIbyqz60+qpKXoX71CGZUPji9TZaI/bWPIcVMXCGGIltTkpAY
+8uX4wiht/oDRtlTC9xeAA/9WBJFhKac=3D
+=3DUM9R
+-----END PGP SIGNATURE-----
+
+
+--===============3725845484149867839==
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQTziqJOuF8J+ZI8pJSb9qggYcy5IQUCaXTDigAKCRCb9qggYcy5
+IXy4AQC4Rtj7qr6oA/0Y+34Af/gtjE+90ct9jsBt+CDcB1UYygEA4mBgfP2VMv6g
+ecpV1sLUdeXBEmZLC+WDmD+cJLp2cgQ=
+=ui/a
+-----END PGP SIGNATURE-----
+
+--===============3725845484149867839==--
 
