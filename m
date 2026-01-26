@@ -1,66 +1,53 @@
-Return-Path: <linux-xfs+bounces-30284-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30285-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id hwxMGDr0dmmRZgEAu9opvQ
-	(envelope-from <linux-xfs+bounces-30284-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 05:57:30 +0100
+	id 4P4jJcP1dmngZgEAu9opvQ
+	(envelope-from <linux-xfs+bounces-30285-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 06:04:03 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D60B84128
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 05:57:30 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66662841C1
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 06:04:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CED5A300B855
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 04:57:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 650523011BD1
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 05:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0DFA30E0EE;
-	Mon, 26 Jan 2026 04:57:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4AE1F7916;
+	Mon, 26 Jan 2026 05:03:58 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661FD13AA2F;
-	Mon, 26 Jan 2026 04:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752EA1ADC97;
+	Mon, 26 Jan 2026 05:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769403441; cv=none; b=lvQIFRyyhdghuNMcadxuoCRvA9IUdWbimwQI5rrq+JyYFJfnV1Q7f7PN9yio6cKvjL+chUvsFhdsL/4tTvhxUvpTXOc3BB8JridV5MotZ+FTxpfW2JiNLmViH99KH1s4gINDWaPr7LeV3UAmO6GePqFyeCJtosQdaCYnbpKujUs=
+	t=1769403838; cv=none; b=XOPLmqHL5Mg9H0q3ijRQhPg3aVd4QZ1hc7Lwi9AXXxecpb1Nf91bKwQnJj6yRkDpr7Xvc/7K9QTE39mT/spBMGdEyBl7ayuhEhp73tWElvaHE0wunJfyNjElKc0iaSxRZqP6kw8Etvr85KOvPmFbMwA7sYBe5r6RHGnLSmp6Hy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769403441; c=relaxed/simple;
-	bh=ajjpzkKmQYBaJ5yLJSgX4W0nod+etg3s5TaDWX1PUss=;
+	s=arc-20240116; t=1769403838; c=relaxed/simple;
+	bh=ZpiqmHWG/c+rs2V/R+5dF5nppepKPkjzRw8NuGrBQfs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNlYCmwSNAZR2WM6rVhDgzv3HK8rPLFVWeQEHPezlfnULKZrCvjd2GyMNHI93h3fuv9JCFu5eFhYrEPKtv8/Br5si5Tx2GiRE7ILAaCLOczUNGabMUuu6J7tBJkqSNX4A1zwg6TL7VsN9Dqur1zFVMSwwvk4wMWjVdLvZ9+4fw4=
+	 Content-Type:Content-Disposition:In-Reply-To; b=KR568UaKwtgWNbrc2GO3Jg6f49GkChv/+R6lHhGekSWNVUO4Yw6WodAajeB2xBd6RW+VxFxmcDKYaiuJWNuhg5op6tRWLT/8TVLk/4egAwdm0XOKQnw8dMpljqybll1GL0Vkq6+57PosMhbnvD7BpR3CH0N0dd6ieBsm8z9eAaw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id F3EC3227A88; Mon, 26 Jan 2026 05:57:16 +0100 (CET)
-Date: Mon, 26 Jan 2026 05:57:16 +0100
-From: "hch@lst.de" <hch@lst.de>
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-	"axboe@kernel.dk" <axboe@kernel.dk>,
-	"agk@redhat.com" <agk@redhat.com>,
-	"snitzer@kernel.org" <snitzer@kernel.org>,
-	"mpatocka@redhat.com" <mpatocka@redhat.com>,
-	"song@kernel.org" <song@kernel.org>,
-	"yukuai@fnnas.com" <yukuai@fnnas.com>, "hch@lst.de" <hch@lst.de>,
-	"sagi@grimberg.me" <sagi@grimberg.me>,
-	"jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-	"chao@kernel.org" <chao@kernel.org>,
-	"cem@kernel.org" <cem@kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
-	"linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: [PATCH V3 4/6] nvmet: ignore discard return value
-Message-ID: <20260126045716.GA31683@lst.de>
-References: <20251124234806.75216-1-ckulkarnilinux@gmail.com> <20251124234806.75216-5-ckulkarnilinux@gmail.com> <942ad29c-cff3-458f-b175-0111de821970@nvidia.com>
+	id A9C38227A88; Mon, 26 Jan 2026 06:03:54 +0100 (CET)
+Date: Mon, 26 Jan 2026 06:03:54 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Anuj Gupta <anuj20.g@samsung.com>,
+	Kanchan Joshi <joshi.k@samsung.com>, linux-block@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/15] block: factor out a bio_integrity_action helper
+Message-ID: <20260126050354.GA31813@lst.de>
+References: <20260121064339.206019-1-hch@lst.de> <20260121064339.206019-2-hch@lst.de> <20260123000113.GF5945@frogsfrogsfrogs> <20260123060324.GA25239@lst.de> <20260123071323.GU5945@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -69,57 +56,48 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <942ad29c-cff3-458f-b175-0111de821970@nvidia.com>
+In-Reply-To: <20260123071323.GU5945@frogsfrogsfrogs>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.36 / 15.00];
+X-Spamd-Result: default: False [-1.36 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	FROM_DN_EQ_ADDR(1.00)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30284-lists,linux-xfs=lfdr.de];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.dk,redhat.com,kernel.org,fnnas.com,lst.de,grimberg.me,vger.kernel.org,lists.linux.dev,lists.infradead.org,lists.sourceforge.net,oracle.com,wdc.com];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	NEURAL_HAM(-0.00)[-0.950];
-	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30285-lists,linux-xfs=lfdr.de];
 	R_DKIM_NA(0.00)[];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email,lst.de:mid,lst.de:email]
-X-Rspamd-Queue-Id: 0D60B84128
+	FORGED_RECIPIENTS_MAILLIST(0.00)[]
+X-Rspamd-Queue-Id: 66662841C1
 X-Rspamd-Action: no action
 
-On Sat, Jan 24, 2026 at 09:35:16PM +0000, Chaitanya Kulkarni wrote:
-> On 11/24/25 15:48, Chaitanya Kulkarni wrote:
-> > __blkdev_issue_discard() always returns 0, making the error checking
-> > in nvmet_bdev_discard_range() dead code.
-> >
-> > Kill the function nvmet_bdev_discard_range() and call
-> > __blkdev_issue_discard() directly from nvmet_bdev_execute_discard(),
-> > since no error handling is needed anymore for __blkdev_issue_discard()
-> > call.
-> >
-> > Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-> > Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-> > ---
+On Thu, Jan 22, 2026 at 11:13:23PM -0800, Darrick J. Wong wrote:
+> > > Er... does someone initialize it eventually?  Such as the filesystem?
+> > > Or maybe an io_uring caller?
+> > 
+> > For integrity metadata?  The code called later fills it out.  But it
+> > doesn't fill non-integrity metadata, so we need to zero it.
 > 
-> Gentle ping on this, can we apply this patch ?
+> Ahhh, right, the app tag or whatever?
 
-Are we down to three patches now?  Maybe resend the whole series and
-get ACKs to merge everything through the block layer?
+No, the app_tag is zeroed by the PI code itself.  NVMe added the concept
+of generic user specified metdata.  That metadata could either be only
+the PI tuple, contain the PI tuple inside of it, or not contain any PI
+tuple at all.  This non-PI part is what needs explicit zeroing here.
 
 
