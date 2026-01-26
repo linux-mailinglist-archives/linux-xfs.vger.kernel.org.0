@@ -1,103 +1,124 @@
-Return-Path: <linux-xfs+bounces-30285-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30286-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4P4jJcP1dmngZgEAu9opvQ
-	(envelope-from <linux-xfs+bounces-30285-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 06:04:03 +0100
+	id mIvnNe79dmmNaAEAu9opvQ
+	(envelope-from <linux-xfs+bounces-30286-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 06:38:54 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66662841C1
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 06:04:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 627D0842F8
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 06:38:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 650523011BD1
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 05:03:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 77E86300820D
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 05:38:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4AE1F7916;
-	Mon, 26 Jan 2026 05:03:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AF51232395;
+	Mon, 26 Jan 2026 05:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dUySapLU"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752EA1ADC97;
-	Mon, 26 Jan 2026 05:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53D6222565
+	for <linux-xfs@vger.kernel.org>; Mon, 26 Jan 2026 05:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769403838; cv=none; b=XOPLmqHL5Mg9H0q3ijRQhPg3aVd4QZ1hc7Lwi9AXXxecpb1Nf91bKwQnJj6yRkDpr7Xvc/7K9QTE39mT/spBMGdEyBl7ayuhEhp73tWElvaHE0wunJfyNjElKc0iaSxRZqP6kw8Etvr85KOvPmFbMwA7sYBe5r6RHGnLSmp6Hy0=
+	t=1769405910; cv=none; b=Jjakgd0gW/YpB5p6yBctSVcHw61kfZ5ScDSGsBAi5XFa1IMGOMNpE5uRXx7IqS3sK0UBIDwrGUWZAjvCdpuWe8w9SyLLvsjq/u5nLR4HJtCKi79/RV2I4L6syHuIIqhSDAx22uHzmaqcTjJIGt0V5ciw5dat207q9wtUKR+QQXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769403838; c=relaxed/simple;
-	bh=ZpiqmHWG/c+rs2V/R+5dF5nppepKPkjzRw8NuGrBQfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KR568UaKwtgWNbrc2GO3Jg6f49GkChv/+R6lHhGekSWNVUO4Yw6WodAajeB2xBd6RW+VxFxmcDKYaiuJWNuhg5op6tRWLT/8TVLk/4egAwdm0XOKQnw8dMpljqybll1GL0Vkq6+57PosMhbnvD7BpR3CH0N0dd6ieBsm8z9eAaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id A9C38227A88; Mon, 26 Jan 2026 06:03:54 +0100 (CET)
-Date: Mon, 26 Jan 2026 06:03:54 +0100
+	s=arc-20240116; t=1769405910; c=relaxed/simple;
+	bh=aJEDhuazncVi+2BKcDO1OcbpD3PfFITAvjNO5Me2aHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zgem6xVosMn/jlqpEQJ6lwZRp67Vkhj2rUGOrQYJClOyUSZktMPP3YOoFfcONcNDd/fibBpofUbOJaDalGep2y/8Gt8fP+MPecEUEv6TqKuK0irZR6xBE38l9pQVwY+sO3eGVcuZ6QdXIGACiElEhOsn8vxyD8nPV8GJRBEoq1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dUySapLU; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=XrnhF4Ua5LyS+w5Z2v9ynhdsh99fyMBVvMhyonZis6Q=; b=dUySapLULTjc39Ok/bYyFKVMNj
+	6B2h9CrDSgD6fWo18eiYpIjfeXvkkuNGTupR9zICsFCzwzmuCvdxGQDRc/GebB416wZ1an6oax5v4
+	U/HgdWa30fe0po2z8etat1U4I7+lWjuJc0W+pjSb24yzfvWF3wG4XwPohb/TBqKip3/vdjMjmudiF
+	k5kcP09+lo1M+SOpYN21rdwqsy0TceYPA5t4/AvE7Lplk96PZd+Tl0jP6V7CQ+cHv4+SXV/YGp0iX
+	72SfSks+g0sVeMGJfWarHDeomYK6ALp21NR3gtWSOsQCaz3G7jn2vC+w6GhfvpA/vWDmRw+qGTMiD
+	AN+eMi5w==;
+Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vkFIy-0000000BwV7-2ecz;
+	Mon, 26 Jan 2026 05:38:28 +0000
 From: Christoph Hellwig <hch@lst.de>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Anuj Gupta <anuj20.g@samsung.com>,
-	Kanchan Joshi <joshi.k@samsung.com>, linux-block@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+To: Carlos Maiolino <cem@kernel.org>
+Cc: Dave Chinner <dchinner@redhat.com>,
+	Brian Foster <bfoster@redhat.com>,
 	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/15] block: factor out a bio_integrity_action helper
-Message-ID: <20260126050354.GA31813@lst.de>
-References: <20260121064339.206019-1-hch@lst.de> <20260121064339.206019-2-hch@lst.de> <20260123000113.GF5945@frogsfrogsfrogs> <20260123060324.GA25239@lst.de> <20260123071323.GU5945@frogsfrogsfrogs>
+Subject: buffer cache simplification v3
+Date: Mon, 26 Jan 2026 06:37:59 +0100
+Message-ID: <20260126053825.1420158-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260123071323.GU5945@frogsfrogsfrogs>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.36 / 15.00];
+X-Spamd-Result: default: False [-0.06 / 15.00];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30286-lists,linux-xfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_THREE(0.00)[4];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30285-lists,linux-xfs=lfdr.de];
-	R_DKIM_NA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: 66662841C1
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:mid]
+X-Rspamd-Queue-Id: 627D0842F8
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026 at 11:13:23PM -0800, Darrick J. Wong wrote:
-> > > Er... does someone initialize it eventually?  Such as the filesystem?
-> > > Or maybe an io_uring caller?
-> > 
-> > For integrity metadata?  The code called later fills it out.  But it
-> > doesn't fill non-integrity metadata, so we need to zero it.
-> 
-> Ahhh, right, the app tag or whatever?
+Hi all,
 
-No, the app_tag is zeroed by the PI code itself.  NVMe added the concept
-of generic user specified metdata.  That metadata could either be only
-the PI tuple, contain the PI tuple inside of it, or not contain any PI
-tuple at all.  This non-PI part is what needs explicit zeroing here.
+this series has a few old patches that simplify the LRU handling, and
+moves back to only having a per-buftarg hash now that the buffer hash
+is using the scalable rhashtable.  While some of this looks like
+performance work, performance and scalability is unchanged even on the
+80 core dual socket system I test this on.  Besides cleaning up the
+code nice, it also happens to fix a syzcaller reported use after free
+during buffer shutdown, which happened incidentally because of how the
+tear down of the buftarg vs the perag structures is handled.
 
+Changes since v2:
+ - mark b_hold as signed in patch 1 before removing it in patch 2
+ - document the changed locking in xfs_buf_rele_cached.
+
+Changes since v2:
+ - add more details and a link to a commit message
+
+Diffstat:
+ libxfs/xfs_ag.c |   13 ---
+ libxfs/xfs_ag.h |    2 
+ xfs_buf.c       |  234 ++++++++++++++++++--------------------------------------
+ xfs_buf.h       |   20 ----
+ xfs_buf_mem.c   |   11 --
+ xfs_trace.h     |   10 +-
+ 6 files changed, 91 insertions(+), 199 deletions(-)
 
