@@ -1,125 +1,234 @@
-Return-Path: <linux-xfs+bounces-30308-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30309-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aHpKAHQKd2lebAEAu9opvQ
-	(envelope-from <linux-xfs+bounces-30308-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 07:32:20 +0100
+	id wCnXKgkWd2k1cAEAu9opvQ
+	(envelope-from <linux-xfs+bounces-30309-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 08:21:45 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DDBC848B9
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 07:32:19 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56B6084CC6
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 08:21:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 161D03003535
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 06:32:18 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BA8D43000890
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jan 2026 07:21:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15C802417C3;
-	Mon, 26 Jan 2026 06:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E8252BDC02;
+	Mon, 26 Jan 2026 07:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAoQ28br"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dW/DPFuT"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DB9225A3B;
-	Mon, 26 Jan 2026 06:32:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE61C2BDC0C;
+	Mon, 26 Jan 2026 07:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769409137; cv=none; b=PqvTiqb7zCRX8s44oMou3V3SuS/BhDZWoSpzzv2MOzo4eg9or2eGrNnVwAAwGy1rASAu281Uru6YPCYyImrQM5QMTnj19IhpW+v8yI0R3/EG8CD5s7g2+hjRSSR7dz8mjtK7qHQUq8MBtQKIDFNjkl0Ez5L1FL6aTynuhQ4htU8=
+	t=1769412101; cv=none; b=n4cr1B0CL9JM18VslYt5jRCDKSWumDkRX0g9hMNblNyFvYXG2SxLpMyhxrVJ8z0thyZ3Xp5hbHzbM153hCZvcFCw69RjnkBcvRy9ZwlagMTyGDIo7BuuxJI6VNy18Lx7wO0Vt7B7dnnIzWfv5klB+oQBweQFf8DaglrZ9O+K9a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769409137; c=relaxed/simple;
-	bh=cEiPux5uVHZDoFNzWa4F7vf525z2LRW0mx7NpMS28Bw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HX1/3wz5VA6uyZNTjvT+gol+t7WDUxd9Buc/89mFVApGu+38u8vfYcnzj6J8aoybujTarfyYxG4+P5J/uIDXjtRxJs+cI3jcBaP+d18vdUGC8QhpnMpY2/ht7E2duX4aU9Y4oQ/DffhHYriUckS8IXi3T/urnLG97s6OYr8330M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAoQ28br; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675F9C116C6;
-	Mon, 26 Jan 2026 06:32:15 +0000 (UTC)
+	s=arc-20240116; t=1769412101; c=relaxed/simple;
+	bh=hnkFfRxrdPdIQZghsS6RKZEQ/YOKmr0+lglFC7UGc0U=;
+	h=Date:Subject:From:To:Cc:Message-ID:MIME-Version:Content-Type; b=CytRuQIeR2kw9Jamv4pt4UegbwQ7FqG3yGFMb81c5cYp9H/HQfcYPeCQHsDd3c+6MxcbwjmfNCSzq7jQCBk85r7Qj/RdgBGiI7AL3IKmCUbHMLrKTrQHnhxv9Ll+EgIi2Ktq5f93Ro80dgA61Rexm/jBWRMfQCpMpVdHGdT3mlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dW/DPFuT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 707CAC116C6;
+	Mon, 26 Jan 2026 07:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769409136;
-	bh=cEiPux5uVHZDoFNzWa4F7vf525z2LRW0mx7NpMS28Bw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rAoQ28brH0P0hlGeG2tUYNzcfiI8wN60/J/4MCxdL4soyjrKGNvw8Jr5r2OgCO32X
-	 MwlmNYshBnYFo3V7RwEGohaqTSEexCUSqkxOJMhIoR1suWgsEm1DeCgpp8C4ijTJvF
-	 1HHBubLl7lyTAsFS9LqZrxeE4WDnwpEAO9oyEuBtWO4A0xCnOqH979pXEeHRhjmP6a
-	 YGgMCeEvVve5cGwM69ZnlgSnznuoQBAfOt/jKrU/ecdClpmEsP7fohyp/z9kIClJlJ
-	 yCLD8uoaXeCSvPkEL+q29Bq6TY5nbvnGwYaDCCiq5ZW9CK0QccEltWVsUn/apkIVCE
-	 VeXoDZs8+owvQ==
-Message-ID: <c8ec9ff0-a445-49d1-8b84-6b0ed39c9b92@kernel.org>
-Date: Mon, 26 Jan 2026 15:27:16 +0900
+	s=k20201202; t=1769412101;
+	bh=hnkFfRxrdPdIQZghsS6RKZEQ/YOKmr0+lglFC7UGc0U=;
+	h=Date:Subject:From:To:Cc:From;
+	b=dW/DPFuTqRU8Iy919dV60RB7mHxugRewn8jZrWhcLymetga82CcQ8luyRCKcjoTZb
+	 2Ex9R/ebFFkZ2RNHTo9BJNw63+6O0RZ4A+645Afl2IZ1SDaHjWsnVVoqe/R0sLosWg
+	 2tWN5NGT2dSH+OSMqFS+xxAgUk06/7nrAuvpgogfYvEljFfp2oNm9kohKKfqgshaH7
+	 k7Mx+L0szz7Y6Sa+Wmgnu8ldrhlZdaNu7jgWRLpm6fGlN85sIO4d9+SWqqo1IOKu7f
+	 QjVLpsvvuSrFNal2tFk+vsU7ttre+eF4+J3xFymxEIHP/Oh8xs9ey722KVWXtZ/miQ
+	 d2VtkfUV/CX4g==
+Date: Sun, 25 Jan 2026 23:21:40 -0800
+Subject: [GIT PULL 1/4] xfs: autonomous self healing of filesystems
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: cem@kernel.org, djwong@kernel.org
+Cc: hch@lst.de, linux-xfs@vger.kernel.org, stable@vger.kernel.org
+Message-ID: <176919034772.1844314.23527352508595796012.stg-ugh@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/15] iov_iter: extract a iov_iter_extract_bvecs helper
- from bio code
-To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
- Christian Brauner <brauner@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Carlos Maiolino <cem@kernel.org>,
- Qu Wenruo <wqu@suse.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-block@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-References: <20260126055406.1421026-1-hch@lst.de>
- <20260126055406.1421026-5-hch@lst.de>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20260126055406.1421026-5-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-30308-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	HAS_ORG_HEADER(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30309-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlemoal@kernel.org,linux-xfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lst.de:email]
-X-Rspamd-Queue-Id: 6DDBC848B9
+	TAGGED_RCPT(0.00)[linux-xfs];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 56B6084CC6
 X-Rspamd-Action: no action
 
-On 1/26/26 2:53 PM, Christoph Hellwig wrote:
-> Massage __bio_iov_iter_get_pages so that it doesn't need the bio, and
-> move it to lib/iov_iter.c so that it can be used by block code for
-> other things than filling a bio and by other subsystems like netfs.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi Carlos,
 
+Please pull this branch with changes for xfs for 7.0-rc1.
 
-> +ssize_t iov_iter_extract_bvecs(struct iov_iter *iter, struct bio_vec *bv,
-> +		size_t max_size, unsigned short *nr_vecs,
-> +		unsigned short max_vecs, iov_iter_extraction_t extraction_flags)
-> +{
-> +	unsigned short entries_left = max_vecs - *nr_vecs;
+As usual, I did a test-merge with the main upstream branch as of a few
+minutes ago, and didn't see any conflicts.  Please let me know if you
+encounter any problems.
 
-Do we need to check that *nrvecs > 0 && *nrvecs < max_vecs ?
-Also, if *nr_vecs == max_vecs, we should warn and return 0, no ?
+Note that this branch is NOT based off the existing xfs-7.0-merge branch;
+instead it's based off of brauner's vfs fserror branch.  You could merge it
+into xfs-7.0-merge, but you could also push it straight to xfs/xfs-linux.git
+and make for-next the merge of xfs-7.0-merge and health-monitoring-7.0 and send
+two PRs to Linus.
 
+Note also that you'll need to patch the two new files in this branch to include
+xfs_platform.h when merging with the xfs-7.0-merge branch:
 
+diff --git i/fs/xfs/xfs_healthmon.c w/fs/xfs/xfs_healthmon.c
+index 3030fa93c1e575..ca7352dcd182fb 100644
+--- i/fs/xfs/xfs_healthmon.c
++++ w/fs/xfs/xfs_healthmon.c
+@@ -1,12 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Copyright (c) 2024-2026 Oracle.  All Rights Reserved.
+  * Author: Darrick J. Wong <djwong@kernel.org>
+  */
+-#include "xfs.h"
++#include "xfs_platform.h"
+ #include "xfs_fs.h"
+ #include "xfs_shared.h"
+ #include "xfs_format.h"
+ #include "xfs_log_format.h"
+ #include "xfs_trans_resv.h"
+ #include "xfs_mount.h"
+diff --git i/fs/xfs/xfs_verify_media.c w/fs/xfs/xfs_verify_media.c
+index f4f620c98d92ca..069cd371619dc2 100644
+--- i/fs/xfs/xfs_verify_media.c
++++ w/fs/xfs/xfs_verify_media.c
+@@ -1,12 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * Copyright (c) 2026 Oracle.  All Rights Reserved.
+  * Author: Darrick J. Wong <djwong@kernel.org>
+  */
+-#include "xfs.h"
++#include "xfs_platform.h"
+ #include "xfs_shared.h"
+ #include "xfs_format.h"
+ #include "xfs_log_format.h"
+ #include "xfs_trans_resv.h"
+ #include "xfs_mount.h"
+ #include "xfs_bit.h"
 
--- 
-Damien Le Moal
-Western Digital Research
+--D
+
+The following changes since commit 347b7042fb26beaae1ea46d0f6c47251fb52985f:
+
+  Merge patch series "fs: generic file IO error reporting" (2026-01-13 09:58:07 +0100)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git tags/health-monitoring-7.0_2026-01-20
+
+for you to fetch changes up to b8accfd65d31f25b9df15ec2419179b6fa0b21d5:
+
+  xfs: add media verification ioctl (2026-01-20 18:06:52 -0800)
+
+----------------------------------------------------------------
+xfs: autonomous self healing of filesystems [v7]
+
+This patchset builds new functionality to deliver live information about
+filesystem health events to userspace.  This is done by creating an
+anonymous file that can be read() for events by userspace programs.
+Events are captured by hooking various parts of XFS and iomap so that
+metadata health failures, file I/O errors, and major changes in
+filesystem state (unmounts, shutdowns, etc.) can be observed by
+programs.
+
+When an event occurs, the hook functions queue an event object to each
+event anonfd for later processing.  Programs must have CAP_SYS_ADMIN
+to open the anonfd and there's a maximum event lag to prevent resource
+overconsumption.  The events themselves can be read() from the anonfd
+as C structs for the xfs_healer daemon.
+
+In userspace, we create a new daemon program that will read the event
+objects and initiate repairs automatically.  This daemon is managed
+entirely by systemd and will not block unmounting of the filesystem
+unless repairs are ongoing.  They are auto-started by a starter
+service that uses fanotify.
+
+This patchset depends on the new fserror code that Christian Brauner
+has tentatively accepted for Linux 7.0:
+https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=vfs-7.0.fserror
+
+v7: more cleanups of the media verification ioctl, improve comments, and
+    reuse the bio
+v6: fix pi-breaking bugs, make verify failures trigger health reports
+    and filter bio status flags better
+v5: add verify-media ioctl, collapse small helper funcs with only
+    one caller
+v4: drop multiple client support so we can make direct calls into
+    healthmon instead of chasing pointers and doing indirect calls
+v3: drag out of rfc status
+
+With a bit of luck, this should all go splendidly.
+
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+
+----------------------------------------------------------------
+Darrick J. Wong (10):
+      xfs: start creating infrastructure for health monitoring
+      xfs: create event queuing, formatting, and discovery infrastructure
+      xfs: convey filesystem unmount events to the health monitor
+      xfs: convey metadata health events to the health monitor
+      xfs: convey filesystem shutdown events to the health monitor
+      xfs: convey externally discovered fsdax media errors to the health monitor
+      xfs: convey file I/O errors to the health monitor
+      xfs: allow toggling verbose logging on the health monitoring file
+      xfs: check if an open file is on the health monitored fs
+      xfs: add media verification ioctl
+
+ fs/xfs/libxfs/xfs_fs.h      |  189 +++++++
+ fs/xfs/libxfs/xfs_health.h  |    5 +
+ fs/xfs/xfs_healthmon.h      |  184 +++++++
+ fs/xfs/xfs_mount.h          |    4 +
+ fs/xfs/xfs_trace.h          |  512 ++++++++++++++++++
+ fs/xfs/xfs_verify_media.h   |   13 +
+ fs/xfs/Makefile             |    2 +
+ fs/xfs/xfs_fsops.c          |    2 +
+ fs/xfs/xfs_health.c         |  124 +++++
+ fs/xfs/xfs_healthmon.c      | 1255 +++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_ioctl.c          |    7 +
+ fs/xfs/xfs_mount.c          |    2 +
+ fs/xfs/xfs_notify_failure.c |   17 +-
+ fs/xfs/xfs_super.c          |   12 +
+ fs/xfs/xfs_trace.c          |    5 +
+ fs/xfs/xfs_verify_media.c   |  445 +++++++++++++++
+ 16 files changed, 2773 insertions(+), 5 deletions(-)
+ create mode 100644 fs/xfs/xfs_healthmon.h
+ create mode 100644 fs/xfs/xfs_verify_media.h
+ create mode 100644 fs/xfs/xfs_healthmon.c
+ create mode 100644 fs/xfs/xfs_verify_media.c
 
