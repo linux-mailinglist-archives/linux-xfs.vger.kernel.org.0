@@ -1,118 +1,114 @@
-Return-Path: <linux-xfs+bounces-30344-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30345-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uH6PIAuUeGmxrAEAu9opvQ
-	(envelope-from <linux-xfs+bounces-30344-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Jan 2026 11:31:39 +0100
+	id OHN3LfmZeGk9rQEAu9opvQ
+	(envelope-from <linux-xfs+bounces-30345-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Jan 2026 11:56:57 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AF5692D2F
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Jan 2026 11:31:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F32A933EF
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Jan 2026 11:56:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id B0BAD300613D
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Jan 2026 10:31:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8A17E3004D00
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Jan 2026 10:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E436341073;
-	Tue, 27 Jan 2026 10:31:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D522344029;
+	Tue, 27 Jan 2026 10:56:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCsabYyg"
+	dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b="CYrNKWDH"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailly.debian.org (mailly.debian.org [82.195.75.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AB533FE08;
-	Tue, 27 Jan 2026 10:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA4034575F
+	for <linux-xfs@vger.kernel.org>; Tue, 27 Jan 2026 10:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769509895; cv=none; b=A8LNp97CUmwRfqNXBoq/uQZrkaLI8F7suq/gM1vZ8Mq4OilvoweVgAHWQWEsG2LKG1c5O3/UrQFxERJhZOH8aEDyqS3necWkdKlSF7KnLp1+IWqvxTOVmduoW/q7/95pNkay8wKF9jBmG9tufxqIaBULVgIdGmLFhifsu2kBNes=
+	t=1769511414; cv=none; b=qVnZ7yVJDcuX9gbMHh6GdVt3DB3ZYVBjpfcdwvv4WvD+QtzHEpIUzL+g6Z/fOvuRs3f+Ru9cBVnjb2PgCWC+kV/TReF7MV7OmmHMjjjgLwX/kRIfuc4mEX+mlOkV4EiTvUzMai/TFsaNsQm1oGas3apbvIPYIH+Qhtjb36ZsU1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769509895; c=relaxed/simple;
-	bh=yez8CxCaJvQdm0pFsZYXYFvGPQwxl8sc40KXS7WLMao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rco23tuptvjxy5JHrU3kZgK5yts18VE1Xd7EPWIjABHFf+Cm9hvCaXMMgrXWXche/TUln6c9Y5lna+dUvqwEiln8bgVexKKb2YOs891heTnp4NiWzNIKDxeSrgbLh7hEOaumJLRp+06Cdo+MzOCzKprE/bhKe0YoKqsVhSvXYg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCsabYyg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA25BC116C6;
-	Tue, 27 Jan 2026 10:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769509895;
-	bh=yez8CxCaJvQdm0pFsZYXYFvGPQwxl8sc40KXS7WLMao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jCsabYyg1Yh0toV4raRWeB0w052zRrIQIPMTaAsVzG58wRJzE/U3nUnLpzCJLN2jY
-	 dKFHFv/Y97VUUIgUc5+0LfDfHoRCnTHkjHU5SSGTIgA42bqhDfUyr5YlSKqRls6g1Z
-	 E2dA1E62ZAjsLfu3getHhtKVtFBQlxrkW4Vn4mfiDetWqiellOrBpALD3bISUOwLVL
-	 01SxuohvYEQ9bfSPvaDCzRdkF8D1MC1z2lxIUPU5OyfsrqF9jRom7FBm3L9u2GWM1I
-	 LIPNeZ8sde/d1d832ikbCUW8g1GztzNi3nMkpCiZcOdwStCLKGrmYwGHzwKeRBGdG4
-	 SpM8Mh7BiJtsA==
-Date: Tue, 27 Jan 2026 11:31:30 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, "Darrick J. Wong" <djwong@kernel.org>, 
-	Carlos Maiolino <cem@kernel.org>, Qu Wenruo <wqu@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-block@vger.kernel.org, linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: block or iomap tree, was: Re: bounce buffer direct I/O when
- stable pages are required v2
-Message-ID: <20260127-dezent-ungunsten-0cc7a56917ba@brauner>
-References: <20260119074425.4005867-1-hch@lst.de>
- <20260123-zuerst-viadukt-b61b8db7f1c5@brauner>
- <20260123141032.GA24964@lst.de>
+	s=arc-20240116; t=1769511414; c=relaxed/simple;
+	bh=lDJRT7dQ3+Xw0hC19vxGGz0/dw1pZF3WgfchPMdQR40=;
+	h=To:From:Subject:Date:Message-Id; b=Nrw9ddp0qk+Shb68oDCwh5gmKWI3HJhNTOxtK3SoBKLZs4TWRfRg5DGH5GWcJuR/riRjNqk18h7j+9u0uKnQXv7p37oVJ1w0WRZjJTfdBW92E+HuU5w/dY/xHoqtcuLOUrB6FG8mC2VpWPNe0Rd02XkiPyRRsMIKMtX5G1XfdB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org; spf=none smtp.mailfrom=ftp-master.debian.org; dkim=pass (2048-bit key) header.d=ftp-master.debian.org header.i=@ftp-master.debian.org header.b=CYrNKWDH; arc=none smtp.client-ip=82.195.75.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ftp-master.debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp-master.debian.org
+Received: from usper.debian.org ([2603:400a:ffff:bb8::801f:45]:49222)
+	from C=NA,ST=NA,L=Ankh Morpork,O=Debian SMTP,OU=Debian SMTP CA,CN=usper.debian.org,EMAIL=hostmaster@usper.debian.org (verified)
+	by mailly.debian.org with esmtps (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <ftpmaster@ftp-master.debian.org>)
+	id 1vkgkX-002Skg-1S
+	for linux-xfs@vger.kernel.org;
+	Tue, 27 Jan 2026 10:56:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ftp-master.debian.org; s=smtpauto.usper; h=Message-Id:Date:Subject:From:To:
+	Reply-To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=WqlyF0J/+5BFhZZkqP4h2LLKsUvvXaV0qOEJ0+1wfGY=; b=CYrNKWDH5ZTgQgxRJqzZ+fcBvF
+	xAbg3wLn9cZf/fEgsectItFQrSW6oSa2qLVxJWKsC+OGe/vKnZnTRMP142sjKUlgI2UlqQ7TbCbcK
+	kPl0utvI6PRMN07NsNodqOngeAQL8SFA797JtoTU4H3qCtv3VDpiajPIWiPOAbMU0Uw1A+yUw0QSP
+	kGdfPQPKcgnpgES2HbBZdk0FkMKhocPFRx4vh1dIed7P9n6Bz4f6ljYkdOcbw8Ph9xqJuP47HBdSn
+	+L0O7rMPgnup2WhIqPtDX//KMaV85X49BsUq7JQOlNPO6qMdPnXiK21BRkFUuzGeyx1x3G/VaxhwL
+	oWkn6+uA==;
+Received: from dak-unpriv by usper.debian.org with local (Exim 4.96)
+	(envelope-from <ftpmaster@ftp-master.debian.org>)
+	id 1vkgkW-000SoS-1r
+	for linux-xfs@vger.kernel.org;
+	Tue, 27 Jan 2026 10:56:44 +0000
+To: linux-xfs@vger.kernel.org
+From: Debian FTP Masters <ftpmaster@ftp-master.debian.org>
+Subject: Processing of xfsprogs_6.18.0-2_source.changes
+Date: Tue, 27 Jan 2026 10:56:44 +0000
+X-Debian: DAK
+X-DAK: DAK
+Precedence: bulk
+Auto-Submitted: auto-generated
+X-Debian-Package: xfsprogs
+Message-Id: <E1vkgkW-000SoS-1r@usper.debian.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260123141032.GA24964@lst.de>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-1.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ftp-master.debian.org:s=smtpauto.usper];
 	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30344-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-30345-lists,linux-xfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_ONE(0.00)[1];
+	DKIM_TRACE(0.00)[ftp-master.debian.org:+];
+	DMARC_NA(0.00)[debian.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 4AF5692D2F
+	FROM_NEQ_ENVFROM(0.00)[ftpmaster@ftp-master.debian.org,linux-xfs@vger.kernel.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ftp-master.debian.org:dkim]
+X-Rspamd-Queue-Id: 4F32A933EF
 X-Rspamd-Action: no action
 
-On Fri, Jan 23, 2026 at 03:10:32PM +0100, Christoph Hellwig wrote:
-> On Fri, Jan 23, 2026 at 01:24:08PM +0100, Christian Brauner wrote:
-> > Applied to the vfs-7.0.iomap branch of the vfs/vfs.git tree.
-> > Patches in the vfs-7.0.iomap branch should appear in linux-next soon.
-> 
-> Hmm, I have another minor revision in the making.  This is mostly
-> spelling fixes, removing a duplicate page_folio call, adding a new
-> comment and adding symbolic constants for the max bvec_iter/bio sizes.
-> 
-> I also have some other work that would conflict with this in the block
-> layer.
-> 
-> What do you and Jens think of waiting for another quick respin and
-> merging it through the block tree or a shared branch in the block
-> tree?  There really is nothing in the iomap branch that conflicts,
+xfsprogs_6.18.0-2_source.changes uploaded successfully to localhost
+along with the files:
+  xfsprogs_6.18.0-2.dsc
+  xfsprogs_6.18.0-2.debian.tar.xz
+  xfsprogs_6.18.0-2_source.buildinfo
 
-I don't mind per se. I haven't pushed this into -next yet. We can also
-just wait for the next merge window given how close we're cutting it.
+Greetings,
+
+	Your Debian queue daemon (running on host usper.debian.org)
 
