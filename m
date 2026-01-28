@@ -1,96 +1,145 @@
-Return-Path: <linux-xfs+bounces-30466-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30467-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uBxHDMMoemlk3QEAu9opvQ
-	(envelope-from <linux-xfs+bounces-30466-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 16:18:27 +0100
+	id QLM5Iw8oemlk3QEAu9opvQ
+	(envelope-from <linux-xfs+bounces-30467-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 16:15:27 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A47DDA3A2F
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 16:18:26 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 634F9A39B2
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 16:15:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 98E8030078F7
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 15:12:56 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 8DC7230098B3
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 15:15:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22FD6369220;
-	Wed, 28 Jan 2026 15:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877E436AB5A;
+	Wed, 28 Jan 2026 15:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyydkiQz"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F311E3596E4
-	for <linux-xfs@vger.kernel.org>; Wed, 28 Jan 2026 15:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F45367F5D
+	for <linux-xfs@vger.kernel.org>; Wed, 28 Jan 2026 15:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769613176; cv=none; b=m/XgqaZ0znvkRbPO1BYpUsUkZs79Lr9tVsRtcNvzsDvA/LRg0Mxmu2llASK0dzCsQMTCKByNE/cEwBXrPmqUO1W5t6pgMEly9IJKcESsG7XhtiFG60JZ+tFL5s69Lnnv+E4blDfY36zAQ+nXAl5Pm/v/5wBASrw+HT98FfxbYxY=
+	t=1769613312; cv=none; b=sHgOb+IHUw29/nS9gaLekfwRWxVzju+L6OPquASNnoTRYFp9u+Vq0Jo7jXPRbpauQnCZRYj4vrTlMlz18oa70ox8Ozd8JIt1SQTR6H/nFR2z1oHl6QEsezHnkp0yZ87L/E7nBnUOvNe86Fp6DvMY9bcV7WPqe2r7JbNn4f/rPhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769613176; c=relaxed/simple;
-	bh=DTX7FkKMcn6aJgotxM2VLTiW/RrP0mNW8p8ymXngXCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GWjYv3qgZAnkF/5hDtHPtxNJZpc3LZjmF65GXxeBDMv0PzgClEmp/yZaiOhiJbAd4a1ggO0zCmjLee3/CKioWA7mTWy8CU/N/RzMXBVb/lSOb3NByi2cTqEx4R0F4r+DH11wvNeoPt6DzYzCyOJVPywJGJ0bNUg0SwWdPtZNtgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 6CC4A227A88; Wed, 28 Jan 2026 16:12:51 +0100 (CET)
-Date: Wed, 28 Jan 2026 16:12:51 +0100
-From: hch <hch@lst.de>
-To: Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: hch <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH 10/10] xfs: add sysfs stats for zoned GC
-Message-ID: <20260128151251.GA7277@lst.de>
-References: <20260127160619.330250-1-hch@lst.de> <20260127160619.330250-11-hch@lst.de> <8df94cf5-20d0-40ea-8658-d24769faf7fd@wdc.com> <20260128141233.GC2054@lst.de> <a589bf70-883b-43da-a6fa-438b0c0d3467@wdc.com>
+	s=arc-20240116; t=1769613312; c=relaxed/simple;
+	bh=FfXRST5TAIleJQV2ElnXMH4I0Ocp4+5OxIeXbRGXJ7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JyPyayQBmuf7jqlS0lLRFXhroL15NPmuEbYG8DrAlK3zs6fsggwUjexHA29xYelo2awnjZygvtmnG76t0joaBJHn/jnY0ZSSRZEYg+Tl8nF4sPUs4oP082e4+NcI2FF1keph3aUcss9iGDUQ/v1LnHCpUv5RrPOeOW3n4X8Xu5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fyydkiQz; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3530715386cso5829332a91.2
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Jan 2026 07:15:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769613307; x=1770218107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NQavHcov3zyWrX+HB/pgu1TA69a661EIAp2ehZc5V3o=;
+        b=fyydkiQzkLqkQVE3N9GXqIlDmt2uPoqabV+zCKaTgD7lEToVNxt4EOVRO29tVw+BJH
+         56b30z5LIPC86bE+SH/5WJtMIi94zD5YkRcglOg4pwexcMnzHpev6Yv2+03sSMcsaJPN
+         pDKnvPcYXLgDsrXduC8bhULFBsWvkPQtyV11AAbqxkYZ44TeFI3252dwAQa/BMWfS1kV
+         AUUtJqHWODpU7yaUsOIbx/A9mqyVzoNNXSIGbMbUbzbKhuDPyFtMuDv9x+il8f0VgNo1
+         SJnjAW7s5FEWJlGJ5w9uMNapLkqkfLqL4WZ3vRTBdmXlYdFHr7mezWu2nM/aDdE4622M
+         JDNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769613307; x=1770218107;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NQavHcov3zyWrX+HB/pgu1TA69a661EIAp2ehZc5V3o=;
+        b=a3oYGIB7dtog+hhSH2YBD1reoLbh+Nt00oZ8IAzPpAUSuSAwWgzYIDn3ulYJyI5P8w
+         jSgF4hwp7+KlauE5f+tP4Ekk+rJQDJp/a4hcgHct/Wa8DZ4OlSmzU0s1Ngxtepq7G391
+         a9VdH5DyWee0lZmc6DwYyD0IFzl3Ot0XOIg7foZ5CKtXKjTO3583aYzBk2Kyo0pAWkkE
+         gKprZetzARL+f3a5zwCoj9jIS10R4TaiPSGgzMOSXZMt9t+X5sdSkiOacLW9lue8HUqI
+         9oA1PBO04zltiN6qcci9ao2iUJRgdG2cgME1Mjo7OWwOdE9O/hOvwmrySV7CsrPoua6x
+         HnTQ==
+X-Gm-Message-State: AOJu0YzcsGrzeLeUySOUjVsN7p2XntkuE5Au17BBuIlI1iceXf0qE4rq
+	hrDMP/sV5q29c5oH/E2Umm0cV7aHzXKrf6hrad3EtR2StwHfuy82PWiBSGbJXQ==
+X-Gm-Gg: AZuq6aJGlsyOBNOAq/sm7WK7QnPQddVsjymwURqvF0h9df5nkLE9PVitrsK6MLnu+Wm
+	NMk+wHsWpas24Fwwvgwtwk0gQ5biIq1OgZvG3k3OSkKiIx84nhb8rvNcDxbEo4eVwANy3BRtVIt
+	aG+AgMm8xj9pfAyTA6w1hAXYHEbPQ4wT5BuDnp7t/7RXzsgYqjGL+hNzdSv0yXMrrETXO7IUrEc
+	GJgzmA+HEGkEArckTIby/jdHauhUhO5la70a1wu/ku6JhsOMTzZ16R6dc8meqi8H+5WIS/RRwnD
+	G1oNcmMMaUhHRszbx/2M3YJmu6KiJjnGYDBlhY23tG8sN1q2vdjRar7EQeYI+Pq8ymxzYTaqmA+
+	Utb72SjicZG9zsAIelvwGcM4cXFhAJuZxxWaCFAb3wSnXa/eU7T4JGEAxxxy3N7r4JaQ9JlGii7
+	ZqjfFaooCV5Fvi6KE5FrN71Nj25RRpL0pciz584U4oYnjBQESLY6epxVKM/xFwELk3
+X-Received: by 2002:a17:90a:c88c:b0:338:3d07:5174 with SMTP id 98e67ed59e1d1-353fecbacbdmr4678362a91.5.1769613306546;
+        Wed, 28 Jan 2026 07:15:06 -0800 (PST)
+Received: from li-5d80d4cc-2782-11b2-a85c-bed59fe4c9e5.ibm.com ([49.207.208.177])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3540f2f0283sm3286080a91.5.2026.01.28.07.15.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jan 2026 07:15:06 -0800 (PST)
+From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
+To: linux-xfs@vger.kernel.org
+Cc: ritesh.list@gmail.com,
+	ojaswin@linux.ibm.com,
+	djwong@kernel.org,
+	hch@infradead.org,
+	nirjhar.roy.lists@gmail.com
+Subject: [PATCH v1 0/2] Misc fixes in XFS realtime
+Date: Wed, 28 Jan 2026 20:44:33 +0530
+Message-ID: <cover.1769613182.git.nirjhar.roy.lists@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a589bf70-883b-43da-a6fa-438b0c0d3467@wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.36 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_NONE(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30467-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-30466-lists,linux-xfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	ASN_FAIL(0.00)[74.135.232.172.asn.rspamd.com:query timed out];
+	FROM_NEQ_ENVFROM(0.00)[nirjharroylists@gmail.com,linux-xfs@vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,linux.ibm.com,kernel.org,infradead.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	MID_RHS_MATCH_FROM(0.00)[];
-	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:mid]
-X-Rspamd-Queue-Id: A47DDA3A2F
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 634F9A39B2
 X-Rspamd-Action: no action
 
-On Wed, Jan 28, 2026 at 03:11:01PM +0000, Hans Holmberg wrote:
-> xs_gc_write_bytes is fine by me as (it is not wrong) but maybe xs_gc_bytes would be a better name?
+This patchset has 2 fixes in some XFS realtime code. Details are
+in the commit messages.
 
-Fine with me.
+PLEASE NOTE that patch 1/2 in this patchset is actually a V2 of [1].
 
-> (as it is the amount of data moved)
-> 
-> and you saw my comment on the xs_gc_write_bytes typo?
+[1] https://lore.kernel.org/all/20260122181148.GE5945@frogsfrogsfrogs/
 
-No, must have missed it, I'll take another look.
+Nirjhar Roy (IBM) (2):
+  xfs: Move ASSERTion location in xfs_rtcopy_summary()
+  xfs: Fix in xfs_rtalloc_query_range()
+
+ fs/xfs/libxfs/xfs_rtbitmap.c | 2 +-
+ fs/xfs/xfs_rtalloc.c         | 6 +++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+-- 
+2.43.5
 
 
