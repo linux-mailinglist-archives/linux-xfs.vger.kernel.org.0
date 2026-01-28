@@ -1,64 +1,62 @@
-Return-Path: <linux-xfs+bounces-30415-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30416-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ILuLDKKReWmOxgEAu9opvQ
-	(envelope-from <linux-xfs+bounces-30415-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 05:33:38 +0100
+	id uOZrMaOReWmOxgEAu9opvQ
+	(envelope-from <linux-xfs+bounces-30416-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 05:33:39 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA8D9D004
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 05:33:37 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 643E29D00B
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 05:33:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 471EA3019C95
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 04:33:36 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5EF6C302688F
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Jan 2026 04:33:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C413284665;
-	Wed, 28 Jan 2026 04:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F28919E97F;
+	Wed, 28 Jan 2026 04:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tg5HwXPx"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HT24LWqs"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E75C8CE
-	for <linux-xfs@vger.kernel.org>; Wed, 28 Jan 2026 04:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D04AC8CE
+	for <linux-xfs@vger.kernel.org>; Wed, 28 Jan 2026 04:33:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769574814; cv=none; b=MhmH7UcGghCbmGX8e1tK7F2vcw8mo2wHlicRW8QWDQQIpEtE5x3R51OjEePRTLAFO3c1mxJmjzlWwxDGol4ayJtHw61laH0Rb5NTT/sO2tbWxgojs8as03VUqBoGkeNUf8wDBCUdrMiefSLHVCK+BTh6uW8SFp+JTIAjCNOmfKI=
+	t=1769574816; cv=none; b=FMDm1iC2V195V46rVwL5vxiZN0Ame9AV5YwXQMaVwsfXEDBzZRDrf0RPodymwZfoAmNAbdQz2er8zmYLXhxBDQ0NQWJ6BhK1iUvJB0zfrKh0Haadx6y3nT1CtM2SRPXmStLutOdtOlirxdV/HfnyDgcUb+0dtAGpx9i3sHpArik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769574814; c=relaxed/simple;
-	bh=VHeaSN2G39PvrTJbYydB7z97ytHve/EasEzS1yrIhEg=;
+	s=arc-20240116; t=1769574816; c=relaxed/simple;
+	bh=3WEj87hr4A/JFTHnx6FuDbaUHlLZ56taS7RRyaCQI0M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C4CNF61l1zAfGIkEXxtRRpLVdB7dsaKekiguFapsPnPc/qIwxA4RsgeGbeKx/Bt8QwK4Nyvznm+QjVfgezZ1cRrRC42yHJE71yeSRAHw+CsfVDZShH4CpxCmg5/7PJ2B246sCWQrLxf6pczxgaP6HOMbLoQcgGP0d1tzV3VuPzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tg5HwXPx; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=rStHWUQqlAqH0NqeupUoH2Lk112Pjd+ynk/vSMaD6sFgkmrfLtYTW63JFmp825CspoZSrWxe8AnRuXAiXlvr+cqy+xQG/Ka8uPiPZXdtU1Vj1hMu/+6P4vUGTJbIjYh6RbZzZONoShIDk10VvX6nHEl6kZKGVl2IZFPVxj5E4AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HT24LWqs; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=+f/UbriC4kyOY/9LgK5JNDkIzJOW5ieZrgVB4hwdWYE=; b=tg5HwXPxvPey7tQrZhPH3oNlsU
-	m0gpjOlsspc0bJYHHOPcuIRw8ZDGRnOXIAZlMlBZLOSo/pGsZMLW6uUlITej2Qr/S/sXfYiIFTZtM
-	HIS6lQFNlkLBC3lmVoYkniWczG8ci/7bgd/BDg+NBUEkcUy3krJa0XnRQmDh3i5uIJA12I06Qi9OU
-	ybgxZxDhBSkyp6qUgpkQMPkCAoE7HetezPMmG2b/ZJYohP5p86idFll29Mo+RGo8jf5w3rqXtfxas
-	DhBLSVi6CzWlPdURCjAR25QwdCzcJxDPBVtBTPnlRrVznyX4HhpC1UQl3LCAcV8yUMTBLgyEor7n6
-	spG2IOVw==;
+	bh=YbySidBqCyAbbdV5hytvGlHGSqAd70AZXYLh6z9OyRE=; b=HT24LWqsbzxX2rJT3hqx7wmupc
+	MdoRGvOo9QTMPiGGgN0jWDQo9SLTnoGYB1Awero10kT7lUJqu/RfNfE/bMnHC+c7zooCdrRefLA/I
+	FPqdAh3hK+dye6yu9c+QTytHSlV5p1TY9tTitygIY1B2Cn/vlGqkDfGIytGauA4yMSAob618BU7io
+	iIJJC/eesw+R2yF18oZ8/DzWn/hSJok/AcB3VC9okVQrMyVX5L5ROVp5ByCZmsHswLTt69VTJYPju
+	T3jJsIbRP+f2vPvpJTvA+h+YDkL7rI/B1CQcdMSDHE6iwqKk2TDPbBSLiPIgXA49BXhgvZbr794Aj
+	ZboOS/MA==;
 Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vkxFD-0000000FQar-2Hhf;
-	Wed, 28 Jan 2026 04:33:31 +0000
+	id 1vkxFG-0000000FQb0-2z66;
+	Wed, 28 Jan 2026 04:33:35 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Andrey Albershteyn <aalbersh@kernel.org>
 Cc: Damien Le Moal <dlemoal@kernel.org>,
 	"Darrick J . Wong" <djwong@kernel.org>,
 	Carlos Maiolino <cem@kernel.org>,
-	linux-xfs@vger.kernel.org,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 2/5] xfs: use blkdev_report_zones_cached()
-Date: Wed, 28 Jan 2026 05:32:56 +0100
-Message-ID: <20260128043318.522432-3-hch@lst.de>
+	linux-xfs@vger.kernel.org
+Subject: [PATCH 3/5] mkfs: remove unnecessary return value affectation
+Date: Wed, 28 Jan 2026 05:32:57 +0100
+Message-ID: <20260128043318.522432-4-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260128043318.522432-1-hch@lst.de>
 References: <20260128043318.522432-1-hch@lst.de>
@@ -72,85 +70,65 @@ Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.06 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30415-lists,linux-xfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-1.000];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	TAGGED_RCPT(0.00)[linux-xfs];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-30416-lists,linux-xfs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,kernel.dk:email,lst.de:mid,lst.de:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,oracle.com:email]
-X-Rspamd-Queue-Id: ABA8D9D004
+	TAGGED_RCPT(0.00)[linux-xfs];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,lst.de:mid,lst.de:email]
+X-Rspamd-Queue-Id: 643E29D00B
 X-Rspamd-Action: no action
 
 From: Damien Le Moal <dlemoal@kernel.org>
 
-Source kernel commit: e04ccfc28252f181ea8d469d834b48e7dece65b2
+The function report_zones() in mkfs/xfs_mkfs.c is a void function. So
+there is no need to set the variable ret to -EIO before returning if
+fstat() fails.
 
-Modify xfs_mount_zones() to replace the call to blkdev_report_zones()
-with blkdev_report_zones_cached() to speed-up mount operations.
-Since this causes xfs_zone_validate_seq() to see zones with the
-BLK_ZONE_COND_ACTIVE condition, this function is also modified to acept
-this condition as valid.
-
-With this change, mounting a freshly formatted large capacity (30 TB)
-SMR HDD completes under 2s compared to over 4.7s before.
-
+Fixes: 2e5a737a61d3 ("xfs_mkfs: support creating file system with zoned RT devices")
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/platform_defs.h | 8 ++++++++
- libxfs/xfs_zones.c      | 1 +
- 2 files changed, 9 insertions(+)
+ mkfs/xfs_mkfs.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/platform_defs.h b/include/platform_defs.h
-index 1152f0622ccf..1a9f401fc11c 100644
---- a/include/platform_defs.h
-+++ b/include/platform_defs.h
-@@ -308,4 +308,12 @@ struct kvec {
- 	size_t iov_len;
- };
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 46f4faf4de5a..b5caa83a799d 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -2586,10 +2586,8 @@ report_zones(
+ 		exit(1);
+ 	}
  
-+/*
-+ * Local definitions for the new cached report zones added in Linux 6.19 in case
-+ * the system <linux/blkzoned.h> doesn't provide them yet.
-+ */
-+#ifndef BLK_ZONE_COND_ACTIVE
-+#define BLK_ZONE_COND_ACTIVE	0xff
-+#endif
-+
- #endif	/* __XFS_PLATFORM_DEFS_H__ */
-diff --git a/libxfs/xfs_zones.c b/libxfs/xfs_zones.c
-index c1ad7075329c..90e2ba0908be 100644
---- a/libxfs/xfs_zones.c
-+++ b/libxfs/xfs_zones.c
-@@ -96,6 +96,7 @@ xfs_zone_validate_seq(
- 	case BLK_ZONE_COND_IMP_OPEN:
- 	case BLK_ZONE_COND_EXP_OPEN:
- 	case BLK_ZONE_COND_CLOSED:
-+	case BLK_ZONE_COND_ACTIVE:
- 		return xfs_zone_validate_wp(zone, rtg, write_pointer);
- 	case BLK_ZONE_COND_FULL:
- 		return xfs_zone_validate_full(zone, rtg, write_pointer);
+-	if (fstat(fd, &st) < 0) {
+-		ret = -EIO;
++	if (fstat(fd, &st) < 0)
+ 		goto out_close;
+-	}
+ 	if (!S_ISBLK(st.st_mode))
+ 		goto out_close;
+ 
 -- 
 2.47.3
 
