@@ -1,144 +1,164 @@
-Return-Path: <linux-xfs+bounces-30530-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30533-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kAJ2OKJ2e2mMEgIAu9opvQ
-	(envelope-from <linux-xfs+bounces-30530-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Jan 2026 16:02:58 +0100
+	id mLRuDeeBe2mvFAIAu9opvQ
+	(envelope-from <linux-xfs+bounces-30533-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Jan 2026 16:51:03 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7645BB1436
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Jan 2026 16:02:58 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41F0AB1A49
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Jan 2026 16:51:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8075A300914E
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Jan 2026 15:02:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 468ED3002D13
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Jan 2026 15:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E605F238C36;
-	Thu, 29 Jan 2026 15:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7EC1335098;
+	Thu, 29 Jan 2026 15:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVQbK445"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RkrZCMVE"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C248B14E2F2;
-	Thu, 29 Jan 2026 15:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7417F32ED39
+	for <linux-xfs@vger.kernel.org>; Thu, 29 Jan 2026 15:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769698954; cv=none; b=EADO4yYV/guOE+pjCFS249aUy/XGXgyy2tqsTmebJR2ZoVTr7LeLiBJDHyEyzUzpHDa+guikcOUqR6Xj474E9l3H3DNJkmhSLpM/YV30Xwr+350HKieMoi7+8ilhAAQko6hZj9JXgC3uCzCtbDkGk7FbSzl8wNXEHNSx/elvNc4=
+	t=1769701835; cv=none; b=igcqBlxRa8wGBl21rNX0FTlFvib3exusgJYiLvVeu1t1JXQgWV6vxecdk9PSQEsATuxvR/pPQpmCFdXlTArdAEvrNMMk/cYj8YLdmfqn2d9xqZHM8+IPDlKgHHZwDk7n5fTLsaKTq9mzWs9QoCaXOpFBstzkiAt83PghpDa+/kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769698954; c=relaxed/simple;
-	bh=J+y3lhsdVJJhsaNBmnJtoAxChDaUcHRnC/rbUBl8U08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltNoNbgukSHOuyhN/S5S8czqfhSStnlEV/u1DZuTxZj6HEcIfhaFE50sJlq7K6fEisgB6PH6sgaqcE4HnMP2J0kzjpI97S8hjcbQLH5FPfnoOqMkwblrOWRkYJY/WrzF9yjMAEUVpHiJlkU9XJY9NoL052TDlZjx/1sjdOWmiPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVQbK445; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA438C19425;
-	Thu, 29 Jan 2026 15:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769698954;
-	bh=J+y3lhsdVJJhsaNBmnJtoAxChDaUcHRnC/rbUBl8U08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HVQbK445T75/BICAAaBr7m65y74gAqiVvZR1vn3jccmqx+jhyuXKDkdUXGhh7dxW2
-	 sv1xv2AdjSJlqCOFW0jzrI7Xrcy5s3J9IP+MOxXQTV+bhnXRk2mkcUXH66BZLJP0+t
-	 u05mvnbj0pVv9lrkB6UbrgGOzCk9NKYbHJ/ZFHTwjdKTML1VbhnmBeeAr5HanFGHmn
-	 3rYLuf5oIPtArGlpguX0JFNhVHh8EIFqaePWBHqkInFb3V7b3wksHV88ukfvZjAqnQ
-	 iygH7Bd1O8ISGZ+b67v9yIIWtcX4x2jvRJjRrd8zlP0v/OtAa9xQCvny10pYUU0a0t
-	 xLhqSBnTQ/FlQ==
-Date: Thu, 29 Jan 2026 16:02:29 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org, 
-	fstests@vger.kernel.org, djwong@kernel.org, fsverity@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] fsverity: add tracepoints
-Message-ID: <20260129-abgraben-atemzug-b46d8fdfcb64@brauner>
-References: <20260119165644.2945008-1-aalbersh@kernel.org>
- <20260119165644.2945008-3-aalbersh@kernel.org>
- <20260121003917.GC12110@quark>
- <20260124184954.GC2762@quark>
+	s=arc-20240116; t=1769701835; c=relaxed/simple;
+	bh=dVoci7UurIKaLWVhEEQyOA/oRtbZVi8H/yVXGSLOoME=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZTpg2EFRr4IjmUxoHekELHnZJepLMM7zji4Of0w/IDP/taSybyhbQ7vS20vIRgUguWm3Zqu9tCB2iVqKXZnLanNysW2PkB1C3ogJlDrg/BtYPK45fLt77pZB+FrcVE21D0tc+JmXhgAlfoXW6r1kXtA7Nwi4o3SrBdNjQu0hAjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RkrZCMVE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769701833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=f6i3WlIu8fBaSjICdJuR/n+CyzTL3A1o0ivoFGDjDtQ=;
+	b=RkrZCMVEOEelTFDQk+Qa0xDBITTmkJ52UkFufg6BInRNd8cTLctdltS0J0VCUO5oIR59Ci
+	XfUY/8wSxvrl+CuPMs3eGxFc+neXxzp0kTL7fRCiMvMmj3S4oqxPdY73+6/Y4bNVuUEgw/
+	Ek+gRMsA7r2Pq7j8KNYiNXXg7RErdMA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-688-4ZKjX25YN3GuGvp1pn5uyA-1; Thu,
+ 29 Jan 2026 10:50:30 -0500
+X-MC-Unique: 4ZKjX25YN3GuGvp1pn5uyA-1
+X-Mimecast-MFC-AGG-ID: 4ZKjX25YN3GuGvp1pn5uyA_1769701829
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 41AEA1956060;
+	Thu, 29 Jan 2026 15:50:29 +0000 (UTC)
+Received: from bfoster.redhat.com (unknown [10.22.81.70])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B2F901800109;
+	Thu, 29 Jan 2026 15:50:28 +0000 (UTC)
+From: Brian Foster <bfoster@redhat.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: [PATCH v2 0/5] iomap, xfs: improve zero range flushing and lookup
+Date: Thu, 29 Jan 2026 10:50:23 -0500
+Message-ID: <20260129155028.141110-1-bfoster@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260124184954.GC2762@quark>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.34 / 15.00];
-	MID_END_EQ_FROM_USER_PART(4.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30530-lists,linux-xfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-30533-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCPT_COUNT_TWO(0.00)[2];
+	FROM_NEQ_ENVFROM(0.00)[bfoster@redhat.com,linux-xfs@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[redhat.com:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[brauner@kernel.org,linux-xfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_NONE(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7645BB1436
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 41F0AB1A49
 X-Rspamd-Action: no action
 
-On Sat, Jan 24, 2026 at 10:49:54AM -0800, Eric Biggers wrote:
-> [+Cc fsverity@lists.linux.dev]
-> 
-> On Tue, Jan 20, 2026 at 04:39:17PM -0800, Eric Biggers wrote:
-> > On Mon, Jan 19, 2026 at 05:56:43PM +0100, Andrey Albershteyn wrote:
-> > [...]
-> > > +	TP_printk("ino %lu data size %llu tree size %llu block size %u levels %u",
-> > [...]
-> > > +	TP_printk("ino %lu levels %d block_size %d tree_size %lld root_hash %s digest %s",
-> > 
-> > Would be nice to make these consistent.  3 of the parameters are the
-> > same, but the naming and order differs slightly.
-> > 
-> > [...]
-> > > +	TP_printk("ino %lu pos %lld merkle_blocksize %u",
-> > > +		(unsigned long) __entry->ino,
-> > > +		__entry->data_pos,
-> > > +		__entry->block_size)
-> > 
-> > Likewise here.  So now we have "block size", "block_size", and
-> > "merkle_blocksize", all for the same thing.
-> > 
-> > > +	TP_printk("ino %lu data_pos %llu hblock_idx %lu level %u hidx %u",
-> > > +		(unsigned long) __entry->ino,
-> > 
-> > And here's data_pos as a %llu, whereas in the previous tracepoint it's
-> > just pos as an %lld.
-> > 
-> > > +TRACE_EVENT(fsverity_verify_merkle_block,
-> > > +	TP_PROTO(const struct inode *inode, unsigned long index,
-> > > +		 unsigned int level, unsigned int hidx),
-> > 
-> > And the 'index' here is what the previous one calls 'hblock_idx'.
-> > 
-> > I think consistent naming would be helpful for people trying to use
-> > these tracepoints.
-> 
-> Andrey, let me know if you're planning to send a new version with the
-> naming cleaned up, or if I should do it in a follow-up patch instead.
-> 
-> Christian, can you let me know if it's okay if I take this series
-> through the fsverity tree, or do you want it to go through the VFS tree?
+Hi all,
 
-Yeah, I can take them no biggie.
-Tracepoints, heh, who would've thought.
+Here's v2 of the iomap zero range flush cleanup patches. Patch 1 in v1
+has already been merged separately, so that's dropped off. Otherwise no
+major changes from v1. The remaining patches here lift the flush into
+XFS, fix up the insert range issue that the flush implicitly suppressed,
+streamlines the .iomap_begin() logic a bit, and finally replaces the
+just lifted flush with proper use of the folio batch mechanism. The end
+result is that the flush remains in iomap zero range purely as a
+fallback for callers who do not provide a folio batch for pagecache
+dirty unwritten mappings.
+
+WRT some of the discussion on v1.. I looked into changing how COW blocks
+over data fork holes are reported in XFS as a first step, but I
+eventually ran into complexity that would essentially duplicate some of
+the hacks I'm trying to clean up. For example, we'd have to determine
+whether to report as a hole or "data" mapping based on pagecache state,
+and this series adds some of that by the end by explicitly doing the
+dirty folio lookup in this scenario. I'll plan to revisit this on top of
+this series as a standalone XFS improvement, but haven't got there yet.
+
+The other thing that is a little more annoying was failure of the idea
+to essentially prep the shift where patch 2 adds an EOF folio flush [1].
+This ordering leads to potential pagecache inconsistency because the
+i_size update can zero and repopulate pagecache. I'm open to other ideas
+here, but otherwise haven't been able to think of anything more
+clever/simple (including futzing around for suggestions with AI). All in
+all I still think this is more clear having the flush isolated in insert
+range where it is actually required than having a flush in iomap
+indirectly suppress the problem.
+
+Thoughts, reviews, flames appreciated.
+
+Brian
+
+[1] https://lore.kernel.org/linux-fsdevel/20251105001445.GW196370@frogsfrogsfrogs/
+
+v2:
+- Patch 1 from v1 merged separately.
+- Fixed up iomap_fill_dirty_folios() call in patch 5.
+v1: https://lore.kernel.org/linux-fsdevel/20251016190303.53881-1-bfoster@redhat.com/
+
+Brian Foster (5):
+  iomap, xfs: lift zero range hole mapping flush into xfs
+  xfs: flush eof folio before insert range size update
+  xfs: look up cow fork extent earlier for buffered iomap_begin
+  xfs: only flush when COW fork blocks overlap data fork holes
+  xfs: replace zero range flush with folio batch
+
+ fs/iomap/buffered-io.c |  6 +--
+ fs/xfs/xfs_file.c      | 17 +++++++++
+ fs/xfs/xfs_iomap.c     | 87 ++++++++++++++++++++++++++++++------------
+ 3 files changed, 81 insertions(+), 29 deletions(-)
+
+-- 
+2.52.0
+
 
