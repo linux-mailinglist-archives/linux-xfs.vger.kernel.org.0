@@ -1,62 +1,64 @@
-Return-Path: <linux-xfs+bounces-30586-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30587-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sLVkEkq7gGl3AgMAu9opvQ
-	(envelope-from <linux-xfs+bounces-30586-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 02 Feb 2026 15:57:14 +0100
+	id OGB+G8nFgGl3AgMAu9opvQ
+	(envelope-from <linux-xfs+bounces-30587-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 02 Feb 2026 16:42:01 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EF08CDB7A
-	for <lists+linux-xfs@lfdr.de>; Mon, 02 Feb 2026 15:57:13 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71605CE5EC
+	for <lists+linux-xfs@lfdr.de>; Mon, 02 Feb 2026 16:42:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EB1DD3084440
-	for <lists+linux-xfs@lfdr.de>; Mon,  2 Feb 2026 14:48:59 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id A74ED30185D3
+	for <lists+linux-xfs@lfdr.de>; Mon,  2 Feb 2026 15:35:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D265372B2F;
-	Mon,  2 Feb 2026 14:48:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4939123D7FC;
+	Mon,  2 Feb 2026 15:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ErlKDL1V"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jQs0t9/Y"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037A4372B24;
-	Mon,  2 Feb 2026 14:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AFF23717F;
+	Mon,  2 Feb 2026 15:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770043732; cv=none; b=aWlsxQOyu+SntlNn9ENZBRz9IaFR0JIAV70Hh6m5g4IkUA5uKBF7JZrWzcithiFzzykHwki+3XxFnD7AJe1WjVa1j49XUhrK4lYRAU48jo/cSq0oEwMLJkxzDWFUhEQkcu4cl559W4sDJA5M3Rjoac3mqVA3UPPnt20ouXSGbh4=
+	t=1770046544; cv=none; b=o1PpLJCu6J8RJtrxtN8j34fjO8YmnH2q2sclqjrFMvFe11VNBRUG5bg/AfXDbqEM4fx6tIZZamEzSjSWAjXNHGjD2ETtT7a2hY0SKZcVW70aSL4jn+QmvhMZ1MDxMWKzNjM6uV3uGMduOOxtfdIaRWYSyKQzv8QaJCxC7xPFcNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770043732; c=relaxed/simple;
-	bh=a0i1EGHJ53Cn36Ogm+2TKGDqjDbkwy8XN50DuccTGvw=;
+	s=arc-20240116; t=1770046544; c=relaxed/simple;
+	bh=6VJJ0fxssxPgViW6cphU37tpXHSRi0cucxuOKUP5bWk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f2CTqSIU+bClA+EePUzTa24QauGKfAk+/kd9gzM1/RLFIahjK3e5/5womJtctQ7z7oAZrZOTxhJQcEKtEWoCjt5Bt3npcMwo5bc+jZDG3qIiKhN/+7qaqbv2ymFfgU6s27hee+gQfc/JfbPtYHUuWVj3I34FBIGzwI/AamIRI8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ErlKDL1V; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=nbXIpSOuHejMd4HU0wMHnn3sTd1B5wsHmcXBxd+RW+1Z56D0/q1FZyyyGkizzz4VZgo7TLFkOiBwcijptlKyZnkcCD7eFzhg5cNDPYWOOblreOY4Xsuc91l5wd6aKMhwNHygAI9qL+yOjhuyy3tmF0rU+zn2O0HNAFZdkmp4fCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jQs0t9/Y; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=5RfuoFuZfmU6d6xpKp+WWNjws0YGAx9f0t4UKjDQuJQ=; b=ErlKDL1VrxmApC+k1RGI4731b9
-	g6U/J6ugzGmf7HqXFcuNK5qCOJENnJzyuTOS1Mki9v1pqhO5TX8C5prq32YkheUfq8pCRqK7KSkQb
-	H0fYZ4DIs2hInp5X2AHqavTVWiHu6IW43MGbxhGEqHzj9iC+9VLxpVbKz7FjRAIplYorYhdao6b2X
-	PPuHDys4lKDAmCyGejWfL2gJMn2gEr7sDXZ9geZ5iNmhhzzaEdLVVTW5CBAHu+/YE+U4lyg9nsFK4
-	m0mtkzdMhOHCV1viHn5KEp4uWoaKPC9pVqCKQXuGLbESv272CJ7VSUsmJX8lifpx3GI1J2K7UvyVR
-	IqUVKhAQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vmvEQ-00000005879-1moJ;
-	Mon, 02 Feb 2026 14:48:50 +0000
-Date: Mon, 2 Feb 2026 06:48:50 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Piyush Patle <piyushpatle228@gmail.com>
-Cc: brauner@kernel.org, djwong@kernel.org, linux-xfs@vger.kernel.org,
+	bh=7WFsbiEQUurYD7EXC/ISqc/9qrsDGzxORricUBfp/VU=; b=jQs0t9/YTs7C4NYcOqlba6fEK+
+	rmggJKqZwnjZGLPRswDnWuWLymMelfckxNdFkN+E0YqvLpJ54FM1NWSrDLv+xPDa2C6euMSZKFqRC
+	WmWSUYN+pVnI3zzXV3Hq6bXc4NLfzly/zMk0jR1ETjUitCJ5jRvq9BQbGUfrWi6TSY4THTJY7fFFh
+	FZ/BQWmsn5yTZEYKrmntX/G9OPy3F2jxRPSKp7XmhjNR0UdCnFVzBiJf/UbsHPQACFaYjHzymsKwf
+	F0UTeP0dgNwVGQfbJe4om0C2muMDv32/Hz6sXIedS3ANlIc+l9LJ4d20z0MHiHA6fvHp9dEz8zvrG
+	woQJhG2A==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vmvxj-0000000Ggx5-3U1O;
+	Mon, 02 Feb 2026 15:35:40 +0000
+Date: Mon, 2 Feb 2026 15:35:39 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Piyush Patle <piyushpatle228@gmail.com>, brauner@kernel.org,
+	djwong@kernel.org, linux-xfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	syzbot+bd5ca596a01d01bfa083@syzkaller.appspotmail.com
 Subject: Re: [PATCH] iomap: handle iterator position advancing beyond current
  mapping
-Message-ID: <aYC5Utav-rTKigTw@infradead.org>
+Message-ID: <aYDES-sGwCEr80Z3@casper.infradead.org>
 References: <20260202130044.567989-1-piyushpatle228@gmail.com>
+ <aYC5Utav-rTKigTw@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -65,43 +67,50 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260202130044.567989-1-piyushpatle228@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <aYC5Utav-rTKigTw@infradead.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=casper.20170209];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org,syzkaller.appspotmail.com];
+	TAGGED_FROM(0.00)[bounces-30587-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30586-lists,linux-xfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[infradead.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-xfs@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[willy@infradead.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs,bd5ca596a01d01bfa083];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 8EF08CDB7A
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,syzkaller.appspot.com:url,casper.infradead.org:mid]
+X-Rspamd-Queue-Id: 71605CE5EC
 X-Rspamd-Action: no action
 
-On Mon, Feb 02, 2026 at 06:30:44PM +0530, Piyush Patle wrote:
-> Closes: https://syzkaller.appspot.com/bug?id=bd5ca596a01d01bfa083
+On Mon, Feb 02, 2026 at 06:48:50AM -0800, Christoph Hellwig wrote:
+> On Mon, Feb 02, 2026 at 06:30:44PM +0530, Piyush Patle wrote:
+> > Closes: https://syzkaller.appspot.com/bug?id=bd5ca596a01d01bfa083
+> 
+> This link doesn't work.  And the commit log has zero details of what's
+> happening either.
 
-This link doesn't work.  And the commit log has zero details of what's
-happening either.
+Looks like this one:
 
+https://syzkaller.appspot.com/bug?extid=bd5ca596a01d01bfa083
+
+but there's no reproducer.  Looks like it's through the blockdev rather
+than a filesystem being involved.
 
