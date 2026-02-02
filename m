@@ -1,57 +1,63 @@
-Return-Path: <linux-xfs+bounces-30571-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30572-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QNjWLgvjfGkQPQIAu9opvQ
-	(envelope-from <linux-xfs+bounces-30571-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Jan 2026 17:57:47 +0100
+	id iNeuI1ZDgGnW5QIAu9opvQ
+	(envelope-from <linux-xfs+bounces-30572-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 02 Feb 2026 07:25:26 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36EA1BCBAF
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Jan 2026 17:57:47 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A0DDC8A1B
+	for <lists+linux-xfs@lfdr.de>; Mon, 02 Feb 2026 07:25:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F0AE63050EE8
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Jan 2026 16:55:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B39E2300BDAC
+	for <lists+linux-xfs@lfdr.de>; Mon,  2 Feb 2026 06:25:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C3C7346AF8;
-	Fri, 30 Jan 2026 16:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CF72F5308;
+	Mon,  2 Feb 2026 06:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vL/ONHEK"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mYBp3ytH"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795E82FCBE3
-	for <linux-xfs@vger.kernel.org>; Fri, 30 Jan 2026 16:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180012BD015
+	for <linux-xfs@vger.kernel.org>; Mon,  2 Feb 2026 06:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769792135; cv=none; b=ewhEMr5qM5AnuHIf7p4C/Z6g5X2x1tQr74S+RTy/P7CHEkAwPzA/d8Oadj+2kkjn0fD2P+5NM9Wd+UQqBMSCO/QiAxKGU1o2GS1MAvvmy4cxBREIFzW2YShYFF0HN4goaMaAlvPUEArPi7cvN8voJBDtUI/dgTaZHO7aC4iHac4=
+	t=1770013524; cv=none; b=d90MFrriMm/t/R/znTQIyBgX4A+VtMMwfjEIv4SxAYz5XSO9DRqJ4o0v6z9EtKUhbOwp8wIrgoRjYq9yLcsDtQP+HMCAHFnnfr2dDrbouyp8ueO+StWYzLlf0Ox7sS1yN2O2086icCnbZq3FQCstYeQoBiE1HtyoPM3zg6LhB/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769792135; c=relaxed/simple;
-	bh=unACMDs/mjky5L11S3jq42d2mErhwm9OujaOdSB+fu0=;
+	s=arc-20240116; t=1770013524; c=relaxed/simple;
+	bh=Y68wovBysM/ximJqeczz4eS49yY2LbFFvceZbAAOOYc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8zD8anm2XPQu1GeUe0/wvLxysqxaACFUeICIR8+AxKY4Gq9iSQ1WVExE9+In8ZHJPxCZSyvhXucV27HaBwQLG8qyqIeRn8zZO7NJbnj0qou5f9otnDGLDEAMSTmeIAhr8rfnj3eHF3E6XfVSEFNzEEaOsuOVynZlUfuXkcH1Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vL/ONHEK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14777C4CEF7;
-	Fri, 30 Jan 2026 16:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769792135;
-	bh=unACMDs/mjky5L11S3jq42d2mErhwm9OujaOdSB+fu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vL/ONHEKBcNMXQZWBCog6BIVwdZPHetosFx/o0p4j/0f37sowI5DeUfCcoheRWaSv
-	 54ytEOxCUruBjJPT4+PPO4ixxfvTEs5HhMj2u8slPAcvuYXnYjWLqWqSfsVNSvMT4b
-	 Iuv6z3Bm+9UCVPESNnnAkzN0mQ/nuHvzU52DPjZQ5Pi4ad9DRZgyzxNf/J+jYFTscU
-	 ogkaH3XL4ct6e6iJJog8Q4rhYw6wFKNyjBjnk8p4fn/o9YByw9Y3D0sZ2aOPgiUxNE
-	 MXh3GODHLDHlZUEmnYeY9zcJynF6b5k92g+9Cz/eK0uvQFno9KfpOZe6yYvCMs36tT
-	 VpFMYmjklMP5Q==
-Date: Fri, 30 Jan 2026 08:55:34 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Lukas Herbolt <lukas@herbolt.com>
-Cc: linux-xfs@vger.kernel.org, cem@kernel.org
-Subject: Re: [PATCH] xfs: Use xarray to track SB UUIDs instead of plain array.
-Message-ID: <20260130165534.GG7712@frogsfrogsfrogs>
-References: <20260130154206.1368034-2-lukas@herbolt.com>
- <20260130154206.1368034-4-lukas@herbolt.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1IY1vi6gRtg8rvCDHUdnaZHBQTMF4nYgQXjnvy/bTA3GXj3zNAyGtlHefwPc0b1R9yapuNaTpw0+FlygM0kKFoXA06EG7E6pDxtCOgBGUacJjqjxLWg5zfPk48l18HsxQa1YNdvG9qPGXMIn5KqXUkQq5ryhFB9+kV5RGHWjZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mYBp3ytH; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Y68wovBysM/ximJqeczz4eS49yY2LbFFvceZbAAOOYc=; b=mYBp3ytHLkdlxkx1GGk+Wr8ax+
+	owTBbSzNgoyh+oYoOELSFep12tXpV5W1g68NAGNb+uKFTf/iO3Z2VlOy/MVv1ZSWWo9UO/9AqNHUk
+	xhHu7bRR/c06CjTRsUgU3q4xqx9wnCvMIUFmd+EcCfZLloT6izO7gs59oz0dZsXXd67ZjjwPWyl5B
+	sW90PVEusi/0z++vulfZfNDHzexlPi/iEGXCrOlwW6RqY8d1Jo+NNHpQhtp5blzyrqgtGvr4pGMdX
+	WJn+0oeDQaCz6EcdYHgVRud8Gm8NGDu0Iuein85zM/jGEWSZdO2lkNhNrwXe0smRfN/OtTgfITipQ
+	G1rDICFQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vmnNB-00000004VNj-3oB4;
+	Mon, 02 Feb 2026 06:25:21 +0000
+Date: Sun, 1 Feb 2026 22:25:21 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>,
+	linux-xfs@vger.kernel.org, ritesh.list@gmail.com,
+	ojaswin@linux.ibm.com, hch@infradead.org
+Subject: Re: [PATCH v1 2/2] xfs: Fix in xfs_rtalloc_query_range()
+Message-ID: <aYBDUUGjK213oZBi@infradead.org>
+References: <cover.1769613182.git.nirjhar.roy.lists@gmail.com>
+ <43e717d7864a2662c067d8013e462209c7b2952a.1769613182.git.nirjhar.roy.lists@gmail.com>
+ <20260128171443.GL5966@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -60,220 +66,45 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260130154206.1368034-4-lukas@herbolt.com>
+In-Reply-To: <20260128171443.GL5966@frogsfrogsfrogs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30571-lists,linux-xfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30572-lists,linux-xfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,linux.ibm.com,infradead.org];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-xfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,herbolt.com:email]
-X-Rspamd-Queue-Id: 36EA1BCBAF
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:mid,infradead.org:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0A0DDC8A1B
 X-Rspamd-Action: no action
 
-On Fri, Jan 30, 2026 at 04:42:08PM +0100, Lukas Herbolt wrote:
-> Removing the plain array to track the UUIDs and switch
-> xarray to make more readable.
-> 
-> Signed-off-by: Lukas Herbolt <lukas@herbolt.com>
-> ---
->  fs/xfs/xfs_mount.c | 87 +++++++++++++++++++++++-----------------------
->  fs/xfs/xfs_mount.h |  3 +-
->  fs/xfs/xfs_super.c |  2 +-
->  3 files changed, 46 insertions(+), 46 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-> index 0953f6ae94ab..35c0d411e0cb 100644
-> --- a/fs/xfs/xfs_mount.c
-> +++ b/fs/xfs/xfs_mount.c
-> @@ -42,18 +42,48 @@
->  #include "scrub/stats.h"
->  #include "xfs_zone_alloc.h"
->  
-> -static DEFINE_MUTEX(xfs_uuid_table_mutex);
-> -static int xfs_uuid_table_size;
-> -static uuid_t *xfs_uuid_table;
-> +static DEFINE_XARRAY_ALLOC(xfs_uuid_table);
-> +
-> +/*
-> + * Helper fucntions to store UUID in xarray.
-> + */
-> +STATIC int
-> +xfs_uuid_insert(uuid_t *uuid)
-> +{
-> +	uint32_t index = 0;
-> +
-> +	return xa_alloc(&xfs_uuid_table, &index, uuid,
-> +			xa_limit_32b, GFP_KERNEL);
-> +}
-> +
-> +STATIC uuid_t
-> +*xfs_uuid_search(uuid_t *new_uuid)
-> +{
-> +	unsigned long index = 0;
-> +	uuid_t *uuid = NULL;
-> +
-> +	xa_for_each(&xfs_uuid_table, index, uuid) {
-> +		if (uuid_equal(uuid, new_uuid))
-> +			return uuid;
-> +	}
-> +	return NULL;
-> +}
-> +
-> +STATIC void
-> +xfs_uuid_delete(uuid_t *uuid)
-> +{
-> +	unsigned long index = 0;
-> +
-> +	xa_for_each(&xfs_uuid_table, index, uuid) {
-> +		xa_erase(&xfs_uuid_table, index);
-> +	}
+On Wed, Jan 28, 2026 at 09:14:43AM -0800, Darrick J. Wong wrote:
+> # mkfs.xfs -m metadir=1 -r rtdev=/dev/sdb /dev/sda -r rgsize=65536b,size=131073b -f
+> # mount /dev/sda /mnt -o rtdev=/dev/sdb
+> # xfs_scrub -dTvn /mnt
 
-Why not store the xarray index in the xfs_mount so you can delete the
-entry directly without having to walk the entire array?
+Can we get this wired up in xfstests?
 
-And while I'm on about it ... if you're going to change data structures,
-why not use rhashtable or something that can do a direct lookup?
-
-> +}
->  
->  void
-> -xfs_uuid_table_free(void)
-> +xfs_uuid_table_destroy(void)
->  {
-> -	if (xfs_uuid_table_size == 0)
-> -		return;
-> -	kfree(xfs_uuid_table);
-> -	xfs_uuid_table = NULL;
-> -	xfs_uuid_table_size = 0;
-> +	ASSERT(xa_empty(&xfs_uuid_table));
-> +	xa_destroy(&xfs_uuid_table);
->  }
->  
->  /*
-> @@ -65,7 +95,6 @@ xfs_uuid_mount(
->  	struct xfs_mount	*mp)
->  {
->  	uuid_t			*uuid = &mp->m_sb.sb_uuid;
-> -	int			hole, i;
->  
->  	/* Publish UUID in struct super_block */
->  	super_set_uuid(mp->m_super, uuid->b, sizeof(*uuid));
-> @@ -78,29 +107,9 @@ xfs_uuid_mount(
->  		return -EINVAL;
->  	}
->  
-> -	mutex_lock(&xfs_uuid_table_mutex);
-> -	for (i = 0, hole = -1; i < xfs_uuid_table_size; i++) {
-> -		if (uuid_is_null(&xfs_uuid_table[i])) {
-> -			hole = i;
-> -			continue;
-> -		}
-> -		if (uuid_equal(uuid, &xfs_uuid_table[i]))
-> -			goto out_duplicate;
-> -	}
-> +	if (!xfs_uuid_search(uuid))
-> +		return xfs_uuid_insert(uuid);
-
-xfs_uuid_table_mutex went away, so what's protecting the lookup and
-insert from racing to insert the same uuid twice?
-
---D
-
->  
-> -	if (hole < 0) {
-> -		xfs_uuid_table = krealloc(xfs_uuid_table,
-> -			(xfs_uuid_table_size + 1) * sizeof(*xfs_uuid_table),
-> -			GFP_KERNEL | __GFP_NOFAIL);
-> -		hole = xfs_uuid_table_size++;
-> -	}
-> -	xfs_uuid_table[hole] = *uuid;
-> -	mutex_unlock(&xfs_uuid_table_mutex);
-> -
-> -	return 0;
-> -
-> - out_duplicate:
-> -	mutex_unlock(&xfs_uuid_table_mutex);
->  	xfs_warn(mp, "Filesystem has duplicate UUID %pU - can't mount", uuid);
->  	return -EINVAL;
->  }
-> @@ -110,22 +119,12 @@ xfs_uuid_unmount(
->  	struct xfs_mount	*mp)
->  {
->  	uuid_t			*uuid = &mp->m_sb.sb_uuid;
-> -	int			i;
->  
->  	if (xfs_has_nouuid(mp))
->  		return;
-> +	xfs_uuid_delete(uuid);
-> +	return;
->  
-> -	mutex_lock(&xfs_uuid_table_mutex);
-> -	for (i = 0; i < xfs_uuid_table_size; i++) {
-> -		if (uuid_is_null(&xfs_uuid_table[i]))
-> -			continue;
-> -		if (!uuid_equal(uuid, &xfs_uuid_table[i]))
-> -			continue;
-> -		memset(&xfs_uuid_table[i], 0, sizeof(uuid_t));
-> -		break;
-> -	}
-> -	ASSERT(i < xfs_uuid_table_size);
-> -	mutex_unlock(&xfs_uuid_table_mutex);
->  }
->  
->  /*
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index b871dfde372b..c3a5035c1fb6 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -689,7 +689,8 @@ xfs_daddr_to_agbno(struct xfs_mount *mp, xfs_daddr_t d)
->  	return (xfs_agblock_t) do_div(ld, mp->m_sb.sb_agblocks);
->  }
->  
-> -extern void	xfs_uuid_table_free(void);
-> +extern void xfs_uuid_table_destroy(void);
-> +
->  uint64_t	xfs_default_resblks(struct xfs_mount *mp,
->  			enum xfs_free_counter ctr);
->  extern int	xfs_mountfs(xfs_mount_t *mp);
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index bc71aa9dcee8..fc9d2e5acf96 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -2723,7 +2723,7 @@ exit_xfs_fs(void)
->  	xfs_mru_cache_uninit();
->  	xfs_destroy_workqueues();
->  	xfs_destroy_caches();
-> -	xfs_uuid_table_free();
-> +	xfs_uuid_table_destroy();
->  }
->  
->  module_init(init_xfs_fs);
-> 
-> base-commit: 63804fed149a6750ffd28610c5c1c98cce6bd377
-> -- 
-> 2.52.0
-> 
-> 
 
