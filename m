@@ -1,48 +1,54 @@
-Return-Path: <linux-xfs+bounces-30668-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30669-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +LkgD6KPhWkODgQAu9opvQ
-	(envelope-from <linux-xfs+bounces-30668-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 06 Feb 2026 07:52:18 +0100
+	id yDfiMaGRhWl7DgQAu9opvQ
+	(envelope-from <linux-xfs+bounces-30669-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Fri, 06 Feb 2026 08:00:49 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD46EFAC62
-	for <lists+linux-xfs@lfdr.de>; Fri, 06 Feb 2026 07:52:17 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E465FACB0
+	for <lists+linux-xfs@lfdr.de>; Fri, 06 Feb 2026 08:00:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 763B1300FEF6
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 Feb 2026 06:52:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BEBE330125E0
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 Feb 2026 07:00:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16F5D2EC0A7;
-	Fri,  6 Feb 2026 06:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5D7E29E10C;
+	Fri,  6 Feb 2026 07:00:45 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88B42D73B6
-	for <linux-xfs@vger.kernel.org>; Fri,  6 Feb 2026 06:52:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FFA2AEE1;
+	Fri,  6 Feb 2026 07:00:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770360736; cv=none; b=nuG3kyHm1CUQhm/28vdGZkA5q0OvBt2seH7rWh0+87qcev483+FotNbT8g3KvaLJSNSgqEPUTGonz0nqveXoWIptPESBi7CZEwXRLKGrwmBaxTz311pl2wgP/zgDWG0+qme9GOBc2+Win3QndsuyFkRiIu5XPrdblNLGbqc1PYo=
+	t=1770361245; cv=none; b=BG2iCk97Q4y++yN2tN3C0uwFJ859NYK0zPtZHGcyq5Arf65h+oTAUQdaSofBEEhSjBIru/SPuU9eAmYxsSz8IdMJYes5NFG8MMkHtyCEntwfTdFGLnT0NbGm+Bv9OfEMvDSh6hP9scc2ADluRUyF8VBNwMTmDu+NpJhpq192VQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770360736; c=relaxed/simple;
-	bh=qW2GqSSksn7CPduMlITTJ4plq4VE80nQh+eW2OOe4ro=;
+	s=arc-20240116; t=1770361245; c=relaxed/simple;
+	bh=5RkE58I9bnJUYy9fpyAjkANrjCa9fz9cE9tSkRjbU6I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HTq5HQBF2mqyU10K01C/44twkUbtUrnVdTZYBLypxvh4kWQbIjOmYLQ+sDtN345Xe3ppMjfh/m2ox1fLz9nppyOYCxwlh8yNJXqzPKjGZ/bkC43GYcatr+u1TdO+ZZMMWwHbau5CckNXB5KLmkmyK1NXhln6dpsOMRMfi4uciJY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=XK6/5z0ArIPPcFEtirZm1A5K07in4FOY5YuzFwUZg0UJ9oFuVvdn99Yor0dAaTc//F/XLHlgnRH/cZEgdTCF/bJ2cT0NE/iLTGVEq0DO+t8pviDS5AejrNC6z0rFZDayWyBdRiClkDgGPQ2KeSbYwd+F2xw2edI/rhkW8b/nH1c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 414D068D0E; Fri,  6 Feb 2026 07:52:13 +0100 (CET)
-Date: Fri, 6 Feb 2026 07:52:13 +0100
+	id 6DCD468D3E; Fri,  6 Feb 2026 08:00:34 +0100 (CET)
+Date: Fri, 6 Feb 2026 08:00:31 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: remove metafile inodes from the active inode
- stat
-Message-ID: <20260206065213.GA26772@lst.de>
-References: <20260202141502.378973-1-hch@lst.de> <20260202141502.378973-3-hch@lst.de> <20260206064342.GX7712@frogsfrogsfrogs>
+To: Kundan Kumar <kundan.kumar@samsung.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	willy@infradead.org, mcgrof@kernel.org, clm@meta.com,
+	david@fromorbit.com, amir73il@gmail.com, axboe@kernel.dk,
+	hch@lst.de, ritesh.list@gmail.com, djwong@kernel.org,
+	dave@stgolabs.net, cem@kernel.org, wangyufei@vivo.com,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org, gost.dev@samsung.com,
+	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com
+Subject: Re: [PATCH v3 3/6] xfs: add per-inode AG prediction map and
+ dirty-AG bitmap
+Message-ID: <20260206070030.GA26818@lst.de>
+References: <20260116100818.7576-1-kundan.kumar@samsung.com> <CGME20260116101251epcas5p1cf5b48f2efb14fe4387be3053b3c3ebc@epcas5p1.samsung.com> <20260116100818.7576-4-kundan.kumar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -51,46 +57,57 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260206064342.GX7712@frogsfrogsfrogs>
+In-Reply-To: <20260116100818.7576-4-kundan.kumar@samsung.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.36 / 15.00];
+X-Spamd-Result: default: False [0.14 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	NEURAL_HAM(-0.00)[-0.994];
-	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,lst.de:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30669-lists,linux-xfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,meta.com,fromorbit.com,gmail.com,kernel.dk,lst.de,stgolabs.net,vivo.com,vger.kernel.org,kvack.org,samsung.com];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30668-lists,linux-xfs=lfdr.de];
-	RCPT_COUNT_THREE(0.00)[4]
-X-Rspamd-Queue-Id: CD46EFAC62
+	NEURAL_HAM(-0.00)[-0.989];
+	MID_RHS_MATCH_FROM(0.00)[];
+	R_DKIM_NA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1E465FACB0
 X-Rspamd-Action: no action
 
-On Thu, Feb 05, 2026 at 10:43:42PM -0800, Darrick J. Wong wrote:
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> 
-> Looks ok to me, though I wonder slightly about the atomicity of the
-> percpu counter inc/decrements.  But it's been that way for a long time
-> so
+On Fri, Jan 16, 2026 at 03:38:15PM +0530, Kundan Kumar wrote:
+> @@ -99,6 +99,11 @@ typedef struct xfs_inode {
+>  	spinlock_t		i_ioend_lock;
+>  	struct work_struct	i_ioend_work;
+>  	struct list_head	i_ioend_list;
+> +
+> +	/* AG prediction map: pgoff_t -> packed u32 */
+> +	struct xarray           i_ag_pmap;
+> +	unsigned long           *i_ag_dirty_bitmap;
+> +	unsigned int            i_ag_dirty_bits;
 
-It's not atomic, but the percpu summing is by definition never fully
-atomic anyway.  So it might add a bit more of error margin than the
-pure summing, but it removes the much larger error margin of having the
-metadir inodes accounted in the first place.
+I don't think bloating the inode like this is acceptable.
 
+As said in my reply to patch 5, I think we're better off with more coarse
+grained sharding anyway.  i.e. just track an ag per inode.  We did this
+for zoned xfs by pointing to the open zone using the existing and
+otherwise unused inode->i_private field with great success.   You won't
+get as good placement for some use cases where files are fragmented over
+multiple AGs and you can please near close blocks right now, but you'll
+save a lot of overhead searching the alloc btrees, and probably generate
+a write pattern more suitable for SSDs.
 
