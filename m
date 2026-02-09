@@ -1,124 +1,165 @@
-Return-Path: <linux-xfs+bounces-30712-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30713-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IHr3Iob3iWl7FAAAu9opvQ
-	(envelope-from <linux-xfs+bounces-30712-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Feb 2026 16:04:38 +0100
+	id wKUREIYFimluFQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-30713-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Feb 2026 17:04:22 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6F9511178C
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Feb 2026 16:04:37 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F156B112499
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Feb 2026 17:04:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A454309E17D
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Feb 2026 14:47:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E633E300A8F7
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Feb 2026 16:03:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F358337A488;
-	Mon,  9 Feb 2026 14:47:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C33437C112;
+	Mon,  9 Feb 2026 16:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GZW9+Yro"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A43B2690EC;
-	Mon,  9 Feb 2026 14:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6083228851F
+	for <linux-xfs@vger.kernel.org>; Mon,  9 Feb 2026 16:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770648474; cv=none; b=E9KMPEpgTGB3LL1wSzWfFIOgdo8rK+A2TZiCNbM2uvGaN52lsmAxQ/y2K8ORWZdTilMaChIigH4NrNNGSpk8wntokHrrjo//8Y/pciFa+pG5VzukO5dqrSpHjsYzEq0m8M0q7GgpEVMB5+Iebmdb9+2bjVR1T3GVd86QQ4AVRIQ=
+	t=1770653016; cv=none; b=aSMl+pBr6NFQWc1K/pVkL1C03/ULbIJYZN4N7K6bWXViKGTuZMICk658Xn5VdXZ7H1eOsYKC5KzaL0sa/qQaf+LCokbegZ6ozsTjKj9dU6TN5cwcRWckqDx79uEu7NnodHUUnrUnC3OkRVOumnAQ+jJKqrk+wprKInPqFy0zhEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770648474; c=relaxed/simple;
-	bh=VEUjsNTk2xbi/qHEMjraTGXqthh4GkYa2if02SQ8WLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hQEHiA3egzJz3aeFsegdcwZB5UCbKvwcg5mchwd7A6JsdyGHsxfep5Xw8xiMSV28KSm2OPYUP2D7No4oblloyTon/ovi8zNzmk6d/4ghUC+TDBLICIQeOlKF/OlKRMLjIlx8pBLF0F7Pbu8z+yvNSrRTkogjGg6g/VDIs09tOWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 8058A68D09; Mon,  9 Feb 2026 15:47:50 +0100 (CET)
-Date: Mon, 9 Feb 2026 15:47:49 +0100
-From: hch <hch@lst.de>
-To: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Cc: hch <hch@lst.de>, "djwong@kernel.org" <djwong@kernel.org>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"cem@kernel.org" <cem@kernel.org>
-Subject: Re: [PATCH] xfs: add static size checks for structures in xfs_fs.h
-Message-ID: <20260209144749.GB16995@lst.de>
-References: <20260206030557.1201204-2-wilfred.opensource@gmail.com> <20260206060803.GA25214@lst.de> <41ea75676ea983281368c449647599aad9551d1b.camel@wdc.com>
+	s=arc-20240116; t=1770653016; c=relaxed/simple;
+	bh=UXh2QxVZT3HQq2olekoy3RjQ2GmndiUc8ED5tEvKLtw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=U1vgLTfLUsfQcZG456LFgyu9mFAm1+n5lY1Ud3REYI+vVb6/jyLWofKCX4zU2Mmxzb6gty4AkyLn9saNCjiJcipQOCD6qUs1hIloq+uTJBB8K5eR15bdR2HYaoa2nHp6fKSp43oHve6qDQO0BdDDw3JA9D1aSobIeENFzSfIFME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GZW9+Yro; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260209155456epoutp040ea7431b109aa12e554f3c9fb62b1579~SnxBiUwQr1410214102epoutp04B
+	for <linux-xfs@vger.kernel.org>; Mon,  9 Feb 2026 15:54:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260209155456epoutp040ea7431b109aa12e554f3c9fb62b1579~SnxBiUwQr1410214102epoutp04B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1770652496;
+	bh=SH6fKsCcHoZUpzqt+IdkVbwE8A8W9DShkgqGQvHxHVw=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=GZW9+YrohBTSdV8WbG6g/CA1zl/LCSj5ruqdRYncptCw4GELMMbltx8RwBe3agSIt
+	 pYkHEohrFnoW/pQrZwk9QAtmXBPXJzNpkEhaZnDIJpxE86lSrHKw63hzlkgYdFN7Er
+	 2R1iAqWSgDDvvLDTvNRqsFPuxS7szNsp7h7IQCtw=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20260209155455epcas5p1881af6ec338c4adc5a29870cdbc1beb4~SnxA1-tem2548425484epcas5p11;
+	Mon,  9 Feb 2026 15:54:55 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.89]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4f8q5V3Yb5z6B9m5; Mon,  9 Feb
+	2026 15:54:54 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260209155454epcas5p270af6d87208aae7466053be8520292c7~Snw-i_C9O1577615776epcas5p28;
+	Mon,  9 Feb 2026 15:54:54 +0000 (GMT)
+Received: from [107.111.86.57] (unknown [107.111.86.57]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260209155450epsmtip1ad4b5be51e3fd96ce54775e25682ded2~Snw8mdDYC0787207872epsmtip1I;
+	Mon,  9 Feb 2026 15:54:50 +0000 (GMT)
+Message-ID: <5b11145d-15e2-485c-a978-365b58854371@samsung.com>
+Date: Mon, 9 Feb 2026 21:24:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41ea75676ea983281368c449647599aad9551d1b.camel@wdc.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] AG aware parallel writeback for XFS
+Content-Language: en-US
+To: Christoph Hellwig <hch@lst.de>
+Cc: Brian Foster <bfoster@redhat.com>, viro@zeniv.linux.org.uk,
+	brauner@kernel.org, jack@suse.cz, willy@infradead.org, mcgrof@kernel.org,
+	clm@meta.com, david@fromorbit.com, amir73il@gmail.com, axboe@kernel.dk,
+	ritesh.list@gmail.com, djwong@kernel.org, dave@stgolabs.net, cem@kernel.org,
+	wangyufei@vivo.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-xfs@vger.kernel.org, gost.dev@samsung.com, anuj20.g@samsung.com,
+	vishak.g@samsung.com, joshi.k@samsung.com
+From: Kundan Kumar <kundan.kumar@samsung.com>
+In-Reply-To: <20260206062527.GA25841@lst.de>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20260209155454epcas5p270af6d87208aae7466053be8520292c7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260116101236epcas5p12ba3de776976f4ea6666e16a33ab6ec4
+References: <CGME20260116101236epcas5p12ba3de776976f4ea6666e16a33ab6ec4@epcas5p1.samsung.com>
+	<20260116100818.7576-1-kundan.kumar@samsung.com> <aXEvAD5Rf5QLp4Ma@bfoster>
+	<ca048ecf-5aec-4a0d-8faf-ad9fcd310e21@samsung.com>
+	<aXN3EtxKFXX8DEbl@bfoster>
+	<e7413e3b-3fae-4aab-90a1-4a6695156b2e@samsung.com>
+	<20260206062527.GA25841@lst.de>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.36 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	TAGGED_FROM(0.00)[bounces-30713-lists,linux-xfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_CC(0.00)[redhat.com,zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,meta.com,fromorbit.com,gmail.com,kernel.dk,stgolabs.net,vivo.com,vger.kernel.org,kvack.org,samsung.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,samsung.com:mid,samsung.com:dkim];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[kundan.kumar@samsung.com,linux-xfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[samsung.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	R_DKIM_NA(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30712-lists,linux-xfs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,lst.de:mid];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Rspamd-Queue-Id: E6F9511178C
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: F156B112499
 X-Rspamd-Action: no action
 
-On Mon, Feb 09, 2026 at 07:04:22AM +0000, Wilfred Mallawa wrote:
-> As Dave mentioned, I did not consider the alignment requirements being
-> different on 32b for example. So I did see some errors for the
-> following structs from testbot:
+On 2/6/2026 11:55 AM, Christoph Hellwig wrote:
+> I fear we're deep down a rabbit hole solving the wrong problem here.
+> Traditionally block allocation, in XFS and in general, was about finding
+> the "best" location to avoid seeks.  With SSDs the seeks themselves are
+> kinda pointless, although large sequential write streams are still very
+> useful of course, as is avoiding both freespace and bmap fragmentation.
+> On the other hand avoiding contention from multiple writers is a good
+> thing.  (this is discounting the HDD case, where the industry is very
+> rapidly moving to zoned device, for which zoned XFS has a totally
+> different allocator)
 > 
+> With multi-threaded writeback this become important for writeback, but
+> even before this would be useful for direct and uncached I/O.
 > 
-> xfs_flock64
-> xfs_fsop_geom_v1
-> xfs_growfs_data_t
-> xfs_growfs_rt_t
-> xfs_inogrp
-> 
-> So we may have to omit these altogether? I'm not sure if this patch
-> would cause issues for other configs the testbot isn't catching? Any
-> thoughts?
+> So I think the first thing I'd look into it to tune the allocator to
+> avoid that contention, by by spreading different allocation streams from
+> different core to different AGs, and relax the very sophisticated and
+> detailed placement done by the XFS allocator
 
-Out of the Linux supported architectures there are basically five
-kinds of differences a struct ABI can have:
+Thanks, I’m going to restate what I think you are suggesting to make
+sure I'm tracking correctly.
 
- 1) different pointer sizes
- 2) different size of long for long derived types
- 3) different alignment of u64 on i386 vs everyone else
- 4) different alignment of u16 on arm32-oldabi vs everyone else
- 5) configuration dependencies
+We will step back from per-folio tagging and instead align coarse
+sharding with a simpler allocation policy:
 
-5) is a no-go for exported types
+- Create a bounded number of bdi wb contexts at mount time (capped,
+e.g. ≤ agcount).
+- Store a per-inode stream/shard id (no per-folio state).
+- Assign the stream id once and use it to select the wb context for
+writeback.
+- In the delalloc allocator, bias AG selection from the stream id by
+partitioning AG space into per-stream "bands" and rotating the start
+AG within that band; fall back to the existing allocator when
+allocation can't be satisfied.
 
-4) doesn't happen in the current xfs uapi headers (it happens in on-disk
-formats structs though..).
-
-3) is clearly indicated by the x86-specific handlers in xfs_ioctl32.c
-
-2) and 1) are indicated by the other handlers in xfs_ioctl32.c.
-
-Based on that your above list is a good start, but incomplete.
-The list of compat_ structures in fs/xfs/xfs_ioctl32.h should have
-a complete list, and if doesn't that is a bug as we're missing
-compat handlers.
-
+Does this align with what you have in mind?
 
