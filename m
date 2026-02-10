@@ -1,106 +1,118 @@
-Return-Path: <linux-xfs+bounces-30746-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30747-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +OqjHm9Ri2nwTwAAu9opvQ
-	(envelope-from <linux-xfs+bounces-30746-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Feb 2026 16:40:31 +0100
+	id +NfAMq9Ri2nwTwAAu9opvQ
+	(envelope-from <linux-xfs+bounces-30747-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Feb 2026 16:41:35 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D41C311CA46
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Feb 2026 16:40:30 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55C6611CA87
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Feb 2026 16:41:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E89853081A2E
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Feb 2026 15:36:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 779DC300BEB5
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Feb 2026 15:39:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D64C12ED164;
-	Tue, 10 Feb 2026 15:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B1A92EC09B;
+	Tue, 10 Feb 2026 15:39:00 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9232EDD40;
-	Tue, 10 Feb 2026 15:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E1022B8AB;
+	Tue, 10 Feb 2026 15:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770737763; cv=none; b=KANMBp1QPKAo7I2TF9wNgswjBY5o5Mwp8vWS/AuaasQnNonpRDceaoz/VGpup3HJxz8F93B9OD+qUO2q7cXMC/VV5JDp4qhRubq/BsOagt4O9goTVrTiOMpb2WljaolBKumcmw5H4stG1XM/DxAGINypPOXMMBRl0USrkyTu8yQ=
+	t=1770737940; cv=none; b=tTFg0zCFrdKF7fKvhszK5R8orKGRiQM9loo3OKaTfbo860XVKBwgC5Av5j7qBjQEwtziof3y4nahlnW7nFjZqE7bzVkHDhEqQSPSP35umReKZJCZlK33UUl0JiyO8WqO7e0WXqI4VWj9p6wz5oIEvBEGFMpPPhOeudCRI/JoRW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770737763; c=relaxed/simple;
-	bh=OXHeSid7E2DAuRdT6tbqff8RT3oU8mNyQUhvtWYyDKA=;
+	s=arc-20240116; t=1770737940; c=relaxed/simple;
+	bh=uFcjjkA3WFiZqFMy3mxET9pV3Rhqx7NQjS+2SqxHlZM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfAqYpdcVcIzMB2K2zYi1Shk468F9azayMt9dc+nLsVW5a3JaJUEOxvlEsTQqWOIhCj9ocEmZJb0JQAyJXiI5KWbnyiyMuq55Juu8/evhFhtCbMG5Ah61rx3h019tSPznN55vfeK7VirAdSPTG8Jf5fRDikLt3BcaM0R7n5DxAA=
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qvn/xpIfGnXwDPdB7P1WlEL1PlGoa3iAhjM/WfmVyOxiVVvJuFyNnV7PjkncyIuJB3R7JkKajZLTxEW/0L9kkhD9tHq4MJkn/zvC7/o9QtXn1QW3V7eTkGIachb4aE6pt08y319OY9BPI7ErGQvdNkGRMhAYXpae2Qg2KuKtO9M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 3607968CFE; Tue, 10 Feb 2026 16:36:00 +0100 (CET)
-Date: Tue, 10 Feb 2026 16:35:59 +0100
+	id E3B9468CFE; Tue, 10 Feb 2026 16:38:54 +0100 (CET)
+Date: Tue, 10 Feb 2026 16:38:54 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: Wilfred Mallawa <wilfred.opensource@gmail.com>
-Cc: Carlos Maiolino <cem@kernel.org>,
-	"Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Wilfred Mallawa <wilfred.mallawa@wdc.com>
-Subject: Re: [PATCH v2 2/2] xfs: add static size checks for ioctl UABI
-Message-ID: <20260210153559.GB31245@lst.de>
-References: <20260210055942.2844783-2-wilfred.opensource@gmail.com> <20260210055942.2844783-5-wilfred.opensource@gmail.com>
+To: Kundan Kumar <kundan.kumar@samsung.com>
+Cc: Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	willy@infradead.org, mcgrof@kernel.org, clm@meta.com,
+	david@fromorbit.com, amir73il@gmail.com, axboe@kernel.dk,
+	ritesh.list@gmail.com, djwong@kernel.org, dave@stgolabs.net,
+	cem@kernel.org, wangyufei@vivo.com, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-xfs@vger.kernel.org, gost.dev@samsung.com,
+	anuj20.g@samsung.com, vishak.g@samsung.com, joshi.k@samsung.com
+Subject: Re: [PATCH v3 0/6] AG aware parallel writeback for XFS
+Message-ID: <20260210153854.GA2484@lst.de>
+References: <CGME20260116101236epcas5p12ba3de776976f4ea6666e16a33ab6ec4@epcas5p1.samsung.com> <20260116100818.7576-1-kundan.kumar@samsung.com> <aXEvAD5Rf5QLp4Ma@bfoster> <ca048ecf-5aec-4a0d-8faf-ad9fcd310e21@samsung.com> <aXN3EtxKFXX8DEbl@bfoster> <e7413e3b-3fae-4aab-90a1-4a6695156b2e@samsung.com> <20260206062527.GA25841@lst.de> <5b11145d-15e2-485c-a978-365b58854371@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260210055942.2844783-5-wilfred.opensource@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5b11145d-15e2-485c-a978-365b58854371@samsung.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30746-lists,linux-xfs=lfdr.de];
-	FREEMAIL_TO(0.00)[gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-30747-lists,linux-xfs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	FREEMAIL_CC(0.00)[lst.de,redhat.com,zeniv.linux.org.uk,kernel.org,suse.cz,infradead.org,meta.com,fromorbit.com,gmail.com,kernel.dk,stgolabs.net,vivo.com,vger.kernel.org,kvack.org,samsung.com];
 	R_DKIM_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[wdc.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,lst.de:mid,lst.de:email]
-X-Rspamd-Queue-Id: D41C311CA46
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,lst.de:mid]
+X-Rspamd-Queue-Id: 55C6611CA87
 X-Rspamd-Action: no action
 
-On Tue, Feb 10, 2026 at 03:59:44PM +1000, Wilfred Mallawa wrote:
-> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
-> 
-> The ioctl structures in libxfs/xfs_fs.h are missing static size checks.
-> It is useful to have static size checks for these structures as adding
-> new fields to them could cause issues (e.g. extra padding that may be
-> inserted by the compiler). So add these checks to xfs/xfs_ondisk.h.
-> 
-> Due to different padding/alignment requirements across different
-> architectures, to avoid build failures, some structures are ommited from
-> the size checks. For example, structures with "compat_" definitions in
-> xfs/xfs_ioctl32.h are ommited.
+On Mon, Feb 09, 2026 at 09:24:49PM +0530, Kundan Kumar wrote:
+> - Create a bounded number of bdi wb contexts at mount time (capped,
+> e.g. ≤ agcount).
 
-Looks good:
+Yeah.  And then optimally map them to CPU cores, similar to the
+blk-mq cpumap.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+> - Store a per-inode stream/shard id (no per-folio state).
 
-I couldn't spot any whitespace issues either, although I'd personally
-drop the last empty line if I had to nitpick.
+Yes.
+
+> - Assign the stream id once and use it to select the wb context for
+> writeback.
+
+Yes.
+
+> - In the delalloc allocator, bias AG selection from the stream id by
+> partitioning AG space into per-stream "bands" and rotating the start
+> AG within that band; fall back to the existing allocator when
+> allocation can't be satisfied.
+
+Yes.
+
+We might also need something that falls back to less helpers if
+the free space is distributed unevently, but probably not for the
+first prototype.
 
 
