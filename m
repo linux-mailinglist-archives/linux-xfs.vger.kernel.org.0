@@ -1,66 +1,59 @@
-Return-Path: <linux-xfs+bounces-30980-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-30981-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AK9gO/QvlmktcAIAu9opvQ
-	(envelope-from <linux-xfs+bounces-30980-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Feb 2026 22:32:36 +0100
+	id KPH6HfkylmktcAIAu9opvQ
+	(envelope-from <linux-xfs+bounces-30981-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Feb 2026 22:45:29 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 543C115A23C
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Feb 2026 22:32:36 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 052DE15A5E2
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Feb 2026 22:45:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6EC133046502
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Feb 2026 21:26:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D24B9302E90C
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Feb 2026 21:40:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E22A333064A;
-	Wed, 18 Feb 2026 21:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 341CD2F0C45;
+	Wed, 18 Feb 2026 21:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="n1x2hzsx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edtfrJ6z"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7650831B823
-	for <linux-xfs@vger.kernel.org>; Wed, 18 Feb 2026 21:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6452ECEA3;
+	Wed, 18 Feb 2026 21:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771449968; cv=none; b=TQO187h/239cRzAdbyXhreHqf3uFDKEpfu+vI9UBWqc0W2F8MwULWJrXGDdsdUcLYVBSERxTRUA4lrZtsDcKgCf/CcfSZZm9+LDRxAGxjvzj1dzxcXdztB2LpJZ646X9LVMgmh84VxNujnXykIEIKaQ5z+HNliOhZZiphxg6pf4=
+	t=1771450838; cv=none; b=cXpuC2PqNIYiGnIz6bCww9wKWFXJDuwpMbRlm9mVcbdTHfI1LlRwH43Gi2igBKPggAEgs2jg8cxEFzeb+KzQIpOokBTJdTYJsROUjjjn2t/oHjR37UskAWHtizd+OT/0DalsGf0sBafiPWxt0tuI5R+hSX76Ri5z6+eJbCY3WxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771449968; c=relaxed/simple;
-	bh=TSEiRfMtoPLZ8CTZelBiCt+Z45NKL8wNlq9NjpF03LE=;
+	s=arc-20240116; t=1771450838; c=relaxed/simple;
+	bh=DTQ+wjpGAm0naij3zSO0oGQV1qi4m4Px+di5qfjPB1U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fYn+ESRz26ygi9Pqlmoq1km5kJqMK9Zatn1efdnjhpiZGjU1Bz8OlQRJ2L6sR4O9c5TrhVrcef7Lx65X1fUrKdssF2eKAwgj0Iu1/O2elPsHRAgilDh7Dhr/KKG7cTPBPHYNV1Y2BKPooGsU1ZzRKCxS+Iv3ebMNvmGBuhGh+Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=n1x2hzsx; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Wed, 18 Feb 2026 13:25:44 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1771449955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wo6vv3zwAb49jabaYEhJvfqzD+EG3AeCMF5nyF6m1Uo=;
-	b=n1x2hzsxevl2KlW0/u2V4Vyr/ZSO5Xh+P9TXfWKLEIalUF12vlcIdJ8A5qhfR4EXzkOPNc
-	tA8qejHL3g3QvA2gIMr6KY/kDgpRKkTCAAG7m+6aiqlp3hyLgb8cRmYYEXY3+leRbLTv7i
-	xA43Ain+4HSrKFlMxM5ocAXx9hoOfKQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Carlos Maiolino <cem@kernel.org>, 
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Ritesh Harjani <riteshh@linux.ibm.com>, ojaswin@linux.ibm.com, Muchun Song <muchun.song@linux.dev>, 
-	Cgroups <cgroups@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	Harry Yoo <harry.yoo@oracle.com>, Hao Li <hao.li@linux.dev>
-Subject: Re: [next-20260216]NULL pointer dereference in drain_obj_stock()
- (RCU free path)
-Message-ID: <aZYuJiEvMR9wC66k@linux.dev>
-References: <ca241daa-e7e7-4604-a48d-de91ec9184a5@linux.ibm.com>
- <aZReMzl-S9KM_snh@nidhogg.toxiclabs.cc>
- <b4288fae-f805-42ff-a823-f6b66748ecfe@suse.cz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=QRW1s4lVZGEufcaq2roUgT4mNge3MioXd5S3e+Qu5r7BVvSn6TQgPjcAM5FV3cLvnKAlY7cdZskd59PAmyUSdRmfRHSEhpvXPMOKizUCU3agZ9nhKfwa531bPyMgrRsjW0w8Vzv41Q4IQzC2IJ0JRm8U+sxVluhn3ZxtGj8Nt8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edtfrJ6z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E044DC116D0;
+	Wed, 18 Feb 2026 21:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771450837;
+	bh=DTQ+wjpGAm0naij3zSO0oGQV1qi4m4Px+di5qfjPB1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=edtfrJ6znppj7TTZHdKkQmi2lQDALyZHhKByyDfPvRsphXwq5uqe01dCKUKFgaqLI
+	 6DEvjQ3yYDOn35eEYvuLRo7auvtABzVCWys5Djs8ACLJ3uEuTiPIdZb5pWJBg1cwAG
+	 Z0I5bh9/hOSbNhWFRBoDHt00qtqVhjQYGXkgQaSe5wd6D+VwqTQfNow5ywO3kpDBhX
+	 bdtPItLuk8IexmDZrh8ek6HqooQXKtQ599BYnaDlEok0f9pJaqDywAq88Lv7ovTLkx
+	 eXutym2M2Vw4i10rWuJyINpTwh9mc/0S5ExVEF48Fa5J5JzStjBmxU9hXZDG84PAUA
+	 7ABi0CsRvmFcw==
+Date: Wed, 18 Feb 2026 13:40:37 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Andrey Albershteyn <aalbersh@kernel.org>
+Cc: linux-xfs@vger.kernel.org, fsverity@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, ebiggers@kernel.org, hch@lst.de
+Subject: Re: [PATCH v3 01/35] fsverity: report validation errors back to the
+ filesystem
+Message-ID: <20260218214037.GA6467@frogsfrogsfrogs>
+References: <20260217231937.1183679-1-aalbersh@kernel.org>
+ <20260217231937.1183679-2-aalbersh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -69,83 +62,131 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b4288fae-f805-42ff-a823-f6b66748ecfe@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20260217231937.1183679-2-aalbersh@kernel.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-30980-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	DKIM_TRACE(0.00)[linux.dev:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[shakeel.butt@linux.dev,linux-xfs@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-30981-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linux.dev:mid,linux.dev:dkim]
-X-Rspamd-Queue-Id: 543C115A23C
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Rspamd-Queue-Id: 052DE15A5E2
 X-Rspamd-Action: no action
 
-On Wed, Feb 18, 2026 at 12:36:06PM +0100, Vlastimil Babka wrote:
-> On 2/17/26 13:40, Carlos Maiolino wrote:
-> > On Tue, Feb 17, 2026 at 04:59:12PM +0530, Venkat Rao Bagalkote wrote:
-> >> Greetings!!!
-> >> 
-> >> I am observing below OOPs, while running xfstests generic/428 test case. But
-> >> I am not able to reproduce this consistently.
-> >> 
-> >> 
-> >> Platform: IBM Power11 (pSeries LPAR), Radix MMU, LE, 64K pages
-> >> Kernel: 6.19.0-next-20260216
-> >> Tests: generic/428
-> >> 
-> >> local.config >>>
-> >> [xfs_4k]
-> >> export RECREATE_TEST_DEV=true
-> >> export TEST_DEV=/dev/loop0
-> >> export TEST_DIR=/mnt/test
-> >> export SCRATCH_DEV=/dev/loop1
-> >> export SCRATCH_MNT=/mnt/scratch
-> >> export MKFS_OPTIONS="-b size=4096"
-> >> export FSTYP=xfs
-> >> export MOUNT_OPTIONS=""-
-> >> 
-> >> 
-> >> 
-> >> Attached is .config file used.
-> >> 
-> >> 
-> >> Traces:
-> >> 
-> > 
-> > /me fixing trace's indentation
+On Wed, Feb 18, 2026 at 12:19:01AM +0100, Andrey Albershteyn wrote:
+> From: "Darrick J. Wong" <djwong@kernel.org>
 > 
-> CCing memcg and slab folks.
-> Would be nice to figure out where in drain_obj_stock things got wrong. Any
-> change for e.g. ./scripts/faddr2line ?
+> Provide a new function call so that validation errors can be reported
+> back to the filesystem.
 > 
-> I wonder if we have either some bogus objext pointer, or maybe the
-> rcu_free_sheaf() context is new (or previously rare) for memcg and we have
-> some locking issues being exposed in refill/drain.
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> ---
+>  fs/verity/verify.c              |  4 ++++
+>  include/linux/fsverity.h        | 14 ++++++++++++++
+>  include/trace/events/fsverity.h | 19 +++++++++++++++++++
+>  3 files changed, 37 insertions(+)
 > 
+> diff --git a/fs/verity/verify.c b/fs/verity/verify.c
+> index 404ab68aaf9b..8f930b2ed9c0 100644
+> --- a/fs/verity/verify.c
+> +++ b/fs/verity/verify.c
+> @@ -312,6 +312,10 @@ static bool verify_data_block(struct fsverity_info *vi,
+>  		data_pos, level - 1, params->hash_alg->name, hsize, want_hash,
+>  		params->hash_alg->name, hsize,
+>  		level == 0 ? dblock->real_hash : real_hash);
+> +	trace_fsverity_file_corrupt(inode, data_pos, params->block_size);
+> +	if (inode->i_sb->s_vop->file_corrupt)
+> +		inode->i_sb->s_vop->file_corrupt(inode, data_pos,
+> +						 params->block_size);
 
-Yes output of ./scripts/faddr2line would be really helpful. I can't think of
-anything that might go wrong in refill/drain.
+Once 7.0-rc1 lands you could turn this into:
 
+	fserror_report_data_lost(inode, data_pos, params->block_size,
+			GFP_WHATEVER);
+
+--D
+
+>  error:
+>  	for (; level > 0; level--) {
+>  		kunmap_local(hblocks[level - 1].addr);
+> diff --git a/include/linux/fsverity.h b/include/linux/fsverity.h
+> index fed91023bea9..d8b581e3ce48 100644
+> --- a/include/linux/fsverity.h
+> +++ b/include/linux/fsverity.h
+> @@ -132,6 +132,20 @@ struct fsverity_operations {
+>  	 */
+>  	int (*write_merkle_tree_block)(struct file *file, const void *buf,
+>  				       u64 pos, unsigned int size);
+> +
+> +	/**
+> +	 * Notify the filesystem that file data is corrupt.
+> +	 *
+> +	 * @inode: the inode being validated
+> +	 * @pos: the file position of the invalid data
+> +	 * @len: the length of the invalid data
+> +	 *
+> +	 * This function is called when fs-verity detects that a portion of a
+> +	 * file's data is inconsistent with the Merkle tree, or a Merkle tree
+> +	 * block needed to validate the data is inconsistent with the level
+> +	 * above it.
+> +	 */
+> +	void (*file_corrupt)(struct inode *inode, loff_t pos, size_t len);
+>  };
+>  
+>  #ifdef CONFIG_FS_VERITY
+> diff --git a/include/trace/events/fsverity.h b/include/trace/events/fsverity.h
+> index a8c52f21cbd5..0c842aaa4158 100644
+> --- a/include/trace/events/fsverity.h
+> +++ b/include/trace/events/fsverity.h
+> @@ -140,6 +140,25 @@ TRACE_EVENT(fsverity_verify_merkle_block,
+>  		__entry->hidx)
+>  );
+>  
+> +TRACE_EVENT(fsverity_file_corrupt,
+> +	TP_PROTO(const struct inode *inode, loff_t pos, size_t len),
+> +	TP_ARGS(inode, pos, len),
+> +	TP_STRUCT__entry(
+> +		__field(ino_t, ino)
+> +		__field(loff_t, pos)
+> +		__field(size_t, len)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->ino = inode->i_ino;
+> +		__entry->pos = pos;
+> +		__entry->len = len;
+> +	),
+> +	TP_printk("ino %lu pos %llu len %zu",
+> +		(unsigned long) __entry->ino,
+> +		__entry->pos,
+> +		__entry->len)
+> +);
+> +
+>  #endif /* _TRACE_FSVERITY_H */
+>  
+>  /* This part must be outside protection */
+> -- 
+> 2.51.2
+> 
+> 
 
