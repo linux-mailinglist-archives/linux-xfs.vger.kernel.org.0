@@ -1,150 +1,178 @@
-Return-Path: <linux-xfs+bounces-31089-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31091-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QHAHByYNl2mTuAIAu9opvQ
-	(envelope-from <linux-xfs+bounces-31089-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 14:16:22 +0100
+	id iAkrB34Ol2mTuAIAu9opvQ
+	(envelope-from <linux-xfs+bounces-31091-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 14:22:06 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AC1715EF71
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 14:16:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 53B8515EFFD
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 14:22:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7D8D53008D26
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 13:16:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30DB430182A5
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 13:21:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD8A24B45;
-	Thu, 19 Feb 2026 13:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFC0308F30;
+	Thu, 19 Feb 2026 13:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wglAwgLV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fq1e6BCj"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF131DF261
-	for <linux-xfs@vger.kernel.org>; Thu, 19 Feb 2026 13:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E246014A8B
+	for <linux-xfs@vger.kernel.org>; Thu, 19 Feb 2026 13:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771506960; cv=none; b=pijePghKrceeAvbvv20nq1+cdlf/AlLR5DfaDurVgRRi7jyZSBGzBxT8oP89wj6i14NSVIeqQqHIbk+g/8XgaLsGR1BwAOhYzQvI6XAX3p8JEAC0lA/fqKKX6v606PY8Hi962nOxAb20uEjwSKZ6KRIhTU+ZlLSFcCZNI65hv0o=
+	t=1771507301; cv=none; b=p/DB+G4/55CqvDDhy9iluRfEx1Xafq1Ghq59cYBLi45jDAjmWc2tpxSNdjLXh8qghW5Pvw13eBKGNa37yTTcC/hlRV5ZhZ2dJtINr/boKP+te0AHnOJJsyrbodJl0IQbLko01Wg2EgEwb91sgEmANZXcN2jLnXCCilw14Y4ANvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771506960; c=relaxed/simple;
-	bh=IuKcDRmNJjOX0Gu7WLWpJfPMCTPA3wSdz6nVNsrH0Ws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ctjxWqIeUqTdO5A/aY1cZMIfYQr0Jd72Vs3ywo2ikuE9fVC216pu5tWmLklm/rqlsVQ85l7InREzNfXbhrxBb8NSOlN7wP0oLy0+qabxln0659yB014ldkAFwOx57DabCbv3cu04h/+iO9/jE6IFP4ZyLjm8F97rHeLltd4GGYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wglAwgLV; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <0ca84d35-ed3e-4387-9b38-a85d62afa1c2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1771506956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XH5fl7iX+3zxGYiW2NIAWUiOwf9QcSJJ8gjNCAIjZEM=;
-	b=wglAwgLV7Jx9nzN8sg37Pp70S6ukaS23E3AY0d/PUPGCFIkPH+AJsZnQNd3uyGJj4Gm1ll
-	x7kmVMG6G2/jMALCfWQGbwYn6FmlCmiBBiybzR22sL+UvSyPOEPTBKy9yyfusDn8P//KK+
-	RBeqqJUy2vfVmUZOEF9H1A/jT37RjB8=
-Date: Thu, 19 Feb 2026 14:15:54 +0100
+	s=arc-20240116; t=1771507301; c=relaxed/simple;
+	bh=Nvaykos3Mepdo9nPguXVQcdlG0G9S+SkYWpfIoEHZZc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lkp3PaWm85lL9zuX4SN1rGBpBcJKAaGoRSj4/CNOUWG/OcDZFzTIo/LZS/nKeKsfR02/lWWt+X/8GNYpq3GmNHADf/JiQA2SVMEAq68OZ1rVM74OGmEO3A66WClLUPgJ/MFUWXiW2VqUCFfbOqcoghtga+QAWFJkiDvMV+vlDD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fq1e6BCj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90503C4CEF7;
+	Thu, 19 Feb 2026 13:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771507300;
+	bh=Nvaykos3Mepdo9nPguXVQcdlG0G9S+SkYWpfIoEHZZc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fq1e6BCjyLLG7Ddo2GWW6NzJ3srsYsH0ZVh8fglI4GwuErYFfqL2YdZWmqBVdBBO5
+	 INlUFQnWyA+aaotXawlSCJyZ1LKjdaLugzeyo/qpJ3XNAyz6GHNGsjQGTHmHgEtj7Y
+	 Nhotlo6I1//UZxUZ7ZiQ0vStuHNxtzCTldGZzvXD+NSl0eaR3imWGiE4QlwQAMw8Ea
+	 8skbXXoEUW3GxupxJ22F18sRYLPmww7zd277FAe38mvZ/uiAhqmSC1WbVVOMH34Ey7
+	 NfQE2e3TnmVi7OUDPyJxxyvqImz6JgCMzSWlQIhIwmU62Eg+wcJmpQO5g5vkSPdmW3
+	 9e0cnPhbJrGkw==
+Date: Thu, 19 Feb 2026 14:21:36 +0100
+From: Carlos Maiolino <cem@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: samsun1006219@gmail.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 6/6] xfs: don't report half-built inodes to fserror
+Message-ID: <aZcNva4Ur6WSqyDD@nidhogg.toxiclabs.cc>
+References: <177145925377.401799.10773940743454980308.stgit@frogsfrogsfrogs>
+ <177145925538.401799.9155847221857034016.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 4/6] xfs: fix potential pointer access race in
- xfs_healthmon_get
-To: "Darrick J. Wong" <djwong@kernel.org>, cem@kernel.org
-Cc: linux-xfs@vger.kernel.org, p.raghav@samsung.com
-References: <177145925377.401799.10773940743454980308.stgit@frogsfrogsfrogs>
- <177145925494.401799.17980890890269795712.stgit@frogsfrogsfrogs>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Pankaj Raghav <pankaj.raghav@linux.dev>
-In-Reply-To: <177145925494.401799.17980890890269795712.stgit@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <177145925538.401799.9155847221857034016.stgit@frogsfrogsfrogs>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
-	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[linux.dev:+];
-	TAGGED_FROM(0.00)[bounces-31089-lists,linux-xfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31091-lists,linux-xfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[pankaj.raghav@linux.dev,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cem@kernel.org,linux-xfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:mid,linux.dev:dkim,linux.dev:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,samsung.com:email]
-X-Rspamd-Queue-Id: 3AC1715EF71
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nidhogg.toxiclabs.cc:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 53B8515EFFD
 X-Rspamd-Action: no action
 
-On 2/19/2026 7:01 AM, Darrick J. Wong wrote:
+On Wed, Feb 18, 2026 at 10:02:17PM -0800, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Pankaj Raghav asks about this code in xfs_healthmon_get:
+> Sam Sun apparently found a syzbot way to fuzz a filesystem such that
+> xfs_iget_cache_miss would free the inode before the fserror code could
+> catch up.  Frustratingly he doesn't use the syzbot dashboard so there's
+> no C reproducer and not even a full error report, so I'm guessing that:
 > 
->    hm = mp->m_healthmon;
->    if (hm && !refcount_inc_not_zero(&hm->ref))
->      hm = NULL;
->    rcu_read_unlock();
->    return hm;
+> Inodes that are being constructed or torn down inside XFS are not
+> visible to the VFS.  They should never be reported to fserror.
+> Also, any inode that has been freshly allocated in _cache_miss should be
+> marked INEW immediately because, well, it's an incompletely constructed
+> inode that isn't yet visible to the VFS.
 > 
-> (slightly edited to compress a mailing list thread)
-> 
-> "Nit: Should we do a READ_ONCE(mp->m_healthmon) here to avoid any
-> compiler tricks that can result in an undefined behaviour? I am not sure
-> if I am being paranoid here.
-> 
-> "So this is my understanding: RCU guarantees that we get a valid object
-> (actual data of m_healthmon) but does not guarantee the compiler will
-> not reread the pointer between checking if hm is !NULL and accessing the
-> pointer as we are doing it lockless.
-> 
-> "So just a barrier() call in rcu_read_lock is enough to make sure this
-> doesn't happen and probably adding a READ_ONCE() is not needed?"
-> 
-> After some initial confusion I concluded that he's correct.  The
-> compiler could very well eliminate the hm variable in favor of walking
-> the pointers twice, turning the code into:
-> 
->    if (mp->m_healthmon && !refcount_inc_not_zero(&mp->m_healthmon->ref))
-> 
-> If this happens, then xfs_healthmon_detach can sneak in between the
-> two sides of the && expression and set mp->m_healthmon to NULL, and
-> thereby cause a null pointer dereference crash.  Fix this by using the
-> rcu pointer assignment and dereference functions, which ensure that the
-> proper reordering barriers are in place.
-> 
-> Practically speaking, gcc seems to allocate an actual variable for hm
-> and only reads mp->m_healthmon once (as intended), but we ought to be
-> more explicit about requiring this.
-> 
-> Reported-by: Pankaj Raghav <pankaj.raghav@linux.dev>
-> Fixes: a48373e7d35a89f6f ("xfs: start creating infrastructure for health monitoring")
+> Reported-by: Sam Sun <samsun1006219@gmail.com>
+> Fixes: 5eb4cb18e445d0 ("xfs: convey metadata health events to the health monitor")
 > Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+
+The change looks ok to me. Would be nice though if we can be sure this
+fix the reporter's issue. Any idea if the reporter could reproduce it?
+
+Otherwise pointing this as a fix to a problem we can't be sure has
+actually been fixed, sounds misleading at best.
+
+For the fix itself though:
+
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
+
+
 > ---
-
-Looks good,
-
-Reviewed-by: Pankaj Raghav <p.raghav@samsung.com>
-
---
-Pankaj
+>  fs/xfs/xfs_health.c |    8 ++++++--
+>  fs/xfs/xfs_icache.c |    9 ++++++++-
+>  2 files changed, 14 insertions(+), 3 deletions(-)
+> 
+> 
+> diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
+> index 6475159eb9302c..239b843e83d42a 100644
+> --- a/fs/xfs/xfs_health.c
+> +++ b/fs/xfs/xfs_health.c
+> @@ -316,8 +316,12 @@ xfs_rgno_mark_sick(
+>  
+>  static inline void xfs_inode_report_fserror(struct xfs_inode *ip)
+>  {
+> -	/* Report metadata inodes as general filesystem corruption */
+> -	if (xfs_is_internal_inode(ip)) {
+> +	/*
+> +	 * Do not report inodes being constructed or freed, or metadata inodes,
+> +	 * to fsnotify.
+> +	 */
+> +	if (xfs_iflags_test(ip, XFS_INEW | XFS_IRECLAIM) ||
+> +	    xfs_is_internal_inode(ip)) {
+>  		fserror_report_metadata(ip->i_mount->m_super, -EFSCORRUPTED,
+>  				GFP_NOFS);
+>  		return;
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index dbaab4ae709f9c..f13e55b75d66c4 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -636,6 +636,14 @@ xfs_iget_cache_miss(
+>  	if (!ip)
+>  		return -ENOMEM;
+>  
+> +	/*
+> +	 * Set XFS_INEW as early as possible so that the health code won't pass
+> +	 * the inode to the fserror code if the ondisk inode cannot be loaded.
+> +	 * We're going to free the xfs_inode immediately if that happens, which
+> +	 * would lead to UAF problems.
+> +	 */
+> +	xfs_iflags_set(ip, XFS_INEW);
+> +
+>  	error = xfs_imap(pag, tp, ip->i_ino, &ip->i_imap, flags);
+>  	if (error)
+>  		goto out_destroy;
+> @@ -713,7 +721,6 @@ xfs_iget_cache_miss(
+>  	ip->i_udquot = NULL;
+>  	ip->i_gdquot = NULL;
+>  	ip->i_pdquot = NULL;
+> -	xfs_iflags_set(ip, XFS_INEW);
+>  
+>  	/* insert the new inode */
+>  	spin_lock(&pag->pag_ici_lock);
+> 
+> 
 
