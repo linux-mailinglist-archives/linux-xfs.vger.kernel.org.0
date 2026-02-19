@@ -1,61 +1,57 @@
-Return-Path: <linux-xfs+bounces-31020-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31026-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +OoCJAuolmmTiQIAu9opvQ
-	(envelope-from <linux-xfs+bounces-31020-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:04:59 +0100
+	id INFvF4yolmmTiQIAu9opvQ
+	(envelope-from <linux-xfs+bounces-31026-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:07:08 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB86B15C4AF
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:04:58 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 042E715C4F2
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:07:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48976302003C
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 06:04:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 5370D300336C
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 06:07:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41432E541E;
-	Thu, 19 Feb 2026 06:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6125D2E541E;
+	Thu, 19 Feb 2026 06:07:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZiyoyDH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pb3mFnl7"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913A6238C16;
-	Thu, 19 Feb 2026 06:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6DB2E4263
+	for <linux-xfs@vger.kernel.org>; Thu, 19 Feb 2026 06:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771481096; cv=none; b=m1Rnw7MzgZz7ZYoGN/O0kXtGx6GPFzJlsMoucDl1jim7+GQ+eITWqvCsOJGKrEz+6V0LtUQfz/0qwcPZKXN86iG7rjRql41sd5ODHYwtlXYYeGpeNBQHPjEMS/PzLw0U5VaGDj8g/WDSnS4zGc0psTFh2N/Y4RXjTIbmZ/3owxo=
+	t=1771481222; cv=none; b=ga5qZ1fZwxivFURa31VClIhIC4yVWEpNotZ/upHhhNK5hwcqqqlCZ67oluqtCNCiKR/qJap6SKZGKJVAiJYomLPWPm+vN5V2/C8SDk1HIyILm8fQmnWLSE08nLPyYLGpMkjzNV/3tAyAV/mL1EGjfU8nMybgxXh77LETYLW6fTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771481096; c=relaxed/simple;
-	bh=koMKSq6q7E0tfAmoL/HLcbbXbKGAz443vWDM9FNzEy0=;
+	s=arc-20240116; t=1771481222; c=relaxed/simple;
+	bh=VBCZYtV5NljcrEsKwgyg9DwGLj0wpvs2c1MFlXE/RZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/SIK8rt1ONJtINtC82x0DXGgDQCKqomoVzyJi/TFxVFYTJyKIv2kBU4ofpmo2LMrhs1BeCW8SeZIpCYMQ/3qVxNpQwD0KBIfkXgSVgOLFzuLtGUJwrPRZvrbHFr+/Y/k2qzbOc6J7ywJYqYOWUn31pM0RDJO4bWEvIlguGvLhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZiyoyDH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E2FC4CEF7;
-	Thu, 19 Feb 2026 06:04:56 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWIr7WS50lbS74oMYuAK/SyF8S1xBnIuxfnnJeMHzDy0mty6WL7SgxBMJ4quxN03xVCDDljxUk1frvuHRzM9CAT7aki6JPvrtaAQzKyr01QbjLeQxdezlISyq4+HBg0hOaI70vrzJjynohS1lMDNWEDO+bhWW1TQAwsQghELcLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pb3mFnl7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B592EC4CEF7;
+	Thu, 19 Feb 2026 06:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771481096;
-	bh=koMKSq6q7E0tfAmoL/HLcbbXbKGAz443vWDM9FNzEy0=;
+	s=k20201202; t=1771481221;
+	bh=VBCZYtV5NljcrEsKwgyg9DwGLj0wpvs2c1MFlXE/RZY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BZiyoyDHPGmWz54IpQsSUQsaZI6JVdIfUHmnTCwoEuhzSgLTqXyIgHeDPnSWT6ggZ
-	 NYFasLiN0ZPGiIfhoMTmI1dOy0hVB4qD49atLoC1NA6JYqTAglZH8ooOSDYIP3x3dJ
-	 apg2wErPKqnLtMVQQqjalTW0IwgbDfsdDBIuE0uwTudve7tITwYMoyIICSkj+6Bdpn
-	 L4jZB/dvwtFEQJHqWEjj2mkHUkDyXhX57xDJu1UlNeyqFEQX0A3ZIWskwj/0YIen0r
-	 AnpgoZEVn7YVQg1/kS75tLJKCVhPcpX15GRHn8sXF5KkCz/0W82q/FnlKl5dNNz7ub
-	 szEZ6y6VANH0g==
-Date: Wed, 18 Feb 2026 22:04:55 -0800
+	b=Pb3mFnl7vdi0I/fKKmLwmsxZRyLryzSrX9vjE/iqbM7a85m9BEmN97HmicB3IPtrB
+	 WEpZgFBi+YzLlqfcx+eJ9OjtHueDzjjjVSBKMMGVUDaSyou6opfwOTmAcW/HVQTDKd
+	 Ze+MbJbphXxrtIREt368uuzHrtB/UiL24krNCTFwHwFJGRq2ilRuV2n6OvfnnvfA1F
+	 lM2/L8RTSf/sbmuO6ribPP/Z+uYUCcrkNAuiMwxL4leDpV+VWT7uYn9pX08jFPE4lA
+	 MGFgg8n8oNMFPTxlzPdmCvBCuPYs6rnHnvzG2rd5Zkg1ItZhSoFOi6Qs6I5SlTrzTD
+	 7s6uixn9M6sLw==
+Date: Wed, 18 Feb 2026 22:07:01 -0800
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org,
-	fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	ebiggers@kernel.org
-Subject: Re: [PATCH v3 07/35] iomap: introduce IOMAP_F_FSVERITY
-Message-ID: <20260219060455.GD6490@frogsfrogsfrogs>
-References: <20260217231937.1183679-1-aalbersh@kernel.org>
- <20260217231937.1183679-8-aalbersh@kernel.org>
- <20260218230348.GF6467@frogsfrogsfrogs>
- <20260219060024.GB3739@lst.de>
+To: cem@kernel.org
+Cc: hch@infradead.org, jack@suse.cz, amir73il@gmail.com,
+	linux-xfs@vger.kernel.org, brauner@kernel.org
+Subject: Re: [PATCHSET 2/2] fs: bug fixes for 7.0
+Message-ID: <20260219060701.GE6490@frogsfrogsfrogs>
+References: <177145925746.402132.684963065354931952.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -64,55 +60,68 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260219060024.GB3739@lst.de>
+In-Reply-To: <177145925746.402132.684963065354931952.stgit@frogsfrogsfrogs>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-31026-lists,linux-xfs=lfdr.de];
+	FREEMAIL_CC(0.00)[infradead.org,suse.cz,gmail.com,vger.kernel.org,kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31020-lists,linux-xfs=lfdr.de];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EB86B15C4AF
+	TAGGED_RCPT(0.00)[linux-xfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 042E715C4F2
 X-Rspamd-Action: no action
 
-On Thu, Feb 19, 2026 at 07:00:24AM +0100, Christoph Hellwig wrote:
-> On Wed, Feb 18, 2026 at 03:03:48PM -0800, Darrick J. Wong wrote:
-> > >  		old_size = iter->inode->i_size;
-> > > -		if (pos + written > old_size) {
-> > > +		if (pos + written > old_size &&
-> > > +		    !(iter->iomap.flags & IOMAP_F_FSVERITY)) {
-> > 
-> > I think this flag should be called IOMAP_F_POSTEOF since there's no
-> > "fsverity" logic dependent on this flag; it merely allows read/write
-> > access to folios beyond EOF without any of the usual clamping and
-> > zeroing...
-> 
-> There are fsverity-specific semantics attached because of the
-> magic hash handling for holes.
+<sigh> I forgot to cc fsdevel on this, will send again...
 
-Ohhh never mind then.  Admittedly I haven't read all the way through
-this patchset yet.
+Ihateemailpatchsubmissions
 
 --D
+
+On Wed, Feb 18, 2026 at 10:00:53PM -0800, Darrick J. Wong wrote:
+> Hi all,
+> 
+> Bug fixes for 7.0.
+> 
+> If you're going to start using this code, I strongly recommend pulling
+> from my git trees, which are linked below.
+> 
+> With a bit of luck, this should all go splendidly.
+> Comments and questions are, as always, welcome.
+> 
+> --D
+> 
+> kernel git tree:
+> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=vfs-fixes-7.0
+> ---
+> Commits in this patchset:
+>  * fsnotify: drop unused helper
+>  * fserror: fix lockdep complaint when igrabbing inode
+> ---
+>  include/linux/fsnotify.h |   13 -------------
+>  fs/iomap/ioend.c         |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 13 deletions(-)
+> 
+> 
 
