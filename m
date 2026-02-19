@@ -1,252 +1,216 @@
-Return-Path: <linux-xfs+bounces-31018-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31021-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iL5PN4unlmmTiQIAu9opvQ
-	(envelope-from <linux-xfs+bounces-31018-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:02:51 +0100
+	id GN3zLyeolmmTiQIAu9opvQ
+	(envelope-from <linux-xfs+bounces-31021-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:05:27 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 551BD15C490
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:02:51 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C5D715C4BE
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 07:05:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F3787300900F
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 06:02:49 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D2673301E6DA
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 06:05:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56EA72E2EF2;
-	Thu, 19 Feb 2026 06:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 558402E4263;
+	Thu, 19 Feb 2026 06:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rt0BIji7"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rnPgIiYX"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346092E2DF2
-	for <linux-xfs@vger.kernel.org>; Thu, 19 Feb 2026 06:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C461238C16;
+	Thu, 19 Feb 2026 06:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771480969; cv=none; b=PIjDPXtS2vTkOLT4FNeKxGETIqxzCPszqSdx3aNnkOrVru4JqGPZ2hBbrB9xEKMdsrf5Tyb9ERDSIJ3belF7wd+k4L5bD208QaCDjqyqDdwg+eslRFLPDvQEVNqoStk0Z6atanyiKDw08bzSFTQWtRMj2/gzcXUZu2JkTiTbqHU=
+	t=1771481125; cv=none; b=N+1A/5jerSS44Ydy9w+5ErX2Db76oCAjcy5djrzke0eL81UR1vcBrDx9CZs3eSWPC4yLu+bx/MHQCB/yhRuP93VpSlF7fkgEXNGmW2izUzWfNsxiqvVXHTiZ6SNH+R/f2M9XfXSQaHriKEn42fsCJGyAAmJ1zAxPlbdJgL0J80I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771480969; c=relaxed/simple;
-	bh=lRg0lzwnzL4bgEYGMWMVMS8ayvm5rd/Z72sYJY3RbKA=;
-	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cQKSmleiG/77F6urvx+MGxTgxmcC+qfR/4v8Pav2/ylAwEXEozGMe/OQfd2ydGQXGUCUSE80BTsEA/v8Upi4Q/wPAqTt26w33peoJN5LLluDbwB3oGz14JSsP5BMtrEhu6BpthBOPxDURKlzrttUvwH35iE5kmZjKERsdGyiKr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rt0BIji7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA21C4CEF7;
-	Thu, 19 Feb 2026 06:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771480968;
-	bh=lRg0lzwnzL4bgEYGMWMVMS8ayvm5rd/Z72sYJY3RbKA=;
-	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=Rt0BIji7xh7M4MweG4gFH83SxunOiRUk/qTBIkHrWgUh67j9mwxlsVxQa0S4V/fNv
-	 621nS+6b3UvPDxCD4v5geV2FomBLnwKoGatVYeljpTlAs8a3hNz6jv+q7xuor/8fHm
-	 p4KOo8G2jCnGL8a9F0Cb1qDyqfYQzf5VU6hQjn5tppeWvkIFpoj/UpGoOQ7wFRHn8c
-	 hZrpT3LneayPNrb2q3a9njysOvdkj7nVmVshE93zmGPy2Qkwi2KwK+8i4B4SmH/E2y
-	 F45U9V7G9BA2LZRyn/Bfva1sSejLWpXY5UHnagcSIeZPgkZpZbbtEWl8OL4YLoSNFh
-	 HjoUBadn9W2nQ==
-Date: Wed, 18 Feb 2026 22:02:48 -0800
-Subject: [PATCH 2/2] fserror: fix lockdep complaint when igrabbing inode
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: cem@kernel.org, djwong@kernel.org
-Cc: hch@infradead.org, linux-xfs@vger.kernel.org, brauner@kernel.org
-Message-ID: <177145925797.402132.4325655006148073935.stgit@frogsfrogsfrogs>
-In-Reply-To: <177145925746.402132.684963065354931952.stgit@frogsfrogsfrogs>
-References: <177145925746.402132.684963065354931952.stgit@frogsfrogsfrogs>
+	s=arc-20240116; t=1771481125; c=relaxed/simple;
+	bh=lB50Eqh15ez+aztP5vAGklG3vGcTMOuSBG5jDtF64SU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=udE8khgPWOnBu2oki94dw7rwvkyyROj4km6CN2hVEc5WcIrT14Ip1+rZAK+kZQWBnVWskTuTj8KOTJpfuZWNoo4hpaPwKg6+xgn6utZyPe1WruzYBle4jOhJEUb3DQOPY8YDqrrzP1Q1+Rbepc9Of2FI+bwsTVRACFcsGEsNlW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rnPgIiYX; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61IL4K6S3493025;
+	Thu, 19 Feb 2026 06:05:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=tJENTSsEnn8dpi8fd
+	TG0U10rZfB/sTfudu33PNdjJcA=; b=rnPgIiYXIXkDyjjBodkO7BL03Se5LlWr7
+	K5UzNtzMR2AYyfZZNncPP+kIXbnK3dufE1LJbckYmUGaFEkubU8PdB+C2nIM7RK7
+	BJn7Qo0BUkvHEozKirwcFxhntcjfI4aA3WUTAsTS/fNqH6ksaUfNFK+9AmOYXN/U
+	uN0dqPE16EzOGwZdQPp23yeMnSY42KtqJzZz+48pvhly5ZY34LSThGFTUnOyX+lm
+	czAYO002b72z+CgIycekbev6RD28B4hjhnbMJnIUzzxFUTCp09MYXi46rrIH3sKz
+	0zkW30ssk+gYeiMKru5tTFHxTZJYtEhVblIXHhAJWv/QdrsetdLZg==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4caj6s4p0t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Feb 2026 06:05:13 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61J3PI4j030217;
+	Thu, 19 Feb 2026 06:05:12 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ccb45aygu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 19 Feb 2026 06:05:12 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61J65Bn315860448
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 19 Feb 2026 06:05:11 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5087D58056;
+	Thu, 19 Feb 2026 06:05:11 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C99C58052;
+	Thu, 19 Feb 2026 06:05:08 +0000 (GMT)
+Received: from li-5d80d4cc-2782-11b2-a85c-bed59fe4c9e5.ibm.com.com (unknown [9.124.222.193])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 19 Feb 2026 06:05:07 +0000 (GMT)
+From: "Nirjhar Roy (IBM)" <nirjhar@linux.ibm.com>
+To: djwong@kernel.org, hch@infradead.org, cem@kernel.org, david@fromorbit.com
+Cc: linux-xfs@vger.kernel.org, fstests@vger.kernel.org, ritesh.list@gmail.com,
+        ojaswin@linux.ibm.com, nirjhar@linux.ibm.com,
+        nirjhar.roy.lists@gmail.com, hsiangkao@linux.alibaba.com
+Subject: [RFC v1 0/4] xfs: Add support to shrink multiple empty rtgroups
+Date: Thu, 19 Feb 2026 11:33:50 +0530
+Message-ID: <cover.1771418537.git.nirjhar.roy.lists@gmail.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20260219055737.769860-1-nirjhar@linux.ibm.com>
+References: <20260219055737.769860-1-nirjhar@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=dvvWylg4 c=1 sm=1 tr=0 ts=6996a819 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
+ a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8
+ a=JfrnYn6hAAAA:8 a=oRyeP-uNSbtuw2HENgkA:9 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-GUID: RO_8T3X97MjIeQAZKO2RyCELKnc_cITN
+X-Proofpoint-ORIG-GUID: tBHkeDeKRVQJC0n-_-aXhbWamVCYrSLF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDA0OSBTYWx0ZWRfX2C5UGalYeMjG
+ YIxecnfF7Ok4V9oTg6vUNNyLt8/0COJDoTaG8Or1FgiP2alJ+GS2Wa+dhgOKoQyjWn3p1rPJUkW
+ iicxIh+RZwvFNRST8f2NOSFI5pM+BB/FoblmLLtpCP/G7vOjSOv2p980WRxmqk3t/T8NGyz/LUk
+ AE+k+KPgg41UIHkCSv3YS+3NYdc77onulU82ARs+92lxIZog89ofn18nuC0zAh5LmZ5P3brsF5x
+ 9QPWNRbIMgHAmK5fdchydap27TSKNxMnYy9O68uQAzJyzR1jBrtoOf8GAIN3HnQE6LB9Hg9zQEH
+ Ml7Vtub07kasFcMQC8Y6pVkYkV6sT9gaamJ0dFybmGr4sTYINmGgOWQK3xk4rePNFbfg+LY71E8
+ P8eQb2hwPjPOA5t6eV5/lFtxpPQnlOYj0wiVEYIGt54AGzzCWLnCOVU+qKPHEPIMIRgjXbUOUM8
+ dDQOsq2kD5cFfJu/bLw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-19_01,2026-02-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0 suspectscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2601150000
+ definitions=main-2602190049
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_COUNT_SEVEN(0.00)[11];
+	FROM_NEQ_ENVFROM(0.00)[nirjhar@linux.ibm.com,linux-xfs@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,linux.ibm.com,linux.alibaba.com];
+	TAGGED_FROM(0.00)[bounces-31021-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31018-lists,linux-xfs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	NEURAL_HAM(-0.00)[-1.000];
+	DKIM_TRACE(0.00)[ibm.com:+];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,qemu.org:url]
-X-Rspamd-Queue-Id: 551BD15C490
+	TO_DN_NONE(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 2C5D715C4BE
 X-Rspamd-Action: no action
 
-From: Darrick J. Wong <djwong@kernel.org>
+From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
 
-Christoph Hellwig reported a lockdep splat in generic/108:
+This work is based on a previous RFC[1] by Gao Xiang and various ideas
+proposed by Dave Chinner in the RFC[1].
 
- ================================
- WARNING: inconsistent lock state
- 6.19.0+ #4827 Tainted: G                 N
- --------------------------------
- inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
- swapper/1/0 [HC1[1]:SC0[0]:HE0:SE1] takes:
- ffff88811ed1b140 (&sb->s_type->i_lock_key#33){?.+.}-{3:3}, at: igrab+0x1a/0xb0
- {HARDIRQ-ON-W} state was registered at:
-   lock_acquire+0xca/0x2c0
-   _raw_spin_lock+0x2e/0x40
-   unlock_new_inode+0x2c/0xc0
-   xfs_iget+0xcf4/0x1080
-   xfs_trans_metafile_iget+0x3d/0x100
-   xfs_metafile_iget+0x2b/0x50
-   xfs_mount_setup_metadir+0x20/0x60
-   xfs_mountfs+0x457/0xa60
-   xfs_fs_fill_super+0x6b3/0xa90
-   get_tree_bdev_flags+0x13c/0x1e0
-   vfs_get_tree+0x27/0xe0
-   vfs_cmd_create+0x54/0xe0
-   __do_sys_fsconfig+0x309/0x620
-   do_syscall_64+0x8b/0xf80
-   entry_SYSCALL_64_after_hwframe+0x76/0x7e
- irq event stamp: 139080
- hardirqs last  enabled at (139079): [<ffffffff813a923c>] do_idle+0x1ec/0x270
- hardirqs last disabled at (139080): [<ffffffff828a8d09>] common_interrupt+0x19/0xe0
- softirqs last  enabled at (139032): [<ffffffff8134a853>] __irq_exit_rcu+0xc3/0x120
- softirqs last disabled at (139025): [<ffffffff8134a853>] __irq_exit_rcu+0xc3/0x120
+The patch begins with the re-introduction of some of the data
+structures that were removed, some code refactoring and
+finally the patch that implements the multi rtgroup shrink design.
+We can remove only those rtgroups which are empty.
+For non-empty rtgroups the rtextents can migrated to other rtgroups
+(assuming the required amount of space is available).
+I am working on the patch series [2](by Darrick and
+Dave) for completion of the data block migration from the end of the
+filesystem for emptying an realtime group. That will be a future work
+after this.
+The final patch has all the details including the definition of the
+terminologies and the overall design.
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+The design is quite similar to the design of data AG removal implemented
+in the patch series[3] that I have posted earlier.
+The reason for keeping [3] on hold and posting this patch series is
+that (based on the discussion in [5], [6]), realtime devices won't have any
+metadata/inodes and migrating data from the end of realtime devices will
+be simpler. On the other hand there are challenges in moving metadata
+from regular AGs especially inodes.
 
-        CPU0
-        ----
-   lock(&sb->s_type->i_lock_key#33);
-   <Interrupt>
-     lock(&sb->s_type->i_lock_key#33);
+Please note that I have added RBs from Darrick in patch 1 which was
+given in [4].
 
-  *** DEADLOCK ***
+Instructions to test this patch:
+$ Apply the patch for xfsprogs sent with this series and install it.
+$ mkfs.xfs -f -m metadir=1  -r rtdev=/dev/loop2,extsize=4096,rgcount=4,size=1G \
+	-d size=1G /dev/loop1
+$ mount -o rtdev=/dev/loop2 /dev/loop1 /mnt/scratch
+$ # shrink by 1.5 rtgroups
+$ xfs_growfs -R $(( 65536 * 2 + 32768 ))  /mnt1/scratch
 
- 1 lock held by swapper/1/0:
-  #0: ffff8881052c81a0 (&vblk->vqs[i].lock){-.-.}-{3:3}, at: virtblk_done+0x4b/0x110
+I have also sent the tests.
 
- stack backtrace:
- CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Tainted: G                 N  6.19.0+ #4827 PREEMPT(full)
- Tainted: [N]=TEST
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
- Call Trace:
-  <IRQ>
-  dump_stack_lvl+0x5b/0x80
-  print_usage_bug.part.0+0x22c/0x2c0
-  mark_lock+0xa6f/0xe90
-  __lock_acquire+0x10b6/0x25e0
-  lock_acquire+0xca/0x2c0
-  _raw_spin_lock+0x2e/0x40
-  igrab+0x1a/0xb0
-  fserror_report+0x135/0x260
-  iomap_finish_ioend_buffered+0x170/0x210
-  clone_endio+0x8f/0x1c0
-  blk_update_request+0x1e4/0x4d0
-  blk_mq_end_request+0x1b/0x100
-  virtblk_done+0x6f/0x110
-  vring_interrupt+0x59/0x80
-  __handle_irq_event_percpu+0x8a/0x2e0
-  handle_irq_event+0x33/0x70
-  handle_edge_irq+0xdd/0x1e0
-  __common_interrupt+0x6f/0x180
-  common_interrupt+0xb7/0xe0
-  </IRQ>
+[1] https://lore.kernel.org/all/20210414195240.1802221-1-hsiangkao@redhat.com/
+[2] https://lore.kernel.org/linux-xfs/173568777852.2709794.6356870909327619205.stgit@frogsfrogsfrogs/
+[3] https://lore.kernel.org/linux-xfs/cover.1760640936.git.nirjhar.roy.lists@gmail.com/
+[4] https://lore.kernel.org/all/20250729202632.GF2672049@frogsfrogsfrogs/
+[5] https://lore.kernel.org/linux-xfs/aPnMk_2YNHLJU5wm@infradead.org/
+[6] https://lore.kernel.org/linux-xfs/aPiFBxhc34RNgu5h@infradead.org/
 
-It looks like the concern here is that inode::i_lock is sometimes taken
-in IRQ context, and sometimes it is held when going to IRQ context,
-though it's a little difficult to tell since I think this is a kernel
-from after the actual 6.19 release but before 7.0-rc1.
+Nirjhar Roy (IBM) (4):
+  xfs: Re-introduce xg_active_wq field in struct xfs_group
+  xfs: Introduce xfs_rtginodes_ensure_all()
+  xfs: Add a new state for shrinking
+  xfs: Add support to shrink multiple empty realtime groups
 
-Either way, we don't need to take i_lock, because filesystems should
-not report files to fserror if they're about to be freed or have not
-yet been exposed to other threads, because the resulting fsnotify report
-will be meaningless.
+ fs/xfs/libxfs/xfs_group.c     |  18 +-
+ fs/xfs/libxfs/xfs_group.h     |   4 +
+ fs/xfs/libxfs/xfs_rtgroup.c   | 105 ++++-
+ fs/xfs/libxfs/xfs_rtgroup.h   |  31 ++
+ fs/xfs/xfs_buf_item_recover.c |  25 +-
+ fs/xfs/xfs_extent_busy.c      |  30 ++
+ fs/xfs/xfs_extent_busy.h      |   2 +
+ fs/xfs/xfs_inode.c            |   8 +-
+ fs/xfs/xfs_mount.h            |   3 +
+ fs/xfs/xfs_rtalloc.c          | 824 +++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_trans.c            |   1 -
+ 11 files changed, 1023 insertions(+), 28 deletions(-)
 
-Therefore, bump inode::i_count directly and clarify the preconditions on
-the inode being passed in.
-
-Link: https://lore.kernel.org/linux-fsdevel/aY7BndIgQg3ci_6s@infradead.org/
-Reported-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
----
- fs/iomap/ioend.c |   46 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
-
-
-diff --git a/fs/iomap/ioend.c b/fs/iomap/ioend.c
-index e4d57cb969f1bb..4d1ef8a2cee90b 100644
---- a/fs/iomap/ioend.c
-+++ b/fs/iomap/ioend.c
-@@ -69,11 +69,57 @@ static u32 iomap_finish_ioend_buffered(struct iomap_ioend *ioend)
- 	return folio_count;
- }
- 
-+static DEFINE_SPINLOCK(failed_ioend_lock);
-+static LIST_HEAD(failed_ioend_list);
-+
-+static void
-+iomap_fail_ioends(
-+	struct work_struct	*work)
-+{
-+	struct iomap_ioend	*ioend;
-+	struct list_head	tmp;
-+	unsigned long		flags;
-+
-+	spin_lock_irqsave(&failed_ioend_lock, flags);
-+	list_replace_init(&failed_ioend_list, &tmp);
-+	spin_unlock_irqrestore(&failed_ioend_lock, flags);
-+
-+	while ((ioend = list_first_entry_or_null(&tmp, struct iomap_ioend,
-+			io_list))) {
-+		list_del_init(&ioend->io_list);
-+		iomap_finish_ioend_buffered(ioend);
-+		cond_resched();
-+	}
-+}
-+
-+static DECLARE_WORK(failed_ioend_work, iomap_fail_ioends);
-+
-+static void iomap_fail_ioend_buffered(struct iomap_ioend *ioend)
-+{
-+	unsigned long flags;
-+
-+	/*
-+	 * Bounce I/O errors to a workqueue to avoid nested i_lock acquisitions
-+	 * in the fserror code.  The caller no longer owns the ioend reference
-+	 * after the spinlock drops.
-+	 */
-+	spin_lock_irqsave(&failed_ioend_lock, flags);
-+	if (list_empty(&failed_ioend_list))
-+		WARN_ON_ONCE(!schedule_work(&failed_ioend_work));
-+	list_add_tail(&ioend->io_list, &failed_ioend_list);
-+	spin_unlock_irqrestore(&failed_ioend_lock, flags);
-+}
-+
- static void ioend_writeback_end_bio(struct bio *bio)
- {
- 	struct iomap_ioend *ioend = iomap_ioend_from_bio(bio);
- 
- 	ioend->io_error = blk_status_to_errno(bio->bi_status);
-+	if (ioend->io_error) {
-+		iomap_fail_ioend_buffered(ioend);
-+		return;
-+	}
-+
- 	iomap_finish_ioend_buffered(ioend);
- }
- 
+--
+2.43.5
 
 
