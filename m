@@ -1,82 +1,82 @@
-Return-Path: <linux-xfs+bounces-31100-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31102-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eOFnKqIil2lAvAIAu9opvQ
-	(envelope-from <linux-xfs+bounces-31100-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 15:48:02 +0100
+	id kMhFEfEil2lvvAIAu9opvQ
+	(envelope-from <linux-xfs+bounces-31102-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 15:49:21 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DB7D15FBAA
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 15:48:02 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFB9515FC1D
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 15:49:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9FEA53004D0D
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 14:48:01 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 14F62305466E
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 Feb 2026 14:48:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 541F633F8B1;
-	Thu, 19 Feb 2026 14:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 391DA2F067E;
+	Thu, 19 Feb 2026 14:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="k97ZDekZ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iq1FL6k+"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0DF2F067E
-	for <linux-xfs@vger.kernel.org>; Thu, 19 Feb 2026 14:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001E726D4F9
+	for <linux-xfs@vger.kernel.org>; Thu, 19 Feb 2026 14:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771512479; cv=none; b=VEt6t3WFf0Fr/xGBtlGoDjUV/mIxr4L5R0CcUdH4JoK5QP5cuobtzzA9K6GdnN7eIHgNdH5hUXR2shguGcwVoRUJdp4fXFcodhrwD4K+LnhJrY7d2vpanufoZwNJU7Qy8849ueOud2l83x/LLsdsdLksF/B4Hys1t0lFbz6q0AM=
+	t=1771512482; cv=none; b=lD6U4DD5CRtsmzkoHsHhfFJ/vJg3JnsdL2P45x3MYCY/rUCM2RmqISFWMmqMtgvxaxuOsrJlQZphIlzAOTLWjlmW//qt8XsmzhGW2xI3ayjVcvjKTubhaqGdOUg/Guqc/ovnxpgCIcZnypG6len8wnEVcO7hzT3HLn1jbcWh6uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771512479; c=relaxed/simple;
-	bh=nRDLSuRaHl78xaAjQE7c0NbO6+WjfDWE9T4sil0pw9A=;
+	s=arc-20240116; t=1771512482; c=relaxed/simple;
+	bh=BA/bW8l3cEJWBZ7P9vHabN/9fXqLkPIdAngKs5N0zSE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fIWZx3abKwpe3U0YZ96ze2uK2kMctuHDr2RA8FT9wVsl+pUsaUgvuL1NSsu0UkYEyHTsVvZdAeN6CAjYM+p5+2edzLYt4avd7T6sEzHddctQavzCVNxavnnr3kbxyfgIgBzZtxiRq36dc9BEeHPT4lKvuZvP1Irh7dycCXF/Jhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=k97ZDekZ; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=GTKzPAKRKy8OlM5ayxjrWYpnpgtsyXYBd+q8nTggPZV5VVqaI5hoYIcvB8t7+JxL9Y7lZmdbFhtPpkfF65BOnzdXFcqwF175Np4OXQAVGJCncKaQttKA9R4buyxbIzsqfZtK9B12r+Fn0lS9WZS8BsYlp3UPhldc7+HsvdcXg38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iq1FL6k+; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61J9A1vo1601377;
-	Thu, 19 Feb 2026 14:47:49 GMT
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61J99xTX1368485;
+	Thu, 19 Feb 2026 14:47:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=/9hMktuZ/KylOaoWq
-	kPKzCNY2hDc+0/DPusQEZwf/SE=; b=k97ZDekZDRsTZWrbHY8DANerD39+hkfmw
-	baPhMeEHBN0R5xkSU8Xj6WLQt26ludcP5LaX/1+SxYVJikwykLIo0j6rCbzDZKBU
-	71IsX8ITODY+py7zivN6JUwIfabrMSE+0YINqfnKmCJtW9G1YI4CSkuhUM9Yzmoj
-	eGWqaTlkuadLI3I7Qn0rBEvtGxkFyiNJv4z/nMQEa5lzLC3bnHfOUcGfC5qkzwJ0
-	2CRxrnf0GAY/MfIR1fuQTc3OBZCPVoB0/FP9YYz6h9Lie404sEm2F9f70hbvjjjT
-	KUXoW1Ps6NF0iV/o6aMZ/eNn9Rau5zP+D56X8HyOFBFaLLpl2vjbw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cajcr6jxs-1
+	:mime-version:references:subject:to; s=pp1; bh=uxBWVS4JzhmGIQSkP
+	EULAu3ns20LbCTmsqIFVCShCJ8=; b=iq1FL6k+l1KMiSYuQZM0b4BPwesKakOL6
+	J+f2Ag+hLUlZXgXxUywziFOGhu3ieR3dJVR7O3CDAlHk09ZxEn4mgmWQu+r4Hmqp
+	4mnMbSqBtdRkxwUPgVAnGxF4M9w0gc5QsNjJxPPK5lI8zNhKHrATyteKz4/TjjC9
+	/pBUpjyH60VOUl7k+gsrk/cWgDYKqKwXJQXUNJtHQLe/QKKu/bprgJRS/GIRfHJ7
+	glwrZD7aj4nveLePDVwX38N0sq1IblD0eaHni4lewTvYzz8ogpQwpC0NMcFxA0DQ
+	cZgaLYHCyKJRWFMp/ts+06CDyoBzkQRt8foGcpKG+feAaGyiiCRTA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cajcjnaeb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Feb 2026 14:47:48 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61JE3JEm017774;
-	Thu, 19 Feb 2026 14:47:47 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ccb28mhtj-1
+	Thu, 19 Feb 2026 14:47:52 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61JE2ehV015690;
+	Thu, 19 Feb 2026 14:47:51 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ccb45chv1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 19 Feb 2026 14:47:47 +0000
+	Thu, 19 Feb 2026 14:47:51 +0000
 Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61JElkIQ52101544
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61JEloLI53412148
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 19 Feb 2026 14:47:46 GMT
+	Thu, 19 Feb 2026 14:47:50 GMT
 Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3F25558043;
-	Thu, 19 Feb 2026 14:47:46 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B598E58043;
+	Thu, 19 Feb 2026 14:47:50 +0000 (GMT)
 Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C5B9858059;
-	Thu, 19 Feb 2026 14:47:43 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 498B058055;
+	Thu, 19 Feb 2026 14:47:48 +0000 (GMT)
 Received: from li-5d80d4cc-2782-11b2-a85c-bed59fe4c9e5.ibm.com.com (unknown [9.39.21.217])
 	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 19 Feb 2026 14:47:43 +0000 (GMT)
+	Thu, 19 Feb 2026 14:47:48 +0000 (GMT)
 From: "Nirjhar Roy (IBM)" <nirjhar@linux.ibm.com>
 To: djwong@kernel.org, hch@infradead.org, cem@kernel.org
 Cc: linux-xfs@vger.kernel.org, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
         nirjhar.roy.lists@gmail.com, nirjhar@linux.ibm.com
-Subject: [PATCH v3 2/4] xfs: Add a comment in xfs_log_sb()
-Date: Thu, 19 Feb 2026 20:16:48 +0530
-Message-ID: <54eccbea06953a46f37c376814a9a85539231a25.1771512159.git.nirjhar.roy.lists@gmail.com>
+Subject: [PATCH v3 3/4] xfs: Update lazy counters in xfs_growfs_rt_bmblock()
+Date: Thu, 19 Feb 2026 20:16:49 +0530
+Message-ID: <8b7290dbe12fccd57b317562de68cf77ec670d96.1771512159.git.nirjhar.roy.lists@gmail.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <cover.1771512159.git.nirjhar.roy.lists@gmail.com>
 References: <cover.1771512159.git.nirjhar.roy.lists@gmail.com>
@@ -89,26 +89,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: w88k7a9H77-gRR5t_bCd6E6ei1g8w6EV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDEzNCBTYWx0ZWRfX5mlJBkhyt+Yt
- rwdPJzCg3/epaeKimP0q67VTiRkg+KEzphvJBruUj2Jv8Rt9LmKdebFZKZWOG2JZhNNr5bzDiB5
- +0lBym5JYiQ4v4V78u/ws56cG6hPU+2onKpeyf72tWjdWQW4oek83BOsHqQ+bQ9/1KlYsZOkrlp
- pelMiYzparqWOxE9rim+O/OD8v6YGXDbehFKxjWIRsDJP8BLZStdiVtyWvILrN1sxiKjOpUewzz
- nSpHl53zZASCLlBWjXdxKkVRQUUr6uyFxPmHcekrCGLJHAh2CBL8dEvhHsE/Pnk3R3bQLniqKH+
- sInjEYhVGgMW7uj+Q6ksNk215nObtFXMt9L19zTVL1s4xN9OWWPE9FxC+VKQKn1XT5BjLg8zOs1
- x8Q39c5x9O8VHXjAxL5qfRY2AEyXqtooQwGtHVekr/qzFO3n4PdZK+qW/TO30xulBDPRe51V1/g
- ko2KDGnJr0du6KZDeNQ==
-X-Authority-Analysis: v=2.4 cv=UPXQ3Sfy c=1 sm=1 tr=0 ts=69972294 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-ORIG-GUID: lfQnMxeaRhzdtTvYabybjELuUGExuATF
+X-Authority-Analysis: v=2.4 cv=Md9hep/f c=1 sm=1 tr=0 ts=69972298 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
- a=GgsMoib0sEa3-_RKJdDe:22 a=pGLkceISAAAA:8 a=McGMf-V2i_Dg8NkQ6AYA:9
-X-Proofpoint-ORIG-GUID: OcaxUkZLM0CzLF0_Kr3ecHwefx4h01A8
+ a=GgsMoib0sEa3-_RKJdDe:22 a=pGLkceISAAAA:8 a=HqRPCohBQm_1MbEnWikA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjE5MDEzNCBTYWx0ZWRfX/V+jbImEtb7e
+ sH21IChPHUMmdUFvd/BE8gVQJUXPCBHKbwMbCpE67mi2xNtrVKYqAfQgPlCtnMja3nQxK/i8HXt
+ UaS8qSLeja+xR11D2ToDszPSJHmolz67GQtGdSE4+OWIB+FzNfvavCXLVAF9iGNlfJMvDU70qnC
+ DpIg59k5ZV6YT/x41WON9F/tjnMuxU6HMcjSgH99o0PK6B/76TbJkKOUC5ucfsUWvFjvRQvXQ65
+ fMb1ls3KMoW/xw31KBz+4TrWpCk22/lbQd/pTYFeaVH1zHECpkGnXzzK6+OQbnEA/l4Toy0YY87
+ Vl/IMNYjPmflbcKGVG8Eio8FaOnhw8DpqEdAKpRoOwdd+Qx+9j9K5FUeIz0tGgdlcLJyZlqfIsz
+ xqtds6vAE6RLdIWfrdHrZQ6KGu8vH5zTIJmeipemxTVq6xwBtiauErCMe1l0S1M4+CsfmKLh7/z
+ FAEFbcv4IyAwBdPdR7A==
+X-Proofpoint-GUID: 9JWdL42WuvkEvPlV7CgrShq8eftQ1xfM
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-02-19_04,2026-02-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 phishscore=0 impostorscore=0 adultscore=0
- bulkscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602190134
 X-Rspamd-Server: lfdr
@@ -118,59 +118,66 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
 	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[ibm.com:+];
-	TAGGED_FROM(0.00)[bounces-31100-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31102-lists,linux-xfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,linux.ibm.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns];
 	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[nirjhar@linux.ibm.com,linux-xfs@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TO_DN_NONE(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	RCVD_COUNT_SEVEN(0.00)[11]
-X-Rspamd-Queue-Id: 4DB7D15FBAA
+X-Rspamd-Queue-Id: AFB9515FC1D
 X-Rspamd-Action: no action
 
 From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
 
-Add a comment explaining why the sb_frextents are updated outside the
-if (xfs_has_lazycount(mp) check even though it is a lazycounter.
-RT groups are supported only in v5 filesystems which always have
-lazycounter enabled - so putting it inside the if(xfs_has_lazycount(mp)
-check is redundant.
+Update lazy counters in xfs_growfs_rt_bmblock() similar to the way it
+is done xfs_growfs_data_private(). This is because the lazy counters are
+not always updated and synching the counters will avoid inconsistencies
+between frexents and rtextents(total realtime extent count). This will
+be more useful once realtime shrink is implemented as this will prevent
+some transient state to occur where frexents might be greater than
+total rtextents.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Nirjhar Roy (IBM) <nirjhar.roy.lists@gmail.com>
 ---
- fs/xfs/libxfs/xfs_sb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/xfs/xfs_rtalloc.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index 38d16fe1f6d8..47322adb7690 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -1347,6 +1347,9 @@ xfs_log_sb(
- 	 * feature was introduced.  This counter can go negative due to the way
- 	 * we handle nearly-lockless reservations, so we must use the _positive
- 	 * variant here to avoid writing out nonsense frextents.
-+	 *
-+	 * RT groups are only supported on v5 file systems, which always
-+	 * have lazy SB counters.
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index decbd07b94fd..9d451474088c 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1047,6 +1047,15 @@ xfs_growfs_rt_bmblock(
  	 */
- 	if (xfs_has_rtgroups(mp) && !xfs_has_zoned(mp)) {
- 		mp->m_sb.sb_frextents =
+ 	xfs_trans_resv_calc(mp, &mp->m_resv);
+ 
++	/*
++	 * Sync sb counters now to reflect the updated values. Lazy counters are
++	 * not always updated and in order to avoid inconsistencies between
++	 * frextents and rtextents, it is better to sync the counters.
++	 */
++
++	if (xfs_has_lazysbcount(mp))
++		xfs_log_sb(args.tp);
++
+ 	error = xfs_trans_commit(args.tp);
+ 	if (error)
+ 		goto out_free;
 -- 
 2.43.5
 
