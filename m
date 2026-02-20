@@ -1,196 +1,184 @@
-Return-Path: <linux-xfs+bounces-31163-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31165-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QLuwCJsBmGnC/AIAu9opvQ
-	(envelope-from <linux-xfs+bounces-31163-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 07:39:23 +0100
+	id cBYCGHUFmGll/QIAu9opvQ
+	(envelope-from <linux-xfs+bounces-31165-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 07:55:49 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 425F0164FFC
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 07:39:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAB151650DE
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 07:55:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 41F34300693E
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 06:39:11 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DA2533020A74
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 06:55:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7D502309AA;
-	Fri, 20 Feb 2026 06:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC5272AD3D;
+	Fri, 20 Feb 2026 06:55:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gb3wDLHs"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SfOGuKDz"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AF232ED42
-	for <linux-xfs@vger.kernel.org>; Fri, 20 Feb 2026 06:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795A02D9EE2
+	for <linux-xfs@vger.kernel.org>; Fri, 20 Feb 2026 06:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771569546; cv=none; b=LOW3YKo+mp9i5CaOlQ/nQld8lxUzKuXMz/O8eqbP4QOx0SdHIUbEm2J5vElG5sEBHBj/9uxaoUKMYNlSRMJyI8Fsa3bUCDfZKybpj8rfVT20ays5hQfn7PPXzwHaMYXsWJ/+K3l0YZlZkVsekXnUGaFPeSj5GBxgQIv/v8ZG51I=
+	t=1771570545; cv=none; b=mwJzqlmMlfR2Y0tViwiMWlw8VQzuEBgKVMtG1pmhm49PHIEvCsnopbMCbVLg8doPoiWpIt4fDZ5T/jOkFtPplD7sp3tFEh5Y5hKV2aYSySJ5UelD8GT5cQ+oOOyihB4yA++dpH7VI3ewPL+sIYv6U9c0XPcNWpHVwOZy2qyhha4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771569546; c=relaxed/simple;
-	bh=l7syuu2WxYhiGxuDalPPlBp/TZkeLdoa6UBndodZX3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KR+3UhzAVAW+O0Pt+3a0Qhv4RJ26fGglp1MWAvd5m3ldgjm7XI4GOZPREpcTqkyW8G+hRe2d9tTNqvFhpZrQmvY251gHfD8+TMEGbjJIMLu3p4kW13vLkrzNPMYD9YaFsXJyRyI5PuPNIhtlMEH53E/YY/+W9We9+fXs74sVZ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gb3wDLHs; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c2a9a9b43b1so1112482a12.2
-        for <linux-xfs@vger.kernel.org>; Thu, 19 Feb 2026 22:39:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771569545; x=1772174345; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3P5rIfwmsbhJBDk3X5FkNG2GbDjGmCTI7qF0hNs15p0=;
-        b=Gb3wDLHsIZvhLNuKb6WcGYSJMdSECz9ZopABh6LN86TdlLzhbhYFbzwcexsNHyn81Q
-         QFku0m7uCp+Z+tfFaryIJgQpALtYqffdEWIYSDMAErG4kReqmygDFmfFww8vO9KNNOtH
-         1G1AN3YdF8zE4cpKHfoyt9YZiKC5X7ldaJJ5Ynu/srTxY6tGIedhq9OWgm9NuuKxvFms
-         EyRIGyu0ko78lUDFqtEBmqJkaI6CMFQcKGyx1mXKvuIf8QVOnhLH1Xpwl4Zd/FdWBINJ
-         MezturdjayS1AhxX82K8Fvz3t3PLEgG5YsUD0CRSSVqInSkaAWCY3/oYdKHKTSYq9J2m
-         lUkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771569545; x=1772174345;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3P5rIfwmsbhJBDk3X5FkNG2GbDjGmCTI7qF0hNs15p0=;
-        b=a465KPK+mqxfOnDjqxzsKqVJJVWe6b5HiIFjc6CgjiI6HqgdzyUx1ejIIEHjMq5m2H
-         YqwLEq8Hn4x071jp8PtD7BENMU5EqQzEzQ8tXr+6HhwcFXfwUPr19HZz56MYm/2JeArx
-         QcQIxh+ArfPRa7fz97ofAENbkEx0TiuUw+2y1Lj0lx9+XVHVZBCTLdkEvTEOzeZRcIL5
-         brXjyBU0bdckCLdYj+INEPw/2OxR10UK7qhVwe7CoJQcOk1W/8A07UeVxnjJ0wGq1mYA
-         n+rkD1R0HAdTip0wLqBmsQFJXrz1z2ZZYE/VNiMv+bqHetJ+I+Qw2MsUadWdO8VH7tpg
-         OGXg==
-X-Forwarded-Encrypted: i=1; AJvYcCV774VE0ZZrF4sfES7uwZ8o7uLPx8nTk66yCmanLeJ9WhEmPG7M94l4DKo6x+5jBu7t/Bkbf1S6C2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdTZ4+V304VAriYk1MvNEx5kC1qISjoHpRcgKXncr58qe0FtOe
-	jqy4GTeUTq0hE/42SVvvgYgjAa4KHphaU3KXCIbun3tTy6u0zm9qs0ih
-X-Gm-Gg: AZuq6aLvel+bcKDhYKwaOkPVfCVcdC3Ygv5V9X37DV89tDCesF5F6sUWE9HsXJn06Ve
-	WOTMgASBwlRl2e66BRrQ1mZJ/oWC8SmlAcs1xgI9E5OGlqP88XNlSRowZns6HznJQjZNxmEOrJO
-	GRqMo1AXwZz95/ATQBX8qplpT2OyuNtXeyD5Vb4Q5iLaxoeWOGrClJyG1KUAhSpBQKpfZNT2e0A
-	uLItVIt+zvN7Jtcd7nJk4HAIgALKDOtod08Oh+DabhccxjCREQH1I3eCDaFgent9hKNedrn86CY
-	cHSjcxDAzy0EY6TErNu1+T84aC3dLL3H+NKDzkHdkqhUVnlqAQcszxNKH23x4RQjlDfUFowWfau
-	nMi+owYR20qJebOzSM96vgqeRRXQbyo4nGD4Muz4y/e74BQ/lTD8jAFJEmpUGYFODzo26879iEw
-	+1LNGQyZybA8kqEe078l2vvlNTgXeYQGTpMA==
-X-Received: by 2002:a05:6a20:438e:b0:392:e5ab:3125 with SMTP id adf61e73a8af0-39483aa0c07mr19053902637.66.1771569544803;
-        Thu, 19 Feb 2026 22:39:04 -0800 (PST)
-Received: from [192.168.0.120] ([49.207.235.235])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c6e531e6c51sm17768546a12.16.2026.02.19.22.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Feb 2026 22:39:04 -0800 (PST)
-Message-ID: <fcd359e2-571d-435e-891d-784956008a54@gmail.com>
-Date: Fri, 20 Feb 2026 12:08:59 +0530
+	s=arc-20240116; t=1771570545; c=relaxed/simple;
+	bh=D9sxnWPtv9YRd0AbgIpG8AfysJRpjSD3c3F4zcxoLwI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XkbJam95//5RtYP9h/kiESN/wo8naXnghx5xVnzVAoqM19pQQMEgvN+XfiakwI1j5EmlQIC9TuEUYhHD52/Z8go7g/lFG89/LzOiY5dPU5mrPj+4SNBPIb6k/fMjLJmhyX94aEm4FuVdCPgNwb+R/Nh7giQzatWwl8UwjpEqmeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SfOGuKDz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61JKYEPJ1368452;
+	Fri, 20 Feb 2026 06:55:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=vt7VPQlgEQsgi9yyjpJ1kGRQrA2PLI4Y2LKFPku55
+	C0=; b=SfOGuKDzXd2799g1qJvXIqb1ctAN/r581j0TTkgeXblC5fSYheTvfSVFx
+	lBhEVAc9UScNd0XgkR3Rb2sakNXpdWn0J9V0Om3IYsh6Pb4FgQ3rnf8+lw0LNVLH
+	MX8Sa6ZKl7L8uwYdmmTrDiodl3cDy6A4SXQGUHWJo+ub9CqGCO19oHTxdrTnRDt0
+	Ia2nFhPVxXt55EHR/NxY98i2Mk0Hin356qYd2k9/1ZMDmBSFcDTH/8paJnfCLtZr
+	qIUeQJa6neO33+JsPQXPZp/ObMIP8z3Ld9SlyWybHfiLRln5oEChTlg7cXR12/AX
+	k3XiqGMqmj/KXZn2L4lhjYdsUWYDQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4cajcjrduv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Feb 2026 06:55:08 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 61K4JkQ4011961;
+	Fri, 20 Feb 2026 06:55:08 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ccb277ffy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 20 Feb 2026 06:55:08 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 61K6sjC310355214
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 20 Feb 2026 06:54:46 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B5C28580C5;
+	Fri, 20 Feb 2026 06:55:06 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 14403580C8;
+	Fri, 20 Feb 2026 06:55:04 +0000 (GMT)
+Received: from li-5d80d4cc-2782-11b2-a85c-bed59fe4c9e5.ibm.com.com (unknown [9.39.30.51])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 20 Feb 2026 06:55:03 +0000 (GMT)
+From: "Nirjhar Roy (IBM)" <nirjhar@linux.ibm.com>
+To: djwong@kernel.org, hch@infradead.org, cem@kernel.org
+Cc: linux-xfs@vger.kernel.org, ritesh.list@gmail.com, ojaswin@linux.ibm.com,
+        nirjhar.roy.lists@gmail.com, nirjhar@linux.ibm.com
+Subject: [PATCH v4 0/4] xfs: Misc changes to XFS realtime
+Date: Fri, 20 Feb 2026 12:23:57 +0530
+Message-ID: <cover.1771570164.git.nirjhar.roy.lists@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] xfs: Add comments for usages of some macros.
-Content-Language: en-US
-To: "Darrick J. Wong" <djwong@kernel.org>,
- "Nirjhar Roy (IBM)" <nirjhar@linux.ibm.com>
-Cc: hch@infradead.org, cem@kernel.org, linux-xfs@vger.kernel.org,
- ritesh.list@gmail.com, ojaswin@linux.ibm.com
-References: <cover.1771512159.git.nirjhar.roy.lists@gmail.com>
- <ed78cfaa48058b00bc93cff93994cfbe0d4ef503.1771512159.git.nirjhar.roy.lists@gmail.com>
- <20260219155409.GG6490@frogsfrogsfrogs>
-From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
-In-Reply-To: <20260219155409.GG6490@frogsfrogsfrogs>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: cH2yT0m70MpxWXfUZ_eJKulNqAEag6PV
+X-Authority-Analysis: v=2.4 cv=Md9hep/f c=1 sm=1 tr=0 ts=6998054d cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=HzLeVaNsDn8A:10 a=VkNPw1HP01LnGYTKEx00:22 a=Mpw57Om8IfrbqaoTuvik:22
+ a=GgsMoib0sEa3-_RKJdDe:22 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
+ a=gs4zxHliH2u7Qpiui64A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjIwMDA1NyBTYWx0ZWRfX4AARlZ0QzC6M
+ oU98jgwExKNWX8KTFcvBAmsAfNIEsKXVcH+Lb6y6qe2gyHSmKU9DQkcaTYQL11kiE3ox+BDOYt6
+ e0muPWoileCcbqWbEIs+2EeQHtW1S634yEy+aIx1V5NSq7C/o9mSoF/cgnanv8q29697YHPISby
+ t9fRoaPKZXjJJkeMep8JsqSsDq1lh2wo6jHLlbBNvrQCe+dUdwND/vzZ1rncUac9tc58hVJn3DK
+ r01TBSc4DMUf4Iwm3YLpZzpCaYhdXdt2wWy3L1klzhAVdiLVgniIDYYIjUsoCEzKUD25zwUG2Hk
+ mYgrwYhKikNLq3f91LgoMGJUqoL3i44Urt9C6VTI+IhaehH5E4USLZB5jYRdKDPkfe/0449FoD4
+ UmIRSfoyZ0k2D3cRvFydO4Gt+CIguEb8uaTwUg/UUBbq1Eap1brvh5AGtRRLw0nL4OrXAYF3iEV
+ 5JV/MdeMg3XIbQoAPyw==
+X-Proofpoint-GUID: 9fharZoRtF4ZCZvEj3a9C7ctq9JAMkfG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-19_06,2026-02-20_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2602200057
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[ibm.com,none];
+	R_DKIM_ALLOW(-0.20)[ibm.com:s=pp1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[infradead.org,kernel.org,vger.kernel.org,gmail.com,linux.ibm.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[ibm.com:+];
+	TAGGED_FROM(0.00)[bounces-31165-lists,linux-xfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31163-lists,linux-xfs=lfdr.de];
-	DKIM_TRACE(0.00)[gmail.com:+];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,linux.ibm.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	MIME_TRACE(0.00)[0:+];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nirjharroylists@gmail.com,linux-xfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[nirjhar@linux.ibm.com,linux-xfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,lst.de:email]
-X-Rspamd-Queue-Id: 425F0164FFC
+	RCVD_COUNT_SEVEN(0.00)[11]
+X-Rspamd-Queue-Id: CAB151650DE
 X-Rspamd-Action: no action
 
+From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
 
-On 2/19/26 21:24, Darrick J. Wong wrote:
-> On Thu, Feb 19, 2026 at 08:16:50PM +0530, Nirjhar Roy (IBM) wrote:
->> From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
->>
->> Add comments explaining when to use XFS_IS_CORRUPT() and ASSERT()
->>
->> Reviewed-by: Christoph Hellwig <hch@lst.de>
->> Signed-off-by: Nirjhar Roy (IBM) <nirjhar.roy.lists@gmail.com>
->> ---
->>   fs/xfs/xfs_platform.h | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/fs/xfs/xfs_platform.h b/fs/xfs/xfs_platform.h
->> index 1e59bf94d1f2..c9ce0450cf7a 100644
->> --- a/fs/xfs/xfs_platform.h
->> +++ b/fs/xfs/xfs_platform.h
->> @@ -235,6 +235,7 @@ int xfs_rw_bdev(struct block_device *bdev, sector_t sector, unsigned int count,
->>   
->>   #ifdef XFS_WARN
->>   
->> +/* Please note that this ASSERT doesn't kill the kernel */
-> It will if the kernel has panic_on_warn set.
->
->>   #define ASSERT(expr)	\
->>   	(likely(expr) ? (void)0 : asswarn(NULL, #expr, __FILE__, __LINE__))
->>   
->> @@ -245,6 +246,11 @@ int xfs_rw_bdev(struct block_device *bdev, sector_t sector, unsigned int count,
->>   #endif /* XFS_WARN */
->>   #endif /* DEBUG */
->>   
->> +/*
->> + * Use this to catch metadata corruptions that are not caught by the regular
-> "...not caught by the block or structure verifiers."
->
->> + * verifiers. The reason is that the verifiers check corruptions only within
->> + * the block.
-> "...only within the scope of the object being verified."
->
->> + */
-> Other than that, I agree with this comment.
+This series has a bug fix and adds some missing operations to
+growfs code in the realtime code. Details are in the commit messages.
 
-Sure, I will update the comment as per your suggestions. Thank you.
+[v3]- v4
+1. Added RBs from Darrick patch 1,2,3.
+2. Updated the comments in patch 4.
 
---NR
+[v2] -> v3
+1. Rebased it on top of latest mainline master(2b7a25df823d) since
+   xfs_linux was renamed to xfs_platform.h.
+2. Add RB from Christoph in patch 2 and 3.
 
->
-> --D
->
->>   #define XFS_IS_CORRUPT(mp, expr)	\
->>   	(unlikely(expr) ? xfs_corruption_error(#expr, XFS_ERRLEVEL_LOW, (mp), \
->>   					       NULL, 0, __FILE__, __LINE__, \
->> -- 
->> 2.43.5
->>
->>
+[v1] -> v2
+1. Added RB from Christoph in patch 1 and 4.
+2. Updated the commit message in patch 4 ("xfs: Add comments for usages of some macros.")
+3. Updated the commit message and added some comments in the code explaining
+   the change in patch 3("xfs: Update lazy counters in xfs_growfs_rt_bmblock()")
+4. Removed patch 2 of [v1] - instead added a comment in xfs_log_sb()
+   explaining why we are not checking the lazy counter enablement while
+   updating the free rtextent count (sb_frextents).
+
+[v3]- https://lore.kernel.org/all/cover.1771512159.git.nirjhar.roy.lists@gmail.com/
+[v2]- https://lore.kernel.org/all/cover.1771486609.git.nirjhar.roy.lists@gmail.com/ 
+[v1]- https://lore.kernel.org/all/cover.1770904484.git.nirjhar.roy.lists@gmail.com/
+
+Nirjhar Roy (IBM) (4):
+  xfs: Fix xfs_last_rt_bmblock()
+  xfs: Add a comment in xfs_log_sb()
+  xfs: Update lazy counters in xfs_growfs_rt_bmblock()
+  xfs: Add comments for usages of some macros.
+
+ fs/xfs/libxfs/xfs_sb.c |  3 +++
+ fs/xfs/xfs_platform.h  |  9 +++++++++
+ fs/xfs/xfs_rtalloc.c   | 39 +++++++++++++++++++++++++++++++++------
+ 3 files changed, 45 insertions(+), 6 deletions(-)
+
 -- 
-Nirjhar Roy
-Linux Kernel Developer
-IBM, Bangalore
+2.43.5
 
 
