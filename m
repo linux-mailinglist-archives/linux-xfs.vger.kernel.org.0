@@ -1,56 +1,57 @@
-Return-Path: <linux-xfs+bounces-31154-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31155-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CBpcDjKyl2mb6QIAu9opvQ
-	(envelope-from <linux-xfs+bounces-31154-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 02:00:34 +0100
+	id mF64CkOyl2mb6QIAu9opvQ
+	(envelope-from <linux-xfs+bounces-31155-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 02:00:51 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7DA91640BA
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 02:00:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72F241640C2
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 02:00:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7413F30056C0
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 01:00:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 040E33005D35
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 01:00:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 031362AD3D;
-	Fri, 20 Feb 2026 01:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0A72AD3D;
+	Fri, 20 Feb 2026 01:00:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyFabvkA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+MnGjvq"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54111DFF7
-	for <linux-xfs@vger.kernel.org>; Fri, 20 Feb 2026 01:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6811DFF7;
+	Fri, 20 Feb 2026 01:00:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771549231; cv=none; b=Y5FTBSOgIBzXHGsoBeSTxD57yQplhQzyo65LnSzqHcG1iTYJjNkIi4ZnBghK7zeeOvqngPGJtNhFDeNzArbaiuLZIbkzdterFZf1Ew489AyT0fHQ8e5/w7gXbORa0Nr9lTajg21EL/Q0ugobTPluRm5mJpaQSJvYCYIHv+31A3U=
+	t=1771549247; cv=none; b=LB0gyOsd/UdQIZ8XziUcC/8kk/afOVJi/RQaJguorZy1Aquc6e+whLx6tqhOMOjifa0B9EnjPtpJld2W5PQCkfmoSly7mVL9jSBV492QijLL9+gog/cXGWsn49BIch7gS+Lmw243HP1Ji82KbKOZLQbpIlqnGJK+oPANGCkKMPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771549231; c=relaxed/simple;
-	bh=yWG/BPaSdrdZ8T62ZosKwpjalTOU+wuXFP5zUlvLjek=;
+	s=arc-20240116; t=1771549247; c=relaxed/simple;
+	bh=7YjorkG2TwZ6exYzlncIPJFNRaN16o5Dpt06f/CvBSs=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QkW0jN4saZ2/X1O36zOq164qFYg+lWJg4jFLbuuaf/Nkloa0Trx0rc41+CLwNdYgoKzelHnTprUcxuPkTsPkxYGOy2u1MWE4fbAcUjZ5jHvBrD/9rpp687FYYfp9PxM/wzYbUwpLy3J2qP6cITziRlxJqvV8k+JZZadcku27mPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyFabvkA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA371C4CEF7;
-	Fri, 20 Feb 2026 01:00:31 +0000 (UTC)
+	 MIME-Version:Content-Type; b=SiRK5hYNXolRs7Txsp4mHTT07Tazdwm8Rj1V9KsDhQLOvezu2P1/yCJTuyxeRY+LwG6CO5uJTe0/IzNUzRR6LJKKzsmJsFrmOGlOv4lyX7czd+FEWEPFqB6Ox3hiPJNbmb52JTqd4zpKlr4t2j3UAUuCwEtfZa1fF93Nz38236w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+MnGjvq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59808C4CEF7;
+	Fri, 20 Feb 2026 01:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771549231;
-	bh=yWG/BPaSdrdZ8T62ZosKwpjalTOU+wuXFP5zUlvLjek=;
+	s=k20201202; t=1771549247;
+	bh=7YjorkG2TwZ6exYzlncIPJFNRaN16o5Dpt06f/CvBSs=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=fyFabvkAnbTdVkQyca4zSiDQNXx4Q4uAQG47oTyYxkbIpOGooNlRD5s2q3qRvDus/
-	 FU+nTS//HNj0MNsZOr+bUBn5EA11MKTxNzBM8pZ/R8I3MQ4hGQEwkGErma5ejnHvFx
-	 cFSjOEQm91diXyRbBbRuSttg6lAcul944aWkZQ+vxHVRe+SSpgTtHHWqgKb2ZJokMk
-	 MmW9n2XELrm45/qRO07YYugvqCIE5yZq5+GVWTPM6dWIqwyKfTxm6+qHzbn0ApQ3ZV
-	 bbYhidjpukW7J/d1G9GR3CzEmvwui5XhHBhKthlDQIPJNIMrS5YtpIUhkVGxFukJRQ
-	 43tgXk7bIvzZw==
-Date: Thu, 19 Feb 2026 17:00:31 -0800
-Subject: [PATCH 2/6] xfs: fix xfs_group release bug in
- xfs_verify_report_losses
+	b=s+MnGjvqsBREJDC93B2UIlkZ2sPFTxETF7S5qwcXIpTupUenof+gu0Qr5FVcraol9
+	 pUTDGVeRFYuKhenX2kWztYXa2UtJ4Vjt5x+QQKkuc7BKSs1R1LhSi+SNJKzxmOktDy
+	 5gIWdB3w0+yQvfdsveqGiJ5IJlONS9z6JHLS31UnRrk8Ea359oNe4xCvYsXiaqhS4Y
+	 7nk3OLAuO3Elz1q8QipwTpQUP0kxFm/4rFzHP/z0NvtA2ReXnVTlKk1ob95tcYIFCO
+	 ZaYOXFix3j9LLrCrrIsR8u5fyq2AnWSIDmPO2UV5AJEx3vAwpj4lo75uDrX8qebuXT
+	 2XRssg24tccCw==
+Date: Thu, 19 Feb 2026 17:00:46 -0800
+Subject: [PATCH 3/6] xfs: fix xfs_group release bug in
+ xfs_dax_notify_dev_failure
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: cem@kernel.org, djwong@kernel.org
-Cc: clm@meta.com, cmaiolino@redhat.com, hch@lst.de, linux-xfs@vger.kernel.org
-Message-ID: <177154903705.1351708.3609536988090688024.stgit@frogsfrogsfrogs>
+Cc: cmaiolino@redhat.com, hch@lst.de, stable@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Message-ID: <177154903727.1351708.2138879525463955738.stgit@frogsfrogsfrogs>
 In-Reply-To: <177154903631.1351708.2643960160835435965.stgit@frogsfrogsfrogs>
 References: <177154903631.1351708.2643960160835435965.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -72,7 +73,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31154-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31155-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -88,8 +89,8 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,meta.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B7DA91640BA
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 72F241640C2
 X-Rspamd-Action: no action
 
 From: Darrick J. Wong <djwong@kernel.org>
@@ -100,22 +101,21 @@ by xfs_group_next_range.  However, the iterator function returns an
 object with an active refcount, which means that we must use the correct
 function to release the active refcount, which is _rele.
 
-Fixes: b8accfd65d31f ("xfs: add media verification ioctl")
-Reported-by: Chris Mason <clm@meta.com>
-Link: https://lore.kernel.org/linux-xfs/20260206030527.2506821-1-clm@meta.com/
+Cc: <stable@vger.kernel.org> # v6.0
+Fixes: 6f643c57d57c56 ("xfs: implement ->notify_failure() for XFS")
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 ---
- fs/xfs/xfs_verify_media.c |    4 ++--
+ fs/xfs/xfs_notify_failure.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_verify_media.c b/fs/xfs/xfs_verify_media.c
-index 069cd371619dc2..8bbd4ec567f8a1 100644
---- a/fs/xfs/xfs_verify_media.c
-+++ b/fs/xfs/xfs_verify_media.c
-@@ -122,7 +122,7 @@ xfs_verify_report_losses(
+diff --git a/fs/xfs/xfs_notify_failure.c b/fs/xfs/xfs_notify_failure.c
+index 6be19fa1ebe262..64c8afb935c261 100644
+--- a/fs/xfs/xfs_notify_failure.c
++++ b/fs/xfs/xfs_notify_failure.c
+@@ -304,7 +304,7 @@ xfs_dax_notify_dev_failure(
  
  			error = xfs_alloc_read_agf(pag, tp, 0, &agf_bp);
  			if (error) {
@@ -124,7 +124,7 @@ index 069cd371619dc2..8bbd4ec567f8a1 100644
  				break;
  			}
  
-@@ -158,7 +158,7 @@ xfs_verify_report_losses(
+@@ -340,7 +340,7 @@ xfs_dax_notify_dev_failure(
  		if (rtg)
  			xfs_rtgroup_unlock(rtg, XFS_RTGLOCK_RMAP);
  		if (error) {
