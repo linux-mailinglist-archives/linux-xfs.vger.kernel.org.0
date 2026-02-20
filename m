@@ -1,93 +1,93 @@
-Return-Path: <linux-xfs+bounces-31171-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31172-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kNBIM7MwmGkzCQMAu9opvQ
-	(envelope-from <linux-xfs+bounces-31171-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 11:00:19 +0100
+	id 0OSIOlYxmGkzCQMAu9opvQ
+	(envelope-from <linux-xfs+bounces-31172-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 11:03:02 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B745166908
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 11:00:19 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 605D61669D0
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 11:03:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id CA7E9300CFEC
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 10:00:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F174F30131EC
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Feb 2026 10:01:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE21233711D;
-	Fri, 20 Feb 2026 10:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4D3B2DE709;
+	Fri, 20 Feb 2026 10:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdzFF0e/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBJw7qDd"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EC73358BC
-	for <linux-xfs@vger.kernel.org>; Fri, 20 Feb 2026 10:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C823115A2
+	for <linux-xfs@vger.kernel.org>; Fri, 20 Feb 2026 10:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771581616; cv=none; b=WVdYO1jM8QP98t5AraxZaWYArQLB/gbRHuLVqsQT1sYrNAYUl+rwbznoS3goAriBn7cZCR++lHdwHyT89q+bZ5TkY4Bl2Q51IiIfp808vP4UttZ/g/rG6JUlthsXcqt2qRTvqfa602PDSIhKjwfL4YxkQ5PUG1JJA2ogZMmi4mU=
+	t=1771581703; cv=none; b=NGbEJclOxk6Dsp5sqAcbW3aEFUeSC+KAhTSzw0/JzqSbtX8EAjXYm+PHBthICQQhQ1SyqrNEhz//0ZJzx/GDX5AasZVrZtc+V/GQECn3mspyqAtoLtg6KesR0enB8it21QGzSi7f9CM+rF5CQ52JfIJCsg2mbAAVP7S1uxvXmTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771581616; c=relaxed/simple;
-	bh=rFa1JNOOh8Ssk8Y8ywFKJB6552RP7UBIeqsSW/gEraI=;
+	s=arc-20240116; t=1771581703; c=relaxed/simple;
+	bh=jBiCFIM1TY02SGwb/3Blp2Q9yS47V/hSmv/Fa0fXxII=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:Mime-Version; b=JX7LyDMv04ASjLgG8DvUloEk1rwTKdmJPMjXTmWRPWqtgvmoiCY4PP0gKay+b6qlFB5b9i/zq3oLv5YcIs66r+4gZHx0Q4p9b1yjEfjeVltcSjevhI7iyOOoOOXEL9H2qievxlYJK+jvMfutVUNobaFF6ukkS6HcS2tql9wI7xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdzFF0e/; arc=none smtp.client-ip=209.85.216.48
+	 Content-Type:Mime-Version; b=r5JsYBuOuXoEG00CXoWOJ+zKwEX6aYbWmGAEWfu9IEKK/tI+gV0igcw15oV9qQTZv3guLgvvffn94ox1UwNdj1CfE70dc4cH05+LMaMF+MJvJhnEMb9TTolzkWqAgXMsB9xKTmeqdFnQ0IVp7A/g8cZxPVN7OMGLVCeS4YDEAW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MBJw7qDd; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-35621aa8c7fso1046233a91.2
-        for <linux-xfs@vger.kernel.org>; Fri, 20 Feb 2026 02:00:15 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2aaf9191da3so11771265ad.2
+        for <linux-xfs@vger.kernel.org>; Fri, 20 Feb 2026 02:01:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771581615; x=1772186415; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1771581701; x=1772186501; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to:date
          :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=E21Ynhw++H4r3Jkl9ZIAjOT6EVhP7EbsgEinOa2T0OU=;
-        b=BdzFF0e/jLSJTHcSA34sOUbNrNEJhWIPpyKxBf6/g8NkOVhBCaaI/FiDCUer/sLl3b
-         x/RArfUs6pkTvtlVoRKyXHL+iRwGRCxhb0893hOFk5jYOZwUH4jSxYkGyumDIZG1HdGQ
-         l5pWszK6La+t+3qmFg5VG/MMFhTqE2lA9FfGhIV/XAcsfm7jCUupKNxJDHpsgm3fve5q
-         1KjixJdnBfSc8/xSkeHXMGIO77Dgu+RmpdCDNM3X86KZnq4sjAqh4/bt+bxHC1LWI467
-         dI9N0eNv/9iLs8/bDrhAhARk+jXVLIm2Bdg8cWm+8a6aKDH4DSMPXKUw54z+HhOx1/EC
-         YaLw==
+        bh=mZqELffXnpUaFWM6UP5mc2YGiMCwLhF/CT8oL4oYv+s=;
+        b=MBJw7qDdKjJiQA43VxYICMohOUFF7uroWwWNZa2AH/LRcwWdNBGQCfycCawd8vfU5V
+         KmnZfnQM4Bf9KSmR4OG9rZGlm71cApSWOcA3GeDjzJk5xlQ17lCPUy03LYHy43arfu3n
+         vwpmymlieHiQZboVNQ8cJVZlru6Ya7x1Dt3v9ERptGMOBm4pJDpO3eGwXa6CrzjJRBfU
+         CJD7It9SPebdCvGoNE8mOq3vV1mQjuDD7rtVWj4rW7cvSCU/sNrPIjpmLft5tvrZNzD1
+         +ZKm7JMmcATn2g/taF3JpTi+hR5Dw95vwK8fw3wiEmBTMgzfwMgUIngh7h/bkAhzU/25
+         mWLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771581615; x=1772186415;
+        d=1e100.net; s=20230601; t=1771581701; x=1772186501;
         h=content-transfer-encoding:mime-version:references:in-reply-to:date
          :cc:to:from:subject:message-id:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E21Ynhw++H4r3Jkl9ZIAjOT6EVhP7EbsgEinOa2T0OU=;
-        b=WoyHToHxD6itZz/tfEDQp/f1abbI1dSi809uXs/NR6o6A2tSrODFbGAlHWw9gl/Fzg
-         J3zeLxXeqjPgc9zLoMNQpZvUan9NJHyOSA+KUKC3timwemFP/XkAICSdWALA//GyNC3P
-         Fq0kBshGbtN6tJ6+Mtp8sXFVHb/bESuxi/sf64mWE8sJwXbM2vdbX7qt9c7ZXqMXRl8y
-         P6WqnwFmyRRSo9s09gZa5jK9VDcAFtczbJMuGoQkx1YOuCVdJhoVF49PFWi8/HphcZv8
-         VBQwZ2D6ch6rZBbzmk/FV2rnD3cxugRXayKYLl+OuqltsGlryeYJPKz1yuj6tMC2tT2W
-         k6Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCX33HpLU2WN4Wj8RMWKD2Y5R7W+lb/1jGVPphNL8UgQPcZk32NxdPUia3MNGOpQMuzxVzAvxjeUVZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfElNinVG3otpi6KrmHnjyFjWRqTlRI/kfHUAZ4g35YITW6ZSQ
-	lv8lVhwAZFgHsx8lQcl6KaCX3ZjghZVWI39aO1aUwlIlDzyEKkoxpd4b
-X-Gm-Gg: AZuq6aJZOQkhdb4w6ATTwNR+qlMu7HlWIjmNZFf5J1Z/DLy/FXSXI0C2LJKnIKKmPEV
-	NWDYhmzKo3a3K6dT0IQf9FgugI/X7ZuoM8q0HdYvaIJwTDegmaGANI7kImG+/Bd94T8VGgLeZQH
-	EcPZZGndJW8HsyWmRkEDvnSDNGDlBpe+yikjptw+T/2XGgAnioqYixmEBZVr0Yc75IxWYapfbWR
-	czWEFnxZDsUnptsAjKgG/K0tuaHExK+gBaN0+fTZf1Cz3Dt3+4x7CtcZgzxlvTY28+AXD7eWVGv
-	phi60XK1AVIWR+FCbGepmF3CRK7ixkZ17C5MDUgnxFK5RJabW8uDqZ8ozKxjeiSqhlyrZ5ZrFZ5
-	2Lu/OYWDdcxthqDGFRLmkbi5UZ3EKjhKTseB5wdM258RPWuyZgh8e9Sn8bbeHKiLeYAHUqDy6tx
-	BTNgl9tVUTtwZ1Q87sGLVD0FT9WJvpkj+cVSk/9Eh5/ezcbe4SVJWcXPoYcUyCaUGzKkz19SDOa
-	uz1
-X-Received: by 2002:a17:90b:2541:b0:343:6108:1712 with SMTP id 98e67ed59e1d1-35844f9bf28mr19807914a91.18.1771581615001;
-        Fri, 20 Feb 2026 02:00:15 -0800 (PST)
+        bh=mZqELffXnpUaFWM6UP5mc2YGiMCwLhF/CT8oL4oYv+s=;
+        b=chOJpbKpm0/Qx8XokZbG3Jj8j8DqBpJnoB4IRDrqs0yOUqNbNfwo0c0tUJWNyQi6tC
+         T3Wu/WS5VoeTDhiFrMRs0/x6gmdGAH/iVoJEw6azeMGdlUlL24fUHeIPtMub4y1Mu1KF
+         m6hw6Kf104XvPWD7Mqt+P7OV0f9Lx9KSOUEIYZkHe9HNxLHESIIK1/FQA72w9NpjXKcS
+         Rn+BjxOoLG4UzhubBDVvhiOKurr8e8eaolQzD/YltGdw273k5EWyoXDrISvfnVml+7/p
+         Vmzc6yH/cKpO0+0h5D/MNuLloK+/MktgwGyCfuMxx4hYoQXWQpdc8iX+ft2xRghgRhK7
+         VTmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViVfzQVK2oZHgpTZ98W3QfhaqYFDGB877ZTYginZ/oQ3QxIGTqa7GHLZVTrvxWczg3/b1ljKNzVas=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFS4Ui9KfsMECbZK8aGIUU8ikGbil8zSVaRxee878KaKuEMkyG
+	8EsUE1Yf4iwB1jwpR0iLbnKD0Fue5foPK0yAkXCjVcTVmd0ay96Job8z
+X-Gm-Gg: AZuq6aIPdT8WkgPf5WFsL8UeJu+LwmzUhq21rTjXkA8Hb6/T1h+6Nfb6YIP4NyoPsBt
+	sIeRwmZ8BwH4gWmH1IdAB0FsccGIu46qmLDibFuCwSPUv0k8uhFxap2265FCh9lxtkjIPsuHqFY
+	3zIU7KOXkLBYA0ntMNpDZLTI2nevVfXZimPF2LZtz/AyWyRyHN8SVEnBUemDa3T+EFUL4silD3o
+	lkRTbQXSs/bID7EV5m0uCd7D8+fqxphaqtxtN/8dcTaYiJ40Jf3PxowRedbFy37CEurToIsG/Ck
+	xxnjP2/CJixiZCAr+dRbClTTH6WW9A0hjIExAW0e9JoodIhfBEE4uHRVw/W4MCToshrPiyEiwzf
+	fODts3RI2KXjoa+ReutoGcjHzyd05SdmzJ4bYOIZj/r0VWsos22+8nEEByppMz1VBFKjirkPQh8
+	Oh3pAFHH2Jx5R1YQ4AMmoAu3jLdA37RKpfKwIcREbKJCMLY8Bi9KpzxjpFewA67jzhWArnfm3TT
+	Lch
+X-Received: by 2002:a17:903:19eb:b0:2aa:f2f3:bcb0 with SMTP id d9443c01a7336-2ad50f9881fmr81093265ad.47.1771581701209;
+        Fri, 20 Feb 2026 02:01:41 -0800 (PST)
 Received: from li-5d80d4cc-2782-11b2-a85c-bed59fe4c9e5.ibm.com ([49.207.233.114])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3589d7f1774sm2444331a91.1.2026.02.20.02.00.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ad1a6fa5cbsm244689215ad.9.2026.02.20.02.01.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Feb 2026 02:00:14 -0800 (PST)
-Message-ID: <f8ea8da2649595f2edcb57a9776748cbced391a7.camel@gmail.com>
-Subject: Re: [PATCH v3] xfs: Fix error pointer dereference
+        Fri, 20 Feb 2026 02:01:40 -0800 (PST)
+Message-ID: <f4b1f5024a17098b29d4623f1a5c60519194ad52.camel@gmail.com>
+Subject: Re: [PATCH v4] xfs: Fix error pointer dereference
 From: "Nirjhar Roy (IBM)" <nirjhar.roy.lists@gmail.com>
 To: Ethan Tidmore <ethantidmore06@gmail.com>, cem@kernel.org,
  djwong@kernel.org
-Cc: neil@brown.name, brauner@kernel.org, jlayton@kernel.org,
- amir73il@gmail.com,  jack@suse.cz, linux-xfs@vger.kernel.org,
- linux-kernel@vger.kernel.org,  stable@vger.kernel.org
-Date: Fri, 20 Feb 2026 15:30:08 +0530
-In-Reply-To: <20260219200715.785849-1-ethantidmore06@gmail.com>
-References: <20260219200715.785849-1-ethantidmore06@gmail.com>
+Cc: brauner@kernel.org, neil@brown.name, jlayton@kernel.org,
+ amir73il@gmail.com,  linux-xfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Date: Fri, 20 Feb 2026 15:31:35 +0530
+In-Reply-To: <20260220033825.1153487-1-ethantidmore06@gmail.com>
+References: <20260220033825.1153487-1-ethantidmore06@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.28.5 (3.28.5-27.el8_10) 
 Precedence: bulk
@@ -102,13 +102,13 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	MV_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31171-lists,linux-xfs=lfdr.de];
-	FREEMAIL_CC(0.00)[brown.name,kernel.org,gmail.com,suse.cz,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-31172-lists,linux-xfs=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,brown.name,gmail.com,vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	FREEMAIL_TO(0.00)[gmail.com,kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -116,7 +116,7 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -124,14 +124,14 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	FREEMAIL_FROM(0.00)[gmail.com];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 0B745166908
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 605D61669D0
 X-Rspamd-Action: no action
 
-On Thu, 2026-02-19 at 14:07 -0600, Ethan Tidmore wrote:
+On Thu, 2026-02-19 at 21:38 -0600, Ethan Tidmore wrote:
 > The function try_lookup_noperm() can return an error pointer and is not
 > checked for one.
 > 
@@ -148,7 +148,10 @@ On Thu, 2026-02-19 at 14:07 -0600, Ethan Tidmore wrote:
 > Fixes: 73597e3e42b4 ("xfs: ensure dentry consistency when the orphanage adopts a file")
 > Cc: <stable@vger.kernel.org> # v6.16
 > Signed-off-by: Ethan Tidmore <ethantidmore06@gmail.com>
+> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 > ---
+> v4:
+> - Add blank line after closing brace.
 > v3:
 > - Add dput(d_orphanage) before returning error code in 
 >   xrep_adoption_check_dcache().
@@ -158,15 +161,14 @@ On Thu, 2026-02-19 at 14:07 -0600, Ethan Tidmore wrote:
 > - Propagate the error back in xrep_adoption_check_dcache().
 > - Add Cc to stable.
 > - Add correct Fixes tag.
-> 
->  fs/xfs/scrub/orphanage.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  fs/xfs/scrub/orphanage.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
 > diff --git a/fs/xfs/scrub/orphanage.c b/fs/xfs/scrub/orphanage.c
-> index 52a108f6d5f4..682af1bcf131 100644
+> index 52a108f6d5f4..33c6db6b4498 100644
 > --- a/fs/xfs/scrub/orphanage.c
 > +++ b/fs/xfs/scrub/orphanage.c
-> @@ -442,6 +442,10 @@ xrep_adoption_check_dcache(
+> @@ -442,6 +442,11 @@ xrep_adoption_check_dcache(
 >  		return 0;
 >  
 >  	d_child = try_lookup_noperm(&qname, d_orphanage);
@@ -174,10 +176,11 @@ On Thu, 2026-02-19 at 14:07 -0600, Ethan Tidmore wrote:
 > +		dput(d_orphanage);
 > +		return PTR_ERR(d_child);
 > +	}
+> +
 >  	if (d_child) {
 >  		trace_xrep_adoption_check_child(sc->mp, d_child);
 >  
-> @@ -479,7 +483,7 @@ xrep_adoption_zap_dcache(
+> @@ -479,7 +484,7 @@ xrep_adoption_zap_dcache(
 >  		return;
 >  
 >  	d_child = try_lookup_noperm(&qname, d_orphanage);
@@ -187,8 +190,10 @@ On Thu, 2026-02-19 at 14:07 -0600, Ethan Tidmore wrote:
 >  
 >  		ASSERT(d_is_negative(d_child));
 
+Okay, so you sent a v4. I gave my RB in v3 - also giving it here too.
 Based on my reviews in the previous version[1], this looks good to me.
 Reviewed-by: Nirjhar Roy (IBM) <nirjhar.roy.lists@gmail.com>
 [1] https://lore.kernel.org/all/61386abf00c817e65ab70c994ed584fde339f9ed.camel@gmail.com/
+--NR
 
 
