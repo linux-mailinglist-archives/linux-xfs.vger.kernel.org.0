@@ -1,60 +1,60 @@
-Return-Path: <linux-xfs+bounces-31250-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31248-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +EfGNeKunWmgQwQAu9opvQ
-	(envelope-from <linux-xfs+bounces-31250-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:00:02 +0100
+	id wHbbAdyunWmgQwQAu9opvQ
+	(envelope-from <linux-xfs+bounces-31248-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:59:56 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 523C71881E1
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:00:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B2B01881C3
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:59:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D2B403042B79
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 13:59:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E04323005D0D
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 13:59:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1C5739E6E3;
-	Tue, 24 Feb 2026 13:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D367518872A;
+	Tue, 24 Feb 2026 13:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QXOYNxK8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o3z6/Skd"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976C639E6CA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9759F39E194
 	for <linux-xfs@vger.kernel.org>; Tue, 24 Feb 2026 13:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771941593; cv=none; b=K/nnbkfj0hVJuJRrRUP0ygZj/8EB+51HFJG+9gTrleqE4cWqkItrFwd77zmOmjahq9XozIAdAnD58Ix3Wx3xSNzxMVrUFJgW3+D915sgBm5WkyWKMDBXRhpk1jvxcKiEZOskcefE8aLLMslJc4CsbHWgL6Nn1deKTcTgLg9yyiA=
+	t=1771941592; cv=none; b=rHgKH7CWkdd8Dpm9o23H8ZwMl6fIgLqmdiLtRP5FixheAUP34XWLKPCaesduXESgLLhuH/b1rxEXKHaQal6oIkzOOAzEMkCOlFndP4Poyr6PdWqF/SVDqsGXjqucKBHoNBSKBZaiR13auBNdD77gs6wByZ0vksgWRXf2d1LJF6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771941593; c=relaxed/simple;
-	bh=FBxnKV8kJr/LukM8pzwQc7zZ56V3QGXClu1nE05wspQ=;
+	s=arc-20240116; t=1771941592; c=relaxed/simple;
+	bh=90IGV3yzq5sMBiIOOmjMy1yyxw0778eEePLVtS4GeLw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XUHt6ChEmw0Gz4/oWqFVZ/Tgy2tW8bn+/xEa+6/TyPgJGCGRx+7nhc/Uzdte1RMX6uO03wV4Z4mAI1QY5oLoDX1xHyI5kQ3WDGGSlBM4RUtchFDpwBZDctFx2VLspfrnS0Nff7AO1/MBeDmw3HLity1haSxuuGuoi3zW2edAKVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QXOYNxK8; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=NfyBYgHGS0YkuLQm0VUBnc104g0K4ROjg132mfQszUKdE0s+5dqnk2qw0NwOh28rhZc+dGuF8b5EBXLx9K4bMomeZvjmfCmNvsU+YcpmhEQkkdNR8sV0ChLOSf3ArIN+hO1th08et2FFfzdeZQqcJO0tyuYC6G36PeBcjfaLqmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=o3z6/Skd; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=8wTNtNW+tq3ODqiJwB0fze/ARStJtqNXWXhjeZgmUWs=; b=QXOYNxK8TjnuSpNg5WBRkW5SJq
-	mD0RoDG6I4v15Ji6fkTVoI01LqGRecyAwT+iT73Rlc8AM0+73G6wCuZvzAaQouJeE+QzszWvdWNpZ
-	foz24TUyb9oVOkymLFWQRFUU4AtZZQXYpfGe8YfD1sIUBeJfVBUAJ2s4mmcbIAIro++u8QsTyz8+S
-	Nwbq1sUOiAPR4+PU1tTsFI37FVI8DGx7GNlX2behvpy+3LQE+dDMkM8l4ZpgieMm16Xx2+r2z4jnf
-	AlwbdHeZ4UX4qK5Sf/ybH6nQKydVeib4xM8IU5xWD4lsU5j1GDwnzRyho8dYkpDaYiBf9wLPbrYMb
-	qZWS3uwg==;
+	bh=NnbfZ1NWNxJfHLx7ZVnEC3FsLQO0RnLRPpJYzV5kIto=; b=o3z6/Skdiir04ekHL7Rvpeg294
+	FKSlHGisIwusojWviF0Bspl2Daj/8gBrv/CRYZzx3qdp8YnV7afdySEVedvDYLnm8Hsz+qZAK1m2y
+	FF8I9UUbavIAjxlXTHdrciQ+oOhLnSHAsjmxMe7fnu2z8oLKoLvVlfnGb6HJW6DcxWKWvD6O8LDLC
+	S8qbb6oIQa+2xBjyKoH2rXbn/2aCNtpFLjLbRLSLMIqNfv5a1rzlXuWZgVnstIpybLnrl/NqqonYp
+	ZyeBrVoycTNGkhWLu7kwlY3Jpn2F3AEUhvoTfYeQB8E3WRkTt+XMxoRTC8PRlxPvA9Br3hc2zdAK7
+	pJauVQAA==;
 Received: from [4.28.11.157] (helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vuswx-00000002Ald-0RJw;
+	id 1vuswx-00000002Alh-16IW;
 	Tue, 24 Feb 2026 13:59:43 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Carlos Maiolino <cem@kernel.org>
 Cc: "Darrick J. Wong" <djwong@kernel.org>,
 	linux-xfs@vger.kernel.org
-Subject: [PATCH 1/2] xfs: cleanup inode counter stats
-Date: Tue, 24 Feb 2026 05:59:35 -0800
-Message-ID: <20260224135942.364932-2-hch@lst.de>
+Subject: [PATCH 2/2] xfs: remove metafile inodes from the active inode stat
+Date: Tue, 24 Feb 2026 05:59:36 -0800
+Message-ID: <20260224135942.364932-3-hch@lst.de>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260224135942.364932-1-hch@lst.de>
 References: <20260224135942.364932-1-hch@lst.de>
@@ -68,154 +68,159 @@ Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.06 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31250-lists,linux-xfs=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_THREE(0.00)[3];
+	TAGGED_FROM(0.00)[bounces-31248-lists,linux-xfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[3];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 523C71881E1
+X-Rspamd-Queue-Id: 2B2B01881C3
 X-Rspamd-Action: no action
 
-Most of them are unused, so mark them as such.  Give the remaining ones
-names that match their use instead of the historic IRIX ones based on
-vnodes.  Note that the names are purely internal to the XFS code, the
-user interface is based on section names and arrays of counters.
+The active inode (or active vnode until recently) stat can get much larger
+than expected on file systems with a lot of metafile inodes like zoned
+file systems on SMR hard disks with 10.000s of rtg rmap inodes.
+
+Remove all metafile inodes from the active counter to make it more useful
+to track actual workloads and add a separate counter for active metafile
+inodes.
+
+This fixes xfs/177 on SMR hard drives.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- fs/xfs/xfs_icache.c |  6 +++---
- fs/xfs/xfs_stats.c  | 10 +++++-----
- fs/xfs/xfs_stats.h  | 16 ++++++++--------
- fs/xfs/xfs_super.c  |  4 ++--
- 4 files changed, 18 insertions(+), 18 deletions(-)
+ fs/xfs/libxfs/xfs_inode_buf.c |  4 ++++
+ fs/xfs/libxfs/xfs_metafile.c  |  5 +++++
+ fs/xfs/xfs_icache.c           |  5 ++++-
+ fs/xfs/xfs_stats.c            | 11 ++++++++---
+ fs/xfs/xfs_stats.h            |  3 ++-
+ 5 files changed, 23 insertions(+), 5 deletions(-)
 
+diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+index a017016e9075..3794e5412eba 100644
+--- a/fs/xfs/libxfs/xfs_inode_buf.c
++++ b/fs/xfs/libxfs/xfs_inode_buf.c
+@@ -268,6 +268,10 @@ xfs_inode_from_disk(
+ 	}
+ 	if (xfs_is_reflink_inode(ip))
+ 		xfs_ifork_init_cow(ip);
++	if (xfs_is_metadir_inode(ip)) {
++		XFS_STATS_DEC(ip->i_mount, xs_inodes_active);
++		XFS_STATS_INC(ip->i_mount, xs_inodes_meta);
++	}
+ 	return 0;
+ 
+ out_destroy_data_fork:
+diff --git a/fs/xfs/libxfs/xfs_metafile.c b/fs/xfs/libxfs/xfs_metafile.c
+index cf239f862212..71f004e9dc64 100644
+--- a/fs/xfs/libxfs/xfs_metafile.c
++++ b/fs/xfs/libxfs/xfs_metafile.c
+@@ -61,6 +61,9 @@ xfs_metafile_set_iflag(
+ 	ip->i_diflags2 |= XFS_DIFLAG2_METADATA;
+ 	ip->i_metatype = metafile_type;
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
++
++	XFS_STATS_DEC(ip->i_mount, xs_inodes_active);
++	XFS_STATS_INC(ip->i_mount, xs_inodes_meta);
+ }
+ 
+ /* Clear the metadata directory inode flag. */
+@@ -74,6 +77,8 @@ xfs_metafile_clear_iflag(
+ 
+ 	ip->i_diflags2 &= ~XFS_DIFLAG2_METADATA;
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
++	XFS_STATS_INC(ip->i_mount, xs_inodes_active);
++	XFS_STATS_DEC(ip->i_mount, xs_inodes_meta);
+ }
+ 
+ /*
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index dbaab4ae709f..f76c6decdaa3 100644
+index f76c6decdaa3..f2d4294efd37 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -106,7 +106,7 @@ xfs_inode_alloc(
- 	mapping_set_folio_min_order(VFS_I(ip)->i_mapping,
- 				    M_IGEO(mp)->min_folio_order);
- 
--	XFS_STATS_INC(mp, vn_active);
-+	XFS_STATS_INC(mp, xs_inodes_active);
- 	ASSERT(atomic_read(&ip->i_pincount) == 0);
- 	ASSERT(ip->i_ino == 0);
- 
-@@ -172,7 +172,7 @@ __xfs_inode_free(
+@@ -172,7 +172,10 @@ __xfs_inode_free(
  	/* asserts to verify all state is correct here */
  	ASSERT(atomic_read(&ip->i_pincount) == 0);
  	ASSERT(!ip->i_itemp || list_empty(&ip->i_itemp->ili_item.li_bio_list));
--	XFS_STATS_DEC(ip->i_mount, vn_active);
-+	XFS_STATS_DEC(ip->i_mount, xs_inodes_active);
+-	XFS_STATS_DEC(ip->i_mount, xs_inodes_active);
++	if (xfs_is_metadir_inode(ip))
++		XFS_STATS_DEC(ip->i_mount, xs_inodes_meta);
++	else
++		XFS_STATS_DEC(ip->i_mount, xs_inodes_active);
  
  	call_rcu(&VFS_I(ip)->i_rcu, xfs_inode_free_callback);
  }
-@@ -2234,7 +2234,7 @@ xfs_inode_mark_reclaimable(
- 	struct xfs_mount	*mp = ip->i_mount;
- 	bool			need_inactive;
- 
--	XFS_STATS_INC(mp, vn_reclaim);
-+	XFS_STATS_INC(mp, xs_inode_mark_reclaimable);
- 
- 	/*
- 	 * We should never get here with any of the reclaim flags already set.
 diff --git a/fs/xfs/xfs_stats.c b/fs/xfs/xfs_stats.c
-index 017db0361cd8..bc4a5d6dc795 100644
+index bc4a5d6dc795..c13d600732c9 100644
 --- a/fs/xfs/xfs_stats.c
 +++ b/fs/xfs/xfs_stats.c
-@@ -42,7 +42,7 @@ int xfs_stats_format(struct xfsstats __percpu *stats, char *buf)
- 		{ "xstrat",		xfsstats_offset(xs_write_calls)	},
- 		{ "rw",			xfsstats_offset(xs_attr_get)	},
- 		{ "attr",		xfsstats_offset(xs_iflush_count)},
--		{ "icluster",		xfsstats_offset(vn_active)	},
-+		{ "icluster",		xfsstats_offset(xs_inodes_active) },
- 		{ "vnodes",		xfsstats_offset(xb_get)		},
- 		{ "buf",		xfsstats_offset(xs_abtb_2)	},
- 		{ "abtb2",		xfsstats_offset(xs_abtc_2)	},
-@@ -100,15 +100,15 @@ int xfs_stats_format(struct xfsstats __percpu *stats, char *buf)
+@@ -59,7 +59,8 @@ int xfs_stats_format(struct xfsstats __percpu *stats, char *buf)
+ 		{ "rtrefcntbt",		xfsstats_offset(xs_qm_dqreclaims)},
+ 		/* we print both series of quota information together */
+ 		{ "qm",			xfsstats_offset(xs_gc_read_calls)},
+-		{ "zoned",		xfsstats_offset(__pad1)},
++		{ "zoned",		xfsstats_offset(xs_inodes_meta)},
++		{ "metafile",		xfsstats_offset(xs_xstrat_bytes)},
+ 	};
+ 
+ 	/* Loop over all stats groups */
+@@ -99,16 +100,20 @@ int xfs_stats_format(struct xfsstats __percpu *stats, char *buf)
+ 
  void xfs_stats_clearall(struct xfsstats __percpu *stats)
  {
++	uint32_t	xs_inodes_active, xs_inodes_meta;
  	int		c;
--	uint32_t	vn_active;
-+	uint32_t	xs_inodes_active;
+-	uint32_t	xs_inodes_active;
  
  	xfs_notice(NULL, "Clearing xfsstats");
  	for_each_possible_cpu(c) {
  		preempt_disable();
--		/* save vn_active, it's a universal truth! */
--		vn_active = per_cpu_ptr(stats, c)->s.vn_active;
-+		/* save xs_inodes_active, it's a universal truth! */
-+		xs_inodes_active = per_cpu_ptr(stats, c)->s.xs_inodes_active;
+-		/* save xs_inodes_active, it's a universal truth! */
++		/*
++		 * Save the active / meta inode counters, as they are stateful.
++		 */
+ 		xs_inodes_active = per_cpu_ptr(stats, c)->s.xs_inodes_active;
++		xs_inodes_meta = per_cpu_ptr(stats, c)->s.xs_inodes_meta;
  		memset(per_cpu_ptr(stats, c), 0, sizeof(*stats));
--		per_cpu_ptr(stats, c)->s.vn_active = vn_active;
-+		per_cpu_ptr(stats, c)->s.xs_inodes_active = xs_inodes_active;
+ 		per_cpu_ptr(stats, c)->s.xs_inodes_active = xs_inodes_active;
++		per_cpu_ptr(stats, c)->s.xs_inodes_meta = xs_inodes_meta;
  		preempt_enable();
  	}
  }
 diff --git a/fs/xfs/xfs_stats.h b/fs/xfs/xfs_stats.h
-index 153d2381d0a8..64bc0cc18126 100644
+index 64bc0cc18126..57c32b86c358 100644
 --- a/fs/xfs/xfs_stats.h
 +++ b/fs/xfs/xfs_stats.h
-@@ -100,14 +100,14 @@ struct __xfsstats {
- 	uint32_t		xs_iflush_count;
- 	uint32_t		xs_icluster_flushcnt;
- 	uint32_t		xs_icluster_flushinode;
--	uint32_t		vn_active;	/* # vnodes not on free lists */
--	uint32_t		vn_alloc;	/* # times vn_alloc called */
--	uint32_t		vn_get;		/* # times vn_get called */
--	uint32_t		vn_hold;	/* # times vn_hold called */
--	uint32_t		vn_rele;	/* # times vn_rele called */
--	uint32_t		vn_reclaim;	/* # times vn_reclaim called */
--	uint32_t		vn_remove;	/* # times vn_remove called */
--	uint32_t		vn_free;	/* # times vn_free called */
-+	uint32_t		xs_inodes_active;
-+	uint32_t		__unused_vn_alloc;
-+	uint32_t		__unused_vn_get;
-+	uint32_t		__unused_vn_hold;
-+	uint32_t		xs_inode_destroy;
-+	uint32_t		xs_inode_destroy2; /* same as xs_inode_destroy */
-+	uint32_t		xs_inode_mark_reclaimable;
-+	uint32_t		__unused_vn_free;
- 	uint32_t		xb_get;
- 	uint32_t		xb_create;
- 	uint32_t		xb_get_locked;
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 8586f044a14b..28f700cd3942 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -712,8 +712,8 @@ xfs_fs_destroy_inode(
- 	trace_xfs_destroy_inode(ip);
- 
- 	ASSERT(!rwsem_is_locked(&inode->i_rwsem));
--	XFS_STATS_INC(ip->i_mount, vn_rele);
--	XFS_STATS_INC(ip->i_mount, vn_remove);
-+	XFS_STATS_INC(ip->i_mount, xs_inode_destroy);
-+	XFS_STATS_INC(ip->i_mount, xs_inode_destroy2);
- 	xfs_inode_mark_reclaimable(ip);
- }
- 
+@@ -142,7 +142,8 @@ struct __xfsstats {
+ 	uint32_t		xs_gc_read_calls;
+ 	uint32_t		xs_gc_write_calls;
+ 	uint32_t		xs_gc_zone_reset_calls;
+-	uint32_t		__pad1;
++/* Metafile counters */
++	uint32_t		xs_inodes_meta;
+ /* Extra precision counters */
+ 	uint64_t		xs_xstrat_bytes;
+ 	uint64_t		xs_write_bytes;
 -- 
 2.47.3
 
