@@ -1,185 +1,114 @@
-Return-Path: <linux-xfs+bounces-31247-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31249-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OCkkL82tnWmgQwQAu9opvQ
-	(envelope-from <linux-xfs+bounces-31247-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:55:25 +0100
+	id OOw2Md+unWmgQwQAu9opvQ
+	(envelope-from <linux-xfs+bounces-31249-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:59:59 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6028F188146
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:55:25 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 732F31881D9
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:59:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A7E530B61FD
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 13:55:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8C8EE301D69C
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 13:59:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2228C39E6CB;
-	Tue, 24 Feb 2026 13:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A97039E6DF;
+	Tue, 24 Feb 2026 13:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MT1kUN+g";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6EFemYbm";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MT1kUN+g";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6EFemYbm"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DIt+vpkD"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0D039E19C
-	for <linux-xfs@vger.kernel.org>; Tue, 24 Feb 2026 13:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9765639E196
+	for <linux-xfs@vger.kernel.org>; Tue, 24 Feb 2026 13:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771941314; cv=none; b=T3h7AccB68CNCScuktBxASS31FT3owIflo7rp+fdk0z8JTjhRrD/Fcoi0hauluG1NVJgvUHyyi1Ofll4RRDWAZLoNE/LYS61RjcLsyT8Ok4qY5sgeKFjGEscwpkn2czftNbWE52vtVecVMWqgkeVOrQ1LduOX/PVV8aTAwRhXT8=
+	t=1771941593; cv=none; b=nKLgFMqcYUjmKw7V61G+8jix76QALe9OQ30UsP+c1QePxLGZg1T6ATxiV0q3cYwc8ksf53Xhjn80uW1+W2cHNUDcOFijLVO5bFAMjYPEcXZe1Edgm8utH/3pKOxGJP5StwF8On21rIAdFFaU9cMFbk6B2UcNWR0jsyhAxcGZBBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771941314; c=relaxed/simple;
-	bh=Y83YN3Z+oLSinJ7NVQEsEsHz/fpDH/jnmePEQ8Rq+M4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SeM9q3NNzFFcvyDamtK3qJvSM6wXGqV3HPdbBjGcYnAFE0nr9Zh/tN6GRhayc7bzkXac4GN8FSvWk/gxuEgb9rgnhcgVOY5Jqo9D50QkB98KFMP+87Orqcv2rL9pa0CpMpIsOdCatK0DipYupLN6B02LVwZ/RZT0a897MJaw1wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MT1kUN+g; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6EFemYbm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MT1kUN+g; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6EFemYbm; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 013293F251;
-	Tue, 24 Feb 2026 13:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1771941309;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IwteX+3st/BoFz5qXCpVjpTwTwtYXckuDq7ibdYt4EA=;
-	b=MT1kUN+gGMsCoUB7Gjf+X+6FRCA4P14szw92f6JxsRV9UMCUBkcWJ/9jC42VOyxmQsQ3Ps
-	iQZMh7ZKItwreVqdT0dkT/MVXaUQUyAzinPYWwXqVuomUEFjzWu09pIxdXe6uVgKTQ9nuj
-	huY1D4lmsDtGpbQaHXgiCDySZqFGOhw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1771941309;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IwteX+3st/BoFz5qXCpVjpTwTwtYXckuDq7ibdYt4EA=;
-	b=6EFemYbm6sEj3mrcQ6sGZxLXHy3au4fcdkZjOBJZG/c8rQEr1EOhkmXX1kXnTMf41r2YMZ
-	ZGAmaWkNO5ITBFBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=MT1kUN+g;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=6EFemYbm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1771941309;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IwteX+3st/BoFz5qXCpVjpTwTwtYXckuDq7ibdYt4EA=;
-	b=MT1kUN+gGMsCoUB7Gjf+X+6FRCA4P14szw92f6JxsRV9UMCUBkcWJ/9jC42VOyxmQsQ3Ps
-	iQZMh7ZKItwreVqdT0dkT/MVXaUQUyAzinPYWwXqVuomUEFjzWu09pIxdXe6uVgKTQ9nuj
-	huY1D4lmsDtGpbQaHXgiCDySZqFGOhw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1771941309;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IwteX+3st/BoFz5qXCpVjpTwTwtYXckuDq7ibdYt4EA=;
-	b=6EFemYbm6sEj3mrcQ6sGZxLXHy3au4fcdkZjOBJZG/c8rQEr1EOhkmXX1kXnTMf41r2YMZ
-	ZGAmaWkNO5ITBFBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB6473EA68;
-	Tue, 24 Feb 2026 13:55:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6HV7MbytnWkuJwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 24 Feb 2026 13:55:08 +0000
-Date: Tue, 24 Feb 2026 14:55:07 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-btrfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] fsverity: add dependency on 64K or smaller pages
-Message-ID: <20260224135507.GT26902@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20260221204525.30426-1-ebiggers@kernel.org>
+	s=arc-20240116; t=1771941593; c=relaxed/simple;
+	bh=jVlObTSDe43jbwLZe5tm2RcGqDDIAd9SmSjgdVofDdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V4wvjBeTJLsTLClEjjlYrmMwVpJhvuBqGQV+YK7W7JNKxN5/kdCX/oM1iKQWN2TlyWKI6RF/p2sb+0tcef2r6ILDLZqthTxqKBeBCOCAvqYxe96MzdLqET4VtQGM1pHF4pVSGnw1KJXZsJ4mRrerBDXSkuKN1nzWFo7KzmBRpWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DIt+vpkD; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=w7KYe5hws4MlaJCybyvqmF/kaneN0RBsgqTgeWP+YyA=; b=DIt+vpkD0gLmx1y1YuvX5LOslA
+	eAYwUUg690X5a+GZfrMAo5asTEKyTq9kW1CdWvZ6zbB6GaU3LtVuzzRLnGEx5YgzefGiSTzyO1+DN
+	PFCgLMMFbmjRBHrmTEiVutI/W/dFUsmcQkNvtbi31as/NdogXh9SdRqdd2Jk3C0shxJufinGgzgkH
+	QpbYQspIqGKaMQTWKvh1o8nMXZa3udnFxgB/wHVcp8WEP4vDEI5vJrdvsW+XGhX/Z8UZEIlBQzzqf
+	tSeenUqn0EznLKds8S1bFJ2C/Eu9lkf0vCjm3rjAUPnWXw9ktrBkZQ3+/mzMEGTRSWgZGc+5Yb57G
+	y1a8GgFA==;
+Received: from [4.28.11.157] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vusww-00000002AlY-3yeJ;
+	Tue, 24 Feb 2026 13:59:42 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Carlos Maiolino <cem@kernel.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	linux-xfs@vger.kernel.org
+Subject: fix inode stats with lots of metafiles v2
+Date: Tue, 24 Feb 2026 05:59:34 -0800
+Message-ID: <20260224135942.364932-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260221204525.30426-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -4.21
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.06 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), DKIM not aligned (relaxed),none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31247-lists,linux-xfs=lfdr.de];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31249-lists,linux-xfs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	DMARC_NA(0.00)[suse.cz];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	HAS_REPLYTO(0.00)[dsterba@suse.cz];
-	RCVD_COUNT_FIVE(0.00)[6];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dsterba@suse.cz,linux-xfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[3];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:dkim,twin.jikos.cz:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6028F188146
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 732F31881D9
 X-Rspamd-Action: no action
 
-On Sat, Feb 21, 2026 at 12:45:25PM -0800, Eric Biggers wrote:
-> Currently, all filesystems that support fsverity (ext4, f2fs, and btrfs)
-> cache the Merkle tree in the pagecache at a 64K aligned offset after the
-> end of the file data.  This offset needs to be a multiple of the page
-> size, which is guaranteed only when the page size is 64K or smaller.
-> 
-> 64K was chosen to be the "largest reasonable page size".  But it isn't
-> the largest *possible* page size: the hexagon and powerpc ports of Linux
-> support 256K pages, though that configuration is rarely used.
-> 
-> For now, just disable support for FS_VERITY in these odd configurations
-> to ensure it isn't used in cases where it would have incorrect behavior.
-> 
-> Fixes: 671e67b47e9f ("fs-verity: add Kconfig and the helper functions for hashing")
-> Reported-by: Christoph Hellwig <hch@lst.de>
-> Closes: https://lore.kernel.org/r/20260119063349.GA643@lst.de
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
-> ---
->  fs/verity/Kconfig | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/verity/Kconfig b/fs/verity/Kconfig
-> index 76d1c5971b82..b20882963ffb 100644
-> --- a/fs/verity/Kconfig
-> +++ b/fs/verity/Kconfig
-> @@ -1,9 +1,12 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  config FS_VERITY
->  	bool "FS Verity (read-only file-based authenticity protection)"
-> +	# Filesystems cache the Merkle tree at a 64K aligned offset in the
-> +	# pagecache.  That approach assumes the page size is at most 64K.
-> +	depends on PAGE_SHIFT <= 16
+Hi all,
 
-Makes sense to me, we have "depends on PAGE_SIZE_LESS_THAN_256KB" since
-somebody tried to use btrfs on the 256K system.
+the second patch fixes the active inode/vnode count on file systems with
+lots of metafiles, i.e. on SMR hard disks.
+
+The first patch cleans up the counters a bit to prepare for that.
+
+Changes since v1:
+ - fix a commit message spelling error
+
+Subject:
+ libxfs/xfs_inode_buf.c |    4 ++++
+ libxfs/xfs_metafile.c  |    5 +++++
+ xfs_icache.c           |    9 ++++++---
+ xfs_stats.c            |   17 +++++++++++------
+ xfs_stats.h            |   19 ++++++++++---------
+ xfs_super.c            |    4 ++--
+ 6 files changed, 38 insertions(+), 20 deletions(-)
 
