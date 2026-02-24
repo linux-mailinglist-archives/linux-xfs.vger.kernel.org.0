@@ -1,54 +1,50 @@
-Return-Path: <linux-xfs+bounces-31252-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31253-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oCg/G720nWnURAQAu9opvQ
-	(envelope-from <linux-xfs+bounces-31252-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:25:01 +0100
+	id MPwgKy65nWntRQQAu9opvQ
+	(envelope-from <linux-xfs+bounces-31253-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:43:58 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD94B18854E
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:25:00 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0AD2188951
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:43:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1E1343011A48
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:24:59 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 704743042DE9
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:42:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 715BD3806A5;
-	Tue, 24 Feb 2026 14:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7V+RnTd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB869378806;
+	Tue, 24 Feb 2026 14:42:53 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E87C11CBA
-	for <linux-xfs@vger.kernel.org>; Tue, 24 Feb 2026 14:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6CD376BE5;
+	Tue, 24 Feb 2026 14:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771943098; cv=none; b=kFDKerwtEVvQZO67HkQi2pt1UbvEIbwuNtaJ87JAyLF849k2kRWpw5yMCVBkoapKPkVZEUWHVsvN3JhBoET2WMKx+yjrMPLYpuqCxJgveyLRxZ84lFApH7U6WDnaorgTolWlVp4eFNyg/hQAYeJs949l47GVDKuWKPbl7JA530Q=
+	t=1771944173; cv=none; b=O6CyGQUE/etQoeYHRX/s/rKccxm7btezLX0z3njNAzM+5FhgvtuSGyL5vFlPcWNmLEuFhVFzVkMhPVAtA9LDf+e9va1CBbGHNsMjuS0r/nHJruZI72w0GeIn4cZscX7FTDAa/rbwOn9ERORE38hqdJcixnaR2LKAbIq6/b3FsWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771943098; c=relaxed/simple;
-	bh=wHy81EcUEDCPRThJ7aV68ObBf7djf+7prQw6Stet+hs=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Z4CY4w7CZExZ3XuonhDjsoXm7HnX+WGq+QcJ7Zxwmk87rk/htKa5isWh+y1N6udq3g7rGRblFhxLDRzOhaFSZluiHqzponrvzTVVmZJXj9ettSIr16raPtnIO9Icu4RJOd/c2qEz4P9bspOermNo22r57DkXP8ZfbbtjCs3XoIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7V+RnTd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56C31C116D0
-	for <linux-xfs@vger.kernel.org>; Tue, 24 Feb 2026 14:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771943098;
-	bh=wHy81EcUEDCPRThJ7aV68ObBf7djf+7prQw6Stet+hs=;
-	h=Date:From:To:Subject:From;
-	b=i7V+RnTd/rDmZa1Y5/pILt8USQJMgKqo44PczS8V+onR8rRC7trefoJYJC+2pbxbj
-	 FSyT69reszy2ICKpvScb5Ap9oEBW5O7YTTD+pyBw5UJNnnzgy1MAVCRXEqkw7YA3Mp
-	 nKcNOei8/SKiSM4oXlJ8km3ISjO/RSjgD6iUovV5E+7lM3fbN/XeozNKyGQbnaBviN
-	 Ode6x8NfEnbZn+DTPtCvZDoc/89QcuGdDmGtPb6+Y+FQqG47fbo+1zbwrcG+eVPCCZ
-	 C+ZSLF3pna5EhKgTUsgFuxeT7NhsegSGKcZBtR4jaDLtfoC+zB0XWddMhl4ezF3AtT
-	 REsEWbBXJYm7g==
-Date: Tue, 24 Feb 2026 15:24:53 +0100
-From: Carlos Maiolino <cem@kernel.org>
-To: linux-xfs@vger.kernel.org
-Subject: [ANNOUNCE] xfs-linux: xfs-7.0-fixes *REBASED* to d7a474481777
-Message-ID: <aZ2zyxF_VFV4WYyt@nidhogg.toxiclabs.cc>
+	s=arc-20240116; t=1771944173; c=relaxed/simple;
+	bh=wC9Y4jz9b+cciDywQ8+900OuS6yQXQOyS1NadcFn5gs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AAm9b8C0IVMIvM6hjAB8VPoKllaVGOpfGGL6FJNFRrwSYzQ2WgenxwCxPC7INIect4Qq7Tu4mWQZ2q7vAU1J5KyBCEkH7q9PRYKXNvm3q7TLNE7PWSFHpZLxgEQaXIiiN8/QW6+DuDGlUsBZZ2TabUfmhZ1aab2bgcANN4F2hVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 5CA4368D09; Tue, 24 Feb 2026 15:42:49 +0100 (CET)
+Date: Tue, 24 Feb 2026 15:42:48 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org,
+	fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	ebiggers@kernel.org, djwong@kernel.org
+Subject: Re: [PATCH v3 11/35] iomap: allow filesystem to read fsverity
+ metadata beyound EOF
+Message-ID: <20260224144248.GA12746@lst.de>
+References: <20260217231937.1183679-1-aalbersh@kernel.org> <20260217231937.1183679-12-aalbersh@kernel.org> <20260218063606.GD8600@lst.de> <hfteu6bonpv7djecbf3d6ekh56ktgcl4c2lvtjtrjfetzaq5dw@scsrvxx5rgig> <20260219060420.GC3739@lst.de> <qheg77kxcl4ecqdrsnmz4acfvszjlamlb7ilgxxyf3pmt4r7ah@5fzzmcpurdfp> <20260219133829.GA11935@lst.de> <bltgc6uliclhzkuqd4la2tzp6x7vsww73nvjedxh7s624tby3k@jw4ij5irh6ni> <20260220153113.GA14359@lst.de> <ujwgs5xb6rienyskr7qbekmsbyn5qea2ew4untas5drqdufirp@2qea2ndmnchs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -57,116 +53,61 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <ujwgs5xb6rienyskr7qbekmsbyn5qea2ew4untas5drqdufirp@2qea2ndmnchs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-1.36 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
+	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31252-lists,linux-xfs=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_ONE(0.00)[1];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[cem@kernel.org,linux-xfs@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,lst.de:mid];
+	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nidhogg.toxiclabs.cc:mid]
-X-Rspamd-Queue-Id: DD94B18854E
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_COUNT_THREE(0.00)[4];
+	R_DKIM_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	PRECEDENCE_BULK(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31253-lists,linux-xfs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[]
+X-Rspamd-Queue-Id: B0AD2188951
 X-Rspamd-Action: no action
 
+On Mon, Feb 23, 2026 at 04:10:23PM +0100, Andrey Albershteyn wrote:
+> 
+> > 
+> > I'm still not sure what "When iomap is reading fsverity descriptor
+> > inode" means.
+> 
+> "When iomap is reading fsverity descriptor, inode won't have any
+> fsverity_info yet."
 
-Hi folks,
+What code path is this?  __fsverity_file_open -> ensure_verity_info ->
+fsverity_get_descriptor?
 
-The xfs-7.0-fixes branch of the xfs-linux repository at:
+> > See above, unlike ext4/f2fs we set it for all I/O on fsverity inodes.
+> > And afaik we don't actually need it, the only use in the fsverity
+> > metadata path is the fill zeroes hash values check (which I'm still
+> > totally confused about).
+> 
+> Yeah, for metadata the only use is to fill zero hash blocks. I will
+> try to split it so lookup happens for data and holes in fsverity
+> metadata. This way we would have less lookups for metadata.
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+I think doing one lookup per ->read_folio / ->readahead is fine.
+I just really need to understand the differences here.  I think I'm
+finally getting it, and it would be greast to capture all this in
+comments.  I'll carefully read over the next versions and will suggest
+updates to the comments based on the my understanding if needed.
 
-has just been *REBASED*.
-
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.
-
-This rebases the currently existing patches plus newer ones
-on top of 7.0-rc1.
-
-The new head of the xfs-7.0-fixes branch is commit:
-
-d7a474481777 xfs: add static size checks for ioctl UABI
-
-21 new commits:
-
-Carlos Maiolino (1):
-      [4b7b9e3b5abf] Merge tag 'xfs-fixes-7.0_2026-02-23' of https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux into xfs-7.0-fixes
-
-Christoph Hellwig (2):
-      [810e363df769] xfs: cleanup inode counter stats
-      [428980f6202b] xfs: remove metafile inodes from the active inode stat
-
-Darrick J. Wong (6):
-      [34e20fb02e39] xfs: fix copy-paste error in previous fix
-      [b46832816931] xfs: fix xfs_group release bug in xfs_verify_report_losses
-      [bc5e571eff64] xfs: fix xfs_group release bug in xfs_dax_notify_dev_failure
-      [27997bc4adc8] xfs: fix potential pointer access race in xfs_healthmon_get
-      [475d26407127] xfs: don't report metadata inodes to fserror
-      [0e9b4455c7a3] xfs: don't report half-built inodes to fserror
-
-Ethan Tidmore (1):
-      [98899e053df0] xfs: Fix error pointer dereference
-
-Nirjhar Roy (IBM) (8):
-      [8e1283f36fe8] xfs: Replace ASSERT with XFS_IS_CORRUPT in xfs_rtcopy_summary()
-      [ae3ddfcd5937] xfs: Fix in xfs_rtalloc_query_range()
-      [adc70ba6f06d] xfs: Refactoring the nagcount and delta calculation
-      [b420344382a4] xfs: Replace &rtg->rtg_group with rtg_group()
-      [5c230c08da92] xfs: Fix xfs_last_rt_bmblock()
-      [d93c48bfe3d9] xfs: Add a comment in xfs_log_sb()
-      [e37c36b26503] xfs: Update lazy counters in xfs_growfs_rt_bmblock()
-      [fddf473b28fb] xfs: Add comments for usages of some macros.
-
-Wilfred Mallawa (3):
-      [dcf2e2fa66ef] xfs: fix code alignment issues in xfs_ondisk.c
-      [3ab9082fcda0] xfs: remove duplicate static size checks
-      [d7a474481777] xfs: add static size checks for ioctl UABI
-
-Code Diffstat:
-
- fs/xfs/libxfs/xfs_ag.c        | 28 +++++++++++++++++++++++
- fs/xfs/libxfs/xfs_ag.h        |  3 +++
- fs/xfs/libxfs/xfs_inode_buf.c |  4 ++++
- fs/xfs/libxfs/xfs_metafile.c  |  5 +++++
- fs/xfs/libxfs/xfs_ondisk.h    | 52 ++++++++++++++++++++++++++++++-------------
- fs/xfs/libxfs/xfs_rtbitmap.c  |  2 +-
- fs/xfs/libxfs/xfs_sb.c        |  3 +++
- fs/xfs/scrub/dir_repair.c     |  2 +-
- fs/xfs/scrub/orphanage.c      |  7 +++++-
- fs/xfs/xfs_fsops.c            | 17 ++------------
- fs/xfs/xfs_health.c           | 20 +++++++++++++++--
- fs/xfs/xfs_healthmon.c        | 11 +++++----
- fs/xfs/xfs_icache.c           | 18 +++++++++++----
- fs/xfs/xfs_mount.h            |  2 +-
- fs/xfs/xfs_notify_failure.c   |  4 ++--
- fs/xfs/xfs_platform.h         |  9 ++++++++
- fs/xfs/xfs_rtalloc.c          | 44 ++++++++++++++++++++++++++++++------
- fs/xfs/xfs_stats.c            | 17 +++++++++-----
- fs/xfs/xfs_stats.h            | 19 ++++++++--------
- fs/xfs/xfs_super.c            |  4 ++--
- fs/xfs/xfs_verify_media.c     |  4 ++--
- fs/xfs/xfs_zone_alloc.c       |  6 ++---
- fs/xfs/xfs_zone_gc.c          | 10 ++++-----
- 23 files changed, 210 insertions(+), 81 deletions(-)
 
