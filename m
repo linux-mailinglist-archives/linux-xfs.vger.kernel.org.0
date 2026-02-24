@@ -1,107 +1,122 @@
-Return-Path: <linux-xfs+bounces-31254-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31255-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ACzfJv67nWklRgQAu9opvQ
-	(envelope-from <linux-xfs+bounces-31254-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:55:58 +0100
+	id OHX6JUa+nWnzRgQAu9opvQ
+	(envelope-from <linux-xfs+bounces-31255-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 16:05:42 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2687C188B8C
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:55:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CB79188CDC
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 16:05:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6EA5A3010D8E
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 14:52:02 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B736E303740A
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Feb 2026 15:01:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E399A39E6FB;
-	Tue, 24 Feb 2026 14:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24EA83A0EB7;
+	Tue, 24 Feb 2026 15:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cqeu6Wi/"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C429A39E6F9;
-	Tue, 24 Feb 2026 14:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AF220E03F
+	for <linux-xfs@vger.kernel.org>; Tue, 24 Feb 2026 15:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771944721; cv=none; b=FuB4+cBw0Ko+jqguKBQRkNLO2GfnAo4z2jPU223ItVzM8h8Z/ftfseJw/GdryrDPtg5VAy1tZvGN3fTb8yHWwfKRCsAWNWBfAKugffaH+PXmRh0IEGUOevF0rH/b2vPKswHfW6O2Wq4iIPxNkf7GZDp1/Imd4lzjnn2BUKnXkxY=
+	t=1771945273; cv=none; b=bIh7JEwix4nhDPydLSZQ8Pu+Y7yAuKSie3XZvtRhZR5MWbNZ3LJiFsolGn16REmEDnXr+vhzOTM4z8u35HZrtC8qc7AHrwQIZSCpk3z5w1XdoM1VbaFIrX2AkANxdcvEh3HCcjkCBvpwy0TOaAp7w0Zxn3Pa3cU8O8zdtglhRV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771944721; c=relaxed/simple;
-	bh=iyIHMDWafRDoQWMxBuWvwQXYG3m2tJZQ5KOhoIR+TDo=;
+	s=arc-20240116; t=1771945273; c=relaxed/simple;
+	bh=75+IVSnaYkUllJjEvFfQyG4IE4WFdm1JcQupf727Ps0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f9Mam3ybSFiLK2agS3xp8F+hsezprqgS+DlTZ8D8Hssjvax6ydoYi30583sEkV2hMPHk1iP/j0IWW8PQk8A142/4q+rywYF5/hPXrKW3Ch5Di+M1p8VynCCNbP/1yJzvUCDDfYYnqkyIUin180en15EHhJtE1mUs2MAewh1RWQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 2604668BEB; Tue, 24 Feb 2026 15:51:57 +0100 (CET)
-Date: Tue, 24 Feb 2026 15:51:56 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: fsverity@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-btrfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-	Andrey Albershteyn <aalbersh@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Subject: Re: [PATCH] fsverity: add dependency on 64K or smaller pages
-Message-ID: <20260224145156.GA13173@lst.de>
-References: <20260221204525.30426-1-ebiggers@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCs9WEzXRCk+UbFa5j50MCUo7h5yebtJKe9AzDQSdsTcqvY9qcV32YfiCAnBST4j1oPMXz4gjGtvgBc/tIV+W2ES7CyhkaeeOU94PZJRycVZI0CVPyMetNQlc5VYjREeh0jEu2f3RsolJBT2bYasU7AaaAIwmJ/r1QSt0KackPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cqeu6Wi/; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Un4RnpiXLdw8F0LP4/Q+d87+F5vSjxj4+l0RjO04Jto=; b=cqeu6Wi/7t9ICnmrHeSY854ABC
+	oVwY+T8YoFhyLn2pOV43cxodXqk5ICChf7w4T49xSG2GSulmgmdSJ30bk+kh46H8+GzCeDgM6YWkN
+	WPpaSu9nQzmmjoALCngAh1qRaRQXKTN22Enye+iHQTPUWV48DHFjL/jwYL/KpJ/sRYlgEW66jt5hg
+	HqD3lzyeaNsrZpnkYnMOQ0U6iPC1Xbxe4KxclB3YjebQTv47xxc0QhMOUXbhaRHNqRlKM+HlfB1zU
+	yCVxMpwkTwmG/i7g8V/rY71DWTp47lXqaY+C3SIoB31kwRHCrj6nuMGNTKfAN5ffsoItokW8QZmxj
+	sZ0dEtUw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vutuR-00000002Hhr-2Jj7;
+	Tue, 24 Feb 2026 15:01:11 +0000
+Date: Tue, 24 Feb 2026 07:01:11 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: =?utf-8?B?0JzQsNGA0Log0JrQvtGA0LXQvdCx0LXRgNCz?= <socketpair@gmail.com>,
+	linux-xfs@vger.kernel.org
+Subject: Re: [RFE] xfs_growfs: option to clamp growth to an AG boundary
+Message-ID: <aZ29NxAM6CpGXVWl@infradead.org>
+References: <CAEmTpZGcBvxsMP6Qg4zcUd-D4M9-jmzS=+9ZsY2RemRDTDQcQg@mail.gmail.com>
+ <20260223162320.GB2390353@frogsfrogsfrogs>
+ <CAEmTpZFcHCgt_T63zE4pQk4mmyULZ7TfTNqPXDXDfJBma8dj+g@mail.gmail.com>
+ <20260223230840.GD2390353@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260221204525.30426-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260223230840.GD2390353@frogsfrogsfrogs>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.36 / 15.00];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	TAGGED_RCPT(0.00)[linux-xfs];
+	TAGGED_FROM(0.00)[bounces-31255-lists,linux-xfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_THREE(0.00)[4];
-	R_DKIM_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	PRECEDENCE_BULK(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31254-lists,linux-xfs=lfdr.de];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: 2687C188B8C
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-xfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 0CB79188CDC
 X-Rspamd-Action: no action
 
-On Sat, Feb 21, 2026 at 12:45:25PM -0800, Eric Biggers wrote:
-> Currently, all filesystems that support fsverity (ext4, f2fs, and btrfs)
-> cache the Merkle tree in the pagecache at a 64K aligned offset after the
-> end of the file data.  This offset needs to be a multiple of the page
-> size, which is guaranteed only when the page size is 64K or smaller.
+On Mon, Feb 23, 2026 at 03:08:40PM -0800, Darrick J. Wong wrote:
+> On Tue, Feb 24, 2026 at 12:29:49AM +0500, Марк Коренберг wrote:
+> > ```
+> > cp: failed to clone
+> > '/run/ideco-overlay-dir/ideco-trash-o4ut52ue/upperdir/var/lib/clickhouse/store/e2b/e2bdef56-6be8-40bf-8fab-d8fb2e9fdd94/90-20250905_11925_11925_0/primary.cidx'
+> > from '/run/ideco-overlay-dir/storage/ideco-ngfw-19-7-19/upperdir/var/lib/clickhouse/store/e2b/e2bdef56-6be8-40bf-8fab-d8fb2e9fdd94/90-20250905_11925_11925_0/primary.cidx':
+> > No space left on device
 > 
-> 64K was chosen to be the "largest reasonable page size".  But it isn't
-> the largest *possible* page size: the hexagon and powerpc ports of Linux
-> support 256K pages, though that configuration is rarely used.
-> 
-> For now, just disable support for FS_VERITY in these odd configurations
-> to ensure it isn't used in cases where it would have incorrect behavior.
+> Ah, that.  coreutils seems to think that FICLONE returning ENOSPC is a
+> fatal error.  I wonder if we need to amend the ficlone manpage to state
+> that ENOSPC can happen if there's not enough space in an AG to clone and
+> that the caller might try a regular copy; or just change xfs to return a
+> different errno?
 
-Do we want to throw in the towel here for the forseable future and if we
-ever need to support fsverity on > 64k page size just do a on-disk
-version rev?
-
-Because if so we could just simply the pending xfs fsverity support to
-drop all the offset adjustment and simplify it a lot..
+I think the problem is that we report ENOSPC for this.  The historic
+error code coming from the old btrfs days is EINVAL for "can't support
+this for random unlisted reason", which btrfs does for example for
+inline extents.  We really should turn ENOSPC into that.
 
 
