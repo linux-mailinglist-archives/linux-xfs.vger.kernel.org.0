@@ -1,52 +1,52 @@
-Return-Path: <linux-xfs+bounces-31272-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31273-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YGXzMkS1nmnwWwQAu9opvQ
-	(envelope-from <linux-xfs+bounces-31272-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Feb 2026 09:39:32 +0100
+	id kOd5BKa1nmnwWwQAu9opvQ
+	(envelope-from <linux-xfs+bounces-31273-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Feb 2026 09:41:10 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC838194516
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Feb 2026 09:39:31 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BFAE19455B
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Feb 2026 09:41:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3F80E3017780
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 Feb 2026 08:39:29 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B6D0A308DCE2
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 Feb 2026 08:39:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEA8D2F691D;
-	Wed, 25 Feb 2026 08:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA52324707;
+	Wed, 25 Feb 2026 08:39:51 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from mx0.herbolt.com (mx0.herbolt.com [5.59.97.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5A42DB789
-	for <linux-xfs@vger.kernel.org>; Wed, 25 Feb 2026 08:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CC931CA4A
+	for <linux-xfs@vger.kernel.org>; Wed, 25 Feb 2026 08:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.59.97.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772008766; cv=none; b=R9EZvUzvw1DHxHjgue/Mqq5L+0jW1eNNdN346O345NEX6htqZk0toOxpuD2soFsJRude70pmSFMln2+Yi6wdDVImXZUnxL2MVdLTgBhGmmkkFKL9223Ef9Gr5w1r9MCW7BNP/cCpwcpRw7oANFHcYFNrLsb4xjuOAmsrLrgw45g=
+	t=1772008791; cv=none; b=OEV8GdqGvpEsI5IsZI8SKPTKnRUh1GJGcpq6LsGkgE+WxYsN0t13aQ3fG3G+vflHoI7jT/b9I6Urqj33lOoR+AKhZ4LTvmcK7ap1Ag7YVNPiZN/7O68YlqDXNnDICXH4B2aKaxF9J6eXrt08aZSeSYX0YZLCM5tGJqlI/fDxDDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772008766; c=relaxed/simple;
+	s=arc-20240116; t=1772008791; c=relaxed/simple;
 	bh=5jRIGxEWfltI6fcGFMPw7GooqWbRzey7Hs7D+TlqxEk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WY9cbGxqiG43wqNb2Hu1FrJKIdI0IBMgaU61Gr4LuQsWTEhD14XWsjT9NmwBQzpgCizVNDXWIuanjpUMjOtWi3eQa4WlBWOLohToRWMjhKDx0RnQmGc5hpBgX4Iu3oP4JSJJXKxDPwo2o+GZIBngqMlO5sEyRPc5qamRuQS9vNI=
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=csv6i+8yov2gh8s0u0LmvBPbWnTWqIWOUdVNCdE7cg19r3XI3GV+hmcSupoC2du1tFgetYg2t7ydXg7laaTFt+Yx+Yh1L+YWRz6U+Jd3AlEkIG3/BOKMfojgmzzijhcdDjL/SOiom7AeEROtzZUqdEOWO55mc4SKdyngFd13Bk4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herbolt.com; spf=pass smtp.mailfrom=herbolt.com; arc=none smtp.client-ip=5.59.97.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herbolt.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=herbolt.com
 Received: from mx0.herbolt.com (localhost [127.0.0.1])
-	by mx0.herbolt.com (Postfix) with ESMTP id 74941180F2E7;
-	Wed, 25 Feb 2026 09:39:21 +0100 (CET)
+	by mx0.herbolt.com (Postfix) with ESMTP id 32714180F2E7;
+	Wed, 25 Feb 2026 09:39:46 +0100 (CET)
 Received: from trufa.intra.herbolt.com.com ([172.168.31.30])
 	by mx0.herbolt.com with ESMTPSA
-	id mYE7Fzm1nml/qg8AKEJqOA
-	(envelope-from <lukas@herbolt.com>); Wed, 25 Feb 2026 09:39:21 +0100
+	id TgRKCVK1nmmYqg8AKEJqOA
+	(envelope-from <lukas@herbolt.com>); Wed, 25 Feb 2026 09:39:46 +0100
 From: Lukas Herbolt <lukas@herbolt.com>
 To: linux-xfs@vger.kernel.org,
 	djwong@kernel.org
 Cc: cem@kernel.org,
 	hch@infradead.org,
 	Lukas Herbolt <lukas@herbolt.com>
-Subject: [PATCH] xfs: add FALLOC_FL_WRITE_ZEROES to XFS code base
-Date: Wed, 25 Feb 2026 09:37:47 +0100
-Message-ID: <20260225083746.580759-2-lukas@herbolt.com>
+Subject: [PATCH v10] xfs: add FALLOC_FL_WRITE_ZEROES to XFS code base
+Date: Wed, 25 Feb 2026 09:39:33 +0100
+Message-ID: <20260225083932.580849-2-lukas@herbolt.com>
 X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
@@ -60,18 +60,18 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-31272-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31273-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	DMARC_NA(0.00)[herbolt.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	FROM_NEQ_ENVFROM(0.00)[lukas@herbolt.com,linux-xfs@vger.kernel.org];
@@ -81,8 +81,8 @@ X-Spamd-Result: default: False [0.04 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_COUNT_FIVE(0.00)[5];
 	R_DKIM_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,herbolt.com:mid,herbolt.com:email]
-X-Rspamd-Queue-Id: EC838194516
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,herbolt.com:mid,herbolt.com:email]
+X-Rspamd-Queue-Id: 9BFAE19455B
 X-Rspamd-Action: no action
 
 Add support for FALLOC_FL_WRITE_ZEROES if the underlying device enable
