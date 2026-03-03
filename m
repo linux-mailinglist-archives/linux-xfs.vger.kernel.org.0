@@ -1,56 +1,55 @@
-Return-Path: <linux-xfs+bounces-31644-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31645-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mE9oN9gnpmk+LQAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31644-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:14:16 +0100
+	id kKdqK+wnpmk+LQAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31645-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:14:36 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 613AE1E703A
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:14:16 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A973B1E7052
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:14:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 097FF30312E5
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 00:14:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id AB01D30080B0
+	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 00:14:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8836A932;
-	Tue,  3 Mar 2026 00:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8E40C8CE;
+	Tue,  3 Mar 2026 00:14:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7wAd0xW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJcx/XcX"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6ADD14AD20
-	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 00:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B72A932
+	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 00:14:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772496854; cv=none; b=epteCHAagxcrfWFqunrgPZtVBDH30bC69ESIrblw7alwevxXDEfGMyVbe8HEgEws9i3igfZSkqBvomUqLwGzoX7d7BQwOsMVd+1OQJi8E7PKvvdxFj/EoWlNcbEACNIfz2v/pim9bF90dgSFWl/vnup+JFWUPE/ggvTsiqcx4FY=
+	t=1772496870; cv=none; b=RlsWmeteab/2Cp+kIr+OOJhOtg0K3q/4KMVrqZcrAJPuWWa6noo/enupPeUNCnbSILfAjYq4giYuEBGQs8jyrhVtnPq16EeOAa5TVuEbTrCTgoFEwcaHvRlliF5CM5X//CmmIrP9+5SVODqbQ64KaI+4DWLmR1s3KOwKDwKLO3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772496854; c=relaxed/simple;
-	bh=oJmQ7nliGKSrTP1D9rU3lLs5QxiIlUTxs9c65jsu2WI=;
+	s=arc-20240116; t=1772496870; c=relaxed/simple;
+	bh=6KoVoYq4sYmDcG7ROkguWGneUGT7Iz7ptsYCHsozxxY=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uoHlWLlsd2UhauF58EMQcS6LoTBeD+5R5kYyZ3tWrKi2PTaHBb0ty71kJGMhIakRrEFgEBzQyLGJrwKIHELjGR5/Q/G6Z9PuWF9Zr0wtuYHADi3GxfzHFryXf4ZWsw6JUZE2dpbXf/xTa3tFKgkVarZSfCT5gJVHd95eePVtJHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7wAd0xW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823EBC19423;
-	Tue,  3 Mar 2026 00:14:14 +0000 (UTC)
+	 MIME-Version:Content-Type; b=jflqyPVvcZmc8XBPtfr2R6Ha461tw7sG3I91dggMbhditrVK5XxVnAKofeeyotK9m1AXzihbsRG4XagwbuBMAYQd1Z7+xIPHZEGbZExxa1jO9yZQlWnL6EPmv80nJPGu0CzZ3aQ88gBKYxZXASoI1GBntXCAH30PR1TEFGZjZwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJcx/XcX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3243BC19423;
+	Tue,  3 Mar 2026 00:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772496854;
-	bh=oJmQ7nliGKSrTP1D9rU3lLs5QxiIlUTxs9c65jsu2WI=;
+	s=k20201202; t=1772496870;
+	bh=6KoVoYq4sYmDcG7ROkguWGneUGT7Iz7ptsYCHsozxxY=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=d7wAd0xWX4P15tDhEbWEtPhXPxMLdh/15FcWjU1+y9fZBnLIUGvOAz3q1PDoEEkMk
-	 lOwQSfjFCTDClX0hip3e8OHJG16sKOISlVH3ditFRrad5wUWdALL8boM7u+D11OQVQ
-	 kiDDorRNzg4TrNn+FDH9gISsN50+GmhkTSPLq/qISgR3YjrYhoaR8tAqCLgfy4Idgu
-	 gg1McDSJOVG2LvS3bhQfcUdgIoAz4FFCIkLmLOASrrDTEp3DNN91IDXOwKHCFTGbTW
-	 klK4obyr9+GkzOCF7kHngk32Kup0zO2aw2P2H920K7mOVSjrncLkqOOiCvV4cP6LQX
-	 0CnUq/W9Aw+Uw==
-Date: Mon, 02 Mar 2026 16:14:14 -0800
-Subject: [PATCH 08/36] xfs: convey externally discovered fsdax media errors to
- the health monitor
+	b=LJcx/XcXS28YTHToR4CWzMAfsDcRVmdPdJ0m9M8lLCnu+YNkfwWcdyr8pmsFY5d/i
+	 WOeSLLCBdSX/CHCoHb0SEWiQm59nFE9VKr4F727ZawBbwW+x3XmKACxz+BlsWuvt4a
+	 4wmrm+6KCTa5oiaqT7qzhqssNNCawPb1dfB20OoHq8jdnlvBM93C/xO1+G+9mjtEgt
+	 P/YpRRmzHem9hB0RNgr0BT+eptuW3szvgYRjIPoLfNbkTn8SEcgZUdKVXXEDoE5Wmt
+	 exelwa/xa5dyGje0UaBY2KNtR4ZqL/tQgcrk9+QWfD7SBZQk7FRMvYFuNZCan9n5OB
+	 rXz603w272qxA==
+Date: Mon, 02 Mar 2026 16:14:29 -0800
+Subject: [PATCH 09/36] xfs: convey file I/O errors to the health monitor
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: aalbersh@kernel.org, djwong@kernel.org
 Cc: hch@lst.de, linux-xfs@vger.kernel.org
-Message-ID: <177249637923.457970.794607132382987708.stgit@frogsfrogsfrogs>
+Message-ID: <177249637941.457970.16330109887717955226.stgit@frogsfrogsfrogs>
 In-Reply-To: <177249637597.457970.8500158485809720053.stgit@frogsfrogsfrogs>
 References: <177249637597.457970.8500158485809720053.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -61,25 +60,25 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 613AE1E703A
+X-Rspamd-Queue-Id: A973B1E7052
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31644-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31645-lists,linux-xfs=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -89,71 +88,79 @@ X-Spamd-Result: default: False [-1.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,lst.de:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,lst.de:email]
 X-Rspamd-Action: no action
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Source kernel commit: e76e0e3fc9957a5183ddc51dc84c3e471125ab06
+Source kernel commit: dfa8bad3a8796ce1ca4f1d15158e2ecfb9c5c014
 
-Connect the fsdax media failure notification code to the health monitor
-so that xfs can send events about that to the xfs_healer daemon.
-
-Later on we'll add the ability for the xfs_scrub media scan (phase 6) to
-report the errors that it finds to the kernel so that those are also
-logged by xfs_healer.
+Connect the fserror reporting to the health monitor so that xfs can send
+events about file I/O errors to the xfs_healer daemon.  These events are
+entirely informational because xfs cannot regenerate user data, so
+hopefully the fsnotify I/O error event gets noticed by the relevant
+management systems.
 
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- libxfs/xfs_fs.h |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ libxfs/xfs_fs.h |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 
 diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index c8f7011a7ef8ef..38aeb1b0d87b5e 100644
+index 38aeb1b0d87b5e..4ec1b2aede976f 100644
 --- a/libxfs/xfs_fs.h
 +++ b/libxfs/xfs_fs.h
-@@ -1014,6 +1014,11 @@ struct xfs_rtgroup_geometry {
- #define XFS_HEALTH_MONITOR_DOMAIN_INODE		(3)
- #define XFS_HEALTH_MONITOR_DOMAIN_RTGROUP	(4)
+@@ -1019,6 +1019,9 @@ struct xfs_rtgroup_geometry {
+ #define XFS_HEALTH_MONITOR_DOMAIN_RTDEV		(6)
+ #define XFS_HEALTH_MONITOR_DOMAIN_LOGDEV	(7)
  
-+/* disk events */
-+#define XFS_HEALTH_MONITOR_DOMAIN_DATADEV	(5)
-+#define XFS_HEALTH_MONITOR_DOMAIN_RTDEV		(6)
-+#define XFS_HEALTH_MONITOR_DOMAIN_LOGDEV	(7)
++/* file range events */
++#define XFS_HEALTH_MONITOR_DOMAIN_FILERANGE	(8)
 +
  /* Health monitor event types */
  
  /* status of the monitor itself */
-@@ -1031,6 +1036,9 @@ struct xfs_rtgroup_geometry {
- /* filesystem shutdown */
- #define XFS_HEALTH_MONITOR_TYPE_SHUTDOWN	(6)
+@@ -1039,6 +1042,17 @@ struct xfs_rtgroup_geometry {
+ /* media errors */
+ #define XFS_HEALTH_MONITOR_TYPE_MEDIA_ERROR	(7)
  
-+/* media errors */
-+#define XFS_HEALTH_MONITOR_TYPE_MEDIA_ERROR	(7)
++/* pagecache I/O to a file range failed */
++#define XFS_HEALTH_MONITOR_TYPE_BUFREAD		(8)
++#define XFS_HEALTH_MONITOR_TYPE_BUFWRITE	(9)
++
++/* direct I/O to a file range failed */
++#define XFS_HEALTH_MONITOR_TYPE_DIOREAD		(10)
++#define XFS_HEALTH_MONITOR_TYPE_DIOWRITE	(11)
++
++/* out of band media error reported for a file range */
++#define XFS_HEALTH_MONITOR_TYPE_DATALOST	(12)
 +
  /* lost events */
  struct xfs_health_monitor_lost {
  	__u64	count;
-@@ -1071,6 +1079,12 @@ struct xfs_health_monitor_shutdown {
+@@ -1079,6 +1093,15 @@ struct xfs_health_monitor_shutdown {
  	__u32	reasons;
  };
  
-+/* disk media errors */
-+struct xfs_health_monitor_media {
-+	__u64	daddr;
-+	__u64	bbcount;
++/* file range events */
++struct xfs_health_monitor_filerange {
++	__u64	pos;
++	__u64	len;
++	__u64	ino;
++	__u32	gen;
++	__u32	error;
 +};
 +
- struct xfs_health_monitor_event {
- 	/* XFS_HEALTH_MONITOR_DOMAIN_* */
- 	__u32	domain;
-@@ -1092,6 +1106,7 @@ struct xfs_health_monitor_event {
- 		struct xfs_health_monitor_group group;
+ /* disk media errors */
+ struct xfs_health_monitor_media {
+ 	__u64	daddr;
+@@ -1107,6 +1130,7 @@ struct xfs_health_monitor_event {
  		struct xfs_health_monitor_inode inode;
  		struct xfs_health_monitor_shutdown shutdown;
-+		struct xfs_health_monitor_media media;
+ 		struct xfs_health_monitor_media media;
++		struct xfs_health_monitor_filerange filerange;
  	} e;
  
  	/* zeroes */
