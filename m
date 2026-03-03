@@ -1,55 +1,56 @@
-Return-Path: <linux-xfs+bounces-31704-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31705-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0LwqL28upmkrLwAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31704-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:42:23 +0100
+	id wGa0AXEupmkrLwAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31705-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:42:25 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6964D1E74B9
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:42:23 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D95491E74C0
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:42:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 918DE3027E2D
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 00:41:10 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E0F703026931
+	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 00:41:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B02A41A9F9B;
-	Tue,  3 Mar 2026 00:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D0C19C546;
+	Tue,  3 Mar 2026 00:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIMKSizi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWjfceL5"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C93219C546;
-	Tue,  3 Mar 2026 00:41:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339ED191F84;
+	Tue,  3 Mar 2026 00:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772498468; cv=none; b=NL54FYXqTzmNZ6CrTqb2YU4XnEomIVf6c2B7RZf/WS8bgUk/5sAe5sx13pA6F5UrxguI45NhH3Cj4+Krw0yUiKJ98z4AuY3z1yaa/gnv33nSoo0+FHIxQm4rogp6FbK/yHCnQpLsNUNFIc62GFAVP/gb/nVON1Oz4g5kS7Uz/q8=
+	t=1772498484; cv=none; b=HK7/pcDjrpT0rsuVkWj29l9Hn8sj8MEy0Ek75qMpGAGRPXmgGcdOBD9ibtzmq3G1DCIwtGIq5IEQoFFaJ+W0k9wwrDTsZ9M5Asr4A9eH71fj/wIRadrrPnYAPLhGMY5cIuyJw2Q0BLZBew2W9z2TiQYHeUjXn5bmn1bZV/tDeOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772498468; c=relaxed/simple;
-	bh=p1pYSqx0+XQQKTHczhAEnrV8MbMSxF3iKDe6Z8riQzI=;
+	s=arc-20240116; t=1772498484; c=relaxed/simple;
+	bh=M2MfOqpBBk/blSnhRnoFq8ddePD9FZPdle5NVRqJQDE=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UmYs5wT0RMOtHkH7C6S9S03FHmFWHhIGNu677CBnfvTY90ec29n6GUJw1TOk/EkWri02T3Q8nMuX7Y2Z2AtSuWBkD/rt0eGL6zX9AixXUx1WhCojvJVZsz0HdFqmRERJsEJ7XyfZbiy4ii782vlhV+PfN2GJeLaOdsYX6fcxHhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIMKSizi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28828C2BC86;
-	Tue,  3 Mar 2026 00:41:08 +0000 (UTC)
+	 MIME-Version:Content-Type; b=dSRrFQTuVBW1Hm9qPatcYd5+XusMwEei/1MeRmxfjz0CO5HAXAbWuhItRo4heUBEg1BT8G22OC1XnT2eqQNzB4P173j/G+JSgyPjcCGm3sxygFtlPtC47gTRQVPWqMfri3Uev37Tqq6geZvxU2+dz8egimlwfzDvC2mLvrDyGKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWjfceL5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB876C19423;
+	Tue,  3 Mar 2026 00:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772498468;
-	bh=p1pYSqx0+XQQKTHczhAEnrV8MbMSxF3iKDe6Z8riQzI=;
+	s=k20201202; t=1772498483;
+	bh=M2MfOqpBBk/blSnhRnoFq8ddePD9FZPdle5NVRqJQDE=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=HIMKSiziS3rQxQK65/z1DF3uT53YCwb+s7UBAyuOlCIAPRnBIpep1qgMNrBIKLh/1
-	 w9Urw50H/1uZjFbM+X52N1ZryX+MZ1+ox5hoFssKr0FF/bDAcOElwO2Xnpqss/twIw
-	 VuJFNaq2irEBpv5EB543KGhYFz3EkI/aW0fRYeqIqeA3pPcBuUXSVO8HA7JzOypzL3
-	 rY/xflBfdkzuEPMJxdLrvgkef99WL2E7lsSc1LTA3DTHlwwtlqNslarvYEEGPz+OAh
-	 ola5MNRBG1m5Jlz8bo7vc1JPBABCSywqR51mmwmxRkdC+eEvZmYZeuYFGK5Pmbm7Gf
-	 OlykEqUcZK2Cg==
-Date: Mon, 02 Mar 2026 16:41:07 -0800
-Subject: [PATCH 01/13] xfs: test health monitoring code
+	b=uWjfceL5P1SFuJynS+s/K+FK85ygW0+Nu444Ll7JCAvAixl0kU4QNl/thimqv0+cf
+	 /FKHge1JbubDCcKYIL1uK/fNg/+FMK55RWPs07+68+AZE07GespmqNo3VMwbMHpWfe
+	 HipuhRJ7s+/TGSwcWyFt3GZPKYLH55j17bFJpWhJpMmAW3S2XSqPihrbXfJgaiC2pq
+	 tbSR910ETwU35QNi57w9w9uY+z86CLmxLJ31VGky/Gs+UpgnYuwFThTKXFPjUCPhw8
+	 CNc6Lwn1ioo8k13M6BgGatbv53OL0Ty0junWxnd2lOXIDEDonBAXvUJx8LMlJ/5VLL
+	 rI43jL1vVzXJQ==
+Date: Mon, 02 Mar 2026 16:41:23 -0800
+Subject: [PATCH 02/13] xfs: test for metadata corruption error reporting via
+ healthmon
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: zlang@redhat.com, djwong@kernel.org
 Cc: hch@lst.de, fstests@vger.kernel.org, linux-xfs@vger.kernel.org
-Message-ID: <177249785787.483507.3326797286262755687.stgit@frogsfrogsfrogs>
+Message-ID: <177249785805.483507.14510385335927372965.stgit@frogsfrogsfrogs>
 In-Reply-To: <177249785709.483507.8373602184765043420.stgit@frogsfrogsfrogs>
 References: <177249785709.483507.8373602184765043420.stgit@frogsfrogsfrogs>
 Precedence: bulk
@@ -60,25 +61,25 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 6964D1E74B9
+X-Rspamd-Queue-Id: D95491E74C0
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31704-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31705-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
@@ -93,99 +94,152 @@ X-Rspamd-Action: no action
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add some functionality tests for the new health monitoring code.
+Check if we can detect runtime metadata corruptions via the health
+monitor.
 
 Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
- doc/group-names.txt |    1 +
- tests/xfs/1885      |   53 +++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1885.out  |    5 +++++
- 3 files changed, 59 insertions(+)
- create mode 100755 tests/xfs/1885
- create mode 100644 tests/xfs/1885.out
+ common/rc          |   10 ++++++
+ tests/xfs/1879     |   93 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1879.out |    8 ++++
+ 3 files changed, 111 insertions(+)
+ create mode 100755 tests/xfs/1879
+ create mode 100644 tests/xfs/1879.out
 
 
-diff --git a/doc/group-names.txt b/doc/group-names.txt
-index 10b49e50517797..158f84d36d3154 100644
---- a/doc/group-names.txt
-+++ b/doc/group-names.txt
-@@ -117,6 +117,7 @@ samefs			overlayfs when all layers are on the same fs
- scrub			filesystem metadata scrubbers
- seed			btrfs seeded filesystems
- seek			llseek functionality
-+selfhealing		self healing filesystem code
- selftest		tests with fixed results, used to validate testing setup
- send			btrfs send/receive
- shrinkfs		decreasing the size of a filesystem
-diff --git a/tests/xfs/1885 b/tests/xfs/1885
+diff --git a/common/rc b/common/rc
+index fd4ca9641822cf..38d4b500b3b51f 100644
+--- a/common/rc
++++ b/common/rc
+@@ -3013,6 +3013,16 @@ _require_xfs_io_command()
+ 		echo $testio | grep -q "Inappropriate ioctl" && \
+ 			_notrun "xfs_io $command support is missing"
+ 		;;
++	"healthmon")
++		testio=`$XFS_IO_PROG -c "$command -p $param" $TEST_DIR 2>&1`
++		echo $testio | grep -q "bad argument count" && \
++			_notrun "xfs_io $command $param support is missing"
++		echo $testio | grep -q "Inappropriate ioctl" && \
++			_notrun "xfs_io $command $param ioctl support is missing"
++		echo $testio | grep -q "Operation not supported" && \
++			_notrun "xfs_io $command $param kernel support is missing"
++		param_checked="$param"
++		;;
+ 	"label")
+ 		testio=`$XFS_IO_PROG -c "label" $TEST_DIR 2>&1`
+ 		;;
+diff --git a/tests/xfs/1879 b/tests/xfs/1879
 new file mode 100755
-index 00000000000000..1d75ef19c7c9d9
+index 00000000000000..75bc8e3b5f4316
 --- /dev/null
-+++ b/tests/xfs/1885
-@@ -0,0 +1,53 @@
++++ b/tests/xfs/1879
+@@ -0,0 +1,93 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (c) 2024-2026 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test 1885
++# FS QA Test No. 1879
 +#
-+# Make sure that healthmon handles module refcount correctly.
++# Corrupt some metadata and try to access it with the health monitoring program
++# running.  Check that healthmon observes a metadata error.
 +#
 +. ./common/preamble
-+_begin_fstest auto selfhealing
++_begin_fstest auto quick eio selfhealing
++
++_cleanup()
++{
++	cd /
++	rm -rf $tmp.* $testdir
++}
 +
 +. ./common/filter
-+. ./common/module
 +
-+refcount_file="/sys/module/xfs/refcnt"
-+test -e "$refcount_file" || _notrun "cannot find xfs module refcount"
-+
-+_require_test
++_require_scratch_nocheck
++_require_scratch_xfs_crc # can't detect minor corruption w/o crc
 +_require_xfs_io_command healthmon
 +
-+# Capture mod refcount without the test fs mounted
-+_test_unmount
-+init_refcount="$(cat "$refcount_file")"
++# Disable the scratch rt device to avoid test failures relating to the rt
++# bitmap consuming all the free space in our small data device.
++unset SCRATCH_RTDEV
 +
-+# Capture mod refcount with the test fs mounted
-+_test_mount
-+nomon_mount_refcount="$(cat "$refcount_file")"
++echo "Format and mount"
++_scratch_mkfs -d agcount=1 | _filter_mkfs 2> $tmp.mkfs >> $seqres.full
++. $tmp.mkfs
++_scratch_mount
++mkdir $SCRATCH_MNT/a/
++# Enough entries to get to a single block directory
++for ((i = 0; i < ( (isize + 255) / 256); i++)); do
++	path="$(printf "%s/a/%0255d" "$SCRATCH_MNT" "$i")"
++	touch "$path"
++done
++inum="$(stat -c %i "$SCRATCH_MNT/a")"
++_scratch_unmount
 +
-+# Capture mod refcount with test fs mounted and the healthmon fd open.
-+# Pause the xfs_io process so that it doesn't actually respond to events.
-+$XFS_IO_PROG -c 'healthmon -c -v' $TEST_DIR >> $seqres.full &
-+sleep 0.5
-+kill -STOP %1
-+mon_mount_refcount="$(cat "$refcount_file")"
++# Fuzz the directory block so that the touch below will be guaranteed to trip
++# a runtime sickness report in exactly the manner we desire.
++_scratch_xfs_db -x -c "inode $inum" -c "dblock 0" -c 'fuzz bhdr.hdr.owner add' -c print &>> $seqres.full
 +
-+# Capture mod refcount with only the healthmon fd open.
-+_test_unmount
-+mon_nomount_refcount="$(cat "$refcount_file")"
++# Try to allocate space to trigger a metadata corruption event
++echo "Runtime corruption detection"
++_scratch_mount
++$XFS_IO_PROG -c 'healthmon -c -v' $SCRATCH_MNT > $tmp.healthmon &
++sleep 1	# wait for program to start up
++touch $SCRATCH_MNT/a/farts &>> $seqres.full
++_scratch_unmount
 +
-+# Capture mod refcount after continuing healthmon (which should exit due to the
-+# unmount) and killing it.
-+kill -CONT %1
-+kill %1
-+wait
-+nomon_nomount_refcount="$(cat "$refcount_file")"
++wait	# for healthmon to finish
 +
-+_within_tolerance "mount refcount" "$nomon_mount_refcount" "$((init_refcount + 1))" 0 -v
-+_within_tolerance "mount + healthmon refcount" "$mon_mount_refcount" "$((init_refcount + 2))" 0 -v
-+_within_tolerance "healthmon refcount" "$mon_nomount_refcount" "$((init_refcount + 1))" 0 -v
-+_within_tolerance "end refcount" "$nomon_nomount_refcount" "$init_refcount" 0 -v
++# Did we get errors?
++check_healthmon()
++{
++	cat $tmp.healthmon >> $seqres.full
++	_filter_scratch < $tmp.healthmon | \
++		grep -E '(sick|corrupt)' | \
++		sed -e 's|SCRATCH_MNT/a|VICTIM|g' \
++		    -e 's|SCRATCH_MNT ino [0-9]* gen 0x[0-9a-f]*|VICTIM|g' | \
++		sort | \
++		uniq
++}
++check_healthmon
++
++# Run scrub to trigger a health event from there too.
++echo "Scrub corruption detection"
++_scratch_mount
++if _supports_xfs_scrub $SCRATCH_MNT $SCRATCH_DEV; then
++	$XFS_IO_PROG -c 'healthmon -c -v' $SCRATCH_MNT > $tmp.healthmon &
++	sleep 1	# wait for program to start up
++	$XFS_SCRUB_PROG -n $SCRATCH_MNT &>> $seqres.full
++	_scratch_unmount
++
++	wait	# for healthmon to finish
++
++	# Did we get errors?
++	check_healthmon
++else
++	# mock the output since we don't support scrub
++	_scratch_unmount
++	cat << ENDL
++VICTIM directory: corrupt
++VICTIM directory: sick
++VICTIM parent: corrupt
++ENDL
++fi
 +
 +status=0
 +exit
-diff --git a/tests/xfs/1885.out b/tests/xfs/1885.out
+diff --git a/tests/xfs/1879.out b/tests/xfs/1879.out
 new file mode 100644
-index 00000000000000..f152cef0525609
+index 00000000000000..2f6acbe1c4fb22
 --- /dev/null
-+++ b/tests/xfs/1885.out
-@@ -0,0 +1,5 @@
-+QA output created by 1885
-+mount refcount is in range
-+mount + healthmon refcount is in range
-+healthmon refcount is in range
-+end refcount is in range
++++ b/tests/xfs/1879.out
+@@ -0,0 +1,8 @@
++QA output created by 1879
++Format and mount
++Runtime corruption detection
++VICTIM directory: sick
++Scrub corruption detection
++VICTIM directory: corrupt
++VICTIM directory: sick
++VICTIM parent: corrupt
 
 
