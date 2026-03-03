@@ -1,61 +1,61 @@
-Return-Path: <linux-xfs+bounces-31771-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31772-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KBUaA1rzpmkzawAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31771-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 15:42:34 +0100
+	id mP0WKxb1pmmgawAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31772-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 15:49:58 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD5EC1F1B43
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 15:42:33 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 173F51F1C87
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 15:49:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 299F1300E299
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 14:42:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DE8EB3154B88
+	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 14:44:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E4CC1D5160;
-	Tue,  3 Mar 2026 14:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676CA3EDAC6;
+	Tue,  3 Mar 2026 14:44:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qiGeql+b"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NGmjxWxQ"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FA9395D8F
-	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 14:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4763B3C00
+	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 14:44:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772548935; cv=none; b=qQ5S4NE1LXLjtnPtfs4h7b34gzOh0Xb8NUxdqYwAkhXRT9li6x+qVJxjVks+u5UQofCSqGGyJ6XiG4A4v+I7Rt6IeIpocZMTNvUG/Z2OwG2f1bdxACAQ4YRS29+NyZ8TRyJcKxJAiPwXrRnrUiSw9sakcEL3CkXCyhRbK/tRsdA=
+	t=1772549055; cv=none; b=KcixtL/QHOKXsMl2Xmsuy2nnnOshs8/unU5chbKEVUxPRh8VX9ZfOqLrmRqKLChFsp9F/MtrvTdpqZAWlUHjKhhbqx4WbJx434UsP1U9JUaTfZjwXHCYZvdTs2ngUMwub0qbAtxf81MBp69AYxnhhGMFwhahl5Ig7p8IkDSDOVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772548935; c=relaxed/simple;
-	bh=9bGhvQVN/D6T9G5r1/2Ni7/E1ETvBeWGLJn5ZF25lVo=;
+	s=arc-20240116; t=1772549055; c=relaxed/simple;
+	bh=vkeRiTfz/9h6/unxuca+euTnMBG1ELrl/3t5paGuSSA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FnYpk6e78R8TW/yN/DW4w6fjUZz3QS1wbeeiVTE3E1CPeukwhQOMQZFDIBw6+V7p5y090WjF/xVhTI5eOeFkSKr60CggahvvoonQj42hQfNXGUjlZJaDwAC29dfPBhlkdR20iL9J3t8+VF4AwnBi3TKTgng62W0KSnAaPN/kZuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qiGeql+b; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=FdoPczQrTDZQ4KSE0emx7ot16iI6ewkz/rkfsMW1MjyJsRi67jVGzL3hF+eQgENgP9YCh1kmU3hhSYxgXtqsvA5W7KdH4rFr4Ql7UcssJQymUbTXI/WjiS8hHU6VEDPny6CeYoPslJh0m+PbO0Je3KTFmv92oC+aLkuJSn7luhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NGmjxWxQ; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=J/DlD14JbWrGeeK6G6xIeO9r92r+571CMLtYCFCincA=; b=qiGeql+b6dNfMMATV9JoPbUAwL
-	IlY8Sx74eUBxo8qXJ6PMyHLKVqk9x6Sumgi7fYM6vlSMmFhUmg3q9yN7Qr7FiI/EYCNS7q+3AfmoR
-	je9hOxiVLe2zr6myGvghE3l2zNeHGd9KMiBeSJFGMcOTvuDJX6AfqKGG29998aNisA1P2ljrNcqlr
-	TsBQ/tVgi6rH1MPHZZHscWbJCzXrhp/gGIlKMOvS/fG809C05chqKmBSKZKU7+/EB+UOpa1rQ4bnB
-	uWueRbiSGRYvASmOeproVfzmMp0K8bKLg/sBMgr+8xeH5O5rBFKPxn1KdqZHFplJzk5nYGp87Dl92
-	tP4nX1rQ==;
+	bh=trPQLvUuTUENTsZkmOYiiTdfd8eLbvIULPI5xBsL1tA=; b=NGmjxWxQtAa2Crdpm1/dXEFrwA
+	IqhJjett7yJ8cnosu0gPHtH36jl1tPtfGty8TYTfY5mDBfvCqMnqzD7MM5uFq1RrYTVtTlPT00ibf
+	MnI/zrIaLPVoHXNA+j0JMytQwFzXoJLd379Pa5uHIqPLEZcHNw6kOVa6EKFGzBPfanpLy1bnil5rM
+	VuZNWwMjOBFvvS5oAJp2pL0hpgVOTmwJtVfmJh/mHRUC1soHWI7okm6Smt1z8T8laCkD6qc6Nsrb2
+	0uM4SizYWfa+jIFbjBV2Ip1nn0DUwR0xXneL9mMDPQ+eQ1XR+767y0LC00l33m857kDjnrePEov0z
+	NbSYlyJw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxQwv-0000000FLc8-3463;
-	Tue, 03 Mar 2026 14:42:13 +0000
-Date: Tue, 3 Mar 2026 06:42:13 -0800
+	id 1vxQyr-0000000FLuj-0759;
+	Tue, 03 Mar 2026 14:44:13 +0000
+Date: Tue, 3 Mar 2026 06:44:13 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: aalbersh@kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 02/36] libfrog: fix missing gettext call in
- current_fixed_time
-Message-ID: <aabzRYmFpaYq0dEq@infradead.org>
+Cc: aalbersh@kernel.org, cem@kernel.org, hch@lst.de,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 12/36] xfs: move struct xfs_log_iovec to xfs_log_priv.h
+Message-ID: <aabzvfIxUWD2jK_e@infradead.org>
 References: <177249637597.457970.8500158485809720053.stgit@frogsfrogsfrogs>
- <177249637813.457970.13704898468170992838.stgit@frogsfrogsfrogs>
+ <177249637996.457970.5988457332713577268.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -64,45 +64,53 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <177249637813.457970.13704898468170992838.stgit@frogsfrogsfrogs>
+In-Reply-To: <177249637996.457970.5988457332713577268.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Rspamd-Queue-Id: DD5EC1F1B43
+X-Rspamd-Queue-Id: 173F51F1C87
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
-	TAGGED_FROM(0.00)[bounces-31771-lists,linux-xfs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31772-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[infradead.org:+];
 	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,infradead.org:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Mon, Mar 02, 2026 at 04:12:40PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> This error message can be seen by regular users, so it should be looked
-> up in the internationalization catalogue with gettext.
+On Mon, Mar 02, 2026 at 04:15:16PM -0800, Darrick J. Wong wrote:
+> +++ b/include/kmem.h
+> @@ -60,6 +60,8 @@ static inline void *kmalloc(size_t size, gfp_t flags)
+>  
+>  #define kzalloc(size, gfp)	kvmalloc((size), (gfp) | __GFP_ZERO)
+>  #define kvzalloc(size, gfp)	kzalloc((size), (gfp))
+> +#define kmalloc_array(n, size, gfp)	kvmalloc((n) * (size), (gfp))
+> +#define kcalloc(n, size, gfp)	kmalloc_array((n), (size), (gfp) | __GFP_ZERO)
 
-Looks good:
+Maybe use check_mul_overflow like the kernel version?
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+And avoid the overly long line and maybe even turn it into an inline?
+
+I think it would also be cleared to split adding new core helpers into
+a separate commit vs tagging it onto porting kernel code that's using
+them.
 
 
