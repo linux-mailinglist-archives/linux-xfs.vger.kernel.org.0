@@ -1,60 +1,60 @@
-Return-Path: <linux-xfs+bounces-31796-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31797-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gM7OLT0Dp2k7bgAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31796-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 16:50:21 +0100
+	id cCkfJDYEp2k7bgAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31797-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 16:54:30 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 561071F2F02
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 16:50:21 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDFA31F3065
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 16:54:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5383830A8E68
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 15:47:51 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id DCA483043D97
+	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 15:48:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BDB8492534;
-	Tue,  3 Mar 2026 15:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69292372EF4;
+	Tue,  3 Mar 2026 15:48:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EY1tIgq4"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GBCkmIdi"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E8D49252A
-	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 15:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6043BED07
+	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 15:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772552852; cv=none; b=o0tpYO79QWUCaP1zDbFqvCp0g1s2vuK++S4vdQfTJgF8OhWVUiUwa99OTl0Oi8Uyfdcg9NGtR+xpNKKKdpAkQJIbR+HqLFpQV4lnzLHI63xzBNxCMkuAv0mYGnE+Wg8h0dG5J2TvSeIH3NMWBoZKGjzlKNzZP0ahwIJXTXpan+M=
+	t=1772552886; cv=none; b=E3ACZ2s7sLVKgZZI4eqvlzPvMhUGwbq2v8gIpbe8D3n9w74csj9v/yezhvLt02b4PQdjnDL7JuEL1H/JAyrmVtSrrtw8YLfta7Q0pRcygGZMn5R5n7lF2KGNIWGJt5FArMCUSkIBOpS/TY2QvkpMQ3EYkNQWyjAbSb8sKc/O+Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772552852; c=relaxed/simple;
+	s=arc-20240116; t=1772552886; c=relaxed/simple;
 	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nxywqX0SkazVU/I+CtsxMRNeEbVJ1tIG8Jpbr/dO+bIsY8hJ66VZub6Z5fN1dPuaF3OFu5wOpSmZ8HHwcUdYq1cxyfIft9rsgVtMRxRlTAOgMmCyb9YCrkJYcUGHhz+eGCCEufLFeRARUDDmYAE1kZgdextASuLqxP+KlC/B0hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EY1tIgq4; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=F0Bis8JIVE2JhNkz14tFgx3Wm8ODmNi9MXzvxKohhnFkojY+NkTeqKvvwvT6jry4+0FTjNklpQX+tsnmQ2vQPrW5Zh+xnQ3udHlzYmoVZlUZEe3AshKa3pBw0K8sy4ut4STEgj7mLfdm6ETZFwGBp5W4ZwVWcYzrJzx1Fw0ysW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GBCkmIdi; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=EY1tIgq4jEvLnXlloa+TpoYOWy
-	9fzTMnL1IFkzFuF81eZw6cWr/tFsjMBfbDgCO470GVgV3Vx9qQ03Ztxtl9yZH1K0Y996h/FAG9Q7D
-	qLjl4EbbSP3nByt4g+DTowOLa6AQYWsGg4a5Qf4Wwdo0PcBa0sXY5SLxZN0GAk4Dh99gKs1iDw7Zn
-	PxW297mgkmSCe5h4c+Rlbw2wLhTEl4fQ/+/uGDocyRZ24tbg3FtRuRcDbMivscGHAsv8S0u1NEo7Y
-	R1gvlZ9MZDartHKbecbg+dPyji0B9LzEuGLI2bk0kU9Q9P+mVvio+lM3V/WC1k0irLDZNGyVFJe4k
-	cil5lZqA==;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=GBCkmIdi2FCbW5NexJNvaideje
+	ar71Ij3ubSKjwLYP45mC4bKNTNM99Zwl4mlVjxH1ungu85jWRCLoMuuSG1adyTlk96pNfdqTkSrx7
+	IwnmJxLSX0y+qAVhNiRdSVHL/Z3iCK0+79L6+GHmT7LBFd+wt12QUK+gtBSfXGBWoz0HPiFbcbfk7
+	yQMAjgpEXIanK0U90vO/R3+yfNZKrQHglbz25dqlfuQl9o+hYPYwivd3cPn1yxqqRtjeDwp/CkfS9
+	UN+yKr/YabqSFrzZgYBUYFVTXoF8rE4BHQonsyPwalpMoijmqwMwGcxCVn5d8UvqXFxAP/2/725UW
+	KTgLzR3A==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vxRy6-0000000FSXF-3dWX;
-	Tue, 03 Mar 2026 15:47:30 +0000
-Date: Tue, 3 Mar 2026 07:47:30 -0800
+	id 1vxRye-0000000FSn4-430n;
+	Tue, 03 Mar 2026 15:48:04 +0000
+Date: Tue, 3 Mar 2026 07:48:04 -0800
 From: Christoph Hellwig <hch@infradead.org>
 To: "Darrick J. Wong" <djwong@kernel.org>
 Cc: aalbersh@kernel.org, hch@lst.de, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 10/26] xfs_healer: enable repairing filesystems
-Message-ID: <aacCktYVattDFFh4@infradead.org>
+Subject: Re: [PATCH 11/26] xfs_healer: use getparents to look up file names
+Message-ID: <aacCtCzCSq2q1pfW@infradead.org>
 References: <177249783165.482027.209169366483011357.stgit@frogsfrogsfrogs>
- <177249783472.482027.18045832701670000143.stgit@frogsfrogsfrogs>
+ <177249783490.482027.6355392425600511229.stgit@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -63,20 +63,20 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <177249783472.482027.18045832701670000143.stgit@frogsfrogsfrogs>
+In-Reply-To: <177249783490.482027.6355392425600511229.stgit@frogsfrogsfrogs>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Rspamd-Queue-Id: 561071F2F02
+X-Rspamd-Queue-Id: BDFA31F3065
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	DKIM_TRACE(0.00)[infradead.org:+];
-	TAGGED_FROM(0.00)[bounces-31796-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31797-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
@@ -91,8 +91,8 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,infradead.org:dkim,infradead.org:mid,lst.de:email]
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,infradead.org:dkim,infradead.org:mid,lst.de:email]
 X-Rspamd-Action: no action
 
 Looks good:
