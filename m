@@ -1,55 +1,57 @@
-Return-Path: <linux-xfs+bounces-31674-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31675-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iA2lOHEspmm/LgAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31674-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:33:53 +0100
+	id 0EgVE3gspmm/LgAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31675-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:34:00 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 488D61E7226
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:33:53 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD6E91E722D
+	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 01:33:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9FBB8304601B
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 00:33:20 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7E03F3070B25
+	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 00:33:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F290126C03;
-	Tue,  3 Mar 2026 00:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA0612CDA5;
+	Tue,  3 Mar 2026 00:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNWVZ9Xf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwSDGUxr"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAD912CDA5
-	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 00:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFC84964F;
+	Tue,  3 Mar 2026 00:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772497999; cv=none; b=o6IXBgQ8Zo8tJHho/S1rFvUw+nfKhxykyvtWFrJmFsliffhXciqowUxtjO6z05rR6dWU/OgRcjG1yCe7YKlxGnEellMElGMujr0bfaUs6QyXiiGM8VH+plyWgfdNhbEJZBUTxCnbwqh911UPHTgUXsG2dqPvNepWAs2csY1rYes=
+	t=1772498014; cv=none; b=jdzg1N5UmEiquYlemDcsMwyQHG66v6Vd9n760Y54rTP2I4zedfHAwfdBPRebMeR72xnYfghvWXkMtRKIQT6hKTlv0gNjls/dC0kBEL5tivA10f72Yk94PXZ8egKH+B4qom1N7Ui7ZYsacdo/Gdsy5hg4D/dAHNBExcvt1q4G8Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772497999; c=relaxed/simple;
-	bh=MxeJmSlWeQupyQ8OUqyyd/OMlDo+y3/DtntHthNZNNQ=;
+	s=arc-20240116; t=1772498014; c=relaxed/simple;
+	bh=IWMBBhqrsrMPeSEuIdpQhx7hc1Ro92GogvTdPorRhrk=;
 	h=Date:Subject:From:To:Cc:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BvHWCVpanohUjszrgg26AfjN5QZt1XyoRetkCKdQedPUWR+FDAjhWKSTJSVnNx3MmXoXhVZ37GRYxUlattFjsgesjuQuVrziLSy8knwAgoQC6+poYnrG/WHNVWTyutymj3Ul6Q3VUZ2HgFuvdjvq8QpD92wQQEFXKpz85+PayAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNWVZ9Xf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7FAC19423;
-	Tue,  3 Mar 2026 00:33:18 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ucmG0+ef/T0PBv31zR68XJwTJFa4GRxC9Fd+vxU+qsSw0qLhqtLSdl4SBcUIjj3W5c3ApppLfkzUwLhiARfoSqdlbzIeu+cIVOXdjKk/64kNr2O81mo2SLtaYHqhsKUz0wDspAMLg+fNdGKmubbwjFKx2pYsDbOfO2T8iD0HL8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwSDGUxr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96686C19423;
+	Tue,  3 Mar 2026 00:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772497999;
-	bh=MxeJmSlWeQupyQ8OUqyyd/OMlDo+y3/DtntHthNZNNQ=;
+	s=k20201202; t=1772498014;
+	bh=IWMBBhqrsrMPeSEuIdpQhx7hc1Ro92GogvTdPorRhrk=;
 	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
-	b=TNWVZ9XfWq5azeSF/kvnorCwlNaWWwkETGsUenhysInbBPx7wHFJlm/UzNI4m4fo+
-	 HXPgDOOpotr6NlfUaK1h44JA5ptPIYK7Es5tmq2PqnrnEi8NNuk+lRSGK7jNLWQFX3
-	 jQ9xru3hnBUM/a+1UkxGkA2nzLlIBfZ+ocRJyStjVnvH7uQo92hFGZ7/XVs7Ry/zSK
-	 1uxbWzSpXiLpqrXTbb6NCrVPHQEGlVD5gF0e93hw89C2NI3OV6Zh2adjAo7ysl7gVL
-	 HqGTKwAfXv4AE9ZO3alt6uxUAEbtHhJXD6Ij3ccNVFqhrKbXyJb3Fam+wU0or4aBi8
-	 RGVXrh39aS/8Q==
-Date: Mon, 02 Mar 2026 16:33:18 -0800
-Subject: [PATCHSET v8] xfsprogs: autonomous self healing of filesystems
+	b=ZwSDGUxrtUS633iB/gsIZZuEU23Ze6gEoQXwKs4XKzcuuXjb7LUHZlzTd/55odQik
+	 Y2Rb+1jzRiS45GmLsMQSKi3NLuKfNO/5Xma4fi4mnr2qerP2IX9G7gxtF2PKg9Ukis
+	 E/BrJOwhm6QRE/MXfNhPWdt1iHJInggsDnYPJOnh8cb11L1JRLG4cdPADlo0Jsi+qD
+	 3k1laiEPsd6Ma1dT3xcjw06yUu0fbnatrwfLW3ns3wCHKqCG/2LbGGUZAPR8CBAIVl
+	 mTEn4KlJH1dkoqsh8S9roIhsmcMc5+QN70ZqhVBZiJgGaQWrIqVkBocigLxZUMhrwp
+	 axAEjt18WBKDQ==
+Date: Mon, 02 Mar 2026 16:33:34 -0800
+Subject: [PATCHSET v8 1/2] fstests: test generic file IO error reporting
 From: "Darrick J. Wong" <djwong@kernel.org>
-To: aalbersh@kernel.org, djwong@kernel.org
-Cc: hch@lst.de, linux-xfs@vger.kernel.org
-Message-ID: <177249783165.482027.209169366483011357.stgit@frogsfrogsfrogs>
+To: zlang@redhat.com, djwong@kernel.org
+Cc: linux-fsdevel@vger.kernel.org, hch@lst.de, gabriel@krisman.be,
+ amir73il@gmail.com, jack@suse.cz, fstests@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Message-ID: <177249785452.483405.17984642662799629787.stgit@frogsfrogsfrogs>
 In-Reply-To: <20260303002508.GB57948@frogsfrogsfrogs>
 References: <20260303002508.GB57948@frogsfrogsfrogs>
 Precedence: bulk
@@ -60,68 +62,44 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 488D61E7226
+X-Rspamd-Queue-Id: DD6E91E722D
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31674-lists,linux-xfs=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,lst.de,krisman.be,gmail.com,suse.cz];
+	TAGGED_FROM(0.00)[bounces-31675-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MIME_TRACE(0.00)[0:+];
 	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	NEURAL_HAM(-0.00)[-0.998];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	NEURAL_HAM(-0.00)[-0.992];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,configure.ac:url]
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
 Hi all,
 
-This patchset builds new functionality to deliver live information about
-filesystem health events to userspace.  This is done by creating an
-anonymous file that can be read() for events by userspace programs.
-Events are captured by hooking various parts of XFS and iomap so that
-metadata health failures, file I/O errors, and major changes in
-filesystem state (unmounts, shutdowns, etc.) can be observed by
-programs.
-
-When an event occurs, the hook functions queue an event object to each
-event anonfd for later processing.  Programs must have CAP_SYS_ADMIN
-to open the anonfd and there's a maximum event lag to prevent resource
-overconsumption.  The events themselves can be read() from the anonfd
-as C structs for the xfs_healer daemon.
-
-In userspace, we create a new daemon program that will read the event
-objects and initiate repairs automatically.  This daemon is managed
-entirely by systemd and will not block unmounting of the filesystem
-unless repairs are ongoing.  They are auto-started by a starter
-service that uses fanotify.
-
-v8: clean up userspace for merging now that the kernel part is upstream
-v7: more cleanups of the media verification ioctl, improve comments, and
-    reuse the bio
-v6: fix pi-breaking bugs, make verify failures trigger health reports
-v5: add verify-media ioctl, collapse small helper funcs with only
-    one caller
-v4: drop multiple client support so we can make direct calls into
-    healthmon instead of chasing pointers and doing indirect calls
-v3: drag out of rfc status
+Refactor the iomap file I/O error handling code so that failures are
+reported in a generic way to fsnotify.  Then connect the XFS health
+reporting to the same fsnotify, and now XFS can notify userspace of
+problems.
 
 If you're going to start using this code, I strongly recommend pulling
 from my git trees, which are linked below.
@@ -132,115 +110,21 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=health-monitoring
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=health-monitoring
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=filesystem-error-reporting
 
 fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=health-monitoring
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=filesystem-error-reporting
 ---
 Commits in this patchset:
- * libfrog: add a function to grab the path from an open fd and a file handle
- * libfrog: create healthmon event log library functions
- * libfrog: add support code for starting systemd services programmatically
- * libfrog: hoist a couple of service helper functions
- * man2: document the healthmon ioctl
- * man2: document the media verification ioctl
- * xfs_io: monitor filesystem health events
- * xfs_io: add a media verify command
- * xfs_healer: create daemon to listen for health events
- * xfs_healer: enable repairing filesystems
- * xfs_healer: use getparents to look up file names
- * xfs_healer: create a per-mount background monitoring service
- * xfs_healer: create a service to start the per-mount healer service
- * xfs_healer: don't start service if kernel support unavailable
- * xfs_healer: use the autofsck fsproperty to select mode
- * xfs_healer: run full scrub after lost corruption events or targeted repair failure
- * xfs_healer: use getmntent to find moved filesystems
- * xfs_healer: validate that repair fds point to the monitored fs
- * xfs_healer: add a manual page
- * xfs_scrub: use the verify media ioctl during phase 6 if possible
- * xfs_scrub: perform media scanning of the log region
- * xfs_io: add listmount command
- * xfs_io: print systemd service names
- * mkfs: enable online repair if all backrefs are enabled
- * debian: enable xfs_healer on the root filesystem by default
- * debian/control: listify the build dependencies
+ * generic: test fsnotify filesystem error reporting
 ---
- healer/xfs_healer.h                            |   88 +++
- io/io.h                                        |    8 
- libfrog/flagmap.h                              |   23 +
- libfrog/fsproperties.h                         |    5 
- libfrog/getparents.h                           |    4 
- libfrog/healthevent.h                          |   55 ++
- libfrog/systemd.h                              |   55 ++
- scrub/disk.h                                   |   11 
- Makefile                                       |    5 
- configure.ac                                   |   12 
- debian/control                                 |   14 +
- debian/postinst                                |    8 
- debian/prerm                                   |   13 +
- debian/rules                                   |    3 
- healer/Makefile                                |   70 +++
- healer/fsrepair.c                              |  342 ++++++++++++++
- healer/system-xfs_healer.slice                 |   31 +
- healer/weakhandle.c                            |  266 +++++++++++
- healer/xfs_healer.c                            |  605 ++++++++++++++++++++++++
- healer/xfs_healer@.service.in                  |  108 ++++
- healer/xfs_healer_start.c                      |  372 +++++++++++++++
- healer/xfs_healer_start.service.in             |   85 +++
- include/builddefs.in                           |   12 
- io/Makefile                                    |   16 +
- io/healthmon.c                                 |  186 +++++++
- io/init.c                                      |    3 
- io/listmount.c                                 |  383 +++++++++++++++
- io/scrub.c                                     |   75 +++
- io/verify_media.c                              |  180 +++++++
- libfrog/Makefile                               |   10 
- libfrog/flagmap.c                              |   79 +++
- libfrog/getparents.c                           |   93 +++-
- libfrog/healthevent.c                          |  477 +++++++++++++++++++
- libfrog/systemd.c                              |  181 +++++++
- m4/package_libcdev.m4                          |   97 ++++
- man/man2/ioctl_xfs_health_fd_on_monitored_fs.2 |   75 +++
- man/man2/ioctl_xfs_health_monitor.2            |  464 ++++++++++++++++++
- man/man2/ioctl_xfs_verify_media.2              |  185 +++++++
- man/man8/Makefile                              |   40 +-
- man/man8/xfs_healer.8                          |  109 ++++
- man/man8/xfs_healer_start.8                    |   37 +
- man/man8/xfs_io.8                              |  134 +++++
- mkfs/xfs_mkfs.c                                |    9 
- scrub/Makefile                                 |   13 -
- scrub/disk.c                                   |   40 ++
- scrub/phase1.c                                 |   25 +
- scrub/phase6.c                                 |   11 
- scrub/read_verify.c                            |    2 
- scrub/xfs_scrub.c                              |   32 -
- 49 files changed, 5090 insertions(+), 61 deletions(-)
- create mode 100644 healer/xfs_healer.h
- create mode 100644 libfrog/flagmap.h
- create mode 100644 libfrog/healthevent.h
- create mode 100644 libfrog/systemd.h
- create mode 100644 debian/prerm
- create mode 100644 healer/Makefile
- create mode 100644 healer/fsrepair.c
- create mode 100644 healer/system-xfs_healer.slice
- create mode 100644 healer/weakhandle.c
- create mode 100644 healer/xfs_healer.c
- create mode 100644 healer/xfs_healer@.service.in
- create mode 100644 healer/xfs_healer_start.c
- create mode 100644 healer/xfs_healer_start.service.in
- create mode 100644 io/healthmon.c
- create mode 100644 io/listmount.c
- create mode 100644 io/verify_media.c
- create mode 100644 libfrog/flagmap.c
- create mode 100644 libfrog/healthevent.c
- create mode 100644 libfrog/systemd.c
- create mode 100644 man/man2/ioctl_xfs_health_fd_on_monitored_fs.2
- create mode 100644 man/man2/ioctl_xfs_health_monitor.2
- create mode 100644 man/man2/ioctl_xfs_verify_media.2
- create mode 100644 man/man8/xfs_healer.8
- create mode 100644 man/man8/xfs_healer_start.8
+ src/Makefile           |    2 
+ src/fs-monitor.c       |  155 +++++++++++++++++++++++++++++++++
+ tests/generic/1838     |  228 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/1838.out |   20 ++++
+ 4 files changed, 404 insertions(+), 1 deletion(-)
+ create mode 100644 src/fs-monitor.c
+ create mode 100755 tests/generic/1838
+ create mode 100644 tests/generic/1838.out
 
 
