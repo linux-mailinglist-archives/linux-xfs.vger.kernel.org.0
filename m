@@ -1,211 +1,130 @@
-Return-Path: <linux-xfs+bounces-31895-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31896-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oKZ2OClhqGmduAAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31895-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Wed, 04 Mar 2026 17:43:21 +0100
+	id kMLHOsZfqGmduAAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31896-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Wed, 04 Mar 2026 17:37:26 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CD8E20480A
-	for <lists+linux-xfs@lfdr.de>; Wed, 04 Mar 2026 17:43:21 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90A322046EA
+	for <lists+linux-xfs@lfdr.de>; Wed, 04 Mar 2026 17:37:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 71AAB3133E5B
-	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2026 16:24:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 871E4318E7DE
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2026 16:30:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39EF134D4E0;
-	Wed,  4 Mar 2026 16:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 646BA2F0C62;
+	Wed,  4 Mar 2026 16:30:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="lMowOp4f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BU2qolYb"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.245.243.92])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A29B241139;
-	Wed,  4 Mar 2026 16:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.245.243.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423E734A3D2
+	for <linux-xfs@vger.kernel.org>; Wed,  4 Mar 2026 16:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772641461; cv=none; b=IEUj9baHvB2CaEwOw1GlQX0J5bvXLkKjYhiRuHg6YRQQH7lvWzHCCz69za741I/xU9apAFbPfFr7TYIvIKk5B+ZTHEyUAhIfhmnA5kVh1LfVCxgDsXn7l/qIoTTD0mtwmTbE/xwDUYejqBOFs0NLrJbnQ84mlTRuv73Blq2anvk=
+	t=1772641821; cv=none; b=WaUFg/lPtsf2/D1hXvLB1Gs192he9p67w4igWKCDxuY0xOcWDcicCxhfLngpeSEp3BfSO0gVrTE13wwKFsNX4HEnsXXUSopDPyMAi1FcEVl3Uuv1PhXXX9UfZ3pYfpJ2ZDbOIrOryPhK2hRxQhdhGsEj9QqajsEFazYHs8HM09A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772641461; c=relaxed/simple;
-	bh=B8eNkJ65eVhNso6TQYQ/uxzg8Zbm1ggT2e5NuXuYHrs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mC6t81BRQ+ykyeiA/wDFO35m4KUPW3Ub3/qKGBYA308IZyzsxYtOqJCCVwYlghbvfS+QQX7KGB6Xqz33NdiamHeP5jcXZK/QpXxdO1xaTbn8ybgQA6MAwlq6fpZh2g1DMcuYu7WPhDVPCZS6DpNvhqxWZXYA4ccEG1Te9Fjy+Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=lMowOp4f; arc=none smtp.client-ip=44.245.243.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1772641460; x=1804177460;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2hOcY5DZinjFfRQaWJ22nOMxK/xTHlKGps9qXv/NCZE=;
-  b=lMowOp4fG7Y+gYJoOQ446cUhytZqktnb2rAcQfr2eBfcE4rp9xcpfrun
-   uWJxDiBNmp3O4Z9yJlKw9jay6NTvnYER/zQLa5tAmu7gi3cttch+mCwmO
-   NWScYiIH+v1tQyL2UTTPJrs8Go+rStD1s8pjW/pQGkgyj/t78PMOUNtIr
-   1WbMx7g6LBVChBaiALPk8KEJWV/T+uMEhHMoNRfvsG06lN8xydesVCUJ8
-   XfLdT7RLGDT/6/6IhWnfrca5beos4DHnpUdN88cRyCl4PUQZCUbNsBt6r
-   9TDuK2KKE2WPfdQvTh4+UsZr5xFhYk45/yc123vt0DQ2BduNeTRwaXWq4
-   A==;
-X-CSE-ConnectionGUID: bxvQI1+4QMOA4pMfplgrPg==
-X-CSE-MsgGUID: Gurz/gbXTRCzL7ziNIu73A==
-X-IronPort-AV: E=Sophos;i="6.21,324,1763424000"; 
-   d="scan'208";a="13830347"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2026 16:24:16 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [205.251.233.111:28163]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.4.108:2525] with esmtp (Farcaster)
- id 334b0d0e-a9c4-4910-aad9-159686ace235; Wed, 4 Mar 2026 16:24:16 +0000 (UTC)
-X-Farcaster-Flow-ID: 334b0d0e-a9c4-4910-aad9-159686ace235
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Wed, 4 Mar 2026 16:24:16 +0000
-Received: from c889f3b07a0a.amazon.com (10.106.82.14) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Wed, 4 Mar 2026 16:24:14 +0000
-From: Yuto Ohnuki <ytohnuki@amazon.com>
-To: Carlos Maiolino <cem@kernel.org>
-CC: "Darrick J . Wong" <darrick.wong@oracle.com>, Dave Chinner
-	<dchinner@redhat.com>, Brian Foster <bfoster@redhat.com>,
-	<linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yuto Ohnuki
-	<ytohnuki@amazon.com>,
-	<syzbot+652af2b3c5569c4ab63c@syzkaller.appspotmail.com>
-Subject: [PATCH] xfs: fix use-after-free in xfs_inode_item_push()
-Date: Wed, 4 Mar 2026 16:24:06 +0000
-Message-ID: <20260304162405.58017-2-ytohnuki@amazon.com>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1772641821; c=relaxed/simple;
+	bh=y+ihdeYqVYpDA+fMCsffMFgWbvumwQ6iTpI8L1A0+KY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZfB4IxgogXyUJhXOZDK9ZvtJgrIDKX9z77zzSUmH3wVlynT/Zpi6x08eea11Ek1fdZIrgyOG49ZukahuimupDOWzqfD0cLgIHc338xotfMVs1KuVBkJ2sORjuHEJp4thVWkx/ougJ31WNbgOL6s5FHEyvd/EvCDXKWlKE1W7VPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BU2qolYb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C9D6C4CEF7;
+	Wed,  4 Mar 2026 16:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772641821;
+	bh=y+ihdeYqVYpDA+fMCsffMFgWbvumwQ6iTpI8L1A0+KY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BU2qolYbjotufvuNWGFEnF5t1q7sqIl/5AFbHtue1hMsAt+kil/Zj7cL6HC+7pQJQ
+	 ZdNP4VagDNNOS/FYFPZfvKAEPrmIgbjCMc8cOb/A5dz44PUe2ErQToSyFZpTB7Sbny
+	 MkTRNDY1O5K2xeSlEGxVGWAcAgO5X+frNLXG0yWxfRqJJDiMH7usbHB9eSsiPIzigR
+	 HDZ3o7SzbpnBNViGJK4NKDiiERSNFYmUHW5iPOzkt7arQm7Dqyc4oUemVzT+DQf0RA
+	 l8F4ohyfO7IdTtfTe1JQetO74+Q1mtv9cAnuYZgiPtB38MpgJEqYW5awTsfSxk5+7Z
+	 d4TXFprUI0sJQ==
+Date: Wed, 4 Mar 2026 08:30:20 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: aalbersh@kernel.org, hch@lst.de, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 17/26] xfs_healer: use getmntent to find moved filesystems
+Message-ID: <20260304163020.GU57948@frogsfrogsfrogs>
+References: <177249783165.482027.209169366483011357.stgit@frogsfrogsfrogs>
+ <177249783601.482027.9121579371607325115.stgit@frogsfrogsfrogs>
+ <aacDkSiRLgD1k3Tg@infradead.org>
+ <20260303172654.GQ57948@frogsfrogsfrogs>
+ <aagtnm0-z3ldfFqd@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D037UWB004.ant.amazon.com (10.13.138.84) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 5CD8E20480A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aagtnm0-z3ldfFqd@infradead.org>
+X-Rspamd-Queue-Id: 90A322046EA
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-6.66 / 15.00];
-	WHITELIST_DMARC(-7.00)[amazon.com:D:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[amazon.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[amazon.com:s=amazoncorp2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-31895-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31896-lists,linux-xfs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[amazon.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[appspotmail.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,syzkaller.appspot.com:url];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ytohnuki@amazon.com,linux-xfs@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-xfs,652af2b3c5569c4ab63c];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-Since commit 90c60e164012 ("xfs: xfs_iflush() is no longer necessary"),
-xfs_inode_item_push() no longer holds the inode locked (ILOCK_SHARED)
-while flushing, so the inode and its log item can be freed via
-RCU callback (xfs_inode_free_callback) while the AIL lock is
-temporarily dropped.
+On Wed, Mar 04, 2026 at 05:03:26AM -0800, Christoph Hellwig wrote:
+> On Tue, Mar 03, 2026 at 09:26:54AM -0800, Darrick J. Wong wrote:
+> > Or did you mean that xfs_healer should keep the rootdir fd open for the
+> > duration of its existence, that way weakhandle reconnection is trivial?
+> > 
+> > [from the next patch]
+> > 
+> > > > When xfs_healer reopens a mountpoint to perform a repair, it should
+> > > > validate that the opened fd points to a file on the same filesystem as
+> > > > the one being monitored.
+> > > 
+> > > .. and if we'd always keep the week handle around we would not need
+> > > this?
+> > 
+> > The trouble with keeping the rootdir fd around is that now we pin the
+> > mount and nobody can unmount the disk until they manually kill
+> > xfs_healer.  IOWs, struct weakhandle is basically a wrapper around
+> > struct xfs_handle with some cleverness to avoid maintaining an open fd
+> > to the xfs filesystem when it's not needed.
+> 
+> Ok.  I've officially forgot what all the kernel code did.  I somehow
+> expected a weak handle to be a fd that the kernel could close on us,
+> which would be much more handy here.
 
-This results in a use-after-free when the function reacquires the AIL
-lock by dereferencing the freed log item's li_ailp pointer at offset 48.
+Yeah.  I tried creating a(nother) anon_inode that has the same sort of
+weak link to the xfs_mount that the healthmon fd has, for the purpose of
+forwarding scrub ioctls.  That got twisty fast because the scrub code
+wants to be able to call things like mnt_want_write_file and file_inode,
+but the file doesn't point to an xfs inode and abusing the anon inode
+file to make that work just became too gross to stomach. :/
 
-Fix this by saving the ailp pointer in a local variable while the AIL
-lock is held and the log item is guaranteed to be valid.
-
-Also move trace_xfs_ail_push() before xfsaild_push_item() because the
-log item may be freed during the push.
-
-Reported-by: syzbot+652af2b3c5569c4ab63c@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=652af2b3c5569c4ab63c
-Fixes: 90c60e164012 ("xfs: xfs_iflush() is no longer necessary")
-Signed-off-by: Yuto Ohnuki <ytohnuki@amazon.com>
----
- fs/xfs/xfs_inode_item.c | 5 +++--
- fs/xfs/xfs_trans_ail.c  | 8 +++++++-
- 2 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index 8913036b8024..0a8957f9c72f 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -746,6 +746,7 @@ xfs_inode_item_push(
- 	struct xfs_inode_log_item *iip = INODE_ITEM(lip);
- 	struct xfs_inode	*ip = iip->ili_inode;
- 	struct xfs_buf		*bp = lip->li_buf;
-+	struct xfs_ail		*ailp = lip->li_ailp;
- 	uint			rval = XFS_ITEM_SUCCESS;
- 	int			error;
- 
-@@ -771,7 +772,7 @@ xfs_inode_item_push(
- 	if (!xfs_buf_trylock(bp))
- 		return XFS_ITEM_LOCKED;
- 
--	spin_unlock(&lip->li_ailp->ail_lock);
-+	spin_unlock(&ailp->ail_lock);
- 
- 	/*
- 	 * We need to hold a reference for flushing the cluster buffer as it may
-@@ -795,7 +796,7 @@ xfs_inode_item_push(
- 		rval = XFS_ITEM_LOCKED;
- 	}
- 
--	spin_lock(&lip->li_ailp->ail_lock);
-+	spin_lock(&ailp->ail_lock);
- 	return rval;
- }
- 
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 923729af4206..e34d8a7e341d 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -510,6 +510,13 @@ xfsaild_push(
- 		if (test_bit(XFS_LI_FLUSHING, &lip->li_flags))
- 			goto next_item;
- 
-+		/*
-+		 * The log item may be freed after the push if the AIL lock is
-+		 * temporarily dropped and the RCU grace period expires,
-+		 * so trace it before pushing.
-+		 */
-+		trace_xfs_ail_push(lip);
-+
- 		/*
- 		 * Note that iop_push may unlock and reacquire the AIL lock.  We
- 		 * rely on the AIL cursor implementation to be able to deal with
-@@ -519,7 +526,6 @@ xfsaild_push(
- 		switch (lock_result) {
- 		case XFS_ITEM_SUCCESS:
- 			XFS_STATS_INC(mp, xs_push_ail_success);
--			trace_xfs_ail_push(lip);
- 
- 			ailp->ail_last_pushed_lsn = lsn;
- 			break;
--- 
-2.50.1
-
-
-
-
-Amazon Web Services EMEA SARL, 38 avenue John F. Kennedy, L-1855 Luxembourg, R.C.S. Luxembourg B186284
-
-Amazon Web Services EMEA SARL, Irish Branch, One Burlington Plaza, Burlington Road, Dublin 4, Ireland, branch registration number 908705
-
-
-
+--D
 
