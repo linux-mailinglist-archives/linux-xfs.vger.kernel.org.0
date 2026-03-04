@@ -1,158 +1,237 @@
-Return-Path: <linux-xfs+bounces-31840-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31841-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2PtmKfY9p2kNgAAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31840-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 21:00:54 +0100
+	id +PoeER6Hp2nOiAAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31841-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Wed, 04 Mar 2026 02:13:02 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A41421F68D5
-	for <lists+linux-xfs@lfdr.de>; Tue, 03 Mar 2026 21:00:53 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDBFB1F91E8
+	for <lists+linux-xfs@lfdr.de>; Wed, 04 Mar 2026 02:13:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AA30C3006990
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Mar 2026 20:00:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 06F56306B3A5
+	for <lists+linux-xfs@lfdr.de>; Wed,  4 Mar 2026 01:12:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A68B837C913;
-	Tue,  3 Mar 2026 20:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7052730B520;
+	Wed,  4 Mar 2026 01:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2tQ9wZz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgCKlAsk"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83541379EEB
-	for <linux-xfs@vger.kernel.org>; Tue,  3 Mar 2026 20:00:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7DBBA21;
+	Wed,  4 Mar 2026 01:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772568049; cv=none; b=CzHi+QKmGBGsQxhMrNjsuaDo7A4ZAKgbMEqLvHWtNz2ZZj6RRG7r82H4Mqif1nb61uJiwrV07aPtbONsw9dFeiYEZKQZEdg50Xc0eWk3ooOvLJ6cL+DNQMNpkWAsV5ktr9SgCKeo72x3kGHiOeqOSj5agtlSHx0uYO5GNf8TMcE=
+	t=1772586771; cv=none; b=FJ5oxib+iMUZMn/h0EDI9NwfHXLTVP98P6ekCJ2e2R4xLh95kZoZXdOVEBv2xUlsoiMcF6eVeiaNeEDL09eiQHlDGKtjKTiVpXW2mxvh202a2juJ3IrwJ0D0GAK97O69Zcld6YtyfegExB7f2Cyy1QuNRuT71boqhOmIsqNNgCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772568049; c=relaxed/simple;
-	bh=dihT0M/4gM835hGqO6Ts3TcJG/1Y4PlrRjBlQo4Ikj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YmXf8OkVB7ZZb3ehQ7AyHlURJlCTX+ejhl/CKFNMHEwdcrNrnimwQ4rVxiycQ62xIclN1/U7ovwsNosKfWI42U5dTna0mCm70n6leM4/TuYu+4gNzTiryBUpGI6K+ArLeZ8qIY4IoNghqHt6iu10zSVg9O3iKuXYBjB5g2Jf4do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2tQ9wZz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA8E1C116C6;
-	Tue,  3 Mar 2026 20:00:46 +0000 (UTC)
+	s=arc-20240116; t=1772586771; c=relaxed/simple;
+	bh=GFMrZQJwS7/We+LO7SGzzxn2lFIugPuzG0DMG56Js2Y=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FOveOG2TCR43Cu4l15Xs8uudLCORKU0jvm/lNs67JB2g1Fdnguzid5cc01D5H0mSBvka/MVmFAv8+QrpbcUddkzceXJC4YSoZu7zw/H13wA7FQ034GDwrjUEgYm0Iw+/wS3gKkpRk6a4JfJTJW0NEDSdC5RKTeYVNU6ziQ6/zYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgCKlAsk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC630C116C6;
+	Wed,  4 Mar 2026 01:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772568049;
-	bh=dihT0M/4gM835hGqO6Ts3TcJG/1Y4PlrRjBlQo4Ikj4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=S2tQ9wZzU0LAsPpdZbxOJ2MCE7jxyNWwQvVA+KR6sFUACgWTD43i8pJDTiDTI00UE
-	 /6TeUiVPJWiQAlKccocFGpS2WhzF2UoE6O5+X0d2Q4ZBMj0/nGqytd0fkhuN0klvAz
-	 6Sr2vynPfSrjv1JRBiBgzGepRGcX5CFAFqzFzBk4iIBlIWR/v3BMtNoey1DuJHYYwP
-	 Fj3sTVLapliaE4g4146ptIS+0vQgVy6A0VdS365y5wid955xecWyiSJxlaLa8vG+0A
-	 svBWRGyavLr++BJj2D7XX0FQQUXvYKr6zO2/1S2AU9EBrJgh+o1l7GphhFJVZM2oX4
-	 0jJ5DduIH5org==
-Date: Tue, 3 Mar 2026 21:00:44 +0100
-From: Andrey Albershteyn <aalbersh@kernel.org>
-To: linux-xfs@vger.kernel.org
-Cc: bage@debian.org, bfoster@redhat.com, brauner@kernel.org, 
-	cem@kernel.org, cmaiolino@redhat.com, djwong@kernel.org, hans.holmberg@wdc.com, 
-	hch@lst.de, lukas@herbolt.com
-Subject: [ANNOUNCE] xfsprogs: for-next updated to b56b8825a89b
-Message-ID: <neyegstecb7gp6llexs6nglyidzeyq5h3ddkx3i462dueug7bv@olv256g3qsg5>
+	s=k20201202; t=1772586770;
+	bh=GFMrZQJwS7/We+LO7SGzzxn2lFIugPuzG0DMG56Js2Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WgCKlAsk3bXb+r/1s8b+OdlG4mX+icJAS45Uq+KKMNYvC49iKTzsvQ1tAfDcKjOHO
+	 pKVaQRChw5HLqCsmNleVgIcsLZe/mxOdeaALYcjfevERMGUkXjesPWWweCyhou7fQl
+	 VQ4Mb37EKNYYDJ4P3igTTUB/rwlUKWDzyHL6MaEPUYg4GKRNARAdOpQi37TER+bijy
+	 ujXwk/T7EtjhMi3TyZMPQ0jsSUIHCkGDCCDxAdqRqWs1EQh9//lrZ/RlcnBRfnGFFQ
+	 Jo6qgWMK/+GUePLR79A6WJNPJzwq2R2bZgMbaePiL9CPpPo5lJ+0GFE54ESH67v3gD
+	 aYrfgbEpOhAMQ==
+Date: Wed, 4 Mar 2026 10:12:29 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven Rostedt
+ <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox
+ <willy@infradead.org>, Eric Biggers <ebiggers@kernel.org>,
+ "Theodore Y. Ts'o" <tytso@mit.edu>, Muchun Song <muchun.song@linux.dev>,
+ Oscar Salvador <osalvador@suse.de>, David Hildenbrand <david@kernel.org>,
+ David Howells <dhowells@redhat.com>, Paulo Alcantara <pc@manguebit.org>,
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, Trond
+ Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck
+ Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Steve French <sfrench@samba.org>, Ronnie Sahlberg
+ <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Bharath
+ SM <bharathsm@microsoft.com>, Alexander Aring <alex.aring@gmail.com>,
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko
+ <slava@dubeyko.com>, Eric Van Hensbergen <ericvh@kernel.org>, Latchesar
+ Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba
+ <dsterba@suse.com>, Marc Dionne <marc.dionne@auristor.com>, Ian Kent
+ <raven@themaw.net>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki
+ <salah.triki@gmail.com>, "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+ Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, Jan
+ Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Nicolas Pitre
+ <nico@fluxnic.net>, Tyler Hicks <code@tyhicks.com>, Amir Goldstein
+ <amir73il@gmail.com>, Christoph Hellwig <hch@infradead.org>, John Paul
+ Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Yangtao Li
+ <frank.li@vivo.com>, Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+ David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>,
+ Dave Kleikamp <shaggy@kernel.org>, Konstantin Komarov
+ <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>,
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg
+ <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, Anders Larsen
+ <al@alarsen.net>, Zhihao Cheng <chengzhihao1@huawei.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Naohiro Aota <naohiro.aota@wdc.com>, Johannes
+ Thumshirn <jth@kernel.org>, John Johansen <john.johansen@canonical.com>,
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, Mimi Zohar <zohar@linux.ibm.com>,
+ Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
+ <dmitry.kasatkin@gmail.com>, Eric Snowberg <eric.snowberg@oracle.com>, Fan
+ Wu <wufan@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Casey Schaufler
+ <casey@schaufler-ca.com>, Alex Deucher <alexander.deucher@amd.com>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Eric Dumazet <edumazet@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, Willem de
+ Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, Oleg Nesterov
+ <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>,
+ "Darrick J. Wong" <djwong@kernel.org>, Martin Schiller <ms@dev.tdt.de>,
+ Eric Paris <eparis@redhat.com>, Joerg Reuter <jreuter@yaina.de>, Marcel
+ Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Oliver Hartkopp
+ <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, David
+ Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, Steffen
+ Klassert <steffen.klassert@secunet.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Remi Denis-Courmont <courmisch@gmail.com>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long
+ <lucien.xin@gmail.com>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, Stanislav Fomichev
+ <sdf@fomichev.me>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, John
+ Fastabend <john.fastabend@gmail.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, fsverity@lists.linux.dev, linux-mm@kvack.org,
+ netfs@lists.linux.dev, linux-ext4@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-nilfs@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+ ecryptfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+ jfs-discussion@lists.sourceforge.net, ntfs3@lists.linux.dev,
+ ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+ linux-unionfs@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-integrity@vger.kernel.org,
+ selinux@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, netdev@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+ linux-xfs@vger.kernel.org, linux-hams@vger.kernel.org,
+ linux-x25@vger.kernel.org, audit@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
+ linux-sctp@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 053/110] uprobes: use PRIino format for i_ino
+Message-Id: <20260304101229.bc9fba5fcb816b7325fdf57d@kernel.org>
+In-Reply-To: <20260302-iino-u64-v2-53-e5388800dae0@kernel.org>
+References: <20260302-iino-u64-v2-0-e5388800dae0@kernel.org>
+	<20260302-iino-u64-v2-53-e5388800dae0@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Rspamd-Queue-Id: A41421F68D5
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: BDBFB1F91E8
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
+	MV_CASE(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,goodmis.org,efficios.com,intel.com,infradead.org,mit.edu,linux.dev,suse.de,redhat.com,manguebit.org,dilger.ca,suse.com,oracle.com,brown.name,talpey.com,samba.org,gmail.com,microsoft.com,dubeyko.com,ionkov.net,codewreck.org,crudebyte.com,auristor.com,themaw.net,cs.cmu.edu,fluxnic.net,tyhicks.com,physik.fu-berlin.de,vivo.com,artax.karlin.mff.cuni.cz,nod.at,paragon-software.com,fasheh.com,evilplan.org,linux.alibaba.com,omnibond.com,szeredi.hu,alarsen.net,huawei.com,wdc.com,canonical.com,paul-moore.com,namei.org,hallyn.com,linux.ibm.com,schaufler-ca.com,amd.com,ffwll.ch,linaro.org,google.com,davemloft.net,arm.com,linux.intel.com,dev.tdt.de,yaina.de,holtmann.org,hartkopp.net,pengutronix.de,secunet.com,gondor.apana.org.au,fomichev.me,iogearbox.net,vger.kernel.org,lists.linux.dev,kvack.org,lists.sourceforge.net,lists.samba.org,lists.infradead.org,coda.cs.cmu.edu,lists.orangefs.org,lists.ubuntu.com,lists.freedesktop.org,lists.linaro.or
+ g];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-31841-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-31840-lists,linux-xfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_NONE(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[171];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[aalbersh@kernel.org,linux-xfs@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	NEURAL_HAM(-0.00)[-1.000];
+	FROM_NEQ_ENVFROM(0.00)[mhiramat@kernel.org,linux-xfs@vger.kernel.org];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-Hi folks,
+On Mon, 02 Mar 2026 15:24:37 -0500
+Jeff Layton <jlayton@kernel.org> wrote:
 
-The xfsprogs for-next branch in repository at:
+> Convert uprobes i_ino format strings to use the PRIino format
+> macro in preparation for the widening of i_ino via kino_t.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+Looks good to me.
 
-has just been updated.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Patches often get missed, so if your outstanding patches are properly reviewed
-on the list and not included in this update, please let me know.
+Thanks,
 
-The for-next branch has also been updated to match the state of master.
+> ---
+>  kernel/events/uprobes.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 923b24b321cc0fbdecaf016645cdac0457a74463..d5bf51565851223730c63b50436c493c0c05eafd 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -344,7 +344,7 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+>  static void update_ref_ctr_warn(struct uprobe *uprobe,
+>  				struct mm_struct *mm, short d)
+>  {
+> -	pr_warn("ref_ctr %s failed for inode: 0x%lx offset: "
+> +	pr_warn("ref_ctr %s failed for inode: 0x%" PRIino "x offset: "
+>  		"0x%llx ref_ctr_offset: 0x%llx of mm: 0x%p\n",
+>  		d > 0 ? "increment" : "decrement", uprobe->inode->i_ino,
+>  		(unsigned long long) uprobe->offset,
+> @@ -982,7 +982,7 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+>  static void
+>  ref_ctr_mismatch_warn(struct uprobe *cur_uprobe, struct uprobe *uprobe)
+>  {
+> -	pr_warn("ref_ctr_offset mismatch. inode: 0x%lx offset: 0x%llx "
+> +	pr_warn("ref_ctr_offset mismatch. inode: 0x%" PRIino "x offset: 0x%llx "
+>  		"ref_ctr_offset(old): 0x%llx ref_ctr_offset(new): 0x%llx\n",
+>  		uprobe->inode->i_ino, (unsigned long long) uprobe->offset,
+>  		(unsigned long long) cur_uprobe->ref_ctr_offset,
+> 
+> -- 
+> 2.53.0
+> 
 
-The new head of the for-next branch is commit:
-
-b56b8825a89b5e2a82ccf4ccee0aae11fe3428a2
-
-New commits:
-
-Bastian Germann (1):
-      [b56b8825a89b] debian: Drop Uploader: Bastian Germann
-
-Brian Foster (2):
-      [bcbd49ae01ff] xfs: error tag to force zeroing on debug kernels
-      [e5f4b834bb2f] xfs: set max_agbno to allow sparse alloc of last full inode chunk
-
-Christoph Hellwig (8):
-      [2fbd34e77b7f] xfs: add a xfs_groups_to_rfsbs helper
-      [19a0fe73785d] xfs: use a lockref for the xfs_dquot reference count
-      [222095f4c52a] xfs: add a XLOG_CYCLE_DATA_SIZE constant
-      [d2b51c1cf4fd] xfs: remove xlog_in_core_2_t
-      [ee001dba26ef] xfs: remove the xlog_rec_header_t typedef
-      [6aa2b48a6b66] xfs: validate that zoned RT devices are zone aligned
-      [c250d4da5191] xfs: mark __xfs_rtgroup_extents static
-      [5756ae33c98b] xfs: fix an overly long line in xfs_rtgroup_calc_geometry
-
-Hans Holmberg (1):
-      [396517b382aa] xfs: remove xarray mark for reclaimable zones
-
-Lukas Herbolt (1):
-      [ca1eb448e116] mkfs.xfs fix sunit size on 512e and 4kN disks.
-
-Code Diffstat:
-
- debian/control            |  2 +-
- include/libxlog.h         |  4 ++--
- libxfs/rdwr.c             |  2 +-
- libxfs/xfs_errortag.h     |  6 ++++--
- libxfs/xfs_group.h        |  9 ++++++++
- libxfs/xfs_ialloc.c       | 11 +++++-----
- libxfs/xfs_log_format.h   | 38 ++++++++++++++++-----------------
- libxfs/xfs_ondisk.h       |  6 ++++--
- libxfs/xfs_quota_defs.h   |  4 +---
- libxfs/xfs_rtgroup.c      | 53 ++++++++++++++++++++++++-----------------------
- libxfs/xfs_rtgroup.h      | 16 +++++++-------
- libxfs/xfs_sb.c           | 15 ++++++++++++++
- libxlog/util.c            |  6 +++---
- libxlog/xfs_log_recover.c | 52 ++++++++++++++++++++++++++--------------------
- logprint/log_dump.c       |  4 ++--
- mkfs/xfs_mkfs.c           |  2 +-
- 16 files changed, 132 insertions(+), 98 deletions(-)
 
 -- 
-- Andrey
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
