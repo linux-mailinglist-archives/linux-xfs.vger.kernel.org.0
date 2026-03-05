@@ -1,168 +1,161 @@
-Return-Path: <linux-xfs+bounces-31924-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31926-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qPpYNutGqWm33gAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31924-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:03:39 +0100
+	id eOEtCl1HqWm33gAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31926-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:05:33 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E4E620DE3B
-	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:03:39 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABB3E20DF27
+	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:05:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id B7654302F709
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2026 08:59:27 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 22DDA303B4D4
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2026 09:05:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54CFA245031;
-	Thu,  5 Mar 2026 08:59:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44563750D7;
+	Thu,  5 Mar 2026 09:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="n9ck+vz9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZhrWAW4"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFA7372EF8
-	for <linux-xfs@vger.kernel.org>; Thu,  5 Mar 2026 08:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2118374186;
+	Thu,  5 Mar 2026 09:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772701167; cv=none; b=RiqVPQQl9r7Ih+/DF0NyE9UK3RqcYlBS2TFa0q2qKmQDv8l7a22TWxWnHfyvctwMKB9OxXLOONCFmi5anWzHEllC9A0sMLVNhgoQ1Ahe/idp9BLyhW/yKgChDrQONebP4YLOUD093YouniBJo+tlyfr7ZmUtJr0twXrV9E1vmFc=
+	t=1772701507; cv=none; b=lBOOIdob50oISlSYn4nRrw4pUDb1/WSaFaBq5FTRbwxUImrZ7/AZGVZuNi7Ukg9eaB7WhWP97zO5M26FzJGz0lwdZx51yqmTz1GaQ8dwoqfNVcOWaSZebMzEG9Y7rs+Wy6GMqXDKfRODaf6O4sWq0owmYxAw5Mq0vGiKbrL1WVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772701167; c=relaxed/simple;
-	bh=+w5GddLI7gjIx3H8saKhQ2AXW86JH39kjepBKRfZlWU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SKwfQrKB88XzM9CwVXA58V5paK59dZRNH10P6/Z2CcY9KPHcij66F77zovFEN4w5j5OAZM/FXBdILUFt99hNzm+FAb7GjiX5CyCQvaK4GBk+FHpa6d/gWM0xePVIBRPcgXKxyoiWToNIeShBrwYY0ra0+uPAz3iWimwRwZQhQWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=n9ck+vz9; arc=none smtp.client-ip=113.46.200.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
-dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=EqooJhpq6Dp0J8xefq4s/G0MXzsQaxPdN9ZHnHS9/VM=;
-	b=n9ck+vz9IA9VSk7GCKVkkOKLm7gQjHENnZPAG1jPhMi1mVvMbk3yvAsHrKOdkg9oo9XPB5SfP
-	/zmUioIoRf0kog4pFhltnclrez0TjD+lFtUcLFg+l6VAj7SizNAx0vGUGDNboYELIV8p6Q5UJB0
-	up1Mi3OWXscILN+y6VQgvYo=
-Received: from mail.maildlp.com (unknown [172.19.162.197])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fRNdN5yGzzRhSc;
-	Thu,  5 Mar 2026 16:54:32 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id CA84040363;
-	Thu,  5 Mar 2026 16:59:23 +0800 (CST)
-Received: from kwepemn100013.china.huawei.com (7.202.194.116) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 5 Mar 2026 16:59:23 +0800
-Received: from huawei.com (10.50.159.234) by kwepemn100013.china.huawei.com
- (7.202.194.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 5 Mar
- 2026 16:59:22 +0800
-From: Long Li <leo.lilong@huawei.com>
-To: <djwong@kernel.org>, <cem@kernel.org>
-CC: <linux-xfs@vger.kernel.org>, <david@fromorbit.com>, <yi.zhang@huawei.com>,
-	<houtao1@huawei.com>, <leo.lilong@huawei.com>, <yangerkun@huawei.com>,
-	<lonuxli.64@gmail.com>
-Subject: [PATCH 2/2] xfs: ensure dquot item is deleted from AIL only after log shutdown
-Date: Thu, 5 Mar 2026 16:49:22 +0800
-Message-ID: <20260305084922.800699-3-leo.lilong@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20260305084922.800699-1-leo.lilong@huawei.com>
-References: <20260305084922.800699-1-leo.lilong@huawei.com>
+	s=arc-20240116; t=1772701507; c=relaxed/simple;
+	bh=ClNFD7uXVR2zd+ywIi5vyi3YiK5DG+nqhGlbvd8sLrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T2XVDDdEhqlp4GUtW/g/iIx/Kk7m5Ob5Il4Q5jD/yYo0vD4U419rWkrJxmHueSS/Fr3jE0+dLVnXEYbtyyTCOyQCrzliqhkSeWW5F8HucAuyQNsq7vwy3XAXQbQV8/vS7Ix5iPPPPIo5vnFj1bCqg23LOo+4+kTb/rGoLbfXAKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZhrWAW4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C1E1C19425;
+	Thu,  5 Mar 2026 09:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772701507;
+	bh=ClNFD7uXVR2zd+ywIi5vyi3YiK5DG+nqhGlbvd8sLrQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aZhrWAW4DpAGLFX9GfVbibg5zID8EYSkTEIRQ95J/NrcPO5uOxo3Z8SBw9eQ85VjU
+	 wHVs8VCUAdAuWXonGjyGYYjNo8xL5sYPNE0iYQ8+5otKl1Lg5S5TrswDTeCJqgT8ZT
+	 THc6x80lmY3d/ytSxkPWEzXRXRKCDftAkoAYJ46iJLuFBGm2Aacm3OZkQtZDhHlb7l
+	 sG11KKzKxUw3WWMJB3HVQoS1UhIC+LGMnGb1xb4R+a59ax/5l1ntSbdpFRf6YzWgha
+	 k0dY688xWWLTrk5hbstEQ2rkhHOg7nJAyeHiuJvLQLqo2vePv76auo4dL4anDWclDp
+	 2oBM2e/TVIIsA==
+Date: Thu, 5 Mar 2026 10:05:03 +0100
+From: Carlos Maiolino <cem@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>, linux-xfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: don't clobber bi_status in xfs_zone_alloc_and_submit
+Message-ID: <aalG6v8qM-FyvrW1@nidhogg.toxiclabs.cc>
+References: <20260304185923.291592-1-agruenba@redhat.com>
+ <20260304195303.GA57948@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemn100013.china.huawei.com (7.202.194.116)
-X-Rspamd-Queue-Id: 4E4E620DE3B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260304195303.GA57948@frogsfrogsfrogs>
+X-Rspamd-Queue-Id: ABB3E20DF27
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [2.84 / 15.00];
-	DMARC_POLICY_QUARANTINE(1.50)[huawei.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),quarantine];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[h-partners.com:s=dkim];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,fromorbit.com,huawei.com,gmail.com];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31926-lists,linux-xfs=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[leo.lilong@huawei.com,linux-xfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-31924-lists,linux-xfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[h-partners.com:+];
-	PRECEDENCE_BULK(0.00)[];
-	TO_DN_NONE(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,huawei.com:mid,huawei.com:email,h-partners.com:dkim];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cem@kernel.org,linux-xfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-In xfs_qm_dqflush(), when a dquot flush fails due to corruption
-(the out_abort error path), the original code removed the dquot log
-item from the AIL before calling xfs_force_shutdown(). This ordering
-introduces a subtle race condition that can lead to data loss after
-a crash.
+On Wed, Mar 04, 2026 at 11:53:03AM -0800, Darrick J. Wong wrote:
+> On Wed, Mar 04, 2026 at 07:59:20PM +0100, Andreas Gruenbacher wrote:
+> > Function xfs_zone_alloc_and_submit() sets bio->bi_status and then it
+> > calls bio_io_error() which overwrites that value again.  Fix that by
+> > completing the bio separately after setting bio->bi_status.
+> > 
+> > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> 
+> Yeah, that make sense to me that we shouldn't override the value set in
+> out_split_error.
+> 
+> Cc: <stable@vger.kernel.org> # v6.15
+> Fixes: 4e4d5207557770 ("xfs: add the zoned space allocator")
+> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
 
-The AIL tracks the oldest dirty metadata in the journal. The position
-of the tail item in the AIL determines the log tail LSN, which is the
-oldest LSN that must be preserved for crash recovery. When an item is
-removed from the AIL, the log tail can advance past the LSN of that item.
+I can add that at commit time, no need to send again Andreas.
 
-The race window is as follows: if the dquot item happens to be at
-the tail of the log, removing it from the AIL allows the log tail
-to advance. If a concurrent log write is sampling the tail LSN at
-the same time and subsequently writes a complete checkpoint (i.e.,
-one containing a commit record) to disk before the shutdown takes
-effect, the journal will no longer protect the dquot's last
-modification. On the next mount, log recovery will not replay the
-dquot changes, even though they were never written back to disk,
-resulting in silent data loss.
 
-Fix this by calling xfs_force_shutdown() before xfs_trans_ail_delete()
-in the out_abort path. Once the log is shut down, no new log writes
-can complete with an updated tail LSN, making it safe to remove the
-dquot item from the AIL.
+For the patch itself:
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 
-Cc: <stable@vger.kernel.org>
-Fixes: b707fffda6a3 ("xfs: abort consistently on dquot flush failure")
-Signed-off-by: Long Li <leo.lilong@huawei.com>
----
- fs/xfs/xfs_dquot.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 2b208e2c5264..69e9bc588c8b 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1439,9 +1439,15 @@ xfs_qm_dqflush(
- 	return 0;
- 
- out_abort:
-+	/*
-+	 * Shut down the log before removing the dquot item from the AIL.
-+	 * Otherwise, the log tail may advance past this item's LSN while
-+	 * log writes are still in progress, making these unflushed changes
-+	 * unrecoverable on the next mount.
-+	 */
-+	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- 	dqp->q_flags &= ~XFS_DQFLAG_DIRTY;
- 	xfs_trans_ail_delete(lip, 0);
--	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- 	xfs_dqfunlock(dqp);
- 	return error;
- }
--- 
-2.39.2
-
+> 
+> --D
+> 
+> > ---
+> >  fs/xfs/xfs_zone_alloc.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_zone_alloc.c b/fs/xfs/xfs_zone_alloc.c
+> > index e3d19b6dc64a..c3328b9dda37 100644
+> > --- a/fs/xfs/xfs_zone_alloc.c
+> > +++ b/fs/xfs/xfs_zone_alloc.c
+> > @@ -862,7 +862,7 @@ xfs_zone_alloc_and_submit(
+> >  	bool			is_seq;
+> >  
+> >  	if (xfs_is_shutdown(mp))
+> > -		goto out_error;
+> > +		goto out_io_error;
+> >  
+> >  	/*
+> >  	 * If we don't have a locally cached zone in this write context, see if
+> > @@ -875,7 +875,7 @@ xfs_zone_alloc_and_submit(
+> >  select_zone:
+> >  		*oz = xfs_select_zone(mp, write_hint, pack_tight);
+> >  		if (!*oz)
+> > -			goto out_error;
+> > +			goto out_io_error;
+> >  		xfs_set_cached_zone(ip, *oz);
+> >  	}
+> >  
+> > @@ -902,7 +902,10 @@ xfs_zone_alloc_and_submit(
+> >  
+> >  out_split_error:
+> >  	ioend->io_bio.bi_status = errno_to_blk_status(PTR_ERR(split));
+> > -out_error:
+> > +	bio_endio(&ioend->io_bio);
+> > +	return;
+> > +
+> > +out_io_error:
+> >  	bio_io_error(&ioend->io_bio);
+> >  }
+> >  
+> > -- 
+> > 2.52.0
+> > 
+> > 
 
