@@ -1,63 +1,70 @@
-Return-Path: <linux-xfs+bounces-31946-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31947-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oJaSGB2OqWni/gAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31946-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 15:07:25 +0100
+	id gEZnOx2PqWni/gAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31947-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 15:11:41 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE71E21306B
-	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 15:07:24 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76B392130CF
+	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 15:11:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6D7493065324
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2026 14:06:50 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id BC5E13050910
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2026 14:11:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F15C3A0B35;
-	Thu,  5 Mar 2026 14:06:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF59438758E;
+	Thu,  5 Mar 2026 14:11:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RuwBeyCZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T0M+oNSf"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F81D3822AE
-	for <linux-xfs@vger.kernel.org>; Thu,  5 Mar 2026 14:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EF23A0B13;
+	Thu,  5 Mar 2026 14:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772719609; cv=none; b=s3mDPnn5RuRCIbe7pbRpfThFNd6O0eCqGkrPiiWaA2F+SRSqEfXDedwVjUCCyHwqb14IqWX5RqWLg6SY7sE9bPHMcosTHoGAJA7CceFMa5dUKfdomw8grjqa1xqBoc0uGwhvH+rUgTa0PBhD7bm8gkcP4fAF9P/+spHWDYc86aI=
+	t=1772719886; cv=none; b=F+7cVQ5VU6Lo7JhsjxP7ebsE8Ev+PRycXJB5qMxPS8kommfPMgja9G2llIg8oK+I6YOBFTPWxKigSeLsLeXct8GUOT1C6oWcsFBFJZtZ47TUdKlLwGuXt+expeRFQIRGWxU/PrnYS37jjcTPhPmj6KolNImf1IiRST7ohR+MnPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772719609; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	s=arc-20240116; t=1772719886; c=relaxed/simple;
+	bh=B8mvh0Htan+FopbEQT5zI/wsx82EDniiBryEpva3/u0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uewEDPZhbjN0Ge0zswqWWNzcEa1jP59rTStIWXe8Zzl3epUXkoQB4/KQZF4E2GapbZTxbS7jEQMpdmW1TLpEJt9RuXqe+SFHqyepQGCikH+JLj2P04NNvEUBja03tOcIIQZQOjPJYIfNzlUpF9Eq5L3qaaUJxT7NMIgY298xSV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RuwBeyCZ; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+xg8Rg6h+HpF4fwQYqjm+oBkYbiKpVIwU6yQJZD175UfLg0EY/ByAaGQkjgrxtQfKaL6rNOz0oinZXk85UlMNswQutkvjk4t3bm6SsZBj0gTZpVxP7fudVTPDrFFoFKIwLsKjqumEJj8wvYm7Ctf5fn1plxselsxdnkRdZ11Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T0M+oNSf; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=RuwBeyCZaFWzHCnG2FNIHd7Gc2
-	LNcID3tW7YoRJkCv7FJqoZiNIKbD23SY3sE58kx37qg9t5KP0gHRR+4I+YOZj8UisM6m2DZ82rPRa
-	6zMUxMxlALf4ri6KAqh8l1eGWGHQFWbi/grbvrpgkuXkV7eUzfLvQH06JLrW7wg2NqT1zv3zCrvn+
-	8+JjhBsph6Q+vbDoKr6mkxaAyQoutBQjVll6OxIeUnaRREVG9YBxVrH07MBpzhl/DoZ0eS+R5E+jd
-	PjufNnPfgXOmQ5x5PkoqLKxxHooA/kYb+8DP/0IJrIOyrFoo0AquSb/7Mwdcga+EgqbzRiB/hiC2v
-	qp6ZwUCg==;
+	bh=BEtMQwJ41ps4Z2R0nTRGNa9qDDL4Xks6T2KCI2MRAtE=; b=T0M+oNSft7UuOf+isJ9Aj3ocbW
+	OoL/ahFy90CY0DllJPJn7Swnwb9NOBGSwpoQylnUEUy81bPHuvBm2aAOFXxwRg7KdJ8MSBTRycp/2
+	cTR24UizmNDTzhXU8xmLEfTAMf8H34OksBO07YdUwARSxAZ9QNsBhJQhmnENSg1BxENneHwXZ+Yn5
+	ZbhNp2wuG/RETR3kcvnVgSkppdDGMay1UMeAVtykzHiWOTTjp+KTUMLxD7p+1Atvk45PO2pGmyETT
+	t7b8Omyc736qCm+udI688korwAmI+cUiQcm0NnZp7obcK8cRRz2anYBZrlfY2k9vQIendDOugqNrj
+	aW2NRxog==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vy9Lj-00000001vKz-2X18;
-	Thu, 05 Mar 2026 14:06:47 +0000
-Date: Thu, 5 Mar 2026 06:06:47 -0800
+	id 1vy9QC-00000001vT1-3PJh;
+	Thu, 05 Mar 2026 14:11:24 +0000
+Date: Thu, 5 Mar 2026 06:11:24 -0800
 From: Christoph Hellwig <hch@infradead.org>
-To: Long Li <leo.lilong@huawei.com>
-Cc: djwong@kernel.org, cem@kernel.org, linux-xfs@vger.kernel.org,
-	david@fromorbit.com, yi.zhang@huawei.com, houtao1@huawei.com,
-	yangerkun@huawei.com, lonuxli.64@gmail.com
-Subject: Re: [PATCH 2/2] xfs: ensure dquot item is deleted from AIL only
- after log shutdown
-Message-ID: <aamN95NjI2L7VBzi@infradead.org>
-References: <20260305084922.800699-1-leo.lilong@huawei.com>
- <20260305084922.800699-3-leo.lilong@huawei.com>
+To: Brian Foster <bfoster@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] iomap, xfs: lift zero range hole mapping flush
+ into xfs
+Message-ID: <aamPDBAAuK8vvYDw@infradead.org>
+References: <aY6_eqkIrMkOr039@infradead.org>
+ <aY9hY7TwgMXJNzkI@bfoster>
+ <aaXesgEmu46X7OwD@bfoster>
+ <aabyFY0l7GTEHnoQ@infradead.org>
+ <aacv39AZ5P9ubOZ5@bfoster>
+ <aagv8y96vGHvbOdX@infradead.org>
+ <aag-_c8G_L5MQ42m@bfoster>
+ <aahEk4yNqd15BIt7@infradead.org>
+ <aahJcVkrkLRtsJO9@bfoster>
+ <aahmBCz1xJBCPcZ-@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -66,42 +73,64 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260305084922.800699-3-leo.lilong@huawei.com>
+In-Reply-To: <aahmBCz1xJBCPcZ-@bfoster>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Rspamd-Queue-Id: CE71E21306B
+X-Rspamd-Queue-Id: 76B392130CF
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[infradead.org,none];
 	R_DKIM_ALLOW(-0.20)[infradead.org:s=bombadil.20210309];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,fromorbit.com,huawei.com,gmail.com];
-	TAGGED_FROM(0.00)[bounces-31946-lists,linux-xfs=lfdr.de];
+	DKIM_TRACE(0.00)[infradead.org:+];
+	TAGGED_FROM(0.00)[bounces-31947-lists,linux-xfs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[infradead.org:+];
+	RCPT_COUNT_THREE(0.00)[4];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hch@infradead.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-xfs];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:dkim,infradead.org:mid,lst.de:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,infradead.org:dkim,infradead.org:mid]
 X-Rspamd-Action: no action
 
-Looks good:
+On Wed, Mar 04, 2026 at 12:04:04PM -0500, Brian Foster wrote:
+> This patch seems to work on a quick test. It's basically the two patches
+> squashed together (I'd post them as independent patches), so nothing too
+> different, but if we fix up the zero logic first that helps clean up the
+> indentation as a bonus.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cool, thanks a lot for putting in this extra effort!
+
+Cosmetic comment on the comment:
+
+> +	/*
+> +	 * We don't allocate blocks for zeroing a hole, but we only report a
+> +	 * hole in zoned mode if one exists in both the COW and data forks.
+
+I'd reword this a bit as:
+
+	/*
+	 * When zeroing, don't allocate blocks for holes as they already
+	 * zeroes, but we need to ensure that no extents exist in both
+	 * the data and COW fork to ensure this really is a hole.
+> +	 *
+> +	 * There is currently a corner case where writeback removes the COW fork
+> +	 * mapping and unlocks the inode, leaving a transient state where a hole
+> +	 * exists in both forks until write completion maps blocks into the data
+> +	 * fork. Until we can avoid this transient hole state, detect and avoid
+> +	 * this with a flush of any such range that appears dirty in pagecache.
+> +	 */
 
 
