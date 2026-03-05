@@ -1,58 +1,56 @@
-Return-Path: <linux-xfs+bounces-31933-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31934-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eB49LGdRqWmd4gAAu9opvQ
-	(envelope-from <linux-xfs+bounces-31933-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:48:23 +0100
+	id +DKdMp5RqWmd4gAAu9opvQ
+	(envelope-from <linux-xfs+bounces-31934-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:49:18 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BDD620EE75
-	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:48:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 668F720EEB3
+	for <lists+linux-xfs@lfdr.de>; Thu, 05 Mar 2026 10:49:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 67ED9304737F
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2026 09:47:54 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C85863017507
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Mar 2026 09:48:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11FE5379999;
-	Thu,  5 Mar 2026 09:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC9AB375F62;
+	Thu,  5 Mar 2026 09:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcMzn6Ny"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eobUAYYi"
 X-Original-To: linux-xfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E434C377553
-	for <linux-xfs@vger.kernel.org>; Thu,  5 Mar 2026 09:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BF6372B5A
+	for <linux-xfs@vger.kernel.org>; Thu,  5 Mar 2026 09:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772704072; cv=none; b=QcfX74dsKv5dJ9CtMoDSgDRKm+qfzz4tSD70ht3Pc3i9iXhWjFavUYfxlONbmze5RQZq4Ye49v0LCNRh6JELs6lFv0+SpCVRHTGtKu8WjOUCXyunXwphIQi+XlmZX+c3FQUMC4rBcJgMelrG3jAZRzQcWw62XJmimoN16EPv81w=
+	t=1772704094; cv=none; b=ZJOuyDmjFc+5Kuj4edq5SzPErQbygYl11S4EQrpL6GArxGVSc2wGLQJIgLpihgL5Bo1tteCtBhShaYj5LE1lgKVxSdtL/uE+LFriLanYLlluV8h6CrY4ybyz7Z/paDO8iXQ3usrcRLaddB9TWQGEXpPuQpFsKxnuj2yp0M6YjhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772704072; c=relaxed/simple;
-	bh=hyfHXBzOq8IhnP1LW/iq3X031ABzjLYw4vyF9biuwlI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aEknk/sUcoaWc/HWDT1bZiyV/wMkHjBavpfDaiTC0Ysh7Yo/b19UY6uObjDzqtIRridCSb2yBBuBfKd5qQjuX0y29TAW3mzAYGCxI13Pcc2cIJNgRbiyYRZiLCy7JD7PajRb7STR8dFOmUJkgQlGiqKvLaaIJrnUmNh85EI84Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcMzn6Ny; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F84C19423;
-	Thu,  5 Mar 2026 09:47:50 +0000 (UTC)
+	s=arc-20240116; t=1772704094; c=relaxed/simple;
+	bh=8W0hZ0iQpLh7OZZgJrtUfhMhGOSd9zf6zWb9YuT8jsI=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=T0vlD50GHAtlvKwKXWMw9R77K38fyplVvABHkVUHr31NWrH+yPXhU4MoX98npoh+mRoiuGAlY+URko1RNwMU68YpnLXgMpSb+gdwWLaRWv4ZOKiZoWAzCN4nQreLux6qLydc5GEEkpVqOlspZXjIHsDc2wgeSleZb4Dd3Arf9iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eobUAYYi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00132C116C6;
+	Thu,  5 Mar 2026 09:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772704071;
-	bh=hyfHXBzOq8IhnP1LW/iq3X031ABzjLYw4vyF9biuwlI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jcMzn6NyfNgG0g8Wode/oODUAt6pq5DhRypQJ7H8q/p6xEc6XzcXbqMO0jsWDCPTr
-	 XcjmWPknWu/N302M25f96RM4XPzx4/Xa6KCtKYh5HiSm824bypnVltReN2OefAcPih
-	 IfQe+2yyKUEIS3hH304lfOfZw0UYVOsOLUE4UCuKbBnEfbuRarDCJW88wlrn4KsZBE
-	 uM1fihm4IajtQKk0LgIjxbYUat2OL+4WZUbPCD5rqVhzGjoUijDrUA0fyGZS1HCo58
-	 oq8erb9o7VhHJdZgDDCGTnCyPo6zP+dXiizwsRk/uVUZXOq8hvdWiXq6+8jNP4mGFV
-	 5sH9Z1Q+MUIJQ==
+	s=k20201202; t=1772704094;
+	bh=8W0hZ0iQpLh7OZZgJrtUfhMhGOSd9zf6zWb9YuT8jsI=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=eobUAYYiH1kFbg0+wLRNgfYMm19G4nfkV64kN8JpYno91MavNQG+n731uVEhueU/p
+	 d5+FkUGjqDRFRjKdoVCqPkRnPldvtMqmxWGeeAINWsaER8uISn4wpxzS5OfIS1MkvI
+	 KtC/WCkc5FHU2ORywGyxuuT5iOpavUmE2OqutPIueb6EoSTjiLlyTx8JQLv/PuSI1/
+	 g3Q5pLa7l4IQTPGeY3mwSDQ6jyLicP4aQKJmwjwxcT5OidZk60ZRtm3BFwuSgpvwbr
+	 qvCXH5hk5zhPQwgRqaXSk6tYj2MoYS+MAyPrXZ8XJZSfie9lzLnVnsSXTmLEFRgzQM
+	 /GcXMUvFaBsUg==
 From: Carlos Maiolino <cem@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: xfs <linux-xfs@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>
-In-Reply-To: <20260302173158.GA57948@frogsfrogsfrogs>
-References: <20260302173158.GA57948@frogsfrogsfrogs>
-Subject: Re: [PATCH v2] xfs: fix race between healthmon unmount and
- read_iter
-Message-Id: <177270407059.16288.15362198237587970371.b4-ty@kernel.org>
-Date: Thu, 05 Mar 2026 10:47:50 +0100
+To: linux-xfs@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>
+In-Reply-To: <20260225224646.2103434-1-dlemoal@kernel.org>
+References: <20260225224646.2103434-1-dlemoal@kernel.org>
+Subject: Re: [PATCH] xfs: remove scratch field from struct xfs_gc_bio
+Message-Id: <177270409367.16364.1785184311578009435.b4-ty@kernel.org>
+Date: Thu, 05 Mar 2026 10:48:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -62,26 +60,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14.2
-X-Rspamd-Queue-Id: 4BDD620EE75
+X-Rspamd-Queue-Id: 668F720EEB3
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-31933-lists,linux-xfs=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-31934-lists,linux-xfs=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_ALL(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	RCPT_COUNT_TWO(0.00)[2];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[cem@kernel.org,linux-xfs@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
@@ -92,20 +90,15 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-On Mon, 02 Mar 2026 09:31:58 -0800, Darrick J. Wong wrote:
-> xfs/1879 on one of my test VMs got stuck due to the xfs_io healthmon
-> subcommand sleeping in wait_event_interruptible at:
+On Thu, 26 Feb 2026 07:46:46 +0900, Damien Le Moal wrote:
+> The scratch field in struct xfs_gc_bio is unused. Remove it.
 > 
->  xfs_healthmon_read_iter+0x558/0x5f8 [xfs]
->  vfs_read+0x248/0x320
->  ksys_read+0x78/0x120
 > 
-> [...]
 
 Applied to for-next, thanks!
 
-[1/1] xfs: fix race between healthmon unmount and read_iter
-      commit: 0ca1a8331c0fa5e57844e003a5d667a15b1e002c
+[1/1] xfs: remove scratch field from struct xfs_gc_bio
+      commit: 6270b8ac2f41858952074b23c2d3d9aa2fe1bfa9
 
 Best regards,
 -- 
