@@ -1,49 +1,63 @@
-Return-Path: <linux-xfs+bounces-32010-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-32011-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kPgMLiPurmkWKQIAu9opvQ
-	(envelope-from <linux-xfs+bounces-32010-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 16:58:27 +0100
+	id OP7nE6zvrmkWKQIAu9opvQ
+	(envelope-from <linux-xfs+bounces-32011-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 17:05:00 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58D9323C445
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 16:58:27 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D800723C667
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 17:04:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 64509306116E
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2026 15:48:06 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6961B3035BDA
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2026 16:02:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2632765ED;
-	Mon,  9 Mar 2026 15:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E203E51E2;
+	Mon,  9 Mar 2026 16:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rzv7sero"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7226323ABA8;
-	Mon,  9 Mar 2026 15:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F663E1229;
+	Mon,  9 Mar 2026 16:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773071283; cv=none; b=BNp5quXlDq/kM6MJwr5EaRTv/sG0q3tNYGjHjOr6tzl6tuFPhzeda0Gvi6MO4dsNaqbWis0vQ1qTF0ED1P3Zyk4Uc7MohWFq8UzooK+osOW+UXNwbDp7Z6gK/YNoAOjSNsb8B0QMPFYMajoOa1Y3h5tOm+eNTZRHyYMvYcKUOkI=
+	t=1773072156; cv=none; b=qAD6y9YqPCHZE+3dsyMeWW/FPoHDsXz7f3K7uhNQsjVdFk9JYCrHHIkeHjwRktb1YMnBH0YzweO62HKjre3cTaSATB/ixYOh2avddW6+fDK80QkyzKf7Vqd46enXGQTGak+Tu/RBTN/PZdf9Eq6s5+leSamiTflxRUV/LdW0Cq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773071283; c=relaxed/simple;
-	bh=mEIWqwGbrW27d8D2B++HR9GmKX1wltJ+IazL+DWKnVM=;
+	s=arc-20240116; t=1773072156; c=relaxed/simple;
+	bh=7gJTBjpk8wrJP9SKNEto2JFBOZ4no8pFKzp7/nr7/r4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyouDTdYKfGtpIsD0CQeRMsH0t63JdM3O7c2qxkLLz24jS954If8VEUAg7i/osCQtO9d4Y/vxvju6rGaJijV6DdY7oxFVptPJy7abNXFoyRG9pP/g3awAImsMQhD183+yMrzl5W2dishOU9gwMyVDhlxLiTibB8zF+q1e4tyW3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C6B2568C7B; Mon,  9 Mar 2026 16:40:47 +0100 (CET)
-Date: Mon, 9 Mar 2026 16:40:47 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Kanchan Joshi <joshi.k@samsung.com>
-Cc: brauner@kernel.org, hch@lst.de, djwong@kernel.org, jack@suse.cz,
-	cem@kernel.org, kbusch@kernel.org, axboe@kernel.dk,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	gost.dev@samsung.com, Hans Holmberg <hans.holmberg@wdc.com>
-Subject: Re: [PATCH v2 0/5] write streams and xfs spatial isolation
-Message-ID: <20260309154047.GA18538@lst.de>
-References: <CGME20260309053425epcas5p32886580a4fbe646ceee66f2864970e9f@epcas5p3.samsung.com> <20260309052944.156054-1-joshi.k@samsung.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EueK+pb6kN7/ol2scnsTrOBp27g97zIihiU4Q1vX/hVlOl3O6LeZNQxDBQtBt+XsQS39nFtpme2Gdb5B0ITMTzjMSP/Z5NfHd7X+5WrD9jqM+m4O1viyEHIScw3KD4b1sZtQNhxeun52whwqVzRX9xTLDSLZcHA7C6TlsnyaclE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rzv7sero; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C37C2BCB0;
+	Mon,  9 Mar 2026 16:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773072156;
+	bh=7gJTBjpk8wrJP9SKNEto2JFBOZ4no8pFKzp7/nr7/r4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rzv7seroo2lu4SNXuG80SAFO4QOjuSiAO71ujq4WtSF9XgvnPTQXRmjsGS/OkhKLd
+	 2seRvvZq1+tspVlUIFwrvl9OoOLGlCBV1Q5AbIrf6W3HUsZvN0bfi68hsZr6j2gbjj
+	 WtGIqSVzWU9I8Kp5a9GtZ12mmq/qLOXsGtv2qWyMCWR1oX/VgfiEwDE6p/4d6503Hs
+	 qb6fksXpEXIKDPgHitC/WwImyWNS9gMiSG948opURmT3S1NINUuXabkDDe1udifaLH
+	 XHZAhRcIVpW/1P2TmRgu2WAc7RREZ85K0S4QZPpGJkYRyfMwebVy+mX3n9LcWe3Njq
+	 bsHo9XtK24GWg==
+Date: Mon, 9 Mar 2026 09:02:35 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Yuto Ohnuki <ytohnuki@amazon.com>
+Cc: Carlos Maiolino <cem@kernel.org>, Dave Chinner <dchinner@redhat.com>,
+	"Darrick J . Wong" <darrick.wong@oracle.com>,
+	Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+652af2b3c5569c4ab63c@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] xfs: stop reclaim before pushing AIL during
+ unmount
+Message-ID: <20260309160235.GA6033@frogsfrogsfrogs>
+References: <20260308182804.33127-6-ytohnuki@amazon.com>
+ <20260308182804.33127-7-ytohnuki@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -52,51 +66,109 @@ List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260309052944.156054-1-joshi.k@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Rspamd-Queue-Id: 58D9323C445
+In-Reply-To: <20260308182804.33127-7-ytohnuki@amazon.com>
+X-Rspamd-Queue-Id: D800723C667
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.36 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[lst.de : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	MID_RHS_MATCH_FROM(0.00)[];
-	NEURAL_SPAM(0.00)[0.300];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hch@lst.de,linux-xfs@vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,lst.de:mid];
+	TAGGED_FROM(0.00)[bounces-32011-lists,linux-xfs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32010-lists,linux-xfs=lfdr.de];
-	R_DKIM_NA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[]
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	NEURAL_HAM(-0.00)[-0.969];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-xfs,652af2b3c5569c4ab63c];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
-This is laking numbers to justify all the changes.
+On Sun, Mar 08, 2026 at 06:28:06PM +0000, Yuto Ohnuki wrote:
+> The unmount sequence in xfs_unmount_flush_inodes() pushed the AIL while
+> background reclaim and inodegc are still running. This creates a race
+> where reclaim can free inodes and their log items while the AIL push is
+> still referencing them.
 
-From previous experiments the most important isolations is to put
-the file system log and metadata into a separate stream each, which
-would be the first step before exposing user knobs.
+Is this a general race between background inode reclaim and AIL pushes?
+Or is the race between an AIL push and the explicit call to
+xfs_reclaim_inodes below?
 
-And once we look into application optimizations I think your best bet is
-to resurrect the FDP/write streams support for zoned XFS that Hans and I
-did and posted in reply to one of Keith' iterations of the write stream
-patches.  This will reuse all the intelligent placement decisions we've
-put into that allocator.  Once that is done we can look into exposing the
-write streams already inherent in that to user space, but we really
-should be doing all the ground work first.  And maybe some of this can
-apply to the conventional allocator, but given that it has no way to
-track the placement unit sizes I'm a bit doubtful that the results will
-look great.
+I ask because there's a call to xfs_ail_push_all_sync from various
+places in the codebase:
 
+- Log covering/quiescing activities
+
+- xchk_checkpoint_log in the online fsck code if the inode btree
+  scrubber thinks it's racing with inode reclaim.
+
+If inode reclaim happens to be running at the same time as these AIL
+pushes, won't the same race condition manifest there?  But maybe you
+meant the race is with the explicit xfs_reclaim_inodes below?
+
+> Reorder xfs_unmount_flush_inodes() to cancel background reclaim and stop
+> inodegc before pushing the AIL, so that background reclaim and inodegc
+> are no longer running while the AIL is pushed.
+> 
+> Reported-by: syzbot+652af2b3c5569c4ab63c@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=652af2b3c5569c4ab63c
+> Fixes: 90c60e164012 ("xfs: xfs_iflush() is no longer necessary")
+> Cc: <stable@vger.kernel.org> # v5.9
+> Signed-off-by: Yuto Ohnuki <ytohnuki@amazon.com>
+> ---
+>  fs/xfs/xfs_mount.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> index 9c295abd0a0a..786e1fc720e5 100644
+> --- a/fs/xfs/xfs_mount.c
+> +++ b/fs/xfs/xfs_mount.c
+> @@ -621,9 +621,9 @@ xfs_unmount_flush_inodes(
+>  
+>  	xfs_set_unmounting(mp);
+>  
+> -	xfs_ail_push_all_sync(mp->m_ail);
+> -	xfs_inodegc_stop(mp);
+>  	cancel_delayed_work_sync(&mp->m_reclaim_work);
+> +	xfs_inodegc_stop(mp);
+
+xfs_inodegc_inactivate (aka the inodegc worker) can call
+xfs_inodegc_set_reclaimable, which in turn calls xfs_reclaim_work_queue.
+That will re-queue m_reclaim_work, which we just cancelled.  I think
+inodegc_stop has to come before cancelling m_reclaim_work.
+
+--D
+
+> +	xfs_ail_push_all_sync(mp->m_ail);
+>  	xfs_reclaim_inodes(mp);
+>  	xfs_health_unmount(mp);
+>  	xfs_healthmon_unmount(mp);
+> -- 
+> 2.50.1
+> 
+> 
+> 
+> 
+> Amazon Web Services EMEA SARL, 38 avenue John F. Kennedy, L-1855 Luxembourg, R.C.S. Luxembourg B186284
+> 
+> Amazon Web Services EMEA SARL, Irish Branch, One Burlington Plaza, Burlington Road, Dublin 4, Ireland, branch registration number 908705
+> 
+> 
+> 
+> 
 
