@@ -1,53 +1,54 @@
-Return-Path: <linux-xfs+bounces-31995-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-31993-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iLamBlCHrmnKFgIAu9opvQ
-	(envelope-from <linux-xfs+bounces-31995-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 09:39:44 +0100
+	id gC6LDEuHrmnKFgIAu9opvQ
+	(envelope-from <linux-xfs+bounces-31993-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 09:39:39 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71211235929
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 09:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F04323591B
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 09:39:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 51952300B462
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2026 08:38:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4D897300951E
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2026 08:38:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285122D0620;
-	Mon,  9 Mar 2026 08:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DF24238C0A;
+	Mon,  9 Mar 2026 08:38:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="kr4IQHlk"
+	dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b="qLDpAmi9"
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63F8219319
-	for <linux-xfs@vger.kernel.org>; Mon,  9 Mar 2026 08:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917B425B1CB
+	for <linux-xfs@vger.kernel.org>; Mon,  9 Mar 2026 08:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773045505; cv=none; b=PXpnx57fnMVsSu/V5Y9u0vupBTDVxeBxHQWULUO3oq538lWiITg4B2lHd0VcqeN14Mrgu15xHVAaLXZNY0kJ68o4lhAvZq1gP3y76AJU3kirZEFJbXJiVP5Oag83P/A/AFezU/Sgk2kNGz99Xd8Si4VoCXJI2lLDGb3K9G9w1+U=
+	t=1773045503; cv=none; b=h8XmIhpjFWQe7/3XgqYCkt33DrvSSU+/MYe3cZj96Efx4mTPNPU+RtTido42rKWb4AGLcbrWOb1s+hgaRImJgD6advDj2tomDIwNWQFliLZ9Th8Ib0o1mbX08KSXw1XtS7LV2vvWZeTgZE5VrBVB93Q6evBkOQYqF/x0Z/M86So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773045505; c=relaxed/simple;
-	bh=9PmD9CvQ5kFvVGsbGL/Mzs5XTqzeHWgsjMSvEBFjoBc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u+8suR583pejbyLsc4qB219PutDF0AcaujjvvJRzf5r+VcUNXd5amrpMsBykJhOWJK3hV/D+3n5AtTuiXaASweaxrQAGnr4IuLGqQgXNt0fJ3/mg6ZC8AKJBBo7rhqfbAOeta/CPjxTJbFeFeHXNjKquTDpp0xX4F+8d01FwWLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=kr4IQHlk; arc=none smtp.client-ip=113.46.200.226
+	s=arc-20240116; t=1773045503; c=relaxed/simple;
+	bh=taobepLiN1ijCj64vKY5StFR9NwWJpdZLOYjyrRDNh4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z8+XF4NLtDHbNovU+rCNKURL2Sp3tmFtGRmL8N1EnsztyluW3d10Osuf71NE7p9aMH3ewYuh3UUzc4wLNuPQiiUo7qUCfk6Km/5mJ9M2CBNaY2YjVxs8+aGlzjp8C69wYr/sptYnCR96+FGuu6pw2AOPpXuWBTsBuF7vRShmA70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; dkim=pass (1024-bit key) header.d=h-partners.com header.i=@h-partners.com header.b=qLDpAmi9; arc=none smtp.client-ip=113.46.200.218
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
 dkim-signature: v=1; a=rsa-sha256; d=h-partners.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=qzdtl9BbJXY38Ik2P0I7elw1qJMHegGXot09RDpVyDM=;
-	b=kr4IQHlkZhMVGynLHzeVPlv6G/SYwswCFUPm+NLH5wuei1l+yjJEuAiIe0ILjhJygUAJSW9n+
-	G8LLHoyXV5UfrteD8KJJkouB9xNj8yaya8ZxsONANXlKNAZBslSZCnkB/P55PW7mFKM/0N+X6U/
-	G9404xIDJPwfxTvFEeRSOCE=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4fTqz63kPKzKm4t;
-	Mon,  9 Mar 2026 16:33:22 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 44B6340565;
+	bh=mw34XKNwqjD5qH8ShVNq7vdxwNxYzwhS0Y4b54VmdZ4=;
+	b=qLDpAmi9QDNtUBkIdedMT9DABwMuCvJGN0jVyBYWbDuO+F7KZCnoI0ORDqcyjYUcjq6zw6T5l
+	Y+DeY9giCce41KeVpSM9oSOYU3DEJuRRvMw5tVxp/YuncBNsPd05lP7Ieh8B3TCQ2GgqQb+7vRF
+	E2b0I48wA5WzUC2BHxuDhIg=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4fTqys60NtzpT0j;
+	Mon,  9 Mar 2026 16:33:09 +0800 (CST)
+Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id DF63E4056B;
 	Mon,  9 Mar 2026 16:38:17 +0800 (CST)
 Received: from kwepemn100013.china.huawei.com (7.202.194.116) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.1544.11; Mon, 9 Mar 2026 16:38:17 +0800
 Received: from huawei.com (10.50.159.234) by kwepemn100013.china.huawei.com
@@ -59,10 +60,12 @@ To: <djwong@kernel.org>, <cem@kernel.org>
 CC: <linux-xfs@vger.kernel.org>, <david@fromorbit.com>, <yi.zhang@huawei.com>,
 	<houtao1@huawei.com>, <leo.lilong@huawei.com>, <yangerkun@huawei.com>,
 	<lonuxli.64@gmail.com>
-Subject: [PATCH 0/4] xfs: close crash window in attr dabtree inactivation
-Date: Mon, 9 Mar 2026 16:27:48 +0800
-Message-ID: <20260309082752.2039861-1-leo.lilong@huawei.com>
+Subject: [PATCH 1/4] xfs: only assert new size for datafork during truncate extents
+Date: Mon, 9 Mar 2026 16:27:49 +0800
+Message-ID: <20260309082752.2039861-2-leo.lilong@huawei.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20260309082752.2039861-1-leo.lilong@huawei.com>
+References: <20260309082752.2039861-1-leo.lilong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
@@ -73,7 +76,7 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
  kwepemn100013.china.huawei.com (7.202.194.116)
-X-Rspamd-Queue-Id: 71211235929
+X-Rspamd-Queue-Id: 5F04323591B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [2.84 / 15.00];
 	DMARC_POLICY_QUARANTINE(1.50)[huawei.com : SPF not aligned (relaxed), DKIM not aligned (relaxed),quarantine];
@@ -90,83 +93,45 @@ X-Spamd-Result: default: False [2.84 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[leo.lilong@huawei.com,linux-xfs@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-31995-lists,linux-xfs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-31993-lists,linux-xfs=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[h-partners.com:+];
 	PRECEDENCE_BULK(0.00)[];
 	TO_DN_NONE(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[h-partners.com:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo];
+	NEURAL_HAM(-0.00)[-0.997];
+	RCVD_COUNT_SEVEN(0.00)[7];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	MIME_TRACE(0.00)[0:+];
 	TAGGED_RCPT(0.00)[linux-xfs];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,h-partners.com:dkim]
 X-Rspamd-Action: no action
 
-Problem
--------
+The assertion functions properly because we currently only truncate the
+attr to a zero size. Any other new size of the attr is not preempted.
+Make this assertion is specific to the datafork, preparing for
+subsequent patches to truncate the attribute to a non-zero size.
 
-xfs_attr3_node_inactive() cancels all child blocks in the attr dabtree
-via xfs_trans_binval(), relying on a subsequent full attr bmap truncation
-in xfs_attr_inactive() to ensure log recovery never reaches the root
-node.  The child block cancellations and the bmap truncation are
-committed in separate transactions, creating a narrow but real crash
-window.
-
-If the system shuts down after the cancellations commit but before the
-bmap truncation commits, the attr bmap survives recovery intact and
-xlog_recover_process_iunlinks() retries inactivation.  It attempts to
-read the root node via the attr bmap: if the root node was not replayed,
-reading the unreplayed root block maybe triggers a metadata verification
-failure immediately; if it was replayed, following its child pointers to
-unreplayed child blocks triggers the same failure.
-
-Zhang Yi previously attempted to solve this problem [1], but Dave gave
-different advice. Following the approach suggested by Dave Chinner in
-review.
-
-[1] https://patchwork.kernel.org/project/xfs/patch/20230613030434.2944173-3-yi.zhang@huaweicloud.com/
-
-Fix
+Signed-off-by: Long Li <leo.lilong@huawei.com>
 ---
+ fs/xfs/xfs_inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The fix addresses the atomicity gap at two levels:
-
-(1) In xfs_attr3_node_inactive(), each child block invalidation and the
-    removal of its reference from the parent node are placed in the same
-    transaction, so no parent node ever holds a pointer to a cancelled
-    block at any crash point.  After all children are removed, the empty
-    root node is converted to an empty leaf in the same transaction.
-    This conversion is necessary because xfs_da3_node_verify() rejects
-    a node block with count == 0, whereas xfs_attr3_leaf_verify()
-    explicitly allows it during recovery to accommodate the transient
-    state from the shortform-to-leaf promotion path.
-
-(2) In xfs_attr_inactive(), the attr fork is truncated in two phases.
-    First the child extents are removed.  Then the root block is
-    invalidated and the attr bmap is truncated to zero in a single
-    transaction.  These two operations in the second phase must be
-    atomic: as long as the attr bmap has any non-zero length, recovery
-    can follow it to the root block, so the root block invalidation must
-    commit together with the bmap-to-zero truncation.
-
-
-Long Li (4):
-  xfs: only assert new size for datafork during truncate extents
-  xfs: factor out xfs_da3_node_entry_remove
-  xfs: factor out xfs_attr3_leaf_init
-  xfs: close crash window in attr dabtree inactivation
-
- fs/xfs/libxfs/xfs_attr_leaf.c | 20 ++++++++
- fs/xfs/libxfs/xfs_attr_leaf.h |  3 ++
- fs/xfs/libxfs/xfs_da_btree.c  | 54 +++++++++++++++----
- fs/xfs/libxfs/xfs_da_btree.h  |  2 +
- fs/xfs/xfs_attr_inactive.c    | 97 ++++++++++++++++++++---------------
- fs/xfs/xfs_inode.c            |  3 +-
- 6 files changed, 125 insertions(+), 54 deletions(-)
-
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 50c0404f9064..beaa26ec62da 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1048,7 +1048,8 @@ xfs_itruncate_extents_flags(
+ 	xfs_assert_ilocked(ip, XFS_ILOCK_EXCL);
+ 	if (icount_read(VFS_I(ip)))
+ 		xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL);
+-	ASSERT(new_size <= XFS_ISIZE(ip));
++	if (whichfork == XFS_DATA_FORK)
++		ASSERT(new_size <= XFS_ISIZE(ip));
+ 	ASSERT(tp->t_flags & XFS_TRANS_PERM_LOG_RES);
+ 	ASSERT(ip->i_itemp != NULL);
+ 	ASSERT(ip->i_itemp->ili_lock_flags == 0);
 -- 
 2.39.2
 
