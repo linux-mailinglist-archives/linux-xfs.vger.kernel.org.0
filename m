@@ -1,229 +1,110 @@
-Return-Path: <linux-xfs+bounces-32036-lists+linux-xfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-xfs+bounces-32037-lists+linux-xfs=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qGhBMNcMr2nHMwIAu9opvQ
-	(envelope-from <linux-xfs+bounces-32036-lists+linux-xfs=lfdr.de@vger.kernel.org>)
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 19:09:27 +0100
+	id YInbNfcNr2njNAIAu9opvQ
+	(envelope-from <linux-xfs+bounces-32037-lists+linux-xfs=lfdr.de@vger.kernel.org>)
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 19:14:15 +0100
 X-Original-To: lists+linux-xfs@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5383523E493
-	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 19:09:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 682D623E659
+	for <lists+linux-xfs@lfdr.de>; Mon, 09 Mar 2026 19:14:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 45CCB3033082
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2026 18:06:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 9D2473032048
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Mar 2026 18:08:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 136223E5ED9;
-	Mon,  9 Mar 2026 18:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gY56th23"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3913B28C2DD;
+	Mon,  9 Mar 2026 18:08:55 +0000 (UTC)
 X-Original-To: linux-xfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0.herbolt.com (mx0.herbolt.com [5.59.97.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A9B3E558C;
-	Mon,  9 Mar 2026 18:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3782BEC45
+	for <linux-xfs@vger.kernel.org>; Mon,  9 Mar 2026 18:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.59.97.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773079390; cv=none; b=jxr6MLm8kEeQhmtAwiwYAHUtEweMSEa2hcjTBW8Wkc7+IyfRDJPgBqZ8Y8EgMsZOUvh6B8PwS+qZbIAaeEyBWqhFd5Pkp9pZFUgkoXiS5V/Kne30cXvBE2B3HV2e8+iQrA8KMO8fGhSm3kyGwPgVy7BI2sG2oWoQrE+8jGjXC0g=
+	t=1773079735; cv=none; b=OKLqgl2XdmsQbDxMQHM8AfuDJ/LwRu6kpsBNoaOOUilZfXHT78+wH0GrzDILKrBzpWrHwX0uipMJKln4Br772MiTSaA5b6/sHfToMwkUowBKECm6TMyu931e6Cr/VvNonR0JpUb1BpPIt1zwAWa0ZyJ9L0XjDdmx+W1q+C24ayg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773079390; c=relaxed/simple;
-	bh=0FfRCf4Ed0R4kQ4TPJho5itvmIRD9sr30fXDJDZjn2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lVtT4d3nzeMWud6R5fA8CGrjC6dav/S+KE3jfdiwk0JE23ZffisN6+YUslvbdpZrkcv3z4On+58CaPpldp4Z3dA0cm8c36e8WWbKO+GGeIz9FnHdU+FqYkOTivH4dDdr1PZDevtw5yXI+mqExU2pb6Jt8kQ5Go7RYaL5CzC3jvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gY56th23; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89628C4CEF7;
-	Mon,  9 Mar 2026 18:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773079389;
-	bh=0FfRCf4Ed0R4kQ4TPJho5itvmIRD9sr30fXDJDZjn2c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gY56th237tyzGR1QcThymtNskNFXgV0WWYSiaY+k5qITt7y2Z0HUsYjaaHF7QzO0E
-	 15tsHk+pUr5kx0KF5BRQyKhDezKCCaPjeonHsRMLelXaAHZutyBlr1Y2l0KIyY9ixR
-	 33Mjgml1aWViA5rgsyxDKSFSRTB/XXldbLfygBF/SlcbgqZPzu8Gnh8Dy+df4q9/N7
-	 vg8dBJVfhqKWA+RzVREOlFqCLo8qlZfeYFWCH88t05XTNQAEhSn6Abn5hjqPKx8bvO
-	 xXzi7MOwVkBm8ZuPkFJXv3Po2kRTR5qMrDG293KaimKEqOLkqpDZg4w89RPFesXVZd
-	 rHbv9lY8pedKQ==
-Date: Mon, 9 Mar 2026 11:03:09 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Zorro Lang <zlang@redhat.com>
-Cc: hch@lst.de, fstests@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 01/13] xfs: test health monitoring code
-Message-ID: <20260309180309.GA6069@frogsfrogsfrogs>
-References: <177249785709.483507.8373602184765043420.stgit@frogsfrogsfrogs>
- <177249785787.483507.3326797286262755687.stgit@frogsfrogsfrogs>
- <20260309172114.4pi7d4y4n2pprfzm@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+	s=arc-20240116; t=1773079735; c=relaxed/simple;
+	bh=5e61FGdTKFWzwwXd37zfObaZ7O1U1d7+PGufJKnsuNE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uQUEW32o0ENgkQTeY9MKIRpBxoZoMTdRLE2DQzsWFl/jn5EC2kdLG7Rq3SOAb0xddigNBUPYillMOb5UkEeR8qbol94f53YXdQGKZ5TI86BHvrZkODVI8TAJhgvqJ1aQE3H2lOqJkUyFiL5tZVgUH0tXoo4zGxi89GQ8Wz/a9uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herbolt.com; spf=pass smtp.mailfrom=herbolt.com; arc=none smtp.client-ip=5.59.97.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=herbolt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=herbolt.com
+Received: from mx0.herbolt.com (localhost [127.0.0.1])
+	by mx0.herbolt.com (Postfix) with ESMTP id C8C51180F243;
+	Mon, 09 Mar 2026 19:08:39 +0100 (CET)
+Received: from trufa.intra.herbolt.com ([172.168.31.30])
+	by mx0.herbolt.com with ESMTPSA
+	id 8vDcK6cMr2k66h0AKEJqOA
+	(envelope-from <lukas@herbolt.com>); Mon, 09 Mar 2026 19:08:39 +0100
+From: Lukas Herbolt <lukas@herbolt.com>
+To: linux-xfs@vger.kernel.org
+Cc: cem@kernel.org,
+	hch@infradead.org,
+	djwong@kernel.org,
+	p.raghav@samsung.com
+Subject: [PATCH 0/2] Addadd FALLOC_FL_WRITE_ZEROES support to xfs
+Date: Mon,  9 Mar 2026 19:07:07 +0100
+Message-ID: <20260309180708.427553-2-lukas@herbolt.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-xfs@vger.kernel.org
 List-Id: <linux-xfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-xfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-xfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260309172114.4pi7d4y4n2pprfzm@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
-X-Rspamd-Queue-Id: 5383523E493
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 682D623E659
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [0.04 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-32036-lists,linux-xfs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-32037-lists,linux-xfs=lfdr.de];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-xfs@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-xfs];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[herbolt.com];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[lukas@herbolt.com,linux-xfs@vger.kernel.org];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	NEURAL_HAM(-0.00)[-0.978];
+	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	R_DKIM_NA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-xfs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,herbolt.com:mid]
 X-Rspamd-Action: no action
 
-On Tue, Mar 10, 2026 at 01:21:14AM +0800, Zorro Lang wrote:
-> On Mon, Mar 02, 2026 at 04:41:07PM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > Add some functionality tests for the new health monitoring code.
-> > 
-> > Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
-> > ---
-> >  doc/group-names.txt |    1 +
-> >  tests/xfs/1885      |   53 +++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  tests/xfs/1885.out  |    5 +++++
-> >  3 files changed, 59 insertions(+)
-> >  create mode 100755 tests/xfs/1885
-> >  create mode 100644 tests/xfs/1885.out
-> > 
-> > 
-> > diff --git a/doc/group-names.txt b/doc/group-names.txt
-> > index 10b49e50517797..158f84d36d3154 100644
-> > --- a/doc/group-names.txt
-> > +++ b/doc/group-names.txt
-> > @@ -117,6 +117,7 @@ samefs			overlayfs when all layers are on the same fs
-> >  scrub			filesystem metadata scrubbers
-> >  seed			btrfs seeded filesystems
-> >  seek			llseek functionality
-> > +selfhealing		self healing filesystem code
-> >  selftest		tests with fixed results, used to validate testing setup
-> >  send			btrfs send/receive
-> >  shrinkfs		decreasing the size of a filesystem
-> > diff --git a/tests/xfs/1885 b/tests/xfs/1885
-> > new file mode 100755
-> > index 00000000000000..1d75ef19c7c9d9
-> > --- /dev/null
-> > +++ b/tests/xfs/1885
-> > @@ -0,0 +1,53 @@
-> > +#! /bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright (c) 2024-2026 Oracle.  All Rights Reserved.
-> > +#
-> > +# FS QA Test 1885
-> > +#
-> > +# Make sure that healthmon handles module refcount correctly.
-> > +#
-> > +. ./common/preamble
-> > +_begin_fstest auto selfhealing
-> 
-> I found this test is quick enough, how about add it into "quick" group.
+This is addtion of the FALLOC_FL_WRITE_ZEROES into the XFS.
 
-OK.
+As suggested this is split into two patches firts one introduce the 
+bmapi_flags for xfs_alloc_file_space. Second patch implements the 
+FALLOC_FL_WRITE_ZEROES doing it in two steps, first preallocates 
+and then converts it to zeroed. Sending first patch as v0 and second 
+as v11 to make the changes visible.
 
-> > +
-> > +. ./common/filter
-> > +. ./common/module
-> 
-> Which helper is this "module" file being included for?
+The first patch is just changes to
+Doing the tho phase allocation t
+Lukas Herbolt (2):
+  xfs: Introduce 'bmapi_flags' parameter to xfs_alloc_file_space()
+  xfs: add FALLOC_FL_WRITE_ZEROES to XFS code base
 
-I think at one point I would rmmod/modprobe the module to force the
-refcount leak issue, but discovered there's a sysfs knob for that...
+ fs/xfs/xfs_bmap_util.c |  5 +++--
+ fs/xfs/xfs_bmap_util.h |  2 +-
+ fs/xfs/xfs_file.c      | 47 ++++++++++++++++++++++++++++++------------
+ 3 files changed, 38 insertions(+), 16 deletions(-)
 
-> > +
-> > +refcount_file="/sys/module/xfs/refcnt"
-> > +test -e "$refcount_file" || _notrun "cannot find xfs module refcount"
-> 
-> Or did you intend to add this part as a helper into common/module?
+-- 
+2.53.0
 
-...so this probably should get refactored into a new helper.
-
-> > +
-> > +_require_test
-> > +_require_xfs_io_command healthmon
-> > +
-> > +# Capture mod refcount without the test fs mounted
-> > +_test_unmount
-> > +init_refcount="$(cat "$refcount_file")"
-> > +
-> > +# Capture mod refcount with the test fs mounted
-> > +_test_mount
-> > +nomon_mount_refcount="$(cat "$refcount_file")"
-> > +
-> > +# Capture mod refcount with test fs mounted and the healthmon fd open.
-> > +# Pause the xfs_io process so that it doesn't actually respond to events.
-> > +$XFS_IO_PROG -c 'healthmon -c -v' $TEST_DIR >> $seqres.full &
-> > +sleep 0.5
-> > +kill -STOP %1
-> > +mon_mount_refcount="$(cat "$refcount_file")"
-> > +
-> > +# Capture mod refcount with only the healthmon fd open.
-> > +_test_unmount
-> > +mon_nomount_refcount="$(cat "$refcount_file")"
-> > +
-> > +# Capture mod refcount after continuing healthmon (which should exit due to the
-> > +# unmount) and killing it.
-> > +kill -CONT %1
-> > +kill %1
-> > +wait
-> 
-> We typically ensure that background processes are handled within the _cleanup function.
-
-oops, will clean that up.
-
-$XFS_IO_PROG -c 'healthmon -c -v' $TEST_DIR >> $seqres.full &
-healer_pid=$!
-...
-kill $healer_pid
-
-etc.  Thanks for pointing that out.
-
---D
-
-> > +nomon_nomount_refcount="$(cat "$refcount_file")"
-> > +
-> > +_within_tolerance "mount refcount" "$nomon_mount_refcount" "$((init_refcount + 1))" 0 -v
-> > +_within_tolerance "mount + healthmon refcount" "$mon_mount_refcount" "$((init_refcount + 2))" 0 -v
-> > +_within_tolerance "healthmon refcount" "$mon_nomount_refcount" "$((init_refcount + 1))" 0 -v
-> > +_within_tolerance "end refcount" "$nomon_nomount_refcount" "$init_refcount" 0 -v
-> > +
-> > +status=0
-> > +exit
-> 
-> _exit 0
-> 
-> > diff --git a/tests/xfs/1885.out b/tests/xfs/1885.out
-> > new file mode 100644
-> > index 00000000000000..f152cef0525609
-> > --- /dev/null
-> > +++ b/tests/xfs/1885.out
-> > @@ -0,0 +1,5 @@
-> > +QA output created by 1885
-> > +mount refcount is in range
-> > +mount + healthmon refcount is in range
-> > +healthmon refcount is in range
-> > +end refcount is in range
-> > 
-> 
 
